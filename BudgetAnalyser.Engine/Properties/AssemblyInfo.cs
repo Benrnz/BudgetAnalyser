@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.2.2.0")]
 [assembly: AssemblyFileVersion("1.2.2.0")]
-[assembly: InternalsVisibleTo("BudgetAnalyser.UnitTest, PublicKey=0024000004800000940000000602000000240000525341310004000001000100e5bcfeacdfe717ebaa953d44088c368499912f722b168a4d1fb6989b531a6b7dfe8b9b5d513af3f63f8066407e77c6614e129a2db6ccef55ed4fd6a71cfa08f64e44d816358fee1ce2213b2cc6c3df539e94a9bbea00792cf5ee572c34f893b9c2a292d03c46b8818e186affa6a4ab29783066cae531c80e154f08fabebf06b5")]
+[assembly: InternalsVisibleTo("BudgetAnalyser.UnitTest")]
