@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser", "BudgetAnalyser\BudgetAnalyser.csproj", "{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.UnitTest", "BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj", "{D2A141E8-73F2-4C1A-8D31-A744968AEED9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{733305F6-B587-45EE-AD4D-FD6DFEF015AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest", "BudgetAnalyser.Wpf.UnitTest\BudgetAnalyser.Wpf.UnitTest.csproj", "{F6BEE529-FA66-4BCD-938B-49677225AFF9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2A141E8-73F2-4C1A-8D31-A744968AEED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2A141E8-73F2-4C1A-8D31-A744968AEED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2A141E8-73F2-4C1A-8D31-A744968AEED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2A141E8-73F2-4C1A-8D31-A744968AEED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{733305F6-B587-45EE-AD4D-FD6DFEF015AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{733305F6-B587-45EE-AD4D-FD6DFEF015AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733305F6-B587-45EE-AD4D-FD6DFEF015AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{733305F6-B587-45EE-AD4D-FD6DFEF015AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6BEE529-FA66-4BCD-938B-49677225AFF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6BEE529-FA66-4BCD-938B-49677225AFF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6BEE529-FA66-4BCD-938B-49677225AFF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6BEE529-FA66-4BCD-938B-49677225AFF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

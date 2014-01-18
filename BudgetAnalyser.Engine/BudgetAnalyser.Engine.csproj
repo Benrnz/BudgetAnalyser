@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{733305F6-B587-45EE-AD4D-FD6DFEF015AB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BudgetAnalyser.Engine</RootNamespace>
+    <AssemblyName>BudgetAnalyser.Engine</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Rees.Biz.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=273cb7bd5f6ca8af, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rees.UserInteraction.Wpf.1.0.1\Rees.UserInteraction.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account\AccountType.cs" />
+    <Compile Include="Account\AccountTypeRepository.cs" />
+    <Compile Include="Account\ChequeAccount.cs" />
+    <Compile Include="Account\AmexAccount.cs" />
+    <Compile Include="Account\MastercardAccount.cs" />
+    <Compile Include="Account\VisaAccount.cs" />
+    <Compile Include="AutoRegisterWithIoCAttribute.cs" />
+    <Compile Include="Budget\BudgetBucket.cs" />
+    <Compile Include="Budget\BudgetBucketRepository.cs" />
+    <Compile Include="Budget\BudgetCollection.cs" />
+    <Compile Include="Budget\BudgetCurrencyContext.cs" />
+    <Compile Include="Budget\BudgetException.cs" />
+    <Compile Include="Budget\BudgetItem.cs" />
+    <Compile Include="Budget\BudgetModel.cs" />
+    <Compile Include="Budget\BudgetModelImporter.cs" />
+    <Compile Include="Budget\Expense.cs" />
+    <Compile Include="Budget\ExpenseBudgetBucket.cs" />
+    <Compile Include="Budget\IBudgetBucketRepository.cs" />
+    <Compile Include="Budget\IBudgetModelImporter.cs" />
+    <Compile Include="Budget\Income.cs" />
+    <Compile Include="Budget\IncomeBudgetBucket.cs" />
+    <Compile Include="Budget\JournalBucket.cs" />
+    <Compile Include="Budget\SavedUpForExpense.cs" />
+    <Compile Include="Budget\SpentMonthlyExpense.cs" />
+    <Compile Include="Budget\SurplusBucket.cs" />
+    <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="FileFormatException.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IoC.cs" />
+    <Compile Include="Ledger\ILedgerBookRepository.cs" />
+    <Compile Include="Ledger\LedgerBookRepository.cs" />
+    <Compile Include="Matching\DataMatchingRule.cs" />
+    <Compile Include="IAccountTypeRepository.cs" />
+    <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
+    <Compile Include="Ledger\CreditLedgerTransaction.cs" />
+    <Compile Include="Ledger\DataLedgerBook.cs" />
+    <Compile Include="Ledger\DataLedgerEntry.cs" />
+    <Compile Include="Ledger\DataLedgerEntryLine.cs" />
+    <Compile Include="Ledger\DataLedgerTransaction.cs" />
+    <Compile Include="Ledger\DebitLedgerTransaction.cs" />
+    <Compile Include="Ledger\ILedgerDataToDomainMapper.cs" />
+    <Compile Include="Ledger\ILedgerDomainToDataMapper.cs" />
+    <Compile Include="Ledger\Ledger.cs" />
+    <Compile Include="Ledger\LedgerBook.cs" />
+    <Compile Include="Ledger\LedgerDataToDomainMapper.cs" />
+    <Compile Include="Ledger\LedgerDomainToDataMapper.cs" />
+    <Compile Include="Ledger\LedgerEntry.cs" />
+    <Compile Include="Ledger\LedgerEntryLine.cs" />
+    <Compile Include="Ledger\LedgerTransaction.cs" />
+    <Compile Include="Matching\IMatchingRuleDataToDomainMapper.cs" />
+    <Compile Include="Matching\IMatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\IMatchingRuleRepository.cs" />
+    <Compile Include="Matching\MatchingRule.cs" />
+    <Compile Include="Matching\MatchingRuleDataToDomainMapper.cs" />
+    <Compile Include="Matching\MatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\MatchingRuleRepository.cs" />
+    <Compile Include="MiscellaneousAccountType.cs" />
+    <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="GlobalFilterCriteria.cs" />
+    <Compile Include="IModelValidate.cs" />
+    <Compile Include="NamedTransaction.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BucketAnalysis.cs" />
+    <Compile Include="Reports\CustomAggregateSpendingGraph.cs" />
+    <Compile Include="Reports\ISpendingGraphAnalyser.cs" />
+    <Compile Include="Reports\OverallPerformanceBudgetAnalysis.cs" />
+    <Compile Include="Reports\SpendingGraphAnalyser.cs" />
+    <Compile Include="StatementModel.cs" />
+    <Compile Include="Statement\AnzAccountStatementImporterV1.cs" />
+    <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />
+    <Compile Include="Statement\BankImportUtilities.cs" />
+    <Compile Include="Statement\BankStatementImporterRepository.cs" />
+    <Compile Include="Statement\BudgetAnalyserStatementImporterV1.cs" />
+    <Compile Include="Statement\IBankStatementImporter.cs" />
+    <Compile Include="Statement\IBankStatementImporterRepository.cs" />
+    <Compile Include="Statement\IStatementModelRepository.cs" />
+    <Compile Include="Statement\BudgetAnalyserStatementModelRepository.cs" />
+    <Compile Include="Statement\IVersionedStatementModelImporter.cs" />
+    <Compile Include="Statement\StatementModelCheckSumException.cs" />
+    <Compile Include="StringExtension.cs" />
+    <Compile Include="Transaction.cs" />
+    <Compile Include="TransactionListExtension.cs" />
+    <Compile Include="TransactionType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">
+      <Link>CodeAnalysisDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ledger\LedgerBook.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

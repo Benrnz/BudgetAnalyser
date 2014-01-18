@@ -1,0 +1,179 @@
+﻿<Window x:Class="BudgetAnalyser.OverallPerformance.BudgetAnalysisView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
+        Background="{StaticResource MainBackgroundBrush}"
+        Height="650"
+        Icon="..\UI\Assets\PieChart.png"
+        MinWidth="550"
+        Title="Overall Performance"
+        Width="740">
+
+    <Window.Resources>
+        <converters1:PercentToColorConverter x:Key="PercentToColorConverter" />
+        <converters1:BucketToVisibilityConverter x:Key="BucketToVisibilityConverter" />
+
+        <DataTemplate DataType="{x:Type reports:BucketAnalysis}">
+            <Grid ToolTip="{Binding Bucket.Description}">
+                <Grid Height="35"
+                      Margin="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Expense}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Expense}" />
+                    <Border Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Income}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Income}" />
+                    <TextBlock FontSize="12"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               Margin="2"
+                               Style="{StaticResource BudgetTileBlock}"
+                               Text="{Binding Bucket.Code}" />
+                    <TextBlock FontSize="10"
+                               Grid.Row="1"
+                               Margin="2,0,0,0"
+                               Style="{StaticResource BudgetTileBlock}"
+                               Text="{Binding Summary}" />
+                    <TextBlock FontSize="16"
+                               Grid.Column="1"
+                               Grid.RowSpan="2"
+                               Margin="2"
+                               Style="{StaticResource BudgetTileBlock}"
+                               Text="{Binding AverageSpend, StringFormat=C}" />
+                </Grid>
+                <ProgressBar Background="Transparent"
+                             Foreground="{StaticResource ShadowBrush}"
+                             HorizontalAlignment="Stretch"
+                             Margin="1"
+                             Maximum="2"
+                             Minimum="0"
+                             Opacity="0.33"
+                             Value="{Binding Percent, Mode=OneTime}"
+                             VerticalAlignment="Stretch" />
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <!-- Gauge -->
+            <RowDefinition Height="*" />
+            <!-- List box -->
+            <RowDefinition Height="Auto" />
+            <!-- Totals Row -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="-1,1,1,25"
+                    Orientation="Horizontal">
+            <TextBlock Margin="2"
+                       Text="Duration In Months:" />
+            <TextBlock Margin="2"
+                       Text="{Binding Analysis.DurationInMonths}" />
+            <RadioButton Content="Expenses"
+                         GroupName="IncomeExpenseFilter"
+                         IsChecked="{Binding ExpenseFilter}"
+                         Margin="10,2,2,2"
+                         VerticalContentAlignment="Center" />
+            <RadioButton Content="Incomes"
+                         GroupName="IncomeExpenseFilter"
+                         IsChecked="{Binding IncomeFilter}"
+                         Margin="2"
+                         VerticalContentAlignment="Center" />
+        </StackPanel>
+        <TextBlock Grid.Row="1"
+                   Foreground="{StaticResource ImportantHighlightLightBrush}"
+                   Text="Warning! This time period covers multiple budgets"
+                   Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource BoolToVisConverter}}" />
+        <Grid Grid.Row="2"
+              Height="6"
+              Margin="10,20,25,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="{StaticResource ShadowBrush}"
+                    BorderThickness="1,0,0,1" />
+            <TextBlock HorizontalAlignment="Left"
+                       Margin="0,-15,0,0"
+                       Text="0%"
+                       VerticalAlignment="Top" />
+            <Border BorderBrush="{StaticResource ShadowBrush}"
+                    BorderThickness="1,0,0,1"
+                    Grid.Column="1" />
+            <TextBlock Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       Margin="0,-15,0,0"
+                       Text="100%"
+                       VerticalAlignment="Top" />
+            <Border BorderBrush="{StaticResource ShadowBrush}"
+                    BorderThickness="1,0,0,1"
+                    Grid.Column="2" />
+            <Border BorderBrush="{StaticResource ShadowBrush}"
+                    BorderThickness="1,0,1,1"
+                    Grid.Column="3" />
+            <TextBlock Grid.Column="3"
+                       HorizontalAlignment="Right"
+                       Margin="0,-15,0,0"
+                       Text="200%"
+                       VerticalAlignment="Top" />
+        </Grid>
+        <ListBox Grid.Row="3"
+                 ItemsSource="{Binding Analysis.Analyses, Mode=OneWay}"
+                 Style="{StaticResource BudgetItemList}" />
+        <Grid Grid.Row="3"
+              Margin="10,20,25,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="2"
+                       Grid.RowSpan="2"
+                       HorizontalAlignment="Left"
+                       Margin="0,-20,0,0"
+                       Stroke="{StaticResource ShadowBrush}"
+                       StrokeDashArray="1 2 0.6"
+                       StrokeThickness="1"
+                       Width="1" />
+        </Grid>
+        <StackPanel Background="{Binding OverallPerformance, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Performance}"
+                    Grid.Row="4"
+                    Margin="2,4,2,4"
+                    Orientation="Horizontal"
+                    TextBlock.FontWeight="Bold"
+                    TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
+            <TextBlock Margin="4,4,1,4"
+                       Text="Avg Expenses " />
+            <TextBlock Margin="0,4,0,4"
+                       Text="{Binding Analysis.AverageSpend, StringFormat=C}" />
+            <TextBlock Margin="10,4,1,4"
+                       Text="Avg Surplus Spend " />
+            <TextBlock Margin="0,4,0,4"
+                       Text="{Binding Analysis.AverageSurplus, StringFormat=C}" />
+            <TextBlock Margin="10,4,1,4"
+                       Text="Overall Expense Performance" />
+            <TextBlock Margin="0,4,0,4"
+                       Text="{Binding Analysis.OverallPerformance, StringFormat=C}" />
+        </StackPanel>
+    </Grid>
+
+</Window>

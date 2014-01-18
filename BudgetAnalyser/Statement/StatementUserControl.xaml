@@ -1,0 +1,329 @@
+<UserControl x:Class="BudgetAnalyser.Statement.StatementUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             mc:Ignorable="d"
+             xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContextChanged="OnDataContextChanged">
+
+    <UserControl.Resources>
+        <converters:NumberSignToColorConverter x:Key="NumberSignToColorConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Tool bar -->
+            <RowDefinition Height="Auto" />
+            <!-- Transaction Headers -->
+            <RowDefinition Height="*" />
+            <!-- Transaction List -->
+        </Grid.RowDefinitions>
+        <Grid>
+            <!-- Tool bar -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        SnapsToDevicePixels="True"
+                        TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
+                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                           Margin="4"
+                           Padding="4"
+                           Text="Loading Data..."
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource NotBoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource CreditBackground1Brush}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="CR: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource CreditBackground1Brush}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding TotalCredits, StringFormat=C}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource DebitBackground1Brush}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="DR: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource DebitBackground1Brush}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding TotalDebits, StringFormat=C}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="Difference: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding TotalDifference, StringFormat=C}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource DebitBackground1Brush}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="Average DR: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource DebitBackground1Brush}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding AverageDebit, StringFormat=C}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="Count: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding TotalCount}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                           Margin="4,4,0,4"
+                           Padding="4,0,0,0"
+                           Text="Months: "
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                           Margin="0,4,4,4"
+                           Padding="0,0,4,0"
+                           Text="{Binding Statement.DurationInMonths}"
+                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
+                <TextBlock Background="{StaticResource ImportantHighlightLightBrush}"
+                           Margin="4"
+                           Padding="4,0,4,0"
+                           Text="{Binding DuplicateSummary}"
+                           ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
+                           Visibility="{Binding DuplicateSummary, Converter={StaticResource NullToVisConverter}}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal">
+                <TextBlock HorizontalAlignment="Right"
+                           Margin="4"
+                           Text="Budget Bucket Filter" />
+                <ComboBox IsEnabled="{Binding BackgroundJob.MenuAvailable}"
+                          ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
+                          ItemsSource="{Binding FilterBudgetBuckets}"
+                          Margin="4"
+                          SelectedItem="{Binding BucketFilter}"
+                          Width="100" />
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2"
+              IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer x:Name="HeaderScrollViewer"
+                          Background="{StaticResource MainBackgroundBrush}"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden">
+                <Grid Height="50"
+                      Margin="17,0,10,0">
+                    <Grid.Resources>
+
+                        <Style BasedOn="{StaticResource TransactionTextBlockStyle}"
+                               TargetType="TextBlock">
+                            <Setter Property="FontSize"
+                                    Value="16" />
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="A"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="B"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="C"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="D"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="E"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="F"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="G"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="H"
+                                          Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="I"
+                                          Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Date" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Amount" />
+                    <TextBlock Grid.Column="2"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Description" />
+                    <TextBlock Grid.Column="3"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Budget" />
+                    <TextBlock Grid.Column="4"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Reference 1" />
+                    <TextBlock Grid.Column="5"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Reference 2" />
+                    <TextBlock Grid.Column="6"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Reference 3" />
+                    <TextBlock Grid.Column="7"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Transaction Type" />
+                    <TextBlock Grid.Column="8"
+                               HorizontalAlignment="Center"
+                               Margin="0"
+                               Text="Account" />
+                </Grid>
+            </ScrollViewer>
+            <!-- 
+            The Control Template for the transaction list box must be inline here so an event can be attached to internal list box Scroll Viewer. 
+            This is so the horizontal scroll can be sync'ed with the header grid horizontal scroll.
+            -->
+            <Border Grid.Row="1" Style="{StaticResource WarningOilLightStyle}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
+                <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                           Text="No Transactions, with current filter."
+                           ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file."/>
+            </Border>
+            <ListBox x:Name="TransactionListBox"
+                     AlternationCount="2"
+                     Grid.Row="1"
+                     IsTextSearchEnabled="False"
+                     ItemsSource="{Binding Statement.Transactions}"
+                     KeyUp="OnTransactionListBoxKeyUp"
+                     MouseDoubleClick="OnTransactionListBoxDoubleClick"
+                     SelectedItem="{Binding SelectedRow}"
+                     SelectionChanged="OnTransactionSelectionChanged"
+                     SelectionMode="Single"
+                     Visibility="{Binding HasTransactions, Converter={StaticResource BoolToVisConverter}}">
+                <ListBox.Style>
+
+                    <Style TargetType="ListBox">
+                        <Setter Property="ItemContainerStyle"
+                                Value="{StaticResource TransactionListBoxContainer}" />
+                        <Setter Property="HorizontalAlignment"
+                                Value="Stretch" />
+                        <Setter Property="SnapsToDevicePixels"
+                                Value="true" />
+                        <Setter Property="OverridesDefaultStyle"
+                                Value="true" />
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                                Value="Auto" />
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
+                                Value="Auto" />
+                        <Setter Property="ScrollViewer.CanContentScroll"
+                                Value="true" />
+                        <Setter Property="MinWidth"
+                                Value="120" />
+                        <Setter Property="MinHeight"
+                                Value="95" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border x:Name="Border"
+                                            BorderThickness="1"
+                                            CornerRadius="2">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="Transparent" />
+                                        </Border.Background>
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Color="Transparent" />
+                                        </Border.BorderBrush>
+                                        <ScrollViewer Focusable="false"
+                                                      Margin="0"
+                                                      ScrollChanged="OnTransactionListScrollChanged">
+                                            <StackPanel IsItemsHost="True"
+                                                        Margin="2" />
+                                        </ScrollViewer>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsEnabled"
+                                                 Value="false">
+                                            <Setter Property="Background"
+                                                    TargetName="Border">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Silver" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="BorderBrush"
+                                                    TargetName="Border">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="LightGray" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsGrouping"
+                                                 Value="true">
+                                            <Setter Property="ScrollViewer.CanContentScroll"
+                                                    Value="false" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.Style>
+                <ListBox.ContextMenu>
+                    <ContextMenu HasDropShadow="true">
+                        <ContextMenu.Resources>
+
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground"
+                                        Value="Black" />
+                            </Style>
+                        </ContextMenu.Resources>
+                        <MenuItem Command="{Binding ApplyRulesCommand}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Apply Matching Rules" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <MenuItem Command="{Binding CreateRuleCommand}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Create Rule" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <MenuItem Command="{Binding ShowRulesCommand}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Edit Rules" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Click="OnEditTransaction">
+                            <MenuItem.Header>
+                                <TextBlock Text="Edit Transaction" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <MenuItem Command="{Binding DeleteTransactionCommand}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Delete Transaction" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Grid>
+    </Grid>
+
+</UserControl>

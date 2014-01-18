@@ -1,0 +1,50 @@
+﻿using System;
+using BudgetAnalyser.Annotations;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.OverallPerformance;
+
+namespace BudgetAnalyser.Budget
+{
+    [AutoRegisterWithIoC(SingleInstance = true)]
+    public class BudgetAnalysisBuilder : IBudgetAnalysisView
+    {
+        private readonly IBudgetBucketRepository bucketRepository;
+        private readonly BudgetAnalysisController controller;
+
+        public BudgetAnalysisBuilder([NotNull] BudgetAnalysisController controller, [NotNull] IBudgetBucketRepository bucketRepository)
+        {
+            if (controller == null)
+            {
+                throw new ArgumentNullException("controller");
+            }
+
+            if (bucketRepository == null)
+            {
+                throw new ArgumentNullException("bucketRepository");
+            }
+
+            this.controller = controller;
+            this.bucketRepository = bucketRepository;
+        }
+
+        public virtual OverallPerformanceBudgetAnalysis Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria)
+        {
+            var analysis = new OverallPerformanceBudgetAnalysis(statement, budgets, this.bucketRepository);
+            analysis.Analyse(criteria);
+            return analysis;
+        }
+
+        public virtual void ShowDialog(OverallPerformanceBudgetAnalysis analysis)
+        {
+            this.controller.Load(analysis);
+            var window = new BudgetAnalysisView
+            {
+                DataContext = this.controller,
+            };
+
+            window.ShowDialog();
+        }
+    }
+}

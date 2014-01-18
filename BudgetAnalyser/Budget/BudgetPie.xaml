@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetPie"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+
+    <UserControl.Resources>
+
+        <Style x:Key="TitleStyle"
+               TargetType="visualizationToolkit:Title">
+            <Setter Property="TextBox.Foreground"
+                    Value="Black" />
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="visualizationToolkit:Title">
+                        <TextBlock FontWeight="Bold"
+                                   Foreground="Black"
+                                   Text="{TemplateBinding Content}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LegendItemStyle"
+               TargetType="{x:Type chartingToolkit:LegendItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="{x:Type chartingToolkit:LegendItem}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Fill="{Binding Background}"
+                                           Height="8"
+                                           Margin="0,0,3,0"
+                                           Stroke="{Binding BorderBrush}"
+                                           StrokeThickness="1"
+                                           Width="8" />
+                                <TextBlock FontSize="9"
+                                           Foreground="Black"
+                                           Text="{TemplateBinding Content}" />
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Expense Pie -->
+            <RowDefinition Height="*" />
+            <!-- Expense Pie Slice Details -->
+            <RowDefinition Height="Auto" />
+            <!-- Income Pie -->
+            <RowDefinition Height="*" />
+            <!-- Income Pie Slice Details -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Command="{Binding CloseCommand}"
+                HorizontalAlignment="Right"
+                Style="{StaticResource CloseButton}"
+                VerticalAlignment="Top" />
+        <!-- Expense Pie -->
+        <Border x:Name="ExpenseBorder"
+                Background="{StaticResource DebitBackgroundLightBrush}"
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                VerticalAlignment="Stretch" />
+        <chartingToolkit:Chart BorderThickness="0"
+                               Grid.Row="1"
+                               Height="{Binding ElementName=ExpenseBorder, Path=ActualHeight}"
+                               Margin="10"
+                               Title="Expense Pie"
+                               TitleStyle="{StaticResource TitleStyle}"
+                               VerticalAlignment="Top">
+            <chartingToolkit:PieSeries DependentValuePath="Value"
+                                       IndependentValuePath="Key"
+                                       IsSelectionEnabled="True"
+                                       ItemsSource="{Binding ExpensePieChartValues}"
+                                       LegendItemStyle="{StaticResource LegendItemStyle}"
+                                       SelectionChanged="OnExpenseChartSelectionChanged" />
+        </chartingToolkit:Chart>
+        <StackPanel Grid.Row="2"
+                    Margin="15,-10,15,15"
+                    Orientation="Horizontal">
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentExpense.Bucket.Code}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentExpense.Bucket.Description}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentExpense.Amount, StringFormat=C}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentExpensePercent, StringFormat=P}" />
+        </StackPanel>
+        <!-- Income Pie -->
+        <Border x:Name="IncomeBorder"
+                Background="{StaticResource CreditBackground2Brush}"
+                Grid.Row="3"
+                Grid.RowSpan="2"
+                HorizontalAlignment="Stretch"
+                Margin="5"
+                VerticalAlignment="Stretch" />
+        <chartingToolkit:Chart BorderThickness="0"
+                               Grid.Row="3"
+                               Height="{Binding ElementName=IncomeBorder, Path=ActualHeight}"
+                               Margin="10"
+                               Title="Income Pie"
+                               TitleStyle="{StaticResource TitleStyle}"
+                               VerticalAlignment="Top">
+            <chartingToolkit:PieSeries DependentValuePath="Value"
+                                       IndependentValuePath="Key"
+                                       IsSelectionEnabled="True"
+                                       ItemsSource="{Binding IncomePieChartValues}"
+                                       LegendItemStyle="{StaticResource LegendItemStyle}"
+                                       SelectionChanged="OnIncomeChartSelectionChanged" />
+        </chartingToolkit:Chart>
+        <StackPanel Grid.Row="4"
+                    Margin="15,-10,15,15"
+                    Orientation="Horizontal">
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentIncome.Bucket.Code}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentIncome.Bucket.Description}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentIncome.Amount, StringFormat=C}" />
+            <TextBlock Margin="2"
+                       Text="{Binding CurrentIncomePercent, StringFormat=P}" />
+        </StackPanel>
+    </Grid>
+
+</UserControl>

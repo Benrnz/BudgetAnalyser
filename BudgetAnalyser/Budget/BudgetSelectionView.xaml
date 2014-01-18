@@ -1,0 +1,94 @@
+﻿<Window x:Class="BudgetAnalyser.Budget.BudgetSelectionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
+        xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
+        xmlns:budget1="clr-namespace:BudgetAnalyser.Budget"
+        Background="{StaticResource MainBackgroundBrush}"
+        Height="320"
+        Icon="..\UI\Assets\PieChart.png"
+        ResizeMode="NoResize"
+        Title="Budget Details"
+        Width="500"
+        WindowState="Normal"
+        WindowStyle="ToolWindow"
+        DataContextChanged="OnDataContextChanged">
+
+    <!-- DataContext must be BudgetController -->
+
+    <Window.Resources>
+        <converters1:BudgetNameViewModelConverter x:Key="BudgetNameViewModelConverter" />
+
+        <DataTemplate DataType="{x:Type budget:BudgetModel}">
+            <Button Style="{x:Null}"
+                    Background="Transparent"
+                    Click="OnBudgetClick">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Grid x:Name="BudgetTemplateGrid"
+                              Background="{StaticResource TileBackgroundBrush}"
+                              Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <budget1:BudgetModelNameUserControl>
+                                <budget1:BudgetModelNameUserControl.DataContext>
+                                    <MultiBinding Converter="{StaticResource BudgetNameViewModelConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding Path="." />
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}"
+                                                     Path="DataContext.Budgets" />
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </budget1:BudgetModelNameUserControl.DataContext>
+                                <!-- DataContext="{Binding />-->
+                            </budget1:BudgetModelNameUserControl>
+                            <TextBlock Grid.Row="1"
+                                       FontSize="10"
+                                       Text="{Binding EffectiveFrom}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter TargetName="BudgetTemplateGrid"
+                                        Property="Background"
+                                        Value="{StaticResource ControlMouseOverBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="210" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Style="{StaticResource CloseButton}" />
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="All budgets from the file:" />
+            <TextBlock Text="{Binding Budgets.FileName}"
+                       FontSize="10"
+                       Width="475"
+                       HorizontalAlignment="Left"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="2"
+                      Height="175"
+                      Margin="10"
+                      VerticalAlignment="Top"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Budgets}" />
+        </ScrollViewer>
+    </Grid>
+</Window>

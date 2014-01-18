@@ -1,0 +1,52 @@
+﻿<Application xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="BudgetAnalyser.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             mc:Ignorable="d"
+             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
+             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
+             xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
+             xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend">
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="UI/Style/Colours.xaml" />
+                <ResourceDictionary Source="UI/Style/Buttons.xaml" />
+                <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
+                <ResourceDictionary Source="UI/Style/TextBlock.xaml" />
+                <ResourceDictionary Source="UI/Style/TextBox.xaml" />
+                <ResourceDictionary Source="UI/Style/ListBox.xaml" />
+                <ResourceDictionary Source="UI/Style/DatePicker.xaml" />
+                <ResourceDictionary Source="UI/Style/ToolTip.xaml" />
+                <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
+                <ResourceDictionary Source="UI/Style/ListView.xaml"/>
+                <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
+                <ResourceDictionary Source="UI/Style/OilLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+            <converters:NotBoolToVisibilityConverter x:Key="NotBoolToVisConverter" />
+            <converters:BoolToVisibility2Converter x:Key="BoolToVis2Converter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
+            
+            <DataTemplate DataType="{x:Type statement:StatementController}">
+                <statement:StatementUserControl />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type budget:BudgetController}">
+                <budget:BudgetMaintenance />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type budget:BudgetPieController}">
+                <budget:BudgetPie />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type budget:BucketSpendingController}">
+                <spendingTrend:BucketSpendingLineChart />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
+                <ledgerBook:LedgerBookUserControl/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

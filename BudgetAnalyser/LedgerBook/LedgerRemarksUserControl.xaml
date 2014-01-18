@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerRemarksUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding CloseCommand}"
+                    HorizontalAlignment="Left"
+                    IsCancel="True"
+                    Style="{StaticResource CloseButton}" />
+            <TextBlock Style="{StaticResource TextBlockHeading1}"
+                       Text="Remarks" />
+        </StackPanel>
+        <TextBox Text="{Binding Remarks}"
+                 MinLines="2"
+                 TextWrapping="Wrap"
+                 Visibility="{Binding IsReadOnly, Converter={StaticResource NotBoolToVisConverter}}"/>
+        <TextBlock Text="{Binding Remarks}"
+                   TextWrapping="Wrap"
+                   Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVisConverter}}" />
+    </StackPanel>
+</UserControl>

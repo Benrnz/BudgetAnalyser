@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BudgetAnalyser.Engine.Ledger.LedgerBook">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABBgAQQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ledger\LedgerBook.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DatedEntries" />
+      <Property Name="Ledgers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.LedgerEntryLine">
+    <Position X="9.25" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAICAAAAABAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Ledger\LedgerEntryLine.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Entries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.Ledger" Collapsed="true">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ledger\Ledger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.LedgerEntry">
+    <Position X="2.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Ledger\LedgerEntry.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ledger" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Transactions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.LedgerTransaction">
+    <Position X="6" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAABAAAAAAAAUAAAAAAAAIAAAIAAAAA=</HashCode>
+      <FileName>Ledger\LedgerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction">
+    <Position X="3" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Ledger\CreditLedgerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction">
+    <Position X="8" Y="7.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ledger\BudgetCreditLedgerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction">
+    <Position X="5.5" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Ledger\DebitLedgerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

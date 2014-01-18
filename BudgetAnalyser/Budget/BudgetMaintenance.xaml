@@ -1,0 +1,261 @@
+<UserControl x:Class="BudgetAnalyser.Budget.BudgetMaintenance"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
+             xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
+             xmlns:views1="clr-namespace:BudgetAnalyser.Budget">
+
+    <UserControl.Resources>
+        <converters1:BucketToColourConverter x:Key="BucketToColourConverter" />
+
+        <DataTemplate DataType="{x:Type budget:Expense}">
+            <Grid Background="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}"
+                  Height="35"
+                  Margin="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox FontSize="12"
+                         Margin="2"
+                         Style="{StaticResource BudgetTile}"
+                         Text="{Binding Bucket.Code}" />
+                <TextBox FontSize="10"
+                         Grid.Row="1"
+                         Margin="2,0,0,0"
+                         Style="{StaticResource BudgetTile}"
+                         Text="{Binding Bucket.Description}" />
+                <StackPanel Grid.Column="1"
+                            Grid.RowSpan="2"
+                            Orientation="Horizontal">
+                    <TextBox FontSize="16"
+                             Margin="2"
+                             Style="{StaticResource BudgetTile}"
+                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Background="Transparent"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
+                            CommandParameter="{Binding .}"
+                            Foreground="{StaticResource MainBackgroundBrush}">
+                        <Button.Template>
+
+                            <ControlTemplate>
+                                <StackPanel x:Name="ContentContainer"
+                                            Background="{StaticResource DebitBackground1Brush}">
+                                    <TextBlock Margin="1"
+                                               Text="x"
+                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource BoolToVis2Converter}}" />
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type budget:Income}">
+            <Grid Background="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}"
+                  Height="35"
+                  Margin="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox FontSize="12"
+                         Margin="2"
+                         Style="{StaticResource BudgetTile}"
+                         Text="{Binding Bucket.Code}" />
+                <TextBox FontSize="10"
+                         Grid.Row="1"
+                         Margin="2,0,0,0"
+                         Style="{StaticResource BudgetTile}"
+                         Text="{Binding Bucket.Description}" />
+                <StackPanel Grid.Column="1"
+                            Grid.RowSpan="2"
+                            Orientation="Horizontal">
+                    <TextBox FontSize="16"
+                             Style="{StaticResource BudgetTile}"
+                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Background="Transparent"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
+                            CommandParameter="{Binding .}"
+                            Foreground="{StaticResource MainBackgroundBrush}">
+                        <Button.Template>
+
+                            <ControlTemplate>
+                                <StackPanel x:Name="ContentContainer"
+                                            Background="{StaticResource CreditBackground1Brush}">
+                                    <TextBlock Margin="1"
+                                               Text="x"
+                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource BoolToVis2Converter}}" />
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="TotalStyle"
+               BasedOn="{StaticResource {x:Type TextBlock}}"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Right" />
+        </Style>
+
+        <Style x:Key="BudgetButton"
+               BasedOn="{StaticResource SquareButtonBaseStyle}"
+               TargetType="Button">
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="Width"
+                    Value="200" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width=".5*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Title Row -->
+            <RowDefinition />
+            <!-- Budget Item List Boxes -->
+            <RowDefinition Height="Auto" />
+            <!-- Add new Budget items row -->
+            <RowDefinition Height="Auto" />
+            <!-- Totals Row -->
+            <RowDefinition Height="Auto" />
+            <!-- Totals Row2 -->
+        </Grid.RowDefinitions>
+        <!-- Title Row -->
+        <views1:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
+                                          Grid.ColumnSpan="2" />
+        <StackPanel Grid.ColumnSpan="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Command="{Binding DetailsCommand}"
+                    Style="{StaticResource InfoButton}" />
+            <Button Command="{Binding LoadBudgetCommand}"
+                    Margin="2,3,2,1"
+                    Style="{StaticResource LoadButton}" />
+            <Button Command="{Binding SaveAsCommand}"
+                    Style="{StaticResource SaveAsButton}" />
+            <Button Command="{Binding CloseCommand}"
+                    Style="{StaticResource CloseButton}" />
+        </StackPanel>
+        <!-- Incomes List -->
+        <StackPanel Grid.Column="0"
+                    Grid.Row="1"
+                    Margin="2">
+            <TextBlock Foreground="{StaticResource CreditBackground1Brush}"
+                       HorizontalAlignment="Left"
+                       Style="{StaticResource TotalStyle}"
+                       Text="Incomes" />
+            <Border BorderBrush="{StaticResource CreditBackground1Brush}"
+                    BorderThickness="2">
+                <ListBox x:Name="Incomes"
+                         ItemsSource="{Binding Incomes}"
+                         Style="{StaticResource BudgetItemList}" />
+            </Border>
+        </StackPanel>
+        <Button Background="{StaticResource CreditBackground1Brush}"
+                Command="{Binding AddNewIncomeCommand}"
+                Grid.Row="2"
+                Style="{StaticResource BudgetButton}">
+            <Button.Content>
+                <TextBlock FontSize="14"
+                           Text="Add New Income" />
+            </Button.Content>
+        </Button>
+        <!-- Expenses List -->
+        <ScrollViewer Grid.Column="1"
+                      Grid.Row="1"
+                      HorizontalScrollBarVisibility="Hidden"
+                      Margin="2">
+            <StackPanel>
+                <TextBlock Foreground="{StaticResource DebitBackground1Brush}"
+                           HorizontalAlignment="Left"
+                           Style="{StaticResource TotalStyle}"
+                           Text="Expenses" />
+                <Border BorderBrush="{StaticResource DebitBackground1Brush}"
+                        BorderThickness="2">
+                    <ListBox x:Name="Expenses"
+                             Background="{StaticResource MainBackgroundBrush}"
+                             ItemsSource="{Binding Expenses}"
+                             Style="{StaticResource BudgetItemList}" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="2"
+                    HorizontalAlignment="Stretch"
+                    Orientation="Horizontal">
+            <Button Background="{StaticResource DebitBackground1Brush}"
+                    Command="{Binding AddNewExpenseCommand}"
+                    Style="{StaticResource BudgetButton}">
+                <Button.Content>
+                    <TextBlock FontSize="14"
+                               Text="New Spent Monthly Expense" />
+                </Button.Content>
+                <Button.CommandParameter>
+                    <budget:SpentMonthlyExpense />
+                </Button.CommandParameter>
+            </Button>
+            <Button Background="{StaticResource DebitBackground1Brush}"
+                    Command="{Binding AddNewExpenseCommand}"
+                    Style="{StaticResource BudgetButton}">
+                <Button.Content>
+                    <TextBlock FontSize="14"
+                               Text="New Saved up for Expense" />
+                </Button.Content>
+                <Button.CommandParameter>
+                    <budget:SavedUpForExpense />
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+        <!-- Totals Row 1 -->
+        <StackPanel Grid.Row="3"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="Total Monthly Income" />
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="{Binding IncomeTotal, StringFormat=C}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="3"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="Total Monthly Expenses" />
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="{Binding ExpenseTotal, StringFormat=C}" />
+        </StackPanel>
+        <!-- Totals Row 2 -->
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="4"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="Total Monthly Surplus" />
+            <TextBlock Style="{StaticResource TotalStyle}"
+                       Text="{Binding Surplus, StringFormat=C}" />
+        </StackPanel>
+    </Grid>
+
+</UserControl>

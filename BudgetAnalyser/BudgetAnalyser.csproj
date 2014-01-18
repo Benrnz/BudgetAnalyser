@@ -1,0 +1,443 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BudgetAnalyser</RootNamespace>
+    <AssemblyName>BudgetAnalyser</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Rees.Biz.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>PieChart.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>BudgetAnalyser.App</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.3.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45, Version=4.2.30.23246, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.WPF45, Version=4.2.30.23246, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=273cb7bd5f6ca8af, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rees.UserInteraction.Wpf.1.0.1\Rees.UserInteraction.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Rees.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=273cb7bd5f6ca8af, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Rees.UserInteraction.Wpf.1.0.1\Rees.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WPF Toolkit_v3.5.50211.1\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WPF Toolkit_v3.5.50211.1\WPFToolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="BackgroundProcessingJobMetadata.cs" />
+    <Compile Include="Budget\BucketSpendingController.cs" />
+    <Compile Include="Budget\BudgetAnalysisBuilder.cs" />
+    <Compile Include="Budget\BudgetAnalysisController.cs" />
+    <Compile Include="Budget\BudgetBucketBindingSource.cs" />
+    <Compile Include="Budget\BudgetController.cs" />
+    <Compile Include="Budget\BudgetPieController.cs" />
+    <Compile Include="Budget\BudgetReadyMessage.cs" />
+    <Compile Include="Budget\ChooseBudgetBucketController.cs" />
+    <Compile Include="Budget\LastBudgetLoadedV1.cs" />
+    <Compile Include="Converters\BucketToColourConverter.cs" />
+    <Compile Include="Converters\BucketToVisibilityConverter.cs" />
+    <Compile Include="Converters\BudgetBucketToStringConverter.cs" />
+    <Compile Include="Converters\BudgetNameViewModelConverter.cs" />
+    <Compile Include="Converters\ConverterHelper.cs" />
+    <Compile Include="Converters\MatchingRuleDescriptorConverter.cs" />
+    <Compile Include="Converters\NumberSignToColorConverter.cs" />
+    <Compile Include="Converters\PercentToColorConverter.cs" />
+    <Compile Include="Filtering\FilterAppliedMessage.cs" />
+    <Compile Include="Filtering\FilterStateV1.cs" />
+    <Compile Include="Filtering\GlobalFilterController.cs" />
+    <Compile Include="Filtering\PersistentFiltersV1.cs" />
+    <Compile Include="Filtering\RequestFilterMessage.cs" />
+    <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="IShowableController.cs" />
+    <Compile Include="LedgerBook\AddLedgerReconciliationController.cs" />
+    <Compile Include="LedgerBook\LastLedgerBookLoadedV1.cs" />
+    <Compile Include="LedgerBook\LedgerBookController.cs" />
+    <Compile Include="LedgerBook\LedgerRemarksController.cs" />
+    <Compile Include="LedgerBook\LedgerTransactionEventArgs.cs" />
+    <Compile Include="LedgerBook\LedgerTransactionsController.cs" />
+    <Compile Include="MessagingGate.cs" />
+    <Compile Include="CompositionRoot.cs" />
+    <Compile Include="OverallPerformance\IBudgetAnalysisView.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ShellController.cs" />
+    <Compile Include="SpendingTrend\AddUserDefinedSpendingChartController.cs" />
+    <Compile Include="SpendingTrend\CustomSpendingChartsV1.cs" />
+    <Compile Include="SpendingTrend\SpendingTrendController.cs" />
+    <Compile Include="Statement\CreateNewRuleViewLoader.cs" />
+    <Compile Include="Statement\IStatementFileManager.cs" />
+    <Compile Include="Statement\LastStatementLoadedV1.cs" />
+    <Compile Include="Statement\LoadFileController.cs" />
+    <Compile Include="Statement\NewRuleController.cs" />
+    <Compile Include="Statement\RulesController.cs" />
+    <Compile Include="Statement\StatementController.cs" />
+    <Compile Include="Statement\StatementFileManager.cs" />
+    <Compile Include="Statement\StatementHasBeenModifiedMessage.cs" />
+    <Compile Include="Statement\TransactionsChangedMessage.cs" />
+    <Compile Include="UiContext.cs" />
+    <Compile Include="LedgerBook\AddLedgerReconciliationUserControl.xaml.cs">
+      <DependentUpon>AddLedgerReconciliationUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpendingTrend\AddUserDefinedSpendingChartDialog.xaml.cs">
+      <DependentUpon>AddUserDefinedSpendingChartDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpendingTrend\BucketSpendingLineChart.xaml.cs">
+      <DependentUpon>BucketSpendingLineChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OverallPerformance\BudgetAnalysisView.xaml.cs">
+      <DependentUpon>BudgetAnalysisView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetDetailsView.xaml.cs">
+      <DependentUpon>BudgetDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetModelNameUserControl.xaml.cs">
+      <DependentUpon>BudgetModelNameUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetPie.xaml.cs">
+      <DependentUpon>BudgetPie.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetMaintenance.xaml.cs">
+      <DependentUpon>BudgetMaintenance.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetSelectionView.xaml.cs">
+      <DependentUpon>BudgetSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\ChooseBudgetBucketUserControl.xaml.cs">
+      <DependentUpon>ChooseBudgetBucketUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filtering\GlobalAccountTypeFilterView.xaml.cs">
+      <DependentUpon>GlobalAccountTypeFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statement\CreateNewRuleView.xaml.cs">
+      <DependentUpon>CreateNewRuleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filtering\GlobalDateFilterView.xaml.cs">
+      <DependentUpon>GlobalDateFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputBox.xaml.cs">
+      <DependentUpon>InputBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\LedgerBookUserControl.xaml.cs">
+      <DependentUpon>LedgerBookUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\LedgerRemarksUserControl.xaml.cs">
+      <DependentUpon>LedgerRemarksUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\LedgerTransactionsUserControl.xaml.cs">
+      <DependentUpon>LedgerTransactionsUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\LedgerTransactionUserControl.xaml.cs">
+      <DependentUpon>LedgerTransactionUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statement\LoadFileView.xaml.cs">
+      <DependentUpon>LoadFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statement\MaintainRulesView.xaml.cs">
+      <DependentUpon>MaintainRulesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpendingTrend\SpendingTrendView.xaml.cs">
+      <DependentUpon>SpendingTrendView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Statement\StatementUserControl.xaml.cs">
+      <DependentUpon>StatementUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserPrompts.cs" />
+    <Page Include="UI\Style\Colours.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Style\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\DatePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\ListBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\ListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\OilLight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\TextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\ToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Style\TransactionListBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LedgerBook\AddLedgerReconciliationUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpendingTrend\AddUserDefinedSpendingChartDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpendingTrend\BucketSpendingLineChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OverallPerformance\BudgetAnalysisView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetModelNameUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetPie.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetMaintenance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetSelectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Budget\ChooseBudgetBucketUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filtering\GlobalAccountTypeFilterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Statement\CreateNewRuleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filtering\GlobalDateFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InputBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerBookUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerRemarksUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerTransactionsUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerTransactionUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statement\LoadFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statement\MaintainRulesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Shell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shell.xaml.cs">
+      <DependentUpon>Shell.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="SpendingTrend\SpendingTrendView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Statement\StatementUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\AmexLogo.png" />
+    <Resource Include="UI\Assets\ChequeLogo.png" />
+    <Resource Include="UI\Assets\ChequeLogo1.png" />
+    <Resource Include="UI\Assets\Mastercard.png" />
+    <Resource Include="UI\Assets\PieChart.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\CodeAnalysisDictionary.xml">
+      <Link>CodeAnalysisDictionary.xml</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
+      <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
+      <Name>BudgetAnalyser.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\PieChart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\SavingsLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\VisaLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PieChart.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\Misc1Logo.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

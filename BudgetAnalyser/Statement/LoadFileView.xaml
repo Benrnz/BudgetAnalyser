@@ -1,0 +1,105 @@
+﻿<Window x:Class="BudgetAnalyser.Statement.LoadFileView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="300"
+        Icon="..\UI\Assets\PieChart.png"
+        ResizeMode="NoResize"
+        Title="{Binding WindowTitle}"
+        Width="500"
+        WindowState="Normal">
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="3"
+                   Text="Select a file:" />
+        <TextBox Grid.Column="1"
+                 HorizontalAlignment="Stretch"
+                 Margin="3"
+                 Text="{Binding FileName}"
+                 ToolTip="{Binding FileName}" />
+        <Button Command="{Binding BrowseForFileCommand}"
+                Grid.Column="2"
+                Style="{StaticResource BuildButton}" />
+        <StackPanel Grid.ColumnSpan="3"
+                    Grid.Row="1">
+            <Border BorderBrush="{StaticResource ControlBorderBrush}"
+                    BorderThickness="2"
+                    Margin="5"
+                    CornerRadius="3">
+                
+            <GroupBox BorderBrush="Transparent"
+                      BorderThickness="0"
+                      IsEnabled="{Binding FileTypeSelectionReady}"
+                      Margin="3">
+                <GroupBox.Header>
+                    <TextBlock Margin="3"
+                               Text="Account Name"
+                               ToolTip="{Binding AccountNameHelp}" />
+                </GroupBox.Header>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="RadioExisting"
+                                     Content="Use an existing Name"
+                                     Foreground="{StaticResource TextBrush}"
+                                     GroupName="AccountNameMode"
+                                     IsChecked="{Binding UseExistingAccountName}"
+                                     Margin="3"
+                                     ToolTip="{Binding AccountNameHelp}" />
+                        <ComboBox x:Name="ComboAccountType"
+                                  IsEnabled="{Binding ElementName=RadioExisting, Path=IsChecked}"
+                                  ItemsSource="{Binding ExistingAccountNames}"
+                                  Margin="3"
+                                  SelectedItem="{Binding SelectedExistingAccountName}"
+                                  ToolTip="{Binding AccountNameHelp}"
+                                  Visibility="{Binding ElementName=RadioExisting, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                  Width="130" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="RadioNew"
+                                     Content="Type a new Name"
+                                     Foreground="{StaticResource TextBrush}"
+                                     GroupName="AccountNameMode"
+                                     IsChecked="{Binding UseNewAccountName}"
+                                     Margin="3"
+                                     ToolTip="{Binding AccountNameHelp}" />
+                        <TextBox IsEnabled="{Binding ElementName=RadioNew, Path=IsChecked}"
+                                 Margin="3"
+                                 Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="{Binding AccountNameHelp}"
+                                 Visibility="{Binding ElementName=RadioNew, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                 Width="150" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            </Border>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="2"
+                           Text="Suggested Date Range"
+                           Visibility="{Binding SuggestedDateRange, Converter={StaticResource NullToVisConverter}}" />
+                <TextBlock Margin="2"
+                           Text="{Binding SuggestedDateRange}" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.ColumnSpan="3"
+                    Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Command="{Binding CancelCommand}"
+                    Style="{StaticResource CloseButton}" />
+            <Button Command="{Binding ActionCommand}"
+                    Style="{StaticResource LoadButton}"
+                    ToolTip="{Binding ActionButtonText}" />
+        </StackPanel>
+    </Grid>
+
+</Window>

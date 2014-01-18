@@ -1,0 +1,165 @@
+<Window x:Class="BudgetAnalyser.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Background="{StaticResource MainBackgroundBrush}"
+        Height="350"
+        Icon="UI\Assets\PieChart.png"
+        MinHeight="600"
+        MinWidth="800"
+        SnapsToDevicePixels="True"
+        Title="{Binding WindowTitle}"
+        Width="1000">
+
+    <Window.InputBindings>
+        <KeyBinding Key="O"
+                    Command="{Binding OpenStatementCommand}"
+                    Modifiers="Control" />
+        <KeyBinding Key="S"
+                    Command="{Binding SaveStatementCommand}"
+                    Modifiers="Control" />
+        <KeyBinding Key="X"
+                    Command="{Binding CloseStatementCommand}"
+                    Modifiers="Control" />
+    </Window.InputBindings>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top"
+              IsEnabled="{Binding BackgroundJob.MenuAvailable}">
+            <Menu.Resources>
+
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Foreground"
+                            Value="Black" />
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="_File">
+                <MenuItem Command="{Binding OpenStatementCommand}"
+                          Header="_Open Statement (Ctrl+O)" />
+                <MenuItem Command="{Binding CloseStatementCommand}"
+                          Header="_Close Statement (Ctrl+X)" />
+                <MenuItem Command="{Binding SaveStatementCommand}"
+                          Header="_Save Statment (Ctrl+S)" />
+                <MenuItem Command="{Binding MergeStatementCommand}"
+                          Header="_Merge Statement" />
+                <MenuItem>
+                    <MenuItem.Header>
+                        <TextBlock Text="Recent Statements" />
+                    </MenuItem.Header>
+                    <MenuItem Command="{Binding RecentFile1Command}"
+                              CommandParameter="{Binding RecentFile1Command.FullFileName}"
+                              ToolTip="{Binding RecentFile1Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="1" />
+                                <TextBlock Text="{Binding RecentFile1Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile2Command}"
+                              CommandParameter="{Binding RecentFile2Command.FullFileName}"
+                              ToolTip="{Binding RecentFile2Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="2" />
+                                <TextBlock Text="{Binding RecentFile2Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile3Command}"
+                              CommandParameter="{Binding RecentFile3Command.FullFileName}"
+                              ToolTip="{Binding RecentFile3Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="3" />
+                                <TextBlock Text="{Binding RecentFile3Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile4Command}"
+                              CommandParameter="{Binding RecentFile4Command.FullFileName}"
+                              ToolTip="{Binding RecentFile4Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="4" />
+                                <TextBlock Text="{Binding RecentFile4Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile5Command}"
+                              CommandParameter="{Binding RecentFile5Command.FullFileName}"
+                              ToolTip="{Binding RecentFile5Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="5" />
+                                <TextBlock Text="{Binding RecentFile5Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Budget">
+                <MenuItem Command="{Binding EditBudgetCommand}"
+                          Header="{Binding BudgetController.BudgetMenuItemName}" />
+                <MenuItem Command="{Binding ViewBudgetPieCommand}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Pie Chart" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding BudgetSelectionCommand}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Show all Budgets"/>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding ViewLedgerBookCommand}">
+                    <MenuItem.Header>
+                        <TextBlock Text="View Ledger Book"/>
+                    </MenuItem.Header>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Analyse Budget">
+                <MenuItem Command="{Binding AnalyseStatementCommand}"
+                          Header="_Overall Performance" />
+                <MenuItem Command="{Binding SpendingTrendCommand}"
+                          Header="_Spending Trend" />
+            </MenuItem>
+            <MenuItem Header="_Filter">
+                <MenuItem Command="{Binding GlobalDateFilterCommand}"
+                          CommandParameter="Date"
+                          IsCheckable="True"
+                          IsChecked="{Binding GlobalDateFilterEnabled}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Date Range" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding GlobalAccountTypeFilterCommand}"
+                          CommandParameter="AccountType"
+                          IsCheckable="True"
+                          IsChecked="{Binding GlobalAccountTypeFilterEnabled}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Account Type" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <ContentPresenter Content="{Binding StatementController}"
+                              DataContext="{Binding StatementController}"
+                              Visibility="{Binding Statement, Converter={StaticResource NullToVisConverter}}" />
+            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding BudgetController}" />
+            </Grid>
+            <Grid Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding BudgetPieController}" />
+            </Grid>
+            <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding LedgerBookController}"/>
+            </Grid>
+        </Grid>
+    </DockPanel>
+
+</Window>

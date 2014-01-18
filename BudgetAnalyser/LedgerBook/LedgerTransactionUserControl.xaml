@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Grid Margin="1"
+          Background="{StaticResource TileBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" MinWidth="80"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="80"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="{Binding Narrative}" />
+        <TextBlock Grid.Column="1"
+                   Style="{StaticResource TextBlockNumber}"
+                   Text="{Binding Credit, StringFormat=N}" />
+        <TextBlock Grid.Column="2"
+                   Text="CR" />
+        <TextBlock Grid.Column="3"
+                   Style="{StaticResource TextBlockNumber}"
+                   Text="{Binding Debit, StringFormat=N}" />
+        <TextBlock Grid.Column="4"
+                   Text="DR" />
+        <Button Style="{StaticResource CloseButton}"
+                Grid.Column="5"
+                Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
+                CommandParameter="{Binding .}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                ToolTip="Remove"
+                Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisConverter}}">
+            <Button.LayoutTransform>
+                <ScaleTransform CenterX="0.5"
+                                CenterY="0.5"
+                                ScaleX="0.5"
+                                ScaleY="0.5"/>
+            </Button.LayoutTransform>
+        </Button>
+    </Grid>
+
+</UserControl>

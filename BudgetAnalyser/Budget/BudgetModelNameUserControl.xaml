@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetModelNameUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- DataContext must be BudgetCurrencyContext -->
+    <StackPanel Orientation="Horizontal">
+        <Border BorderBrush="{StaticResource ControlBorderBrush}"
+                Background="{StaticResource SecondaryBackgroundBrush}"
+                BorderThickness="2"
+                CornerRadius="3"
+                Height="25"
+                Margin="5"
+                ToolTip="This budget is the current active budget for today."
+                Visibility="{Binding BudgetActive, Converter={StaticResource BoolToVisConverter}}">
+            <TextBlock FontSize="12"
+                       FontWeight="Bold"
+                       Margin="3"
+                       Foreground="{StaticResource MainBackgroundBrush}"
+                       Text="Active" />
+        </Border>
+        <Border BorderBrush="{StaticResource ControlBorderBrush}"
+                Background="{StaticResource TileBackgroundBrush}"
+                BorderThickness="2"
+                CornerRadius="3"
+                Height="25"
+                Margin="5"
+                ToolTip="This budget is old, and is not current for today's or future transactions."
+                Visibility="{Binding BudgetArchived, Converter={StaticResource BoolToVisConverter}}">
+            <TextBlock FontSize="11"
+                       Margin="3"
+                       Text="Archived" />
+        </Border>
+        <Border BorderBrush="{StaticResource ControlBorderBrush}"
+                BorderThickness="2"
+                CornerRadius="3"
+                Height="25"
+                Margin="5"
+                ToolTip="This budget is a future dated budget and has not yet being applied to transactions."
+                Visibility="{Binding BudgetInFuture, Converter={StaticResource BoolToVisConverter}}">
+            <TextBlock FontSize="11"
+                       Margin="3"
+                       Text="Future" />
+        </Border>
+        <TextBlock Style="{StaticResource TextBlockHeading1}"
+                   Text="{Binding Model.Name}" />
+    </StackPanel>
+</UserControl>

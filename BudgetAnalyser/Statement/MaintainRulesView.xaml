@@ -1,0 +1,100 @@
+﻿<Window x:Class="BudgetAnalyser.Statement.MaintainRulesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        mc:Ignorable="d"
+        xmlns:converters2="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:matching="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine"
+        xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
+        Background="{StaticResource MainBackgroundBrush}"
+        Height="500"
+        Icon="..\UI\Assets\PieChart.png"
+        MaxWidth="320"
+        Title="Maintain Matching Rules"
+        Width="320">
+    <!-- Data Context = RulesController -->
+
+    <Window.Resources>
+        <converters1:BucketToColourConverter x:Key="BucketToColourConverter" />
+        <converters2:ZeroToBlankConverter x:Key="ZeroToBlankConverter" />
+        <converters1:MatchingRuleDescriptorConverter x:Key="RuleDescriptorConverter" />
+
+        <DataTemplate DataType="{x:Type matching:MatchingRule}">
+            <Border Background="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}"
+                    CornerRadius="2"
+                    Margin="2"
+                    Width="265">
+                <Grid TextBlock.FontSize="10"
+                      TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="11"
+                               Margin="4"
+                               Text="{Binding Description}"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding Description}" />
+                    <Border BorderBrush="{StaticResource MainBackgroundBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2"
+                            Grid.Column="1"
+                            Margin="2"
+                            Width="55">
+                        <TextBlock FontSize="11"
+                                   FontWeight="Bold"
+                                   Margin="2"
+                                   Text="{Binding Bucket.Code}"
+                                   ToolTip="{Binding Bucket.Description}" />
+                    </Border>
+                    <TextBlock Grid.Row="1"
+                               Margin="2"
+                               Text="{Binding ., Converter={StaticResource RuleDescriptorConverter}, ConverterParameter=true}"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding ., Converter={StaticResource RuleDescriptorConverter}}" />
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                        <TextBlock Margin="2"
+                                   Text="{Binding LastMatch, StringFormat=g}"
+                                   ToolTip="The last date and time this rule was matched against a transaction." />
+                        <TextBlock Margin="2,2,0,2"
+                                   Text="x" />
+                        <TextBlock Margin="0,2,2,2"
+                                   Text="{Binding MatchCount}"
+                                   ToolTip="The number of times this rule has been used to match transactions." />
+                    </StackPanel>
+                    <TextBlock Grid.Column="2"
+                               Grid.Row="1"
+                               Margin="2"
+                               Text="{Binding Amount, StringFormat=C, Converter={StaticResource ZeroToBlankConverter}}"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding Amount, StringFormat=C}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource MainBackgroundBrush}"
+          MaxWidth="320">
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding Rules}"
+                 SelectedItem="{Binding SelectedRule}"
+                 Style="{StaticResource BudgetItemList}">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding DeleteRuleCommand}"
+                              Header="Delete Rule" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+    </Grid>
+
+</Window>
