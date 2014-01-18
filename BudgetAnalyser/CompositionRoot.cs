@@ -89,7 +89,7 @@ namespace BudgetAnalyser
             var budgetDetailsViewLoader = new WpfViewLoader<BudgetDetailsView>();
             var budgetSelectionViewLoader = new WpfViewLoader<BudgetSelectionView>();
             builder.Register(c => new BudgetController(
-                                      c.Resolve<IBudgetModelImporter>(),
+                                      c.Resolve<IBudgetRepository>(),
                                       c.Resolve<UiContext>(), 
                                       budgetDetailsViewLoader, 
                                       budgetSelectionViewLoader));

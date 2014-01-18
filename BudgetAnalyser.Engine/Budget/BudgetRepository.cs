@@ -7,26 +7,44 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class BudgetModelImporter : IBudgetModelImporter
+    public class BudgetRepository : IBudgetRepository
     {
-        public BudgetModelImporter([NotNull] IBudgetBucketRepository bucketRepository)
+        public BudgetRepository([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
             }
 
-            this.BudgetBucketRepository = bucketRepository;
+            BudgetBucketRepository = bucketRepository;
         }
 
-        public BudgetCollection LoadBudgetData(string fileName)
+        public BudgetCollection CreateNew(string fileName)
+        {
+            var newBudget = new BudgetModel
+            {
+                EffectiveFrom = DateTime.Today,
+                Name = "Default Budget",
+            };
+
+            var newCollection = new BudgetCollection(new[] {newBudget})
+            {
+                FileName = fileName
+            };
+
+            Save(newCollection);
+
+            return newCollection;
+        }
+
+        public BudgetCollection Load(string fileName)
         {
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException("File not found.", fileName);
             }
 
-            object serialised = null;
+            object serialised;
             try
             {
                 serialised = XamlServices.Load(fileName); // Will always succeed without exceptions even if bad file format, but will return null.
@@ -34,7 +52,7 @@ namespace BudgetAnalyser.Engine.Budget
             catch (XamlObjectWriterException ex)
             {
                 throw new FileFormatException("The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
-            } 
+            }
 
             var correctFormat = serialised as BudgetCollection;
             if (correctFormat == null)
@@ -44,11 +62,11 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             correctFormat.FileName = fileName;
-            this.BudgetBucketRepository.Initialise(correctFormat);
+            BudgetBucketRepository.Initialise(correctFormat);
             return correctFormat;
         }
 
-        public void SaveBudgetData(BudgetCollection budgetData)
+        public void Save(BudgetCollection budgetData)
         {
             string serialised = XamlServices.Save(budgetData);
             File.WriteAllText(budgetData.FileName, serialised);

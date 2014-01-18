@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Budget
         private const string EditBudgetMenuName = "Edit Current _Budget";
 
         private readonly IViewLoader budgetDetailsViewLoader;
-        private readonly IBudgetModelImporter budgetModelImporter;
+        private readonly IBudgetRepository budgetRepository;
         private readonly IViewLoader budgetSelectionLoader;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
@@ -40,15 +40,15 @@ namespace BudgetAnalyser.Budget
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
-            [NotNull] IBudgetModelImporter budgetModelImporter,
+            [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext context,
             [NotNull] IViewLoader budgetDetailsViewLoader,
             [NotNull] IViewLoader budgetSelectionLoader)
         {
             // BUG Scroll into view when adding new expense or income.
-            if (budgetModelImporter == null)
+            if (budgetRepository == null)
             {
-                throw new ArgumentNullException("budgetModelImporter");
+                throw new ArgumentNullException("budgetRepository");
             }
 
             if (context == null)
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Budget
             }
 
             this.budgetSelectionLoader = budgetSelectionLoader;
-            this.budgetModelImporter = budgetModelImporter;
+            this.budgetRepository = budgetRepository;
             this.questionBox = context.UserPrompts.YesNoBox;
             this.messageBox = context.UserPrompts.MessageBox;
             this.fileOpenDialogFactory = context.UserPrompts.OpenFileFactory;
@@ -260,7 +260,7 @@ namespace BudgetAnalyser.Budget
             }
 
             CurrentBudget.Model.LastModifiedComment = input;
-            this.budgetModelImporter.SaveBudgetData(Budgets);
+            this.budgetRepository.Save(Budgets);
             return true;
         }
 
@@ -300,10 +300,23 @@ namespace BudgetAnalyser.Budget
             LoadBudget(defaultFileName);
         }
 
+        private void LoadBudgetOrCreate(string fileName)
+        {
+            try
+            {
+                LoadBudget(fileName);
+            }
+            catch (FileNotFoundException)
+            {
+                this.budgetRepository.CreateNew(fileName);
+                LoadBudget(fileName);
+            }
+        }
+
         private void LoadBudget(string fileName)
         {
-            Budgets = this.budgetModelImporter.LoadBudgetData(fileName);
-            BudgetBucketBindingSource.BucketRepository = this.budgetModelImporter.BudgetBucketRepository;
+            Budgets = this.budgetRepository.Load(fileName);
+            BudgetBucketBindingSource.BucketRepository = this.budgetRepository.BudgetBucketRepository;
             CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
             RaisePropertyChanged(() => TruncatedFileName);
         }
@@ -344,14 +357,14 @@ namespace BudgetAnalyser.Budget
                 string defaultFileName = GetDefaultFileName();
                 if (!message.RehydratedModels.ContainsKey(typeof (LastBudgetLoadedV1)))
                 {
-                    LoadBudget(defaultFileName);
+                    LoadBudgetOrCreate(defaultFileName);
                     return;
                 }
 
                 var budgetFileName = message.RehydratedModels[typeof (LastBudgetLoadedV1)].AdaptModel<string>();
                 if (string.IsNullOrWhiteSpace(budgetFileName))
                 {
-                    LoadBudget(defaultFileName);
+                    LoadBudgetOrCreate(defaultFileName);
                     return;
                 }
 

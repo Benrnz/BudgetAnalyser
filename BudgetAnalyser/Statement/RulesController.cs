@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -88,7 +90,16 @@ namespace BudgetAnalyser.Statement
 
         public void Initialize()
         {
-            LoadRules();
+            try
+            {
+                LoadRules();
+            }
+            catch (FileNotFoundException)
+            {
+                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
+                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
+                LoadRules();
+            }
         }
 
         public virtual void SaveRules()

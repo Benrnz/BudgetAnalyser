@@ -299,3 +299,7 @@ packages/structuremap.2.6.4.1/lib/net40/StructureMap.pdb
 packages/structuremap.2.6.4.1/lib/net40/StructureMap.XML
 packages/structuremap.2.6.4.1/structuremap.2.6.4.1.nupkg
 packages/structuremap.2.6.4.1/structuremap.2.6.4.1.nuspec
+BudgetAnalyser/bin/Debug/BudgetAnalyserAppState.xml
+BudgetAnalyser/bin/Debug/BudgetModel.xml
+BudgetAnalyser/bin/Debug/MatchingRules.xml
+BudgetAnalyser/obj/Debug/TempPE/Properties.Resources.Designer.cs.dll

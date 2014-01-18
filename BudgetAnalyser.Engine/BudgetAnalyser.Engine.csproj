@@ -38,7 +38,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Rees.Biz.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -72,11 +73,11 @@
     <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
     <Compile Include="Budget\BudgetModel.cs" />
-    <Compile Include="Budget\BudgetModelImporter.cs" />
+    <Compile Include="Budget\BudgetRepository.cs" />
     <Compile Include="Budget\Expense.cs" />
     <Compile Include="Budget\ExpenseBudgetBucket.cs" />
     <Compile Include="Budget\IBudgetBucketRepository.cs" />
-    <Compile Include="Budget\IBudgetModelImporter.cs" />
+    <Compile Include="Budget\IBudgetRepository.cs" />
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
     <Compile Include="Budget\JournalBucket.cs" />
@@ -151,7 +152,6 @@
   <ItemGroup>
     <None Include="Ledger\LedgerBook.cd" />
     <None Include="packages.config" />
-    <None Include="Rees.Biz.snk" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
