@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Margin="3"
                    Text="Select a file:" />
@@ -99,6 +100,14 @@
             <Button Command="{Binding ActionCommand}"
                     Style="{StaticResource LoadButton}"
                     ToolTip="{Binding ActionButtonText}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="3">
+            <Image Source="../UI/Assets/warning.png"
+                   Height="20"
+                   Margin="5"/>
+            <TextBlock Text="WARNING: Only ANZ Bank CSV Statement files are supported."/>
         </StackPanel>
     </Grid>
 

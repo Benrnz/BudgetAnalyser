@@ -310,7 +310,7 @@ namespace BudgetAnalyser.Statement
             RulesController.Initialize();
         }
 
-        public void Load(string fullFileName)
+        public bool Load(string fullFileName)
         {
             if (PromptToSaveIfDirty())
             {
@@ -320,7 +320,7 @@ namespace BudgetAnalyser.Statement
             try
             {
                 BackgroundJob.StartNew("Loading statement...", false);
-                LoadInternal(fullFileName);
+                return LoadInternal(fullFileName);
             }
             finally
             {
@@ -401,15 +401,16 @@ namespace BudgetAnalyser.Statement
             return SelectedRow != null;
         }
 
-        private void LoadInternal(string fullFileName)
+        private bool LoadInternal(string fullFileName)
         {
+            StatementModel statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName);
+
             using (this.uiContext.WaitCursorFactory())
             {
-                StatementModel statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName);
                 if (statementModel == null)
                 {
                     // User cancelled.
-                    return;
+                    return false;
                 }
 
                 Statement = statementModel;
@@ -423,6 +424,8 @@ namespace BudgetAnalyser.Statement
                 NotifyOfReset();
                 UpdateTotalsRow();
             }
+
+            return true;
         }
 
         private void LoadStatementFromApplicationState(string statementFileName)

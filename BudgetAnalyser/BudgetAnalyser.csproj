@@ -42,7 +42,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Rees.Biz.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>PieChart.ico</ApplicationIcon>
@@ -395,7 +396,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Rees.Biz.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -432,6 +432,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="UI\Assets\Misc1Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Assets\warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

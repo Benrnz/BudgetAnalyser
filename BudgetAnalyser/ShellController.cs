@@ -461,7 +461,11 @@ namespace BudgetAnalyser
             BudgetController.Shown = false;
             try
             {
-                StatementController.Load(fullFileName);
+                if (!StatementController.Load(fullFileName))
+                {
+                    return;
+                }
+
                 UpdateRecentFiles(this.recentFileManager.AddFile(StatementController.Statement.FileName));
             }
             catch (FileNotFoundException ex)
