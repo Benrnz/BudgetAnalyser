@@ -1,6 +1,4 @@
-﻿// TODO Move to statement
-
-namespace BudgetAnalyser.Engine.Statement
+﻿namespace BudgetAnalyser.Engine.Statement
 {
     public interface IVersionedStatementModelImporter
     {

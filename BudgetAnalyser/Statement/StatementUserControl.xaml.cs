@@ -15,7 +15,6 @@ namespace BudgetAnalyser.Statement
     public partial class StatementUserControl : UserControl
     {
         // TODO Consider moving the edit mode to the controller, so that it controls the edit more than the view.
-        // BUg Button disabled chrome needed - maybe add more blue to enabled state.
 
         private EditMode currentEditMode;
         private ListBoxItem currentRowEdit;
