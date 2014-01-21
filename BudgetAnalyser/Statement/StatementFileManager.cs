@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Statement
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
         private readonly IStatementModelRepository statementModelRepository;
+        private Func<IWaitCursor> waitCursorFactory;
 
         public StatementFileManager(
             [NotNull] LoadFileController loadFileController,
@@ -54,6 +55,7 @@ namespace BudgetAnalyser.Statement
             this.statementModelRepository = statementModelRepository;
             this.importerRepository = importerRepository;
             this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.waitCursorFactory = uiContext.WaitCursorFactory;
         }
 
         private enum OpenMode
@@ -140,8 +142,10 @@ namespace BudgetAnalyser.Statement
         private StatementModel LoadStatement(string fullFileName)
         {
             // TODO add generic UI to let user classify columns.
+            IWaitCursor waitCursor = null;
             try
             {
+                waitCursor = this.waitCursorFactory();
                 switch (this.loadFileController.LastFileWasBudgetAnalyserStatementFile)
                 {
                     case null:
@@ -184,6 +188,10 @@ namespace BudgetAnalyser.Statement
             finally
             {
                 this.loadFileController.Reset();
+                if (waitCursor != null)
+                {
+                    waitCursor.Dispose();
+                }
             }
         }
     }

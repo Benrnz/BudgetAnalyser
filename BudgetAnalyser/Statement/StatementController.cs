@@ -336,9 +336,9 @@ namespace BudgetAnalyser.Statement
             try
             {
                 BackgroundJob.StartNew("Merging statement...", false);
+                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(Statement);
                 using (this.uiContext.WaitCursorFactory())
                 {
-                    StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(Statement);
                     if (additionalModel == null)
                     {
                         // User cancelled.

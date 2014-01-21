@@ -147,6 +147,7 @@
     <Compile Include="SpendingTrend\SpendingTrendController.cs" />
     <Compile Include="Statement\CreateNewRuleViewLoader.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />
+    <Compile Include="Statement\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Statement\LastStatementLoadedV1.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
     <Compile Include="Statement\NewRuleController.cs" />

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -12,6 +11,7 @@ using BudgetAnalyser.Engine.Matching;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Statement
 {
@@ -24,6 +24,13 @@ namespace BudgetAnalyser.Statement
         private readonly IViewLoader maintainRulesViewLoader;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
+
+        /// <summary>
+        ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
+        ///     message
+        ///     arrives nothing will happen, if its a string value this will be used as a full file and path.
+        /// </summary>
+        private string rulesFileName;
 
         public RulesController(
             [NotNull] NewRuleController newRuleController,
@@ -50,6 +57,9 @@ namespace BudgetAnalyser.Statement
             this.ruleRepository = ruleRepository;
             NewRuleController = newRuleController;
             Rules = new BindingList<MatchingRule>();
+
+            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
         public ICommand DeleteRuleCommand
@@ -62,6 +72,40 @@ namespace BudgetAnalyser.Statement
         public BindingList<MatchingRule> Rules { get; private set; }
 
         public MatchingRule SelectedRule { get; set; }
+
+        public void Initialize()
+        {
+            try
+            {
+                LoadRules();
+            }
+            catch (FileNotFoundException)
+            {
+                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
+                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
+                LoadRules();
+            }
+        }
+
+        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+        {
+            var lastRuleSet = new LastMatchingRulesLoadedV1
+            {
+                Model = this.rulesFileName,
+            };
+            message.PersistThisModel(lastRuleSet);
+        }
+
+        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        {
+            if (!message.RehydratedModels.ContainsKey(typeof (LastMatchingRulesLoadedV1)))
+            {
+                return;
+            }
+
+            this.rulesFileName = message.RehydratedModels[typeof (LastMatchingRulesLoadedV1)].AdaptModel<string>();
+            LoadRules();
+        }
 
         public void CreateNewRuleFromTransaction(Transaction transaction)
         {
@@ -88,20 +132,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public void Initialize()
-        {
-            try
-            {
-                LoadRules();
-            }
-            catch (FileNotFoundException)
-            {
-                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
-                LoadRules();
-            }
-        }
-
         public virtual void SaveRules()
         {
             this.ruleRepository.SaveRules(Rules, GetFileName());
@@ -114,8 +144,13 @@ namespace BudgetAnalyser.Statement
 
         protected virtual string GetFileName()
         {
-            string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            return Path.Combine(path, "MatchingRules.xml");
+            if (string.IsNullOrWhiteSpace(this.rulesFileName))
+            {
+                string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                return Path.Combine(path, "MatchingRules.xml");
+            }
+
+            return this.rulesFileName;
         }
 
         protected virtual void LoadRules()
