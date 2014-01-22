@@ -25,7 +25,8 @@
                         VerticalAlignment="Center" />
             <TextBlock Margin="20,2,2,2"
                        Text="Bank Balance:" />
-            <TextBox Text="{Binding BankBalance, StringFormat=N}" />
+            <TextBox GotFocus="OnUIElementGotFocus"
+                     Text="{Binding BankBalance, StringFormat=N}" />
             <Button Command="{Binding OkCommand}"
                     HorizontalAlignment="Left"
                     Margin="20,2,2,2"

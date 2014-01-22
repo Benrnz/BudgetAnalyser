@@ -43,7 +43,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id1,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new DataLedgerTransaction
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id3,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id4,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new DataLedgerTransaction
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id6,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id7,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -134,7 +134,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id8,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id9,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id10,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -181,7 +181,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id11,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -219,7 +219,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id1,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -234,7 +234,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id2,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -249,7 +249,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id3,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -268,7 +268,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id4,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -282,7 +282,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id5,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -296,7 +296,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id6,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                     }
@@ -315,7 +315,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id7,
                             Credit = 75,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new DataLedgerTransaction
@@ -336,7 +336,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id9,
                             Credit = 21.15M,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
                     }
@@ -350,7 +350,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         {
                             Id = id10,
                             Credit = 95,
-                            Narrative = "Budgetted Amount",
+                            Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new DataLedgerTransaction

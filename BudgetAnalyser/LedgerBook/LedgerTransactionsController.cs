@@ -34,8 +34,6 @@ namespace BudgetAnalyser.LedgerBook
             Reset();
         }
 
-        public event EventHandler<LedgerTransactionEventArgs> Complete;
-
         public ICommand AddTransactionCommand
         {
             get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
@@ -143,16 +141,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-            set
-            {
-                this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
-            }
-        }
-
         public IEnumerable<LedgerTransaction> ShownTransactions
         {
             get { return this.doNotUseShownTransactions; }
@@ -181,7 +169,24 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand ZeroNetAmountCommand
         {
-            get { return new RelayCommand(OnZeroNetAmountCommandExecuted); }
+            get { return new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand); }
+        }
+
+        public bool Shown
+        {
+            get { return this.doNotUseShown; }
+            set
+            {
+                this.doNotUseShown = value;
+                RaisePropertyChanged(() => Shown);
+            }
+        }
+
+        public event EventHandler<LedgerTransactionEventArgs> Complete;
+
+        private bool CanExecuteZeroNetAmountCommand()
+        {
+            return LedgerEntry != null && LedgerEntry.NetAmount != 0;
         }
 
         public void Show(LedgerEntry ledgerEntry, bool isNew)
@@ -280,9 +285,25 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            NewTransactionIsDebit = true;
-            NewTransactionIsCredit = false;
-            NewTransactionAmount = LedgerEntry.NetAmount;
+            if (LedgerEntry.NetAmount == 0)
+            {
+                return;
+            }
+
+            if (LedgerEntry.NetAmount > 0)
+            {
+                NewTransactionIsDebit = true;
+                NewTransactionIsCredit = false;
+                NewTransactionNarrative = "Zero the remainder - don't accumulate credits";
+                NewTransactionAmount = LedgerEntry.NetAmount;
+            }
+            else
+            {
+                NewTransactionIsDebit = false;
+                NewTransactionIsCredit = true;
+                NewTransactionNarrative = "Zero the remainder - supplement shortfall from surplus";
+                NewTransactionAmount = -LedgerEntry.NetAmount;
+            }
         }
 
         private void Reset()

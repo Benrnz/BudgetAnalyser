@@ -16,19 +16,19 @@ namespace BudgetAnalyser.Engine.Ledger
         {
         }
 
-        internal LedgerTransaction CreditRegularBudgettedAmount([NotNull] Expense budgettedExpense)
+        internal LedgerTransaction CreditRegularBudgetedAmount([NotNull] Expense budgetedExpense)
         {
-            if (budgettedExpense == null)
+            if (budgetedExpense == null)
             {
-                throw new ArgumentNullException("budgettedExpense");
+                throw new ArgumentNullException("budgetedExpense");
             }
             
-            if (!(budgettedExpense.Bucket is SavedUpForExpense))
+            if (!(budgetedExpense.Bucket is SavedUpForExpense))
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Given budgetted expense {0} is not a {1}.", GetType().Name, typeof(SavedUpForExpense).Name));
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Given budgeted expense {0} is not a {1}.", GetType().Name, typeof(SavedUpForExpense).Name));
             }
 
-            return WithNarrative(budgettedExpense.Bucket.ToString()).WithAmount(budgettedExpense.Amount);
+            return WithNarrative(budgetedExpense.Bucket.ToString()).WithAmount(budgetedExpense.Amount);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Ledger
     /// <summary>
     /// A single entry on a <see cref="Ledger"/> for a date (which comes from the <see cref="LedgerEntryLine"/>). This instance can contain one or
     /// more <see cref="LedgerTransaction"/>s defining all movements for this <see cref="BudgetBucket"/> for this date. Possible transactions 
-    /// include budgetted 'saved up for expenses' credited into this <see cref="Ledger"/> and all statement transactions that are debitted to this
+    /// include budgeted 'saved up for expenses' credited into this <see cref="Ledger"/> and all statement transactions that are debitted to this
     /// budget bucket ledger.
     /// </summary>
     public class LedgerEntry
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgetted and funds can be safely used elsewhere.
+        /// Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds can be safely used elsewhere.
         /// By zeroing the balance the surplus will increase.
         /// </summary>
         public void ZeroTheBalance(string narrative = null)

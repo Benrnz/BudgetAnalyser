@@ -166,8 +166,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 var transactions = new List<LedgerTransaction>();
                 if (expenseBudget != null)
                 {
-                    var budgettedAmount = new BudgetCreditLedgerTransaction { Credit = expenseBudget.Amount, Narrative = "Budgetted Amount" };
-                    transactions.Add(budgettedAmount);
+                    var budgetedAmount = new BudgetCreditLedgerTransaction { Credit = expenseBudget.Amount, Narrative = "Budgeted Amount" };
+                    transactions.Add(budgetedAmount);
                 }
 
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
