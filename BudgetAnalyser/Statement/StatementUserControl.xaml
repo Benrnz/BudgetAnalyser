@@ -34,72 +34,69 @@
                            Padding="4"
                            Text="Loading Data..."
                            Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource NotBoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource CreditBackground1Brush}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="CR: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource CreditBackground1Brush}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding TotalCredits, StringFormat=C}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource DebitBackground1Brush}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="DR: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource DebitBackground1Brush}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding TotalDebits, StringFormat=C}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="Difference: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding TotalDifference, StringFormat=C}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource DebitBackground1Brush}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="Average DR: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource DebitBackground1Brush}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding AverageDebit, StringFormat=C}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="Count: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding TotalCount}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
-                           Margin="4,4,0,4"
-                           Padding="4,0,0,0"
-                           Text="Months: "
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
-                           Margin="0,4,4,4"
-                           Padding="0,0,4,0"
-                           Text="{Binding Statement.DurationInMonths}"
-                           Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}" />
-                <TextBlock Background="{StaticResource ImportantHighlightLightBrush}"
-                           Margin="4"
-                           Padding="4,0,4,0"
-                           Text="{Binding DuplicateSummary}"
-                           ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows."
-                           Visibility="{Binding DuplicateSummary, Converter={StaticResource NullToVisConverter}}" />
+                <Border Background="{StaticResource CreditBackground1Brush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="CR: " />
+                        <TextBlock Text="{Binding TotalCredits, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource DebitBackground1Brush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="DR: " />
+                        <TextBlock Text="{Binding TotalDebits, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="Difference: " />
+                        <TextBlock Text="{Binding TotalDifference, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource DebitBackground1Brush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="Average DR: " />
+                        <TextBlock Text="{Binding AverageDebit, StringFormat=C}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="Count: " />
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding TotalCount}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="Months: " />
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding Statement.DurationInMonths}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource ImportantHighlightLightBrush}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding DuplicateSummary, Converter={StaticResource NullToVisConverter}}">
+                    <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                               Text="{Binding DuplicateSummary}"
+                               ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows." />
+                </Border>
             </StackPanel>
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal">
@@ -198,13 +195,14 @@
             The Control Template for the transaction list box must be inline here so an event can be attached to internal list box Scroll Viewer. 
             This is so the horizontal scroll can be sync'ed with the header grid horizontal scroll.
             -->
-            <Border Grid.Row="1" Style="{StaticResource WarningOilLightStyle}"
+            <Border Grid.Row="1"
                     HorizontalAlignment="Center"
+                    Style="{StaticResource WarningOilLightStyle}"
                     VerticalAlignment="Center"
                     Visibility="{Binding HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
                 <TextBlock Style="{StaticResource WarningLightTextStyle}"
                            Text="No Transactions, with current filter."
-                           ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file."/>
+                           ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
             </Border>
             <ListBox x:Name="TransactionListBox"
                      AlternationCount="2"
