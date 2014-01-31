@@ -153,9 +153,9 @@ namespace BudgetAnalyser.Statement
                         RestoreEditModeToRead();
                         break;
                 }
-            }
 
-            e.Handled = true;
+                e.Handled = true;
+            }
         }
 
         private void OnTransactionListScrollChanged(object sender, ScrollChangedEventArgs e)
