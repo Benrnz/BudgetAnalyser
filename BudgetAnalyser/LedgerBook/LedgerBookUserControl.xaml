@@ -74,10 +74,10 @@
                     BorderThickness="1,0,0,0"
                     Width="1"
                     Margin="10,0,10,0" />
-            <Button Style="{StaticResource PlusR}"
+            <Button Style="{StaticResource PlusRButton}"
                     ToolTip="Add new reconciliation"
                     Command="{Binding AddNewReconciliationCommand}" />
-            <Button Style="{DynamicResource PlusL}"
+            <Button Style="{DynamicResource PlusLButton}"
                     ToolTip="Add new ledger"
                     Command="{Binding AddNewLedgerCommand}" />
             <TextBlock Style="{StaticResource TextBlockHeading1}"

@@ -10,7 +10,7 @@
 
     <SolidColorBrush x:Key="ButtonDisabledBrush"
                      Color="{StaticResource MainBackground}" />
-    
+
     <Color x:Key="ButtonBackgroundColor">
         #AAA9A9A9
     </Color>
@@ -690,7 +690,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="PlusL"
+    <Style x:Key="PlusLButton"
            TargetType="{x:Type Button}">
         <Setter Property="Background"
                 Value="{StaticResource ButtonBackgroundBrush}" />
@@ -725,8 +725,6 @@
                 Value="40" />
         <Setter Property="Height"
                 Value="40" />
-        <Setter Property="ToolTip"
-                Value="Build" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">
@@ -740,8 +738,8 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <Style x:Key="PlusR"
+
+    <Style x:Key="PlusRButton"
            TargetType="{x:Type Button}">
         <Setter Property="Background"
                 Value="{StaticResource ButtonBackgroundBrush}" />
@@ -775,8 +773,6 @@
                 Value="40" />
         <Setter Property="Height"
                 Value="40" />
-        <Setter Property="ToolTip"
-                Value="Build" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">
@@ -791,4 +787,108 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="AllButton"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="#AA333333"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="#FF333333"
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="-1,-1,0,0"
+                                   Text="All"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="All" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PieButton"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="#AA333333"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Ellipse Stroke="#FF333333"
+                                 HorizontalAlignment="Center"
+                                 Width="20"
+                                 Height="20"
+                                 StrokeThickness="2"
+                                 VerticalAlignment="Center" />
+                        <Path Data="M19,9.5 L19,19 L25,12"
+                              Margin="1"
+                              StrokeThickness="2"
+                              Stroke="#FF333333"
+                              />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Pie Graph" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

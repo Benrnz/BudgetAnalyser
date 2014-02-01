@@ -118,8 +118,8 @@ namespace BudgetAnalyser
             var container = builder.Build();
             var uiContext = container.Resolve<UiContext>();
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
-            uiContext.BudgetController = container.Resolve<BudgetController>();
             uiContext.BudgetPieController = container.Resolve<BudgetPieController>();
+            uiContext.BudgetController = container.Resolve<BudgetController>();
             uiContext.ChooseBudgetBucketController = container.Resolve<ChooseBudgetBucketController>();
             uiContext.LedgerRemarksController = container.Resolve<LedgerRemarksController>();
             uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();

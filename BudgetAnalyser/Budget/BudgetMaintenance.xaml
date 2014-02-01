@@ -143,10 +143,16 @@
         </Grid.RowDefinitions>
         <!-- Title Row -->
         <views1:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
-                                          Grid.ColumnSpan="2" />
+                                           Grid.ColumnSpan="2" />
+
         <StackPanel Grid.ColumnSpan="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
+            <Button Command="{Binding ShowPieCommand}"
+                    Style="{StaticResource PieButton}" />
+            <Button Command="{Binding ShowAllCommand}"
+                    Style="{StaticResource AllButton}"
+                    ToolTip="Show all budgets within the loaded budget file, and select one to view." />
             <Button Command="{Binding DetailsCommand}"
                     Style="{StaticResource InfoButton}" />
             <Button Command="{Binding LoadBudgetCommand}"
@@ -256,6 +262,15 @@
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding Surplus, StringFormat=C}" />
         </StackPanel>
+
+        <Grid Grid.RowSpan="5"
+              Grid.ColumnSpan="2"
+              Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource BoolToVisConverter}}"
+              Background="{StaticResource MainBackgroundBrush}">
+            <ContentPresenter Content="{Binding BudgetPieController}"
+                              VerticalAlignment="Top" />
+        </Grid>
+
     </Grid>
 
 </UserControl>

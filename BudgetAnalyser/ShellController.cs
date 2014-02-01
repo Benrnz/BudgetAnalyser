@@ -53,7 +53,6 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("statePersistence");
             }
 
-            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReady);
             MessagingGate.Register<StatementHasBeenModifiedMessage>(this, OnStatementModified);
             MessagingGate.Register<ShutdownMessage>(this, OnShutdownRequested);
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
@@ -80,16 +79,6 @@ namespace BudgetAnalyser
             get { return this.uiContext.BudgetController; }
         }
 
-        public BudgetPieController BudgetPieController
-        {
-            get { return this.uiContext.BudgetPieController; }
-        }
-
-        public ICommand BudgetSelectionCommand
-        {
-            get { return new RelayCommand(OnBudgetSelectionCommandExecute, CanExecuteBudgetSelectionCommand); }
-        }
-
         // TODO Would like to make all commands execute background tasks and use async.
         public ICommand CloseStatementCommand
         {
@@ -99,11 +88,6 @@ namespace BudgetAnalyser
         public DashboardController DashboardController
         {
             get { return this.uiContext.DashboardController; }
-        }
-
-        public ICommand EditBudgetCommand
-        {
-            get { return new RelayCommand(OnEditBudgetExecute, CanExecuteEditBudgetCommand); }
         }
 
         public ICommand GlobalAccountTypeFilterCommand
@@ -251,11 +235,6 @@ namespace BudgetAnalyser
             get { return this.uiContext.StatementController; }
         }
 
-        public ICommand ViewBudgetPieCommand
-        {
-            get { return new RelayCommand(OnViewBudgetPieCommandExecute, CanExecuteViewBudgetPieCommand); }
-        }
-
         public string WindowTitle
         {
             get
@@ -315,19 +294,9 @@ namespace BudgetAnalyser
                    && StatementController.BudgetModel != null;
         }
 
-        private bool CanExecuteBudgetSelectionCommand()
-        {
-            return BackgroundJob.MenuAvailable && !AnyControllersShown(BudgetController);
-        }
-
         private bool CanExecuteCloseStatementCommand()
         {
             return BackgroundJob.MenuAvailable && StatementController.Statement != null;
-        }
-
-        private bool CanExecuteEditBudgetCommand()
-        {
-            return BackgroundJob.MenuAvailable && !AnyControllersShown(BudgetController);
         }
 
         private bool CanExecuteGlobalFilterCommand(string parameter)
@@ -341,21 +310,6 @@ namespace BudgetAnalyser
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable && !AnyControllersShown(StatementController);
-        }
-
-        private bool CanExecuteViewBudgetPieCommand()
-        {
-            if (!BackgroundJob.MenuAvailable || AnyControllersShown(BudgetPieController))
-            {
-                return false;
-            }
-
-            if (BudgetController.Expenses == null || BudgetController.Incomes == null || StatementController.BudgetModel == null)
-            {
-                return false;
-            }
-
-            return BudgetController.Expenses.Any() || BudgetController.Incomes.Any();
         }
 
         private void OnAnalyseStatementCommandExecute()
@@ -403,40 +357,9 @@ namespace BudgetAnalyser
             message.PersistThisModel(filterState);
         }
 
-        private void OnBudgetReady(BudgetReadyMessage message)
-        {
-            if (message.Budget.BudgetActive)
-            {
-                StatementController.BudgetModel = message.Budget.Model;
-            }
-
-            BudgetController.Shown = false;
-        }
-
-        private void OnBudgetSelectionCommandExecute()
-        {
-            BudgetController.SelectOtherBudget();
-        }
-
         private void OnCloseStatementExecute()
         {
             StatementController.CloseStatement();
-        }
-
-        private void OnEditBudgetExecute()
-        {
-            if (BudgetController.Shown)
-            {
-                BudgetPieController.Close();
-                if (!BudgetController.ValidateAndClose())
-                {
-                    return;
-                }
-
-                return;
-            }
-
-            BudgetController.Shown = !BudgetController.Shown;
         }
 
         private void OnFilterAppliedMessageReceived(FilterAppliedMessage message)
@@ -530,11 +453,6 @@ namespace BudgetAnalyser
         {
             this.dirtyFlag = message.Dirty ? "*" : string.Empty;
             RaisePropertyChanged(() => WindowTitle);
-        }
-
-        private void OnViewBudgetPieCommandExecute()
-        {
-            BudgetPieController.Load(BudgetController.CurrentBudget.Model);
         }
 
         private void SendFilterAppliedMessage()

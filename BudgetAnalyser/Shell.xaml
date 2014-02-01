@@ -160,11 +160,6 @@
                                   VerticalAlignment="Top" />
             </Grid>
 
-            <Grid Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding BudgetPieController}"
-                                  VerticalAlignment="Top" />
-            </Grid>
-
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding LedgerBookController}"
                                   VerticalAlignment="Top" />
