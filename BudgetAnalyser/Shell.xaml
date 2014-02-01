@@ -104,20 +104,6 @@
                     </MenuItem>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Budget">
-                <MenuItem Command="{Binding EditBudgetCommand}"
-                          Header="{Binding BudgetController.BudgetMenuItemName}" />
-                <MenuItem Command="{Binding ViewBudgetPieCommand}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Pie Chart" />
-                    </MenuItem.Header>
-                </MenuItem>
-                <MenuItem Command="{Binding BudgetSelectionCommand}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Show all Budgets" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </MenuItem>
             <MenuItem Header="_Analyse Budget">
                 <MenuItem Command="{Binding AnalyseStatementCommand}"
                           Header="_Overall Performance" />
