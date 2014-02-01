@@ -5,11 +5,14 @@ namespace BudgetAnalyser.Budget
 {
     public class BudgetReadyMessage : MessageBase
     {
-        public BudgetReadyMessage(BudgetCurrencyContext budget)
+        public BudgetReadyMessage(BudgetCurrencyContext activeBudget, BudgetCollection budgets = null)
         {
-            Budget = budget;
+            ActiveBudget = activeBudget;
+            Budgets = budgets;
         }
 
-        public BudgetCurrencyContext Budget { get; private set; }
+        public BudgetCurrencyContext ActiveBudget { get; private set; }
+
+        public BudgetCollection Budgets { get; private set; }
     }
 }

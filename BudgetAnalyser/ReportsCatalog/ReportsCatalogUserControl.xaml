@@ -4,6 +4,18 @@
              MinHeight="200"
              MinWidth="200">
     <Grid Background="{StaticResource TileBackgroundBrush}">
-            <TextBlock Foreground="{StaticResource MainBackgroundBrush}" Text="Reports Catalog Under construction"/>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Foreground="{StaticResource MainBackgroundBrush}"
+                   Text="Reports Catalog Under construction" />
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal">
+            <Button Command="{Binding AnalyseStatementCommand}"
+                    Content="Overall Performance"/>
+            <Button Command="{Binding SpendingTrendCommand}"
+                    Content="Spending Trend Graphs" />
+        </StackPanel>
     </Grid>
 </UserControl>

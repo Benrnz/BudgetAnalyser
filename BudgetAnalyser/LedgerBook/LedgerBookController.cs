@@ -371,9 +371,9 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
-            if (message.Budget.BudgetActive)
+            if (message.ActiveBudget.BudgetActive)
             {
-                CurrentBudget = message.Budget;
+                CurrentBudget = message.ActiveBudget;
             }
         }
 

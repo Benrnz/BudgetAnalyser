@@ -104,12 +104,6 @@
                     </MenuItem>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Analyse Budget">
-                <MenuItem Command="{Binding AnalyseStatementCommand}"
-                          Header="_Overall Performance" />
-                <MenuItem Command="{Binding SpendingTrendCommand}"
-                          Header="_Spending Trend" />
-            </MenuItem>
             <MenuItem Header="_Filter">
                 <MenuItem Command="{Binding GlobalDateFilterCommand}"
                           CommandParameter="Date"

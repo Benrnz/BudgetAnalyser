@@ -7,7 +7,6 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
@@ -65,11 +64,6 @@ namespace BudgetAnalyser
             this.uiContext = uiContext;
             BackgroundJob = uiContext.BackgroundJob;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
-        }
-
-        public ICommand AnalyseStatementCommand
-        {
-            get { return new RelayCommand(OnAnalyseStatementCommandExecute, CanExecuteAnalyseStatementCommand); }
         }
 
         public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
@@ -220,11 +214,6 @@ namespace BudgetAnalyser
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
-        public ICommand SpendingTrendCommand
-        {
-            get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteAnalyseStatementCommand); }
-        }
-
         public SpendingTrendController SpendingTrendController
         {
             get { return this.uiContext.SpendingTrendController; }
@@ -285,15 +274,6 @@ namespace BudgetAnalyser
             return this.uiContext.ShowableControllers.Where(c => c.GetType() != exceptThisOne.GetType()).Any(c => c.Shown);
         }
 
-        private bool CanExecuteAnalyseStatementCommand()
-        {
-            return BackgroundJob.MenuAvailable
-                   && !AnyControllersShown(StatementController)
-                   && StatementController.Statement != null
-                   && StatementController.Statement.Transactions.Any()
-                   && StatementController.BudgetModel != null;
-        }
-
         private bool CanExecuteCloseStatementCommand()
         {
             return BackgroundJob.MenuAvailable && StatementController.Statement != null;
@@ -310,17 +290,6 @@ namespace BudgetAnalyser
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable && !AnyControllersShown(StatementController);
-        }
-
-        private void OnAnalyseStatementCommandExecute()
-        {
-            OverallPerformanceBudgetAnalysis analysis;
-            using (this.uiContext.WaitCursorFactory())
-            {
-                analysis = this.uiContext.AnalysisFactory.Analyse(StatementController.Statement, BudgetController.Budgets, GlobalFilterCriteria);
-            }
-
-            this.uiContext.AnalysisFactory.ShowDialog(analysis);
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -439,14 +408,6 @@ namespace BudgetAnalyser
             var gatherDataMessage = new ApplicationStateRequestedMessage();
             Messenger.Send(gatherDataMessage);
             this.statePersistence.Persist(gatherDataMessage.PersistentData);
-        }
-
-        private void OnSpendingTrendCommandExecute()
-        {
-            using (this.uiContext.WaitCursorFactory())
-            {
-                SpendingTrendController.Load(StatementController.Statement, StatementController.BudgetModel, GlobalFilterCriteria);
-            }
         }
 
         private void OnStatementModified(StatementHasBeenModifiedMessage message)

@@ -330,7 +330,6 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
-                MessagingGate.Send(new StatementReadyMessage(Statement));
                 BackgroundJob.Finish();
             }
         }
@@ -433,6 +432,7 @@ namespace BudgetAnalyser.Statement
                 UpdateTotalsRow();
             }
 
+            MessagingGate.Send(new StatementReadyMessage(Statement));
             return true;
         }
 
@@ -511,14 +511,14 @@ namespace BudgetAnalyser.Statement
 
         private void OnBudgetReadyMessage(BudgetReadyMessage message)
         {
-            if (!message.Budget.BudgetActive)
+            if (!message.ActiveBudget.BudgetActive)
             {
                 // Not the current budget for today so ignore.
                 return;
             }
 
             BudgetModel oldBudget = BudgetModel;
-            BudgetModel = message.Budget.Model;
+            BudgetModel = message.ActiveBudget.Model;
 
             if (this.waitingForBudgetToLoad != null)
             {

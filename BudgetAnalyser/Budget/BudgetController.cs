@@ -263,7 +263,7 @@ namespace BudgetAnalyser.Budget
                     this.dirty = false;
                 }
 
-                Messenger.Send(new BudgetReadyMessage(CurrentBudget));
+                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
             }
         }
 
@@ -338,6 +338,10 @@ namespace BudgetAnalyser.Budget
             BudgetBucketBindingSource.BucketRepository = this.budgetRepository.BudgetBucketRepository;
             CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
             RaisePropertyChanged(() => TruncatedFileName);
+            if (CurrentBudget != null)
+            {
+                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+            }
         }
 
         private void LoadBudgetOrCreate(string fileName)
@@ -409,13 +413,6 @@ namespace BudgetAnalyser.Budget
             catch (FileNotFoundException)
             {
                 HandleBudgetFileExceptions("The last Budget file used cannot be found. A empty default file will use the default file instead.");
-            }
-            finally
-            {
-                if (CurrentBudget != null)
-                {
-                    Messenger.Send(new BudgetReadyMessage(CurrentBudget));
-                }
             }
         }
 
