@@ -40,7 +40,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="CR: " />
-                        <TextBlock Text="{Binding TotalCredits, StringFormat=C}" />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding TotalCredits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource DebitBackground1Brush}"
@@ -49,7 +51,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="DR: " />
-                        <TextBlock Text="{Binding TotalDebits, StringFormat=C}" />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding TotalDebits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
@@ -58,7 +62,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Difference: " />
-                        <TextBlock Text="{Binding TotalDifference, StringFormat=C}" />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding TotalDifference, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource DebitBackground1Brush}"
@@ -67,7 +73,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Average DR: " />
-                        <TextBlock Text="{Binding AverageDebit, StringFormat=C}" />
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
+                                   Text="{Binding AverageDebit, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
@@ -76,7 +84,8 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Count: " />
-                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
                                    Text="{Binding TotalCount}" />
                     </StackPanel>
                 </Border>
@@ -86,7 +95,8 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Months: " />
-                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                        <TextBlock FontSize="16"
+                                   Style="{StaticResource WarningLightTextStyle}"
                                    Text="{Binding Statement.DurationInMonths}" />
                     </StackPanel>
                 </Border>

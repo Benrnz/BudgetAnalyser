@@ -25,7 +25,7 @@
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
                                                                           Storyboard.TargetName="MainGrid">
-                                                <EasingColorKeyFrame KeyTime="0:0:0.1"
+                                                <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                      Value="{StaticResource ControlMouseOverColor}" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
@@ -37,7 +37,7 @@
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
                                                                           Storyboard.TargetName="MainGrid">
-                                                <EasingColorKeyFrame KeyTime="0:0:0.1"
+                                                <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                      Value="{StaticResource SelectedItemRowColor}" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
@@ -66,46 +66,41 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <RadioButton Grid.Column="0"
-                     GroupName="Menu"
+        <ToggleButton Grid.Column="0"
                      Margin="10,10,10,2"
                      IsChecked="{Binding DashboardToggle}"
                      Command="{Binding DashboardCommand}"
                      Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Dashboard" />
-        </RadioButton>
+        </ToggleButton>
 
-        <RadioButton Grid.Column="1"
+        <ToggleButton Grid.Column="1"
                      IsChecked="{Binding TransactionsToggle}"
-                     GroupName="Menu"
                      Command="{Binding TransactionsCommand}"
                      Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Transactions" />
-        </RadioButton>
+        </ToggleButton>
 
-        <RadioButton Grid.Column="2"
-                     GroupName="Menu"
+        <ToggleButton Grid.Column="2"
                      IsChecked="{Binding LedgerBookToggle}"
                      Command="{Binding LedgerBookCommand}"
                      Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Ledger Book" />
-        </RadioButton>
+        </ToggleButton>
 
-        <RadioButton Grid.Column="3"
-                     GroupName="Menu"
+        <ToggleButton Grid.Column="3"
                      IsChecked="{Binding BudgetToggle}"
                      Command="{Binding BudgetCommand}"
                      Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Budget" />
-        </RadioButton>
+        </ToggleButton>
 
-        <RadioButton Grid.Column="4"
-                     GroupName="Menu"
+        <ToggleButton Grid.Column="4"
                      IsChecked="{Binding ReportsToggle}"
                      Command="{Binding ReportsCommand}"
                      Style="{StaticResource TabButtonStyle}">
             <TextBlock Text="Reports" />
-        </RadioButton>
+        </ToggleButton>
 
         <Border Grid.ColumnSpan="6"
                 Height="2"

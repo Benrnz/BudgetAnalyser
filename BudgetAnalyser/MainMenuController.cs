@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using GalaSoft.MvvmLight.Command;
@@ -16,12 +15,14 @@ namespace BudgetAnalyser
         private bool doNotUseReportsToggle;
         private bool doNotUseTransactionsToggle;
 
+
         public MainMenuController([NotNull] UiContext uiContext)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
+
             this.uiContext = uiContext;
         }
 
@@ -100,47 +101,57 @@ namespace BudgetAnalyser
             }
         }
 
+        private void AfterTabExecutedCommon()
+        {
+            this.uiContext.DashboardController.Shown = DashboardToggle;
+            //this.uiContext.StatementController.Shown = TransactionsToggle;
+            this.uiContext.LedgerBookController.Shown = LedgerBookToggle;
+            this.uiContext.BudgetController.Shown = BudgetToggle;
+            //this.uiContext.ReportsController.Shown = ReportsToggle;
+        }
+
+        private void BeforeTabExecutedCommon()
+        {
+            DashboardToggle = false;
+            TransactionsToggle = false;
+            LedgerBookToggle = false;
+            BudgetToggle = false;
+            ReportsToggle = false;
+        }
+
         private void OnBudgetExecuted()
         {
-            TabExecutedCommon();
-            this.uiContext.BudgetController.Shown = BudgetToggle;
+            BeforeTabExecutedCommon();
+            BudgetToggle = true;
+            AfterTabExecutedCommon();
         }
 
         private void OnDashboardExecuted()
         {
-            TabExecutedCommon();
-            this.uiContext.DashboardController.Shown = DashboardToggle;
+            BeforeTabExecutedCommon();
+            DashboardToggle = true;
+            AfterTabExecutedCommon();
         }
 
         private void OnLedgerBookExecuted()
         {
-            TabExecutedCommon();
-            this.uiContext.LedgerBookController.Shown = LedgerBookToggle;
+            BeforeTabExecutedCommon();
+            LedgerBookToggle = true;
+            AfterTabExecutedCommon();
         }
 
         private void OnReportsExecuted()
         {
-            TabExecutedCommon();
-            
+            BeforeTabExecutedCommon();
+            ReportsToggle = true;
+            AfterTabExecutedCommon();
         }
 
         private void OnTransactionExecuted()
         {
-            TabExecutedCommon();
-        }
-
-        private void TabExecutedCommon()
-        {
-            if (!DashboardToggle && !TransactionsToggle && !LedgerBookToggle && !BudgetToggle && !ReportsToggle)
-            {
-                DashboardToggle = true;
-            }
-
-            Debug.WriteLine("Dashboard: " + DashboardToggle);
-            Debug.WriteLine("Transactions: " + TransactionsToggle);
-            Debug.WriteLine("LedgerBook: " + LedgerBookToggle);
-            Debug.WriteLine("Budget: " + BudgetToggle);
-            Debug.WriteLine("Reports: " + ReportsToggle);
+            BeforeTabExecutedCommon();
+            TransactionsToggle = true;
+            AfterTabExecutedCommon();
         }
     }
 }
