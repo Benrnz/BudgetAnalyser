@@ -34,6 +34,15 @@ namespace BudgetAnalyser.Dashboard
 
         public GlobalFilterController GlobalFilterController { get; private set; }
 
+        public string VersionString
+        {
+            get
+            {
+                var assemblyName = GetType().Assembly.GetName();
+                return assemblyName.Name + "Version: " + assemblyName.Version;
+            }
+        }
+
         public bool Shown
         {
             get { return this.doNotUseShown; }

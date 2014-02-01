@@ -119,22 +119,22 @@
 
             <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding BudgetController}"
-                                  VerticalAlignment="Top" />
+                                  VerticalAlignment="Stretch" />
             </Grid>
 
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding LedgerBookController}"
-                                  VerticalAlignment="Top" />
+                                  VerticalAlignment="Stretch" />
             </Grid>
 
             <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding DashboardController}"
-                                  VerticalAlignment="Top" />
+                                  VerticalAlignment="Stretch" />
             </Grid>
 
             <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
-                                  VerticalAlignment="Top" />
+                                  VerticalAlignment="Stretch" />
             </Grid>
         </Grid>
     </DockPanel>

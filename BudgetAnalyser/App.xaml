@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollViewer.xaml" />
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
+                <ResourceDictionary Source="UI/Style/ModernTiles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
