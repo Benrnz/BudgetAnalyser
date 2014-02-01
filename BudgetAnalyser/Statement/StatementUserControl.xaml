@@ -13,7 +13,6 @@
 
     <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <!-- Tool bar -->
             <RowDefinition Height="Auto" />
             <!-- Transaction Headers -->
@@ -121,7 +120,7 @@
                           Width="100" />
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="1"
               IsSharedSizeScope="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
