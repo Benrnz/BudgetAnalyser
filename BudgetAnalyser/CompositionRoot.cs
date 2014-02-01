@@ -3,6 +3,7 @@ using System.Windows;
 using Autofac;
 using Autofac.Core;
 using BudgetAnalyser.Budget;
+using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
@@ -126,6 +127,8 @@ namespace BudgetAnalyser
             uiContext.SpendingTrendController = container.Resolve<SpendingTrendController>();
             uiContext.StatementController = container.Resolve<StatementController>();
             uiContext.RulesController = container.Resolve<RulesController>();
+            uiContext.MainMenuController = container.Resolve<MainMenuController>();
+            uiContext.DashboardController = container.Resolve<DashboardController>();
 
             
             // Kick it off

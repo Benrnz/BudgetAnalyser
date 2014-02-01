@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
+using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -83,6 +84,9 @@ namespace BudgetAnalyser
         public StatementController StatementController { get; set; }
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }
+
+        public MainMenuController MainMenuController { get; set; }
+        public DashboardController DashboardController { get; set; }
 
         private List<ControllerBase> DiscoverAllControllers()
         {

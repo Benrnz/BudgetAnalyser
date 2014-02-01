@@ -8,7 +8,9 @@
              xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
-             xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend">
+             xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
+             xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
+             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -47,6 +49,12 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
                 <ledgerBook:LedgerBookUserControl/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dashboard:DashboardController}">
+                <dashboard:DashboardUserControl/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type budgetAnalyser:MainMenuController}">
+                <budgetAnalyser:MainMenuUserControl />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

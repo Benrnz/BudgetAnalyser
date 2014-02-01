@@ -1,6 +1,7 @@
 <Window x:Class="BudgetAnalyser.ShellWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
         Background="{StaticResource MainBackgroundBrush}"
         Height="350"
         Icon="UI\Assets\PieChart.png"
@@ -112,12 +113,12 @@
                 </MenuItem>
                 <MenuItem Command="{Binding BudgetSelectionCommand}">
                     <MenuItem.Header>
-                        <TextBlock Text="Show all Budgets"/>
+                        <TextBlock Text="Show all Budgets" />
                     </MenuItem.Header>
                 </MenuItem>
                 <MenuItem Command="{Binding ViewLedgerBookCommand}">
                     <MenuItem.Header>
-                        <TextBlock Text="View Ledger Book"/>
+                        <TextBlock Text="View Ledger Book" />
                     </MenuItem.Header>
                 </MenuItem>
             </MenuItem>
@@ -145,6 +146,15 @@
                     </MenuItem.Header>
                 </MenuItem>
             </MenuItem>
+
+            <MenuItem Header="_Experimental">
+                <MenuItem IsCheckable="True"
+                          IsChecked="{Binding TabMenuShown}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Tab Menu" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </MenuItem>
         </Menu>
         <Grid>
             <ContentPresenter Content="{Binding StatementController}"
@@ -157,7 +167,15 @@
                 <ContentPresenter Content="{Binding BudgetPieController}" />
             </Grid>
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding LedgerBookController}"/>
+                <ContentPresenter Content="{Binding LedgerBookController}" />
+            </Grid>
+            <Grid Visibility="{Binding TabMenuShown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding MainMenuController}"
+                                  VerticalAlignment="Top" />
+            </Grid>
+            <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding DashboardController}"
+                                  VerticalAlignment="Top" />
             </Grid>
         </Grid>
     </DockPanel>

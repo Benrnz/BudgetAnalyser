@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
+using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
@@ -27,6 +28,7 @@ namespace BudgetAnalyser
 
         private string dirtyFlag = string.Empty;
         private GlobalFilterCriteria doNotUseGlobalFilterCriteria;
+        private bool doNotUseTabMenuShown;
         private List<ICommand> recentFileCommands;
 
         // TODO Upgrade all windows to be win8 style inline content, and not a separate window.
@@ -62,7 +64,7 @@ namespace BudgetAnalyser
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
             BackgroundJob = uiContext.BackgroundJob;
-            this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
+            this.recentFileCommands = new List<ICommand> {null, null, null, null, null};
         }
 
         public ICommand AnalyseStatementCommand
@@ -91,6 +93,11 @@ namespace BudgetAnalyser
         public ICommand CloseStatementCommand
         {
             get { return new RelayCommand(OnCloseStatementExecute, CanExecuteCloseStatementCommand); }
+        }
+
+        public DashboardController DashboardController
+        {
+            get { return this.uiContext.DashboardController; }
         }
 
         public ICommand EditBudgetCommand
@@ -136,6 +143,11 @@ namespace BudgetAnalyser
         public LedgerBookController LedgerBookController
         {
             get { return this.uiContext.LedgerBookController; }
+        }
+
+        public MainMenuController MainMenuController
+        {
+            get { return this.uiContext.MainMenuController; }
         }
 
         public ICommand MergeStatementCommand
@@ -231,6 +243,16 @@ namespace BudgetAnalyser
         public StatementController StatementController
         {
             get { return this.uiContext.StatementController; }
+        }
+
+        public bool TabMenuShown
+        {
+            get { return this.doNotUseTabMenuShown; }
+            set
+            {
+                this.doNotUseTabMenuShown = value;
+                RaisePropertyChanged(() => TabMenuShown);
+            }
         }
 
         public ICommand ViewBudgetPieCommand

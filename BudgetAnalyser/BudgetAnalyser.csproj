@@ -124,6 +124,10 @@
     <Compile Include="Converters\MatchingRuleDescriptorConverter.cs" />
     <Compile Include="Converters\NumberSignToColorConverter.cs" />
     <Compile Include="Converters\PercentToColorConverter.cs" />
+    <Compile Include="Dashboard\DashboardController.cs" />
+    <Compile Include="Dashboard\DashboardUserControl.xaml.cs">
+      <DependentUpon>DashboardUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
     <Compile Include="Filtering\FilterStateV1.cs" />
     <Compile Include="Filtering\GlobalFilterController.cs" />
@@ -137,6 +141,10 @@
     <Compile Include="LedgerBook\LedgerRemarksController.cs" />
     <Compile Include="LedgerBook\LedgerTransactionEventArgs.cs" />
     <Compile Include="LedgerBook\LedgerTransactionsController.cs" />
+    <Compile Include="MainMenuController.cs" />
+    <Compile Include="MainMenuUserControl.xaml.cs">
+      <DependentUpon>MainMenuUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MessagingGate.cs" />
     <Compile Include="CompositionRoot.cs" />
     <Compile Include="OverallPerformance\IBudgetAnalysisView.cs" />
@@ -224,6 +232,14 @@
       <DependentUpon>StatementUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPrompts.cs" />
+    <Page Include="Dashboard\DashboardUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainMenuUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Style\Colours.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
