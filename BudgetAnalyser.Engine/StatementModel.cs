@@ -112,7 +112,7 @@ namespace BudgetAnalyser.Engine
 
         public void Filter(GlobalFilterCriteria criteria)
         {
-            if (criteria.BeginDate >= criteria.EndDate)
+            if (criteria.BeginDate > criteria.EndDate)
             {
                 throw new ArgumentException("End date must be after the begin date.");
             }

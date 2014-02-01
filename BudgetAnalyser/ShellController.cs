@@ -7,10 +7,8 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -27,7 +25,6 @@ namespace BudgetAnalyser
         private readonly UiContext uiContext;
 
         private string dirtyFlag = string.Empty;
-        private GlobalFilterCriteria doNotUseGlobalFilterCriteria;
         private bool initialised;
         private List<ICommand> recentFileCommands;
 
@@ -54,10 +51,6 @@ namespace BudgetAnalyser
 
             MessagingGate.Register<StatementHasBeenModifiedMessage>(this, OnStatementModified);
             MessagingGate.Register<ShutdownMessage>(this, OnShutdownRequested);
-            MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessagingGate.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
 
             this.recentFileManager = recentFileManager;
             this.statePersistence = statePersistence;
@@ -82,41 +75,6 @@ namespace BudgetAnalyser
         public DashboardController DashboardController
         {
             get { return this.uiContext.DashboardController; }
-        }
-
-        public ICommand GlobalAccountTypeFilterCommand
-        {
-            get { return new RelayCommand<string>(OnGlobalDateFilterCommandExecute, CanExecuteGlobalFilterCommand); }
-        }
-
-        public bool GlobalAccountTypeFilterEnabled
-        {
-            get
-            {
-                return GlobalFilterCriteria != null
-                       && !GlobalFilterCriteria.Cleared
-                       && GlobalFilterCriteria.AccountType != null;
-            }
-
-            set { }
-        }
-
-        public ICommand GlobalDateFilterCommand
-        {
-            get { return new RelayCommand<string>(OnGlobalDateFilterCommandExecute, CanExecuteGlobalFilterCommand); }
-        }
-
-        public bool GlobalDateFilterEnabled
-        {
-            get
-            {
-                return GlobalFilterCriteria != null
-                       && !GlobalFilterCriteria.Cleared
-                       && GlobalFilterCriteria.BeginDate != null
-                       && GlobalFilterCriteria.EndDate != null;
-            }
-
-            set { }
         }
 
         public LedgerBookController LedgerBookController
@@ -214,11 +172,6 @@ namespace BudgetAnalyser
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
-        public SpendingTrendController SpendingTrendController
-        {
-            get { return this.uiContext.SpendingTrendController; }
-        }
-
         public StatementController StatementController
         {
             get { return this.uiContext.StatementController; }
@@ -232,18 +185,6 @@ namespace BudgetAnalyser
                     ? string.Empty
                     : StatementController.Statement.FileName;
                 return string.Format("{0} Budget Analyser {1}", this.dirtyFlag, fileName);
-            }
-        }
-
-        private GlobalFilterCriteria GlobalFilterCriteria
-        {
-            get { return this.doNotUseGlobalFilterCriteria; }
-
-            set
-            {
-                this.doNotUseGlobalFilterCriteria = value;
-                RaisePropertyChanged(() => GlobalFilterCriteria);
-                RaisePropertyChanged(() => GlobalDateFilterEnabled);
             }
         }
 
@@ -279,88 +220,14 @@ namespace BudgetAnalyser
             return BackgroundJob.MenuAvailable && StatementController.Statement != null;
         }
 
-        private bool CanExecuteGlobalFilterCommand(string parameter)
-        {
-            return BackgroundJob.MenuAvailable
-                   && !BudgetController.Shown
-                   && StatementController.Statement != null
-                   && StatementController.BudgetModel != null;
-        }
-
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable && !AnyControllersShown(StatementController);
         }
 
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-        {
-            if (!message.RehydratedModels.ContainsKey(typeof(PersistentFiltersV1)))
-            {
-                return;
-            }
-
-            var rehydratedFilters = message.RehydratedModels[typeof(PersistentFiltersV1)].AdaptModel<FilterStateV1>();
-            GlobalFilterCriteria = new GlobalFilterCriteria
-            {
-                AccountType = rehydratedFilters.AccountType,
-                BeginDate = rehydratedFilters.BeginDate,
-                EndDate = rehydratedFilters.EndDate,
-            };
-
-            SendFilterAppliedMessage();
-        }
-
-        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-        {
-            bool noCriteria = GlobalFilterCriteria == null;
-            var filterState = new PersistentFiltersV1
-            {
-                Model = new FilterStateV1
-                {
-                    BeginDate = noCriteria ? null : GlobalFilterCriteria.BeginDate,
-                    EndDate = noCriteria ? null : GlobalFilterCriteria.EndDate,
-                    AccountType = noCriteria ? null : GlobalFilterCriteria.AccountType,
-                },
-            };
-
-            message.PersistThisModel(filterState);
-        }
-
         private void OnCloseStatementExecute()
         {
             StatementController.CloseStatement();
-        }
-
-        private void OnFilterAppliedMessageReceived(FilterAppliedMessage message)
-        {
-            if (message.Sender is StatementController)
-            {
-                GlobalFilterCriteria = message.Criteria;
-            }
-
-            RaisePropertyChanged("GlobalDateFilterEnabled");
-            RaisePropertyChanged("GlobalAccountTypeFilterEnabled");
-        }
-
-        private void OnGlobalDateFilterCommandExecute(string filterType)
-        {
-            this.uiContext.GlobalFilterController.InitialValues(GlobalFilterCriteria);
-            if (filterType == "Date")
-            {
-                this.uiContext.GlobalFilterController.PromptUserForDates();
-            }
-            else if (filterType == "AccountType")
-            {
-                this.uiContext.GlobalFilterController.PromptUserForAccountType(StatementController.Statement.AccountTypes);
-            }
-
-            GlobalFilterCriteria = this.uiContext.GlobalFilterController.Criteria;
-            SendFilterAppliedMessage();
-        }
-
-        private void OnGlobalFilterRequested(RequestFilterMessage message)
-        {
-            message.Criteria = GlobalFilterCriteria;
         }
 
         private void OnMergeStatementCommandExecute()
@@ -414,13 +281,6 @@ namespace BudgetAnalyser
         {
             this.dirtyFlag = message.Dirty ? "*" : string.Empty;
             RaisePropertyChanged(() => WindowTitle);
-        }
-
-        private void SendFilterAppliedMessage()
-        {
-            BackgroundJob.StartNew("Filtering transactions...", false);
-            Messenger.Send(new FilterAppliedMessage(this, GlobalFilterCriteria));
-            BackgroundJob.Finish();
         }
 
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)

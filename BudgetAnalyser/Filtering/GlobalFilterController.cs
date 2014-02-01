@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.Annotations;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Filtering
 {
@@ -17,10 +18,17 @@ namespace BudgetAnalyser.Filtering
         private readonly IViewLoader accountView;
         private readonly IViewLoader dateView;
         private readonly IUserMessageBox userMessageBox;
+        private string doNotUseAccountTypeSummary;
+        private GlobalFilterCriteria doNotUseCriteria;
+        private string doNotUseDateSummaryLine1;
+        private string doNotUseDateSummaryLine2;
         private AccountType doNotUseSelectedAccountType;
         private FilterMode filterMode;
 
-        public GlobalFilterController([NotNull] IUserMessageBox userMessageBox, [NotNull] IViewLoader dateViewLoader, [NotNull] IViewLoader accountViewLoader)
+        public GlobalFilterController(
+            [NotNull] IUserMessageBox userMessageBox,
+            [NotNull] IViewLoader dateViewLoader,
+            [NotNull] IViewLoader accountViewLoader)
         {
             if (userMessageBox == null)
             {
@@ -40,12 +48,21 @@ namespace BudgetAnalyser.Filtering
             this.dateView = dateViewLoader;
             this.accountView = accountViewLoader;
             this.userMessageBox = userMessageBox;
+            Criteria = new GlobalFilterCriteria();
+
+            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessagingGate.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
         }
 
-        private enum FilterMode
+        public string AccountTypeSummary
         {
-            Dates,
-            AccountType,
+            get { return this.doNotUseAccountTypeSummary; }
+            private set
+            {
+                this.doNotUseAccountTypeSummary = value;
+                RaisePropertyChanged(() => AccountTypeSummary);
+            }
         }
 
         public IEnumerable<AccountType> AccountTypes { get; private set; }
@@ -60,7 +77,36 @@ namespace BudgetAnalyser.Filtering
             get { return new RelayCommand(OnCloseCommandExecute); }
         }
 
-        public GlobalFilterCriteria Criteria { get; set; }
+        public GlobalFilterCriteria Criteria
+        {
+            get { return this.doNotUseCriteria; }
+            set
+            {
+                this.doNotUseCriteria = value;
+                RaisePropertyChanged(() => Criteria);
+                UpdateSummaries();
+            }
+        }
+
+        public string DateSummaryLine1
+        {
+            get { return this.doNotUseDateSummaryLine1; }
+            private set
+            {
+                this.doNotUseDateSummaryLine1 = value;
+                RaisePropertyChanged(() => DateSummaryLine1);
+            }
+        }
+
+        public string DateSummaryLine2
+        {
+            get { return this.doNotUseDateSummaryLine2; }
+            private set
+            {
+                this.doNotUseDateSummaryLine2 = value;
+                RaisePropertyChanged(() => DateSummaryLine2);
+            }
+        }
 
         public AccountType SelectedAccountType
         {
@@ -71,11 +117,6 @@ namespace BudgetAnalyser.Filtering
                 this.doNotUseSelectedAccountType = value;
                 RaisePropertyChanged(() => SelectedAccountType);
             }
-        }
-
-        public void InitialValues(GlobalFilterCriteria criteria)
-        {
-            Criteria = criteria ?? new GlobalFilterCriteria();
         }
 
         public void PromptUserForAccountType(IEnumerable<AccountType> availableAccountTypes)
@@ -92,6 +133,40 @@ namespace BudgetAnalyser.Filtering
         {
             this.filterMode = FilterMode.Dates;
             this.dateView.ShowDialog(this);
+        }
+
+        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        {
+            if (!message.RehydratedModels.ContainsKey(typeof(PersistentFiltersV1)))
+            {
+                return;
+            }
+
+            var rehydratedFilters = message.RehydratedModels[typeof(PersistentFiltersV1)].AdaptModel<FilterStateV1>();
+            Criteria = new GlobalFilterCriteria
+            {
+                AccountType = rehydratedFilters.AccountType,
+                BeginDate = rehydratedFilters.BeginDate,
+                EndDate = rehydratedFilters.EndDate,
+            };
+
+            SendFilterAppliedMessage();
+        }
+
+        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+        {
+            bool noCriteria = Criteria == null;
+            var filterState = new PersistentFiltersV1
+            {
+                Model = new FilterStateV1
+                {
+                    BeginDate = noCriteria ? null : Criteria.BeginDate,
+                    EndDate = noCriteria ? null : Criteria.EndDate,
+                    AccountType = noCriteria ? null : Criteria.AccountType,
+                },
+            };
+
+            message.PersistThisModel(filterState);
         }
 
         private void OnClearCommandExecute()
@@ -128,6 +203,45 @@ namespace BudgetAnalyser.Filtering
 
             this.accountView.Close();
             this.dateView.Close();
+            SendFilterAppliedMessage();
+        }
+
+        private void OnGlobalFilterRequested(RequestFilterMessage message)
+        {
+            message.Criteria = Criteria;
+        }
+
+        private void SendFilterAppliedMessage()
+        {
+            UpdateSummaries();
+            Messenger.Send(new FilterAppliedMessage(this, Criteria));
+        }
+
+        private void UpdateSummaries()
+        {
+            DateSummaryLine1 = "No date filter applied.";
+            DateSummaryLine2 = string.Empty;
+            AccountTypeSummary = "No account filter applied.";
+
+            if (Criteria.Cleared)
+            {
+                return;
+            }
+
+            if (Criteria.BeginDate != null)
+            {
+                DateSummaryLine1 = "Filtered from: " + Criteria.BeginDate.Value.ToString("dd-MMM-yy");
+            }
+
+            if (Criteria.EndDate != null)
+            {
+                DateSummaryLine2 = "up until: " + Criteria.EndDate.Value.ToString("dd-MMM-yy");
+            }
+
+            if (Criteria.AccountType != null)
+            {
+                AccountTypeSummary = "Filtered by " + Criteria.AccountType.Name;
+            }
         }
     }
 }

@@ -129,6 +129,7 @@
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
+    <Compile Include="Filtering\FilterMode.cs" />
     <Compile Include="Filtering\FilterStateV1.cs" />
     <Compile Include="Filtering\GlobalFilterController.cs" />
     <Compile Include="Filtering\PersistentFiltersV1.cs" />

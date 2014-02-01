@@ -104,24 +104,6 @@
                     </MenuItem>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Filter">
-                <MenuItem Command="{Binding GlobalDateFilterCommand}"
-                          CommandParameter="Date"
-                          IsCheckable="True"
-                          IsChecked="{Binding GlobalDateFilterEnabled}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Date Range" />
-                    </MenuItem.Header>
-                </MenuItem>
-                <MenuItem Command="{Binding GlobalAccountTypeFilterCommand}"
-                          CommandParameter="AccountType"
-                          IsCheckable="True"
-                          IsChecked="{Binding GlobalAccountTypeFilterEnabled}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Account Type" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </MenuItem>
         </Menu>
 
         <Grid DockPanel.Dock="Top">
