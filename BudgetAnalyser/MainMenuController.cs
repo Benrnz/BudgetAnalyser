@@ -104,10 +104,11 @@ namespace BudgetAnalyser
         private void AfterTabExecutedCommon()
         {
             this.uiContext.DashboardController.Shown = DashboardToggle;
+            // TODO
             //this.uiContext.StatementController.Shown = TransactionsToggle;
             this.uiContext.LedgerBookController.Shown = LedgerBookToggle;
             this.uiContext.BudgetController.Shown = BudgetToggle;
-            //this.uiContext.ReportsController.Shown = ReportsToggle;
+            this.uiContext.ReportsCatalogController.Shown = ReportsToggle;
         }
 
         private void BeforeTabExecutedCommon()

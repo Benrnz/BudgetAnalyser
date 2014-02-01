@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
+using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
 using Rees.UserInteraction.Contracts;
@@ -69,10 +70,14 @@ namespace BudgetAnalyser
             get { return this.controllers ?? (this.controllers = DiscoverAllControllers()); }
         }
 
+        public DashboardController DashboardController { get; set; }
+
         public GlobalFilterController GlobalFilterController { get; set; }
         public LedgerBookController LedgerBookController { get; set; }
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
+        public MainMenuController MainMenuController { get; set; }
+        public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
 
         public IEnumerable<IShowableController> ShowableControllers
@@ -85,13 +90,10 @@ namespace BudgetAnalyser
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }
 
-        public MainMenuController MainMenuController { get; set; }
-        public DashboardController DashboardController { get; set; }
-
         private List<ControllerBase> DiscoverAllControllers()
         {
             return GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => typeof (ControllerBase).IsAssignableFrom(p.PropertyType))
+                .Where(p => typeof(ControllerBase).IsAssignableFrom(p.PropertyType))
                 .Select(p => p.GetValue(this))
                 .Cast<ControllerBase>()
                 .ToList();

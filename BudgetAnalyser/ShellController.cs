@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
+using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
@@ -64,7 +65,7 @@ namespace BudgetAnalyser
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
             BackgroundJob = uiContext.BackgroundJob;
-            this.recentFileCommands = new List<ICommand> {null, null, null, null, null};
+            this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
         }
 
         public ICommand AnalyseStatementCommand
@@ -225,6 +226,11 @@ namespace BudgetAnalyser
             }
         }
 
+        public ReportsCatalogController ReportsCatalogController
+        {
+            get { return this.uiContext.ReportsCatalogController; }
+        }
+
         public ICommand SaveStatementCommand
         {
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
@@ -372,12 +378,12 @@ namespace BudgetAnalyser
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof (PersistentFiltersV1)))
+            if (!message.RehydratedModels.ContainsKey(typeof(PersistentFiltersV1)))
             {
                 return;
             }
 
-            var rehydratedFilters = message.RehydratedModels[typeof (PersistentFiltersV1)].AdaptModel<FilterStateV1>();
+            var rehydratedFilters = message.RehydratedModels[typeof(PersistentFiltersV1)].AdaptModel<FilterStateV1>();
             GlobalFilterCriteria = new GlobalFilterCriteria
             {
                 AccountType = rehydratedFilters.AccountType,
@@ -553,7 +559,7 @@ namespace BudgetAnalyser
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
         {
             this.recentFileCommands =
-                files.Select(f => (ICommand) new RecentFileRelayCommand(f.Value, f.Key, file => OnOpenStatementExecute(file), x => BackgroundJob.MenuAvailable))
+                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, file => OnOpenStatementExecute(file), x => BackgroundJob.MenuAvailable))
                     .ToList();
             RaisePropertyChanged(() => RecentFile1Command);
             RaisePropertyChanged(() => RecentFile2Command);

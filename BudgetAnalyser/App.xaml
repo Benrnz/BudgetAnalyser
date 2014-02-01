@@ -10,7 +10,8 @@
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
-             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser">
+             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
+             xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -55,6 +56,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type budgetAnalyser:MainMenuController}">
                 <budgetAnalyser:MainMenuUserControl />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
+                <reportsCatalog:ReportsCatalogUserControl />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

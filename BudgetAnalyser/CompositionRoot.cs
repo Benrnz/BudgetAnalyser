@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
+using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
 
@@ -129,6 +130,7 @@ namespace BudgetAnalyser
             uiContext.RulesController = container.Resolve<RulesController>();
             uiContext.MainMenuController = container.Resolve<MainMenuController>();
             uiContext.DashboardController = container.Resolve<DashboardController>();
+            uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
 
             
             // Kick it off

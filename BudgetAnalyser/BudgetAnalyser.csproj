@@ -149,6 +149,10 @@
     <Compile Include="CompositionRoot.cs" />
     <Compile Include="OverallPerformance\IBudgetAnalysisView.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ReportsCatalog\ReportsCatalogController.cs" />
+    <Compile Include="ReportsCatalog\DashboardUserControl.xaml.cs">
+      <DependentUpon>DashboardUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShellController.cs" />
     <Compile Include="SpendingTrend\AddUserDefinedSpendingChartController.cs" />
     <Compile Include="SpendingTrend\CustomSpendingChartsV1.cs" />
@@ -239,6 +243,10 @@
     <Page Include="MainMenuUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportsCatalog\DashboardUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Style\Colours.xaml">
       <SubType>Designer</SubType>

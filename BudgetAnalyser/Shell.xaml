@@ -1,7 +1,6 @@
 <Window x:Class="BudgetAnalyser.ShellWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
         Background="{StaticResource MainBackgroundBrush}"
         Height="350"
         Icon="UI\Assets\PieChart.png"
@@ -156,6 +155,14 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
+        
+        <Grid DockPanel.Dock="Top">
+            <Grid Visibility="{Binding TabMenuShown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding MainMenuController}"
+                                  VerticalAlignment="Top" />
+            </Grid>
+        </Grid>
+        
         <Grid>
             <ContentPresenter Content="{Binding StatementController}"
                               DataContext="{Binding StatementController}"
@@ -169,12 +176,12 @@
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding LedgerBookController}" />
             </Grid>
-            <Grid Visibility="{Binding TabMenuShown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding MainMenuController}"
-                                  VerticalAlignment="Top" />
-            </Grid>
             <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding DashboardController}"
+                                  VerticalAlignment="Top" />
+            </Grid>
+            <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Top" />
             </Grid>
         </Grid>
