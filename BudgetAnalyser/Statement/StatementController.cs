@@ -13,14 +13,16 @@ using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
+using Rees.Wpf.RecentFiles;
 
 namespace BudgetAnalyser.Statement
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class StatementController : ControllerBase, IShowableController
+    public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly UiContext uiContext;
         private bool dirty;
@@ -28,13 +30,16 @@ namespace BudgetAnalyser.Statement
         private string doNotUseDuplicateSummary;
         private bool doNotUseShown;
         private StatementModel doNotUseStatement;
+        private bool initialised;
+        private List<ICommand> recentFileCommands;
 
         private string waitingForBudgetToLoad;
 
         public StatementController(
             [NotNull] UiContext uiContext,
             [NotNull] IStatementFileManager statementFileManager,
-            [NotNull] IBudgetBucketRepository budgetBucketRepository)
+            [NotNull] IBudgetBucketRepository budgetBucketRepository,
+            [NotNull] IRecentFileManager recentFileManager)
         {
             if (uiContext == null)
             {
@@ -45,14 +50,23 @@ namespace BudgetAnalyser.Statement
             {
                 throw new ArgumentNullException("statementFileManager");
             }
+
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
             }
 
+            if (recentFileManager == null)
+            {
+                throw new ArgumentNullException("recentFileManager");
+            }
+
             this.uiContext = uiContext;
             this.statementFileManager = statementFileManager;
             this.budgetBucketRepository = budgetBucketRepository;
+            this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
+            this.recentFileManager = recentFileManager;
+
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterApplied);
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
@@ -142,6 +156,11 @@ namespace BudgetAnalyser.Statement
 
         public BudgetModel BudgetModel { get; set; }
 
+        public ICommand CloseStatementCommand
+        {
+            get { return new RelayCommand(OnCloseStatementExecute, CanExecuteCloseStatementCommand); }
+        }
+
         public ICommand CreateRuleCommand
         {
             get { return new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand); }
@@ -178,14 +197,94 @@ namespace BudgetAnalyser.Statement
             get { return Statement.Transactions.Max(t => t.Date); }
         }
 
+        public ICommand MergeStatementCommand
+        {
+            get { return new RelayCommand(() => OnMergeStatementCommandExecute(), CanExecuteCloseStatementCommand); }
+        }
+
         public DateTime MinTransactionDate
         {
             get { return Statement.Transactions.Min(t => t.Date); }
         }
 
+        public ICommand OpenStatementCommand
+        {
+            get { return new RelayCommand(() => OnOpenStatementExecute(null), CanExecuteOpenStatementCommand); }
+        }
+
+        public ICommand RecentFile1Command
+        {
+            get
+            {
+                if (this.recentFileCommands.Count > 0)
+                {
+                    return this.recentFileCommands[0];
+                }
+
+                return null;
+            }
+        }
+
+        public ICommand RecentFile2Command
+        {
+            get
+            {
+                if (this.recentFileCommands.Count > 1)
+                {
+                    return this.recentFileCommands[1];
+                }
+
+                return null;
+            }
+        }
+
+        public ICommand RecentFile3Command
+        {
+            get
+            {
+                if (this.recentFileCommands.Count > 2)
+                {
+                    return this.recentFileCommands[2];
+                }
+
+                return null;
+            }
+        }
+
+        public ICommand RecentFile4Command
+        {
+            get
+            {
+                if (this.recentFileCommands.Count > 3)
+                {
+                    return this.recentFileCommands[3];
+                }
+
+                return null;
+            }
+        }
+
+        public ICommand RecentFile5Command
+        {
+            get
+            {
+                if (this.recentFileCommands.Count > 4)
+                {
+                    return this.recentFileCommands[4];
+                }
+
+                return null;
+            }
+        }
+
         public RulesController RulesController
         {
             get { return this.uiContext.RulesController; }
+        }
+
+        public ICommand SaveStatementCommand
+        {
+            get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
         public Transaction SelectedRow { get; set; }
@@ -316,6 +415,17 @@ namespace BudgetAnalyser.Statement
             UpdateTotalsRow();
         }
 
+        public void Initialize()
+        {
+            if (this.initialised)
+            {
+                return;
+            }
+
+            this.initialised = true;
+            UpdateRecentFiles(this.recentFileManager.Files());
+        }
+
         public bool Load(string fullFileName)
         {
             if (PromptToSaveIfDirty())
@@ -393,14 +503,29 @@ namespace BudgetAnalyser.Statement
             NotifyOfReset();
         }
 
+        private bool AnyControllersShown(ControllerBase exceptThisOne)
+        {
+            return this.uiContext.ShowableControllers.Where(c => c.GetType() != exceptThisOne.GetType()).Any(c => c.Shown);
+        }
+
         private bool CanExecuteApplyRulesCommand()
         {
             return RulesController.Rules.Any();
         }
 
+        private bool CanExecuteCloseStatementCommand()
+        {
+            return BackgroundJob.MenuAvailable && Statement != null;
+        }
+
         private bool CanExecuteCreateRuleCommand()
         {
             return SelectedRow != null;
+        }
+
+        private bool CanExecuteOpenStatementCommand()
+        {
+            return BackgroundJob.MenuAvailable && !AnyControllersShown(this);
         }
 
         private bool CanExecuteTransactionCommand()
@@ -540,6 +665,11 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        private void OnCloseStatementExecute()
+        {
+            CloseStatement();
+        }
+
         private void OnCreateRuleCommandExecute()
         {
             if (SelectedRow == null)
@@ -584,6 +714,45 @@ namespace BudgetAnalyser.Statement
             UpdateTotalsRow();
         }
 
+        private void OnMergeStatementCommandExecute()
+        {
+            Merge();
+        }
+
+        private void OnOpenStatementExecute(string fullFileName)
+        {
+            try
+            {
+                if (!Load(fullFileName))
+                {
+                    return;
+                }
+
+                UpdateRecentFiles(this.recentFileManager.AddFile(Statement.FileName));
+            }
+            catch (FileNotFoundException ex)
+            {
+                // When merging this exception will never be thrown.
+                if (!string.IsNullOrWhiteSpace(ex.FileName))
+                {
+                    UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
+                }
+            }
+
+            // Bug ensure window title is updated
+            //RaisePropertyChanged(() => WindowTitle);
+        }
+
+        private void OnSaveStatementExecute()
+        {
+            // Not async at this stage, because saving of data while user edits are taking place will result in inconsistent results.
+            using (this.uiContext.WaitCursorFactory())
+            {
+                Save();
+                UpdateRecentFiles(this.recentFileManager.UpdateFile(Statement.FileName));
+            }
+        }
+
         private void OnShowRulesCommandExecute()
         {
             RulesController.Show();
@@ -602,6 +771,18 @@ namespace BudgetAnalyser.Statement
             }
 
             return false;
+        }
+
+        private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
+        {
+            this.recentFileCommands =
+                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, file => OnOpenStatementExecute(file), x => BackgroundJob.MenuAvailable))
+                    .ToList();
+            RaisePropertyChanged(() => RecentFile1Command);
+            RaisePropertyChanged(() => RecentFile2Command);
+            RaisePropertyChanged(() => RecentFile3Command);
+            RaisePropertyChanged(() => RecentFile4Command);
+            RaisePropertyChanged(() => RecentFile5Command);
         }
 
         private void UpdateTotalsRow()

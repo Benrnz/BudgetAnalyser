@@ -11,15 +11,111 @@
         <converters:NumberSignToColorConverter x:Key="NumberSignToColorConverter" />
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Key="O"
+                    Command="{Binding OpenStatementCommand}"
+                    Modifiers="Control" />
+        <KeyBinding Key="S"
+                    Command="{Binding SaveStatementCommand}"
+                    Modifiers="Control" />
+        <KeyBinding Key="X"
+                    Command="{Binding CloseStatementCommand}"
+                    Modifiers="Control" />
+    </UserControl.InputBindings>
+
     <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
+            <!-- Menu bar -->
+            <RowDefinition Height="Auto" />
             <!-- Tool bar -->
             <RowDefinition Height="Auto" />
             <!-- Transaction Headers -->
             <RowDefinition Height="*" />
             <!-- Transaction List -->
         </Grid.RowDefinitions>
-        <Grid>
+
+        <Menu Grid.Row="0"
+              IsEnabled="{Binding BackgroundJob.MenuAvailable}">
+            <Menu.Resources>
+
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Foreground"
+                            Value="Black" />
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="_File">
+                <MenuItem Command="{Binding OpenStatementCommand}"
+                          Header="_Open Statement (Ctrl+O)" />
+                <MenuItem Command="{Binding CloseStatementCommand}"
+                          Header="_Close Statement (Ctrl+X)" />
+                <MenuItem Command="{Binding SaveStatementCommand}"
+                          Header="_Save Statment (Ctrl+S)" />
+                <MenuItem Command="{Binding MergeStatementCommand}"
+                          Header="_Merge Statement" />
+                <MenuItem>
+                    <MenuItem.Header>
+                        <TextBlock Text="Recent Statements" />
+                    </MenuItem.Header>
+                    <MenuItem Command="{Binding RecentFile1Command}"
+                              CommandParameter="{Binding RecentFile1Command.FullFileName}"
+                              ToolTip="{Binding RecentFile1Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="1" />
+                                <TextBlock Text="{Binding RecentFile1Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile2Command}"
+                              CommandParameter="{Binding RecentFile2Command.FullFileName}"
+                              ToolTip="{Binding RecentFile2Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="2" />
+                                <TextBlock Text="{Binding RecentFile2Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile3Command}"
+                              CommandParameter="{Binding RecentFile3Command.FullFileName}"
+                              ToolTip="{Binding RecentFile3Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="3" />
+                                <TextBlock Text="{Binding RecentFile3Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile4Command}"
+                              CommandParameter="{Binding RecentFile4Command.FullFileName}"
+                              ToolTip="{Binding RecentFile4Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="4" />
+                                <TextBlock Text="{Binding RecentFile4Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding RecentFile5Command}"
+                              CommandParameter="{Binding RecentFile5Command.FullFileName}"
+                              ToolTip="{Binding RecentFile5Command.FullFileName}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="-15,0,2,0"
+                                           Text="5" />
+                                <TextBlock Text="{Binding RecentFile5Command.Name}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
             <!-- Tool bar -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -120,7 +216,8 @@
                           Width="100" />
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1"
+        
+        <Grid Grid.Row="2"
               IsSharedSizeScope="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
