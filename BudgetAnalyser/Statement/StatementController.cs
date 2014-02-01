@@ -17,7 +17,7 @@ using Rees.Wpf.ApplicationState;
 namespace BudgetAnalyser.Statement
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class StatementController : ControllerBase, IInitializableController
+    public class StatementController : ControllerBase, IShowableController
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
@@ -26,6 +26,7 @@ namespace BudgetAnalyser.Statement
         private bool dirty;
         private string doNotUseBucketFilter;
         private string doNotUseDuplicateSummary;
+        private bool doNotUseShown;
         private StatementModel doNotUseStatement;
 
         private string waitingForBudgetToLoad;
@@ -167,6 +168,11 @@ namespace BudgetAnalyser.Statement
             get { return BudgetBuckets.Union(new[] { UncategorisedFilter }).OrderBy(b => b); }
         }
 
+        public bool HasTransactions
+        {
+            get { return Statement != null && Statement.Transactions.Any(); }
+        }
+
         public DateTime MaxTransactionDate
         {
             get { return Statement.Transactions.Max(t => t.Date); }
@@ -187,6 +193,16 @@ namespace BudgetAnalyser.Statement
         public ICommand ShowRulesCommand
         {
             get { return new RelayCommand(OnShowRulesCommandExecute); }
+        }
+
+        public bool Shown
+        {
+            get { return this.doNotUseShown; }
+            set
+            {
+                this.doNotUseShown = value;
+                RaisePropertyChanged(() => Shown);
+            }
         }
 
         public StatementModel Statement
@@ -288,11 +304,6 @@ namespace BudgetAnalyser.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
-        public bool HasTransactions
-        {
-            get { return Statement != null && Statement.Transactions.Any(); }
-        }
-
         public void CloseStatement()
         {
             if (PromptToSaveIfDirty())
@@ -303,11 +314,6 @@ namespace BudgetAnalyser.Statement
             Statement = null;
             NotifyOfReset();
             UpdateTotalsRow();
-        }
-
-        public void Initialize()
-        {
-            RulesController.Initialize();
         }
 
         public bool Load(string fullFileName)
@@ -459,12 +465,12 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof (LastStatementLoadedV1)))
+            if (!message.RehydratedModels.ContainsKey(typeof(LastStatementLoadedV1)))
             {
                 return;
             }
 
-            var statementFileName = message.RehydratedModels[typeof (LastStatementLoadedV1)].AdaptModel<string>();
+            var statementFileName = message.RehydratedModels[typeof(LastStatementLoadedV1)].AdaptModel<string>();
             LoadStatementFromApplicationState(statementFileName);
         }
 

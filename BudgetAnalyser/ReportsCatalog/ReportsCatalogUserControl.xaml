@@ -4,6 +4,6 @@
              MinHeight="200"
              MinWidth="200">
     <Grid Background="{StaticResource TileBackgroundBrush}">
-            <TextBlock Foreground="{StaticResource MainBackgroundBrush}" Text="Under construction"/>
+            <TextBlock Foreground="{StaticResource MainBackgroundBrush}" Text="Reports Catalog Under construction"/>
     </Grid>
 </UserControl>

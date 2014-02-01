@@ -11,5 +11,10 @@ namespace BudgetAnalyser
         {
             InitializeComponent();
         }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ((ShellController)DataContext).OnViewReady();
+        }
     }
 }

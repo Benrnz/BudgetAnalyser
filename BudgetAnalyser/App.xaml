@@ -54,9 +54,6 @@
             <DataTemplate DataType="{x:Type dashboard:DashboardController}">
                 <dashboard:DashboardUserControl/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type budgetAnalyser:MainMenuController}">
-                <budgetAnalyser:MainMenuUserControl />
-            </DataTemplate>
             <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
                 <reportsCatalog:ReportsCatalogUserControl />
             </DataTemplate>

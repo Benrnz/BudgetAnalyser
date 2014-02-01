@@ -6,7 +6,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser
 {
-    public class MainMenuController : ControllerBase
+    public class MainMenuController : ControllerBase, IInitializableController
     {
         private readonly UiContext uiContext;
         private bool doNotUseBudgetToggle;
@@ -14,7 +14,6 @@ namespace BudgetAnalyser
         private bool doNotUseLedgerBookToggle;
         private bool doNotUseReportsToggle;
         private bool doNotUseTransactionsToggle;
-
 
         public MainMenuController([NotNull] UiContext uiContext)
         {
@@ -101,11 +100,15 @@ namespace BudgetAnalyser
             }
         }
 
+        public void Initialize()
+        {
+            DashboardCommand.Execute(null);
+        }
+
         private void AfterTabExecutedCommon()
         {
             this.uiContext.DashboardController.Shown = DashboardToggle;
-            // TODO
-            //this.uiContext.StatementController.Shown = TransactionsToggle;
+            this.uiContext.StatementController.Shown = TransactionsToggle;
             this.uiContext.LedgerBookController.Shown = LedgerBookToggle;
             this.uiContext.BudgetController.Shown = BudgetToggle;
             this.uiContext.ReportsCatalogController.Shown = ReportsToggle;

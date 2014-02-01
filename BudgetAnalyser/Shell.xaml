@@ -1,6 +1,7 @@
 <Window x:Class="BudgetAnalyser.ShellWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
         Background="{StaticResource MainBackgroundBrush}"
         Height="350"
         Icon="UI\Assets\PieChart.png"
@@ -8,6 +9,7 @@
         MinWidth="800"
         SnapsToDevicePixels="True"
         Title="{Binding WindowTitle}"
+        Loaded="OnLoaded"
         Width="1000">
 
     <Window.InputBindings>
@@ -145,41 +147,39 @@
                     </MenuItem.Header>
                 </MenuItem>
             </MenuItem>
-
-            <MenuItem Header="_Experimental">
-                <MenuItem IsCheckable="True"
-                          IsChecked="{Binding TabMenuShown}">
-                    <MenuItem.Header>
-                        <TextBlock Text="Tab Menu" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </MenuItem>
         </Menu>
-        
+
         <Grid DockPanel.Dock="Top">
-            <Grid Visibility="{Binding TabMenuShown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding MainMenuController}"
+            <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />
+        </Grid>
+
+        <Grid>
+            <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding StatementController}"
+                                  DataContext="{Binding StatementController}"
+                                  Visibility="{Binding Statement, Converter={StaticResource NullToVisConverter}}" />
+            </Grid>
+
+            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding BudgetController}"
                                   VerticalAlignment="Top" />
             </Grid>
-        </Grid>
-        
-        <Grid>
-            <ContentPresenter Content="{Binding StatementController}"
-                              DataContext="{Binding StatementController}"
-                              Visibility="{Binding Statement, Converter={StaticResource NullToVisConverter}}" />
-            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding BudgetController}" />
-            </Grid>
+
             <Grid Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding BudgetPieController}" />
+                <ContentPresenter Content="{Binding BudgetPieController}"
+                                  VerticalAlignment="Top" />
             </Grid>
+
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
-                <ContentPresenter Content="{Binding LedgerBookController}" />
+                <ContentPresenter Content="{Binding LedgerBookController}"
+                                  VerticalAlignment="Top" />
             </Grid>
+
             <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding DashboardController}"
                                   VerticalAlignment="Top" />
             </Grid>
+
             <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Top" />

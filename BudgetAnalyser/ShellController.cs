@@ -29,7 +29,7 @@ namespace BudgetAnalyser
 
         private string dirtyFlag = string.Empty;
         private GlobalFilterCriteria doNotUseGlobalFilterCriteria;
-        private bool doNotUseTabMenuShown;
+        private bool initialised;
         private List<ICommand> recentFileCommands;
 
         // TODO Upgrade all windows to be win8 style inline content, and not a separate window.
@@ -251,16 +251,6 @@ namespace BudgetAnalyser
             get { return this.uiContext.StatementController; }
         }
 
-        public bool TabMenuShown
-        {
-            get { return this.doNotUseTabMenuShown; }
-            set
-            {
-                this.doNotUseTabMenuShown = value;
-                RaisePropertyChanged(() => TabMenuShown);
-            }
-        }
-
         public ICommand ViewBudgetPieCommand
         {
             get { return new RelayCommand(OnViewBudgetPieCommandExecute, CanExecuteViewBudgetPieCommand); }
@@ -296,11 +286,24 @@ namespace BudgetAnalyser
 
         public void Initialize()
         {
-            StatementController.Initialize();
+            if (this.initialised)
+            {
+                return;
+            }
+
+            this.initialised = true;
 
             IEnumerable<IPersistent> rehydratedModels = this.statePersistence.Load();
             Messenger.Send(new ApplicationStateLoadedMessage(rehydratedModels));
             UpdateRecentFiles(this.recentFileManager.Files());
+
+            this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
+        }
+
+        public void OnViewReady()
+        {
+            // Re-run the initialisers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
+            this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
 
         private bool AnyControllersShown(ControllerBase exceptThisOne)
