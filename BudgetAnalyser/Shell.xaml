@@ -117,11 +117,6 @@
                         <TextBlock Text="Show all Budgets" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Command="{Binding ViewLedgerBookCommand}">
-                    <MenuItem.Header>
-                        <TextBlock Text="View Ledger Book" />
-                    </MenuItem.Header>
-                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Analyse Budget">
                 <MenuItem Command="{Binding AnalyseStatementCommand}"

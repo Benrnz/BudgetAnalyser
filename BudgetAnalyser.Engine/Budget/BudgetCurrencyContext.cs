@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,7 +11,7 @@ namespace BudgetAnalyser.Engine.Budget
     ///     A transient wrapper class to indicate a budgets active state in relation to other budgets in the collection.
     ///     This class will tell you if a budget is active, future dated, or has past and is archived.
     /// </summary>
-    public class BudgetCurrencyContext : INotifyPropertyChanged 
+    public class BudgetCurrencyContext : INotifyPropertyChanged
     {
         private readonly BudgetCollection budgets;
 
@@ -27,40 +28,43 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             this.budgets = budgets;
-            this.Model = budget;
+            Model = budget;
 
             if (budgets.All(b => b != budget))
             {
-                throw new System.Collections.Generic.KeyNotFoundException("The given budget is not found in the given collection.");
+                throw new KeyNotFoundException("The given budget is not found in the given collection.");
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public bool BudgetActive
         {
-            get { return this.budgets.IsCurrentBudget(this.Model); }
+            get { return this.budgets.IsCurrentBudget(Model); }
         }
 
         public bool BudgetArchived
         {
-            get { return this.budgets.IsArchivedBudget(this.Model); }
+            get { return this.budgets.IsArchivedBudget(Model); }
         }
 
         public bool BudgetInFuture
         {
-            get { return this.budgets.IsFutureBudget(this.Model); }
+            get { return this.budgets.IsFutureBudget(Model); }
         }
 
         public DateTime? EffectiveUntil
         {
-            get { 
-                var orderedBudgets = this.budgets.OrderByDescending(b => b.EffectiveFrom).ToList();
-                var myIndex = orderedBudgets.IndexOf(this.Model);
+            get
+            {
+                List<BudgetModel> orderedBudgets = this.budgets.OrderByDescending(b => b.EffectiveFrom).ToList();
+                int myIndex = orderedBudgets.IndexOf(Model);
                 if (myIndex == 0)
                 {
                     return null;
                 }
 
-                var nextBudget = orderedBudgets[myIndex - 1];
+                BudgetModel nextBudget = orderedBudgets[myIndex - 1];
                 return nextBudget.EffectiveFrom;
             }
         }
@@ -71,12 +75,11 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public BudgetModel Model { get; private set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));

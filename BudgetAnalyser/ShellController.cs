@@ -256,11 +256,6 @@ namespace BudgetAnalyser
             get { return new RelayCommand(OnViewBudgetPieCommandExecute, CanExecuteViewBudgetPieCommand); }
         }
 
-        public ICommand ViewLedgerBookCommand
-        {
-            get { return new RelayCommand(OnViewLedgerBookCommandExecute, CanExecuteViewLedgerBookCommand); }
-        }
-
         public string WindowTitle
         {
             get
@@ -361,11 +356,6 @@ namespace BudgetAnalyser
             }
 
             return BudgetController.Expenses.Any() || BudgetController.Incomes.Any();
-        }
-
-        private bool CanExecuteViewLedgerBookCommand()
-        {
-            return !AnyControllersShown(LedgerBookController) && BackgroundJob.MenuAvailable;
         }
 
         private void OnAnalyseStatementCommandExecute()
@@ -545,11 +535,6 @@ namespace BudgetAnalyser
         private void OnViewBudgetPieCommandExecute()
         {
             BudgetPieController.Load(BudgetController.CurrentBudget.Model);
-        }
-
-        private void OnViewLedgerBookCommandExecute()
-        {
-            LedgerBookController.Show(StatementController.Statement, BudgetController.CurrentBudget);
         }
 
         private void SendFilterAppliedMessage()

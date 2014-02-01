@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -60,6 +61,8 @@ namespace BudgetAnalyser.LedgerBook
 
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
         }
 
         public event EventHandler LedgerBookUpdated;
@@ -211,18 +214,6 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
         }
 
-        public void Show(StatementModel statement, BudgetCurrencyContext budget)
-        {
-            if (Shown)
-            {
-                Shown = false;
-            }
-
-            CurrentStatement = statement;
-            CurrentBudget = budget;
-            Shown = true;
-        }
-
         private bool CanExecuteAddNewLedgerCommand()
         {
             return !ShowPopup && LedgerBook != null;
@@ -341,12 +332,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof (LastLedgerBookLoadedV1)))
+            if (!message.RehydratedModels.ContainsKey(typeof(LastLedgerBookLoadedV1)))
             {
                 return;
             }
 
-            var lastLedgerBookFileName = message.RehydratedModels[typeof (LastLedgerBookLoadedV1)].AdaptModel<string>();
+            var lastLedgerBookFileName = message.RehydratedModels[typeof(LastLedgerBookLoadedV1)].AdaptModel<string>();
             this.pendingFileName = lastLedgerBookFileName;
         }
 
@@ -376,6 +367,14 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             LedgerBook.AddLedger(selectedBucket);
+        }
+
+        private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+        {
+            if (message.Budget.BudgetActive)
+            {
+                CurrentBudget = message.Budget;
+            }
         }
 
         private void OnCloseCommandExecute()
@@ -466,6 +465,11 @@ namespace BudgetAnalyser.LedgerBook
                     handler(this, EventArgs.Empty);
                 }
             }
+        }
+
+        private void OnStatementReadyMessageReceived(StatementReadyMessage message)
+        {
+            CurrentStatement = message.StatementModel;
         }
     }
 }

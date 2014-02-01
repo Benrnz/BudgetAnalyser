@@ -27,7 +27,12 @@ namespace BudgetAnalyser
 
         public ICommand BudgetCommand
         {
-            get { return new RelayCommand(OnBudgetExecuted); }
+            get { return new RelayCommand(OnBudgetExecuted, CanExecuteBudgetCommand); }
+        }
+
+        private bool CanExecuteBudgetCommand()
+        {
+            return this.uiContext.BackgroundJob.MenuAvailable;
         }
 
         public bool BudgetToggle
@@ -42,7 +47,12 @@ namespace BudgetAnalyser
 
         public ICommand DashboardCommand
         {
-            get { return new RelayCommand(OnDashboardExecuted); }
+            get { return new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand); }
+        }
+
+        private bool CanExecuteDashboardCommand()
+        {
+            return this.uiContext.BackgroundJob.MenuAvailable;
         }
 
         public bool DashboardToggle
@@ -57,7 +67,12 @@ namespace BudgetAnalyser
 
         public ICommand LedgerBookCommand
         {
-            get { return new RelayCommand(OnLedgerBookExecuted); }
+            get { return new RelayCommand(OnLedgerBookExecuted, CanExecuteLedgerBookCommand); }
+        }
+
+        private bool CanExecuteLedgerBookCommand()
+        {
+            return this.uiContext.BackgroundJob.MenuAvailable;
         }
 
         public bool LedgerBookToggle

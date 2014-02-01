@@ -330,6 +330,7 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
+                MessagingGate.Send(new StatementReadyMessage(Statement));
                 BackgroundJob.Finish();
             }
         }
@@ -361,6 +362,7 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
+                MessagingGate.Send(new StatementReadyMessage(Statement));
                 BackgroundJob.Finish();
             }
         }
