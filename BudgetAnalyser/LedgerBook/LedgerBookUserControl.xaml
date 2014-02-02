@@ -60,8 +60,6 @@
 
         <!-- Toolbar -->
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding CloseButton}"
-                    Style="{StaticResource CloseButton}" />
             <Button Command="{Binding LoadLedgerBookCommand}"
                     Style="{StaticResource LoadButton}" />
             <Button Command="{Binding NewLedgerBookCommand}"

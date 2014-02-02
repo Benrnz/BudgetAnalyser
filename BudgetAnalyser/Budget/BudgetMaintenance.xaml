@@ -160,8 +160,6 @@
                     Style="{StaticResource LoadButton}" />
             <Button Command="{Binding SaveAsCommand}"
                     Style="{StaticResource SaveAsButton}" />
-            <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource CloseButton}" />
         </StackPanel>
         <!-- Incomes List -->
         <StackPanel Grid.Column="0"

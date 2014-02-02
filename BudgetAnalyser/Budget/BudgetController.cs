@@ -111,11 +111,6 @@ namespace BudgetAnalyser.Budget
 
         public BudgetCollection Budgets { get; private set; }
 
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(OnCloseCommandExecute); }
-        }
-
         public BudgetCurrencyContext CurrentBudget
         {
             get { return this.doNotUseModel; }
@@ -422,11 +417,6 @@ namespace BudgetAnalyser.Budget
             // Save the filename of the last budget used by the application.
             var persistentModel = new LastBudgetLoadedV1 { Model = Budgets.FileName };
             message.PersistThisModel(persistentModel);
-        }
-
-        private void OnCloseCommandExecute()
-        {
-            ValidateAndClose();
         }
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)

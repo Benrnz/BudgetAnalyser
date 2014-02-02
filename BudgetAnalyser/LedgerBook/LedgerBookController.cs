@@ -81,11 +81,6 @@ namespace BudgetAnalyser.LedgerBook
 
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; private set; }
 
-        public ICommand CloseButton
-        {
-            get { return new RelayCommand(OnCloseCommandExecute, CanExecuteCloseCommand); }
-        }
-
         public ICommand CloseLedgerBookCommand
         {
             get { return new RelayCommand(OnCloseLedgerBookCommandExecuted, CanExecuteCloseLedgerBookCommand); }
@@ -375,12 +370,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 CurrentBudget = message.ActiveBudget;
             }
-        }
-
-        private void OnCloseCommandExecute()
-        {
-            CheckIfSaveRequired();
-            Shown = false;
         }
 
         private void OnCloseLedgerBookCommandExecuted()
