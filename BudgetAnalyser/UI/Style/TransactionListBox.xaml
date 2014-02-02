@@ -34,62 +34,41 @@
                     <ColumnDefinition SharedSizeGroup="I"
                                       Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock HorizontalAlignment="Left"
+                <TextBlock Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding Date, StringFormat=\{0:d\}}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding Date, StringFormat=\{0:D\}}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding Date, StringFormat=\{0:D\}}" />
                 <TextBlock Grid.Column="1"
-                           Style="{StaticResource TextBlockNumber}"
+                           Style="{StaticResource TransactionTextBlockNumber}"
                            Text="{Binding Amount, StringFormat=\{0:N\}}" />
                 <TextBlock Grid.Column="2"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding Description}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding Description}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding Description}" />
                 <TextBlock Grid.Column="3"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            MinWidth="120"
                            Text="{Binding BudgetBucket, Converter={StaticResource BudgetBucketToStringConverter}}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding BudgetBucket}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding BudgetBucket}" />
                 <TextBlock Grid.Column="4"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding Reference1}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding Reference1}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding Reference1}" />
                 <TextBlock Grid.Column="5"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding Reference2}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding Reference2}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding Reference2}" />
                 <TextBlock Grid.Column="6"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding Reference3}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding Reference3}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding Reference3}" />
                 <TextBlock Grid.Column="7"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding TransactionType}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding TransactionType}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding TransactionType}" />
                 <Image Grid.Column="8"
                        Height="20"
                        HorizontalAlignment="Left"
-                       Margin="4"
+                       Margin="6,2,6,2"
                        Source="{Binding AccountType.ImagePath}"
                        Stretch="Uniform"
                        ToolTip="{Binding AccountType.Name}"
@@ -148,11 +127,8 @@
                             Width="34"
                             TabIndex="2" />
                 <TextBlock Grid.Column="1"
-                           HorizontalAlignment="Right"
-                           Text="{Binding Amount, StringFormat=\{0:N\}}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           VerticalAlignment="Top" />
+                           Style="{StaticResource TransactionTextBlockNumber}"
+                           Text="{Binding Amount, StringFormat=\{0:N\}}" />
                 <TextBox Grid.Column="2"
                          HorizontalAlignment="Left"
                          Text="{Binding Description}"
@@ -189,12 +165,9 @@
                          TabIndex="6"
                          VerticalAlignment="Top" />
                 <TextBlock Grid.Column="7"
-                           HorizontalAlignment="Left"
+                           Style="{StaticResource TransactionTextBlockStyle}"
                            Text="{Binding TransactionType}"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"
-                           ToolTip="{Binding TransactionType}"
-                           VerticalAlignment="Top" />
+                           ToolTip="{Binding TransactionType}" />
                 <Image Grid.Column="8"
                        Height="20"
                        HorizontalAlignment="Left"
