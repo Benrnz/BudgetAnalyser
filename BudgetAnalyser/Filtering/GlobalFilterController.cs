@@ -185,6 +185,7 @@ namespace BudgetAnalyser.Filtering
 
             this.accountView.Close();
             this.dateView.Close();
+            SendFilterAppliedMessage();
         }
 
         private void OnCloseCommandExecute()
