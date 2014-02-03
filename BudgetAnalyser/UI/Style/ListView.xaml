@@ -11,9 +11,9 @@
                                      EndPoint="0,1">
                     <LinearGradientBrush.GradientStops>
                         <GradientStopCollection>
-                            <GradientStop Color="{DynamicResource BorderLightColor}"
+                            <GradientStop Color="{StaticResource BorderLightColor}"
                                           Offset="0.0" />
-                            <GradientStop Color="{DynamicResource BorderDarkColor}"
+                            <GradientStop Color="{StaticResource BorderDarkColor}"
                                           Offset="1.0" />
                         </GradientStopCollection>
                     </LinearGradientBrush.GradientStops>
@@ -52,7 +52,7 @@
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
         <Setter Property="Foreground"
-                Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
@@ -81,9 +81,9 @@
                                                      EndPoint="0,1">
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="{DynamicResource BorderLightColor}"
+                                            <GradientStop Color="{StaticResource BorderLightColor}"
                                                           Offset="0.0" />
-                                            <GradientStop Color="{DynamicResource BorderDarkColor}"
+                                            <GradientStop Color="{StaticResource BorderDarkColor}"
                                                           Offset="1.0" />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
@@ -96,9 +96,9 @@
                                                      EndPoint="0,1">
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="{DynamicResource ControlLightColor}"
+                                            <GradientStop Color="{StaticResource ControlLightColor}"
                                                           Offset="0.0" />
-                                            <GradientStop Color="{DynamicResource ControlMediumColor}"
+                                            <GradientStop Color="{StaticResource ControlMediumColor}"
                                                           Offset="1.0" />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
@@ -145,16 +145,16 @@
                             <Border Name="HeaderBorder"
                                     BorderThickness="0,1,0,1">
                                 <Border.Background>
-                                    <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                                    <SolidColorBrush Color="{StaticResource ControlLightColor}" />
                                 </Border.Background>
                                 <Border.BorderBrush>
                                     <LinearGradientBrush StartPoint="0,0"
                                                          EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{DynamicResource BorderLightColor}"
+                                                <GradientStop Color="{StaticResource BorderLightColor}"
                                                               Offset="0.0" />
-                                                <GradientStop Color="{DynamicResource BorderDarkColor}"
+                                                <GradientStop Color="{StaticResource BorderDarkColor}"
                                                               Offset="1.0" />
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>

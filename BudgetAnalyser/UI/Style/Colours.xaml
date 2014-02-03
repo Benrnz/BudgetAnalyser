@@ -108,9 +108,9 @@
     <LinearGradientBrush x:Key="ControlBorderBrush"
                          EndPoint="0,1"
                          StartPoint="0,0">
-        <GradientStop Color="{DynamicResource BorderLightColor}"
+        <GradientStop Color="{StaticResource BorderLightColor}"
                       Offset="0" />
-        <GradientStop Color="{DynamicResource BorderDarkColor}"
+        <GradientStop Color="{StaticResource BorderDarkColor}"
                       Offset="1" />
     </LinearGradientBrush>
 

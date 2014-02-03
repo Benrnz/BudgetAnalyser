@@ -75,7 +75,7 @@
             <Button Style="{StaticResource PlusRButton}"
                     ToolTip="Add new reconciliation"
                     Command="{Binding AddNewReconciliationCommand}" />
-            <Button Style="{DynamicResource PlusLButton}"
+            <Button Style="{StaticResource PlusLButton}"
                     ToolTip="Add new ledger"
                     Command="{Binding AddNewLedgerCommand}" />
             <TextBlock Style="{StaticResource TextBlockHeading1}"

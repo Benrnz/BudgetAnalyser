@@ -80,9 +80,9 @@
                 <Border.BorderBrush>
                     <LinearGradientBrush EndPoint="0,1"
                                          StartPoint="0,0">
-                        <GradientStop Color="{DynamicResource BorderLightColor}"
+                        <GradientStop Color="{StaticResource BorderLightColor}"
                                       Offset="0" />
-                        <GradientStop Color="{DynamicResource BorderDarkColor}"
+                        <GradientStop Color="{StaticResource BorderDarkColor}"
                                       Offset="1" />
                     </LinearGradientBrush>
                 </Border.BorderBrush>
@@ -103,7 +103,7 @@
                   VerticalAlignment="Center"
                   Data="M 0 0 L 4 4 L 8 0 Z">
                 <Path.Fill>
-                    <SolidColorBrush Color="{DynamicResource GlyphColor}" />
+                    <SolidColorBrush Color="{StaticResource GlyphColor}" />
                 </Path.Fill>
             </Path>
         </Grid>
@@ -208,10 +208,10 @@
                                 <Border x:Name="DropDownBorder"
                                         BorderThickness="1">
                                     <Border.BorderBrush>
-                                        <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
+                                        <SolidColorBrush Color="{StaticResource BorderMediumColor}" />
                                     </Border.BorderBrush>
                                     <Border.Background>
-                                        <SolidColorBrush Color="{DynamicResource MainBackground}" />
+                                        <SolidColorBrush Color="{StaticResource MainBackground}" />
                                     </Border.Background>
                                 </Border>
                                 <ScrollViewer Margin="4,6,4,6"
