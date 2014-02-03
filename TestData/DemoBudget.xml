@@ -1,0 +1,43 @@
+<BudgetCollection Capacity="1" FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml" xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine">
+  <BudgetModel EffectiveFrom="2012-01-01" Id="aaa64aaa-7aaa-4aaa-8aaa-aaad1844caaa" LastModified="2014-02-03T21:08:25.4087304+13:00" LastModifiedComment="Demo budget creation" Name="Demo Budget 1">
+    <BudgetModel.Expenses>
+      <Expense Amount="500.00">
+        <Expense.Bucket>
+          <SpentMonthlyExpense Code="FOOD" Description="Groceries, staples, and necessities" Id="f598eaaa-0aa3-4ac0-9cad-c2803dbd8aaa" />
+        </Expense.Bucket>
+      </Expense>
+      <Expense Amount="57.00">
+        <Expense.Bucket>
+          <SpentMonthlyExpense Code="WATER" Description="Water Rates" Id="75992770-94f9-490e-9369-ef74243965e7" />
+        </Expense.Bucket>
+      </Expense>
+      <Expense Amount="100.00">
+        <Expense.Bucket>
+          <SpentMonthlyExpense Code="INSHOME" Description="Home and Contents Insurance" Id="5981fc5d-4b11-481d-8a74-4a0e186dce46" />
+        </Expense.Bucket>
+      </Expense>
+      <Expense Amount="45.00">
+        <Expense.Bucket>
+          <SavedUpForExpense Code="DOC" Description="General Doctor Visits and Chiropractor" Id="7c14a840-c0cc-4e09-a0b7-6f00748fd112" />
+        </Expense.Bucket>
+      </Expense>
+      <Expense Amount="1.00">
+        <Expense.Bucket>
+          <SavedUpForExpense Code="FEES" Description="Bank Fees" Id="d6d2ecee-6ded-46ae-99cc-4c89e914b344" />
+        </Expense.Bucket>
+      </Expense>
+    </BudgetModel.Expenses>
+    <BudgetModel.Incomes>
+      <Income Amount="1500.00">
+        <Income.Bucket>
+          <IncomeBudgetBucket Code="SALARY" Description="Salary from Lawn Mowing business" Id="419e348c-9074-40ce-9786-dd90a4527bfa" />
+        </Income.Bucket>
+      </Income>
+      <Income Amount="0.0100">
+        <Income.Bucket>
+          <IncomeBudgetBucket Code="GIFT" Description="Income from gifts and paybacks that are not spent as surplus" Id="0ee87fde-4805-4431-a2ae-a6c601e018d3" />
+        </Income.Bucket>
+      </Income>
+    </BudgetModel.Incomes>
+  </BudgetModel>
+</BudgetCollection>
