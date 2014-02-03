@@ -21,8 +21,7 @@
         <Grid>
             <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource BoolToVisConverter}}">
                 <ContentPresenter Content="{Binding StatementController}"
-                                  DataContext="{Binding StatementController}"
-                                  Visibility="{Binding Statement, Converter={StaticResource NullToVisConverter}}" />
+                                  DataContext="{Binding StatementController}" />
             </Grid>
 
             <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">

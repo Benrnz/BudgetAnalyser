@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
+        // Bug God would be jealous of the length of this class.
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly IRecentFileManager recentFileManager;
@@ -403,18 +404,6 @@ namespace BudgetAnalyser.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
-        public void CloseStatement()
-        {
-            if (PromptToSaveIfDirty())
-            {
-                Save();
-            }
-
-            Statement = null;
-            NotifyOfReset();
-            UpdateTotalsRow();
-        }
-
         public void Initialize()
         {
             if (this.initialised)
@@ -667,7 +656,14 @@ namespace BudgetAnalyser.Statement
 
         private void OnCloseStatementExecute()
         {
-            CloseStatement();
+            if (PromptToSaveIfDirty())
+            {
+                Save();
+            }
+
+            Statement = null;
+            NotifyOfReset();
+            UpdateTotalsRow();
         }
 
         private void OnCreateRuleCommandExecute()
@@ -738,9 +734,6 @@ namespace BudgetAnalyser.Statement
                     UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
                 }
             }
-
-            // Bug ensure window title is updated
-            //RaisePropertyChanged(() => WindowTitle);
         }
 
         private void OnSaveStatementExecute()
