@@ -364,19 +364,6 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        private void LoadBudgetOrCreate(string fileName)
-        {
-            try
-            {
-                LoadBudget(fileName);
-            }
-            catch (FileNotFoundException)
-            {
-                this.budgetRepository.CreateNew(fileName);
-                LoadBudget(fileName);
-            }
-        }
-
         private void OnAddNewExpenseExecute(ExpenseBudgetBucket expense)
         {
             this.dirty = true;
@@ -410,17 +397,16 @@ namespace BudgetAnalyser.Budget
         {
             try
             {
-                string defaultFileName = GetDefaultFileName();
                 if (!message.RehydratedModels.ContainsKey(typeof(LastBudgetLoadedV1)))
                 {
-                    LoadBudgetOrCreate(defaultFileName);
+                    LoadDemoBudget();
                     return;
                 }
 
                 var budgetFileName = message.RehydratedModels[typeof(LastBudgetLoadedV1)].AdaptModel<string>();
                 if (string.IsNullOrWhiteSpace(budgetFileName))
                 {
-                    LoadBudgetOrCreate(defaultFileName);
+                    LoadDemoBudget();
                     return;
                 }
 
@@ -512,6 +498,11 @@ namespace BudgetAnalyser.Budget
         }
 
         private void OnDemoBudgetCommandExecuted()
+        {
+            LoadDemoBudget();
+        }
+
+        private void LoadDemoBudget()
         {
             LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
