@@ -136,11 +136,19 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock HorizontalAlignment="Center"
-                       Text="No Ledger Book loaded. Load one now:" />
-            <Button Command="{Binding LoadLedgerBookCommand}"
-                    Grid.Row="1"
-                    Style="{StaticResource LoadButton}" />
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding LoadLedgerBookCommand}"
+                        Style="{StaticResource LoadButton}" />
+                <TextBlock HorizontalAlignment="Center"
+                           Text="No Ledger Book loaded. Load one now:" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1">
+                <Button Command="{Binding DemoLedgerBookCommand}"
+                        Style="{StaticResource HappyButton}" />
+                <TextBlock HorizontalAlignment="Center"
+                           Text="Show a sample LedgerBook" />
+            </StackPanel>
         </Grid>
         
         <!-- Transactions view -->

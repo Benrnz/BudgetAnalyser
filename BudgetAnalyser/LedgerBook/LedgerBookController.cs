@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
@@ -84,6 +85,11 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand CloseLedgerBookCommand
         {
             get { return new RelayCommand(OnCloseLedgerBookCommandExecuted, CanExecuteCloseLedgerBookCommand); }
+        }
+
+        public ICommand DemoLedgerBookCommand
+        {
+            get { return new RelayCommand(OnDemoLedgerBookCommandExecute, CanExecuteCloseCommand); }
         }
 
         public Engine.Ledger.LedgerBook LedgerBook
@@ -209,6 +215,11 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
         }
 
+        protected virtual bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+
         private bool CanExecuteAddNewLedgerCommand()
         {
             return !ShowPopup && LedgerBook != null;
@@ -280,6 +291,30 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
+        }
+
+        private string FindDemoLedgerBookFile()
+        {
+            const string ledgerBookDemoFile = @"DemoLedgerBook.xml";
+            string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            for (int failsafe = 0; failsafe < 10; failsafe++)
+            {
+                string path = Path.Combine(folder, ledgerBookDemoFile);
+                if (FileExists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(folder, "TestData", ledgerBookDemoFile);
+                if (FileExists(path))
+                {
+                    return path;
+                }
+
+                folder = Directory.GetParent(folder).FullName;
+            }
+
+            throw new FileNotFoundException();
         }
 
         private void LoadLedgerBookFromFile(string fileName)
@@ -392,6 +427,18 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
             LedgerBook = null;
             this.pendingFileName = null;
+        }
+
+        private void OnDemoLedgerBookCommandExecute()
+        {
+            try
+            {
+                LoadLedgerBookFromFile(FindDemoLedgerBookFile());
+            }
+            catch
+            {
+                this.messageBox.Show("Unable to find the demo LedgerBook file.");
+            }
         }
 
         private void OnLoadLedgerBookCommandExecute()
