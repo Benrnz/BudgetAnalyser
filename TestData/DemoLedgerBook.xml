@@ -1,0 +1,191 @@
+﻿<DataLedgerBook Checksum="6109.88" 
+				FileName="" 
+				Modified="2013-12-29T15:31:03.5480436+13:00" 
+				Name="Demo LedgerBook" 
+				xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine" 
+				xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" 
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DataLedgerBook.DatedEntries>
+		<scg:List x:TypeArguments="DataLedgerEntryLine" 
+			      Capacity="4">
+			<DataLedgerEntryLine BankBalance="1700" 
+								 Date="2013-10-20" 
+								 Remarks="Not a full pay this month, some unpaid leave.">
+				<DataLedgerEntryLine.BankBalanceAdjustments>
+					<scg:List x:TypeArguments="DataLedgerTransaction" 
+					          Capacity="4">
+						<DataLedgerTransaction Credit="0" 
+						                       Debit="100" 
+											   Id="e70314e0-aaab-455a-90d8-b0d456e4de6a" 
+											   Narrative="Visa payment, not yet reflected in bank balance." 
+											   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+						<DataLedgerTransaction Credit="0" 
+						                       Debit="50" 
+											   Id="bc344b4a-6ff7-4511-90d1-bdea709034ce" 
+											   Narrative="Savings yet to go out not reflected in bank balance" 
+											   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+					</scg:List>
+				</DataLedgerEntryLine.BankBalanceAdjustments>
+				<DataLedgerEntryLine.Entries>
+					<scg:List x:TypeArguments="DataLedgerEntry" 
+					          Capacity="16">
+						<DataLedgerEntry Balance="37.00" 
+						                 BucketCode="WATER">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="4">
+									<DataLedgerTransaction Credit="37.00" 
+									                       Debit="0" 
+														   Id="b050ccf4-2f6f-413d-ae9d-dbfe1ca6c39e" 
+														   Narrative="Budgeted Amount" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+									<DataLedgerTransaction Credit="0" 
+									                       Debit="34.17" 
+														   Id="500debc5-7f72-4071-be68-1961b7341fb2" 
+														   Narrative="Watercare Services" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+									<DataLedgerTransaction Debit="2.83" 
+									                       Credit="0" 
+														   Id="2bf7a802-8de5-49b8-bac4-e43a2c812070" 
+														   Narrative="Zero the remainder - no need to accumulate." 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="100.00" 
+						                 BucketCode="INSHOME">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="4">
+									<DataLedgerTransaction Credit="100.00" 
+									                       Debit="0" 
+														   Id="a7d8dc68-8cc5-4fa2-b2e7-939226b4f997" 
+														   Narrative="Budgeted Amount" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+									<DataLedgerTransaction Credit="0" 
+									                       Debit="100.96" 
+														   Id="8f606d2f-b569-4bf6-af6f-a10b48f69d95" 
+														   Narrative="Pay home and contents to Foo Insurance Ltd" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+									<DataLedgerTransaction Credit="0.96" 
+									                       Debit="0" 
+														   Id="6aa34d0f-9d26-4e31-abe8-be9019ad2601" 
+														   Narrative="Zero the remainder - supplement shortfall from surplus." 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="211.44" 
+						                 BucketCode="DOC">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="4">
+									<DataLedgerTransaction Credit="95.00" 
+									                       Debit="0" 
+														   Id="97adeaf4-5c5a-4aa0-90c8-d5c2938df1d0" 
+														   Narrative="Budgeted Amount" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+									<DataLedgerTransaction Credit="0" 
+									                       Debit="89.00" 
+														   Id="6a1f1045-0740-4b53-a6d0-fecfbb6d693d"  
+														   Narrative="Life Pharmacy Sylvia Pk  Sylvia Park  Nz" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="1200" 
+						                 BucketCode="RENT">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="8">
+									<DataLedgerTransaction Credit="1200.00" 
+									                       Debit="0" 
+														   Id="7c518808-c57e-4d4f-9f8f-d790273fcc08" 
+														   Narrative="Budgeted Amount" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+									<DataLedgerTransaction Credit="0" 
+									                       Debit="1200.00" 
+														   Id="0bf223a0-d618-441e-88bf-1d7427e3b5e1" 
+														   Narrative="Rent to Rentals R Us" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+					</scg:List>
+				</DataLedgerEntryLine.Entries>
+			</DataLedgerEntryLine>
+
+			<DataLedgerEntryLine BankBalance="1500" 
+								 Date="2013-09-20" 
+								 Remarks="Started using LedgerBook - Opening balances">
+				<DataLedgerEntryLine.BankBalanceAdjustments>
+					<scg:List x:TypeArguments="DataLedgerTransaction" 
+					          Capacity="1">
+						<DataLedgerTransaction Credit="0" 
+						                       Debit="37" 
+											   Id="bc344b4a-6ff7-4511-90d1-bdea709034bb" 
+											   Narrative="Starting balance" 
+											   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+					</scg:List>
+				</DataLedgerEntryLine.BankBalanceAdjustments>
+				<DataLedgerEntryLine.Entries>
+					<scg:List x:TypeArguments="DataLedgerEntry" 
+					          Capacity="16">
+						<DataLedgerEntry Balance="37.00" 
+						                 BucketCode="WATER">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="1">
+									<DataLedgerTransaction Credit="37.00" 
+									                       Debit="0" 
+														   Id="b050ccf4-2f6f-413d-ae9d-dbfe1ca6c3bb" 
+														   Narrative="Starting balance" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="100.00" 
+						                 BucketCode="INSHOME">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="1">
+									<DataLedgerTransaction Credit="100.00" 
+									                       Debit="0" 
+														   Id="a7d8dc68-8cc5-4fa2-b2e7-939226b4f9bb" 
+														   Narrative="Starting balance" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="211.44" 
+						                 BucketCode="DOC">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="1">
+									<DataLedgerTransaction Credit="95.00" 
+									                       Debit="0" 
+														   Id="97adeaf4-5c5a-4aa0-90c8-d5c2938bb1bb" 
+														   Narrative="Starting balance" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+						<DataLedgerEntry Balance="1200" 
+						                 BucketCode="RENT">
+							<DataLedgerEntry.Transactions>
+								<scg:List x:TypeArguments="DataLedgerTransaction" 
+								          Capacity="1">
+									<DataLedgerTransaction Credit="1200" 
+									                       Debit="0" 
+														   Id="0bf223a0-d618-441e-88bf-1d7427e3b5e1" 
+														   Narrative="Rent to Rentals R Us" 
+														   TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+								</scg:List>
+							</DataLedgerEntry.Transactions>
+						</DataLedgerEntry>
+					</scg:List>
+				</DataLedgerEntryLine.Entries>
+			</DataLedgerEntryLine>
+			</scg:List>
+	</DataLedgerBook.DatedEntries>
+</DataLedgerBook>

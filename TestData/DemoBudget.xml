@@ -1,12 +1,17 @@
 <BudgetCollection Capacity="1" FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml" xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine">
-  <BudgetModel EffectiveFrom="2012-01-01" Id="aaa64aaa-7aaa-4aaa-8aaa-aaad1844caaa" LastModified="2014-02-03T21:08:25.4087304+13:00" LastModifiedComment="Demo budget creation" Name="Demo Budget 1">
+  <BudgetModel EffectiveFrom="2012-01-01" Id="aaa64aaa-7aaa-4aaa-8aaa-aaad1844caaa" LastModified="2014-02-05T20:58:41.8316716+13:00" LastModifiedComment="" Name="Demo Budget 1">
     <BudgetModel.Expenses>
-      <Expense Amount="500.00">
+      <Expense Amount="1200.00">
+        <Expense.Bucket>
+          <SpentMonthlyExpense Code="RENT" Description="Rent for my bachelor pad" Id="f598eaaa-0aa3-4ac0-9cad-c2803dbd8aaa" />
+        </Expense.Bucket>
+      </Expense>
+      <Expense Amount="400.00">
         <Expense.Bucket>
           <SpentMonthlyExpense Code="FOOD" Description="Groceries, staples, and necessities" Id="f598eaaa-0aa3-4ac0-9cad-c2803dbd8aaa" />
         </Expense.Bucket>
       </Expense>
-      <Expense Amount="57.00">
+      <Expense Amount="37.00">
         <Expense.Bucket>
           <SpentMonthlyExpense Code="WATER" Description="Water Rates" Id="75992770-94f9-490e-9369-ef74243965e7" />
         </Expense.Bucket>
@@ -28,7 +33,7 @@
       </Expense>
     </BudgetModel.Expenses>
     <BudgetModel.Incomes>
-      <Income Amount="1500.00">
+      <Income Amount="2000.00">
         <Income.Bucket>
           <IncomeBudgetBucket Code="SALARY" Description="Salary from Lawn Mowing business" Id="419e348c-9074-40ce-9786-dd90a4527bfa" />
         </Income.Bucket>

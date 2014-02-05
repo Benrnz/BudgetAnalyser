@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser", "BudgetAnalyser\BudgetAnalyser.csproj", "{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.UnitTest", "BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj", "{D2A141E8-73F2-4C1A-8D31-A744968AEED9}"
@@ -8,6 +10,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{733305F6-B587-45EE-AD4D-FD6DFEF015AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest", "BudgetAnalyser.Wpf.UnitTest\BudgetAnalyser.Wpf.UnitTest.csproj", "{F6BEE529-FA66-4BCD-938B-49677225AFF9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{845726B9-86B6-4BAD-92AD-E330EF09D971}"
+	ProjectSection(SolutionItems) = preProject
+		TestData\DemoBudget.xml = TestData\DemoBudget.xml
+		TestData\DemoLedgerBook.xml = TestData\DemoLedgerBook.xml
+		TestData\DemoTransactions.csv = TestData\DemoTransactions.csv
+		TestData\DuplicateTxnTest.csv = TestData\DuplicateTxnTest.csv
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
