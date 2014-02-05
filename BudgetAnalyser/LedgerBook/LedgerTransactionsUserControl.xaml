@@ -96,7 +96,7 @@
                              FontSize="11"
                              Text="{Binding NewTransactionAmount}" />
                     <Button Command="{Binding ZeroNetAmountCommand}"
-                            Style="{StaticResource ClearFilterButton}"
+                            Style="{StaticResource ClearButton}"
                             ToolTip="Set amount to zero the net change for this ledger." />
                     <CheckBox IsChecked="{Binding NewTransactionIsReversal}"
                               VerticalAlignment="Center">

@@ -66,7 +66,7 @@
                     Style="{StaticResource NewButton}"
                     ToolTip="New Ledger Book" />
             <Button Command="{Binding CloseLedgerBookCommand}"
-                    Style="{StaticResource ClearFilterButton}"
+                    Style="{StaticResource ClearButton}"
                     ToolTip="Close Ledger Book"/>
             <Border BorderBrush="{StaticResource ControlBorderBrush}"
                     BorderThickness="1,0,0,0"

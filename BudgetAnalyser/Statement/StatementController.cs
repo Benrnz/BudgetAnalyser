@@ -305,6 +305,19 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        public string StatementName
+        {
+            get
+            {
+                if (Statement != null)
+                {
+                    return Path.GetFileNameWithoutExtension(Statement.FileName);
+                }
+
+                return "[No Transactions Loaded]";
+            }
+        }
+
         public StatementModel Statement
         {
             get { return this.doNotUseStatement; }

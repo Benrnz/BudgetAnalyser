@@ -275,6 +275,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Style\Menu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Style\ModernTiles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

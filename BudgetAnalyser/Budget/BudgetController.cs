@@ -24,8 +24,6 @@ namespace BudgetAnalyser.Budget
 
         private readonly IViewLoader budgetDetailsViewLoader;
 
-        public BudgetPieController BudgetPieController { get; private set; }
-
         private readonly IBudgetRepository budgetRepository;
         private readonly IViewLoader budgetSelectionLoader;
         private readonly DemoFileHelper demoFileHelper;
@@ -36,11 +34,11 @@ namespace BudgetAnalyser.Budget
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
         private bool dirty;
-        private bool loading;
         private BudgetCurrencyContext doNotUseModel;
         private bool doNotUseShownBudget;
         private decimal expenseTotal;
         private decimal incomeTotal;
+        private bool loading;
         private decimal surplus;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -48,7 +46,7 @@ namespace BudgetAnalyser.Budget
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext context,
             [NotNull] IViewLoader budgetDetailsViewLoader,
-            [NotNull] IViewLoader budgetSelectionLoader, 
+            [NotNull] IViewLoader budgetSelectionLoader,
             [NotNull] DemoFileHelper demoFileHelper)
         {
             // BUG Scroll into view when adding new expense or income.
@@ -118,6 +116,8 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        public BudgetPieController BudgetPieController { get; private set; }
+
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -153,6 +153,11 @@ namespace BudgetAnalyser.Budget
         public ICommand DeleteBudgetItemCommand
         {
             get { return new RelayCommand<object>(OnDeleteBudgetItemCommandExecute); }
+        }
+
+        public ICommand DemoBudgetCommand
+        {
+            get { return new RelayCommand(OnDemoBudgetCommandExecuted); }
         }
 
         public ICommand DetailsCommand
@@ -206,14 +211,6 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand); }
         }
 
-        public ICommand DemoBudgetCommand
-        {
-            get
-            {
-                return new RelayCommand(OnDemoBudgetCommandExecuted);
-            }
-        }
-
         public bool Shown
         {
             get { return this.doNotUseShownBudget; }
@@ -255,28 +252,6 @@ namespace BudgetAnalyser.Budget
             CurrentBudget = new BudgetCurrencyContext(Budgets, budgetToShow);
             Shown = true;
             this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
-        }
-
-        private void ValidateAndClose()
-        {
-            if (CurrentBudget == null)
-            {
-                // No budget loaded yet
-                return;
-            }
-
-            bool valid = ValidateAndSaveIfRequired();
-            if (valid)
-            {
-                if (CurrentBudget.Model != Budgets.CurrentActiveBudget)
-                {
-                    // Were viewing a different budget other than the current active budget for today's date.  Reset back to active budget.
-                    CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
-                    this.dirty = false;
-                }
-
-                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
-            }
         }
 
         protected virtual string GetDefaultFileName()
@@ -364,6 +339,11 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        private void LoadDemoBudget()
+        {
+            LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
+        }
+
         private void OnAddNewExpenseExecute(ExpenseBudgetBucket expense)
         {
             this.dirty = true;
@@ -449,6 +429,11 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        private void OnDemoBudgetCommandExecuted()
+        {
+            LoadDemoBudget();
+        }
+
         private void OnDetailsCommandExecute()
         {
             this.budgetDetailsViewLoader.ShowDialog(CurrentBudget);
@@ -495,16 +480,6 @@ namespace BudgetAnalyser.Budget
             this.dirty = false;
             string fileName = GetFileNameFromUserForOpen();
             LoadBudget(fileName);
-        }
-
-        private void OnDemoBudgetCommandExecuted()
-        {
-            LoadDemoBudget();
-        }
-
-        private void LoadDemoBudget()
-        {
-            LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
 
         private void OnSaveAsCommandExecute()
@@ -563,6 +538,28 @@ namespace BudgetAnalyser.Budget
             }
 
             return false;
+        }
+
+        private void ValidateAndClose()
+        {
+            if (CurrentBudget == null)
+            {
+                // No budget loaded yet
+                return;
+            }
+
+            bool valid = ValidateAndSaveIfRequired();
+            if (valid)
+            {
+                if (CurrentBudget.Model != Budgets.CurrentActiveBudget)
+                {
+                    // Were viewing a different budget other than the current active budget for today's date.  Reset back to active budget.
+                    CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
+                    this.dirty = false;
+                }
+
+                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+            }
         }
 
         private bool ValidateAndSaveIfRequired()

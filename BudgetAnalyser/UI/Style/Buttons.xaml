@@ -22,8 +22,15 @@
         #AA333333
     </Color>
 
+    <Color x:Key="ButtonGlyphColor">
+        #FF333333
+    </Color>
+    
     <SolidColorBrush x:Key="ButtonStrokeBrush"
                      Color="{StaticResource ButtonStokeColor}" />
+
+    <SolidColorBrush x:Key="ButtonGlyphBrush"
+                     Color="{StaticResource ButtonGlyphColor}" />
 
 
     <!-- Rectangular Buttons -->
@@ -98,7 +105,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -106,7 +113,7 @@
                               Height="20"
                               HorizontalAlignment="Center"
                               Stretch="Uniform"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               StrokeThickness="3"
                               VerticalAlignment="Center"
                               Width="20" />
@@ -151,13 +158,13 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock HorizontalAlignment="Center"
                                    Margin="0,1,0,0"
-                                   Foreground="#FF333333"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
                                    FontSize="22"
                                    FontFamily="Segoe Script"
                                    FontWeight="Bold"
@@ -204,12 +211,12 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="Ok"
-                                   Foreground="#FF333333"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
                                    Margin="-1,-3,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -264,17 +271,17 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="#FF333333"
+                              Fill="{StaticResource ButtonGlyphBrush}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="13,12,0,0"
                               Stretch="Uniform"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
@@ -316,27 +323,27 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="#FF333333"
+                              Fill="{StaticResource ButtonGlyphBrush}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="9,9,0,0"
                               Stretch="Uniform"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="#FF333333"
+                              Fill="{StaticResource ButtonGlyphBrush}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="15,15,0,0"
                               Stretch="Uniform"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
@@ -377,7 +384,7 @@
                               StrokeThickness="1"
                               VerticalAlignment="Top" />
                         <Path Data="M0,10 L14,10 L18,18 L4,18 L0,10"
-                              Fill="#FF333333"
+                              Fill="{StaticResource ButtonGlyphBrush}"
                               HorizontalAlignment="Left"
                               Margin="8,12,10,10"
                               Stroke="{StaticResource ButtonStrokeBrush}"
@@ -428,11 +435,11 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="#FF333333"
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontSize="24"
@@ -451,7 +458,7 @@
                 Value="Build" />
     </Style>
 
-    <Style x:Key="ClearFilterButton"
+    <Style x:Key="ClearButton"
            TargetType="{x:Type Button}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -478,7 +485,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -486,13 +493,13 @@
                                  Width="15"
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
-                                 Stroke="#FF333333"
+                                 Stroke="{StaticResource ButtonGlyphBrush}"
                                  StrokeThickness="2" />
                         <Path Data="M19,0 L0,16"
                               HorizontalAlignment="Center"
                               Margin="12.5,14.75,12.5,15"
                               StrokeThickness="2"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               VerticalAlignment="Center"
                               Height="10.25"
                               Stretch="Fill"
@@ -536,12 +543,12 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="&lt;"
-                                   Foreground="#FF333333"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
                                    Margin="0,2,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -589,12 +596,12 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="&gt;"
-                                   Foreground="#FF333333"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
                                    Margin="0,2,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -630,7 +637,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -638,13 +645,13 @@
                                    Width="15"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Stroke="#FF333333"
+                                   Stroke="{StaticResource ButtonGlyphBrush}"
                                    StrokeThickness="2" />
                         <Path Data="M19,0 L0,16"
                               HorizontalAlignment="Center"
                               Margin="22.25,12.5,12.5,22.75"
                               StrokeThickness="2"
-                              Stroke="#FF333333"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
                               VerticalAlignment="Center"
                               Height="4.75"
                               Stretch="Fill"
@@ -659,7 +666,7 @@
                                 </TransformGroup>
                             </Path.RenderTransform>
                         </Path>
-                        <TextBlock Foreground="#FF333333"
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    FontFamily="Segoe UI"
                                    FontSize="16"
                                    Margin="24,3,0,0"
@@ -705,11 +712,11 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="#FF333333"
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    FontWeight="Bold"
                                    FontFamily="Segoe UI"
                                    FontSize="18"
@@ -754,11 +761,11 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="#FF333333"
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    HorizontalAlignment="Center"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -802,11 +809,11 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="#FF333333"
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    HorizontalAlignment="Center"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -852,11 +859,11 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <Ellipse Stroke="#FF333333"
+                        <Ellipse Stroke="{StaticResource ButtonGlyphBrush}"
                                  HorizontalAlignment="Center"
                                  Width="20"
                                  Height="20"
@@ -865,7 +872,7 @@
                         <Path Data="M19,9.5 L19,19 L25,12"
                               Margin="1"
                               StrokeThickness="2"
-                              Stroke="#FF333333" />
+                              Stroke="{StaticResource ButtonGlyphBrush}" />
 
                     </Grid>
                 </ControlTemplate>
@@ -906,7 +913,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="#AA333333"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -929,7 +936,7 @@
                                                         </GeometryDrawing>
                                                     </DrawingGroup.Children>
                                                 </DrawingGroup>
-                                                <GeometryDrawing Brush="#FF333333"
+                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
                                                                  Pen="{x:Null}">
                                                     <GeometryDrawing.Geometry>
                                                         <PathGeometry FillRule="Nonzero"
