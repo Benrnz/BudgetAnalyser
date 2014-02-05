@@ -94,7 +94,8 @@ namespace BudgetAnalyser
                                       c.Resolve<IBudgetRepository>(),
                                       c.Resolve<UiContext>(), 
                                       budgetDetailsViewLoader, 
-                                      budgetSelectionViewLoader));
+                                      budgetSelectionViewLoader,
+                                      c.Resolve<DemoFileHelper>()));
 
 
             // Filters

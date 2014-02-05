@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
@@ -26,6 +25,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IWaitCursor> waitCursorFactory;
+        private readonly DemoFileHelper demoFileHelper;
 
         private bool dirty;
         private BudgetCurrencyContext doNotUseCurrentBudget;
@@ -37,7 +37,8 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
-            [NotNull] ILedgerBookRepository ledgerRepository)
+            [NotNull] ILedgerBookRepository ledgerRepository, 
+            [NotNull] DemoFileHelper demoFileHelper)
         {
             if (uiContext == null)
             {
@@ -49,12 +50,18 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("ledgerRepository");
             }
 
+            if (demoFileHelper == null)
+            {
+                throw new ArgumentNullException("demoFileHelper");
+            }
+
             this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
             this.ledgerRepository = ledgerRepository;
+            this.demoFileHelper = demoFileHelper;
             ChooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
             AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
@@ -215,11 +222,6 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
         }
 
-        protected virtual bool FileExists(string path)
-        {
-            return File.Exists(path);
-        }
-
         private bool CanExecuteAddNewLedgerCommand()
         {
             return !ShowPopup && LedgerBook != null;
@@ -291,30 +293,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
-        }
-
-        private string FindDemoLedgerBookFile()
-        {
-            const string ledgerBookDemoFile = @"DemoLedgerBook.xml";
-            string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            for (int failsafe = 0; failsafe < 10; failsafe++)
-            {
-                string path = Path.Combine(folder, ledgerBookDemoFile);
-                if (FileExists(path))
-                {
-                    return path;
-                }
-
-                path = Path.Combine(folder, "TestData", ledgerBookDemoFile);
-                if (FileExists(path))
-                {
-                    return path;
-                }
-
-                folder = Directory.GetParent(folder).FullName;
-            }
-
-            throw new FileNotFoundException();
         }
 
         private void LoadLedgerBookFromFile(string fileName)
@@ -433,7 +411,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                LoadLedgerBookFromFile(FindDemoLedgerBookFile());
+                LoadLedgerBookFromFile(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
             }
             catch
             {

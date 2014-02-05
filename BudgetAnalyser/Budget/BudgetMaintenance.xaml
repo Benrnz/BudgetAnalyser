@@ -160,6 +160,8 @@
                     Style="{StaticResource LoadButton}" />
             <Button Command="{Binding SaveAsCommand}"
                     Style="{StaticResource SaveAsButton}" />
+            <Button Command="{Binding DemoBudgetCommand}"
+                    Style="{StaticResource HappyButton}" />
         </StackPanel>
         <!-- Incomes List -->
         <StackPanel Grid.Column="0"

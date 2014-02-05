@@ -28,6 +28,7 @@ namespace BudgetAnalyser.Budget
 
         private readonly IBudgetRepository budgetRepository;
         private readonly IViewLoader budgetSelectionLoader;
+        private readonly DemoFileHelper demoFileHelper;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
@@ -47,7 +48,8 @@ namespace BudgetAnalyser.Budget
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext context,
             [NotNull] IViewLoader budgetDetailsViewLoader,
-            [NotNull] IViewLoader budgetSelectionLoader)
+            [NotNull] IViewLoader budgetSelectionLoader, 
+            [NotNull] DemoFileHelper demoFileHelper)
         {
             // BUG Scroll into view when adding new expense or income.
             if (budgetRepository == null)
@@ -70,7 +72,13 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("budgetSelectionLoader");
             }
 
+            if (demoFileHelper == null)
+            {
+                throw new ArgumentNullException("demoFileHelper");
+            }
+
             this.budgetSelectionLoader = budgetSelectionLoader;
+            this.demoFileHelper = demoFileHelper;
             this.budgetRepository = budgetRepository;
             this.questionBox = context.UserPrompts.YesNoBox;
             this.messageBox = context.UserPrompts.MessageBox;
@@ -196,6 +204,14 @@ namespace BudgetAnalyser.Budget
         public ICommand ShowPieCommand
         {
             get { return new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand); }
+        }
+
+        public ICommand DemoBudgetCommand
+        {
+            get
+            {
+                return new RelayCommand(OnDemoBudgetCommandExecuted);
+            }
         }
 
         public bool Shown
@@ -493,6 +509,11 @@ namespace BudgetAnalyser.Budget
             this.dirty = false;
             string fileName = GetFileNameFromUserForOpen();
             LoadBudget(fileName);
+        }
+
+        private void OnDemoBudgetCommandExecuted()
+        {
+            LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
 
         private void OnSaveAsCommandExecute()
