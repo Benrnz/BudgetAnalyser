@@ -145,7 +145,8 @@
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1">
                 <Button Command="{Binding DemoLedgerBookCommand}"
-                        Style="{StaticResource HappyButton}" />
+                        Style="{StaticResource HappyButton}" 
+                        ToolTip="Demo LedgerBook"/>
                 <TextBlock HorizontalAlignment="Center"
                            Text="Show a sample LedgerBook" />
             </StackPanel>

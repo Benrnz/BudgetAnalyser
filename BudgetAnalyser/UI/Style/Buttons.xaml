@@ -951,8 +951,6 @@
                 Value="40" />
         <Setter Property="Height"
                 Value="40" />
-        <Setter Property="ToolTip"
-                Value="Pie Graph" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">
