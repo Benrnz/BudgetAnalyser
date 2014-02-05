@@ -159,6 +159,7 @@
     <Compile Include="SpendingTrend\AddUserDefinedSpendingChartController.cs" />
     <Compile Include="SpendingTrend\CustomSpendingChartsV1.cs" />
     <Compile Include="SpendingTrend\SpendingTrendController.cs" />
+    <Compile Include="Statement\AppliedRulesController.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
     <Compile Include="Statement\CreateNewRuleViewLoader.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />

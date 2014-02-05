@@ -420,17 +420,17 @@
                                         Value="Black" />
                             </Style>
                         </ContextMenu.Resources>
-                        <MenuItem Command="{Binding ApplyRulesCommand}">
+                        <MenuItem Command="{Binding AppliedRulesController.ApplyRulesCommand}">
                             <MenuItem.Header>
                                 <TextBlock Text="Apply Matching Rules" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding CreateRuleCommand}">
+                        <MenuItem Command="{Binding AppliedRulesController.CreateRuleCommand}">
                             <MenuItem.Header>
                                 <TextBlock Text="Create Rule" />
                             </MenuItem.Header>
                         </MenuItem>
-                        <MenuItem Command="{Binding ShowRulesCommand}">
+                        <MenuItem Command="{Binding AppliedRulesController.ShowRulesCommand}">
                             <MenuItem.Header>
                                 <TextBlock Text="Edit Rules" />
                             </MenuItem.Header>

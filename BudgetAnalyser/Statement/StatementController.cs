@@ -8,7 +8,6 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -81,11 +80,6 @@ namespace BudgetAnalyser.Statement
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
-        }
-
-        public ICommand ApplyRulesCommand
-        {
-            get { return new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand); }
         }
 
         // TODO Need a find feature to find and highlight transactions based on text search
@@ -169,11 +163,6 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnCloseStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
-        public ICommand CreateRuleCommand
-        {
-            get { return new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand); }
-        }
-
         public ICommand DeleteTransactionCommand
         {
             get { return new RelayCommand(OnDeleteTransactionCommandExecute, CanExecuteDeleteTransactionCommand); }
@@ -193,6 +182,11 @@ namespace BudgetAnalyser.Statement
                 this.doNotUseDuplicateSummary = value;
                 RaisePropertyChanged(() => DuplicateSummary);
             }
+        }
+
+        public AppliedRulesController AppliedRulesController
+        {
+            get { return this.uiContext.AppliedRulesController; }
         }
 
         public IEnumerable<string> FilterBudgetBuckets
@@ -290,22 +284,12 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public RulesController RulesController
-        {
-            get { return this.uiContext.RulesController; }
-        }
-
         public ICommand SaveStatementCommand
         {
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
         public Transaction SelectedRow { get; set; }
-
-        public ICommand ShowRulesCommand
-        {
-            get { return new RelayCommand(OnShowRulesCommandExecute); }
-        }
 
         public bool Shown
         {
@@ -474,17 +458,12 @@ namespace BudgetAnalyser.Statement
             Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = false });
         }
 
-        private bool CanExecuteApplyRulesCommand()
-        {
-            return RulesController.Rules.Any();
-        }
-
         private bool CanExecuteCloseStatementCommand()
         {
             return BackgroundJob.MenuAvailable && Statement != null;
         }
 
-        private bool CanExecuteCreateRuleCommand()
+        private bool CanExecuteDeleteTransactionCommand()
         {
             return SelectedRow != null;
         }
@@ -492,11 +471,6 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable;
-        }
-
-        private bool CanExecuteDeleteTransactionCommand()
-        {
-            return SelectedRow != null;
         }
 
         private bool Load(string fullFileName)
@@ -626,30 +600,6 @@ namespace BudgetAnalyser.Statement
             message.PersistThisModel(lastStatement);
         }
 
-        private void OnApplyRulesCommandExecute()
-        {
-            bool matchesOccured = false;
-            foreach (Transaction transaction in Statement.Transactions)
-            {
-                if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
-                {
-                    foreach (MatchingRule rule in RulesController.Rules)
-                    {
-                        if (rule.Match(transaction))
-                        {
-                            transaction.BudgetBucket = rule.Bucket;
-                            matchesOccured = true;
-                        }
-                    }
-                }
-            }
-
-            if (matchesOccured)
-            {
-                RulesController.SaveRules();
-            }
-        }
-
         private void OnBudgetReadyMessage(BudgetReadyMessage message)
         {
             if (!message.ActiveBudget.BudgetActive)
@@ -691,17 +641,6 @@ namespace BudgetAnalyser.Statement
             Statement = null;
             NotifyOfReset();
             UpdateTotalsRow();
-        }
-
-        private void OnCreateRuleCommandExecute()
-        {
-            if (SelectedRow == null)
-            {
-                this.uiContext.UserPrompts.MessageBox.Show("No row selected.");
-                return;
-            }
-
-            RulesController.CreateNewRuleFromTransaction(SelectedRow);
         }
 
         private void OnDeleteTransactionCommandExecute()
@@ -776,11 +715,6 @@ namespace BudgetAnalyser.Statement
                 Save();
                 UpdateRecentFiles(this.recentFileManager.UpdateFile(Statement.FileName));
             }
-        }
-
-        private void OnShowRulesCommandExecute()
-        {
-            RulesController.Show();
         }
 
         private bool PromptToSaveIfDirty()

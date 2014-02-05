@@ -59,6 +59,7 @@ namespace BudgetAnalyser
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
 
         public IBudgetAnalysisView AnalysisFactory { get; private set; }
+        public AppliedRulesController AppliedRulesController { get; set; }
         public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
 
         public BudgetController BudgetController { get; set; }

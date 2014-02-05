@@ -132,6 +132,7 @@ namespace BudgetAnalyser
             uiContext.MainMenuController = container.Resolve<MainMenuController>();
             uiContext.DashboardController = container.Resolve<DashboardController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
+            uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
 
             
             // Kick it off
