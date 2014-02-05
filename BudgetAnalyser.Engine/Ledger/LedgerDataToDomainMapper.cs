@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName);
             book.SetDatedEntries(MapLines(dataBook.DatedEntries));
+            
             var messages = new StringBuilder();
             if (!book.Validate(messages))
             {

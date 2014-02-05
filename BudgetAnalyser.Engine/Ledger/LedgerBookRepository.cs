@@ -53,6 +53,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
             }
 
+            dataEntity.FileName = fileName;
             return this.dataToDomainMapper.Map(dataEntity);
         }
 

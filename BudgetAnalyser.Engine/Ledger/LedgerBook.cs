@@ -58,10 +58,26 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="bankBalance">The bank balance as at the <see cref="date"/>.</param>
         /// <param name="budget">The current budget.</param>
         /// <param name="statement">The currently loaded statement.</param>
+        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException"/>.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook"/> is in an invalid state.</exception>
-        public LedgerEntryLine Reconcile(DateTime date, decimal bankBalance, BudgetModel budget, StatementModel statement = null)
+        public LedgerEntryLine Reconcile(
+            DateTime date, 
+            decimal bankBalance, 
+            BudgetModel budget, 
+            StatementModel statement = null, 
+            bool ignoreWarnings = false)
         {
-            PreReconciliationValidation(date, statement);
+            try
+            {
+                PreReconciliationValidation(date, statement);
+            }
+            catch (ValidationWarningException)
+            {
+                if (!ignoreWarnings)
+                {
+                    throw;
+                }
+            }
 
             var newLine = new LedgerEntryLine(date, bankBalance);
             var previousEntries = new Dictionary<Ledger, LedgerEntry>();
@@ -88,7 +104,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// the date specified (today or pay day). The start date should start from the previous ledger entry line or one month prior if no records
         /// exist.
         /// </summary>
-        /// <param param name="date">The chosen date from the user</param>
+        /// <param name="date">The chosen date from the user</param>
         private DateTime CalculateStartDateForReconcile(DateTime date)
         {
             if (DatedEntries.Any())
@@ -124,7 +140,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var startDate = date.AddMonths(-1);
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
-                throw new InvalidOperationException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
+                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
             }
         }
 

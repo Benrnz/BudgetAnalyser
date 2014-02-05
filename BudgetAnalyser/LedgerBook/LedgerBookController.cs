@@ -254,6 +254,34 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        private void FinaliseAddingReconciliation(bool ignoreWarnings = false)
+        {
+            try
+            {
+                this.newLedgerLine = LedgerBook.Reconcile(AddLedgerReconciliationController.Date, AddLedgerReconciliationController.BankBalance, CurrentBudget.Model, CurrentStatement, ignoreWarnings);
+                this.dirty = true;
+                EventHandler handler = LedgerBookUpdated;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+            }
+            catch (ValidationWarningException ex)
+            {
+                bool? result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
+                if (result == null || !result.Value)
+                {
+                    return;
+                }
+
+                FinaliseAddingReconciliation(true);
+            }
+            catch (InvalidOperationException ex)
+            {
+                this.messageBox.Show(ex, "Unable to add new reconciliation.");
+            }
+        }
+
         private void LoadLedgerBookFromFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
@@ -309,20 +337,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            try
-            {
-                this.newLedgerLine = LedgerBook.Reconcile(AddLedgerReconciliationController.Date, AddLedgerReconciliationController.BankBalance, CurrentBudget.Model, CurrentStatement);
-                this.dirty = true;
-                EventHandler handler = LedgerBookUpdated;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                this.messageBox.Show(ex, "Unable to add new reconciliation.");
-            }
+            FinaliseAddingReconciliation();
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)

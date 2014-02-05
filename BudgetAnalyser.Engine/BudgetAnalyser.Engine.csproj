@@ -85,6 +85,7 @@
     <Compile Include="Budget\SpentMonthlyExpense.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="ValidationWarningException.cs" />
     <Compile Include="FileFormatException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IoC.cs" />
