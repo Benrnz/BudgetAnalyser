@@ -12,18 +12,18 @@ namespace BudgetAnalyser
             return File.Exists(path);
         }
 
-        public string FindDemoFile(string ledgerBookDemoFile)
+        public string FindDemoFile(string demoFilename)
         {
             string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             for (int failsafe = 0; failsafe < 10; failsafe++)
             {
-                string path = Path.Combine(folder, ledgerBookDemoFile);
+                string path = Path.Combine(folder, demoFilename);
                 if (FileExists(path))
                 {
                     return path;
                 }
 
-                path = Path.Combine(folder, "TestData", ledgerBookDemoFile);
+                path = Path.Combine(folder, "TestData", demoFilename);
                 if (FileExists(path))
                 {
                     return path;

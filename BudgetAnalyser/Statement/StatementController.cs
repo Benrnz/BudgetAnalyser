@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Statement
         // Bug God would be jealous of the length of this class.
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly DemoFileHelper demoFileHelper;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly UiContext uiContext;
@@ -40,7 +41,8 @@ namespace BudgetAnalyser.Statement
             [NotNull] UiContext uiContext,
             [NotNull] IStatementFileManager statementFileManager,
             [NotNull] IBudgetBucketRepository budgetBucketRepository,
-            [NotNull] IRecentFileManager recentFileManager)
+            [NotNull] IRecentFileManager recentFileManager,
+            [NotNull] DemoFileHelper demoFileHelper)
         {
             if (uiContext == null)
             {
@@ -62,11 +64,17 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("recentFileManager");
             }
 
+            if (demoFileHelper == null)
+            {
+                throw new ArgumentNullException("demoFileHelper");
+            }
+
             this.uiContext = uiContext;
             this.statementFileManager = statementFileManager;
             this.budgetBucketRepository = budgetBucketRepository;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
             this.recentFileManager = recentFileManager;
+            this.demoFileHelper = demoFileHelper;
 
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterApplied);
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
@@ -170,6 +178,11 @@ namespace BudgetAnalyser.Statement
         public ICommand DeleteTransactionCommand
         {
             get { return new RelayCommand(OnDeleteTransactionCommandExecute, CanExecuteTransactionCommand); }
+        }
+
+        public ICommand DemoStatementCommand
+        {
+            get { return new RelayCommand(OnDemoStatementCommandExecuted, CanExecuteOpenStatementCommand); }
         }
 
         public string DuplicateSummary
@@ -305,6 +318,17 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        public StatementModel Statement
+        {
+            get { return this.doNotUseStatement; }
+
+            private set
+            {
+                this.doNotUseStatement = value;
+                RaisePropertyChanged(() => Statement);
+            }
+        }
+
         public string StatementName
         {
             get
@@ -315,17 +339,6 @@ namespace BudgetAnalyser.Statement
                 }
 
                 return "[No Transactions Loaded]";
-            }
-        }
-
-        public StatementModel Statement
-        {
-            get { return this.doNotUseStatement; }
-
-            private set
-            {
-                this.doNotUseStatement = value;
-                RaisePropertyChanged(() => Statement);
             }
         }
 
@@ -707,6 +720,11 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        private void OnDemoStatementCommandExecuted()
+        {
+            OnOpenStatementExecute(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
+        }
+
         private void OnFilterApplied(FilterAppliedMessage message)
         {
             if (message.Sender == this || message.Criteria == null)
@@ -799,6 +817,7 @@ namespace BudgetAnalyser.Statement
             RaisePropertyChanged(() => AverageDebit);
             RaisePropertyChanged(() => TotalCount);
             RaisePropertyChanged(() => HasTransactions);
+            RaisePropertyChanged(() => StatementName);
 
             if (Statement == null)
             {

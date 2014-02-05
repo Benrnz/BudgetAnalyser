@@ -132,6 +132,9 @@
                 <Button Command="{Binding MergeStatementCommand}"
                         Style="{StaticResource LoadButton}"
                         ToolTip="Merge in new Transactions" />
+                <Button Command="{Binding DemoStatementCommand}"
+                        Style="{StaticResource HappyButton}"
+                        ToolTip="Load a demo set of transactions" />
             </StackPanel>
         </Grid>
 
