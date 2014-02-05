@@ -35,6 +35,7 @@ namespace BudgetAnalyser.Budget
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
         private bool dirty;
+        private bool loading;
         private BudgetCurrencyContext doNotUseModel;
         private bool doNotUseShownBudget;
         private decimal expenseTotal;
@@ -329,13 +330,21 @@ namespace BudgetAnalyser.Budget
 
         private void LoadBudget(string fileName)
         {
-            Budgets = this.budgetRepository.Load(fileName);
-            BudgetBucketBindingSource.BucketRepository = this.budgetRepository.BudgetBucketRepository;
-            CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
-            RaisePropertyChanged(() => TruncatedFileName);
-            if (CurrentBudget != null)
+            try
             {
-                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+                this.loading = true;
+                Budgets = this.budgetRepository.Load(fileName);
+                BudgetBucketBindingSource.BucketRepository = this.budgetRepository.BudgetBucketRepository;
+                CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
+                RaisePropertyChanged(() => TruncatedFileName);
+                if (CurrentBudget != null)
+                {
+                    Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+                }
+            }
+            finally
+            {
+                this.loading = false;
             }
         }
 
@@ -445,10 +454,13 @@ namespace BudgetAnalyser.Budget
 
         private void OnExpenseAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)
         {
-            // Let the first property change event through, because it is the initial set of the value.
-            if (ExpenseTotal != 0)
+            if (!this.loading)
             {
-                this.dirty = true;
+                // Let the first property change event through, because it is the initial set of the value.
+                if (ExpenseTotal != 0)
+                {
+                    this.dirty = true;
+                }
             }
 
             ExpenseTotal = Expenses.Sum(x => x.Amount);
@@ -457,10 +469,13 @@ namespace BudgetAnalyser.Budget
 
         private void OnIncomeAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)
         {
-            // Let the first property change event through, because it is the initial set of the value.
-            if (IncomeTotal != 0)
+            if (!this.loading)
             {
-                this.dirty = true;
+                // Let the first property change event through, because it is the initial set of the value.
+                if (IncomeTotal != 0)
+                {
+                    this.dirty = true;
+                }
             }
 
             IncomeTotal = Incomes.Sum(x => x.Amount);
