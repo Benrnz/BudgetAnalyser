@@ -27,8 +27,9 @@ namespace BudgetAnalyser.Statement
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly UiContext uiContext;
-        private bool dirty;
+        private BudgetModel budgetModel;
         private string doNotUseBucketFilter;
+        private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
         private bool doNotUseShown;
         private StatementModel doNotUseStatement;
@@ -163,8 +164,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public BudgetModel BudgetModel { get; set; }
-
         public ICommand CloseStatementCommand
         {
             get { return new RelayCommand(OnCloseStatementExecute, CanExecuteCloseStatementCommand); }
@@ -177,7 +176,7 @@ namespace BudgetAnalyser.Statement
 
         public ICommand DeleteTransactionCommand
         {
-            get { return new RelayCommand(OnDeleteTransactionCommandExecute, CanExecuteTransactionCommand); }
+            get { return new RelayCommand(OnDeleteTransactionCommandExecute, CanExecuteDeleteTransactionCommand); }
         }
 
         public ICommand DemoStatementCommand
@@ -335,7 +334,10 @@ namespace BudgetAnalyser.Statement
             {
                 if (Statement != null)
                 {
-                    return Path.GetFileNameWithoutExtension(Statement.FileName);
+                    return string.Format(
+                        "{0} {1}",
+                        Path.GetFileNameWithoutExtension(Statement.FileName),
+                        Dirty ? "*" : string.Empty);
                 }
 
                 return "[No Transactions Loaded]";
@@ -430,6 +432,17 @@ namespace BudgetAnalyser.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
+        private bool Dirty
+        {
+            get { return this.doNotUseDirty; }
+
+            set
+            {
+                this.doNotUseDirty = value;
+                RaisePropertyChanged(() => StatementName);
+            }
+        }
+
         public void Initialize()
         {
             if (this.initialised)
@@ -439,56 +452,6 @@ namespace BudgetAnalyser.Statement
 
             this.initialised = true;
             UpdateRecentFiles(this.recentFileManager.Files());
-        }
-
-        public bool Load(string fullFileName)
-        {
-            if (PromptToSaveIfDirty())
-            {
-                Save();
-            }
-
-            try
-            {
-                BackgroundJob.StartNew("Loading statement...", false);
-                return LoadInternal(fullFileName);
-            }
-            finally
-            {
-                BackgroundJob.Finish();
-            }
-        }
-
-        public void Merge()
-        {
-            Save();
-            BucketFilter = null;
-
-            try
-            {
-                BackgroundJob.StartNew("Merging statement...", false);
-                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(Statement);
-                using (this.uiContext.WaitCursorFactory())
-                {
-                    if (additionalModel == null)
-                    {
-                        // User cancelled.
-                        return;
-                    }
-
-                    Statement.Merge(additionalModel);
-                }
-
-                RaisePropertyChanged(() => Statement);
-                Messenger.Send(new TransactionsChangedMessage());
-                NotifyOfEdit();
-                UpdateTotalsRow();
-            }
-            finally
-            {
-                MessagingGate.Send(new StatementReadyMessage(Statement));
-                BackgroundJob.Finish();
-            }
         }
 
         public void NotifyOfClosing()
@@ -501,26 +464,14 @@ namespace BudgetAnalyser.Statement
 
         public void NotifyOfEdit()
         {
-            this.dirty = true;
-            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = this.dirty });
+            Dirty = true;
+            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = Dirty });
         }
 
         public void NotifyOfReset()
         {
-            this.dirty = false;
+            Dirty = false;
             Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = false });
-        }
-
-        public void Save()
-        {
-            this.statementFileManager.Save(Statement);
-            UpdateTotalsRow();
-            NotifyOfReset();
-        }
-
-        private bool AnyControllersShown(ControllerBase exceptThisOne)
-        {
-            return this.uiContext.ShowableControllers.Where(c => c.GetType() != exceptThisOne.GetType()).Any(c => c.Shown);
         }
 
         private bool CanExecuteApplyRulesCommand()
@@ -540,12 +491,30 @@ namespace BudgetAnalyser.Statement
 
         private bool CanExecuteOpenStatementCommand()
         {
-            return BackgroundJob.MenuAvailable && !AnyControllersShown(this);
+            return BackgroundJob.MenuAvailable;
         }
 
-        private bool CanExecuteTransactionCommand()
+        private bool CanExecuteDeleteTransactionCommand()
         {
             return SelectedRow != null;
+        }
+
+        private bool Load(string fullFileName)
+        {
+            if (PromptToSaveIfDirty())
+            {
+                Save();
+            }
+
+            try
+            {
+                BackgroundJob.StartNew("Loading statement...", false);
+                return LoadInternal(fullFileName);
+            }
+            finally
+            {
+                BackgroundJob.Finish();
+            }
         }
 
         private bool LoadInternal(string fullFileName)
@@ -586,7 +555,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                if (BudgetModel == null)
+                if (this.budgetModel == null)
                 {
                     // Budget isn't yet loaded. Wait for the next BudgetClosedMessage to signal budget is ready.
                     this.waitingForBudgetToLoad = statementFileName;
@@ -601,6 +570,38 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
+                BackgroundJob.Finish();
+            }
+        }
+
+        private void Merge()
+        {
+            Save();
+            BucketFilter = null;
+
+            try
+            {
+                BackgroundJob.StartNew("Merging statement...", false);
+                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(Statement);
+                using (this.uiContext.WaitCursorFactory())
+                {
+                    if (additionalModel == null)
+                    {
+                        // User cancelled.
+                        return;
+                    }
+
+                    Statement.Merge(additionalModel);
+                }
+
+                RaisePropertyChanged(() => Statement);
+                Messenger.Send(new TransactionsChangedMessage());
+                NotifyOfEdit();
+                UpdateTotalsRow();
+            }
+            finally
+            {
+                MessagingGate.Send(new StatementReadyMessage(Statement));
                 BackgroundJob.Finish();
             }
         }
@@ -657,8 +658,8 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            BudgetModel oldBudget = BudgetModel;
-            BudgetModel = message.ActiveBudget.Model;
+            BudgetModel oldBudget = this.budgetModel;
+            this.budgetModel = message.ActiveBudget.Model;
 
             if (this.waitingForBudgetToLoad != null)
             {
@@ -670,7 +671,7 @@ namespace BudgetAnalyser.Statement
 
             if (oldBudget != null
                 && (oldBudget.Expenses.Any() || oldBudget.Incomes.Any())
-                && oldBudget.Id != BudgetModel.Id
+                && oldBudget.Id != this.budgetModel.Id
                 && Statement != null
                 && Statement.AllTransactions.Any())
             {
@@ -784,7 +785,7 @@ namespace BudgetAnalyser.Statement
 
         private bool PromptToSaveIfDirty()
         {
-            if (Statement != null && this.dirty)
+            if (Statement != null && Dirty)
             {
                 bool? result = this.uiContext.UserPrompts.YesNoBox.Show("Statement has been modified, save changes?",
                     "Budget Analyser");
@@ -795,6 +796,13 @@ namespace BudgetAnalyser.Statement
             }
 
             return false;
+        }
+
+        private void Save()
+        {
+            this.statementFileManager.Save(Statement);
+            UpdateTotalsRow();
+            NotifyOfReset();
         }
 
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
