@@ -40,13 +40,13 @@
             </Grid.ColumnDefinitions>
             <TextBlock Margin="8,2,2,2"
                        Style="{StaticResource TextBlockHeading1}"
-                       Text="{Binding StatementName}" />
+                       Text="{Binding ViewModel.StatementName}" />
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                         Orientation="Horizontal">
                 <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
-                      Style="{DynamicResource MenuStyle1}"
+                      Style="{StaticResource MenuStyle1}"
                       Foreground="{StaticResource ButtonGlyphBrush}"
                       Background="{StaticResource ButtonBackgroundBrush}"
                       BorderBrush="{StaticResource ButtonStrokeBrush}"
@@ -160,7 +160,7 @@
                                    Text="CR: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding TotalCredits, StringFormat=C}" />
+                                   Text="{Binding ViewModel.TotalCredits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource DebitBackground1Brush}"
@@ -171,10 +171,10 @@
                                    Text="DR: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding TotalDebits, StringFormat=C}" />
+                                   Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{Binding TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
                         Style="{StaticResource WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
@@ -182,7 +182,7 @@
                                    Text="Difference: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding TotalDifference, StringFormat=C}" />
+                                   Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource DebitBackground1Brush}"
@@ -193,7 +193,7 @@
                                    Text="Average DR: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding AverageDebit, StringFormat=C}" />
+                                   Text="{Binding ViewModel.AverageDebit, StringFormat=C}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
@@ -204,7 +204,7 @@
                                    Text="Count: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding TotalCount}" />
+                                   Text="{Binding ViewModel.TotalCount}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
@@ -215,14 +215,14 @@
                                    Text="Months: " />
                         <TextBlock FontSize="16"
                                    Style="{StaticResource WarningLightTextStyle}"
-                                   Text="{Binding Statement.DurationInMonths}" />
+                                   Text="{Binding ViewModel.Statement.DurationInMonths}" />
                     </StackPanel>
                 </Border>
                 <Border Background="{StaticResource ImportantHighlightLightBrush}"
                         Style="{StaticResource WarningOilLightStyle}"
-                        Visibility="{Binding DuplicateSummary, Converter={StaticResource NullToVisConverter}}">
+                        Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource NullToVisConverter}}">
                     <TextBlock Style="{StaticResource WarningLightTextStyle}"
-                               Text="{Binding DuplicateSummary}"
+                               Text="{Binding ViewModel.DuplicateSummary}"
                                ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows." />
                 </Border>
             </StackPanel>
@@ -233,9 +233,9 @@
                            Text="Budget Bucket Filter" />
                 <ComboBox IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                           ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
-                          ItemsSource="{Binding FilterBudgetBuckets}"
+                          ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                           Margin="4"
-                          SelectedItem="{Binding BucketFilter}"
+                          SelectedItem="{Binding ViewModel.BucketFilter}"
                           Width="100" />
             </StackPanel>
         </Grid>
@@ -327,7 +327,7 @@
                     HorizontalAlignment="Center"
                     Style="{StaticResource WarningOilLightStyle}"
                     VerticalAlignment="Center"
-                    Visibility="{Binding HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
+                    Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
                 <TextBlock Style="{StaticResource WarningLightTextStyle}"
                            Text="No Transactions, with current filter."
                            ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
@@ -336,13 +336,13 @@
                      AlternationCount="2"
                      Grid.Row="1"
                      IsTextSearchEnabled="False"
-                     ItemsSource="{Binding Statement.Transactions}"
+                     ItemsSource="{Binding ViewModel.Statement.Transactions}"
                      KeyUp="OnTransactionListBoxKeyUp"
                      MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      SelectedItem="{Binding SelectedRow}"
                      SelectionChanged="OnTransactionSelectionChanged"
                      SelectionMode="Single"
-                     Visibility="{Binding HasTransactions, Converter={StaticResource BoolToVisConverter}}">
+                     Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource BoolToVisConverter}}">
                 <ListBox.Style>
 
                     <Style TargetType="ListBox">

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -20,18 +19,11 @@ namespace BudgetAnalyser.Statement
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
         // Bug God would be jealous of the length of this class.
-        public const string UncategorisedFilter = "[Uncategorised Only]";
-        private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly DemoFileHelper demoFileHelper;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly UiContext uiContext;
-        private BudgetModel budgetModel;
-        private string doNotUseBucketFilter;
-        private bool doNotUseDirty;
-        private string doNotUseDuplicateSummary;
         private bool doNotUseShown;
-        private StatementModel doNotUseStatement;
         private bool initialised;
         private List<ICommand> recentFileCommands;
 
@@ -69,9 +61,9 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("demoFileHelper");
             }
 
+            ViewModel = new StatementViewModel(budgetBucketRepository);
             this.uiContext = uiContext;
             this.statementFileManager = statementFileManager;
-            this.budgetBucketRepository = budgetBucketRepository;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
             this.recentFileManager = recentFileManager;
             this.demoFileHelper = demoFileHelper;
@@ -82,80 +74,16 @@ namespace BudgetAnalyser.Statement
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
         }
 
-        // TODO Need a find feature to find and highlight transactions based on text search
-
-        public decimal AverageDebit
+        public AppliedRulesController AppliedRulesController
         {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    IEnumerable<Transaction> query = Statement.Transactions.Where(t => t.Amount < 0).ToList();
-                    if (query.Any())
-                    {
-                        return query.Average(t => t.Amount);
-                    }
-                }
-
-                if (BucketFilter == UncategorisedFilter)
-                {
-                    List<Transaction> query2 =
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code)).ToList();
-                    if (query2.Any())
-                    {
-                        return query2.Average(t => t.Amount);
-                    }
-
-                    return 0;
-                }
-
-                IEnumerable<Transaction> query3 = Statement.Transactions
-                    .Where(
-                        t =>
-                            t.Amount < 0 && t.BudgetBucket != null &&
-                            t.BudgetBucket.Code == BucketFilter)
-                    .ToList();
-                if (query3.Any())
-                {
-                    return query3.Average(t => t.Amount);
-                }
-
-                return 0;
-            }
+            get { return this.uiContext.AppliedRulesController; }
         }
+
+        // TODO Need a find feature to find and highlight transactions based on text search
 
         public IBackgroundProcessingJobMetadata BackgroundJob
         {
             get { return this.uiContext.BackgroundJob; }
-        }
-
-        public string BucketFilter
-        {
-            get { return this.doNotUseBucketFilter; }
-
-            set
-            {
-                // TODO Change to a multi-select drop down and allow one or many buckets to be selected.
-                this.doNotUseBucketFilter = value;
-                RaisePropertyChanged(() => BucketFilter);
-                UpdateTotalsRow();
-            }
-        }
-
-        public IEnumerable<string> BudgetBuckets
-        {
-            get
-            {
-                return this.budgetBucketRepository.Buckets
-                    .Select(b => b.Code)
-                    .Union(new[] { string.Empty }).OrderBy(b => b);
-            }
         }
 
         public ICommand CloseStatementCommand
@@ -173,45 +101,9 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnDemoStatementCommandExecuted, CanExecuteOpenStatementCommand); }
         }
 
-        public string DuplicateSummary
-        {
-            get { return this.doNotUseDuplicateSummary; }
-
-            private set
-            {
-                this.doNotUseDuplicateSummary = value;
-                RaisePropertyChanged(() => DuplicateSummary);
-            }
-        }
-
-        public AppliedRulesController AppliedRulesController
-        {
-            get { return this.uiContext.AppliedRulesController; }
-        }
-
-        public IEnumerable<string> FilterBudgetBuckets
-        {
-            get { return BudgetBuckets.Union(new[] { UncategorisedFilter }).OrderBy(b => b); }
-        }
-
-        public bool HasTransactions
-        {
-            get { return Statement != null && Statement.Transactions.Any(); }
-        }
-
-        public DateTime MaxTransactionDate
-        {
-            get { return Statement.Transactions.Max(t => t.Date); }
-        }
-
         public ICommand MergeStatementCommand
         {
-            get { return new RelayCommand(() => OnMergeStatementCommandExecute(), CanExecuteCloseStatementCommand); }
-        }
-
-        public DateTime MinTransactionDate
-        {
-            get { return Statement.Transactions.Min(t => t.Date); }
+            get { return new RelayCommand(OnMergeStatementCommandExecute, CanExecuteCloseStatementCommand); }
         }
 
         public ICommand OpenStatementCommand
@@ -301,131 +193,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public StatementModel Statement
-        {
-            get { return this.doNotUseStatement; }
-
-            private set
-            {
-                this.doNotUseStatement = value;
-                RaisePropertyChanged(() => Statement);
-            }
-        }
-
-        public string StatementName
-        {
-            get
-            {
-                if (Statement != null)
-                {
-                    return string.Format(
-                        "{0} {1}",
-                        Path.GetFileNameWithoutExtension(Statement.FileName),
-                        Dirty ? "*" : string.Empty);
-                }
-
-                return "[No Transactions Loaded]";
-            }
-        }
-
-        public decimal TotalCount
-        {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Count();
-                }
-
-                if (BucketFilter == UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Count(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code));
-                }
-
-                return Statement.Transactions.Count(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter);
-            }
-        }
-
-        public decimal TotalCredits
-        {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-                }
-
-                if (BucketFilter == UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code))
-                            .Sum(t => t.Amount);
-                }
-
-                return
-                    Statement.Transactions.Where(
-                        t => t.Amount > 0 && t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter)
-                        .Sum(t => t.Amount);
-            }
-        }
-
-        public decimal TotalDebits
-        {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
-                }
-
-                if (BucketFilter == UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code))
-                            .Sum(t => t.Amount);
-                }
-
-                return
-                    Statement.Transactions.Where(
-                        t => t.Amount < 0 && t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter)
-                        .Sum(t => t.Amount);
-            }
-        }
-
-        public decimal TotalDifference
-        {
-            get { return TotalCredits + TotalDebits; }
-        }
-
-        private bool Dirty
-        {
-            get { return this.doNotUseDirty; }
-
-            set
-            {
-                this.doNotUseDirty = value;
-                RaisePropertyChanged(() => StatementName);
-            }
-        }
+        public StatementViewModel ViewModel { get; private set; }
 
         public void Initialize()
         {
@@ -448,19 +216,19 @@ namespace BudgetAnalyser.Statement
 
         public void NotifyOfEdit()
         {
-            Dirty = true;
-            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = Dirty });
+            ViewModel.Dirty = true;
+            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = ViewModel.Dirty });
         }
 
         public void NotifyOfReset()
         {
-            Dirty = false;
+            ViewModel.Dirty = false;
             Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = false });
         }
 
         private bool CanExecuteCloseStatementCommand()
         {
-            return BackgroundJob.MenuAvailable && Statement != null;
+            return BackgroundJob.MenuAvailable && ViewModel.Statement != null;
         }
 
         private bool CanExecuteDeleteTransactionCommand()
@@ -503,19 +271,19 @@ namespace BudgetAnalyser.Statement
                     return false;
                 }
 
-                Statement = statementModel;
+                ViewModel.Statement = statementModel;
                 var requestCurrentFilterMessage = new RequestFilterMessage(this);
                 Messenger.Send(requestCurrentFilterMessage);
                 if (requestCurrentFilterMessage.Criteria != null)
                 {
-                    Statement.Filter(requestCurrentFilterMessage.Criteria);
+                    ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
                 }
 
                 NotifyOfReset();
-                UpdateTotalsRow();
+                ViewModel.TriggerRefreshTotalsRow();
             }
 
-            MessagingGate.Send(new StatementReadyMessage(Statement));
+            MessagingGate.Send(new StatementReadyMessage(ViewModel.Statement));
             return true;
         }
 
@@ -529,7 +297,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                if (this.budgetModel == null)
+                if (ViewModel.BudgetModel == null)
                 {
                     // Budget isn't yet loaded. Wait for the next BudgetClosedMessage to signal budget is ready.
                     this.waitingForBudgetToLoad = statementFileName;
@@ -551,12 +319,12 @@ namespace BudgetAnalyser.Statement
         private void Merge()
         {
             Save();
-            BucketFilter = null;
+            ViewModel.BucketFilter = null;
 
             try
             {
                 BackgroundJob.StartNew("Merging statement...", false);
-                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(Statement);
+                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement);
                 using (this.uiContext.WaitCursorFactory())
                 {
                     if (additionalModel == null)
@@ -565,17 +333,17 @@ namespace BudgetAnalyser.Statement
                         return;
                     }
 
-                    Statement.Merge(additionalModel);
+                    ViewModel.Statement.Merge(additionalModel);
                 }
 
-                RaisePropertyChanged(() => Statement);
+                RaisePropertyChanged(() => ViewModel);
                 Messenger.Send(new TransactionsChangedMessage());
                 NotifyOfEdit();
-                UpdateTotalsRow();
+                ViewModel.TriggerRefreshTotalsRow();
             }
             finally
             {
-                MessagingGate.Send(new StatementReadyMessage(Statement));
+                MessagingGate.Send(new StatementReadyMessage(ViewModel.Statement));
                 BackgroundJob.Finish();
             }
         }
@@ -595,7 +363,7 @@ namespace BudgetAnalyser.Statement
         {
             var lastStatement = new LastStatementLoadedV1
             {
-                Model = Statement == null ? null : Statement.FileName,
+                Model = ViewModel.Statement == null ? null : ViewModel.Statement.FileName,
             };
             message.PersistThisModel(lastStatement);
         }
@@ -608,8 +376,8 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            BudgetModel oldBudget = this.budgetModel;
-            this.budgetModel = message.ActiveBudget.Model;
+            BudgetModel oldBudget = ViewModel.BudgetModel;
+            ViewModel.BudgetModel = message.ActiveBudget.Model;
 
             if (this.waitingForBudgetToLoad != null)
             {
@@ -621,9 +389,9 @@ namespace BudgetAnalyser.Statement
 
             if (oldBudget != null
                 && (oldBudget.Expenses.Any() || oldBudget.Incomes.Any())
-                && oldBudget.Id != this.budgetModel.Id
-                && Statement != null
-                && Statement.AllTransactions.Any())
+                && oldBudget.Id != ViewModel.BudgetModel.Id
+                && ViewModel.Statement != null
+                && ViewModel.Statement.AllTransactions.Any())
             {
                 this.uiContext.UserPrompts.MessageBox.Show(
                     "WARNING! By loading a different budget with a Statement loaded data loss may occur. There may be budget categories used in the Statement that do not exist in the loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
@@ -638,9 +406,9 @@ namespace BudgetAnalyser.Statement
                 Save();
             }
 
-            Statement = null;
+            ViewModel.Statement = null;
             NotifyOfReset();
-            UpdateTotalsRow();
+            ViewModel.TriggerRefreshTotalsRow();
         }
 
         private void OnDeleteTransactionCommandExecute()
@@ -654,8 +422,8 @@ namespace BudgetAnalyser.Statement
                 "Are you sure you want to delete this transaction?", "Delete Transaction");
             if (confirm != null && confirm.Value)
             {
-                Statement.RemoveTransaction(SelectedRow);
-                UpdateTotalsRow();
+                ViewModel.Statement.RemoveTransaction(SelectedRow);
+                ViewModel.TriggerRefreshTotalsRow();
                 NotifyOfEdit();
             }
         }
@@ -672,13 +440,13 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            if (Statement == null)
+            if (ViewModel.Statement == null)
             {
                 return;
             }
 
-            Statement.Filter(message.Criteria);
-            UpdateTotalsRow();
+            ViewModel.Statement.Filter(message.Criteria);
+            ViewModel.TriggerRefreshTotalsRow();
         }
 
         private void OnMergeStatementCommandExecute()
@@ -695,7 +463,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                UpdateRecentFiles(this.recentFileManager.AddFile(Statement.FileName));
+                UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.FileName));
             }
             catch (FileNotFoundException ex)
             {
@@ -713,13 +481,13 @@ namespace BudgetAnalyser.Statement
             using (this.uiContext.WaitCursorFactory())
             {
                 Save();
-                UpdateRecentFiles(this.recentFileManager.UpdateFile(Statement.FileName));
+                UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
             }
         }
 
         private bool PromptToSaveIfDirty()
         {
-            if (Statement != null && Dirty)
+            if (ViewModel.Statement != null && ViewModel.Dirty)
             {
                 bool? result = this.uiContext.UserPrompts.YesNoBox.Show("Statement has been modified, save changes?",
                     "Budget Analyser");
@@ -734,45 +502,21 @@ namespace BudgetAnalyser.Statement
 
         private void Save()
         {
-            this.statementFileManager.Save(Statement);
-            UpdateTotalsRow();
+            this.statementFileManager.Save(ViewModel.Statement);
+            ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
         }
 
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
         {
             this.recentFileCommands =
-                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, file => OnOpenStatementExecute(file), x => BackgroundJob.MenuAvailable))
+                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecute, x => BackgroundJob.MenuAvailable))
                     .ToList();
             RaisePropertyChanged(() => RecentFile1Command);
             RaisePropertyChanged(() => RecentFile2Command);
             RaisePropertyChanged(() => RecentFile3Command);
             RaisePropertyChanged(() => RecentFile4Command);
             RaisePropertyChanged(() => RecentFile5Command);
-        }
-
-        private void UpdateTotalsRow()
-        {
-            RaisePropertyChanged(() => TotalCredits);
-            RaisePropertyChanged(() => TotalDebits);
-            RaisePropertyChanged(() => TotalDifference);
-            RaisePropertyChanged(() => AverageDebit);
-            RaisePropertyChanged(() => TotalCount);
-            RaisePropertyChanged(() => HasTransactions);
-            RaisePropertyChanged(() => StatementName);
-
-            if (Statement == null)
-            {
-                DuplicateSummary = null;
-            }
-            else
-            {
-                List<IGrouping<int, Transaction>> duplicates = Statement.ValidateAgainstDuplicates().ToList();
-                DuplicateSummary = duplicates.Any()
-                    ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
-                        duplicates.Sum(group => group.Count()))
-                    : null;
-            }
         }
     }
 }

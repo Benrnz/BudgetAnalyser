@@ -171,6 +171,7 @@
     <Compile Include="Statement\StatementController.cs" />
     <Compile Include="Statement\StatementFileManager.cs" />
     <Compile Include="Statement\StatementHasBeenModifiedMessage.cs" />
+    <Compile Include="Statement\StatementViewModel.cs" />
     <Compile Include="Statement\TransactionsChangedMessage.cs" />
     <Compile Include="UiContext.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationUserControl.xaml.cs">

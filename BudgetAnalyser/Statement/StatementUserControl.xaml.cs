@@ -34,21 +34,21 @@ namespace BudgetAnalyser.Statement
 
         private StatementController Controller
         {
-            get { return (StatementController) DataContext; }
+            get { return (StatementController)DataContext; }
         }
 
         private void ApplyFilter()
         {
-            ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.Statement.Transactions);
-            if (string.IsNullOrWhiteSpace(Controller.BucketFilter))
+            ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.ViewModel.Statement.Transactions);
+            if (string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
             {
                 defaultView.Filter = null;
             }
-            else if (Controller.BucketFilter == StatementController.UncategorisedFilter)
+            else if (Controller.ViewModel.BucketFilter == StatementViewModel.UncategorisedFilter)
             {
                 defaultView.Filter = t =>
                 {
-                    var txn = (Transaction) t;
+                    var txn = (Transaction)t;
                     return txn.BudgetBucket == null || string.IsNullOrWhiteSpace(txn.BudgetBucket.Code);
                 };
             }
@@ -56,8 +56,8 @@ namespace BudgetAnalyser.Statement
             {
                 defaultView.Filter = t =>
                 {
-                    var txn = (Transaction) t;
-                    return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.BucketFilter;
+                    var txn = (Transaction)t;
+                    return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.ViewModel.BucketFilter;
                 };
             }
         }
@@ -65,15 +65,7 @@ namespace BudgetAnalyser.Statement
         private ListBoxItem GetSelectedListBoxItem()
         {
             object transaction = this.TransactionListBox.SelectedItem;
-            return (ListBoxItem) this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
-        }
-
-        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "BucketFilter")
-            {
-                ApplyFilter();
-            }
+            return (ListBoxItem)this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -86,16 +78,16 @@ namespace BudgetAnalyser.Statement
 
             if (Controller != null)
             {
-                Controller.PropertyChanged += OnControllerPropertyChanged;
+                Controller.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
             }
 
             if (Controller == null)
             {
-                ((StatementController) e.OldValue).PropertyChanged -= OnControllerPropertyChanged;
+                ((StatementController)e.OldValue).ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
                 return;
             }
 
-            if (Controller.Statement == null)
+            if (Controller.ViewModel.Statement == null)
             {
                 return;
             }
@@ -117,7 +109,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            var currentValue = (string) listboxItem.Tag;
+            var currentValue = (string)listboxItem.Tag;
             if (currentValue == "True")
             {
                 RestoreEditModeToRead();
@@ -160,7 +152,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnTransactionListScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            this.HeaderScrollViewer.ScrollToHorizontalOffset(((ScrollViewer) sender).HorizontalOffset);
+            this.HeaderScrollViewer.ScrollToHorizontalOffset(((ScrollViewer)sender).HorizontalOffset);
         }
 
         /// <summary>
@@ -190,6 +182,14 @@ namespace BudgetAnalyser.Statement
         private void OnTransactionsChanged(TransactionsChangedMessage message)
         {
             ApplyFilter();
+        }
+
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "BucketFilter")
+            {
+                ApplyFilter();
+            }
         }
 
         private void RestoreEditModeToRead()

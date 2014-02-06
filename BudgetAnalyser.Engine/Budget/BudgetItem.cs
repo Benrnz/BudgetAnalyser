@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Budget
     public abstract class BudgetItem : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         public virtual decimal Amount { get; set; }
 
         public virtual BudgetBucket Bucket { get; set; }
@@ -30,18 +30,18 @@ namespace BudgetAnalyser.Engine.Budget
                 return false;
             }
 
-            return this.Bucket.Code == otherBudget.Bucket.Code;
+            return Bucket.Code == otherBudget.Bucket.Code;
         }
 
         public override int GetHashCode()
         {
-            return this.Bucket.Code.GetHashCode();
+            return Bucket.Code.GetHashCode();
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));

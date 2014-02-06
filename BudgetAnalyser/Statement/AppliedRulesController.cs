@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Statement
         private void OnApplyRulesCommandExecute()
         {
             bool matchesOccured = false;
-            foreach (Transaction transaction in this.statementController.Statement.Transactions)
+            foreach (Transaction transaction in this.statementController.ViewModel.Statement.Transactions)
             {
                 if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
                 {
