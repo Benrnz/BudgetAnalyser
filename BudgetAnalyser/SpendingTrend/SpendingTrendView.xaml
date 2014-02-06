@@ -16,8 +16,8 @@
 
     <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Margin="2"
                     Grid.Row="0"
@@ -27,7 +27,7 @@
                     Visibility="{Binding Criteria.Cleared, Converter={StaticResource BoolToVis2Converter}}">
                 <TextBlock Text="No Filter"
                            Style="{StaticResource WarningLightTextStyle}"
-                           ToolTip="There is no global filter currently in affect to limit the date range."/>
+                           ToolTip="There is no global filter currently in affect to limit the date range." />
             </Border>
         </StackPanel>
         <ListBox x:Name="ChartsList"

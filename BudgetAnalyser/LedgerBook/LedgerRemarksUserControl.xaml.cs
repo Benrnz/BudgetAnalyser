@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.LedgerBook
 {
     /// <summary>
-    /// Interaction logic for LedgerRemarksUserControl.xaml
+    ///     Interaction logic for LedgerRemarksUserControl.xaml
     /// </summary>
     public partial class LedgerRemarksUserControl : UserControl
     {

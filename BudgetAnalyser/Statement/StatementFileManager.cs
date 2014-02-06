@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Statement
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
         private readonly IStatementModelRepository statementModelRepository;
-        private Func<IWaitCursor> waitCursorFactory;
+        private readonly Func<IWaitCursor> waitCursorFactory;
 
         public StatementFileManager(
             [NotNull] LoadFileController loadFileController,

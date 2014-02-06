@@ -30,8 +30,9 @@
                     <vsm:VisualState x:Name="Normal" />
                     <vsm:VisualState x:Name="MouseOver">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource ControlMouseOverColor}" />
                             </ColorAnimationUsingKeyFrames>
@@ -40,18 +41,21 @@
                     <vsm:VisualState x:Name="Pressed" />
                     <vsm:VisualState x:Name="Disabled">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource DisabledControlDarkColor}" />
                             </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="Arrow">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="Arrow">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource DisabledForegroundColor}" />
                             </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource DisabledBorderDarkColor}" />
                             </ColorAnimationUsingKeyFrames>
@@ -61,8 +65,9 @@
                 <vsm:VisualStateGroup x:Name="CheckStates">
                     <vsm:VisualState x:Name="Checked">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource ControlPressedColor}" />
                             </ColorAnimationUsingKeyFrames>
@@ -139,8 +144,7 @@
                         <vsm:VisualStateManager.VisualStateGroups>
                             <vsm:VisualStateGroup x:Name="CommonStates">
                                 <vsm:VisualState x:Name="Normal" />
-                                <vsm:VisualState x:Name="MouseOver">
-                                </vsm:VisualState>
+                                <vsm:VisualState x:Name="MouseOver" />
                                 <vsm:VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="PART_EditableTextBox"
@@ -154,13 +158,15 @@
                             <vsm:VisualStateGroup x:Name="EditStates">
                                 <vsm:VisualState x:Name="Editable">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="PART_EditableTextBox">
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="PART_EditableTextBox">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{x:Static Visibility.Visible}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="ContentSite">
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="ContentSite">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{x:Static Visibility.Hidden}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -183,8 +189,7 @@
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           Margin="3,3,23,3"
                                           VerticalAlignment="Stretch"
-                                          HorizontalAlignment="Left">
-                        </ContentPresenter>
+                                          HorizontalAlignment="Left" />
                         <TextBox x:Name="PART_EditableTextBox"
                                  Style="{x:Null}"
                                  Template="{StaticResource ComboBoxTextBox}"
@@ -263,14 +268,14 @@
                             Padding="2"
                             SnapsToDevicePixels="true"
                             Background="Transparent">
-                        <ContentPresenter x:Name="ComboItemContent"/>
+                        <ContentPresenter x:Name="ComboItemContent" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Trigger.Setters>
                                 <Setter Property="Background"
                                         TargetName="ComboItemBorder"
-                                        Value="{StaticResource ControlMouseOverBrush}"/>
+                                        Value="{StaticResource ControlMouseOverBrush}" />
                             </Trigger.Setters>
                         </Trigger>
                         <Trigger Property="IsSelected"

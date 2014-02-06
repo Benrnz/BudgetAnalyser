@@ -211,7 +211,7 @@ namespace BudgetAnalyser.LedgerBook
                 bankBalanceText.Foreground = FindResource(BankBalanceTextBrush) as Brush;
 
                 TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref column, row, NormalStyle, line.Remarks);
-                var hyperlink = (Hyperlink) remarksHyperlink.Inlines.FirstInline;
+                var hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
                 hyperlink.Command = Controller.ShowRemarksCommand;
                 hyperlink.CommandParameter = line;
 
@@ -306,12 +306,12 @@ namespace BudgetAnalyser.LedgerBook
 
             if (e.OldValue != null)
             {
-                ((LedgerBookController) e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
+                ((LedgerBookController)e.OldValue).LedgerBookUpdated -= OnLedgerBookUpdated;
             }
 
             if (e.NewValue != null)
             {
-                ((LedgerBookController) e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
+                ((LedgerBookController)e.NewValue).LedgerBookUpdated += OnLedgerBookUpdated;
             }
 
             DynamicallyCreateLedgerBookGrid();

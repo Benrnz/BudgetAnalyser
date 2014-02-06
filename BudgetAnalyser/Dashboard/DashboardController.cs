@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
@@ -34,15 +35,6 @@ namespace BudgetAnalyser.Dashboard
 
         public GlobalFilterController GlobalFilterController { get; private set; }
 
-        public string VersionString
-        {
-            get
-            {
-                var assemblyName = GetType().Assembly.GetName();
-                return assemblyName.Name + "Version: " + assemblyName.Version;
-            }
-        }
-
         public bool Shown
         {
             get { return this.doNotUseShown; }
@@ -50,6 +42,15 @@ namespace BudgetAnalyser.Dashboard
             {
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
+            }
+        }
+
+        public string VersionString
+        {
+            get
+            {
+                AssemblyName assemblyName = GetType().Assembly.GetName();
+                return assemblyName.Name + "Version: " + assemblyName.Version;
             }
         }
 

@@ -4,7 +4,7 @@
     <Grid Background="{StaticResource TileBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <WrapPanel Orientation="Horizontal">
@@ -56,17 +56,17 @@
                                Margin="10"
                                HorizontalAlignment="Left"
                                Width="30"
-                               Height="30"/>
+                               Height="30" />
                     <Border Margin="13,10,10,10"
-                               HorizontalAlignment="Left"
-                               BorderThickness="1,0,0,1"
-                               Width="24"
-                               Height="24"
-                               BorderBrush="{StaticResource ModernTileColourBrush1}"/>
+                            HorizontalAlignment="Left"
+                            BorderThickness="1,0,0,1"
+                            Width="24"
+                            Height="24"
+                            BorderBrush="{StaticResource ModernTileColourBrush1}" />
                     <Path Stroke="{StaticResource ModernTileColourBrush1}"
                           Margin="17,-4,0,0"
                           VerticalAlignment="Center"
-                          Data="M0,0 L5,4 L10,4 L15,11"/>
+                          Data="M0,0 L5,4 L10,4 L15,11" />
                     <TextBlock Margin="50,0,0,0"
                                Text="Spending Trend Graphs" />
                     <Button Style="{StaticResource ModernTileButton}"
@@ -74,6 +74,6 @@
                 </Grid>
             </Border>
         </WrapPanel>
-        <Border Grid.Row="1"></Border>
+        <Border Grid.Row="1" />
     </Grid>
 </UserControl>

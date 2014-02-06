@@ -36,51 +36,51 @@
                     BorderThickness="2"
                     Margin="5"
                     CornerRadius="3">
-                
-            <GroupBox BorderBrush="Transparent"
-                      BorderThickness="0"
-                      IsEnabled="{Binding FileTypeSelectionReady}"
-                      Margin="3">
-                <GroupBox.Header>
-                    <TextBlock Margin="3"
-                               Text="Account Name"
-                               ToolTip="{Binding AccountNameHelp}" />
-                </GroupBox.Header>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton x:Name="RadioExisting"
-                                     Content="Use an existing Name"
-                                     Foreground="{StaticResource TextBrush}"
-                                     GroupName="AccountNameMode"
-                                     IsChecked="{Binding UseExistingAccountName}"
+
+                <GroupBox BorderBrush="Transparent"
+                          BorderThickness="0"
+                          IsEnabled="{Binding FileTypeSelectionReady}"
+                          Margin="3">
+                    <GroupBox.Header>
+                        <TextBlock Margin="3"
+                                   Text="Account Name"
+                                   ToolTip="{Binding AccountNameHelp}" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="RadioExisting"
+                                         Content="Use an existing Name"
+                                         Foreground="{StaticResource TextBrush}"
+                                         GroupName="AccountNameMode"
+                                         IsChecked="{Binding UseExistingAccountName}"
+                                         Margin="3"
+                                         ToolTip="{Binding AccountNameHelp}" />
+                            <ComboBox x:Name="ComboAccountType"
+                                      IsEnabled="{Binding ElementName=RadioExisting, Path=IsChecked}"
+                                      ItemsSource="{Binding ExistingAccountNames}"
+                                      Margin="3"
+                                      SelectedItem="{Binding SelectedExistingAccountName}"
+                                      ToolTip="{Binding AccountNameHelp}"
+                                      Visibility="{Binding ElementName=RadioExisting, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                      Width="130" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="RadioNew"
+                                         Content="Type a new Name"
+                                         Foreground="{StaticResource TextBrush}"
+                                         GroupName="AccountNameMode"
+                                         IsChecked="{Binding UseNewAccountName}"
+                                         Margin="3"
+                                         ToolTip="{Binding AccountNameHelp}" />
+                            <TextBox IsEnabled="{Binding ElementName=RadioNew, Path=IsChecked}"
                                      Margin="3"
-                                     ToolTip="{Binding AccountNameHelp}" />
-                        <ComboBox x:Name="ComboAccountType"
-                                  IsEnabled="{Binding ElementName=RadioExisting, Path=IsChecked}"
-                                  ItemsSource="{Binding ExistingAccountNames}"
-                                  Margin="3"
-                                  SelectedItem="{Binding SelectedExistingAccountName}"
-                                  ToolTip="{Binding AccountNameHelp}"
-                                  Visibility="{Binding ElementName=RadioExisting, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
-                                  Width="130" />
+                                     Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="{Binding AccountNameHelp}"
+                                     Visibility="{Binding ElementName=RadioNew, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                     Width="150" />
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton x:Name="RadioNew"
-                                     Content="Type a new Name"
-                                     Foreground="{StaticResource TextBrush}"
-                                     GroupName="AccountNameMode"
-                                     IsChecked="{Binding UseNewAccountName}"
-                                     Margin="3"
-                                     ToolTip="{Binding AccountNameHelp}" />
-                        <TextBox IsEnabled="{Binding ElementName=RadioNew, Path=IsChecked}"
-                                 Margin="3"
-                                 Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}"
-                                 ToolTip="{Binding AccountNameHelp}"
-                                 Visibility="{Binding ElementName=RadioNew, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
-                                 Width="150" />
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
+                </GroupBox>
             </Border>
 
             <StackPanel Orientation="Horizontal">
@@ -106,8 +106,8 @@
                     Grid.Row="3">
             <Image Source="../UI/Assets/warning.png"
                    Height="20"
-                   Margin="5"/>
-            <TextBlock Text="WARNING: Only ANZ Bank CSV Statement files are supported."/>
+                   Margin="5" />
+            <TextBlock Text="WARNING: Only ANZ Bank CSV Statement files are supported." />
         </StackPanel>
     </Grid>
 

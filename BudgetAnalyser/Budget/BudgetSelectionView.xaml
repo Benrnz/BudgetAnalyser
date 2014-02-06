@@ -37,8 +37,9 @@
                                     <MultiBinding Converter="{StaticResource BudgetNameViewModelConverter}">
                                         <MultiBinding.Bindings>
                                             <Binding Path="." />
-                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}"
-                                                     Path="DataContext.Budgets" />
+                                            <Binding
+                                                RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}"
+                                                Path="DataContext.Budgets" />
                                         </MultiBinding.Bindings>
                                     </MultiBinding>
                                 </budget1:BudgetModelNameUserControl.DataContext>

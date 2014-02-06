@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Budget
         public void Load(OverallPerformanceBudgetAnalysis overallPerformanceBudgetAnalysis)
         {
             Analysis = overallPerformanceBudgetAnalysis;
-            OverallPerformance = (double) overallPerformanceBudgetAnalysis.OverallPerformance;
+            OverallPerformance = (double)overallPerformanceBudgetAnalysis.OverallPerformance;
             ExpenseFilter = true;
             IncomeFilter = false;
 

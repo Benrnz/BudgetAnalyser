@@ -26,14 +26,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Expense}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Expense}" />
-                    <Border Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Income}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Income}" />
+                    <Border
+                        Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Expense}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Expense}" />
+                    <Border
+                        Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Income}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Income}" />
                     <TextBlock FontSize="12"
                                FontWeight="Bold"
                                HorizontalAlignment="Left"
@@ -155,12 +157,13 @@
                        StrokeThickness="1"
                        Width="1" />
         </Grid>
-        <StackPanel Background="{Binding OverallPerformance, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Performance}"
-                    Grid.Row="4"
-                    Margin="2,4,2,4"
-                    Orientation="Horizontal"
-                    TextBlock.FontWeight="Bold"
-                    TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
+        <StackPanel
+            Background="{Binding OverallPerformance, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Performance}"
+            Grid.Row="4"
+            Margin="2,4,2,4"
+            Orientation="Horizontal"
+            TextBlock.FontWeight="Bold"
+            TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
             <TextBlock Margin="4,4,1,4"
                        Text="Avg Expenses " />
             <TextBlock Margin="0,4,0,4"

@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Converters
         {
             try
             {
-                var percent = (double) value;
+                var percent = (double)value;
                 if (parameter == null || string.IsNullOrWhiteSpace(parameter.ToString()) || parameter.ToString() == "Expense")
                 {
                     return ConvertToExpenseColors(percent);

@@ -24,8 +24,8 @@
                 Value="6,2,2,6" />
         <Setter Property="VerticalAlignment"
                 Value="Top" />
-        <Setter Property="HorizontalAlignment" 
-                Value="Left"/>
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
     </Style>
 
     <Style x:Key="BudgetTileBlock"

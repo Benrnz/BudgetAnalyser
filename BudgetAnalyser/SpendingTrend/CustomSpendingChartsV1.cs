@@ -8,7 +8,7 @@ namespace BudgetAnalyser.SpendingTrend
 
         public T AdaptModel<T>()
         {
-            return (T) Model;
+            return (T)Model;
         }
     }
 }

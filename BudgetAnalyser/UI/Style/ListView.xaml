@@ -44,7 +44,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="{x:Type GridViewColumnHeader}"
            TargetType="GridViewColumnHeader">
         <Setter Property="HorizontalContentAlignment"
@@ -62,8 +62,9 @@
                                 <vsm:VisualState x:Name="Normal" />
                                 <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
-                                                                      Storyboard.TargetName="HeaderBorder">
+                                        <ColorAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                            Storyboard.TargetName="HeaderBorder">
                                             <EasingColorKeyFrame KeyTime="0"
                                                                  Value="{StaticResource ControlMouseOverColor}" />
                                         </ColorAnimationUsingKeyFrames>

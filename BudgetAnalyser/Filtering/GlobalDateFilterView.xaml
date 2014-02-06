@@ -43,8 +43,8 @@
                     Style="{StaticResource ClearButton}"
                     Margin="2" />
             <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource CloseButton}" 
-                    ToolTip="Apply filter and close"/>
+                    Style="{StaticResource CloseButton}"
+                    ToolTip="Apply filter and close" />
         </StackPanel>
     </Grid>
 

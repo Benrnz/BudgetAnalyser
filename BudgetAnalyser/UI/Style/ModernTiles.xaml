@@ -24,8 +24,9 @@
                                 <vsm:VisualState x:Name="Normal" />
                                 <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
-                                                                      Storyboard.TargetName="MainPanel">
+                                        <ColorAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
+                                            Storyboard.TargetName="MainPanel">
                                             <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                  Value="{StaticResource ModernTileHighlightColor}" />
                                         </ColorAnimationUsingKeyFrames>

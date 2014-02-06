@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.ReportsCatalog
 {
     /// <summary>
-    /// Interaction logic for DashboardUserControl.xaml
+    ///     Interaction logic for DashboardUserControl.xaml
     /// </summary>
     public partial class ReportsCatalogUserControl : UserControl
     {

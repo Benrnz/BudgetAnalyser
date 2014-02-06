@@ -50,8 +50,7 @@
                     <ControlTemplate TargetType="{x:Type chartingToolkit:NumericAxisLabel}">
                         <TextBlock FontSize="10"
                                    Foreground="Black"
-                                   Text="{TemplateBinding FormattedContent}">
-                        </TextBlock>
+                                   Text="{TemplateBinding FormattedContent}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -64,8 +63,7 @@
                     <ControlTemplate TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}">
                         <TextBlock FontSize="10"
                                    Foreground="Black"
-                                   Text="{TemplateBinding FormattedContent}">
-                        </TextBlock>
+                                   Text="{TemplateBinding FormattedContent}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

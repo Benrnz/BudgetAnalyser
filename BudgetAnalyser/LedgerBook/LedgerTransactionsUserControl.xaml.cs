@@ -22,7 +22,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnNewTransactionVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool) e.NewValue)
+            if ((bool)e.NewValue)
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.NewTransactionNarrativeTextBox.Focus());
             }

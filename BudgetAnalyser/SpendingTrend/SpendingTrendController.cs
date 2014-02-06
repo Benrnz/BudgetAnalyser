@@ -163,9 +163,9 @@ namespace BudgetAnalyser.SpendingTrend
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (message.RehydratedModels.ContainsKey(typeof (CustomSpendingChartsV1)))
+            if (message.RehydratedModels.ContainsKey(typeof(CustomSpendingChartsV1)))
             {
-                this.customCharts = message.RehydratedModels[typeof (CustomSpendingChartsV1)].AdaptModel<List<CustomAggregateSpendingGraph>>();
+                this.customCharts = message.RehydratedModels[typeof(CustomSpendingChartsV1)].AdaptModel<List<CustomAggregateSpendingGraph>>();
             }
         }
 

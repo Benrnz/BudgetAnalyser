@@ -19,13 +19,13 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerBookController : ControllerBase, IShowableController
     {
+        private readonly DemoFileHelper demoFileHelper;
         private readonly IUserInputBox inputBox;
         private readonly ILedgerBookRepository ledgerRepository;
         private readonly IUserMessageBox messageBox;
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IWaitCursor> waitCursorFactory;
-        private readonly DemoFileHelper demoFileHelper;
 
         private bool dirty;
         private BudgetCurrencyContext doNotUseCurrentBudget;
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
-            [NotNull] ILedgerBookRepository ledgerRepository, 
+            [NotNull] ILedgerBookRepository ledgerRepository,
             [NotNull] DemoFileHelper demoFileHelper)
         {
             if (uiContext == null)

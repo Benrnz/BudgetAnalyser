@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Budget
             }
 
             Close();
-            ((BudgetController) DataContext).ShowOtherBudget(budget);
+            ((BudgetController)DataContext).ShowOtherBudget(budget);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

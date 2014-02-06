@@ -20,8 +20,8 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            var selectedItem = (KeyValuePair<string, decimal>) e.AddedItems[0];
-            ((BudgetPieController) DataContext).ExpenseSelectedItem = selectedItem;
+            var selectedItem = (KeyValuePair<string, decimal>)e.AddedItems[0];
+            ((BudgetPieController)DataContext).ExpenseSelectedItem = selectedItem;
         }
 
         private void OnIncomeChartSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -31,8 +31,8 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            var selectedItem = (KeyValuePair<string, decimal>) e.AddedItems[0];
-            ((BudgetPieController) DataContext).IncomeSelectedItem = selectedItem;
+            var selectedItem = (KeyValuePair<string, decimal>)e.AddedItems[0];
+            ((BudgetPieController)DataContext).IncomeSelectedItem = selectedItem;
         }
     }
 }

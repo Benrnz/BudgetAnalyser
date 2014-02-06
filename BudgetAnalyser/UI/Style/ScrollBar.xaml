@@ -117,7 +117,7 @@
             <Border Grid.RowSpan="3"
                     Background="{StaticResource TileBackgroundAlternateBrush}"
                     BorderBrush="{StaticResource MainBackgroundBrush}"
-                    BorderThickness="1,0,0,0"/>
+                    BorderThickness="1,0,0,0" />
             <RepeatButton Style="{StaticResource ScrollBarLineButton}"
                           Height="18"
                           Command="ScrollBar.LineUpCommand"
@@ -132,7 +132,7 @@
                 <Track.Thumb>
                     <Thumb Style="{StaticResource ScrollBarThumb}"
                            Margin="1,0,1,0"
-                           Background="{StaticResource MainBackgroundBrush}"/>
+                           Background="{StaticResource MainBackgroundBrush}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
@@ -173,7 +173,7 @@
                 <Track.Thumb>
                     <Thumb Style="{StaticResource ScrollBarThumb}"
                            Margin="0,1,0,1"
-                           Background="{StaticResource MainBackgroundBrush}"/>
+                           Background="{StaticResource MainBackgroundBrush}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"

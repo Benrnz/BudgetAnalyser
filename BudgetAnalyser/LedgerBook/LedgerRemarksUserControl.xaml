@@ -13,7 +13,7 @@
         <TextBox Text="{Binding Remarks}"
                  MinLines="2"
                  TextWrapping="Wrap"
-                 Visibility="{Binding IsReadOnly, Converter={StaticResource NotBoolToVisConverter}}"/>
+                 Visibility="{Binding IsReadOnly, Converter={StaticResource NotBoolToVisConverter}}" />
         <TextBlock Text="{Binding Remarks}"
                    TextWrapping="Wrap"
                    Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVisConverter}}" />

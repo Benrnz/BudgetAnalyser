@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Statement
 
         public T AdaptModel<T>()
         {
-            return (T) Model;
+            return (T)Model;
         }
     }
 }

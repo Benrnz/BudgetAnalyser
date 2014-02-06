@@ -101,10 +101,10 @@
         DarkOrange
     </Color>
 
-    <SolidColorBrush x:Key="PopUpBackground" Color="#FF003300"/>
-    
-    <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource BorderLightColor}"/>
-    
+    <SolidColorBrush x:Key="PopUpBackground" Color="#FF003300" />
+
+    <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource BorderLightColor}" />
+
     <LinearGradientBrush x:Key="ControlBorderBrush"
                          EndPoint="0,1"
                          StartPoint="0,0">
@@ -122,7 +122,7 @@
 
     <SolidColorBrush x:Key="ControlMouseOverBrush"
                      Color="{StaticResource ControlMouseOverColor}" />
-    
+
     <SolidColorBrush x:Key="SelectedItemRowBrush"
                      Color="{StaticResource SelectedItemRowColor}" />
 
@@ -176,5 +176,5 @@
 
     <SolidColorBrush x:Key="TertiaryBackgroundBrush"
                      Color="{StaticResource TertiaryBackground}" />
-    
+
 </ResourceDictionary>

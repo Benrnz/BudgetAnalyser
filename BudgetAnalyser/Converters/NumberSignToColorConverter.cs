@@ -11,13 +11,13 @@ namespace BudgetAnalyser.Converters
             decimal number;
             try
             {
-                number = (decimal) value;
+                number = (decimal)value;
             }
             catch (InvalidCastException)
             {
                 try
                 {
-                    var doublenumber = (double) value;
+                    var doublenumber = (double)value;
                     number = System.Convert.ToDecimal(doublenumber);
                 }
                 catch (InvalidCastException)

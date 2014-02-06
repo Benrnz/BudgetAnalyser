@@ -28,10 +28,10 @@
         <StackPanel Grid.Row="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource CloseButton}" 
-                    Click="OnCancelButtonClick"/>
+            <Button Style="{StaticResource CloseButton}"
+                    Click="OnCancelButtonClick" />
             <Button Style="{StaticResource SaveButton}"
-                    Click="OnOkButtonClick"/>
+                    Click="OnOkButtonClick" />
         </StackPanel>
     </Grid>
 

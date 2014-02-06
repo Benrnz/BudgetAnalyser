@@ -73,40 +73,6 @@ namespace BudgetAnalyser.Statement
 
         public MatchingRule SelectedRule { get; set; }
 
-        public void Initialize()
-        {
-            try
-            {
-                LoadRules();
-            }
-            catch (FileNotFoundException)
-            {
-                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
-                LoadRules();
-            }
-        }
-
-        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-        {
-            var lastRuleSet = new LastMatchingRulesLoadedV1
-            {
-                Model = this.rulesFileName,
-            };
-            message.PersistThisModel(lastRuleSet);
-        }
-
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-        {
-            if (!message.RehydratedModels.ContainsKey(typeof (LastMatchingRulesLoadedV1)))
-            {
-                return;
-            }
-
-            this.rulesFileName = message.RehydratedModels[typeof (LastMatchingRulesLoadedV1)].AdaptModel<string>();
-            LoadRules();
-        }
-
         public void CreateNewRuleFromTransaction(Transaction transaction)
         {
             if (transaction.BudgetBucket == null || string.IsNullOrWhiteSpace(transaction.BudgetBucket.Code))
@@ -129,6 +95,20 @@ namespace BudgetAnalyser.Statement
             {
                 Rules.Add(NewRuleController.NewRule);
                 SaveRules();
+            }
+        }
+
+        public void Initialize()
+        {
+            try
+            {
+                LoadRules();
+            }
+            catch (FileNotFoundException)
+            {
+                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
+                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
+                LoadRules();
             }
         }
 
@@ -163,6 +143,26 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteDeleteRuleCommand()
         {
             return SelectedRule != null;
+        }
+
+        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        {
+            if (!message.RehydratedModels.ContainsKey(typeof(LastMatchingRulesLoadedV1)))
+            {
+                return;
+            }
+
+            this.rulesFileName = message.RehydratedModels[typeof(LastMatchingRulesLoadedV1)].AdaptModel<string>();
+            LoadRules();
+        }
+
+        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+        {
+            var lastRuleSet = new LastMatchingRulesLoadedV1
+            {
+                Model = this.rulesFileName,
+            };
+            message.PersistThisModel(lastRuleSet);
         }
 
         private void OnDeleteRuleCommandExecute()

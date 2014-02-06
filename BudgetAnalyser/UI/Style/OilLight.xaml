@@ -4,7 +4,7 @@
     <Color x:Key="WarningOilLightColour">
         DarkOrange
     </Color>
-    
+
     <Color x:Key="OilLightTextColor">Black</Color>
 
     <SolidColorBrush x:Key="WarningOilLightBrush"
@@ -12,7 +12,7 @@
 
     <SolidColorBrush x:Key="OilLightTextBrush"
                      Color="{StaticResource OilLightTextColor}" />
-    
+
     <Style x:Key="WarningOilLightStyle"
            TargetType="Border">
         <Setter Property="CornerRadius"

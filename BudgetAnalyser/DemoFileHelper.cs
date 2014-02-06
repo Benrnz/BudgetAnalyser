@@ -7,11 +7,6 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class DemoFileHelper
     {
-        protected virtual bool FileExists(string path)
-        {
-            return File.Exists(path);
-        }
-
         public string FindDemoFile(string demoFilename)
         {
             string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -33,6 +28,11 @@ namespace BudgetAnalyser
             }
 
             throw new FileNotFoundException();
+        }
+
+        protected virtual bool FileExists(string path)
+        {
+            return File.Exists(path);
         }
     }
 }

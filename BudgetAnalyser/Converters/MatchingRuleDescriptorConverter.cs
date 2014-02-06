@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Converters
             int truncateTo;
             if (parameter is bool)
             {
-                if ((bool) parameter)
+                if ((bool)parameter)
                 {
                     truncateTo = 15;
                 }

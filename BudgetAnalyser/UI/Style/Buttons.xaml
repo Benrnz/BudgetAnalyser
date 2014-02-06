@@ -25,7 +25,7 @@
     <Color x:Key="ButtonGlyphColor">
         #FF333333
     </Color>
-    
+
     <SolidColorBrush x:Key="ButtonStrokeBrush"
                      Color="{StaticResource ButtonStokeColor}" />
 
@@ -919,7 +919,7 @@
                                  Width="40" />
                         <Image RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>
-                                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
                             </Image.RenderTransform>
                             <Image.Source>
                                 <DrawingImage>

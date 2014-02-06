@@ -34,6 +34,8 @@ namespace BudgetAnalyser.LedgerBook
             Reset();
         }
 
+        public event EventHandler<LedgerTransactionEventArgs> Complete;
+
         public ICommand AddTransactionCommand
         {
             get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
@@ -141,6 +143,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        public bool Shown
+        {
+            get { return this.doNotUseShown; }
+            set
+            {
+                this.doNotUseShown = value;
+                RaisePropertyChanged(() => Shown);
+            }
+        }
+
         public IEnumerable<LedgerTransaction> ShownTransactions
         {
             get { return this.doNotUseShownTransactions; }
@@ -170,23 +182,6 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand ZeroNetAmountCommand
         {
             get { return new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand); }
-        }
-
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-            set
-            {
-                this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
-            }
-        }
-
-        public event EventHandler<LedgerTransactionEventArgs> Complete;
-
-        private bool CanExecuteZeroNetAmountCommand()
-        {
-            return LedgerEntry != null && LedgerEntry.NetAmount != 0;
         }
 
         public void Show(LedgerEntry ledgerEntry, bool isNew)
@@ -226,6 +221,11 @@ namespace BudgetAnalyser.LedgerBook
         private bool CanExecuteDeleteTransactionCommand(LedgerTransaction arg)
         {
             return !IsReadOnly && arg != null;
+        }
+
+        private bool CanExecuteZeroNetAmountCommand()
+        {
+            return LedgerEntry != null && LedgerEntry.NetAmount != 0;
         }
 
         private void OnAddNewTransactionCommandExecuted()

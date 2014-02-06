@@ -165,14 +165,14 @@
                 </Button>
             </Grid>
         </Border>
-        
+
         <TextBlock Grid.Row="2"
                    Grid.Column="1"
                    VerticalAlignment="Bottom"
                    HorizontalAlignment="Right"
                    FontSize="10"
                    Foreground="{StaticResource TileBackgroundBrush}"
-                   Text="{Binding VersionString}"/>
+                   Text="{Binding VersionString}" />
     </Grid>
 
 </UserControl>

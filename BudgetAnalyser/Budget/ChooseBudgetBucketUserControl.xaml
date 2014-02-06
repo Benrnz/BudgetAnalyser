@@ -15,7 +15,7 @@
             <TextBlock Margin="10,2,2,2"
                        Text="Budget Buckets" />
         </StackPanel>
-        <TextBlock Grid.Row="1" 
+        <TextBlock Grid.Row="1"
                    Text="{Binding FilterDescription}" />
         <StackPanel Orientation="Horizontal"
                     Grid.Row="2"
@@ -31,7 +31,7 @@
                       VerticalAlignment="Top" />
             <Button Style="{StaticResource OkRoundButton}"
                     Command="{Binding CloseCommand}"
-                    HorizontalAlignment="Left"/>
+                    HorizontalAlignment="Left" />
         </StackPanel>
     </Grid>
 </UserControl>

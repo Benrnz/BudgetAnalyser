@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Budget
                     return 0;
                 }
 
-                return (double) ExpenseSelectedItem.Value/(double) ExpensePieChartValues.Sum(e => e.Value);
+                return (double)ExpenseSelectedItem.Value/(double)ExpensePieChartValues.Sum(e => e.Value);
             }
         }
 
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Budget
                     return 0;
                 }
 
-                return (double) IncomeSelectedItem.Value/(double) IncomePieChartValues.Sum(i => i.Value);
+                return (double)IncomeSelectedItem.Value/(double)IncomePieChartValues.Sum(i => i.Value);
             }
         }
 

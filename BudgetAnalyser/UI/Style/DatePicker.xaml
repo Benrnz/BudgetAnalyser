@@ -22,13 +22,13 @@
                 Value="{StaticResource MainBackgroundBrush}" />
         <Setter Property="FontSize"
                 Value="14" />
-        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <Style TargetType="Calendar"
            x:Key="CalendarStyle">
-        <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
     </Style>
 </ResourceDictionary>

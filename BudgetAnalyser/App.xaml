@@ -12,7 +12,7 @@
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog">
-    
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,19 +25,19 @@
                 <ResourceDictionary Source="UI/Style/DatePicker.xaml" />
                 <ResourceDictionary Source="UI/Style/ToolTip.xaml" />
                 <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
-                <ResourceDictionary Source="UI/Style/ListView.xaml"/>
+                <ResourceDictionary Source="UI/Style/ListView.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollViewer.xaml" />
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
-                <ResourceDictionary Source="UI/Style/ModernTiles.xaml"/>
+                <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
             <converters:NotBoolToVisibilityConverter x:Key="NotBoolToVisConverter" />
             <converters:BoolToVisibility2Converter x:Key="BoolToVis2Converter" />
             <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
-            
+
             <DataTemplate DataType="{x:Type statement:StatementController}">
                 <statement:StatementUserControl />
             </DataTemplate>
@@ -51,10 +51,10 @@
                 <spendingTrend:BucketSpendingLineChart />
             </DataTemplate>
             <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
-                <ledgerBook:LedgerBookUserControl/>
+                <ledgerBook:LedgerBookUserControl />
             </DataTemplate>
             <DataTemplate DataType="{x:Type dashboard:DashboardController}">
-                <dashboard:DashboardUserControl/>
+                <dashboard:DashboardUserControl />
             </DataTemplate>
             <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
                 <reportsCatalog:ReportsCatalogUserControl />

@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Converters
 {
-    public class BudgetBucketToStringConverter : IValueConverter 
+    public class BudgetBucketToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

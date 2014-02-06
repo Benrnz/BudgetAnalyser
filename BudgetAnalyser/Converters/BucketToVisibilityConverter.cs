@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Converters
             {
                 return bucket is IncomeBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
             }
-            
+
             return Visibility.Visible;
         }
 
