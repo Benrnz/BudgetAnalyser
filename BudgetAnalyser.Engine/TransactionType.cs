@@ -1,6 +1,8 @@
-﻿namespace BudgetAnalyser.Engine
+﻿using System.Diagnostics;
+
+namespace BudgetAnalyser.Engine
 {
-    [System.Diagnostics.DebuggerDisplay("TransactionType {Name}")]
+    [DebuggerDisplay("TransactionType {Name}")]
     public abstract class TransactionType
     {
         public abstract string Name { get; }

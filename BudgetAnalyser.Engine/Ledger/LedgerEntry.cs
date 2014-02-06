@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    /// A single entry on a <see cref="Ledger"/> for a date (which comes from the <see cref="LedgerEntryLine"/>). This instance can contain one or
-    /// more <see cref="LedgerTransaction"/>s defining all movements for this <see cref="BudgetBucket"/> for this date. Possible transactions 
-    /// include budgeted 'saved up for expenses' credited into this <see cref="Ledger"/> and all statement transactions that are debitted to this
-    /// budget bucket ledger.
+    ///     A single entry on a <see cref="Ledger" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This
+    ///     instance can contain one or
+    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="BudgetBucket" /> for this date.
+    ///     Possible transactions
+    ///     include budgeted 'saved up for expenses' credited into this <see cref="Ledger" /> and all statement transactions
+    ///     that are debitted to this
+    ///     budget bucket ledger.
     /// </summary>
     public class LedgerEntry
     {
         /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from loading from file.
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
+        ///     loading from file.
         ///     This variable is intentionally not persisted.
         /// </summary>
-        private bool isNew = false;
+        private readonly bool isNew;
 
         private List<LedgerTransaction> transactions;
 
         /// <summary>
-        /// Used only by persistence.
+        ///     Used only by persistence.
         /// </summary>
         internal LedgerEntry(Ledger ledger, LedgerEntry previousLedgerEntry)
         {
@@ -33,7 +36,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Used when adding a new entry for a new reconciliation.
+        ///     Used when adding a new entry for a new reconciliation.
         /// </summary>
         internal LedgerEntry(Ledger ledger, LedgerEntry previousLedgerEntry, bool isNew)
         {
@@ -47,17 +50,23 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public Ledger Ledger { get; private set; }
 
+        /// <summary>
+        ///     The total net affect of all transactions in this entry.  Debits will be negative.
+        /// </summary>
+        public decimal NetAmount
+        {
+            get { return this.transactions.Sum(t => t.Credit - t.Debit); }
+        }
+
         public IEnumerable<LedgerTransaction> Transactions
         {
             get { return this.transactions; }
         }
 
-        /// <summary>
-        /// The total net affect of all transactions in this entry.  Debits will be negative.
-        /// </summary>
-        public decimal NetAmount
+        public void AddTransaction(LedgerTransaction newTransaction)
         {
-            get { return this.transactions.Sum(t => t.Credit - t.Debit); }
+            this.transactions.Add(newTransaction);
+            Balance += (newTransaction.Credit - newTransaction.Debit);
         }
 
         public void RemoveTransaction(Guid transactionId)
@@ -75,15 +84,10 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public void AddTransaction(LedgerTransaction newTransaction)
-        {
-            this.transactions.Add(newTransaction);
-            Balance += (newTransaction.Credit - newTransaction.Debit);
-        }
-
         /// <summary>
-        /// Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds can be safely used elsewhere.
-        /// By zeroing the balance the surplus will increase.
+        ///     Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds
+        ///     can be safely used elsewhere.
+        ///     By zeroing the balance the surplus will increase.
         /// </summary>
         public void ZeroTheBalance(string narrative = null)
         {
@@ -105,7 +109,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions)
         {
             this.transactions = newTransactions;
-            var newBalance = Balance + NetAmount;
+            decimal newBalance = Balance + NetAmount;
             Balance = newBalance < 0 ? 0 : newBalance;
             return this;
         }

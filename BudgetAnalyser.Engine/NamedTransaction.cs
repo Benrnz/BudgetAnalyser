@@ -17,12 +17,12 @@ namespace BudgetAnalyser.Engine
             Sign = sign;
         }
 
-        public decimal Sign { get; private set; }
-
         public override string Name
         {
-            get { return name; }
+            get { return this.name; }
         }
+
+        public decimal Sign { get; private set; }
 
         public override int GetHashCode()
         {

@@ -3,7 +3,6 @@
     public class SpentMonthlyExpense : ExpenseBudgetBucket
     {
         public SpentMonthlyExpense()
-            : base()
         {
         }
 

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml.Serialization;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Matching
 {
     [DebuggerDisplay("Rule: {Bucket} {Description} {Reference1} {Reference2} {Reference3}")]
-    public class MatchingRule 
+    public class MatchingRule
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private decimal? doNotUseAmount;
@@ -17,7 +16,7 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
 
         /// <summary>
-        /// Used any other time.
+        ///     Used any other time.
         /// </summary>
         /// <param name="bucketRepository"></param>
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
@@ -38,21 +37,19 @@ namespace BudgetAnalyser.Engine.Matching
 
         public BudgetBucket Bucket
         {
-            get { return this.bucketRepository.Buckets.FirstOrDefault(b => b.Id == this.BucketId); }
+            get { return this.bucketRepository.Buckets.FirstOrDefault(b => b.Id == BucketId); }
 
             set
             {
                 if (value == null)
                 {
-                    this.BucketId = Guid.Empty;
+                    BucketId = Guid.Empty;
                     return;
                 }
 
-                this.BucketId = value.Id;
+                BucketId = value.Id;
             }
         }
-
-        internal Guid BucketId { get; set; }
 
         public string Description { get; set; }
 
@@ -70,72 +67,64 @@ namespace BudgetAnalyser.Engine.Matching
         {
             get { return this.doNotUseReference1; }
 
-            set
-            {
-                this.doNotUseReference1 = value == null ? null : value.Trim();
-            }
+            set { this.doNotUseReference1 = value == null ? null : value.Trim(); }
         }
 
         public string Reference2
         {
             get { return this.doNotUseReference2; }
 
-            set
-            {
-                this.doNotUseReference2 = value == null ? null : value.Trim();
-            }
+            set { this.doNotUseReference2 = value == null ? null : value.Trim(); }
         }
 
         public string Reference3
         {
             get { return this.doNotUseReference3; }
 
-            set
-            {
-                this.doNotUseReference3 = value == null ? null : value.Trim();
-            }
+            set { this.doNotUseReference3 = value == null ? null : value.Trim(); }
         }
 
         public string TransactionType { get; set; }
+        internal Guid BucketId { get; set; }
 
         public bool Match(Transaction transaction)
         {
             bool matched = false;
-            if (!string.IsNullOrWhiteSpace(this.Description))
+            if (!string.IsNullOrWhiteSpace(Description))
             {
-                if (transaction.Description == this.Description)
+                if (transaction.Description == Description)
                 {
                     matched = true;
                 }
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(this.Reference1))
+            if (!matched && !string.IsNullOrWhiteSpace(Reference1))
             {
-                if (transaction.Reference1 == this.Reference1)
+                if (transaction.Reference1 == Reference1)
                 {
                     matched = true;
                 }
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(this.Reference2))
+            if (!matched && !string.IsNullOrWhiteSpace(Reference2))
             {
-                if (transaction.Reference2 == this.Reference2)
+                if (transaction.Reference2 == Reference2)
                 {
                     matched = true;
                 }
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(this.Reference3))
+            if (!matched && !string.IsNullOrWhiteSpace(Reference3))
             {
-                if (transaction.Reference3 == this.Reference3)
+                if (transaction.Reference3 == Reference3)
                 {
                     matched = true;
                 }
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(this.TransactionType))
+            if (!matched && !string.IsNullOrWhiteSpace(TransactionType))
             {
-                if (transaction.TransactionType.Name == this.TransactionType)
+                if (transaction.TransactionType.Name == TransactionType)
                 {
                     matched = true;
                 }
@@ -143,8 +132,8 @@ namespace BudgetAnalyser.Engine.Matching
 
             if (matched)
             {
-                this.LastMatch = DateTime.Now;
-                this.MatchCount++;
+                LastMatch = DateTime.Now;
+                MatchCount++;
             }
 
             return matched;

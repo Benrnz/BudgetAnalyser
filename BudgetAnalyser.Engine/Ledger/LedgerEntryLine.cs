@@ -7,13 +7,15 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="Ledger" />s for a date.
+    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="Ledger" />s for a
+    ///     date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
         /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from loading from file.
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
+        ///     loading from file.
         ///     This variable is intentionally not persisted.
         /// </summary>
         private readonly bool isNew;
@@ -35,7 +37,8 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. Use this constructor for adding a new line when reconciling once a month.
+        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. Use this constructor for adding a new line when
+        ///     reconciling once a month.
         /// </summary>
         /// <param name="date">The date of the line</param>
         /// <param name="bankBalance">The bank balance for this date.</param>
@@ -156,8 +159,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             DateTime finishDateExcl = Date;
             List<Transaction> filteredStatementTransactions = statement == null
-                                                                  ? new List<Transaction>()
-                                                                  : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
+                ? new List<Transaction>()
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
             foreach (var previousEntry in previousEntries)
             {
                 Ledger ledger = previousEntry.Key;

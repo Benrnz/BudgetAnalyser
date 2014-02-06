@@ -16,23 +16,23 @@ namespace BudgetAnalyser.Engine.Budget
                     return;
                 }
                 this.amount = value;
-                this.OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public bool Validate(StringBuilder validationMessages)
         {
-            bool retval = this.Bucket.Validate(validationMessages);
+            bool retval = Bucket.Validate(validationMessages);
 
-            if (retval && this.Amount <= 0)
+            if (retval && Amount <= 0)
             {
-                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, amount can not be zero or less.", this.Bucket.Description, this.Amount);
+                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, amount can not be zero or less.", Bucket.Description, Amount);
                 retval = false;
             }
 
-            if (retval && !(this.Bucket is ExpenseBudgetBucket))
+            if (retval && !(Bucket is ExpenseBudgetBucket))
             {
-                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, you must allocate an expense bucket.", this.Bucket.Description, this.Amount);
+                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, you must allocate an expense bucket.", Bucket.Description, Amount);
                 retval = false;
             }
 

@@ -8,10 +8,10 @@ namespace BudgetAnalyser.Engine
     {
         AccountType Add(string key, AccountType instance);
 
-        AccountType GetOrCreateNew(string key);
         AccountType Find(Predicate<AccountType> criteria);
 
         AccountType GetByKey(string key);
+        AccountType GetOrCreateNew(string key);
         IEnumerable<AccountType> List();
     }
 }

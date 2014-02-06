@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Budget
             buckets.Add(SurplusCode, SurplusBucket);
 
             foreach (Income income in budgetCollectionModel.SelectMany(model => model.Incomes)
-                                                           .Distinct())
+                .Distinct())
             {
                 buckets.Add(income.Bucket.Code, income.Bucket);
             }

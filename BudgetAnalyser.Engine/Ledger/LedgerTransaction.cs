@@ -15,34 +15,25 @@ namespace BudgetAnalyser.Engine.Ledger
             Id = id;
         }
 
-        public Guid Id { get; private set; }
         /// <summary>
-        /// Gets the amount of the credit value.
-        /// Both Credit and Debit cannot be set at the same time.
-        /// Values will be positive unless its a reversal.
+        ///     Gets the amount of the credit value.
+        ///     Both Credit and Debit cannot be set at the same time.
+        ///     Values will be positive unless its a reversal.
         /// </summary>
         public decimal Credit { get; internal set; }
 
         /// <summary>
-        /// Gets the amount of the debit value.
-        /// Both Credit and Debit cannot be set at the same time.
-        /// Values will be positive unless its a reversal.
+        ///     Gets the amount of the debit value.
+        ///     Both Credit and Debit cannot be set at the same time.
+        ///     Values will be positive unless its a reversal.
         /// </summary>
         public decimal Debit { get; internal set; }
+
+        public Guid Id { get; private set; }
 
         public string Narrative { get; internal set; }
 
         public virtual LedgerTransaction WithAmount(decimal amount)
-        {
-            if (amount <= 0)
-            {
-                throw new ArgumentException("Amount cannot be zero or less than zero", "amount");
-            }
-
-            return this;
-        }
-
-        public virtual LedgerTransaction WithReversal(decimal amount)
         {
             if (amount <= 0)
             {
@@ -60,6 +51,16 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             Narrative = narrative;
+            return this;
+        }
+
+        public virtual LedgerTransaction WithReversal(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ArgumentException("Amount cannot be zero or less than zero", "amount");
+            }
+
             return this;
         }
     }

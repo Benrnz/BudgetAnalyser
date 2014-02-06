@@ -7,14 +7,14 @@
             Name = name;
         }
 
-        internal override string[] KeyWords
-        {
-            get { return new[] { "AMEX" }; }
-        }
-
         public override string ImagePath
         {
             get { return "../Assets/AmexLogo.png"; }
+        }
+
+        internal override string[] KeyWords
+        {
+            get { return new[] { "AMEX" }; }
         }
 
         public override AccountType Clone(string name)

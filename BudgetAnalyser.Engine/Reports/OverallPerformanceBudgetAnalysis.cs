@@ -8,8 +8,8 @@ namespace BudgetAnalyser.Engine.Reports
 {
     public class OverallPerformanceBudgetAnalysis
     {
-        private readonly BudgetCollection budgets;
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly BudgetCollection budgets;
         private readonly StatementModel statement;
 
         public OverallPerformanceBudgetAnalysis([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
@@ -37,15 +37,16 @@ namespace BudgetAnalyser.Engine.Reports
         public List<BucketAnalysis> Analyses { get; private set; }
 
         /// <summary>
-        /// Gets the average spend per month based on statement transaction data over a period of time.
-        /// Expected to be negative.
+        ///     Gets the average spend per month based on statement transaction data over a period of time.
+        ///     Expected to be negative.
         /// </summary>
         public decimal AverageSpend { get; private set; }
 
         /// <summary>
-        /// Gets the average surplus spending per month based on statement transaction data over a period of time.
+        ///     Gets the average surplus spending per month based on statement transaction data over a period of time.
         /// </summary>
         public decimal AverageSurplus { get; private set; }
+
         public int DurationInMonths { get; private set; }
 
         public decimal OverallPerformance { get; private set; }
@@ -54,19 +55,22 @@ namespace BudgetAnalyser.Engine.Reports
         public bool UsesMultipleBudgets { get; private set; }
 
         /// <summary>
-        /// Analyses the supplied statement using the supplied budget within the criteria given to this method.
+        ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
         /// </summary>
         /// <param name="criteria">The criteria to limit the analysis.</param>
-        /// <exception cref="BudgetException">Will be thrown if no budget is supplied or if no budget can be found for the dates given in the criteria.</exception>
+        /// <exception cref="BudgetException">
+        ///     Will be thrown if no budget is supplied or if no budget can be found for the dates
+        ///     given in the criteria.
+        /// </exception>
         /// <exception cref="ArgumentException">If statement or budget is null.</exception>
         public void Analyse([NotNull] GlobalFilterCriteria criteria)
         {
             DateTime endDate, beginDate;
             AnalysisPreconditions(criteria, out beginDate, out endDate);
 
-            var budgetsInvolved = this.budgets.ForDates(beginDate, endDate).ToList();
+            List<BudgetModel> budgetsInvolved = this.budgets.ForDates(beginDate, endDate).ToList();
             UsesMultipleBudgets = budgetsInvolved.Count() > 1;
-            var currentBudget = budgetsInvolved.First();
+            BudgetModel currentBudget = budgetsInvolved.First();
 
             DurationInMonths = StatementModel.CalculateDuration(criteria, this.statement.Transactions);
 
@@ -79,7 +83,7 @@ namespace BudgetAnalyser.Engine.Reports
                 BudgetBucket bucketCopy = bucket;
                 List<Transaction> query = this.statement.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
                 decimal totalSpent = query.Sum(t => t.Amount);
-                decimal averageSpend = totalSpent / DurationInMonths;
+                decimal averageSpend = totalSpent/DurationInMonths;
 
                 if (bucket == this.bucketRepository.SurplusBucket)
                 {
@@ -87,13 +91,13 @@ namespace BudgetAnalyser.Engine.Reports
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
-                        Balance = currentBudget.Surplus * DurationInMonths - totalSpent,
-                        BudgetTotal = currentBudget.Surplus * DurationInMonths,
+                        Balance = currentBudget.Surplus*DurationInMonths - totalSpent,
+                        BudgetTotal = currentBudget.Surplus*DurationInMonths,
                         Budget = currentBudget.Surplus,
                         AverageSpend = -averageSpend,
                         BudgetComparedToAverage =
                             string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", currentBudget.Surplus,
-                                          -averageSpend)
+                                -averageSpend)
                     };
                     list.Add(surplusAnalysis);
                     continue;
@@ -102,7 +106,7 @@ namespace BudgetAnalyser.Engine.Reports
                 Expense expense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket == bucket);
                 if (expense != null)
                 {
-                    decimal totalBudget = expense.Amount * DurationInMonths;
+                    decimal totalBudget = expense.Amount*DurationInMonths;
                     var analysis = new BucketAnalysis
                     {
                         Bucket = bucket,
@@ -113,7 +117,7 @@ namespace BudgetAnalyser.Engine.Reports
                         AverageSpend = -averageSpend,
                         BudgetComparedToAverage =
                             string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", expense.Amount,
-                                          -averageSpend)
+                                -averageSpend)
                     };
                     list.Add(analysis);
                     continue;
@@ -122,7 +126,7 @@ namespace BudgetAnalyser.Engine.Reports
                 Income income = currentBudget.Incomes.FirstOrDefault(i => i.Bucket == bucket);
                 if (income != null)
                 {
-                    decimal totalBudget = income.Amount * DurationInMonths;
+                    decimal totalBudget = income.Amount*DurationInMonths;
                     var analysis = new BucketAnalysis
                     {
                         Bucket = bucket,
@@ -133,7 +137,7 @@ namespace BudgetAnalyser.Engine.Reports
                         AverageSpend = averageSpend,
                         BudgetComparedToAverage =
                             string.Format("Budget per Month: {0:C}, Actual per month: {1:C}", income.Amount,
-                                          -averageSpend)
+                                -averageSpend)
                     };
                     list.Add(analysis);
                 }
@@ -180,15 +184,15 @@ namespace BudgetAnalyser.Engine.Reports
         {
             // First total the expenses without the saved up for expenses.
             decimal totalExpensesSpend = this.statement.Transactions
-                                             .Where(t => t.BudgetBucket is ExpenseBudgetBucket)
-                                             .Sum(t => t.Amount);
+                .Where(t => t.BudgetBucket is ExpenseBudgetBucket)
+                .Sum(t => t.Amount);
 
             decimal totalSurplusSpend = this.statement.Transactions
-                                            .Where(t => t.BudgetBucket is SurplusBucket)
-                                            .Sum(t => t.Amount);
+                .Where(t => t.BudgetBucket is SurplusBucket)
+                .Sum(t => t.Amount);
 
-            AverageSpend = totalExpensesSpend / DurationInMonths;  // Expected to be negative
-            AverageSurplus = totalSurplusSpend / DurationInMonths; // Expected to be negative
+            AverageSpend = totalExpensesSpend/DurationInMonths; // Expected to be negative
+            AverageSurplus = totalSurplusSpend/DurationInMonths; // Expected to be negative
             TotalBudgetExpenses = currentBudget.Expenses.Sum(e => e.Amount);
             OverallPerformance = AverageSpend + TotalBudgetExpenses;
         }

@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
-    /// An implementation of <see cref="IStatementModelRepository"/> based on the local file system.
+    ///     An implementation of <see cref="IStatementModelRepository" /> based on the local file system.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetAnalyserStatementModelRepository : IStatementModelRepository
@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Check to see if the repository contains and recognises the given file.
+        ///     Check to see if the repository contains and recognises the given file.
         /// </summary>
         public bool IsValidFile([NotNull] string fileName)
         {
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Load a <see cref="StatementModel"/> given the filename.
+        ///     Load a <see cref="StatementModel" /> given the filename.
         /// </summary>
         public StatementModel Load([NotNull] string fileName)
         {
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Save a <see cref="StatementModel"/> so it can be recalled later.
+        ///     Save a <see cref="StatementModel" /> so it can be recalled later.
         /// </summary>
         public void Save([NotNull] StatementModel model, [NotNull] string fileName)
         {

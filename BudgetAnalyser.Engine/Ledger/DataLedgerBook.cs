@@ -10,13 +10,13 @@ namespace BudgetAnalyser.Engine.Ledger
             DatedEntries = new List<DataLedgerEntryLine>();
         }
 
+        public double? Checksum { get; set; }
+
         public List<DataLedgerEntryLine> DatedEntries { get; set; }
 
         public string FileName { get; set; }
 
         public DateTime Modified { get; set; }
         public string Name { get; set; }
-
-        public double? Checksum { get; set; }
     }
 }

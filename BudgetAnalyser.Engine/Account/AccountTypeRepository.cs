@@ -8,37 +8,19 @@ namespace BudgetAnalyser.Engine.Account
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AccountTypeRepository : IAccountTypeRepository
     {
-        private readonly ConcurrentDictionary<string, AccountType> repository = new ConcurrentDictionary<string, AccountType>(8, 5);
-        private readonly AccountType[] referenceAccountTypes = new AccountType[]
+        private readonly AccountType[] referenceAccountTypes =
         {
-            new AmexAccount(null), 
-            new ChequeAccount(null), 
-            new MastercardAccount(null), 
-            new VisaAccount(null), 
+            new AmexAccount(null),
+            new ChequeAccount(null),
+            new MastercardAccount(null),
+            new VisaAccount(null)
         };
-       
-        private AccountType CreateNewAccountType(string key)
-        {
-            var keyIgnoreCase = key.ToUpperInvariant();
-            foreach (var referenceType in referenceAccountTypes)
-            {
-                if (referenceType.KeyWords.Any(supportedKeyWord => supportedKeyWord == keyIgnoreCase))
-                {
-                    return referenceType.Clone(key);
-                }
-            }
 
-            return new MiscellaneousAccountType(key);
-        }
+        private readonly ConcurrentDictionary<string, AccountType> repository = new ConcurrentDictionary<string, AccountType>(8, 5);
 
         public AccountType Add(string key, AccountType instance)
         {
             return this.repository.GetOrAdd(key, instance);
-        }
-
-        public AccountType GetOrCreateNew(string key)
-        {
-            return this.repository.GetOrAdd(key, CreateNewAccountType);
         }
 
         public AccountType Find(Predicate<AccountType> criteria)
@@ -58,9 +40,28 @@ namespace BudgetAnalyser.Engine.Account
             return null;
         }
 
+        public AccountType GetOrCreateNew(string key)
+        {
+            return this.repository.GetOrAdd(key, CreateNewAccountType);
+        }
+
         public IEnumerable<AccountType> List()
         {
             return this.repository.Values.ToList();
+        }
+
+        private AccountType CreateNewAccountType(string key)
+        {
+            string keyIgnoreCase = key.ToUpperInvariant();
+            foreach (AccountType referenceType in this.referenceAccountTypes)
+            {
+                if (referenceType.KeyWords.Any(supportedKeyWord => supportedKeyWord == keyIgnoreCase))
+                {
+                    return referenceType.Clone(key);
+                }
+            }
+
+            return new MiscellaneousAccountType(key);
         }
     }
 }

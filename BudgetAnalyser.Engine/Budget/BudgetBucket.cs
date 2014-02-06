@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     [DebuggerDisplay("BudgetBucket {Code} {Description}")]
-    [XmlInclude(typeof (IncomeBudgetBucket))]
-    [XmlInclude(typeof (SpentMonthlyExpense))]
-    [XmlInclude(typeof (SavedUpForExpense))]
+    [XmlInclude(typeof(IncomeBudgetBucket))]
+    [XmlInclude(typeof(SpentMonthlyExpense))]
+    [XmlInclude(typeof(SavedUpForExpense))]
     public abstract class BudgetBucket : IModelValidate
     {
         private string doNotUseCode;
 
         protected BudgetBucket()
         {
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
         }
 
         protected BudgetBucket(string code, string name)
@@ -33,9 +31,9 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("name");
             }
 
-            this.Description = name;
-            this.Code = code.ToUpperInvariant();
-            this.Id = Guid.NewGuid();
+            Description = name;
+            Code = code.ToUpperInvariant();
+            Id = Guid.NewGuid();
         }
 
         public string Code
@@ -89,7 +87,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public override int GetHashCode()
         {
-            return this.Code.GetHashCode();
+            return Code.GetHashCode();
         }
 
         public override string ToString()
@@ -100,21 +98,21 @@ namespace BudgetAnalyser.Engine.Budget
         public bool Validate(StringBuilder validationMessages)
         {
             bool retval = true;
-            if (string.IsNullOrWhiteSpace(this.Code))
+            if (string.IsNullOrWhiteSpace(Code))
             {
-                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Code must be a small textual code.", this.Code);
+                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Code must be a small textual code.", Code);
                 retval = false;
             }
 
-            if (this.Code.Length > 7)
+            if (Code.Length > 7)
             {
-                validationMessages.AppendFormat("Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", this.Code, this.Description);
+                validationMessages.AppendFormat("Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", Code, Description);
                 retval = false;
             }
 
-            if (string.IsNullOrWhiteSpace(this.Description))
+            if (string.IsNullOrWhiteSpace(Description))
             {
-                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Description must not be blank.", this.Code);
+                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Description must not be blank.", Code);
                 retval = false;
             }
 

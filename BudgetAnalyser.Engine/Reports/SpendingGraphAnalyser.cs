@@ -12,7 +12,8 @@ namespace BudgetAnalyser.Engine.Reports
     public class SpendingGraphAnalyser : ISpendingGraphAnalyser
     {
         /// <summary>
-        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more friendly with the graph control than a dictionary.
+        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
+        ///     friendly with the graph control than a dictionary.
         ///     These values shows actual spending over the month.
         /// </summary>
         public List<KeyValuePair<DateTime, decimal>> ActualSpending { get; private set; }
@@ -29,7 +30,8 @@ namespace BudgetAnalyser.Engine.Reports
         public decimal NetWorth { get; private set; }
 
         /// <summary>
-        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more friendly with the graph control than a dictionary.
+        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
+        ///     friendly with the graph control than a dictionary.
         ///     These values are used draw a horizontal zero line on the graph.
         /// </summary>
         public List<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
@@ -50,11 +52,11 @@ namespace BudgetAnalyser.Engine.Reports
             List<BudgetBucket> bucketsCopy = buckets.ToList();
 
             var query = statementModel.Transactions
-                                      .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
-                                      .Where(t => t.Date >= filterCriteria.BeginDate && t.Date <= filterCriteria.EndDate)
-                                      .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
-                                      .OrderBy(t => t.Date)
-                                      .AsParallel();
+                .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
+                .Where(t => t.Date >= filterCriteria.BeginDate && t.Date <= filterCriteria.EndDate)
+                .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
+                .OrderBy(t => t.Date)
+                .AsParallel();
 
             foreach (var transaction in query)
             {
@@ -99,7 +101,7 @@ namespace BudgetAnalyser.Engine.Reports
                 }
             }
 
-            return budgetTotal * durationInMonths;
+            return budgetTotal*durationInMonths;
         }
 
         private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(StatementModel statementModel, GlobalFilterCriteria criteria)
@@ -137,13 +139,13 @@ namespace BudgetAnalyser.Engine.Reports
 
         private void CalculateBudgetLineValues(decimal budgetTotal)
         {
-            decimal average = budgetTotal / ActualSpending.Count;
+            decimal average = budgetTotal/ActualSpending.Count;
 
             BudgetLine = new List<KeyValuePair<DateTime, decimal>>();
             int iteration = 0;
             foreach (var day in ActualSpending)
             {
-                BudgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
+                BudgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average*iteration++)));
             }
         }
     }

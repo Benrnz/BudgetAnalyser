@@ -18,34 +18,34 @@ namespace BudgetAnalyser.Engine.Reports
 
         public double Percent
         {
-            get { return (double) Math.Round(this.TotalSpent/this.BudgetTotal, 2); }
+            get { return (double)Math.Round(TotalSpent/BudgetTotal, 2); }
         }
 
         public string Summary
         {
             get
             {
-                decimal difference = this.BudgetTotal - this.TotalSpent;
-                if (this.Percent > 1)
+                decimal difference = BudgetTotal - TotalSpent;
+                if (Percent > 1)
                 {
                     return string.Format(
                         CultureInfo.CurrentCulture,
                         "{0:P} ({1:C}) OVER Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
-                        this.Percent - 1,
+                        Percent - 1,
                         difference,
-                        this.BudgetTotal,
-                        this.TotalSpent,
-                        this.Budget);
+                        BudgetTotal,
+                        TotalSpent,
+                        Budget);
                 }
 
                 return string.Format(
                     CultureInfo.CurrentCulture,
                     "{0:P} ({1:C}) under Budget of {2:C}.  Total Spent: {3:C}.  Single Month Budget: {4:C}",
-                    this.Percent,
+                    Percent,
                     difference,
-                    this.BudgetTotal,
-                    this.TotalSpent,
-                    this.Budget);
+                    BudgetTotal,
+                    TotalSpent,
+                    Budget);
             }
         }
 

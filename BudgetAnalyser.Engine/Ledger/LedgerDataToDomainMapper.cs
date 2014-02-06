@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName);
             book.SetDatedEntries(MapLines(dataBook.DatedEntries));
-            
+
             var messages = new StringBuilder();
             if (!book.Validate(messages))
             {
@@ -35,6 +35,13 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return book;
+        }
+
+        private LedgerEntry MapEntry(DataLedgerEntry dataEntry, LedgerEntry previousEntry)
+        {
+            var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry);
+            entry.SetTransactions(MapTransactions(dataEntry.Transactions));
+            return entry;
         }
 
         private Ledger MapLedger(string budgetBucketCode)
@@ -56,10 +63,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private List<LedgerEntryLine> MapLines(IEnumerable<DataLedgerEntryLine> dataLines)
         {
-            var localCopyOfLines = dataLines.Reverse().ToList(); // Now it is in ascending order starting at oldest date first.
+            List<DataLedgerEntryLine> localCopyOfLines = dataLines.Reverse().ToList(); // Now it is in ascending order starting at oldest date first.
             LedgerEntryLine previousLine = null;
             var listOfLines = new List<LedgerEntryLine>();
-            foreach (var line in localCopyOfLines)
+            foreach (DataLedgerEntryLine line in localCopyOfLines)
             {
                 var domainLine = new LedgerEntryLine(line.Date, line.BankBalance, line.Remarks);
                 domainLine.SetBalanceAdjustments(MapTransactions(line.BankBalanceAdjustments));
@@ -71,9 +78,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 else
                 {
                     var entries = new List<LedgerEntry>();
-                    foreach (var entry in line.Entries)
+                    foreach (DataLedgerEntry entry in line.Entries)
                     {
-                        var previousEntry = previousLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket.Code == entry.BucketCode);
+                        LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket.Code == entry.BucketCode);
                         entries.Add(MapEntry(entry, previousEntry));
                     }
 
@@ -87,13 +94,6 @@ namespace BudgetAnalyser.Engine.Ledger
             return listOfLines.ToList();
         }
 
-        private LedgerEntry MapEntry(DataLedgerEntry dataEntry, LedgerEntry previousEntry)
-        {
-            var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry);
-            entry.SetTransactions(MapTransactions(dataEntry.Transactions));
-            return entry;
-        }
-
         private List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
         {
             var list = new List<LedgerTransaction>();
@@ -101,13 +101,15 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
                 {
-                    throw new FileFormatException(string.Format("A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative, dataTransaction.Credit - dataTransaction.Debit));
+                    throw new FileFormatException(string.Format("A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
                 }
 
                 Type transactionType = Type.GetType(dataTransaction.TransactionType);
                 if (transactionType == null)
                 {
-                    throw new FileFormatException(string.Format("Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative, dataTransaction.Credit - dataTransaction.Debit));
+                    throw new FileFormatException(string.Format("Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
                 }
 
                 var transaction = Activator.CreateInstance(transactionType, dataTransaction.Id) as LedgerTransaction;

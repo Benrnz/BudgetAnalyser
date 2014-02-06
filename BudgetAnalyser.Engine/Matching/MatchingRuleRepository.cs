@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public void SaveRules(IEnumerable<MatchingRule> rules, string fileName)
         {
-            var dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
+            IEnumerable<DataMatchingRule> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
             XamlServices.Save(fileName, dataEntities.ToList());
         }
     }

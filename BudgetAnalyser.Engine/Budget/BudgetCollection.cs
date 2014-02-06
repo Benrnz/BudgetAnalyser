@@ -7,11 +7,11 @@ namespace BudgetAnalyser.Engine.Budget
 {
     public class BudgetCollection : List<BudgetModel>, IModelValidate
     {
-        public BudgetCollection() : base()
+        public BudgetCollection()
         {
         }
 
-        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets) : base((IEnumerable<BudgetModel>) initialBudgets.OrderByDescending(b => b.EffectiveFrom))
+        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets) : base(initialBudgets.OrderByDescending(b => b.EffectiveFrom))
         {
         }
 
@@ -28,14 +28,23 @@ namespace BudgetAnalyser.Engine.Budget
 
         public string FileName { get; set; }
 
-        public bool IsFutureBudget(BudgetModel budget)
+        public BudgetModel ForDate(DateTime date)
         {
-            return budget.EffectiveFrom > DateTime.Now;
+            return this.FirstOrDefault(b => b.EffectiveFrom <= date);
         }
 
-        public bool IsCurrentBudget(BudgetModel budget)
+        public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
         {
-            return CurrentActiveBudget == budget;
+            var budgets = new List<BudgetModel>();
+            BudgetModel firstEffectiveBudget = ForDate(beginInclusive);
+            if (firstEffectiveBudget == null)
+            {
+                throw new BudgetException("The period covered by the dates given overlaps a period where no budgets are available.");
+            }
+
+            budgets.Add(firstEffectiveBudget);
+            budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
+            return budgets;
         }
 
         public bool IsArchivedBudget(BudgetModel budget)
@@ -58,29 +67,20 @@ namespace BudgetAnalyser.Engine.Budget
             return true;
         }
 
-        public BudgetModel ForDate(DateTime date)
+        public bool IsCurrentBudget(BudgetModel budget)
         {
-            return this.FirstOrDefault(b => b.EffectiveFrom <= date);
+            return CurrentActiveBudget == budget;
         }
 
-        public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
+        public bool IsFutureBudget(BudgetModel budget)
         {
-            var budgets = new List<BudgetModel>();
-            var firstEffectiveBudget = ForDate(beginInclusive);
-            if (firstEffectiveBudget == null)
-            {
-                throw new BudgetException("The period covered by the dates given overlaps a period where no budgets are available.");
-            }
-            
-            budgets.Add(firstEffectiveBudget);
-            budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
-            return budgets;
+            return budget.EffectiveFrom > DateTime.Now;
         }
 
         public bool Validate(StringBuilder validationMessages)
         {
             bool allValid = this.All(budget => budget.Validate(validationMessages));
-            var duplicateEffectiveDates = this.GroupBy(b => b.EffectiveFrom, b => b).ToList();
+            List<IGrouping<DateTime, BudgetModel>> duplicateEffectiveDates = this.GroupBy(b => b.EffectiveFrom, b => b).ToList();
             if (duplicateEffectiveDates.Any(group => group.Count() > 1))
             {
                 // Loop all duplicate dates found
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Budget
                 {
                     // Arbitrarily change the effective dates to ensure a sure later effective date.
                     int index = 0;
-                    foreach (var budget in duplicateGroups)
+                    foreach (BudgetModel budget in duplicateGroups)
                     {
                         budget.EffectiveFrom = budget.EffectiveFrom.AddSeconds(index);
                         index++;
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Budget
                 }
             }
 
-            var handler = Validating;
+            EventHandler handler = Validating;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

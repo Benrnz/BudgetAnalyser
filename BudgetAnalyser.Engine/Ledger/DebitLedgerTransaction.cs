@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class DebitLedgerTransaction : LedgerTransaction
     {
-        public DebitLedgerTransaction() : base()
+        public DebitLedgerTransaction()
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
@@ -29,7 +30,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public bool Exists(string fileName)
         {
-            return System.IO.File.Exists(fileName);
+            return File.Exists(fileName);
         }
 
         public LedgerBook Load(string fileName)
@@ -46,7 +47,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             else
             {
-                var calculatedChecksum = CalculateChecksum(dataEntity);
+                double calculatedChecksum = CalculateChecksum(dataEntity);
                 if (calculatedChecksum != dataEntity.Checksum)
                 {
                     throw new FileFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
@@ -64,7 +65,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public void Save(LedgerBook book, string fileName)
         {
-            var dataEntity = this.domainToDataMapper.Map(book);
+            DataLedgerBook dataEntity = this.domainToDataMapper.Map(book);
             dataEntity.FileName = fileName;
             dataEntity.Checksum = CalculateChecksum(dataEntity);
 
@@ -75,8 +76,8 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
-                return dataEntity.DatedEntries.Sum(l => 
-                    (double)l.BankBalance 
+                return dataEntity.DatedEntries.Sum(l =>
+                    (double)l.BankBalance
                     + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
                     + l.Entries.Sum(e => (double)e.Balance));
             }

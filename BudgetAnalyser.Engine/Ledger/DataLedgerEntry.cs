@@ -9,10 +9,10 @@ namespace BudgetAnalyser.Engine.Ledger
             Transactions = new List<DataLedgerTransaction>();
         }
 
+        public decimal Balance { get; set; }
+
         public string BucketCode { get; set; }
 
         public List<DataLedgerTransaction> Transactions { get; set; }
-
-        public decimal Balance { get; set; }
     }
 }

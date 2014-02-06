@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Account;
 namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
-    /// A <see cref="IBankStatementImporter"/> repository based on a list of dependency injected importers.
+    ///     A <see cref="IBankStatementImporter" /> repository based on a list of dependency injected importers.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BankStatementImporterRepository : IBankStatementImporterRepository
@@ -19,8 +19,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Can any importer in this repository read and import the given file.
-        /// Calling this method will open the file and read some of its contents.
+        ///     Can any importer in this repository read and import the given file.
+        ///     Calling this method will open the file and read some of its contents.
         /// </summary>
         /// <returns>True if this file can be imported one of the importers in the repository.</returns>
         public bool CanImport(string fullFileName)
@@ -29,8 +29,9 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImport"/> first.  If the file cannot
-        /// be imported by any of this repositories importers a <see cref="NotSupportedException"/> will be thrown.
+        ///     Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImport" /> first.
+        ///     If the file cannot
+        ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
         public StatementModel Import(string fullFileName, AccountType accountType)
         {

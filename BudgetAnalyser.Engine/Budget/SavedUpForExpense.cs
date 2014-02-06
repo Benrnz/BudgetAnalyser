@@ -3,7 +3,6 @@
     public class SavedUpForExpense : ExpenseBudgetBucket
     {
         public SavedUpForExpense()
-            : base()
         {
         }
 

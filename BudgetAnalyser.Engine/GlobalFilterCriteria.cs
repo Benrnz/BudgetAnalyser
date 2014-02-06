@@ -9,23 +9,12 @@ namespace BudgetAnalyser.Engine
 {
     public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate
     {
+        private AccountType doNotUseAccountType;
         private DateTime? doNotUseBeginDate;
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
-        private AccountType doNotUseAccountType;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public DateTime? BeginDate
-        {
-            get { return this.doNotUseBeginDate; }
-            set
-            {
-                this.doNotUseBeginDate = value;
-                OnPropertyChanged();
-                CheckConsistency();
-            }
-        }
 
         public AccountType AccountType
         {
@@ -34,6 +23,17 @@ namespace BudgetAnalyser.Engine
             set
             {
                 this.doNotUseAccountType = value;
+                OnPropertyChanged();
+                CheckConsistency();
+            }
+        }
+
+        public DateTime? BeginDate
+        {
+            get { return this.doNotUseBeginDate; }
+            set
+            {
+                this.doNotUseBeginDate = value;
                 OnPropertyChanged();
                 CheckConsistency();
             }
@@ -98,6 +98,15 @@ namespace BudgetAnalyser.Engine
             return valid;
         }
 
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         private void CheckConsistency()
         {
             if (BeginDate != null && BeginDate.Value == DateTime.MinValue)
@@ -119,15 +128,6 @@ namespace BudgetAnalyser.Engine
             else
             {
                 Cleared = false;
-            }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

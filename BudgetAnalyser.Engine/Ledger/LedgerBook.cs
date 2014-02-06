@@ -31,9 +31,9 @@ namespace BudgetAnalyser.Engine.Ledger
             get
             {
                 return this.datedEntries.SelectMany(e => e.Entries)
-                           .Select(e => e.Ledger)
-                           .Union(this.newlyAddedLedgers)
-                           .Distinct();
+                    .Select(e => e.Ledger)
+                    .Union(this.newlyAddedLedgers)
+                    .Distinct();
             }
         }
 
@@ -52,19 +52,22 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Creates a new LedgerEntryLine for this <see cref="LedgerBook"/>.
+        ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
-        /// <param name="date">The date for the <see cref="LedgerEntryLine"/>. Also used to search for transactions in the <see cref="statement"/>.</param>
-        /// <param name="bankBalance">The bank balance as at the <see cref="date"/>.</param>
+        /// <param name="date">
+        ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
+        ///     <see cref="statement" />.
+        /// </param>
+        /// <param name="bankBalance">The bank balance as at the <see cref="date" />.</param>
         /// <param name="budget">The current budget.</param>
         /// <param name="statement">The currently loaded statement.</param>
-        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException"/>.</param>
-        /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook"/> is in an invalid state.</exception>
+        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
+        /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         public LedgerEntryLine Reconcile(
-            DateTime date, 
-            decimal bankBalance, 
-            BudgetModel budget, 
-            StatementModel statement = null, 
+            DateTime date,
+            decimal bankBalance,
+            BudgetModel budget,
+            StatementModel statement = null,
             bool ignoreWarnings = false)
         {
             try
@@ -99,51 +102,6 @@ namespace BudgetAnalyser.Engine.Ledger
             return newLine;
         }
 
-        /// <summary>
-        /// When creating a new reconciliation a start date is required to be able to search a statement for transactions between a start date and
-        /// the date specified (today or pay day). The start date should start from the previous ledger entry line or one month prior if no records
-        /// exist.
-        /// </summary>
-        /// <param name="date">The chosen date from the user</param>
-        private DateTime CalculateStartDateForReconcile(DateTime date)
-        {
-            if (DatedEntries.Any())
-            {
-                return DatedEntries.First().Date;
-            }
-            else
-            {
-                DateTime startDateIncl = date.AddMonths(-1);
-                return startDateIncl;
-            }
-        }
-
-        private void PreReconciliationValidation(DateTime date, StatementModel statement)
-        {
-            var messages = new StringBuilder();
-            if (!Validate(messages))
-            {
-                throw new InvalidOperationException("Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
-            }
-
-            var recentEntry = DatedEntries.FirstOrDefault();
-            if (recentEntry != null && date < recentEntry.Date)
-            {
-                throw new InvalidOperationException("The date entered is before the previous ledger entry.");
-            }
-
-            if (statement == null)
-            {
-                return;
-            }
-
-            var startDate = date.AddMonths(-1);
-            if (!statement.AllTransactions.Any(t => t.Date >= startDate))
-            {
-                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
-            }
-        }
-
         public bool Validate(StringBuilder validationMessages)
         {
             if (string.IsNullOrWhiteSpace(FileName))
@@ -175,6 +133,50 @@ namespace BudgetAnalyser.Engine.Ledger
         internal void SetDatedEntries(List<LedgerEntryLine> lines)
         {
             this.datedEntries = lines.OrderByDescending(l => l.Date).ToList();
+        }
+
+        /// <summary>
+        ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
+        ///     between a start date and
+        ///     the date specified (today or pay day). The start date should start from the previous ledger entry line or one month
+        ///     prior if no records
+        ///     exist.
+        /// </summary>
+        /// <param name="date">The chosen date from the user</param>
+        private DateTime CalculateStartDateForReconcile(DateTime date)
+        {
+            if (DatedEntries.Any())
+            {
+                return DatedEntries.First().Date;
+            }
+            DateTime startDateIncl = date.AddMonths(-1);
+            return startDateIncl;
+        }
+
+        private void PreReconciliationValidation(DateTime date, StatementModel statement)
+        {
+            var messages = new StringBuilder();
+            if (!Validate(messages))
+            {
+                throw new InvalidOperationException("Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
+            }
+
+            LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
+            if (recentEntry != null && date < recentEntry.Date)
+            {
+                throw new InvalidOperationException("The date entered is before the previous ledger entry.");
+            }
+
+            if (statement == null)
+            {
+                return;
+            }
+
+            DateTime startDate = date.AddMonths(-1);
+            if (!statement.AllTransactions.Any(t => t.Date >= startDate))
+            {
+                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
+            }
         }
     }
 }

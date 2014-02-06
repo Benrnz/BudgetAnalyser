@@ -3,7 +3,6 @@
     public abstract class ExpenseBudgetBucket : BudgetBucket
     {
         protected ExpenseBudgetBucket()
-            : base()
         {
         }
 

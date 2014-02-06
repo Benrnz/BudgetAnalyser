@@ -12,28 +12,22 @@ namespace BudgetAnalyser.Engine
 {
     public class StatementModel : INotifyPropertyChanged
     {
+        private GlobalFilterCriteria currentFilter;
+        private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
         private List<Transaction> doNotUseTransactions;
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
 
         private int fullDuration;
-        private GlobalFilterCriteria currentFilter;
-        private List<Transaction> doNotUseAllTransactions;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public IEnumerable<AccountType> AccountTypes { get; private set; }
 
         public IEnumerable<Transaction> AllTransactions
         {
-            get
-            {
-                return this.doNotUseAllTransactions;
-            }
+            get { return this.doNotUseAllTransactions; }
 
-            private set
-            {
-                this.doNotUseAllTransactions = value.ToList();
-            }
+            private set { this.doNotUseAllTransactions = value.ToList(); }
         }
 
         public int DurationInMonths
@@ -65,11 +59,14 @@ namespace BudgetAnalyser.Engine
         /// <summary>
         ///     Calculates the duration in months from the beginning of the period to the end.
         /// </summary>
-        /// <param name="criteria">The criteria that is currently applied to the Statement. Pass in null to use first and last statement dates.</param>
+        /// <param name="criteria">
+        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
+        ///     statement dates.
+        /// </param>
         /// <param name="transactions">The list of transactions to use to determine duration.</param>
         public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            var list = transactions.ToList();
+            List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
             bool needMinDate = true, needMaxDate = true;
 
@@ -87,13 +84,13 @@ namespace BudgetAnalyser.Engine
 
             if (needMaxDate || needMinDate)
             {
-                foreach (var transaction in list)
+                foreach (Transaction transaction in list)
                 {
                     if (needMinDate && transaction.Date < minDate)
                     {
                         minDate = transaction.Date;
                     }
-                    
+
                     if (needMaxDate && transaction.Date > maxDate)
                     {
                         maxDate = transaction.Date;
@@ -101,7 +98,7 @@ namespace BudgetAnalyser.Engine
                 }
             }
 
-            var durationInMonths = (int)Math.Round(maxDate.Subtract(minDate).TotalDays / 30, 0);
+            var durationInMonths = (int)Math.Round(maxDate.Subtract(minDate).TotalDays/30, 0);
             if (durationInMonths <= 0)
             {
                 durationInMonths = 1;
@@ -152,7 +149,7 @@ namespace BudgetAnalyser.Engine
         public StatementModel Merge(StatementModel additionalModel)
         {
             Imported = additionalModel.Imported;
-            var mergedTransactions = AllTransactions.ToList().Merge(additionalModel.Transactions).ToList();
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.Transactions).ToList();
             AllTransactions = mergedTransactions;
             this.duplicates = null;
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
@@ -160,6 +157,12 @@ namespace BudgetAnalyser.Engine
             AccountTypes = mergedTransactions.Select(t => t.AccountType).Distinct().ToList();
             Filter(this.currentFilter);
             return this;
+        }
+
+        public void RemoveTransaction(Transaction transaction)
+        {
+            this.doNotUseAllTransactions.Remove(transaction);
+            Filter(this.currentFilter);
         }
 
         public IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
@@ -172,20 +175,14 @@ namespace BudgetAnalyser.Engine
             List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetHashCode(), t => t).Where(group => group.Count() > 1).ToList();
             Debug.WriteLine("{0} Duplicates detected.", query.Sum(group => group.Count()));
             Parallel.ForEach(query, duplicate =>
+            {
+                foreach (Transaction txn in duplicate)
                 {
-                    foreach (Transaction txn in duplicate)
-                    {
-                        txn.IsSuspectedDuplicate = true;
-                    }
-                });
+                    txn.IsSuspectedDuplicate = true;
+                }
+            });
             this.duplicates = query;
             return this.duplicates;
-        }
-
-        public void RemoveTransaction(Transaction transaction)
-        {
-            this.doNotUseAllTransactions.Remove(transaction);
-            Filter(this.currentFilter);
         }
 
         /// <summary>

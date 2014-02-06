@@ -18,6 +18,18 @@ namespace BudgetAnalyser.Engine.Ledger
             return dataBook;
         }
 
+        private DataLedgerEntry MapEntry(LedgerEntry entry)
+        {
+            var dataEntry = new DataLedgerEntry
+            {
+                Balance = entry.Balance,
+                BucketCode = entry.Ledger.BudgetBucket.Code,
+                Transactions = entry.Transactions.Select(MapTransaction).ToList()
+            };
+
+            return dataEntry;
+        }
+
         private DataLedgerEntryLine MapLine(LedgerEntryLine line)
         {
             var dataLine = new DataLedgerEntryLine
@@ -44,18 +56,6 @@ namespace BudgetAnalyser.Engine.Ledger
             };
 
             return dataTransaction;
-        }
-
-        private DataLedgerEntry MapEntry(LedgerEntry entry)
-        {
-            var dataEntry = new DataLedgerEntry
-            {
-                Balance = entry.Balance,
-                BucketCode = entry.Ledger.BudgetBucket.Code,
-                Transactions = entry.Transactions.Select(MapTransaction).ToList()
-            };
-
-            return dataEntry;
         }
     }
 }

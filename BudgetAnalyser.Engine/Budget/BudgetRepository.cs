@@ -19,6 +19,8 @@ namespace BudgetAnalyser.Engine.Budget
             BudgetBucketRepository = bucketRepository;
         }
 
+        public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
+
         public BudgetCollection CreateNew(string fileName)
         {
             var newBudget = new BudgetModel
@@ -27,7 +29,7 @@ namespace BudgetAnalyser.Engine.Budget
                 Name = "Default Budget",
             };
 
-            var newCollection = new BudgetCollection(new[] {newBudget})
+            var newCollection = new BudgetCollection(new[] { newBudget })
             {
                 FileName = fileName
             };
@@ -71,7 +73,5 @@ namespace BudgetAnalyser.Engine.Budget
             string serialised = XamlServices.Save(budgetData);
             File.WriteAllText(budgetData.FileName, serialised);
         }
-
-        public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -143,7 +144,7 @@ namespace BudgetAnalyser.Engine.Statement
             return statementModel;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
         public void Save(StatementModel model, string fileName)
         {
             IEnumerable<Transaction> transactionsToSave = model.Filtered ? model.AllTransactions : model.Transactions;
@@ -248,7 +249,7 @@ namespace BudgetAnalyser.Engine.Statement
                 txnCheckSum *= 397; // also prime 
                 foreach (Transaction txn in model.AllTransactions)
                 {
-                    txnCheckSum += (long) txn.Amount*100;
+                    txnCheckSum += (long)txn.Amount*100;
                     txnCheckSum *= 829;
                 }
             }

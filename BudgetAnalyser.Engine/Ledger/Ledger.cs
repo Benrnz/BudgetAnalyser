@@ -1,17 +1,10 @@
-﻿using System.Collections;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    public class Ledger 
+    public class Ledger
     {
         public BudgetBucket BudgetBucket { get; internal set; }
-
-        public override int GetHashCode()
-        {
-            var hash = BudgetBucket.Code.GetHashCode();
-            return hash;
-        }
 
         public override bool Equals(object obj)
         {
@@ -29,5 +22,10 @@ namespace BudgetAnalyser.Engine.Ledger
             return BudgetBucket.Code.Equals(otherLedger.BudgetBucket.Code);
         }
 
+        public override int GetHashCode()
+        {
+            int hash = BudgetBucket.Code.GetHashCode();
+            return hash;
+        }
     }
 }

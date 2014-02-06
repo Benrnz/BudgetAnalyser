@@ -5,7 +5,6 @@ namespace BudgetAnalyser.Engine.Ledger
     public class CreditLedgerTransaction : LedgerTransaction
     {
         public CreditLedgerTransaction()
-            : base()
         {
         }
 

@@ -4,6 +4,11 @@ namespace BudgetAnalyser.Engine
 {
     public static class DateTimeExtension
     {
+        public static DateTime ToBeginingOfMonth(this DateTime instance)
+        {
+            return instance.AddDays(-instance.Day + 1);
+        }
+
         public static DateTime ToEndOfMonth(this DateTime instance)
         {
             int lastDay = 1;
@@ -17,11 +22,6 @@ namespace BudgetAnalyser.Engine
             } while (month == next.Month);
 
             return new DateTime(instance.Year, instance.Month, lastDay);
-        }
-
-        public static DateTime ToBeginingOfMonth(this DateTime instance)
-        {
-            return instance.AddDays(-instance.Day + 1);
         }
     }
 }

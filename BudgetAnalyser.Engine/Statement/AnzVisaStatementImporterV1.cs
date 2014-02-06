@@ -9,14 +9,14 @@ using Rees.UserInteraction.Contracts;
 namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
-    /// An importer for ANZ Visa bank statement export.
+    ///     An importer for ANZ Visa bank statement export.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AnzVisaStatementImporterV1 : IBankStatementImporter
     {
-        private readonly IUserMessageBox userMessageBox;
-        private readonly BankImportUtilities importUtilities;
         private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>();
+        private readonly BankImportUtilities importUtilities;
+        private readonly IUserMessageBox userMessageBox;
 
         public AnzVisaStatementImporterV1([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
         {
@@ -35,12 +35,13 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Load the given file into a <see cref="StatementModel"/>.
+        ///     Load the given file into a <see cref="StatementModel" />.
         /// </summary>
         /// <param name="fileName">The file to load.</param>
         /// <param name="accountType">
-        /// The account type to classify these transactions. This is useful when merging one statement to another. For example, merging a cheque account
-        /// export with visa account export, each can be classified using an account type.
+        ///     The account type to classify these transactions. This is useful when merging one statement to another. For example,
+        ///     merging a cheque account
+        ///     export with visa account export, each can be classified using an account type.
         /// </param>
         public StatementModel Load(string fileName, AccountType accountType)
         {
@@ -77,8 +78,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Test the given file to see if this importer implementation can read and import it.
-        /// This will open and read some of the contents of the file.
+        ///     Test the given file to see if this importer implementation can read and import it.
+        ///     This will open and read some of the contents of the file.
         /// </summary>
         public bool TasteTest(string fileName)
         {
