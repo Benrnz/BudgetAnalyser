@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Statement
         private string windowTitle;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LoadFileController([NotNull] IViewLoader viewLoader,
+        public LoadFileController([NotNull] LoadFileViewLoader viewLoader,
             [NotNull] UiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] IStatementModelRepository statementModelRepository)

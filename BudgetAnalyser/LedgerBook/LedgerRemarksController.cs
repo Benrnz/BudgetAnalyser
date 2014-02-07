@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerRemarksController : ControllerBase, IShowableController
     {
         private bool doNotUseIsReadOnly;

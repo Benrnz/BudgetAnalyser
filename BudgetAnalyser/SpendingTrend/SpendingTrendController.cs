@@ -29,7 +29,7 @@ namespace BudgetAnalyser.SpendingTrend
 
         public SpendingTrendController(
             [NotNull] Func<BucketSpendingController> bucketSpendingFactory,
-            [NotNull] IViewLoader viewLoader,
+            [NotNull] SpendingTrendViewLoader viewLoader,
             [NotNull] AddUserDefinedSpendingChartController addUserDefinedSpendingChartController,
             [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {

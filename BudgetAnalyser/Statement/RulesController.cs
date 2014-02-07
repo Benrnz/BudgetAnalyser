@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Statement
 
         public RulesController(
             [NotNull] NewRuleController newRuleController,
-            [NotNull] IViewLoader maintainRulesViewLoader,
+            [NotNull] MaintainRulesViewLoader maintainRulesViewLoader,
             [NotNull] IUserQuestionBoxYesNo questionBox,
             [NotNull] IMatchingRuleRepository ruleRepository)
         {

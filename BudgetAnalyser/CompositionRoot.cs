@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Windows;
 using Autofac;
-using Autofac.Core;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
@@ -25,13 +21,6 @@ namespace BudgetAnalyser
 {
     public class CompositionRoot
     {
-        private const string SpendingTrendView = "SpendingTrendView";
-        private const string UserDefinedChartDialog = "UserDefinedChartDialog";
-        private const string DateFilterView = "DateFilterView";
-        private const string AccountTypeFilterView = "AccountTypeFilterView";
-        private const string LoadFileView = "LoadFileView";
-        private const string MaintainRulesView = "MaintainRulesView";
-        private const string NewRuleView = "NewRuleView";
         private const string InputBoxView = "InputBoxView";
 
         public ShellController ShellController { get; private set; }
@@ -41,14 +30,16 @@ namespace BudgetAnalyser
         {
             var builder = new ContainerBuilder();
 
-            DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+            Engine.DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+            Engine.IoC.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
 
-            IoC.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
 
-
-            // Everything else:
+            // Wait Cursor Builder
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
+            // Registrations from Rees.Wpf
+            builder.RegisterType<XmlRecentFileManager>().As<IRecentFileManager>().SingleInstance();
+            builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
             builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
             builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
@@ -60,62 +51,18 @@ namespace BudgetAnalyser
                 .SingleInstance();
 
 
-            // Load File View and Controller
-            builder.RegisterType<WpfViewLoader<LoadFileView>>().Named<IViewLoader>(LoadFileView).SingleInstance();
-            builder.Register(c => new LoadFileController(
-                c.ResolveNamed<IViewLoader>(LoadFileView),
-                c.Resolve<UiContext>(),
-                c.Resolve<IAccountTypeRepository>(),
-                c.Resolve<IStatementModelRepository>()))
-                .SingleInstance();
+            builder.RegisterInstance<Func<BucketSpendingController>>(() => new BucketSpendingController(new SpendingGraphAnalyser()));
 
+
+            // Register Messenger Singleton from MVVM Light
+            builder.RegisterInstance(Messenger.Default).As<IMessenger>();
+            
+            // Explicit object creation below is necessary to correctly register with IoC container.
+            // ReSharper disable once RedundantDelegateCreation
+            builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
             
 
-            // Rules
-            builder.RegisterType<CreateNewRuleViewLoader>().Named<IViewLoader>(NewRuleView).SingleInstance();
-            builder.RegisterType<NewRuleController>().SingleInstance().WithParameter(ResolvedParameter.ForNamed<IViewLoader>(NewRuleView));
-            builder.RegisterType<WpfViewLoader<MaintainRulesView>>().Named<IViewLoader>(MaintainRulesView).SingleInstance();
-            builder.RegisterType<RulesController>().SingleInstance().WithParameter(ResolvedParameter.ForNamed<IViewLoader>(MaintainRulesView));
-
-
-
-            // Statement Controller
-            builder.RegisterInstance<Func<BucketSpendingController>>(() => new BucketSpendingController(new SpendingGraphAnalyser()));
-            builder.RegisterType<WpfViewLoader<SpendingTrendView>>().Named<IViewLoader>(SpendingTrendView).SingleInstance();
-            builder.RegisterType<WpfViewLoader<AddUserDefinedSpendingChartDialog>>().Named<IViewLoader>(UserDefinedChartDialog).SingleInstance();
-            builder.RegisterType<AddUserDefinedSpendingChartController>().SingleInstance().WithParameter(ResolvedParameter.ForNamed<IViewLoader>(UserDefinedChartDialog));
-            builder.RegisterType<SpendingTrendController>().SingleInstance().WithParameter(ResolvedParameter.ForNamed<IViewLoader>(SpendingTrendView));
-
-
-            // Budget Controller
-            var budgetDetailsViewLoader = new WpfViewLoader<BudgetDetailsView>();
-            var budgetSelectionViewLoader = new WpfViewLoader<BudgetSelectionView>();
-            builder.Register(c => new BudgetController(
-                                      c.Resolve<IBudgetRepository>(),
-                                      c.Resolve<UiContext>(), 
-                                      budgetDetailsViewLoader, 
-                                      budgetSelectionViewLoader,
-                                      c.Resolve<DemoFileHelper>()));
-
-
-            // Filters
-            builder.RegisterType<WpfViewLoader<GlobalDateFilterView>>().Named<IViewLoader>(DateFilterView).SingleInstance();
-            builder.RegisterType<WpfViewLoader<GlobalAccountTypeFilterView>>().Named<IViewLoader>(AccountTypeFilterView).SingleInstance();
-            builder.Register(c => new GlobalFilterController(
-                c.Resolve<IUserMessageBox>(), 
-                c.ResolveNamed<IViewLoader>(DateFilterView), 
-                c.ResolveNamed<IViewLoader>(AccountTypeFilterView)));
-
-
-            // Shell Controller and Application State
-            builder.RegisterInstance(Messenger.Default).As<IMessenger>();
-            builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
-            builder.RegisterType<XmlRecentFileManager>().As<IRecentFileManager>().SingleInstance();
-
-            builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
-
-
-
+            // Instantiate and store all controllers...
             var container = builder.Build();
             var uiContext = container.Resolve<UiContext>();
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
@@ -136,8 +83,8 @@ namespace BudgetAnalyser
 
             
             // Kick it off
-            ShellWindow = new ShellWindow { DataContext = ShellController };
             ShellController = container.Resolve<ShellController>();
+            ShellWindow = new ShellWindow { DataContext = ShellController };
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Statement;
@@ -10,7 +9,6 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class DashboardController : ControllerBase, IShowableController
     {
         private IEnumerable<AccountType> currentAccountTypes;

@@ -112,8 +112,10 @@
     <Compile Include="Budget\BudgetAnalysisController.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetController.cs" />
+    <Compile Include="Budget\BudgetDetailsViewLoader.cs" />
     <Compile Include="Budget\BudgetPieController.cs" />
     <Compile Include="Budget\BudgetReadyMessage.cs" />
+    <Compile Include="Budget\BudgetSelectionViewLoader.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
@@ -132,10 +134,15 @@
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
     <Compile Include="Filtering\FilterMode.cs" />
     <Compile Include="Filtering\FilterStateV1.cs" />
+    <Compile Include="Filtering\GlobalAccountTypeFilterViewLoader.cs" />
+    <Compile Include="Filtering\GlobalDateFilterViewLoader.cs" />
     <Compile Include="Filtering\GlobalFilterController.cs" />
     <Compile Include="Filtering\PersistentFiltersV1.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="SpendingTrend\AddUserDefinedSpendingChartDialogViewLoader.cs" />
+    <Compile Include="SpendingTrend\SpendingTrendViewLoader.cs" />
+    <Compile Include="Statement\LoadFileViewLoader.cs" />
     <Compile Include="IShowableController.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationController.cs" />
     <Compile Include="LedgerBook\LastLedgerBookLoadedV1.cs" />
@@ -160,6 +167,7 @@
     <Compile Include="SpendingTrend\CustomSpendingChartsV1.cs" />
     <Compile Include="SpendingTrend\SpendingTrendController.cs" />
     <Compile Include="Statement\AppliedRulesController.cs" />
+    <Compile Include="Statement\MaintainRulesViewLoader.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
     <Compile Include="Statement\CreateNewRuleViewLoader.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />

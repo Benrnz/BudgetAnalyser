@@ -15,7 +15,6 @@ using Rees.Wpf.RecentFiles;
 
 namespace BudgetAnalyser.Statement
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
         // Bug God would be jealous of the length of this class.

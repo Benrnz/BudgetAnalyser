@@ -45,8 +45,8 @@ namespace BudgetAnalyser.Budget
         public BudgetController(
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext context,
-            [NotNull] IViewLoader budgetDetailsViewLoader,
-            [NotNull] IViewLoader budgetSelectionLoader,
+            [NotNull] BudgetDetailsViewLoader budgetDetailsViewLoader,
+            [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
             [NotNull] DemoFileHelper demoFileHelper)
         {
             // BUG Scroll into view when adding new expense or income.

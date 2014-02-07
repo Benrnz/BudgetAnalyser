@@ -1,12 +1,10 @@
 using System;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class AddLedgerReconciliationController : ControllerBase, IShowableController
     {
         private decimal doNotUseBankBalance;

@@ -27,8 +27,8 @@ namespace BudgetAnalyser.Filtering
 
         public GlobalFilterController(
             [NotNull] IUserMessageBox userMessageBox,
-            [NotNull] IViewLoader dateViewLoader,
-            [NotNull] IViewLoader accountViewLoader)
+            [NotNull] GlobalDateFilterViewLoader dateViewLoader,
+            [NotNull] GlobalAccountTypeFilterViewLoader accountViewLoader)
         {
             if (userMessageBox == null)
             {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using GalaSoft.MvvmLight.Command;
@@ -10,7 +9,6 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetPieController : ControllerBase, IShowableController
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;

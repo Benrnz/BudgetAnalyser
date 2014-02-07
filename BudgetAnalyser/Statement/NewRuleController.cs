@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
 
-        public NewRuleController([NotNull] IViewLoader viewLoader, [NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public NewRuleController([NotNull] CreateNewRuleViewLoader viewLoader, [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
             if (viewLoader == null)
             {

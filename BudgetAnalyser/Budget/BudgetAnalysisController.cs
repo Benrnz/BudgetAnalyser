@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetAnalysisController : ControllerBase
     {
         private bool doNotUseExpenseFilter;
