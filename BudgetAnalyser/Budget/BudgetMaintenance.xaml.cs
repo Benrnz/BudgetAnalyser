@@ -28,20 +28,47 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        private void OnIncomesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
+        {
+            if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
+            {
+                this.IncomesListScrollViewer.ScrollToBottom();
+                int count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
+                this.Incomes.SelectedIndex = count;
+            }
+        }
+
         private void OnOnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue != null)
             {
                 var controller = e.OldValue as BudgetController;
-                if (controller != null && controller.Expenses != null)
+                if (controller != null)
                 {
-                    controller.Expenses.ListChanged -= OnExpensesListChanged;
+                    if (controller.Expenses != null)
+                    {
+                        controller.Expenses.ListChanged -= OnExpensesListChanged;
+                    }
+
+                    if (controller.Incomes != null)
+                    {
+                        controller.Incomes.ListChanged -= OnIncomesListChanged;
+                    }
                 }
+
             }
 
-            if (Controller != null && Controller.Expenses != null)
+            if (Controller != null)
             {
-                Controller.Expenses.ListChanged += OnExpensesListChanged;
+                if (Controller.Expenses != null)
+                {
+                    Controller.Expenses.ListChanged += OnExpensesListChanged;
+                }
+
+                if (Controller.Incomes != null)
+                {
+                    Controller.Incomes.ListChanged += OnIncomesListChanged;
+                }
             }
         }
     }

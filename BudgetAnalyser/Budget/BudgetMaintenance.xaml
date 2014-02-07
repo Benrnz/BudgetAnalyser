@@ -24,7 +24,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBox x:Name="ExpenseCode"
-                    FontSize="12"
+                         FontSize="12"
                          Margin="2"
                          Style="{StaticResource BudgetTile}"
                          Text="{Binding Bucket.Code}" />
@@ -60,8 +60,10 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type budget:Income}">
+        <DataTemplate DataType="{x:Type budget:Income}"
+                      x:Key="IncomeTemplate">
             <Grid Background="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}"
+                  FocusManager.FocusedElement="{Binding ElementName=IncomeCode}"
                   Height="35"
                   Margin="1">
                 <Grid.ColumnDefinitions>
@@ -72,7 +74,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBox FontSize="12"
+                <TextBox x:Name="IncomeCode"
+                         FontSize="12"
                          Margin="2"
                          Style="{StaticResource BudgetTile}"
                          Text="{Binding Bucket.Code}" />
@@ -167,21 +170,26 @@
             <Button Command="{Binding DemoBudgetCommand}"
                     Style="{StaticResource HappyButton}" />
         </StackPanel>
+
         <!-- Incomes List -->
-        <StackPanel Grid.Column="0"
-                    Grid.Row="1"
-                    Margin="2">
-            <TextBlock Foreground="{StaticResource CreditBackground1Brush}"
-                       HorizontalAlignment="Left"
-                       Style="{StaticResource TotalStyle}"
-                       Text="Incomes" />
-            <Border BorderBrush="{StaticResource CreditBackground1Brush}"
-                    BorderThickness="2">
-                <ListBox x:Name="Incomes"
-                         ItemsSource="{Binding Incomes}"
-                         Style="{StaticResource BudgetItemList}" />
-            </Border>
-        </StackPanel>
+        <ScrollViewer x:Name="IncomesListScrollViewer"
+                      Grid.Row="1"
+                      Margin="2"
+                      HorizontalScrollBarVisibility="Hidden">
+            <StackPanel>
+                <TextBlock Foreground="{StaticResource CreditBackground1Brush}"
+                           HorizontalAlignment="Left"
+                           Style="{StaticResource TotalStyle}"
+                           Text="Incomes" />
+                <Border BorderBrush="{StaticResource CreditBackground1Brush}"
+                        BorderThickness="2">
+                    <ListBox x:Name="Incomes"
+                             ItemTemplate="{StaticResource IncomeTemplate}"
+                             ItemsSource="{Binding Incomes}"
+                             Style="{StaticResource BudgetItemList}" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
         <Button Background="{StaticResource CreditBackground1Brush}"
                 Command="{Binding AddNewIncomeCommand}"
                 Grid.Row="2"
@@ -191,6 +199,7 @@
                            Text="Add New Income" />
             </Button.Content>
         </Button>
+
         <!-- Expenses List -->
         <ScrollViewer x:Name="ExpensesListScrollViewer"
                       Grid.Column="1"
