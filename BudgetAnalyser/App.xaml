@@ -37,6 +37,7 @@
             <converters:NotBoolToVisibilityConverter x:Key="NotBoolToVisConverter" />
             <converters:BoolToVisibility2Converter x:Key="BoolToVis2Converter" />
             <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
+            <converters:NotNullToVisibilityConverter x:Key="NotNullToVisConverter" />
 
             <DataTemplate DataType="{x:Type statement:StatementController}">
                 <statement:StatementUserControl />

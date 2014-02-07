@@ -152,7 +152,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnTransactionListScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            this.HeaderScrollViewer.ScrollToHorizontalOffset(((ScrollViewer)sender).HorizontalOffset);
+            //this.HeaderScrollViewer.ScrollToHorizontalOffset(((ScrollViewer)sender).HorizontalOffset);
         }
 
         /// <summary>

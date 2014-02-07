@@ -5,10 +5,17 @@
         DarkOrange
     </Color>
 
+    <Color x:Key="RedWarningOilLightColour">
+        Red
+    </Color>
+
     <Color x:Key="OilLightTextColor">Black</Color>
 
     <SolidColorBrush x:Key="WarningOilLightBrush"
                      Color="{StaticResource WarningOilLightColour}" />
+
+    <SolidColorBrush x:Key="RedWarningOilLightBrush"
+                     Color="{StaticResource RedWarningOilLightColour}" />
 
     <SolidColorBrush x:Key="OilLightTextBrush"
                      Color="{StaticResource OilLightTextColor}" />
@@ -21,6 +28,13 @@
                 Value="8" />
         <Setter Property="Background"
                 Value="{StaticResource WarningOilLightBrush}" />
+    </Style>
+
+    <Style x:Key="RedWarningOilLightStyle"
+           TargetType="Border"
+           BasedOn="{StaticResource WarningOilLightStyle}">
+        <Setter Property="Background"
+                Value="{StaticResource RedWarningOilLightBrush}" />
     </Style>
 
     <Style x:Key="WarningLightTextStyle"

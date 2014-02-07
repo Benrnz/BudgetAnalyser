@@ -132,9 +132,6 @@
                 <Button Command="{Binding MergeStatementCommand}"
                         Style="{StaticResource LoadButton}"
                         ToolTip="Merge in new Transactions" />
-                <Button Command="{Binding DemoStatementCommand}"
-                        Style="{StaticResource HappyButton}"
-                        ToolTip="Load a demo set of transactions" />
             </StackPanel>
         </Grid>
 
@@ -174,10 +171,9 @@
                                    Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border
-                    Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
-                    Style="{StaticResource WarningOilLightStyle}"
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Difference: " />
@@ -246,7 +242,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <ScrollViewer x:Name="HeaderScrollViewer"
+            <!--<ScrollViewer x:Name="HeaderScrollViewer"
                           Background="{StaticResource MainBackgroundBrush}"
                           HorizontalScrollBarVisibility="Hidden"
                           VerticalScrollBarVisibility="Hidden">
@@ -319,20 +315,44 @@
                                Margin="0"
                                Text="Account" />
                 </Grid>
-            </ScrollViewer>
+            </ScrollViewer>-->
             <!-- 
             The Control Template for the transaction list box must be inline here so an event can be attached to internal list box Scroll Viewer. 
             This is so the horizontal scroll can be sync'ed with the header grid horizontal scroll.
             -->
-            <Border Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource WarningOilLightStyle}"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
-                <TextBlock Style="{StaticResource WarningLightTextStyle}"
-                           Text="No Transactions, with current filter."
-                           ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
-            </Border>
+            <StackPanel Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <StackPanel Visibility="{Binding ViewModel.Statement, Converter={StaticResource NullToVisConverter}}">
+                    <Border HorizontalAlignment="Center"
+                            Style="{StaticResource WarningOilLightStyle}"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource NotBoolToVisConverter}}">
+                        <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                                   Text="No Transactions, with current filter."
+                                   ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
+                    </Border>
+                </StackPanel>
+                
+                <Border HorizontalAlignment="Center"
+                        Style="{StaticResource RedWarningOilLightStyle}"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding ViewModel.Statement, Converter={StaticResource NotNullToVisConverter}}">
+                    <TextBlock Style="{StaticResource WarningLightTextStyle}"
+                               Text="No transactions file loaded."
+                               ToolTip="Load a transactions csv file." />
+                </Border>
+
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding ViewModel.Statement, Converter={StaticResource NotNullToVisConverter}}">
+                    <Button Command="{Binding DemoStatementCommand}"
+                            Margin="20,20,4,20"
+                            Style="{StaticResource HappyButton}"
+                            ToolTip="Load a demo set of transactions" />
+                    <TextBlock Text="Load a demonstration set of transactions." />
+                </StackPanel>
+            </StackPanel>
+
             <ListBox x:Name="TransactionListBox"
                      AlternationCount="2"
                      Grid.Row="1"
