@@ -30,11 +30,21 @@ namespace BudgetAnalyser.Engine.Budget
                 return false;
             }
 
+            if (Bucket == null || otherBudget.Bucket == null)
+            {
+                return false;
+            }
+
             return Bucket.Code == otherBudget.Bucket.Code;
         }
 
         public override int GetHashCode()
         {
+            if (Bucket == null)
+            {
+                return 0;
+            }
+
             return Bucket.Code.GetHashCode();
         }
 

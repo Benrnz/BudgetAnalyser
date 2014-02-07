@@ -347,21 +347,22 @@ namespace BudgetAnalyser.Budget
         private void OnAddNewExpenseExecute(ExpenseBudgetBucket expense)
         {
             this.dirty = true;
-            Expense newExpense;
+            var newExpense = Expenses.AddNew();
+            newExpense.Amount = 0;
             if (expense is SpentMonthlyExpense)
             {
-                newExpense = new Expense { Bucket = new SpentMonthlyExpense(string.Empty, string.Empty), Amount = 0 };
+                newExpense.Bucket = new SpentMonthlyExpense(string.Empty, string.Empty);
             }
             else if (expense is SavedUpForExpense)
             {
-                newExpense = new Expense { Bucket = new SavedUpForExpense(string.Empty, string.Empty), Amount = 0 };
+                newExpense.Bucket = new SavedUpForExpense(string.Empty, string.Empty);
             }
             else
             {
                 throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
             }
 
-            Expenses.Add(newExpense);
+            Expenses.RaiseListChangedEvents = true;
             newExpense.PropertyChanged += OnExpenseAmountPropertyChanged;
         }
 
