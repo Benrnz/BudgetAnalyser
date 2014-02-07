@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Budget
     /// <summary>
     ///     Interaction logic for BudgetMaintenance.xaml
     /// </summary>
-    public partial class BudgetMaintenance 
+    public partial class BudgetMaintenance
     {
         public BudgetMaintenance()
         {
@@ -55,7 +55,6 @@ namespace BudgetAnalyser.Budget
                         controller.Incomes.ListChanged -= OnIncomesListChanged;
                     }
                 }
-
             }
 
             if (Controller != null)
