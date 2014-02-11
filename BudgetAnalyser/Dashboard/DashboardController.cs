@@ -24,6 +24,11 @@ namespace BudgetAnalyser.Dashboard
         private readonly IWidgetRepository widgetRepository;
         private IEnumerable<AccountType> currentAccountTypes;
         private bool doNotUseShown;
+        // TODO Timer for time based widget updates
+        // TODO Style changer for when widget escalate to a different style after updating.
+        // TODO Support for medium sized tiles
+        // TODO Support for medium tiles with image
+        // TODO Support for image changes when widget updates
 
         public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository)
         {
