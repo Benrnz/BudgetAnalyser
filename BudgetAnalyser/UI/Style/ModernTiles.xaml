@@ -56,4 +56,11 @@
                 Value="{StaticResource ModernTileColourBrush1}" />
     </Style>
 
+    <Style x:Key="ModernTileSmallStyle1"
+           BasedOn="{StaticResource ModernTileMediumStyle1}"
+           TargetType="Border">
+        <Setter Property="Width"
+                Value="75" />
+    </Style>
+
 </ResourceDictionary>

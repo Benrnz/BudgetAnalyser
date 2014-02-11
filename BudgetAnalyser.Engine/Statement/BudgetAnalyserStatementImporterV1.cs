@@ -89,7 +89,6 @@ namespace BudgetAnalyser.Engine.Statement
             var statementModel = new StatementModel
             {
                 FileName = fileName,
-                Imported = DateTime.Now,
             };
 
             if (totalLines == 1)
@@ -122,10 +121,10 @@ namespace BudgetAnalyser.Engine.Statement
                 transactions.Add(transaction);
             }
 
-
             statementModel.LoadTransactions(transactions);
 
             statementModel.DurationInMonths = StatementModel.CalculateDuration(null, statementModel.Transactions);
+            statementModel.Imported = transactions.Any() ? transactions.Max(t => t.Date) : DateTime.Now;
 
             long calcTxnCheckSum = CalculateTransactionCheckSum(statementModel);
 
