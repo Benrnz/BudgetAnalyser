@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Timers;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -22,10 +25,8 @@ namespace BudgetAnalyser.Dashboard
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly IWidgetRepository widgetRepository;
         private bool doNotUseShown;
-        // TODO Timer for time based widget updates
-        // TODO Style changer for when widget escalate to a different style after updating.
-        // TODO Support for medium sized tiles
-        // TODO Support for medium tiles with image
+        private Timer updateTimer;
+        private TimeSpan elapsedTime;
         // TODO Support for image changes when widget updates
 
         public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository)
@@ -42,6 +43,27 @@ namespace BudgetAnalyser.Dashboard
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
+
+            this.updateTimer = new Timer(TimeSpan.FromMinutes(1).TotalMilliseconds)
+            {
+                AutoReset = true,
+                Enabled = true,
+            };
+            this.updateTimer.Elapsed += OnUpdateTimerElapsed;
+        }
+
+        private void OnUpdateTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
+            foreach (var widget in Widgets.Where(w => w.RecommendedTimeIntervalUpdate != null))
+            {
+                Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
+                if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
+                {
+                    Widget widgetCopy = widget;
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
+                }
+            }
         }
 
         public GlobalFilterController GlobalFilterController { get; private set; }
