@@ -9,9 +9,10 @@ namespace BudgetAnalyser.Engine.Widget
         {
             Category = "Transactions";
             Dependencies = new[] { typeof(StatementModel) };
-            DetailedText = "Days since new transactions";
-            ImageResourceUri = null;
+            DetailedText = "Days since last import";
+            ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
+            Clickable = true;
         }
 
         public override void Update(params object[] input)
@@ -32,11 +33,11 @@ namespace BudgetAnalyser.Engine.Widget
             ToolTip = string.Format("It's been {0} days since new transactions have been imported.", LargeNumber);
             if (days >= 7)
             {
-                ColourStyleName = WidgetWarningBrush;
+                ColourStyleName = WidgetWarningStyle;
             }
             else
             {
-                ColourStyleName = WidgetStandardBrush;
+                ColourStyleName = WidgetStandardStyle;
             }
         }
     }

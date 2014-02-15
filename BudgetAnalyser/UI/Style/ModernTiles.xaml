@@ -63,4 +63,14 @@
                 Value="75" />
     </Style>
 
+    <Style x:Key="WidgetWarningStyle"
+           TargetType="Panel">
+        <Setter Property="Background" Value="{StaticResource WarningOilLightBrush}"/>
+    </Style>
+
+    <Style x:Key="WidgetStandardStyle"
+           TargetType="Panel">
+        <Setter Property="Background"
+                Value="{StaticResource ModernTileColourBrush1}" />
+    </Style>
 </ResourceDictionary>

@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Account
             return this.repository.GetOrAdd(key, CreateNewAccountType);
         }
 
-        public IEnumerable<AccountType> List()
+        public IEnumerable<AccountType> ListCurrentlyUsedAccountTypes()
         {
             return this.repository.Values.ToList();
         }

@@ -10,7 +10,6 @@
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
-             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog">
 
     <Application.Resources>
@@ -31,6 +30,7 @@
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
+                <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />

@@ -12,6 +12,6 @@ namespace BudgetAnalyser.Engine
 
         AccountType GetByKey(string key);
         AccountType GetOrCreateNew(string key);
-        IEnumerable<AccountType> List();
+        IEnumerable<AccountType> ListCurrentlyUsedAccountTypes();
     }
 }

@@ -222,7 +222,7 @@ namespace BudgetAnalyser.Statement
                 SuggestedDateRange = string.Format(CultureInfo.CurrentCulture, "{0:d} to {1:d}", lastTransactionDate, maxDate);
             }
 
-            RequestUserInputCommomPreparation(this.accountTypeRepository.List());
+            RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
         public void RequestUserInputForOpenFile()
@@ -231,7 +231,7 @@ namespace BudgetAnalyser.Statement
             SuggestedDateRange = null;
             WindowTitle = "Open Statement";
             ActionButtonText = "Open";
-            RequestUserInputCommomPreparation(this.accountTypeRepository.List());
+            RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
         public void Reset()

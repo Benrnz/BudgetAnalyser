@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widget;
@@ -22,7 +21,6 @@ namespace BudgetAnalyser.Dashboard
     {
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly IWidgetRepository widgetRepository;
-        private IEnumerable<AccountType> currentAccountTypes;
         private bool doNotUseShown;
         // TODO Timer for time based widget updates
         // TODO Style changer for when widget escalate to a different style after updating.
@@ -43,16 +41,7 @@ namespace BudgetAnalyser.Dashboard
             MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-        }
-
-        public ICommand GlobalAccountTypeFilterCommand
-        {
-            get { return new RelayCommand<FilterMode>(OnGlobalDateFilterCommandExecute, CanExecuteGlobalFilterCommand); }
-        }
-
-        public ICommand GlobalDateFilterCommand
-        {
-            get { return new RelayCommand<FilterMode>(OnGlobalDateFilterCommandExecute, CanExecuteGlobalFilterCommand); }
+            MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
         }
 
         public GlobalFilterController GlobalFilterController { get; private set; }
@@ -76,15 +65,19 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public IEnumerable<Widget> Widgets { get; private set; }
-
-        private bool CanExecuteGlobalFilterCommand(FilterMode parameter)
+        public ICommand WidgetCommand
         {
-            return true;
+            get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
         }
 
-        private void OnApplicationStateLoadedMessageReceived(ApplicationStateLoadedMessage message)
+        public IEnumerable<Widget> Widgets { get; private set; }
+
+        private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
             if (Widgets == null)
             {
                 Widgets = this.widgetRepository.GetAll();
@@ -118,16 +111,16 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void OnGlobalDateFilterCommandExecute(FilterMode filterType)
+        private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)
         {
-            if (filterType == FilterMode.Dates)
+            if (message == null)
             {
-                GlobalFilterController.PromptUserForDates();
+                throw new ArgumentNullException("message");
             }
-            else if (filterType == FilterMode.AccountType)
-            {
-                GlobalFilterController.PromptUserForAccountType(this.currentAccountTypes);
-            }
+
+            Type key = typeof(GlobalFilterCriteria);
+            this.availableDependencies[key] = message.Criteria;
+            UpdateWidgets(key);
         }
 
         private void OnStatementReadyMessageReceived([NotNull] StatementReadyMessage message)
@@ -139,11 +132,15 @@ namespace BudgetAnalyser.Dashboard
 
             if (message.StatementModel != null)
             {
-                this.currentAccountTypes = message.StatementModel.AccountTypes;
                 Type key = typeof(StatementModel);
                 this.availableDependencies[key] = message.StatementModel;
                 UpdateWidgets(key);
             }
+        }
+
+        private void OnWidgetCommandExecuted(Widget widget)
+        {
+            MessagingGate.Send(new WidgetActivatedMessage(widget));
         }
 
         private void UpdateWidget(Widget widget)
@@ -192,6 +189,11 @@ namespace BudgetAnalyser.Dashboard
                 // update all
                 Widgets.ToList().ForEach(UpdateWidget);
             }
+        }
+
+        private bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
         }
     }
 }

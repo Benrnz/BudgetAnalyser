@@ -130,6 +130,7 @@
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dashboard\WidgetActivatedMessage.cs" />
     <Compile Include="DemoFileHelper.cs" />
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
     <Compile Include="Filtering\FilterMode.cs" />
@@ -260,6 +261,10 @@
     <Page Include="ReportsCatalog\ReportsCatalogUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Assets\DateFilterImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Style\Colours.xaml">
       <SubType>Designer</SubType>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
+using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Widget;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
@@ -23,6 +25,7 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
+            MessagingGate.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }
 
         public ICommand BudgetCommand
@@ -39,6 +42,20 @@ namespace BudgetAnalyser
                 RaisePropertyChanged(() => BudgetToggle);
             }
         }
+
+        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            if (message.Widget is DaysSinceLastImport)
+            {
+                OnTransactionExecuted();
+            }
+        }
+
 
         public ICommand DashboardCommand
         {

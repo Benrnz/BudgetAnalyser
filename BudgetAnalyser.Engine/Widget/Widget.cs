@@ -9,26 +9,30 @@ namespace BudgetAnalyser.Engine.Widget
 {
     public abstract class Widget : INotifyPropertyChanged
     {
-        protected const string WidgetStandardBrush = "WidgetWarningBrush";
-        protected const string WidgetWarningBrush = "WidgetWarningBrush";
+        protected const string WidgetStandardStyle = "WidgetStandardStyle";
+        protected const string WidgetWarningStyle = "WidgetWarningStyle";
 
         private string doNotUseCategory;
         private string doNotUseColour;
         private string doNotUseDetailedText;
-        private string doNotUseImageResourceUri;
+        private string doNotUseImageResourceName;
         private string doNotUseLargeNumber;
+        private WidgetSize doNotUseSize;
         private string doNotUseToolTip;
-        private bool doNotUseVisibility;
+        private string doNotUseWidgetStyle;
 
         protected Widget()
         {
             Name = GetType().Name;
             ColourStyleName = "WidgetStandardBrush";
+            Size = WidgetSize.Small;
+            WidgetStyle = "ModernTileSmallStyle1";
         }
 
+        public event EventHandler ColourStyleChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler StyleChanged;
+        public event EventHandler WidgetStyleChanged;
 
         public string Category
         {
@@ -40,6 +44,8 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
+        public bool Clickable { get; set; }
+
         public string ColourStyleName
         {
             get { return this.doNotUseColour; }
@@ -50,12 +56,11 @@ namespace BudgetAnalyser.Engine.Widget
                 OnPropertyChanged();
                 if (changed)
                 {
-                    OnStyleChanged();
+                    OnStyleChanged(ColourStyleChanged);
                 }
             }
         }
 
-        public object Command { get; set; }
         public IEnumerable<Type> Dependencies { get; protected set; }
 
         public string DetailedText
@@ -68,12 +73,12 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
-        public string ImageResourceUri
+        public string ImageResourceName
         {
-            get { return this.doNotUseImageResourceUri; }
+            get { return this.doNotUseImageResourceName; }
             protected set
             {
-                this.doNotUseImageResourceUri = value;
+                this.doNotUseImageResourceName = value;
                 OnPropertyChanged();
             }
         }
@@ -92,6 +97,16 @@ namespace BudgetAnalyser.Engine.Widget
 
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
 
+        public WidgetSize Size
+        {
+            get { return this.doNotUseSize; }
+            protected set
+            {
+                this.doNotUseSize = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ToolTip
         {
             get { return this.doNotUseToolTip; }
@@ -102,13 +117,18 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
-        public bool Visibility
+        public string WidgetStyle
         {
-            get { return this.doNotUseVisibility; }
+            get { return this.doNotUseWidgetStyle; }
             protected set
             {
-                this.doNotUseVisibility = value;
+                bool changed = value != this.doNotUseWidgetStyle;
+                this.doNotUseWidgetStyle = value;
                 OnPropertyChanged();
+                if (changed)
+                {
+                    OnStyleChanged(WidgetStyleChanged);
+                }
             }
         }
 
@@ -124,9 +144,9 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
-        protected void OnStyleChanged()
+        protected void OnStyleChanged(EventHandler eventToInvoke)
         {
-            EventHandler handler = StyleChanged;
+            EventHandler handler = eventToInvoke;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

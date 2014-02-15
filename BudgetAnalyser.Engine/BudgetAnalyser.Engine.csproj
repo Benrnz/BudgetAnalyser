@@ -144,10 +144,13 @@
     <Compile Include="Transaction.cs" />
     <Compile Include="TransactionListExtension.cs" />
     <Compile Include="TransactionType.cs" />
+    <Compile Include="Widget\AccountFilterWidget.cs" />
+    <Compile Include="Widget\DateFilterWidget.cs" />
     <Compile Include="Widget\DaysSinceLastImport.cs" />
     <Compile Include="Widget\IWidgetRepository.cs" />
     <Compile Include="Widget\ReflectionWidgetRepository.cs" />
     <Compile Include="Widget\Widget.cs" />
+    <Compile Include="Widget\WidgetSize.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">

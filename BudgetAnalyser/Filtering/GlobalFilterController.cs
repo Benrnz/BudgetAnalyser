@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Widget;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -15,6 +17,7 @@ namespace BudgetAnalyser.Filtering
 {
     public class GlobalFilterController : ControllerBase
     {
+        private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IViewLoader accountView;
         private readonly IViewLoader dateView;
         private readonly IUserMessageBox userMessageBox;
@@ -28,7 +31,8 @@ namespace BudgetAnalyser.Filtering
         public GlobalFilterController(
             [NotNull] IUserMessageBox userMessageBox,
             [NotNull] GlobalDateFilterViewLoader dateViewLoader,
-            [NotNull] GlobalAccountTypeFilterViewLoader accountViewLoader)
+            [NotNull] GlobalAccountTypeFilterViewLoader accountViewLoader,
+            [NotNull] IAccountTypeRepository accountTypeRepository)
         {
             if (userMessageBox == null)
             {
@@ -45,14 +49,21 @@ namespace BudgetAnalyser.Filtering
                 throw new ArgumentNullException("accountViewLoader");
             }
 
+            if (accountTypeRepository == null)
+            {
+                throw new ArgumentNullException("accountTypeRepository");
+            }
+
             this.dateView = dateViewLoader;
             this.accountView = accountViewLoader;
+            this.accountTypeRepository = accountTypeRepository;
             this.userMessageBox = userMessageBox;
             Criteria = new GlobalFilterCriteria();
 
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
+            MessagingGate.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }
 
         public string AccountTypeSummary
@@ -119,10 +130,10 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public void PromptUserForAccountType(IEnumerable<AccountType> availableAccountTypes)
+        public void PromptUserForAccountType()
         {
             this.filterMode = FilterMode.AccountType;
-            List<AccountType> accountTypeList = availableAccountTypes.ToList();
+            List<AccountType> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             accountTypeList.Insert(0, null);
             AccountTypes = accountTypeList;
             SelectedAccountType = Criteria.AccountType;
@@ -210,6 +221,25 @@ namespace BudgetAnalyser.Filtering
         private void OnGlobalFilterRequested(RequestFilterMessage message)
         {
             message.Criteria = Criteria;
+        }
+
+        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            if (message.Widget is DateFilterWidget)
+            {
+                PromptUserForDates();
+                return;
+            }
+
+            if (message.Widget is AccountFilterWidget)
+            {
+                PromptUserForAccountType();
+            }
         }
 
         private void SendFilterAppliedMessage()

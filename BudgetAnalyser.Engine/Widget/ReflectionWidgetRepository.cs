@@ -11,7 +11,10 @@ namespace BudgetAnalyser.Engine.Widget
         {
             var widgetTypes = GetType().Assembly.GetExportedTypes()
                 .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
-            return widgetTypes.Select(widgetType => Activator.CreateInstance(widgetType) as Widget).ToList();
+            return widgetTypes.Select(widgetType => Activator.CreateInstance(widgetType) as Widget)
+                .OrderBy(w => w.Category)
+                .ThenBy(w => w.Name)
+                .ToList();
         }
     }
 }
