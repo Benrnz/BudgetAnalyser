@@ -25,8 +25,8 @@ namespace BudgetAnalyser.Dashboard
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly IWidgetRepository widgetRepository;
         private bool doNotUseShown;
-        private Timer updateTimer;
         private TimeSpan elapsedTime;
+        private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
         public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository)
@@ -50,20 +50,6 @@ namespace BudgetAnalyser.Dashboard
                 Enabled = true,
             };
             this.updateTimer.Elapsed += OnUpdateTimerElapsed;
-        }
-
-        private void OnUpdateTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
-            foreach (var widget in Widgets.Where(w => w.RecommendedTimeIntervalUpdate != null))
-            {
-                Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
-                if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
-                {
-                    Widget widgetCopy = widget;
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
-                }
-            }
         }
 
         public GlobalFilterController GlobalFilterController { get; private set; }
@@ -157,6 +143,20 @@ namespace BudgetAnalyser.Dashboard
                 Type key = typeof(StatementModel);
                 this.availableDependencies[key] = message.StatementModel;
                 UpdateWidgets(key);
+            }
+        }
+
+        private void OnUpdateTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
+            foreach (Widget widget in Widgets.Where(w => w.RecommendedTimeIntervalUpdate != null))
+            {
+                Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
+                if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
+                {
+                    Widget widgetCopy = widget;
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
+                }
             }
         }
 
