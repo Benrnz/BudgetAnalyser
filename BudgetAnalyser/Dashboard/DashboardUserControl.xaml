@@ -27,7 +27,13 @@
                            Margin="5"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Left"/>
+                    <Image Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
+                           Width="20"
+                           Margin="40,25,0,0"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left" />
                     <TextBlock FontSize="24"
+                               Margin="5,2,2,2"
                                Text="{Binding LargeNumber}" />
                     <TextBlock Grid.Row="1"
                                Grid.ColumnSpan="2"
