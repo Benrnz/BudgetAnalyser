@@ -13,6 +13,7 @@ using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widget;
 using BudgetAnalyser.Filtering;
+using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -43,6 +44,7 @@ namespace BudgetAnalyser.Dashboard
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
+            MessagingGate.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
 
             this.updateTimer = new Timer(TimeSpan.FromMinutes(1).TotalMilliseconds)
             {
@@ -50,6 +52,8 @@ namespace BudgetAnalyser.Dashboard
                 Enabled = true,
             };
             this.updateTimer.Elapsed += OnUpdateTimerElapsed;
+
+            InitialiseSupportedDependenciesArray();
         }
 
         public GlobalFilterController GlobalFilterController { get; private set; }
@@ -80,6 +84,14 @@ namespace BudgetAnalyser.Dashboard
 
         public IEnumerable<Widget> Widgets { get; private set; }
 
+        private void InitialiseSupportedDependenciesArray()
+        {
+            this.availableDependencies[typeof(StatementModel)] = null;
+            this.availableDependencies[typeof(BudgetCollection)] = null;
+            this.availableDependencies[typeof(BudgetCurrencyContext)] = null;
+            this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = null;
+        }
+
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
@@ -100,23 +112,9 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            bool updated = false;
-            if (message.Budgets != null)
-            {
-                this.availableDependencies[typeof(BudgetCollection)] = message.Budgets;
-                updated = true;
-            }
-
-            if (message.ActiveBudget != null)
-            {
-                this.availableDependencies[typeof(BudgetCurrencyContext)] = message.ActiveBudget;
-                updated = true;
-            }
-
-            if (updated)
-            {
-                UpdateWidgets(typeof(BudgetCollection), typeof(BudgetCurrencyContext));
-            }
+            this.availableDependencies[typeof(BudgetCollection)] = message.Budgets;
+            this.availableDependencies[typeof(BudgetCurrencyContext)] = message.ActiveBudget;
+            UpdateWidgets(typeof(BudgetCollection), typeof(BudgetCurrencyContext));
         }
 
         private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)
@@ -131,6 +129,17 @@ namespace BudgetAnalyser.Dashboard
             UpdateWidgets(key);
         }
 
+        private void OnLedgerBookReadyMessageReceived([NotNull] LedgerBookReadyMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = message.LedgerBook;
+            UpdateWidgets(typeof(Engine.Ledger.LedgerBook));
+        }
+
         private void OnStatementReadyMessageReceived([NotNull] StatementReadyMessage message)
         {
             if (message == null)
@@ -138,12 +147,9 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            if (message.StatementModel != null)
-            {
-                Type key = typeof(StatementModel);
-                this.availableDependencies[key] = message.StatementModel;
-                UpdateWidgets(key);
-            }
+            Type key = typeof(StatementModel);
+            this.availableDependencies[key] = message.StatementModel;
+            UpdateWidgets(key);
         }
 
         private void OnUpdateTimerElapsed(object sender, ElapsedEventArgs e)

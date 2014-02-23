@@ -311,6 +311,7 @@ namespace BudgetAnalyser.LedgerBook
                     }
 
                     LedgerBook = this.ledgerRepository.Load(fileName);
+                    MessagingGate.Send(new LedgerBookReadyMessage(LedgerBook));
                 }
                 catch (FileFormatException ex)
                 {
@@ -404,6 +405,7 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
             LedgerBook = null;
             this.pendingFileName = null;
+            MessagingGate.Send(new LedgerBookReadyMessage(null));
         }
 
         private void OnDemoLedgerBookCommandExecute()

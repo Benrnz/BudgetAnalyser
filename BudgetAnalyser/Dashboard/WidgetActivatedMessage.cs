@@ -10,6 +10,7 @@ namespace BudgetAnalyser.Dashboard
             Widget = widget;
         }
 
+        public bool Handled { get; set; }
         public Widget Widget { get; private set; }
     }
 }

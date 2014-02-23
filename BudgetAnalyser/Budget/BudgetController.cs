@@ -49,7 +49,6 @@ namespace BudgetAnalyser.Budget
             [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
             [NotNull] DemoFileHelper demoFileHelper)
         {
-            // BUG Scroll into view when adding new expense or income.
             if (budgetRepository == null)
             {
                 throw new ArgumentNullException("budgetRepository");

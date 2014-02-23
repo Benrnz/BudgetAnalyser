@@ -2,7 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Widget
 {
-    public class DateFilterWidget : Widget
+    public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {
         private string doNotUseImageResourceName2;
 

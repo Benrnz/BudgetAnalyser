@@ -5,10 +5,8 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
-using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Widget;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -19,7 +17,6 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
-        // Bug God would be jealous of the length of this class.
         private readonly DemoFileHelper demoFileHelper;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;

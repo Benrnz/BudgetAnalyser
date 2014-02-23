@@ -141,6 +141,7 @@
     <Compile Include="Filtering\PersistentFiltersV1.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
     <Compile Include="SpendingTrend\AddUserDefinedSpendingChartDialogViewLoader.cs" />
     <Compile Include="SpendingTrend\SpendingTrendViewLoader.cs" />
     <Compile Include="Statement\LoadFileViewLoader.cs" />

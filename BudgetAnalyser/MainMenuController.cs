@@ -43,19 +43,6 @@ namespace BudgetAnalyser
             }
         }
 
-        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException("message");
-            }
-
-            if (message.Widget is DaysSinceLastImport)
-            {
-                OnTransactionExecuted();
-            }
-        }
-
 
         public ICommand DashboardCommand
         {
@@ -188,6 +175,53 @@ namespace BudgetAnalyser
             BeforeTabExecutedCommon();
             TransactionsToggle = true;
             AfterTabExecutedCommon();
+        }
+
+        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            if (message.Handled)
+            {
+                return;
+            }
+
+            if (message.Widget is DaysSinceLastImport)
+            {
+                OnTransactionExecuted();
+            }
+
+            ProcessCurrentFileWidgetActivated(message);
+        }
+
+        private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+        {
+            var widget = message.Widget as CurrentFilesWidget;
+            if (widget == null)
+            {
+                return;
+            }
+
+            message.Handled = true;
+            if (!widget.HasStatement)
+            {
+                OnTransactionExecuted();
+                return;
+            }
+
+            if (!widget.HasBudget)
+            {
+                OnBudgetExecuted();
+                return;
+            }
+
+            if (!widget.HasLedgerBook)
+            {
+                OnLedgerBookExecuted();
+            }
         }
     }
 }

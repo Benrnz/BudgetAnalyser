@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Engine.Widget
         private WidgetSize doNotUseSize;
         private string doNotUseToolTip;
         private string doNotUseWidgetStyle;
+        private bool doNotUseClickable;
 
         protected Widget()
         {
@@ -44,7 +45,15 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
-        public bool Clickable { get; set; }
+        public bool Clickable
+        {
+            get { return this.doNotUseClickable; }
+            set
+            {
+                this.doNotUseClickable = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string ColourStyleName
         {
