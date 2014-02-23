@@ -139,6 +139,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return CurrentStatement == null; }
         }
 
+        public ICommand SaveLedgerBookCommand
+        {
+            get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
+        }
+
         public bool ShowPopup
         {
             get
@@ -244,6 +249,11 @@ namespace BudgetAnalyser.LedgerBook
         private bool CanExecuteNewLedgerBookCommand()
         {
             return LedgerBook == null && string.IsNullOrWhiteSpace(this.pendingFileName);
+        }
+
+        private bool CanExecuteSaveCommand()
+        {
+            return LedgerBook != null && this.dirty;
         }
 
         private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
@@ -442,6 +452,11 @@ namespace BudgetAnalyser.LedgerBook
         {
             LedgerBook = new Engine.Ledger.LedgerBook("New Ledger Book 1", DateTime.Now, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "LedgerBook1.xml"));
             this.dirty = true;
+        }
+
+        private void OnSaveLedgerBookCommandExecute()
+        {
+            this.ledgerRepository.Save(LedgerBook);
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

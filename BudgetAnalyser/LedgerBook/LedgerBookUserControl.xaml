@@ -60,6 +60,8 @@
 
         <!-- Toolbar -->
         <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding SaveLedgerBookCommand}"
+                    Style="{StaticResource SaveButton}" />
             <Button Command="{Binding LoadLedgerBookCommand}"
                     Style="{StaticResource LoadButton}" />
             <Button Command="{Binding NewLedgerBookCommand}"
