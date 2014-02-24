@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {

@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public void AddTransaction(LedgerTransaction newTransaction)
         {
             this.transactions.Add(newTransaction);
-            var newBalance = Balance + (newTransaction.Credit - newTransaction.Debit);
+            decimal newBalance = Balance + (newTransaction.Credit - newTransaction.Debit);
             Balance = newBalance > 0 ? newBalance : 0;
         }
 

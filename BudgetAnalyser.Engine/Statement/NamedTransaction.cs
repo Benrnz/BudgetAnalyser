@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BudgetAnalyser.Engine
+namespace BudgetAnalyser.Engine.Statement
 {
     public class NamedTransaction : TransactionType
     {

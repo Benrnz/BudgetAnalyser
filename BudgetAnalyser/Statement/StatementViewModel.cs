@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Statement
 {

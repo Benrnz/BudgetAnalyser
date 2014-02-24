@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Reports
 {

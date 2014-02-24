@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Reports
 {

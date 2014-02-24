@@ -5,6 +5,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.SpendingTrend;

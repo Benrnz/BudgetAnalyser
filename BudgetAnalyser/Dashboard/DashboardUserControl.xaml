@@ -15,23 +15,25 @@
                     ToolTip="{Binding ToolTip}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource TextToStaticResourceConverter}}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image Source="{Binding ImageResourceName, Converter={StaticResource TextToStaticResourceConverter}}"
-                           Width="40"
-                           Margin="5"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Left"/>
-                    <Image Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
-                           Width="20"
-                           Margin="40,25,0,0"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Left" />
+                    <Image
+                        Source="{Binding ImageResourceName, Converter={StaticResource TextToStaticResourceConverter}}"
+                        Width="40"
+                        Margin="5"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left" />
+                    <Image
+                        Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
+                        Width="20"
+                        Margin="40,25,0,0"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left" />
                     <TextBlock FontSize="24"
                                Margin="5,2,2,2"
                                Text="{Binding LargeNumber}" />
@@ -41,13 +43,13 @@
                                Text="{Binding DetailedText}"
                                Margin="4,0,4,4"
                                TextWrapping="Wrap" />
-                    <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                            CommandParameter="{Binding .}"
-                            Grid.RowSpan="2"
-                            Grid.ColumnSpan="2"
-                            Style="{StaticResource ModernTileButton}"
-                            Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}">
-                    </Button>
+                    <Button
+                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                        CommandParameter="{Binding .}"
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource ModernTileButton}"
+                        Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
                 </Grid>
             </Border>
         </DataTemplate>

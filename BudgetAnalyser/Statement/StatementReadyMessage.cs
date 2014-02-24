@@ -1,4 +1,4 @@
-﻿using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.Statement

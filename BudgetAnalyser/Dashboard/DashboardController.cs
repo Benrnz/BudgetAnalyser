@@ -11,6 +11,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widget;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;

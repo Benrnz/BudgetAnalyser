@@ -4,6 +4,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Matching
 {

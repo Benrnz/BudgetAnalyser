@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.Widget
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
 
         private string doNotUseCategory;
+        private bool doNotUseClickable;
         private string doNotUseColour;
         private string doNotUseDetailedText;
         private string doNotUseImageResourceName;
@@ -20,7 +21,6 @@ namespace BudgetAnalyser.Engine.Widget
         private WidgetSize doNotUseSize;
         private string doNotUseToolTip;
         private string doNotUseWidgetStyle;
-        private bool doNotUseClickable;
 
         protected Widget()
         {

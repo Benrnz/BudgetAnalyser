@@ -16,7 +16,7 @@ namespace BudgetAnalyser.SpendingTrend
         private readonly IViewLoader viewLoader;
 
         public AddUserDefinedSpendingChartController(
-            [NotNull] AddUserDefinedSpendingChartDialogViewLoader viewLoader, 
+            [NotNull] AddUserDefinedSpendingChartDialogViewLoader viewLoader,
             [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (viewLoader == null)

@@ -4,6 +4,7 @@ using System.IO;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widget
 {
@@ -22,9 +23,9 @@ namespace BudgetAnalyser.Engine.Widget
             Clickable = true;
         }
 
-        public bool HasStatement { get; private set; }
         public bool HasBudget { get; private set; }
         public bool HasLedgerBook { get; private set; }
+        public bool HasStatement { get; private set; }
 
         public override void Update(params object[] input)
         {
@@ -35,7 +36,8 @@ namespace BudgetAnalyser.Engine.Widget
             if (statementModel == null)
             {
                 this.statementName = null;
-            } else 
+            }
+            else
             {
                 this.statementName = ShortenFileName(statementModel.FileName);
             }
@@ -43,7 +45,8 @@ namespace BudgetAnalyser.Engine.Widget
             if (budgetModel == null)
             {
                 this.budgetName = null;
-            } else 
+            }
+            else
             {
                 this.budgetName = ShortenFileName(budgetModel.FileName);
             }
@@ -51,7 +54,8 @@ namespace BudgetAnalyser.Engine.Widget
             if (ledgerBook == null)
             {
                 this.ledgerBookName = null;
-            } else
+            }
+            else
             {
                 this.ledgerBookName = ShortenFileName(ledgerBook.FileName);
             }

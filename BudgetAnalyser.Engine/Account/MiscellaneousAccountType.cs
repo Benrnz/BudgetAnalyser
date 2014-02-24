@@ -1,6 +1,4 @@
-﻿using BudgetAnalyser.Engine.Account;
-
-namespace BudgetAnalyser.Engine
+﻿namespace BudgetAnalyser.Engine.Account
 {
     public class MiscellaneousAccountType : AccountType
     {

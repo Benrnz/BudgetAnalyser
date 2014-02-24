@@ -346,7 +346,7 @@ namespace BudgetAnalyser.Budget
         private void OnAddNewExpenseExecute(ExpenseBudgetBucket expense)
         {
             this.dirty = true;
-            var newExpense = Expenses.AddNew();
+            Expense newExpense = Expenses.AddNew();
             newExpense.Amount = 0;
             if (expense is SpentMonthlyExpense)
             {

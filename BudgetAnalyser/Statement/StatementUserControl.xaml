@@ -171,9 +171,10 @@
                                    Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
-                        Style="{StaticResource WarningOilLightStyle}"
-                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                <Border
+                    Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                    Style="{StaticResource WarningOilLightStyle}"
+                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Difference: " />
@@ -333,7 +334,7 @@
                                    ToolTip="Check the current global filter to widen the search, or clear the filter completely and show all transactions in the loaded statement file." />
                     </Border>
                 </StackPanel>
-                
+
                 <Border HorizontalAlignment="Center"
                         Style="{StaticResource RedWarningOilLightStyle}"
                         VerticalAlignment="Center"

@@ -3,6 +3,7 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.OverallPerformance;
 
 namespace BudgetAnalyser.Budget

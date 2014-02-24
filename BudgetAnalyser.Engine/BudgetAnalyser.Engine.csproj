@@ -63,7 +63,9 @@
     <Compile Include="Account\AccountTypeRepository.cs" />
     <Compile Include="Account\ChequeAccount.cs" />
     <Compile Include="Account\AmexAccount.cs" />
+    <Compile Include="Account\IAccountTypeRepository.cs" />
     <Compile Include="Account\MastercardAccount.cs" />
+    <Compile Include="Account\MiscellaneousAccountType.cs" />
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
     <Compile Include="Budget\BudgetBucket.cs" />
@@ -85,6 +87,11 @@
     <Compile Include="Budget\SpentMonthlyExpense.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="Statement\NamedTransaction.cs" />
+    <Compile Include="Statement\StatementModel.cs" />
+    <Compile Include="Statement\Transaction.cs" />
+    <Compile Include="Statement\TransactionListExtension.cs" />
+    <Compile Include="Statement\TransactionType.cs" />
     <Compile Include="ValidationWarningException.cs" />
     <Compile Include="FileFormatException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -92,7 +99,6 @@
     <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\LedgerBookRepository.cs" />
     <Compile Include="Matching\DataMatchingRule.cs" />
-    <Compile Include="IAccountTypeRepository.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
     <Compile Include="Ledger\DataLedgerBook.cs" />
@@ -116,11 +122,9 @@
     <Compile Include="Matching\MatchingRuleDataToDomainMapper.cs" />
     <Compile Include="Matching\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\MatchingRuleRepository.cs" />
-    <Compile Include="MiscellaneousAccountType.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
     <Compile Include="IModelValidate.cs" />
-    <Compile Include="NamedTransaction.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\BucketAnalysis.cs" />
@@ -128,7 +132,6 @@
     <Compile Include="Reports\ISpendingGraphAnalyser.cs" />
     <Compile Include="Reports\OverallPerformanceBudgetAnalysis.cs" />
     <Compile Include="Reports\SpendingGraphAnalyser.cs" />
-    <Compile Include="StatementModel.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />
     <Compile Include="Statement\BankImportUtilities.cs" />
@@ -141,9 +144,6 @@
     <Compile Include="Statement\IVersionedStatementModelImporter.cs" />
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
     <Compile Include="StringExtension.cs" />
-    <Compile Include="Transaction.cs" />
-    <Compile Include="TransactionListExtension.cs" />
-    <Compile Include="TransactionType.cs" />
     <Compile Include="Widget\AccountFilterWidget.cs" />
     <Compile Include="Widget\CurrentFilesWidget.cs" />
     <Compile Include="Widget\DateFilterWidget.cs" />

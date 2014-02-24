@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;

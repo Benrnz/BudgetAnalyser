@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement

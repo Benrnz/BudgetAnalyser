@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Widget
     {
         public IEnumerable<Widget> GetAll()
         {
-            var widgetTypes = GetType().Assembly.GetExportedTypes()
+            IEnumerable<Type> widgetTypes = GetType().Assembly.GetExportedTypes()
                 .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
             return widgetTypes.Select(widgetType => Activator.CreateInstance(widgetType) as Widget)
                 .OrderBy(w => w.Category)

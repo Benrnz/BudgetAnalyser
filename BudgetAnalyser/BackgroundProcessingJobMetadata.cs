@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 

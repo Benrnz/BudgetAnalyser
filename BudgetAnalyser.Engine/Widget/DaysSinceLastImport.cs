@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widget
 {

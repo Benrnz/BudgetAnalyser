@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine
+namespace BudgetAnalyser.Engine.Statement
 {
     public class StatementModel : INotifyPropertyChanged
     {

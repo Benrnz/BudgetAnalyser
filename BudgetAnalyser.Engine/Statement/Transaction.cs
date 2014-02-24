@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine
+namespace BudgetAnalyser.Engine.Statement
 {
     [DebuggerDisplay("{Date} {Amount} {Description} {BudgetBucket}")]
     public class Transaction : INotifyPropertyChanged, IComparable

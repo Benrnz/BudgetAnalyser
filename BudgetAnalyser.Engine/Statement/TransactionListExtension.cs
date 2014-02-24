@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace BudgetAnalyser.Engine
+namespace BudgetAnalyser.Engine.Statement
 {
-    public static class TransactionListExtension
+    internal static class TransactionListExtension
     {
         public static IEnumerable<Transaction> Merge(this IEnumerable<Transaction> instance, IEnumerable<Transaction> additionalTransactions)
         {

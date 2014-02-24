@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine.Account;
 
-namespace BudgetAnalyser.Engine
+namespace BudgetAnalyser.Engine.Account
 {
     public interface IAccountTypeRepository
     {

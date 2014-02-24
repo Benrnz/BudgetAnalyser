@@ -4,7 +4,6 @@ using System.Linq;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.Statement;

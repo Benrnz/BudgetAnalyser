@@ -7,6 +7,7 @@ using BudgetAnalyser.Converters;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
