@@ -200,7 +200,14 @@ namespace BudgetAnalyser.Statement
             this.currentEditMode = EditMode.ReadMode;
             Controller.NotifyOfEdit();
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => GetSelectedListBoxItem().Focus());
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                var item = GetSelectedListBoxItem();
+                if (item != null)
+                {
+                    item.Focus();
+                }
+            });
         }
     }
 }
