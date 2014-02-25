@@ -10,6 +10,7 @@ namespace BudgetAnalyser.Engine.Widget
     {
         private BudgetCurrencyContext budget;
         private GlobalFilterCriteria filter;
+        private int filterHash;
         private StatementModel statement;
 
         public RemainingSurplusWidget()
@@ -40,13 +41,14 @@ namespace BudgetAnalyser.Engine.Widget
 
             if (newStatement != this.statement)
             {
+                this.filter = newFilter;
                 this.statement = newStatement;
                 updated = true;
             }
 
-            if (newFilter != this.filter)
+            if (newFilter.GetHashCode() != this.filterHash)
             {
-                this.filter = newFilter;
+                this.filterHash = newFilter.GetHashCode();
                 updated = true;
             }
 

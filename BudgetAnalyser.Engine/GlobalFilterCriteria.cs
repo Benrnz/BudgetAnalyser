@@ -73,6 +73,45 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        public static bool operator ==(GlobalFilterCriteria left, GlobalFilterCriteria right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(GlobalFilterCriteria left, GlobalFilterCriteria right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+            return Equals((GlobalFilterCriteria)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (this.doNotUseAccountType != null ? this.doNotUseAccountType.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ this.doNotUseBeginDate.GetHashCode();
+                hashCode = (hashCode*397) ^ this.doNotUseCleared.GetHashCode();
+                hashCode = (hashCode*397) ^ this.doNotUseEndDate.GetHashCode();
+                return hashCode;
+            }
+        }
+
         public bool Validate(StringBuilder validationMessages)
         {
             if (Cleared)
@@ -96,6 +135,12 @@ namespace BudgetAnalyser.Engine
             }
 
             return valid;
+        }
+
+        protected bool Equals(GlobalFilterCriteria other)
+        {
+            return Equals(this.doNotUseAccountType, other.doNotUseAccountType) && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate) && this.doNotUseCleared.Equals(other.doNotUseCleared) &&
+                   this.doNotUseEndDate.Equals(other.doNotUseEndDate);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
