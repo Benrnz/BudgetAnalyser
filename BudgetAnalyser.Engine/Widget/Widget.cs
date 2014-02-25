@@ -175,19 +175,26 @@ namespace BudgetAnalyser.Engine.Widget
                 return false;
             }
 
-            int index = 0;
+            int index = 0, nullCount = 0;
             foreach (Type dependencyType in Dependencies)
             {
                 object dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
-                    return false;
+                    // Allow this to continue, because nulls are valid when the dependency isnt available yet.
+                    nullCount++;
+                    continue;
                 }
 
                 if (!dependencyType.IsInstanceOfType(dependencyInstance))
                 {
                     return false;
                 }
+            }
+
+            if (nullCount == Dependencies.Count())
+            {
+                return false;
             }
 
             return true;

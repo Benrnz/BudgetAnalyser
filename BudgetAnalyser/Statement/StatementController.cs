@@ -407,6 +407,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Statement = null;
             NotifyOfReset();
             ViewModel.TriggerRefreshTotalsRow();
+            MessagingGate.Send(new StatementReadyMessage(null));
         }
 
         private void OnDeleteTransactionCommandExecute()

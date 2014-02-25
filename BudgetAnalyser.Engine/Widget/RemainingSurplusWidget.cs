@@ -32,19 +32,19 @@ namespace BudgetAnalyser.Engine.Widget
             var newFilter = (GlobalFilterCriteria)input[2];
 
             bool updated = false;
-            if (newBudget != null && newBudget != this.budget)
+            if (newBudget != this.budget)
             {
                 this.budget = newBudget;
                 updated = true;
             }
 
-            if (newStatement != null && newStatement != this.statement)
+            if (newStatement != this.statement)
             {
                 this.statement = newStatement;
                 updated = true;
             }
 
-            if (newFilter != null && newFilter != this.filter)
+            if (newFilter != this.filter)
             {
                 this.filter = newFilter;
                 updated = true;

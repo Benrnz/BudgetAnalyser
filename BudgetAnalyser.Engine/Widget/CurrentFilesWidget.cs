@@ -21,6 +21,8 @@ namespace BudgetAnalyser.Engine.Widget
             Size = WidgetSize.Medium;
             WidgetStyle = "ModernTileMediumStyle1";
             Clickable = true;
+            DetailedText = "No files loaded!";
+            ColourStyleName = WidgetWarningStyle;
         }
 
         public bool HasBudget { get; private set; }
@@ -38,50 +40,38 @@ namespace BudgetAnalyser.Engine.Widget
             var budgetModel = input[1] as BudgetCurrencyContext;
             var ledgerBook = input[2] as LedgerBook;
 
+            int number = 0;
             if (statementModel == null)
             {
-                this.statementName = null;
+                this.statementName = "! No Statement file is loaded !";
             }
             else
             {
+                number++;
+                HasStatement = true;
                 this.statementName = ShortenFileName(statementModel.FileName);
             }
 
             if (budgetModel == null)
             {
-                this.budgetName = null;
+                this.budgetName = "! No Budget file is loaded !";
             }
             else
             {
+                number++;
+                HasBudget = true;
                 this.budgetName = ShortenFileName(budgetModel.FileName);
             }
 
             if (ledgerBook == null)
             {
-                this.ledgerBookName = null;
+                this.ledgerBookName = "! No LedgerBook file is loaded !";
             }
             else
             {
-                this.ledgerBookName = ShortenFileName(ledgerBook.FileName);
-            }
-
-            int number = 0;
-            if (!string.IsNullOrWhiteSpace(this.statementName))
-            {
-                number++;
-                HasStatement = true;
-            }
-
-            if (!string.IsNullOrWhiteSpace(this.budgetName))
-            {
-                number++;
-                HasBudget = true;
-            }
-
-            if (!string.IsNullOrWhiteSpace(this.ledgerBookName))
-            {
                 number++;
                 HasLedgerBook = true;
+                this.ledgerBookName = ShortenFileName(ledgerBook.FileName);
             }
 
             if (number == 3)
