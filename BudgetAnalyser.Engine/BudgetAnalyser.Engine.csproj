@@ -151,6 +151,7 @@
     <Compile Include="Widget\IWidgetRepository.cs" />
     <Compile Include="Widget\IWidgetWithAdditionalImage.cs" />
     <Compile Include="Widget\ReflectionWidgetRepository.cs" />
+    <Compile Include="Widget\RemainingSurplusWidget.cs" />
     <Compile Include="Widget\Widget.cs" />
     <Compile Include="Widget\WidgetSize.cs" />
   </ItemGroup>

@@ -29,6 +29,11 @@ namespace BudgetAnalyser.Engine.Widget
 
         public override void Update(params object[] input)
         {
+            if (!ValidateUpdateInput(input))
+            {
+                return;
+            }
+
             var statementModel = input[0] as StatementModel;
             var budgetModel = input[1] as BudgetCurrencyContext;
             var ledgerBook = input[2] as LedgerBook;

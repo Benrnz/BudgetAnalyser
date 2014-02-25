@@ -150,11 +150,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void OnTransactionListScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            //this.HeaderScrollViewer.ScrollToHorizontalOffset(((ScrollViewer)sender).HorizontalOffset);
-        }
-
         /// <summary>
         ///     This is used to swap out the item template on demand to the edit template.
         ///     The prerequisite is that the user has already executed the Edit Transaction context menu item. This event fires

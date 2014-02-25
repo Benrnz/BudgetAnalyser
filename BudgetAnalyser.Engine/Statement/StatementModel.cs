@@ -68,43 +68,33 @@ namespace BudgetAnalyser.Engine.Statement
         {
             List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
-            bool needMinDate = true, needMaxDate = true;
 
-            if (criteria != null && !criteria.Cleared && criteria.BeginDate != null)
+            if (criteria != null && !criteria.Cleared)
             {
-                minDate = criteria.BeginDate.Value;
-                needMinDate = false;
+                if (criteria.BeginDate != null)
+                {
+                    minDate = criteria.BeginDate.Value;
+                    Debug.Assert(criteria.EndDate != null);
+                    maxDate = criteria.EndDate.Value;
+                }
             }
-
-            if (criteria != null && !criteria.Cleared && criteria.EndDate != null)
-            {
-                maxDate = criteria.EndDate.Value;
-                needMaxDate = false;
-            }
-
-            if (needMaxDate || needMinDate)
+            else
             {
                 foreach (Transaction transaction in list)
                 {
-                    if (needMinDate && transaction.Date < minDate)
+                    if (transaction.Date < minDate)
                     {
                         minDate = transaction.Date;
                     }
 
-                    if (needMaxDate && transaction.Date > maxDate)
+                    if (transaction.Date > maxDate)
                     {
                         maxDate = transaction.Date;
                     }
                 }
             }
 
-            var durationInMonths = (int)Math.Round(maxDate.Subtract(minDate).TotalDays/30, 0);
-            if (durationInMonths <= 0)
-            {
-                durationInMonths = 1;
-            }
-
-            return durationInMonths;
+            return minDate.DurationInMonths(maxDate);
         }
 
         public void Filter(GlobalFilterCriteria criteria)
