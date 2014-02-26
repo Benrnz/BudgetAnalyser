@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widget
 {
-    public abstract class RemainingBudgetBucketWidget : Widget
+    public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
         private IBudgetBucketRepository bucketRepository;
         private int filterHash;
@@ -83,12 +83,14 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             Visibility = true;
-            decimal totalFoodBudget = MonthlyBudgetAmount()
+            decimal totalBudget = MonthlyBudgetAmount()
                                       *Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
+            Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
-            decimal remainingBudget = totalFoodBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
-            LargeNumber = remainingBudget.ToString("C");
+            decimal remainingBudget = totalBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            // LargeNumber = remainingBudget.ToString("C");
+            Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
         }
 

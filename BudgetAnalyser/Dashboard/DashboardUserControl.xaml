@@ -1,14 +1,48 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Dashboard.DashboardUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
+             xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:widget="clr-namespace:BudgetAnalyser.Engine.Widget;assembly=BudgetAnalyser.Engine"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
-             xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
              MinHeight="200"
              MinWidth="200">
 
     <UserControl.Resources>
         <converters1:TextToStaticResourceConverter x:Key="TextToStaticResourceConverter" />
+
+        <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
+            <Border Style="{Binding WidgetStyle, Converter={StaticResource TextToStaticResourceConverter}}"
+                    ToolTip="{Binding ToolTip}"
+                    Visibility="{Binding Visibility, Converter={StaticResource BoolToVisConverter}}">
+                <Grid Style="{Binding ColourStyleName, Converter={StaticResource TextToStaticResourceConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar Background="{StaticResource WarningOilLightBrush}"
+                                 BorderBrush="{StaticResource ControlBorderBrush}"
+                                 BorderThickness="2"
+                                 Height="30"
+                                 Margin="2"
+                                 Maximum="{Binding Maximum}"
+                                 Minimum="{Binding Minimum}"
+                                 ToolTip="{Binding ToolTip}"
+                                 Value="{Binding Value}"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BoolToVisConverter}}" />
+                    <TextBlock Grid.Row="1"
+                               Margin="4,0,4,4"
+                               Style="{StaticResource TextBlockParagraph}"
+                               Text="{Binding DetailedText}"
+                               TextWrapping="Wrap" />
+                    <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                            CommandParameter="{Binding .}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource ModernTileButton}"
+                            Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type widget:Widget}">
             <Border Style="{Binding WidgetStyle, Converter={StaticResource TextToStaticResourceConverter}}"
@@ -23,34 +57,31 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image
-                        Source="{Binding ImageResourceName, Converter={StaticResource TextToStaticResourceConverter}}"
-                        Width="40"
-                        Margin="5"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left" />
-                    <Image
-                        Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
-                        Width="20"
-                        Margin="40,25,0,0"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left" />
+                    <Image HorizontalAlignment="Left"
+                           Margin="5"
+                           Source="{Binding ImageResourceName, Converter={StaticResource TextToStaticResourceConverter}}"
+                           VerticalAlignment="Top"
+                           Width="40" />
+                    <Image HorizontalAlignment="Left"
+                           Margin="40,25,0,0"
+                           Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
+                           VerticalAlignment="Top"
+                           Width="20" />
                     <TextBlock FontSize="24"
                                Margin="5,2,2,2"
                                Text="{Binding LargeNumber}" />
-                    <TextBlock Grid.Row="1"
-                               Grid.ColumnSpan="2"
+                    <TextBlock Grid.ColumnSpan="2"
+                               Grid.Row="1"
+                               Margin="4,0,4,4"
                                Style="{StaticResource TextBlockParagraph}"
                                Text="{Binding DetailedText}"
-                               Margin="4,0,4,4"
                                TextWrapping="Wrap" />
-                    <Button
-                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                        CommandParameter="{Binding .}"
-                        Grid.RowSpan="2"
-                        Grid.ColumnSpan="2"
-                        Style="{StaticResource ModernTileButton}"
-                        Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
+                    <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                            CommandParameter="{Binding .}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource ModernTileButton}"
+                            Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
                 </Grid>
             </Border>
         </DataTemplate>

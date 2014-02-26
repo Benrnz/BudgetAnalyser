@@ -150,6 +150,7 @@
     <Compile Include="Widget\DaysSinceLastImport.cs" />
     <Compile Include="Widget\IWidgetRepository.cs" />
     <Compile Include="Widget\IWidgetWithAdditionalImage.cs" />
+    <Compile Include="Widget\ProgressBarWidget.cs" />
     <Compile Include="Widget\ReflectionWidgetRepository.cs" />
     <Compile Include="Widget\RemainingBudgetBucketWidget.cs" />
     <Compile Include="Widget\RemainingClothesWidget.cs" />
