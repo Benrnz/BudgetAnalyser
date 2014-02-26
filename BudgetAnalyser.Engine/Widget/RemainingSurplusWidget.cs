@@ -1,8 +1,8 @@
 ﻿namespace BudgetAnalyser.Engine.Widget
 {
-    public class RemainingSurplusWidget1 : RemainingBudgetBucketWidget
+    public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     {
-        public RemainingSurplusWidget1()
+        public RemainingSurplusWidget()
         {
             DetailedText = "Surplus";
             DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, surplus cannot be calculated.";

@@ -9,7 +9,6 @@ namespace BudgetAnalyser.Engine.Widget
     public abstract class RemainingBudgetBucketWidget : Widget
     {
         private IBudgetBucketRepository bucketRepository;
-        private GlobalFilterCriteria filter;
         private int filterHash;
         private StatementModel statement;
 
@@ -23,6 +22,7 @@ namespace BudgetAnalyser.Engine.Widget
         protected string BucketCode { get; set; }
         protected BudgetCurrencyContext Budget { get; private set; }
         protected string DependencyMissingToolTip { get; set; }
+        protected GlobalFilterCriteria Filter { get; private set; }
         protected string RemainingBudgetToolTip { get; set; }
 
         public override void Update(params object[] input)
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Widget
 
             if (newStatement != this.statement)
             {
-                this.filter = newFilter;
+                Filter = newFilter;
                 this.statement = newStatement;
                 updated = true;
             }
@@ -64,12 +64,17 @@ namespace BudgetAnalyser.Engine.Widget
                 updated = true;
             }
 
+            if (SetAdditionalDependencies(input))
+            {
+                updated = true;
+            }
+
             if (!updated)
             {
                 return;
             }
 
-            if (this.statement == null || Budget == null || this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.EndDate == null)
+            if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null)
             {
                 Visibility = false;
                 LargeNumber = "?";
@@ -79,7 +84,7 @@ namespace BudgetAnalyser.Engine.Widget
 
             Visibility = true;
             decimal totalFoodBudget = MonthlyBudgetAmount()
-                                      *this.filter.BeginDate.Value.DurationInMonths(this.filter.EndDate.Value);
+                                      *Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
             decimal remainingBudget = totalFoodBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
@@ -90,6 +95,11 @@ namespace BudgetAnalyser.Engine.Widget
         protected virtual decimal MonthlyBudgetAmount()
         {
             return Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+        }
+
+        protected virtual bool SetAdditionalDependencies(object[] input)
+        {
+            return false;
         }
     }
 }
