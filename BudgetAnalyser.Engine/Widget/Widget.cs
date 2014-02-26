@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Engine.Widget
         private string doNotUseLargeNumber;
         private WidgetSize doNotUseSize;
         private string doNotUseToolTip;
+        private bool doNotUseVisibility;
         private string doNotUseWidgetStyle;
 
         protected Widget()
@@ -28,6 +29,7 @@ namespace BudgetAnalyser.Engine.Widget
             ColourStyleName = "WidgetStandardBrush";
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
+            Visibility = true;
         }
 
         public event EventHandler ColourStyleChanged;
@@ -122,6 +124,16 @@ namespace BudgetAnalyser.Engine.Widget
             protected set
             {
                 this.doNotUseToolTip = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Visibility
+        {
+            get { return this.doNotUseVisibility; }
+            set
+            {
+                this.doNotUseVisibility = value;
                 OnPropertyChanged();
             }
         }

@@ -26,19 +26,25 @@ namespace BudgetAnalyser.Dashboard
     {
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly IWidgetRepository widgetRepository;
+        private readonly IBudgetBucketRepository bucketRepository;
         private bool doNotUseShown;
         private TimeSpan elapsedTime;
         private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
-        public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository)
+        public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (widgetRepository == null)
             {
                 throw new ArgumentNullException("widgetRepository");
             }
+            if (bucketRepository == null)
+            {
+                throw new ArgumentNullException("bucketRepository");
+            }
 
             this.widgetRepository = widgetRepository;
+            this.bucketRepository = bucketRepository;
             GlobalFilterController = uiContext.GlobalFilterController;
 
             MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
@@ -91,6 +97,7 @@ namespace BudgetAnalyser.Dashboard
             this.availableDependencies[typeof(BudgetCollection)] = null;
             this.availableDependencies[typeof(BudgetCurrencyContext)] = null;
             this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = null;
+            this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
         }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)

@@ -151,8 +151,10 @@
     <Compile Include="Widget\IWidgetRepository.cs" />
     <Compile Include="Widget\IWidgetWithAdditionalImage.cs" />
     <Compile Include="Widget\ReflectionWidgetRepository.cs" />
+    <Compile Include="Widget\RemainingBudgetBucketWidget.cs" />
+    <Compile Include="Widget\RemainingFuelWidget.cs" />
     <Compile Include="Widget\RemainingFoodWidget.cs" />
-    <Compile Include="Widget\RemainingSurplusWidget.cs" />
+    <Compile Include="Widget\RemainingSurplusWidget1.cs" />
     <Compile Include="Widget\Widget.cs" />
     <Compile Include="Widget\WidgetSize.cs" />
   </ItemGroup>

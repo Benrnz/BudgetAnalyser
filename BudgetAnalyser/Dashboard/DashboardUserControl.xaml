@@ -12,7 +12,8 @@
 
         <DataTemplate DataType="{x:Type widget:Widget}">
             <Border Style="{Binding WidgetStyle, Converter={StaticResource TextToStaticResourceConverter}}"
-                    ToolTip="{Binding ToolTip}">
+                    ToolTip="{Binding ToolTip}"
+                    Visibility="{Binding Visibility, Converter={StaticResource BoolToVisConverter}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource TextToStaticResourceConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
