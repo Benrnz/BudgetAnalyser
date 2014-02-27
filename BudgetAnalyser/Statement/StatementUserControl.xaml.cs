@@ -116,6 +116,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
+            TransactionListBox.SelectedItem = null;
             listboxItem.IsSelected = true;
             this.currentEditMode = EditMode.EditMode;
             this.currentRowEdit = listboxItem;

@@ -163,10 +163,7 @@ namespace BudgetAnalyser.Statement
             {
                 if (Statement != null)
                 {
-                    return string.Format(
-                        "{0} {1}",
-                        Path.GetFileNameWithoutExtension(Statement.FileName),
-                        Dirty ? "*" : string.Empty);
+                    return Path.GetFileNameWithoutExtension(Statement.FileName);
                 }
 
                 return "[No Transactions Loaded]";

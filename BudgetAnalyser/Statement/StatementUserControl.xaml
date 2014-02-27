@@ -38,9 +38,14 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Margin="8,2,2,2"
-                       Style="{StaticResource TextBlockHeading1}"
-                       Text="{Binding ViewModel.StatementName}" />
+            <StackPanel Margin="8,2,2,2"
+                        Orientation="Horizontal">
+                <TextBlock Style="{StaticResource TextBlockHeading1}"
+                           Text="{Binding ViewModel.StatementName}" />
+                <TextBlock Style="{StaticResource TextBlockHeading1}" 
+                           Text="*"
+                           Visibility="{Binding ViewModel.Dirty, Converter={StaticResource BoolToVisConverter}}"/>
+            </StackPanel>
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"

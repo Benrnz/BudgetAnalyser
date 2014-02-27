@@ -20,7 +20,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ProgressBar Background="{StaticResource WarningOilLightBrush}"
-                                 BorderBrush="{StaticResource ControlBorderBrush}"
+                                 BorderBrush="{StaticResource TextBrush}"
                                  BorderThickness="2"
                                  Height="30"
                                  Margin="2"
