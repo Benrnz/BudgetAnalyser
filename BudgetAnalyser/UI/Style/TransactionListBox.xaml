@@ -2,12 +2,13 @@
                     xmlns:engine2="clr-namespace:BudgetAnalyser.Engine;assembly=BudgetAnalyser.Engine"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
-                    xmlns:converters="clr-namespace:BudgetAnalyser.Converters">
+                    xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
+                    xmlns:statement="clr-namespace:BudgetAnalyser.Engine.Statement;assembly=BudgetAnalyser.Engine">
 
     <converters:BudgetBucketToStringConverter x:Key="BudgetBucketToStringConverter" />
 
     <DataTemplate x:Key="TransactionTemplate1"
-                  DataType="engine2:Transaction">
+                  DataType="statement:Transaction">
         <Border x:Name="MainBorder"
                 Margin="0,1,2,1">
             <Grid>
@@ -92,7 +93,7 @@
 
 
     <DataTemplate x:Key="TransactionEditTemplate1"
-                  DataType="engine2:Transaction">
+                  DataType="statement:Transaction">
         <Border x:Name="MainBorder"
                 Margin="0,1,2,1">
             <Grid FocusManager.FocusedElement="{Binding ElementName=BucketCodeComboBox}"
@@ -122,7 +123,7 @@
                 </Grid.ColumnDefinitions>
                 <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
                             HorizontalAlignment="Left"
-                            SelectedDate="{Binding Date}"
+                            SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}"
                             VerticalAlignment="Top"
                             Width="34"
                             TabIndex="2" />
@@ -131,7 +132,7 @@
                            Text="{Binding Amount, StringFormat=\{0:N\}}" />
                 <TextBox Grid.Column="2"
                          HorizontalAlignment="Left"
-                         Text="{Binding Description}"
+                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                          ToolTip="{Binding Description}"
                          TabIndex="3"
                          VerticalAlignment="Top" />
@@ -142,25 +143,25 @@
                           ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                           ItemsSource="{Binding Source={x:Static budget:BudgetBucketBindingSource.BucketRepository}, Path=Buckets}"
                           MinWidth="120"
-                          SelectedItem="{Binding BudgetBucket}"
+                          SelectedItem="{Binding BudgetBucket, UpdateSourceTrigger=PropertyChanged}"
                           TabIndex="1"
                           ToolTip="{Binding BudgetBucket}"
                           VerticalAlignment="Top" />
                 <TextBox Grid.Column="4"
                          HorizontalAlignment="Left"
-                         Text="{Binding Reference1}"
+                         Text="{Binding Reference1, UpdateSourceTrigger=PropertyChanged}"
                          ToolTip="{Binding Reference1}"
                          TabIndex="4"
                          VerticalAlignment="Top" />
                 <TextBox Grid.Column="5"
                          HorizontalAlignment="Left"
-                         Text="{Binding Reference2}"
+                         Text="{Binding Reference2, UpdateSourceTrigger=PropertyChanged}"
                          ToolTip="{Binding Reference2}"
                          TabIndex="5"
                          VerticalAlignment="Top" />
                 <TextBox Grid.Column="6"
                          HorizontalAlignment="Left"
-                         Text="{Binding Reference3}"
+                         Text="{Binding Reference3, UpdateSourceTrigger=PropertyChanged}"
                          ToolTip="{Binding Reference3}"
                          TabIndex="6"
                          VerticalAlignment="Top" />

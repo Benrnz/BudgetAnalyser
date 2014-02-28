@@ -21,6 +21,7 @@ namespace BudgetAnalyser.Statement
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly UiContext uiContext;
+        private Transaction doNotUseSelectedRow;
         private bool doNotUseShown;
         private bool initialised;
         private List<ICommand> recentFileCommands;
@@ -179,7 +180,15 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
-        public Transaction SelectedRow { get; set; }
+        public Transaction SelectedRow
+        {
+            get { return this.doNotUseSelectedRow; }
+            set
+            {
+                this.doNotUseSelectedRow = value;
+                RaisePropertyChanged(() => SelectedRow);
+            }
+        }
 
         public bool Shown
         {

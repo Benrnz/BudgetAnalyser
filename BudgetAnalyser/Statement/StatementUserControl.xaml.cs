@@ -102,6 +102,7 @@ namespace BudgetAnalyser.Statement
         /// <param name="e"></param>
         private void OnEditTransaction(object sender, RoutedEventArgs e)
         {
+            // Bug this seems to return the previously selected row rather than the double-clicked row?! Requires an edit on another row first.
             ListBoxItem listboxItem = GetSelectedListBoxItem();
             if (listboxItem == null)
             {
@@ -128,10 +129,14 @@ namespace BudgetAnalyser.Statement
             Controller.NotifyOfClosing();
         }
 
-        private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            OnEditTransaction(sender, e);
-        }
+        //private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (this.currentEditMode == EditMode.ReadMode)
+        //    {
+        //        Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () => OnEditTransaction(sender, e));
+        //        e.Handled = true;
+        //    }
+        //}
 
         private void OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)
         {
@@ -147,7 +152,6 @@ namespace BudgetAnalyser.Statement
                         break;
                 }
 
-                e.Handled = true;
             }
         }
 
@@ -191,13 +195,13 @@ namespace BudgetAnalyser.Statement
         private void RestoreEditModeToRead()
         {
             // User has edited the row and has navigated away from the current row.  Edit mode can be restored to ReadMode.
-            this.currentRowEdit.Tag = null;
-            this.currentRowEdit = null;
-            this.currentEditMode = EditMode.ReadMode;
             Controller.NotifyOfEdit();
 
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
+                this.currentRowEdit.Tag = null;
+                this.currentRowEdit = null;
+                this.currentEditMode = EditMode.ReadMode;
                 var item = GetSelectedListBoxItem();
                 if (item != null)
                 {

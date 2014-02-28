@@ -365,11 +365,11 @@
                      IsTextSearchEnabled="False"
                      ItemsSource="{Binding ViewModel.Statement.Transactions}"
                      KeyUp="OnTransactionListBoxKeyUp"
-                     MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      SelectedItem="{Binding SelectedRow}"
                      SelectionChanged="OnTransactionSelectionChanged"
                      SelectionMode="Single"
                      Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource BoolToVisConverter}}">
+                <!--MouseDoubleClick="OnTransactionListBoxDoubleClick"-->
                 <ListBox.Style>
 
                     <Style TargetType="ListBox">
