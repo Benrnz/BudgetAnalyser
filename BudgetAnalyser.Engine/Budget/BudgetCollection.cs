@@ -47,6 +47,14 @@ namespace BudgetAnalyser.Engine.Budget
             return budgets;
         }
 
+        public void Initialise()
+        {
+            foreach (var model in this)
+            {
+                model.Initialise();
+            }
+        }
+
         public bool IsArchivedBudget(BudgetModel budget)
         {
             if (IsFutureBudget(budget))

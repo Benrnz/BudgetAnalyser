@@ -65,6 +65,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             correctFormat.FileName = fileName;
             BudgetBucketRepository.Initialise(correctFormat);
+            correctFormat.Initialise();
             return correctFormat;
         }
 

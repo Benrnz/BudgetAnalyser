@@ -26,6 +26,7 @@ namespace BudgetAnalyser.SpendingTrend
         private List<CustomAggregateSpendingGraph> customCharts = new List<CustomAggregateSpendingGraph>();
         private GlobalFilterCriteria doNotUseCriteria;
         private BucketSpendingController doNotUseSelectedChart;
+        private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
 
         public SpendingTrendController(
@@ -106,16 +107,17 @@ namespace BudgetAnalyser.SpendingTrend
             this.viewLoader.Close();
         }
 
-        public void Load(StatementModel statementModel, BudgetModel budgetModel, GlobalFilterCriteria criteria)
+        public void Load(StatementModel statementModel, BudgetModel budgetModel, GlobalFilterCriteria criteria, Engine.Ledger.LedgerBook ledgerBookModel)
         {
             this.statement = statementModel;
             this.budget = budgetModel;
+            this.ledgerBook = ledgerBookModel;
             var listOfCharts = new List<BucketSpendingController>(this.budgetBucketRepository.Buckets.Count());
 
             foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets.Where(b => b is SpentMonthlyExpense))
             {
                 BucketSpendingController chartController = this.bucketSpendingFactory();
-                chartController.Load(statementModel, budgetModel, bucket, criteria);
+                chartController.Load(statementModel, budgetModel, bucket, criteria, ledgerBookModel);
                 listOfCharts.Add(chartController);
             }
 
@@ -124,7 +126,7 @@ namespace BudgetAnalyser.SpendingTrend
             // Put surplus at the top.
             listOfCharts.Insert(
                 0,
-                this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, criteria));
+                this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, criteria, ledgerBookModel));
 
             // Put any custom charts on top.
             foreach (CustomAggregateSpendingGraph customChart in this.customCharts)
@@ -132,7 +134,7 @@ namespace BudgetAnalyser.SpendingTrend
                 BucketSpendingController chartController = this.bucketSpendingFactory();
                 IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
                     .Join(customChart.BucketIds, bucket => bucket.Id, id => id, (bucket, id) => bucket);
-                chartController.LoadCustomChart(statementModel, budgetModel, buckets, criteria, customChart.Name);
+                chartController.LoadCustomChart(statementModel, budgetModel, buckets, criteria, ledgerBookModel, customChart.Name);
                 listOfCharts.Insert(0, chartController);
             }
 
@@ -151,7 +153,7 @@ namespace BudgetAnalyser.SpendingTrend
 
             List<BudgetBucket> buckets = this.addUserDefinedSpendingChartController.SelectedBuckets.ToList();
             BucketSpendingController newChart = this.bucketSpendingFactory();
-            newChart.LoadCustomChart(this.statement, this.budget, buckets, Criteria, this.addUserDefinedSpendingChartController.ChartTitle);
+            newChart.LoadCustomChart(this.statement, this.budget, buckets, Criteria, this.ledgerBook, this.addUserDefinedSpendingChartController.ChartTitle);
             ChartControllers.Insert(0, newChart);
             var persistChart = new CustomAggregateSpendingGraph
             {

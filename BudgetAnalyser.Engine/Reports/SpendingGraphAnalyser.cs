@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Reports
@@ -41,7 +43,8 @@ namespace BudgetAnalyser.Engine.Reports
             StatementModel statementModel,
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
-            GlobalFilterCriteria filterCriteria)
+            GlobalFilterCriteria filterCriteria,
+            LedgerBook ledgerBook)
         {
             ZeroLine = null;
             BudgetLine = null;
@@ -65,6 +68,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             decimal budgetTotal = GetBudgetTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths);
+            budgetTotal += AddLedgerBalance(ledgerBook, filterCriteria, bucketsCopy);
             decimal runningTotal = budgetTotal;
             ActualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
             foreach (var day in chartData)
@@ -79,7 +83,52 @@ namespace BudgetAnalyser.Engine.Reports
             ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
         }
 
-        private static decimal GetBudgetTotal(BudgetModel budgetModel, IEnumerable<BudgetBucket> buckets, int durationInMonths)
+        private static decimal AddLedgerBalance(LedgerBook ledgerBook, GlobalFilterCriteria filterCriteria, IEnumerable<BudgetBucket> buckets)
+        {
+            if (ledgerBook == null || filterCriteria == null)
+            {
+                return 0;
+            }
+
+            DateTime lastTransactionDate, beginDate;
+            if (filterCriteria.Cleared)
+            {
+                lastTransactionDate = ledgerBook.DatedEntries.First().Date;
+                beginDate = lastTransactionDate.AddDays(-1); // Doesnt really matter but need a valid date.
+            }
+            else
+            {
+                Debug.Assert(filterCriteria.BeginDate != null);
+                Debug.Assert(filterCriteria.EndDate != null);
+                lastTransactionDate = filterCriteria.EndDate.Value;
+                beginDate = filterCriteria.BeginDate.Value;
+            }
+
+            LedgerEntryLine applicableLine = ledgerBook.DatedEntries
+                .FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= beginDate && ledgerEntryLine.Date <= lastTransactionDate);
+
+            if (applicableLine == null)
+            {
+                return 0;
+            }
+
+            decimal ledgerBalances = 0;
+            foreach (var budgetBucket in buckets)
+            {
+                var ledger = applicableLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket == budgetBucket);
+                if (ledger != null)
+                {
+                    ledgerBalances += ledger.Balance;
+                }
+            }
+
+            return ledgerBalances;
+        }
+
+        private static decimal GetBudgetTotal(
+            BudgetModel budgetModel, 
+            IEnumerable<BudgetBucket> buckets, 
+            int durationInMonths)
         {
             decimal budgetTotal = 0;
             foreach (BudgetBucket bucket in buckets)
@@ -98,7 +147,11 @@ namespace BudgetAnalyser.Engine.Reports
                 }
                 else
                 {
-                    budgetTotal += budgetModel.Expenses.First(e => e.Bucket == bucket).Amount;
+                    var budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+                    if (budget != null)
+                    {
+                        budgetTotal += budget.Amount;
+                    }
                 }
             }
 

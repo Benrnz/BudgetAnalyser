@@ -64,14 +64,19 @@ namespace BudgetAnalyser.Budget
 
         public List<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
-        public BucketSpendingController Load(StatementModel statementModel, BudgetModel budgetModel, BudgetBucket bucket, GlobalFilterCriteria criteria)
+        public BucketSpendingController Load(
+            StatementModel statementModel,
+            BudgetModel budgetModel,
+            BudgetBucket bucket,
+            GlobalFilterCriteria criteria,
+            Engine.Ledger.LedgerBook ledgerBook)
         {
             Background = ConverterHelper.SecondaryBackgroundBrush;
             Bucket = bucket;
             ActualSpendingLabel = Bucket.Code;
             ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
 
-            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, criteria);
+            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, criteria, ledgerBook);
             CopyOutputFromAnalyser();
 
             return this;
@@ -82,6 +87,7 @@ namespace BudgetAnalyser.Budget
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
             GlobalFilterCriteria criteria,
+            Engine.Ledger.LedgerBook ledgerBook,
             string chartTitle)
         {
             IsCustomChart = true;
@@ -89,7 +95,7 @@ namespace BudgetAnalyser.Budget
             ChartTitle = chartTitle;
             ActualSpendingLabel = "Combined Spending";
             Bucket = null;
-            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, buckets, criteria);
+            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, buckets, criteria, ledgerBook);
             CopyOutputFromAnalyser();
 
             return this;

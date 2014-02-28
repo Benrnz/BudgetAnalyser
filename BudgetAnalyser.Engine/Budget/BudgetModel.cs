@@ -50,11 +50,18 @@ namespace BudgetAnalyser.Engine.Budget
             };
         }
 
+        public void Initialise()
+        {
+            Expenses = Expenses.OrderByDescending(e => e.Amount).ToList();
+            Incomes = Incomes.OrderByDescending(i => i.Amount).ToList();
+        }
+
         public void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
         {
             Incomes = incomes.ToList();
             Expenses = expenses.ToList();
             LastModified = DateTime.Now;
+            Initialise();
         }
 
         internal bool Validate(StringBuilder validationMessages)

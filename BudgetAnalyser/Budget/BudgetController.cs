@@ -412,6 +412,12 @@ namespace BudgetAnalyser.Budget
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)
         {
+            var response = this.questionBox.Show("Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.", "Delete Budget Bucket");
+            if (response == null || response.Value == false)
+            {
+                return;
+            }
+
             this.dirty = true;
             var expenseItem = budgetItem as Expense;
             if (expenseItem != null)

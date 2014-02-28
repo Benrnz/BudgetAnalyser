@@ -3,10 +3,12 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
+using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
@@ -22,6 +24,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private BudgetCollection budgets;
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
+        private Engine.Ledger.LedgerBook currentLedgerBook;
 
         public ReportsCatalogController(UiContext uiContext)
         {
@@ -31,6 +34,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
             MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            MessagingGate.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
         public ICommand AnalyseStatementCommand
@@ -79,11 +83,21 @@ namespace BudgetAnalyser.ReportsCatalog
             this.budgets = message.Budgets;
         }
 
+        private void OnLedgerBookReadyMessageReceived([NotNull] LedgerBookReadyMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            this.currentLedgerBook = message.LedgerBook;
+        }
+
         private void OnSpendingTrendCommandExecute()
         {
             using (this.waitCursorFactory())
             {
-                SpendingTrendController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter());
+                SpendingTrendController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
             }
         }
 
