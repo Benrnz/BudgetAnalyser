@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseShown;
         private bool initialised;
         private List<ICommand> recentFileCommands;
+        private Guid shellDialogCorrelationId;
 
         private string waitingForBudgetToLoad;
 
@@ -71,6 +72,7 @@ namespace BudgetAnalyser.Statement
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
+            MessagingGate.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
         }
 
         public AppliedRulesController AppliedRulesController
@@ -201,6 +203,24 @@ namespace BudgetAnalyser.Statement
         }
 
         public StatementViewModel ViewModel { get; private set; }
+
+        public void BeginEditTransaction()
+        {
+            if (SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
+            {
+                return;
+            }
+
+            this.shellDialogCorrelationId = Guid.NewGuid();
+            MessagingGate.Send(
+                new RequestShellDialogMessage(
+                    new EditingTransactionViewModel { Transaction = SelectedRow }, 
+                    ShellDialogType.Ok)
+                {
+                    CorrelationId = this.shellDialogCorrelationId,
+                    Title = "Edit Transaction",
+                });
+        }
 
         public void Initialize()
         {
@@ -490,6 +510,23 @@ namespace BudgetAnalyser.Statement
             {
                 Save();
                 UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
+            }
+        }
+
+        private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
+        {
+            if (message.CorrelationId != Guid.Empty && message.CorrelationId == this.shellDialogCorrelationId)
+            {
+                if (message.Response == ShellDialogResponse.Ok)
+                {
+                    var viewModel = (EditingTransactionViewModel)message.Content;
+                    if (viewModel.HasChanged)
+                    {
+                        NotifyOfEdit();
+                    }
+                }
+
+                this.shellDialogCorrelationId = Guid.Empty;
             }
         }
 

@@ -3,9 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Engine.Statement;
-using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
@@ -16,20 +14,14 @@ namespace BudgetAnalyser.Statement
     {
         // TODO Consider moving the edit mode to the controller, so that it controls the edit more than the view.
 
-        private EditMode currentEditMode;
-        private ListBoxItem currentRowEdit;
         private bool subscribedToMainWindowClose;
 
         public StatementUserControl()
         {
             MessagingGate.Register<TransactionsChangedMessage>(this, OnTransactionsChanged);
-            InitializeComponent();
-        }
+            MessagingGate.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
-        private enum EditMode
-        {
-            ReadMode,
-            EditMode,
+            InitializeComponent();
         }
 
         private StatementController Controller
@@ -62,12 +54,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private ListBoxItem GetSelectedListBoxItem()
-        {
-            object transaction = this.TransactionListBox.SelectedItem;
-            return (ListBoxItem)this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
-        }
-
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!this.subscribedToMainWindowClose)
@@ -96,32 +82,13 @@ namespace BudgetAnalyser.Statement
         }
 
         /// <summary>
-        ///     Edit a transaction in the list <see cref="OnTransactionSelectionChanged" /> for more details.
+        ///     Edit a transaction in the list.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnEditTransaction(object sender, RoutedEventArgs e)
         {
-            // Bug this seems to return the previously selected row rather than the double-clicked row?! Requires an edit on another row first.
-            ListBoxItem listboxItem = GetSelectedListBoxItem();
-            if (listboxItem == null)
-            {
-                // Can happen if scroll bar is double clicked.
-                return;
-            }
-
-            var currentValue = (string)listboxItem.Tag;
-            if (currentValue == "True")
-            {
-                RestoreEditModeToRead();
-                return;
-            }
-
-            TransactionListBox.SelectedItem = null;
-            listboxItem.IsSelected = true;
-            this.currentEditMode = EditMode.EditMode;
-            this.currentRowEdit = listboxItem;
-            listboxItem.Tag = "True";
+            Controller.BeginEditTransaction();
         }
 
         private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -129,54 +96,25 @@ namespace BudgetAnalyser.Statement
             Controller.NotifyOfClosing();
         }
 
-        //private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
-        //{
-        //    if (this.currentEditMode == EditMode.ReadMode)
-        //    {
-        //        Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () => OnEditTransaction(sender, e));
-        //        e.Handled = true;
-        //    }
-        //}
+        private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
+        {
+            if (message.Content is EditingTransactionViewModel)
+            {
+                this.TransactionListBox.Focus();
+            }
+        }
+
+        private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OnEditTransaction(sender, e);
+        }
 
         private void OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                switch (this.currentEditMode)
-                {
-                    case EditMode.ReadMode:
-                        OnEditTransaction(sender, e);
-                        break;
-                    case EditMode.EditMode:
-                        RestoreEditModeToRead();
-                        break;
-                }
-
+                OnEditTransaction(sender, e);
             }
-        }
-
-        /// <summary>
-        ///     This is used to swap out the item template on demand to the edit template.
-        ///     The prerequisite is that the user has already executed the Edit Transaction context menu item. This event fires
-        ///     after the
-        ///     <see cref="OnEditTransaction" /> event.
-        /// </summary>
-        private void OnTransactionSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Ensure the event has come from a list box. This is because the DataTemplate consists of controls (ie a ComboBox) that also fire the SelectionChanged Routed Event.
-            if (!(e.OriginalSource is ListBox))
-            {
-                return;
-            }
-
-            // User is browsing around, there is no editing happening.
-            if (this.currentEditMode == EditMode.ReadMode)
-            {
-                return;
-            }
-
-            // User has navigated away.
-            RestoreEditModeToRead();
         }
 
         private void OnTransactionsChanged(TransactionsChangedMessage message)
@@ -190,24 +128,6 @@ namespace BudgetAnalyser.Statement
             {
                 ApplyFilter();
             }
-        }
-
-        private void RestoreEditModeToRead()
-        {
-            // User has edited the row and has navigated away from the current row.  Edit mode can be restored to ReadMode.
-            Controller.NotifyOfEdit();
-
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-            {
-                this.currentRowEdit.Tag = null;
-                this.currentRowEdit = null;
-                this.currentEditMode = EditMode.ReadMode;
-                var item = GetSelectedListBoxItem();
-                if (item != null)
-                {
-                    item.Focus();
-                }
-            });
         }
     }
 }

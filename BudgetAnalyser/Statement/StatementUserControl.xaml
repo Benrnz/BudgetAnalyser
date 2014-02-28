@@ -248,80 +248,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <!--<ScrollViewer x:Name="HeaderScrollViewer"
-                          Background="{StaticResource MainBackgroundBrush}"
-                          HorizontalScrollBarVisibility="Hidden"
-                          VerticalScrollBarVisibility="Hidden">
-                <Grid Height="50"
-                      Margin="17,0,10,0">
-                    <Grid.Resources>
 
-                        <Style BasedOn="{StaticResource TransactionTextBlockStyle}"
-                               TargetType="TextBlock">
-                            <Setter Property="FontSize"
-                                    Value="16" />
-                            <Setter Property="VerticalAlignment"
-                                    Value="Center" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="A"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="B"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="C"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="D"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="E"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="F"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="G"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="H"
-                                          Width="Auto" />
-                        <ColumnDefinition SharedSizeGroup="I"
-                                          Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Date" />
-                    <TextBlock Grid.Column="1"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Amount" />
-                    <TextBlock Grid.Column="2"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Description" />
-                    <TextBlock Grid.Column="3"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Budget" />
-                    <TextBlock Grid.Column="4"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Reference 1" />
-                    <TextBlock Grid.Column="5"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Reference 2" />
-                    <TextBlock Grid.Column="6"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Reference 3" />
-                    <TextBlock Grid.Column="7"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Transaction Type" />
-                    <TextBlock Grid.Column="8"
-                               HorizontalAlignment="Center"
-                               Margin="0"
-                               Text="Account" />
-                </Grid>
-            </ScrollViewer>-->
             <!-- 
             The Control Template for the transaction list box must be inline here so an event can be attached to internal list box Scroll Viewer. 
             This is so the horizontal scroll can be sync'ed with the header grid horizontal scroll.
@@ -365,11 +292,10 @@
                      IsTextSearchEnabled="False"
                      ItemsSource="{Binding ViewModel.Statement.Transactions}"
                      KeyUp="OnTransactionListBoxKeyUp"
+                     MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      SelectedItem="{Binding SelectedRow}"
-                     SelectionChanged="OnTransactionSelectionChanged"
                      SelectionMode="Single"
                      Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource BoolToVisConverter}}">
-                <!--MouseDoubleClick="OnTransactionListBoxDoubleClick"-->
                 <ListBox.Style>
 
                     <Style TargetType="ListBox">

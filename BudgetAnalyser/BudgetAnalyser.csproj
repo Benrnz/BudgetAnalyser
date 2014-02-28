@@ -142,8 +142,13 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
+    <Compile Include="RequestShellDialogMessage.cs" />
+    <Compile Include="ShellDialogResponse.cs" />
+    <Compile Include="ShellDialogResponseMessage.cs" />
+    <Compile Include="ShellDialogType.cs" />
     <Compile Include="SpendingTrend\AddUserDefinedSpendingChartDialogViewLoader.cs" />
     <Compile Include="SpendingTrend\SpendingTrendViewLoader.cs" />
+    <Compile Include="Statement\EditingTransactionViewModel.cs" />
     <Compile Include="Statement\LoadFileViewLoader.cs" />
     <Compile Include="IShowableController.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationController.cs" />
