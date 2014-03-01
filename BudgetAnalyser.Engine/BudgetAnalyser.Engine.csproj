@@ -87,6 +87,7 @@
     <Compile Include="Budget\SpentMonthlyExpense.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\Transaction.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Widget\RemainingFuelWidget.cs" />
     <Compile Include="Widget\RemainingFoodWidget.cs" />
     <Compile Include="Widget\RemainingSurplusWidget.cs" />
+    <Compile Include="Widget\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widget\Widget.cs" />
     <Compile Include="Widget\WidgetSize.cs" />
   </ItemGroup>

@@ -30,16 +30,8 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             // Filter has already been checked for null and for cleared status.
-            Debug.Assert(Filter.BeginDate != null);
-            Debug.Assert(Filter.EndDate != null);
-            LedgerEntryLine line = this.ledgerBook.DatedEntries.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= Filter.BeginDate.Value && ledgerEntryLine.Date <= Filter.EndDate.Value);
-            if (line == null)
-            {
-                return monthlyBudget;
-            }
-
-            decimal ledgerBalance = (from ledgerEntry in line.Entries where ledgerEntry.Ledger.BudgetBucket.Code == BucketCode select ledgerEntry.Balance).FirstOrDefault();
-            return monthlyBudget + ledgerBalance;
+            monthlyBudget += LedgerCalculation.LocateApplicableLedgerBalance(this.ledgerBook, Filter, BucketCode);
+            return monthlyBudget;
         }
 
         protected override bool SetAdditionalDependencies(object[] input)

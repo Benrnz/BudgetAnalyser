@@ -77,8 +77,6 @@ namespace BudgetAnalyser.Engine.Widget
             if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null)
             {
                 Visibility = false;
-                LargeNumber = "?";
-                ToolTip = DependencyMissingToolTip;
                 return;
             }
 
@@ -93,7 +91,7 @@ namespace BudgetAnalyser.Engine.Widget
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
 
-            if (remainingBudget < 0.8M*totalBudget)
+            if (remainingBudget < 0.2M*totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
