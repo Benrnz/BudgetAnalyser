@@ -89,9 +89,18 @@ namespace BudgetAnalyser.Engine.Widget
 
             // Debit transactions are negative so normally the total spend will be a negative number.
             decimal remainingBudget = totalBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
-            // LargeNumber = remainingBudget.ToString("C");
+            
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
+
+            if (remainingBudget < 0.8M*totalBudget)
+            {
+                ColourStyleName = WidgetWarningStyle;
+            }
+            else
+            {
+                ColourStyleName = WidgetStandardStyle;
+            }
         }
 
         protected virtual decimal MonthlyBudgetAmount()
