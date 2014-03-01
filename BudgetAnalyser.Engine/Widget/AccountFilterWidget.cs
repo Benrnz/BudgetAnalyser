@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Widget
             Dependencies = new[] { typeof(GlobalFilterCriteria) };
             ImageResourceName = "DateFilterBeakerImage";
             Size = WidgetSize.Medium;
-            WidgetStyle = "ModernTileMediumStyle1";
+            WidgetStyle = "ModernTileMediumStyle2";
             Clickable = true;
         }
 

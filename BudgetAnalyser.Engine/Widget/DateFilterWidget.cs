@@ -5,6 +5,7 @@ namespace BudgetAnalyser.Engine.Widget
     public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {
         private string doNotUseImageResourceName2;
+        private string standardStyleName;
 
         public DateFilterWidget()
         {
@@ -13,7 +14,8 @@ namespace BudgetAnalyser.Engine.Widget
             ImageResourceName = "DateFilterBeakerImage";
             ImageResourceName2 = "DateFilterCalendarImage";
             Size = WidgetSize.Medium;
-            WidgetStyle = "ModernTileMediumStyle1";
+            this.standardStyleName = "ModernTileColourBrush2";
+            WidgetStyle = "ModernTileMediumStyle2";
             Clickable = true;
         }
 
@@ -52,7 +54,7 @@ namespace BudgetAnalyser.Engine.Widget
 
         private void DateFilterApplied(GlobalFilterCriteria criteria)
         {
-            ColourStyleName = WidgetStandardStyle;
+            ColourStyleName = this.standardStyleName;
             DetailedText = string.Format(
                 CultureInfo.CurrentCulture,
                 "Filtered from {0} to {1}",

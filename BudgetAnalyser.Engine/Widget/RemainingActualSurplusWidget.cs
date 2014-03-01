@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Widget
         private GlobalFilterCriteria filter;
         private int filterHash;
         private LedgerBook ledgerBook;
+        private string standardStyle;
 
         public RemainingActualSurplusWidget()
         {
@@ -19,6 +20,7 @@ namespace BudgetAnalyser.Engine.Widget
             DetailedText = "Surplus A";
             Name = "Surplus A";
             Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
+            this.standardStyle = "WidgetStandardStyle3";
         }
 
         public override void Update(params object[] input)
@@ -77,7 +79,7 @@ namespace BudgetAnalyser.Engine.Widget
             }
             else
             {
-                ColourStyleName = WidgetStandardStyle;
+                ColourStyleName = this.standardStyle;
             }
 
             ToolTip = string.Format("Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);

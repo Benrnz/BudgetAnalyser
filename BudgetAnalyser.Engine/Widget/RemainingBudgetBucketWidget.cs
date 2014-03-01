@@ -11,12 +11,14 @@ namespace BudgetAnalyser.Engine.Widget
         private IBudgetBucketRepository bucketRepository;
         private int filterHash;
         private StatementModel statement;
+        private readonly string standardStyle;
 
         protected RemainingBudgetBucketWidget()
         {
             Category = "Monthly Budget";
             Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
+            this.standardStyle = "WidgetStandardStyle3";
         }
 
         protected string BucketCode { get; set; }
@@ -97,7 +99,7 @@ namespace BudgetAnalyser.Engine.Widget
             }
             else
             {
-                ColourStyleName = WidgetStandardStyle;
+                ColourStyleName = this.standardStyle;
             }
         }
 

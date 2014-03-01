@@ -21,9 +21,10 @@
                     </Grid.RowDefinitions>
                     <ProgressBar Background="{StaticResource WarningOilLightBrush}"
                                  BorderBrush="{StaticResource TextBrush}"
+                                 Foreground="{StaticResource ProgressBarBrush}"
                                  BorderThickness="2"
                                  Height="30"
-                                 Margin="2"
+                                 Margin="4"
                                  Maximum="{Binding Maximum}"
                                  Minimum="{Binding Minimum}"
                                  ToolTip="{Binding ToolTip}"

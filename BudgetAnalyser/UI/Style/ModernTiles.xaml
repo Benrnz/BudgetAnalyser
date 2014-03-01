@@ -6,6 +6,15 @@
     <SolidColorBrush x:Key="ModernTileColourBrush1"
                      Color="#FF0073C6" />
 
+    <SolidColorBrush x:Key="ModernTileColourBrush2"
+                     Color="#FF00A400" />
+
+    <SolidColorBrush x:Key="ModernTileColourBrush3"
+                     Color="#FF9A00A2" />
+
+    <SolidColorBrush x:Key="ProgressBarBrush"
+                     Color="#FF65006B" />
+
     <Style x:Key="ModernTileButton"
            TargetType="{x:Type Button}">
         <Setter Property="HorizontalAlignment"
@@ -17,7 +26,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="MainPanel"
                             Background="Transparent"
-                            BorderBrush="{StaticResource ModernTileColourBrush1}"
+                            BorderBrush="Transparent"
                             BorderThickness="2">
                         <vsm:VisualStateManager.VisualStateGroups>
                             <vsm:VisualStateGroup x:Name="CommonStates">
@@ -44,7 +53,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ModernTileMediumStyle1"
+    <Style x:Key="ModernTileMediumBaseStyle"
            TargetType="Border">
         <Setter Property="Height"
                 Value="75" />
@@ -52,8 +61,20 @@
                 Value="250" />
         <Setter Property="Margin"
                 Value="10,10,0,0" />
+    </Style>
+    
+    <Style x:Key="ModernTileMediumStyle1"
+           TargetType="Border"
+           BasedOn="{StaticResource ModernTileMediumBaseStyle}">
         <Setter Property="Background"
                 Value="{StaticResource ModernTileColourBrush1}" />
+    </Style>
+
+    <Style x:Key="ModernTileMediumStyle2"
+           TargetType="Border"
+           BasedOn="{StaticResource ModernTileMediumBaseStyle}">
+        <Setter Property="Background"
+                Value="{StaticResource ModernTileColourBrush2}" />
     </Style>
 
     <Style x:Key="ModernTileSmallStyle1"
@@ -61,6 +82,13 @@
            TargetType="Border">
         <Setter Property="Width"
                 Value="75" />
+    </Style>
+
+    <Style x:Key="ModernTileSmallStyle2"
+           TargetType="Border"
+           BasedOn="{StaticResource ModernTileSmallStyle1}">
+        <Setter Property="Background"
+                Value="{StaticResource ModernTileColourBrush3}" />
     </Style>
 
     <Style x:Key="WidgetWarningStyle"
@@ -72,5 +100,17 @@
            TargetType="Panel">
         <Setter Property="Background"
                 Value="{StaticResource ModernTileColourBrush1}" />
+    </Style>
+
+    <Style x:Key="WidgetStandardStyle2"
+           TargetType="Panel">
+        <Setter Property="Background"
+                Value="{StaticResource ModernTileColourBrush2}" />
+    </Style>
+
+    <Style x:Key="WidgetStandardStyle3"
+           TargetType="Panel">
+        <Setter Property="Background"
+                Value="{StaticResource ModernTileColourBrush3}" />
     </Style>
 </ResourceDictionary>
