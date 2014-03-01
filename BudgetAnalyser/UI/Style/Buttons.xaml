@@ -898,6 +898,86 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="UnlockButton"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Image RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.5"
+                                                ScaleY="0.5" />
+                            </Image.RenderTransform>
+                            <Image.Source>
+                                <DrawingImage>
+                                    <DrawingImage.Drawing>
+                                        <DrawingGroup Opacity="1">
+                                            <DrawingGroup.Children>
+                                                <DrawingGroup Opacity="1">
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="{x:Null}">
+                                                            <GeometryDrawing.Pen>
+                                                                <Pen Brush="{x:Null}"
+                                                                     Thickness="1" />
+                                                            </GeometryDrawing.Pen>
+                                                            <GeometryDrawing.Geometry>
+                                                                <PathGeometry FillRule="Nonzero"
+                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
+                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                                 Pen="{x:Null}">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="Nonzero"
+                                                                      Figures="M160,320C142.326995849609,320 128,334.326995849609 128,352 128,362.963012695313 133.516006469727,372.634002685547 141.919998168945,378.399993896484L128,448 192,448 178.080001831055,378.399993896484C186.483993530273,372.634002685547 192,362.963012695313 192,352 192,334.326995849609 177.673004150391,320 160,320z M320,32L384,32C436.934997558594,32,480,75.0650024414063,480,128L480,224 416,224 416,128C416,110.355003356934,401.644989013672,96,384,96L320,96C302.355010986328,96,288,110.355003356934,288,128L288,224 296,224C309.200012207031,224,320,234.800003051758,320,248L320,488C320,501.200012207031,309.200012207031,512,296,512L24,512C10.8000001907349,512,0,501.200012207031,0,488L0,248C0,234.800003051758,10.8000001907349,224,24,224L224,224 224,128C224,75.0650024414063,267.065002441406,32,320,32z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Source>
+                        </Image>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    
     <Style x:Key="HappyButton"
            TargetType="{x:Type Button}">
         <Setter Property="Background"

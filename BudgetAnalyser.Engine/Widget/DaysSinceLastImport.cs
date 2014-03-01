@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Widget
     {
         public DaysSinceLastImport()
         {
-            Category = "Transactions";
+            Category = "Files";
             Dependencies = new[] { typeof(StatementModel) };
             DetailedText = "Days since last import";
             ImageResourceName = null;

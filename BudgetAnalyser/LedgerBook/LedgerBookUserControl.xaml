@@ -80,6 +80,10 @@
             <Button Style="{StaticResource PlusLButton}"
                     ToolTip="Add new ledger"
                     Command="{Binding AddNewLedgerCommand}" />
+            <Button Command="{Binding UnlockLedgerLineCommand}"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource UnlockButton}"
+                    ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
             <TextBlock Style="{StaticResource TextBlockHeading1}"
                        Text="{Binding LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />

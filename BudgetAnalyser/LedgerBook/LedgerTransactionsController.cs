@@ -182,6 +182,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand); }
         }
 
+        /// <summary>
+        /// Show the Ledger Transactions view for viewing and editing Ledger Transactions.
+        /// </summary>
+        /// <param name="ledgerEntry"></param>
+        /// <param name="isNew"></param>
         public void Show(LedgerEntry ledgerEntry, bool isNew)
         {
             if (ledgerEntry == null)
@@ -196,6 +201,9 @@ namespace BudgetAnalyser.LedgerBook
             Shown = true;
         }
 
+        /// <summary>
+        /// Show the Ledger Transactions view, for viewing and editing Balance Adjustments
+        /// </summary>
         public void Show(LedgerEntryLine ledgerEntryLine, bool isNew)
         {
             if (ledgerEntryLine == null)

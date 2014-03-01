@@ -32,7 +32,13 @@ namespace BudgetAnalyser.LedgerBook
         private StatementModel doNotUseCurrentStatement;
         private bool doNotUseShown;
         private Engine.Ledger.LedgerBook ledgerBook;
+
+        /// <summary>
+        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
+        ///     it also indicates the ledger row can be edited.
+        /// </summary>
         private LedgerEntryLine newLedgerLine;
+
         private string pendingFileName;
 
         public LedgerBookController(
@@ -183,6 +189,11 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        public ICommand UnlockLedgerLineCommand
+        {
+            get { return new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand); }
+        }
+
         private BudgetCurrencyContext CurrentBudget
         {
             get { return this.doNotUseCurrentBudget; }
@@ -261,6 +272,11 @@ namespace BudgetAnalyser.LedgerBook
         {
             return parameter != null
                    && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == this.newLedgerLine);
+        }
+
+        private bool CanExecuteUnlockLedgerLineCommand()
+        {
+            return this.newLedgerLine == null && LedgerBook != null;
         }
 
         private void CheckIfSaveRequired()
@@ -516,6 +532,21 @@ namespace BudgetAnalyser.LedgerBook
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)
         {
             CurrentStatement = message.StatementModel;
+        }
+
+        private void OnUnlockLedgerLineCommandExecuted()
+        {
+            bool? response = this.questionBox.Show(
+                "Unlock Ledger Entry Line",
+                "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
+                LedgerBook.DatedEntries.First().Date);
+
+            if (response == null || response.Value == false)
+            {
+                return;
+            }
+
+            this.newLedgerLine = LedgerBook.DatedEntries.First();
         }
     }
 }
