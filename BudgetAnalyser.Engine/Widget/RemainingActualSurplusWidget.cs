@@ -17,6 +17,7 @@ namespace BudgetAnalyser.Engine.Widget
         {
             Category = "Monthly Budget";
             DetailedText = "Surplus A";
+            Name = "Surplus A";
             Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
         }
 
@@ -79,7 +80,7 @@ namespace BudgetAnalyser.Engine.Widget
                 ColourStyleName = WidgetStandardStyle;
             }
 
-            ToolTip = string.Format("Remaining Surplus for period is {0:C}", remainingBalance);
+            ToolTip = string.Format("Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
         }
 
         private static decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
