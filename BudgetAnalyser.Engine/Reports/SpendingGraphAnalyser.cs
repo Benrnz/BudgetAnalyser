@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Odbc;
 using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
@@ -67,7 +68,7 @@ namespace BudgetAnalyser.Engine.Reports
                 chartData[transaction.Date] = transaction.Total;
             }
 
-            decimal budgetTotal = GetBudgetTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths);
+            decimal budgetTotal = GetBudgetTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook != null);
             budgetTotal += AddLedgerBalance(ledgerBook, filterCriteria, bucketsCopy);
             decimal runningTotal = budgetTotal;
             ActualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
@@ -90,22 +91,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return 0;
             }
 
-            DateTime lastTransactionDate, beginDate;
-            if (filterCriteria.Cleared)
-            {
-                lastTransactionDate = ledgerBook.DatedEntries.First().Date;
-                beginDate = lastTransactionDate.AddDays(-1); // Doesnt really matter but need a valid date.
-            }
-            else
-            {
-                Debug.Assert(filterCriteria.BeginDate != null);
-                Debug.Assert(filterCriteria.EndDate != null);
-                lastTransactionDate = filterCriteria.EndDate.Value;
-                beginDate = filterCriteria.BeginDate.Value;
-            }
-
-            LedgerEntryLine applicableLine = ledgerBook.DatedEntries
-                .FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= beginDate && ledgerEntryLine.Date <= lastTransactionDate);
+            LedgerEntryLine applicableLine = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filterCriteria);
 
             if (applicableLine == null)
             {
@@ -115,10 +101,17 @@ namespace BudgetAnalyser.Engine.Reports
             decimal ledgerBalances = 0;
             foreach (var budgetBucket in buckets)
             {
-                var ledger = applicableLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket == budgetBucket);
-                if (ledger != null)
+                if (budgetBucket is SurplusBucket)
                 {
-                    ledgerBalances += ledger.Balance;
+                    ledgerBalances += applicableLine.CalculatedSurplus;
+                }
+                else
+                {
+                    var ledger = applicableLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket == budgetBucket);
+                    if (ledger != null)
+                    {
+                        ledgerBalances += ledger.Balance;
+                    }
                 }
             }
 
@@ -128,14 +121,18 @@ namespace BudgetAnalyser.Engine.Reports
         private static decimal GetBudgetTotal(
             BudgetModel budgetModel, 
             IEnumerable<BudgetBucket> buckets, 
-            int durationInMonths)
+            int durationInMonths,
+            bool haveLedgerBook)
         {
             decimal budgetTotal = 0;
             foreach (BudgetBucket bucket in buckets)
             {
                 if (bucket is SurplusBucket)
                 {
-                    budgetTotal += budgetModel.Surplus;
+                    if (!haveLedgerBook)
+                    {
+                        budgetTotal += budgetModel.Surplus;
+                    }
                 }
                 else if (bucket is JournalBucket)
                 {

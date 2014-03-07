@@ -89,7 +89,11 @@ namespace BudgetAnalyser.Engine.Widget
 
             // Debit transactions are negative so normally the total spend will be a negative number.
             decimal remainingBudget = totalBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
-            
+            if (remainingBudget < 0)
+            {
+                remainingBudget = 0;
+            }
+
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
 
