@@ -9,7 +9,6 @@ namespace BudgetAnalyser.Engine.Widget
     public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
         private IBudgetBucketRepository bucketRepository;
-        private int filterHash;
         private StatementModel statement;
         private readonly string standardStyle;
 
@@ -35,9 +34,9 @@ namespace BudgetAnalyser.Engine.Widget
                 return;
             }
 
-            var newBudget = (BudgetCurrencyContext)input[0];
-            var newStatement = (StatementModel)input[1];
-            var newFilter = (GlobalFilterCriteria)input[2];
+            Budget = (BudgetCurrencyContext)input[0];
+            this.statement = (StatementModel)input[1];
+            Filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
@@ -46,35 +45,7 @@ namespace BudgetAnalyser.Engine.Widget
                 return;
             }
 
-            bool updated = false;
-            if (newBudget != Budget)
-            {
-                Budget = newBudget;
-                updated = true;
-            }
-
-            if (newStatement != this.statement)
-            {
-                Filter = newFilter;
-                this.statement = newStatement;
-                updated = true;
-            }
-
-            if (newFilter.GetHashCode() != this.filterHash)
-            {
-                this.filterHash = newFilter.GetHashCode();
-                updated = true;
-            }
-
-            if (SetAdditionalDependencies(input))
-            {
-                updated = true;
-            }
-
-            if (!updated)
-            {
-                return;
-            }
+            SetAdditionalDependencies(input);
 
             if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null)
             {
@@ -112,9 +83,8 @@ namespace BudgetAnalyser.Engine.Widget
             return Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
         }
 
-        protected virtual bool SetAdditionalDependencies(object[] input)
+        protected virtual void SetAdditionalDependencies(object[] input)
         {
-            return false;
         }
     }
 }

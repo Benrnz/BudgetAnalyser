@@ -34,17 +34,10 @@ namespace BudgetAnalyser.Engine.Widget
             return monthlyBudget;
         }
 
-        protected override bool SetAdditionalDependencies(object[] input)
+        protected override void SetAdditionalDependencies(object[] input)
         {
             base.SetAdditionalDependencies(input);
-            var newLedger = (LedgerBook)input[4];
-            if (newLedger != this.ledgerBook)
-            {
-                this.ledgerBook = newLedger;
-                return true;
-            }
-
-            return false;
+            this.ledgerBook = (LedgerBook)input[4];
         }
     }
 }

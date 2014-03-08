@@ -25,10 +25,12 @@ namespace BudgetAnalyser.Dashboard
     public class DashboardController : ControllerBase, IShowableController
     {
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
-        private readonly IWidgetRepository widgetRepository;
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IWidgetRepository widgetRepository;
         private bool doNotUseShown;
         private TimeSpan elapsedTime;
+        private Guid statementChangeHash;
+        private int filterChangeHash;
         private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
@@ -48,6 +50,7 @@ namespace BudgetAnalyser.Dashboard
             GlobalFilterController = uiContext.GlobalFilterController;
 
             MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            MessagingGate.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
@@ -134,7 +137,13 @@ namespace BudgetAnalyser.Dashboard
 
             Type key = typeof(GlobalFilterCriteria);
             this.availableDependencies[key] = message.Criteria;
-            UpdateWidgets(key);
+
+            var newHash = message.Criteria.GetHashCode();
+            if (newHash != this.filterChangeHash)
+            {
+                this.filterChangeHash = newHash;
+                UpdateWidgets(key);
+            }
         }
 
         private void OnLedgerBookReadyMessageReceived([NotNull] LedgerBookReadyMessage message)
@@ -146,6 +155,27 @@ namespace BudgetAnalyser.Dashboard
 
             this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = message.LedgerBook;
             UpdateWidgets(typeof(Engine.Ledger.LedgerBook));
+        }
+
+        private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException("message");
+            }
+
+            if (message.StatementModel == null)
+            {
+                return;
+            }
+
+            if (this.statementChangeHash != message.StatementModel.ChangeHash)
+            {
+                this.statementChangeHash = message.StatementModel.ChangeHash;
+                var key = typeof(StatementModel);
+                this.availableDependencies[key] = message.StatementModel;
+                UpdateWidgets(key);
+            }
         }
 
         private void OnStatementReadyMessageReceived([NotNull] StatementReadyMessage message)

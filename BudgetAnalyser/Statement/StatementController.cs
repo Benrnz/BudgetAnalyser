@@ -244,13 +244,13 @@ namespace BudgetAnalyser.Statement
         public void NotifyOfEdit()
         {
             ViewModel.Dirty = true;
-            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = ViewModel.Dirty });
+            Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
         }
 
         public void NotifyOfReset()
         {
             ViewModel.Dirty = false;
-            Messenger.Send(new StatementHasBeenModifiedMessage { Dirty = false });
+            Messenger.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
         }
 
         private bool CanExecuteCloseStatementCommand()

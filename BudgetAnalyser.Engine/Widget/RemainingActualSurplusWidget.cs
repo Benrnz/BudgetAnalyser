@@ -10,7 +10,6 @@ namespace BudgetAnalyser.Engine.Widget
     {
         private StatementModel statement;
         private GlobalFilterCriteria filter;
-        private int filterHash;
         private LedgerBook ledgerBook;
         private string standardStyle;
 
@@ -31,34 +30,9 @@ namespace BudgetAnalyser.Engine.Widget
                 return;
             }
 
-            var newStatement = (StatementModel)input[0];
-            var newFilter = (GlobalFilterCriteria)input[1];
-            var newLedgerBook = (LedgerBook)input[2];
-
-            bool updated = false;
-            if (newStatement != this.statement)
-            {
-                this.filter = newFilter;
-                this.statement = newStatement;
-                updated = true;
-            }
-
-            if (newLedgerBook != this.ledgerBook)
-            {
-                this.ledgerBook = newLedgerBook;
-                updated = true;
-            }
-
-            if (newFilter.GetHashCode() != this.filterHash)
-            {
-                this.filterHash = newFilter.GetHashCode();
-                updated = true;
-            }
-
-            if (!updated)
-            {
-                return;
-            }
+            this.statement = (StatementModel)input[0];
+            this.filter = (GlobalFilterCriteria)input[1];
+            this.ledgerBook = (LedgerBook)input[2];
 
             if (this.ledgerBook == null || this.statement == null || this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.EndDate == null)
             {

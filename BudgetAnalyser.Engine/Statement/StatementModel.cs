@@ -20,6 +20,11 @@ namespace BudgetAnalyser.Engine.Statement
 
         private int fullDuration;
 
+        public StatementModel()
+        {
+            ChangeHash = Guid.NewGuid();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public IEnumerable<AccountType> AccountTypes { get; private set; }
 
@@ -29,6 +34,12 @@ namespace BudgetAnalyser.Engine.Statement
 
             private set { this.doNotUseAllTransactions = value.ToList(); }
         }
+
+        /// <summary>
+        /// A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
+        /// The hash does not persist between Application Loads.
+        /// </summary>
+        public Guid ChangeHash { get; private set; }
 
         public int DurationInMonths
         {
@@ -52,6 +63,7 @@ namespace BudgetAnalyser.Engine.Statement
             private set
             {
                 this.doNotUseTransactions = value.ToList();
+                ChangeHash = Guid.NewGuid();
                 OnPropertyChanged();
             }
         }
@@ -106,6 +118,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             this.currentFilter = criteria;
 
+            ChangeHash = Guid.NewGuid();
             if (criteria.Cleared)
             {
                 Transactions = AllTransactions.ToList();
@@ -138,6 +151,8 @@ namespace BudgetAnalyser.Engine.Statement
 
         public StatementModel Merge(StatementModel additionalModel)
         {
+            UnsubscribeToTransactionChangedEvents();
+            ChangeHash = Guid.NewGuid();
             Imported = additionalModel.Imported;
             List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.Transactions).ToList();
             AllTransactions = mergedTransactions;
@@ -146,11 +161,15 @@ namespace BudgetAnalyser.Engine.Statement
             DurationInMonths = this.fullDuration;
             AccountTypes = mergedTransactions.Select(t => t.AccountType).Distinct().ToList();
             Filter(this.currentFilter);
+            SubscribeToTransactionChangedEvents();
+
             return this;
         }
 
         public void RemoveTransaction(Transaction transaction)
         {
+            transaction.PropertyChanged -= OnTransactionPropertyChanged;
+            ChangeHash = Guid.NewGuid();
             this.doNotUseAllTransactions.Remove(transaction);
             Filter(this.currentFilter);
         }
@@ -182,12 +201,15 @@ namespace BudgetAnalyser.Engine.Statement
         /// <returns>Returns this instance, to allow chaining.</returns>
         internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
         {
+            UnsubscribeToTransactionChangedEvents();
+            ChangeHash = Guid.NewGuid();
             Transactions = transactions.OrderBy(t => t.Date).ToList();
             AllTransactions = Transactions;
             this.fullDuration = DurationInMonths;
             this.duplicates = null;
             AccountTypes = Transactions.Select(t => t.AccountType).Distinct().ToList();
             OnPropertyChanged("Transactions");
+            SubscribeToTransactionChangedEvents();
             return this;
         }
 
@@ -198,6 +220,44 @@ namespace BudgetAnalyser.Engine.Statement
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "Amount":
+                case "BudgetBucket":
+                case "Date":
+                    ChangeHash = Guid.NewGuid();
+                    break;
+            }
+        }
+
+        private void SubscribeToTransactionChangedEvents()
+        {
+            if (AllTransactions == null)
+            {
+                return;
+            }
+
+            foreach (Transaction transaction in AllTransactions)
+            {
+                transaction.PropertyChanged += OnTransactionPropertyChanged;
+            }
+        }
+
+        private void UnsubscribeToTransactionChangedEvents()
+        {
+            if (AllTransactions == null)
+            {
+                return;
+            }
+
+            foreach (Transaction transaction in AllTransactions)
+            {
+                transaction.PropertyChanged -= OnTransactionPropertyChanged;
             }
         }
     }
