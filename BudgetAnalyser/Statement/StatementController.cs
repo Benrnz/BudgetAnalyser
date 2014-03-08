@@ -214,7 +214,7 @@ namespace BudgetAnalyser.Statement
             this.shellDialogCorrelationId = Guid.NewGuid();
             MessagingGate.Send(
                 new RequestShellDialogMessage(
-                    new EditingTransactionViewModel { Transaction = SelectedRow }, 
+                    new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
                 {
                     CorrelationId = this.shellDialogCorrelationId,

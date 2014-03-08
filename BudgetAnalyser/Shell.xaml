@@ -37,7 +37,9 @@
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
+            
             <Grid Background="#cc000000"
+                  KeyUp="OnShellDialogKeyUp"
                   Visibility="{Binding PopUpDialogContent, Converter={StaticResource NullToVisConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -59,6 +61,7 @@
                                     Visibility="{Binding SaveButtonVisible, Converter={StaticResource BoolToVisConverter}}" />
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Ok"
+                                    IsDefault="False"
                                     IsCancel="{Binding DialogOkIsCancel}"
                                     Style="{StaticResource OkRoundButton}"
                                     Visibility="{Binding OkButtonVisible, Converter={StaticResource BoolToVisConverter}}" />

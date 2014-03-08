@@ -10,10 +10,8 @@ namespace BudgetAnalyser.Statement
     /// <summary>
     ///     Interaction logic for StatementUserControl.xaml
     /// </summary>
-    public partial class StatementUserControl : UserControl
+    public partial class StatementUserControl
     {
-        // TODO Consider moving the edit mode to the controller, so that it controls the edit more than the view.
-
         private bool subscribedToMainWindowClose;
 
         public StatementUserControl()
@@ -52,6 +50,12 @@ namespace BudgetAnalyser.Statement
                     return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.ViewModel.BucketFilter;
                 };
             }
+        }
+
+        private ListBoxItem GetSelectedListBoxItem()
+        {
+            object transaction = this.TransactionListBox.SelectedItem;
+            return (ListBoxItem)this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -100,7 +104,11 @@ namespace BudgetAnalyser.Statement
         {
             if (message.Content is EditingTransactionViewModel)
             {
-                this.TransactionListBox.Focus();
+                ListBoxItem listBoxItem = GetSelectedListBoxItem();
+                if (listBoxItem != null)
+                {
+                    listBoxItem.Focus();
+                }
             }
         }
 
@@ -111,7 +119,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter || e.Key == Key.Return)
             {
                 OnEditTransaction(sender, e);
             }

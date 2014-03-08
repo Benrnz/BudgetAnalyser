@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -176,22 +177,26 @@ namespace BudgetAnalyser
 
         private void OnDialogCommandExecute(string commandType)
         {
-            switch (commandType)
+            // Delay execution so that keyed events happen
+            Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
-                case "Ok":
-                case "Save":
-                    MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
-                    break;
+                switch (commandType)
+                {
+                    case "Ok":
+                    case "Save":
+                        MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
+                        break;
 
-                case "Cancel":
-                    MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
-                    break;
+                    case "Cancel":
+                        MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
+                        break;
 
-                default:
-                    throw new NotSupportedException("Unsupported command type received from Dialog Popup on Shell view. " + commandType);
-            }
+                    default:
+                        throw new NotSupportedException("Unsupported command type received from Dialog Popup on Shell view. " + commandType);
+                }
 
-            PopUpDialogContent = null;
+                PopUpDialogContent = null;
+            });
         }
 
         private void OnPopUpDialogRequested(RequestShellDialogMessage message)
