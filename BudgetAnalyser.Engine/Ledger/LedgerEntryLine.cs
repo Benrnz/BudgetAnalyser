@@ -151,6 +151,13 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
+        /// <summary>
+        /// Called by <see cref="LedgerBook.Reconcile"/>. It builds the contents of the new ledger line based on budget and statement input.
+        /// </summary>
+        /// <param name="previousEntries">A collection of previous <see cref="LedgerEntry"/>s to construct the running balance for the entries this line contains.</param>
+        /// <param name="currentBudget">The current applicable budget</param>
+        /// <param name="statement">The current period statement.</param>
+        /// <param name="startDateIncl">The date for this ledger line.</param>
         internal void AddNew(IDictionary<Ledger, LedgerEntry> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
         {
             if (!this.isNew)
@@ -176,7 +183,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
 
-                newEntry.SetTransactions(transactions);
+                newEntry.SetTransactions(transactions, true);
                 this.entries.Add(newEntry);
             }
         }

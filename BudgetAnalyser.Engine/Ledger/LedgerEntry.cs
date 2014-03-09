@@ -107,11 +107,52 @@ namespace BudgetAnalyser.Engine.Ledger
             Balance = 0;
         }
 
-        internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions)
+        /// <summary>
+        /// Called by <see cref="LedgerBook.Reconcile"/>. Sets up this new Entry with transactions.
+        /// ALSO USED BY Persistence.
+        /// </summary>
+        /// <param name="newTransactions">The list of new transactions for this entry.</param>
+        /// <param name="reconciliationMode">
+        /// Set this to true if performing a reconciliation and as a result adding this new Entry.
+        /// Set this to false, default, when rehydrating from file.
+        /// </param>
+        internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions, bool reconciliationMode = false)
         {
             this.transactions = newTransactions;
-            decimal newBalance = Balance + NetAmount;
-            Balance = newBalance < 0 ? 0 : newBalance;
+            if (reconciliationMode && Ledger.BudgetBucket is SpentMonthlyExpense && NetAmount != 0)
+            {
+                // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
+                LedgerTransaction zeroingTransaction;
+                if (NetAmount < 0)
+                {
+                    zeroingTransaction = new CreditLedgerTransaction
+                    {
+                        Credit = -NetAmount,
+                        Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
+                    };
+                }
+                else
+                {
+                    zeroingTransaction = new DebitLedgerTransaction
+                    {
+                        Debit = NetAmount,
+                        Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder",
+                    };
+                }
+
+                this.transactions.Add(zeroingTransaction);
+                if (NetAmount != 0)
+                {
+                    throw new InvalidOperationException("Code Error: SpentMonthly Ledger's automatically zero their Net-Amount, but after attempting to, a non-zero balance remains.");
+                }
+            }
+            else
+            {
+                // All other ledgers can accumulate a balance but cannot be negative.
+                decimal newBalance = Balance + NetAmount;
+                Balance = newBalance < 0 ? 0 : newBalance;
+            }
+
             return this;
         }
     }
