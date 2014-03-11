@@ -1,7 +1,9 @@
-﻿using BudgetAnalyser.Engine.Budget;
+﻿using System.Diagnostics;
+using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    [DebuggerDisplay("Ledger({BudgetBucket})")]
     public class Ledger
     {
         public BudgetBucket BudgetBucket { get; internal set; }

@@ -199,27 +199,31 @@ namespace BudgetAnalyser.LedgerBook
                 foreach (Ledger ledger in allLedgers)
                 {
                     LedgerEntry entry = line.Entries.FirstOrDefault(e => e.Ledger.Equals(ledger));
+                    decimal balance, netAmount;
+
                     if (entry == null)
                     {
                         // New ledger added that older entries do not have.
-                        AddHyperlinkToGrid(grid, 0.ToString("N"), ref column, row, NumberStyle, parameter: null);
-                        Border border = AddBorderToGridCell(grid, true, true, column, row);
-                        AddContentToGrid(border, 0.ToString("N"), ref column, row, NumberStyle);
+                        balance = 0;
+                        netAmount = 0;
                     }
                     else
                     {
-                        if (ledger.BudgetBucket is SpentMonthlyExpense)
-                        {
-                            AddBorderToGridCell(parent:grid, hasBackground: false, hasBorder: true, column:column, row:row);
-                            AddHyperlinkToGrid(grid, entry.Balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
-                        }
-                        else
-                        {
-                            AddBorderToGridCell(parent: grid, hasBackground: true, hasBorder: false, column: column, row: row); 
-                            AddHyperlinkToGrid(grid, entry.NetAmount.ToString("N"), ref column, row, NumberStyle, parameter: entry);
-                            AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
-                            AddHyperlinkToGrid(grid, entry.Balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
-                        }
+                        balance = entry.Balance;
+                        netAmount = entry.NetAmount;
+                    }
+
+                    if (ledger.BudgetBucket is SpentMonthlyExpense)
+                    {
+                        AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
+                        AddHyperlinkToGrid(grid, balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                    }
+                    else
+                    {
+                        AddBorderToGridCell(parent: grid, hasBackground: true, hasBorder: false, column: column, row: row);
+                        AddHyperlinkToGrid(grid, netAmount.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
+                        AddHyperlinkToGrid(grid, balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
                     }
                 }
 

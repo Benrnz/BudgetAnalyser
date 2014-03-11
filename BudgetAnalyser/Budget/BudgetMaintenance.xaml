@@ -235,7 +235,7 @@
                     <budget:SpentMonthlyExpense />
                 </Button.CommandParameter>
             </Button>
-            <Button Background="{StaticResource DebitBackground1Brush}"
+            <Button Background="{StaticResource DebitBackground2Brush}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
