@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 
 namespace BudgetAnalyser.LedgerBook
@@ -28,8 +29,8 @@ namespace BudgetAnalyser.LedgerBook
         private const string NumberStyle = "LedgerBookTextBlockNumber";
         private const string SurplusBackground = "TileBackgroundAlternateBrush";
         private const string SurplusTextBrush = "CreditBackground1Brush";
-        private static readonly GridLength MediumGridWidth = new GridLength(90);
-        private static readonly GridLength SmallGridWidth = new GridLength(60);
+        private static readonly GridLength MediumGridWidth = new GridLength(100);
+        private static readonly GridLength SmallGridWidth = new GridLength(75);
 
         private bool subscribedToControllerPropertyChanged;
         private bool subscribedToMainWindowClose;
@@ -107,17 +108,22 @@ namespace BudgetAnalyser.LedgerBook
             foreach (Ledger ledger in Controller.LedgerBook.Ledgers)
             {
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
-                Grid.SetColumnSpan(border, 2);
-                TextBlock ledgerTitle = AddContentToGrid(border, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, ledger.BudgetBucket.Description);
+                // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
+                Grid.SetColumnSpan(border, ledger.BudgetBucket is SpentMonthlyExpense ? 1 : 2);
+                string tooltip = string.Format("{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
+                TextBlock ledgerTitle = AddContentToGrid(border, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, tooltip);
                 ledgerTitle.HorizontalAlignment = HorizontalAlignment.Center;
                 column--; // Ledger heading shares a column with other Ledger Headings
 
-                TextBlock ledgerTxnsHeading = AddContentToGrid(grid, "Txns", ref column, 0, HeadingStyle, "Transactions");
-                ledgerTxnsHeading.Margin = new Thickness(2, 30, 2, 2);
-                ledgerTxnsHeading.HorizontalAlignment = HorizontalAlignment.Right;
+                if (!(ledger.BudgetBucket is SpentMonthlyExpense))
+                {
+                    TextBlock ledgerTxnsHeading = AddContentToGrid(grid, "Txns", ref column, 0, HeadingStyle, "Transactions");
+                    ledgerTxnsHeading.Margin = new Thickness(5, 30, 5, 2);
+                    ledgerTxnsHeading.HorizontalAlignment = HorizontalAlignment.Right;
+                }
 
                 TextBlock ledgerBalanceHeading = AddContentToGrid(grid, "Balance", ref column, 0, HeadingStyle, "Ledger Balance");
-                ledgerBalanceHeading.Margin = new Thickness(2, 30, 2, 2);
+                ledgerBalanceHeading.Margin = new Thickness(5, 30, 5, 2);
                 ledgerBalanceHeading.HorizontalAlignment = HorizontalAlignment.Right;
             }
 
@@ -159,10 +165,18 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddLedgerColumns(Grid grid)
         {
-            for (int index = 0; index < Controller.LedgerBook.Ledgers.Count(); index++)
+            foreach (var ledger in Controller.LedgerBook.Ledgers)
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
+                if (ledger.BudgetBucket is SpentMonthlyExpense)
+                {
+                    // Spent Monthly ledgers only have a balance column
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
+                }
+                else
+                {
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
+                }
             }
         }
 
@@ -174,6 +188,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 if (row >= 13)
                 {
+                    // Only showing 1 year worth of data for now.
                     break;
                 }
 
@@ -193,9 +208,18 @@ namespace BudgetAnalyser.LedgerBook
                     }
                     else
                     {
-                        AddHyperlinkToGrid(grid, entry.NetAmount.ToString("N"), ref column, row, NumberStyle, parameter: entry);
-                        Border border = AddBorderToGridCell(grid, true, true, column, row);
-                        AddContentToGrid(border, entry.Balance.ToString("N"), ref column, row, NumberStyle);
+                        if (ledger.BudgetBucket is SpentMonthlyExpense)
+                        {
+                            AddBorderToGridCell(parent:grid, hasBackground: false, hasBorder: true, column:column, row:row);
+                            AddHyperlinkToGrid(grid, entry.Balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        }
+                        else
+                        {
+                            AddBorderToGridCell(parent: grid, hasBackground: true, hasBorder: false, column: column, row: row); 
+                            AddHyperlinkToGrid(grid, entry.NetAmount.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                            AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
+                            AddHyperlinkToGrid(grid, entry.Balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        }
                     }
                 }
 

@@ -13,5 +13,10 @@ namespace BudgetAnalyser.Engine.Budget
         {
             Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
         }
+
+        public override string TypeDescription
+        {
+            get { return "Calculated Surplus"; }
+        }
     }
 }

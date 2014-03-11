@@ -34,7 +34,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 return this.datedEntries.SelectMany(e => e.Entries)
                     .Select(e => e.Ledger)
                     .Union(this.newlyAddedLedgers)
-                    .Distinct();
+                    .Distinct()
+                    .OrderBy(l => l.BudgetBucket.Code);
             }
         }
 

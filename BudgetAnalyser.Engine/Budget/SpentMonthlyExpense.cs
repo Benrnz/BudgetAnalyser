@@ -10,5 +10,10 @@
             : base(code, name)
         {
         }
+
+        public override string TypeDescription
+        {
+            get { return "Spent Monthly Expense"; }
+        }
     }
 }

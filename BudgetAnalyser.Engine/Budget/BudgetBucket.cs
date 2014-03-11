@@ -48,6 +48,11 @@ namespace BudgetAnalyser.Engine.Budget
         [XmlAttribute]
         public Guid Id { get; set; }
 
+        public virtual string TypeDescription
+        {
+            get { return GetType().Name; }
+        }
+
         public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
         {
             object obj3 = obj1, obj4 = obj2;
