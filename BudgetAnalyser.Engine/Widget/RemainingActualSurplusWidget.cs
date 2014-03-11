@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Widget
         private static decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
         {
             var line = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filter);
-            return line.CalculatedSurplus;
+            return line == null ? 0 : line.CalculatedSurplus;
         }
 
         private static decimal CalculateSurplusSpend(StatementModel statementModel)
