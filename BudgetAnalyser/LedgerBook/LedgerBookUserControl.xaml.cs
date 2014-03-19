@@ -30,7 +30,7 @@ namespace BudgetAnalyser.LedgerBook
         private const string SurplusBackground = "TileBackgroundAlternateBrush";
         private const string SurplusTextBrush = "CreditBackground1Brush";
         private static readonly GridLength MediumGridWidth = new GridLength(100);
-        private static readonly GridLength SmallGridWidth = new GridLength(75);
+        private static readonly GridLength SmallGridWidth = new GridLength(60);
 
         private bool subscribedToControllerPropertyChanged;
         private bool subscribedToMainWindowClose;

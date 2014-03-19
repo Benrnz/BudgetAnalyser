@@ -4,7 +4,6 @@
     <Color x:Key="ButtonChromeColor">
         #FFBEE6FD
     </Color>
-
     <SolidColorBrush x:Key="ButtonChromeBrush"
                      Color="{StaticResource ButtonChromeColor}" />
 
@@ -12,7 +11,7 @@
                      Color="{StaticResource MainBackground}" />
 
     <Color x:Key="ButtonBackgroundColor">
-        #AAA9A9A9
+        #FF2C6F8E
     </Color>
 
     <SolidColorBrush x:Key="ButtonBackgroundBrush"

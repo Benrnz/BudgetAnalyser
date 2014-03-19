@@ -51,7 +51,7 @@
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                         Orientation="Horizontal">
                 <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
-                      Style="{StaticResource MenuStyle1}"
+                      Style="{StaticResource RoundMenuButton}"
                       Foreground="{StaticResource ButtonGlyphBrush}"
                       Background="{StaticResource ButtonBackgroundBrush}"
                       BorderBrush="{StaticResource ButtonStrokeBrush}"
@@ -62,7 +62,7 @@
                                     Value="{StaticResource ButtonGlyphBrush}" />
                         </Style>
                     </Menu.Resources>
-                    <MenuItem Style="{StaticResource MenuItemStyle1}">
+                    <MenuItem Style="{StaticResource RoundMenuItemButton}">
                         <MenuItem.Header>
                             <TextBlock Text="Recent..."
                                        FontSize="14"
