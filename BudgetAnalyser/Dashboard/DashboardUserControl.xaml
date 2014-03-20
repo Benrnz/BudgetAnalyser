@@ -22,7 +22,7 @@
                     <ProgressBar Background="Transparent"
                                  BorderBrush="{StaticResource TextBrush}"
                                  Foreground="{StaticResource TextBrush}"
-                                 BorderThickness="2"
+                                 BorderThickness="1"
                                  Height="30"
                                  Margin="4"
                                  Maximum="{Binding Maximum}"

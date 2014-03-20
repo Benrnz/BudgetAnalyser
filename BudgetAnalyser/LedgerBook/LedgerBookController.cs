@@ -473,7 +473,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnSaveLedgerBookCommandExecute()
         {
-            this.ledgerRepository.Save(LedgerBook);
+            this.ledgerRepository.Save(LedgerBook); 
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
@@ -546,7 +546,8 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            this.newLedgerLine = LedgerBook.DatedEntries.First();
+            this.newLedgerLine = LedgerBook.UnlockMostRecentLine();
+            this.dirty = true;
         }
     }
 }

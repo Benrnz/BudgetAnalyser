@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     loading from file.
         ///     This variable is intentionally not persisted.
         /// </summary>
-        private readonly bool isNew;
+        private bool isNew;
 
         private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
         private List<LedgerEntry> entries = new List<LedgerEntry>();
@@ -226,6 +226,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return new List<LedgerTransaction>();
+        }
+
+        internal void Unlock()
+        {
+            this.isNew = true;
         }
     }
 }

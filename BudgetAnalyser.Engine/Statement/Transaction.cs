@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Statement
 {
     [DebuggerDisplay("{Date} {Amount} {Description} {BudgetBucket}")]
-    public class Transaction : INotifyPropertyChanged, IComparable
+    public class Transaction : INotifyPropertyChanged, IComparable, ICloneable
     {
         private BudgetBucket budgetBucket;
         private AccountType doNotUseAccountType;
@@ -119,6 +119,24 @@ namespace BudgetAnalyser.Engine.Statement
                 this.doNotUseTransactionType = value;
                 OnPropertyChanged();
             }
+        }
+
+        public object Clone()
+        {
+            return new Transaction
+            {
+                Id = Id,
+                AccountType = AccountType,
+                Amount = Amount,
+                BudgetBucket = BudgetBucket,
+                Date = Date,
+                Description = Description,
+                IsSuspectedDuplicate = IsSuspectedDuplicate,
+                Reference1 = Reference1,
+                Reference2 = Reference2,
+                Reference3 = Reference3,
+                TransactionType = TransactionType,
+            };
         }
 
         public int CompareTo(object obj)

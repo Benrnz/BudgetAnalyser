@@ -180,5 +180,16 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
             }
         }
+
+        public LedgerEntryLine UnlockMostRecentLine()
+        {
+            var line = DatedEntries.FirstOrDefault();
+            if (line != null)
+            {
+                line.Unlock();
+            }
+
+            return line;
+        }
     }
 }

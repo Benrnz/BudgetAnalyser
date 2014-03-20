@@ -10,7 +10,7 @@
         MinWidth="800"
         SnapsToDevicePixels="True"
         Title="{Binding WindowTitle}"
-        Width="1000">
+        Width="1250">
 
     <DockPanel>
         <Grid DockPanel.Dock="Top">
