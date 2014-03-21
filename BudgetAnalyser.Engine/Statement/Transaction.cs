@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Statement
 {
     [DebuggerDisplay("{Date} {Amount} {Description} {BudgetBucket}")]
-    public class Transaction : INotifyPropertyChanged, IComparable, ICloneable
+    public class Transaction : INotifyPropertyChanged, IComparable
     {
         private BudgetBucket budgetBucket;
         private AccountType doNotUseAccountType;
@@ -121,24 +121,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        public object Clone()
-        {
-            return new Transaction
-            {
-                Id = Id,
-                AccountType = AccountType,
-                Amount = Amount,
-                BudgetBucket = BudgetBucket,
-                Date = Date,
-                Description = Description,
-                IsSuspectedDuplicate = IsSuspectedDuplicate,
-                Reference1 = Reference1,
-                Reference2 = Reference2,
-                Reference3 = Reference3,
-                TransactionType = TransactionType,
-            };
-        }
-
         public int CompareTo(object obj)
         {
             var otherTransaction = obj as Transaction;
@@ -150,7 +132,13 @@ namespace BudgetAnalyser.Engine.Statement
             return Date.CompareTo(otherTransaction.Date);
         }
 
-        public override int GetHashCode()
+        /// <summary>
+        /// Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction"/>.
+        /// <see cref="Object.GetHashCode"/> cannot be used because it is intended to show instance reference equivalence. It will
+        /// give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with 
+        /// UI controls such as ListBox.
+        /// </summary>
+        public int GetEqualityHashCode()
         {
             unchecked
             {

@@ -212,11 +212,9 @@ namespace BudgetAnalyser.Statement
             }
 
             this.shellDialogCorrelationId = Guid.NewGuid();
-            var transactionCopy = SelectedRow;
-            //var transactionCopy = (Transaction)SelectedRow.Clone();
             MessagingGate.Send(
                 new RequestShellDialogMessage(
-                    new EditingTransactionViewModel { Transaction = transactionCopy },
+                    new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
                 {
                     CorrelationId = this.shellDialogCorrelationId,

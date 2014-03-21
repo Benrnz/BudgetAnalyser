@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseTransaction = value;
-                OriginalHash = value.GetHashCode();
+                OriginalHash = value.GetEqualityHashCode();
             }
         }
 
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Statement
 
         public bool HasChanged
         {
-            get { return OriginalHash != Transaction.GetHashCode(); }
+            get { return OriginalHash != Transaction.GetEqualityHashCode(); }
         }
     }
 }

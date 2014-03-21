@@ -602,8 +602,6 @@ namespace BudgetAnalyser.Annotations
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC action.
     ///     If applied to a method, the MVC action name is calculated implicitly from the context.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcActionAttribute : Attribute
@@ -623,8 +621,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC araa.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcAreaAttribute : PathReferenceAttribute
@@ -646,8 +642,6 @@ namespace BudgetAnalyser.Annotations
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC controller.
     ///     If applied to a method, the MVC controller name is calculated implicitly from the context.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcControllerAttribute : Attribute
@@ -667,8 +661,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC Master.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Controller.View(String, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcMasterAttribute : Attribute
@@ -677,8 +669,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Controller.View(String, Object)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcModelTypeAttribute : Attribute
@@ -688,8 +678,6 @@ namespace BudgetAnalyser.Annotations
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC partial view.
     ///     If applied to a method, the MVC partial view name is calculated implicitly from the context.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute
@@ -706,8 +694,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcDisplayTemplateAttribute : Attribute
@@ -716,8 +702,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcEditorTemplateAttribute : Attribute
@@ -727,8 +711,6 @@ namespace BudgetAnalyser.Annotations
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC view.
     ///     If applied to a method, the MVC view name is calculated implicitly from the context.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.Mvc.Controller.View(Object)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcViewAttribute : PathReferenceAttribute
@@ -758,8 +740,6 @@ namespace BudgetAnalyser.Annotations
 
     /// <summary>
     ///     Razor attribute. Indicates that a parameter or a method is a Razor section.
-    ///     Use this attribute for custom wrappers similar to
-    ///     <see cref="System.Web.WebPages.WebPageBase.RenderSection(String)" />
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method, Inherited = true)]
     public sealed class RazorSectionAttribute : Attribute
