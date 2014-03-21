@@ -15,13 +15,17 @@
         <TextBlock Text="{Binding Narrative}" />
         <TextBlock Grid.Column="1"
                    Style="{StaticResource TextBlockNumber}"
-                   Text="{Binding Credit, StringFormat=N}" />
+                   Text="{Binding Credit, StringFormat=N}"
+                   Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}" />
         <TextBlock Grid.Column="2"
-                   Text="CR" />
+                   Text="CR"
+                   Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}"/>
         <TextBlock Grid.Column="3"
                    Style="{StaticResource TextBlockNumber}"
-                   Text="{Binding Debit, StringFormat=N}" />
+                   Text="{Binding Debit, StringFormat=N}"
+                   Visibility="{Binding Debit, Converter={StaticResource ZeroToVisibilityConverter}}" />
         <TextBlock Grid.Column="4"
+                   Visibility="{Binding Debit, Converter={StaticResource ZeroToVisibilityConverter}}"
                    Text="DR" />
         <Button Style="{StaticResource CloseButton}"
                 Grid.Column="5"
