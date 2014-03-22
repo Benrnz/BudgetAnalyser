@@ -87,6 +87,7 @@
     <Compile Include="LedgerDataToDomainMapperTest.cs" />
     <Compile Include="MastercardAccountTest.cs" />
     <Compile Include="StatementModelRepositoryTest.cs" />
+    <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />

@@ -65,10 +65,10 @@
 
             if (useEllipses)
             {
-                return "…" + instance.Substring(instance.Length - truncateToLength, truncateToLength);
+                return "…" + instance.Substring(instance.Length - truncateToLength + 1, truncateToLength - 1);
             }
 
-            return instance.Substring(0, truncateToLength);
+            return instance.Substring(instance.Length - truncateToLength, truncateToLength);
         }
     }
 }
