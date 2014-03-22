@@ -2,6 +2,11 @@
 {
     public class SavedUpForExpense : ExpenseBudgetBucket
     {
+        public SavedUpForExpense()
+        {
+            // Default constructor required for deserialisation.
+        }
+
         public SavedUpForExpense(string code, string name)
             : base(code, name)
         {
