@@ -122,14 +122,28 @@ namespace BudgetAnalyser.Engine.Ledger
             if (reconciliationMode && Ledger.BudgetBucket is SpentMonthlyExpense && NetAmount != 0)
             {
                 // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
-                LedgerTransaction zeroingTransaction;
+                LedgerTransaction zeroingTransaction = null;
                 if (NetAmount < 0)
                 {
-                    zeroingTransaction = new CreditLedgerTransaction
+                    if (newTransactions.OfType<BudgetCreditLedgerTransaction>().Any())
                     {
-                        Credit = -NetAmount,
-                        Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
-                    };
+                        zeroingTransaction = new CreditLedgerTransaction
+                        {
+                            Credit = -NetAmount,
+                            Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
+                        };
+                    }
+                    else
+                    {
+                        if (Balance + NetAmount < 0)
+                        {
+                            zeroingTransaction = new CreditLedgerTransaction
+                            {
+                                Credit = -(Balance + NetAmount),
+                                Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
+                            };
+                        }
+                    }
                 }
                 else
                 {
@@ -140,10 +154,9 @@ namespace BudgetAnalyser.Engine.Ledger
                     };
                 }
 
-                this.transactions.Add(zeroingTransaction);
-                if (NetAmount != 0)
+                if (zeroingTransaction != null)
                 {
-                    throw new InvalidOperationException("Code Error: SpentMonthly Ledger's automatically zero their Net-Amount, but after attempting to, a non-zero balance remains.");
+                    this.transactions.Add(zeroingTransaction);
                 }
             }
             else

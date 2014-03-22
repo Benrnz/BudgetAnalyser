@@ -181,7 +181,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return this.duplicates;
             }
 
-            List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetHashCode(), t => t).Where(group => group.Count() > 1).ToList();
+            List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).ToList();
             Debug.WriteLine("{0} Duplicates detected.", query.Sum(group => group.Count()));
             Parallel.ForEach(query, duplicate =>
             {

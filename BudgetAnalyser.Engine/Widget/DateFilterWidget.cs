@@ -5,7 +5,7 @@ namespace BudgetAnalyser.Engine.Widget
     public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {
         private string doNotUseImageResourceName2;
-        private string standardStyleName;
+        private readonly string standardStyleName;
 
         public DateFilterWidget()
         {

@@ -179,6 +179,11 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
             }
+
+            if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
+            {
+                throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.");
+            }
         }
 
         public LedgerEntryLine UnlockMostRecentLine()

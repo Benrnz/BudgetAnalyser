@@ -4,6 +4,7 @@ using System.Linq;
 using Autofac;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Widget;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest
@@ -19,6 +20,7 @@ namespace BudgetAnalyser.UnitTest
                 {
                     typeof (IModelValidate), // Used to indicate support for standard validation.
                     typeof (IBankStatementImporter), // The implementations of this interface are discovered by reflection.
+                    typeof (IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
                 };
             }
         }

@@ -8,5 +8,6 @@
         public const string PhoneBucketCode = "PHNET";
         public const string PowerBucketCode = "POWER";
         public const string HairBucketCode = "HAIRCUT";
+        public const string IncomeBucketCode = "INCOME";
     }
 }

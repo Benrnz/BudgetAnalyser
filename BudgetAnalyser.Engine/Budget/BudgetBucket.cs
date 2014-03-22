@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public override int GetHashCode()
         {
-            return Code.GetHashCode();
+            return Code == null ? base.GetHashCode() : Code.GetHashCode();
         }
 
         public override string ToString()
