@@ -142,14 +142,12 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void PerformanceOfValidateTest()
         {
-            //BudgetModel budget;
-            //var subject = CreateStatementModel(out budget);
-            //var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            //subject.ValidateAgainstDuplicates();
-            //stopwatch.Stop();
-
-            //Assert.IsTrue(stopwatch.ElapsedMilliseconds < 180);
-            Assert.Inconclusive();
+            var subject = StatementModelTestData.TestData1();
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            subject.ValidateAgainstDuplicates();
+            stopwatch.Stop();
+            Console.WriteLine("{0:N0} ms", stopwatch.ElapsedMilliseconds);
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 5);
         }
 
         [TestMethod]

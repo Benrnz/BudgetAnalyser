@@ -76,6 +76,7 @@
     <Compile Include="BudgetCollectionTest.cs" />
     <Compile Include="ChequeAccountTest.cs" />
     <Compile Include="DataLedgerBookTest.cs" />
+    <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="LedgerBookRepositoryTest.cs" />

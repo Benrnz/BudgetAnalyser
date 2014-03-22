@@ -104,6 +104,7 @@ namespace BudgetAnalyser.Engine.Reports
                     continue;
                 }
 
+                // If the most recent budget does not contain this bucket, then skip it.
                 if (currentBudget.Expenses.Any(e => e.Bucket == bucket))
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildExpenseFinder(bucket));
@@ -122,6 +123,7 @@ namespace BudgetAnalyser.Engine.Reports
                     continue;
                 }
 
+                // If the most recent budget does not contain this bucket, then skip it.
                 if (currentBudget.Incomes.Any(i => i.Bucket == bucket))
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildIncomeFinder(bucket));
