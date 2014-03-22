@@ -49,19 +49,6 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public string Description
-        {
-            get
-            {
-                if (Cleared)
-                {
-                    return "Showing all.";
-                }
-
-                return string.Format(CultureInfo.CurrentCulture, "From {0:d} to {1:d}.", BeginDate, EndDate);
-            }
-        }
-
         public DateTime? EndDate
         {
             get { return this.doNotUseEndDate; }

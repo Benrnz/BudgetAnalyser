@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Engine.Statement
             Filtered = true;
         }
 
-        public StatementModel Merge(StatementModel additionalModel)
+        public void Merge(StatementModel additionalModel)
         {
             UnsubscribeToTransactionChangedEvents();
             ChangeHash = Guid.NewGuid();
@@ -162,8 +162,6 @@ namespace BudgetAnalyser.Engine.Statement
             AccountTypes = mergedTransactions.Select(t => t.AccountType).Distinct().ToList();
             Filter(this.currentFilter);
             SubscribeToTransactionChangedEvents();
-
-            return this;
         }
 
         public void RemoveTransaction(Transaction transaction)

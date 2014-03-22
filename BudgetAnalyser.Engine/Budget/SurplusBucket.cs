@@ -7,6 +7,7 @@ namespace BudgetAnalyser.Engine.Budget
         public SurplusBucket()
         {
             Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
+            Code = "SURPLUS";
         }
 
         public SurplusBucket(string code, string description) : base(code, description)
