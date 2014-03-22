@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
@@ -92,9 +91,9 @@ namespace BudgetAnalyser.Engine
             unchecked
             {
                 int hashCode = (this.doNotUseAccountType != null ? this.doNotUseAccountType.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ this.doNotUseBeginDate.GetHashCode();
-                hashCode = (hashCode*397) ^ this.doNotUseCleared.GetHashCode();
-                hashCode = (hashCode*397) ^ this.doNotUseEndDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.doNotUseBeginDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
                 return hashCode;
             }
         }
@@ -121,13 +120,21 @@ namespace BudgetAnalyser.Engine
                 valid = false;
             }
 
+            if (BeginDate > EndDate)
+            {
+                validationMessages.AppendLine("Begin Date cannot be after the End Date.");
+                valid = false;
+            }
+
             return valid;
         }
 
         protected bool Equals(GlobalFilterCriteria other)
         {
-            return Equals(this.doNotUseAccountType, other.doNotUseAccountType) && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate) && this.doNotUseCleared.Equals(other.doNotUseCleared) &&
-                   this.doNotUseEndDate.Equals(other.doNotUseEndDate);
+            return Equals(this.doNotUseAccountType, other.doNotUseAccountType)
+                   && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate)
+                   && this.doNotUseCleared.Equals(other.doNotUseCleared)
+                   && this.doNotUseEndDate.Equals(other.doNotUseEndDate);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

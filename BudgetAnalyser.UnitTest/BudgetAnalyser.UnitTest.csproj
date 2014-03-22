@@ -78,6 +78,7 @@
     <Compile Include="DataLedgerBookTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
+    <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="LedgerBookRepositoryTest.cs" />
     <Compile Include="LedgerBookToDataLedgerBookMapperTest.cs" />
