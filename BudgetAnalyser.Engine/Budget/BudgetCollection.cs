@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public BudgetModel ForDate(DateTime date)
         {
-            return this.FirstOrDefault(b => b.EffectiveFrom <= date);
+            return this.OrderByDescending(b => b.EffectiveFrom).FirstOrDefault(b => b.EffectiveFrom <= date);
         }
 
         public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)

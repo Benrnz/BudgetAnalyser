@@ -71,11 +71,11 @@ namespace BudgetAnalyser.Engine.Reports
 
             List<BudgetModel> budgetsInvolved = this.budgets.ForDates(beginDate, endDate).ToList();
             UsesMultipleBudgets = budgetsInvolved.Count() > 1;
-            BudgetModel currentBudget = budgetsInvolved.First();
+            BudgetModel currentBudget = budgetsInvolved.Last();  // Use most recent budget as the current
 
             DurationInMonths = StatementModel.CalculateDuration(criteria, this.statement.Transactions);
 
-            CalculateTotalsAndAverage(currentBudget);
+            CalculateTotalsAndAverage(beginDate);
 
             Analyses = new List<BucketAnalysis>();
             var list = new List<BucketAnalysis>();
@@ -84,67 +84,91 @@ namespace BudgetAnalyser.Engine.Reports
                 BudgetBucket bucketCopy = bucket;
                 List<Transaction> query = this.statement.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
                 decimal totalSpent = query.Sum(t => t.Amount);
-                decimal averageSpend = totalSpent/DurationInMonths;
+                decimal averageSpend = totalSpent / DurationInMonths;
 
                 if (bucket == this.bucketRepository.SurplusBucket)
                 {
+                    decimal budgetedTotal = CalculateBudgetedTotalAmount(beginDate, b => b.Surplus);
+                    decimal perMonthBudget = budgetedTotal / DurationInMonths; // Calc an average in case multiple budgets are used and the budgeted amounts are different.
                     var surplusAnalysis = new BucketAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
-                        Balance = currentBudget.Surplus*DurationInMonths - totalSpent,
-                        BudgetTotal = currentBudget.Surplus*DurationInMonths,
-                        Budget = currentBudget.Surplus,
+                        Balance = budgetedTotal - totalSpent,
+                        BudgetTotal = budgetedTotal * DurationInMonths,
+                        Budget = perMonthBudget, 
                         AverageSpend = -averageSpend,
-                        BudgetComparedToAverage =
-                            string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", currentBudget.Surplus,
-                                -averageSpend)
+                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(surplusAnalysis);
                     continue;
                 }
 
-                Expense expense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-                if (expense != null)
+                if (currentBudget.Expenses.Any(e => e.Bucket == bucket))
                 {
-                    decimal totalBudget = expense.Amount*DurationInMonths;
+                    decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildExpenseFinder(bucket));
+                    decimal perMonthBudget = totalBudget / DurationInMonths;
                     var analysis = new BucketAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
                         Balance = totalBudget - totalSpent,
                         BudgetTotal = totalBudget,
-                        Budget = expense.Amount,
+                        Budget = perMonthBudget,
                         AverageSpend = -averageSpend,
-                        BudgetComparedToAverage =
-                            string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", expense.Amount,
-                                -averageSpend)
+                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(analysis);
                     continue;
                 }
 
-                Income income = currentBudget.Incomes.FirstOrDefault(i => i.Bucket == bucket);
-                if (income != null)
+                if (currentBudget.Incomes.Any(i => i.Bucket == bucket))
                 {
-                    decimal totalBudget = income.Amount*DurationInMonths;
+                    decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildIncomeFinder(bucket));
+                    decimal perMonthBudget = totalBudget / DurationInMonths;
                     var analysis = new BucketAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = totalSpent,
                         Balance = totalBudget - totalSpent,
                         BudgetTotal = totalBudget,
-                        Budget = income.Amount,
+                        Budget = perMonthBudget,
                         AverageSpend = averageSpend,
-                        BudgetComparedToAverage =
-                            string.Format("Budget per Month: {0:C}, Actual per month: {1:C}", income.Amount,
-                                -averageSpend)
+                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(analysis);
                 }
             }
 
             Analyses = list.OrderByDescending(a => a.Percent).ToList();
+        }
+
+        private static Func<BudgetModel, decimal> BuildExpenseFinder(BudgetBucket bucket)
+        {
+            return b =>
+            {
+                Expense first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+                if (first == null)
+                {
+                    return 0;
+                }
+
+                return first.Amount;
+            };
+        }
+
+        private static Func<BudgetModel, decimal> BuildIncomeFinder(BudgetBucket bucket)
+        {
+            return b =>
+            {
+                Income first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
+                if (first == null)
+                {
+                    return 0;
+                }
+
+                return first.Amount;
+            };
         }
 
         private void AnalysisPreconditions(GlobalFilterCriteria criteria, out DateTime beginDate, out DateTime endDate)
@@ -181,7 +205,24 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
-        private void CalculateTotalsAndAverage(BudgetModel currentBudget)
+        private decimal CalculateBudgetedTotalAmount(DateTime beginDate, Func<BudgetModel, decimal> whichBudgetBucket)
+        {
+            if (!UsesMultipleBudgets)
+            {
+                return whichBudgetBucket(this.budgets.ForDate(beginDate)) * DurationInMonths;
+            }
+
+            decimal budgetedAmount = 0;
+            for (int month = 0; month < DurationInMonths; month++)
+            {
+                BudgetModel budget = this.budgets.ForDate(beginDate.AddMonths(month));
+                budgetedAmount += whichBudgetBucket(budget);
+            }
+
+            return budgetedAmount;
+        }
+
+        private void CalculateTotalsAndAverage(DateTime beginDate)
         {
             // First total the expenses without the saved up for expenses.
             decimal totalExpensesSpend = this.statement.Transactions
@@ -192,9 +233,15 @@ namespace BudgetAnalyser.Engine.Reports
                 .Where(t => t.BudgetBucket is SurplusBucket)
                 .Sum(t => t.Amount);
 
-            AverageSpend = totalExpensesSpend/DurationInMonths; // Expected to be negative
-            AverageSurplus = totalSurplusSpend/DurationInMonths; // Expected to be negative
-            TotalBudgetExpenses = currentBudget.Expenses.Sum(e => e.Amount);
+            AverageSpend = totalExpensesSpend / DurationInMonths; // Expected to be negative
+            AverageSurplus = totalSurplusSpend / DurationInMonths; // Expected to be negative
+
+            for (var month = 0; month < DurationInMonths; month++)
+            {
+                var budget = this.budgets.ForDate(beginDate.AddMonths(month));
+                TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);    
+            }
+            
             OverallPerformance = AverageSpend + TotalBudgetExpenses;
         }
     }

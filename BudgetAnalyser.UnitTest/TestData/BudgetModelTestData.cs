@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 EffectiveFrom = new DateTime(2013, 01, 01),
                 Id = Guid.NewGuid(),
-                Name = "Test Data 1 Budget"
+                Name = TestDataConstants.Budget1Name,
             };
 
             budget.Expenses.AddRange(new[]
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 EffectiveFrom = new DateTime(2014, 01, 20),
                 Id = Guid.NewGuid(),
-                Name = "Test Data 2 Budget"
+                Name = TestDataConstants.Budget2Name,
             };
 
             budget.Expenses.AddRange(new[]
