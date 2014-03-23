@@ -71,6 +71,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="AccountTypeRepositoryTest.cs" />
     <Compile Include="AmexAccountTest.cs" />
     <Compile Include="BankImportUtilitiesTest.cs" />
     <Compile Include="BudgetCollectionTest.cs" />

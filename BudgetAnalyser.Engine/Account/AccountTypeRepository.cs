@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Account
 {
@@ -18,8 +19,18 @@ namespace BudgetAnalyser.Engine.Account
 
         private readonly ConcurrentDictionary<string, AccountType> repository = new ConcurrentDictionary<string, AccountType>(8, 5);
 
-        public AccountType Add(string key, AccountType instance)
+        public AccountType Add([NotNull] string key, [NotNull] AccountType instance)
         {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance");
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
             return this.repository.GetOrAdd(key, instance);
         }
 
