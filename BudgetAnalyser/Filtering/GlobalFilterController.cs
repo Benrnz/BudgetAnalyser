@@ -61,6 +61,7 @@ namespace BudgetAnalyser.Filtering
             Criteria = new GlobalFilterCriteria();
 
             MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessagingGate.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
             MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessagingGate.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
             MessagingGate.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
@@ -144,6 +145,14 @@ namespace BudgetAnalyser.Filtering
         {
             this.filterMode = FilterMode.Dates;
             this.dateView.ShowDialog(this);
+        }
+
+        private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
+        {
+            if (Criteria == null || Criteria.Cleared)
+            {
+                SendFilterAppliedMessage();
+            }
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)

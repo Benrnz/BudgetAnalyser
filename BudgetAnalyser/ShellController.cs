@@ -160,6 +160,7 @@ namespace BudgetAnalyser
 
             IEnumerable<IPersistent> rehydratedModels = this.statePersistence.Load();
             Messenger.Send(new ApplicationStateLoadedMessage(rehydratedModels));
+            Messenger.Send(new ApplicationStateLoadFinishedMessage());
 
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }

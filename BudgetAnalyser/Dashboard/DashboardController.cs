@@ -101,6 +101,7 @@ namespace BudgetAnalyser.Dashboard
             this.availableDependencies[typeof(BudgetCurrencyContext)] = null;
             this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = null;
             this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
+            this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
         }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
@@ -223,6 +224,7 @@ namespace BudgetAnalyser.Dashboard
             {
                 if (!this.availableDependencies.ContainsKey(dependencyType))
                 {
+                    // If you get an exception here first check the InitialiseSupportedDependenciesArray method.
                     throw new NotSupportedException(
                         string.Format(
                             CultureInfo.CurrentCulture,
