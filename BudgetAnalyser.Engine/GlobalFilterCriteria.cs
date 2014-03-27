@@ -15,6 +15,11 @@ namespace BudgetAnalyser.Engine
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public GlobalFilterCriteria()
+        {
+            Cleared = true;
+        }
+
         public AccountType AccountType
         {
             get { return this.doNotUseAccountType; }

@@ -7,7 +7,7 @@ using System.Windows;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("BudgetAnalyser")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Windows (WPF) Application for the Budget Analyser Engine.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
 [assembly: AssemblyProduct("BudgetAnalyser")]
