@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Budget
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
             [NotNull] IBudgetRepository budgetRepository,
-            [NotNull] UiContext context,
+            [NotNull] UiContext uiContext,
             [NotNull] BudgetDetailsViewLoader budgetDetailsViewLoader,
             [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
             [NotNull] DemoFileHelper demoFileHelper)
@@ -54,9 +54,9 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("budgetRepository");
             }
 
-            if (context == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException("uiContext");
             }
 
             if (budgetDetailsViewLoader == null)
@@ -77,17 +77,18 @@ namespace BudgetAnalyser.Budget
             this.budgetSelectionLoader = budgetSelectionLoader;
             this.demoFileHelper = demoFileHelper;
             this.budgetRepository = budgetRepository;
-            this.questionBox = context.UserPrompts.YesNoBox;
-            this.messageBox = context.UserPrompts.MessageBox;
-            this.fileOpenDialogFactory = context.UserPrompts.OpenFileFactory;
-            this.fileSaveDialogFactory = context.UserPrompts.SaveFileFactory;
-            this.inputBox = context.UserPrompts.InputBox;
+            this.questionBox = uiContext.UserPrompts.YesNoBox;
+            this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.fileOpenDialogFactory = uiContext.UserPrompts.OpenFileFactory;
+            this.fileSaveDialogFactory = uiContext.UserPrompts.SaveFileFactory;
+            this.inputBox = uiContext.UserPrompts.InputBox;
             this.budgetDetailsViewLoader = budgetDetailsViewLoader;
-            BudgetPieController = context.BudgetPieController;
+            BudgetPieController = uiContext.BudgetPieController;
             Shown = false;
 
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
 
 
             var budget = new BudgetModel();
@@ -329,7 +330,7 @@ namespace BudgetAnalyser.Budget
                 RaisePropertyChanged(() => TruncatedFileName);
                 if (CurrentBudget != null)
                 {
-                    Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+                    MessengerInstance.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
                 }
             }
             finally
@@ -564,7 +565,7 @@ namespace BudgetAnalyser.Budget
                     this.dirty = false;
                 }
 
-                Messenger.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
+                MessengerInstance.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
             }
         }
 

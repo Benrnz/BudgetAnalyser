@@ -55,7 +55,7 @@ namespace BudgetAnalyser
 
 
             // Register Messenger Singleton from MVVM Light
-            builder.RegisterInstance(Messenger.Default).As<IMessenger>();
+            builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
             
             // Explicit object creation below is necessary to correctly register with IoC container.
             // ReSharper disable once RedundantDelegateCreation
@@ -80,7 +80,7 @@ namespace BudgetAnalyser
             uiContext.DashboardController = container.Resolve<DashboardController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
-
+            uiContext.NewRuleController = container.Resolve<NewRuleController>();
             
             // Kick it off
             ShellController = container.Resolve<ShellController>();

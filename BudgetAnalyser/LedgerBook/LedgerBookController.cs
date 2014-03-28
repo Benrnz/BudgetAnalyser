@@ -73,10 +73,11 @@ namespace BudgetAnalyser.LedgerBook
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
             LedgerRemarksController = uiContext.LedgerRemarksController;
 
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
         }
 
         public event EventHandler LedgerBookUpdated;
@@ -338,7 +339,7 @@ namespace BudgetAnalyser.LedgerBook
                     }
 
                     LedgerBook = this.ledgerRepository.Load(fileName);
-                    MessagingGate.Send(new LedgerBookReadyMessage(LedgerBook));
+                    MessengerInstance.Send(new LedgerBookReadyMessage(LedgerBook));
                 }
                 catch (FileFormatException ex)
                 {
@@ -432,7 +433,7 @@ namespace BudgetAnalyser.LedgerBook
             CheckIfSaveRequired();
             LedgerBook = null;
             this.pendingFileName = null;
-            MessagingGate.Send(new LedgerBookReadyMessage(null));
+            MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
         private void OnDemoLedgerBookCommandExecute()

@@ -16,9 +16,6 @@ namespace BudgetAnalyser.Statement
 
         public StatementUserControl()
         {
-            MessagingGate.Register<TransactionsChangedMessage>(this, OnTransactionsChanged);
-            MessagingGate.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
-
             InitializeComponent();
         }
 
@@ -62,8 +59,11 @@ namespace BudgetAnalyser.Statement
         {
             if (!this.subscribedToMainWindowClose)
             {
+                // Once only initialisation:
                 this.subscribedToMainWindowClose = true;
                 Application.Current.MainWindow.Closing += OnMainWindowClosing;
+                Controller.RegisterListener<TransactionsChangedMessage>(this, OnTransactionsChanged);
+                Controller.RegisterListener<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
             }
 
             if (Controller != null)

@@ -43,8 +43,9 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("statePersistence");
             }
 
-            MessagingGate.Register<ShutdownMessage>(this, OnShutdownRequested);
-            MessagingGate.Register<RequestShellDialogMessage>(this, OnPopUpDialogRequested);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
+            MessengerInstance.Register<RequestShellDialogMessage>(this, OnPopUpDialogRequested);
 
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
@@ -159,8 +160,8 @@ namespace BudgetAnalyser
             this.initialised = true;
 
             IEnumerable<IPersistent> rehydratedModels = this.statePersistence.Load();
-            Messenger.Send(new ApplicationStateLoadedMessage(rehydratedModels));
-            Messenger.Send(new ApplicationStateLoadFinishedMessage());
+            MessengerInstance.Send(new ApplicationStateLoadedMessage(rehydratedModels));
+            MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());
 
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
@@ -185,11 +186,11 @@ namespace BudgetAnalyser
                 {
                     case "Ok":
                     case "Save":
-                        MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     case "Cancel":
-                        MessagingGate.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     default:
@@ -213,7 +214,7 @@ namespace BudgetAnalyser
         private void OnShutdownRequested(ShutdownMessage message)
         {
             var gatherDataMessage = new ApplicationStateRequestedMessage();
-            Messenger.Send(gatherDataMessage);
+            MessengerInstance.Send(gatherDataMessage);
             this.statePersistence.Persist(gatherDataMessage.PersistentData);
         }
     }

@@ -41,7 +41,16 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new FileNotFoundException(fileName);
             }
 
-            var dataEntities = XamlServices.Load(fileName) as List<DataMatchingRule>;
+            List<DataMatchingRule> dataEntities;
+            try
+            {
+                dataEntities = XamlServices.Load(fileName) as List<DataMatchingRule>;
+            }
+            catch (Exception ex)
+            {
+                throw new FileFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+            }
+
             if (dataEntities == null)
             {
                 throw new FileFormatException("Derserialised MatchingRules are not of type List<DataMatchingRule>");

@@ -49,12 +49,13 @@ namespace BudgetAnalyser.Dashboard
             this.bucketRepository = bucketRepository;
             GlobalFilterController = uiContext.GlobalFilterController;
 
-            MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessagingGate.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
-            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessagingGate.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
-            MessagingGate.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
+            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
+            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
 
             this.updateTimer = new Timer(TimeSpan.FromMinutes(1).TotalMilliseconds)
             {
@@ -207,7 +208,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnWidgetCommandExecuted(Widget widget)
         {
-            MessagingGate.Send(new WidgetActivatedMessage(widget));
+            MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
 
         private void UpdateWidget(Widget widget)

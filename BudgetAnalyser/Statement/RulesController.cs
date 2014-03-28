@@ -33,33 +33,29 @@ namespace BudgetAnalyser.Statement
         private string rulesFileName;
 
         public RulesController(
-            [NotNull] NewRuleController newRuleController,
+            [NotNull] UiContext uiContext,
             [NotNull] MaintainRulesViewLoader maintainRulesViewLoader,
-            [NotNull] IUserQuestionBoxYesNo questionBox,
             [NotNull] IMatchingRuleRepository ruleRepository)
         {
-            if (newRuleController == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException("newRuleController");
+                throw new ArgumentNullException("uiContext");
             }
 
             if (maintainRulesViewLoader == null)
             {
                 throw new ArgumentNullException("maintainRulesViewLoader");
             }
-            if (questionBox == null)
-            {
-                throw new ArgumentNullException("questionBox");
-            }
 
             this.maintainRulesViewLoader = maintainRulesViewLoader;
-            this.questionBox = questionBox;
+            this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
-            NewRuleController = newRuleController;
+            NewRuleController = uiContext.NewRuleController;
             Rules = new BindingList<MatchingRule>();
 
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance = uiContext.Messenger;
+            uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
         public ICommand DeleteRuleCommand

@@ -35,7 +35,16 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook Load(string fileName)
         {
-            var dataEntity = XamlServices.Load(fileName) as DataLedgerBook;
+            DataLedgerBook dataEntity;
+            try
+            {
+                dataEntity = XamlServices.Load(fileName) as DataLedgerBook;
+            }
+            catch (Exception ex)
+            {
+                throw new FileFormatException("Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+            }
+
             if (dataEntity == null)
             {
                 throw new FileFormatException(string.Format("The specified file {0} is not of type DataLedgerBook", fileName));

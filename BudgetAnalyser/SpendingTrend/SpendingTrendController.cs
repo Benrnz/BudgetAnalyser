@@ -33,7 +33,8 @@ namespace BudgetAnalyser.SpendingTrend
             [NotNull] Func<BucketSpendingController> bucketSpendingFactory,
             [NotNull] SpendingTrendViewLoader viewLoader,
             [NotNull] AddUserDefinedSpendingChartController addUserDefinedSpendingChartController,
-            [NotNull] IBudgetBucketRepository budgetBucketRepository)
+            [NotNull] IBudgetBucketRepository budgetBucketRepository,
+            UiContext uiContext)
         {
             if (bucketSpendingFactory == null)
             {
@@ -59,8 +60,10 @@ namespace BudgetAnalyser.SpendingTrend
             this.viewLoader = viewLoader;
             this.addUserDefinedSpendingChartController = addUserDefinedSpendingChartController;
             this.budgetBucketRepository = budgetBucketRepository;
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
         public ICommand AddChartCommand

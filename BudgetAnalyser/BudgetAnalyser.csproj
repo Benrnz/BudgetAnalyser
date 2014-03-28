@@ -118,6 +118,7 @@
     <Compile Include="Budget\BudgetSelectionViewLoader.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
+    <Compile Include="ConcurrentMessenger.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
     <Compile Include="Converters\BucketToVisibilityConverter.cs" />
     <Compile Include="Converters\BudgetBucketToStringConverter.cs" />
@@ -161,7 +162,6 @@
     <Compile Include="MainMenuUserControl.xaml.cs">
       <DependentUpon>MainMenuUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MessagingGate.cs" />
     <Compile Include="CompositionRoot.cs" />
     <Compile Include="OverallPerformance\IBudgetAnalysisView.cs" />
     <Compile Include="Properties\Annotations.cs" />

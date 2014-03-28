@@ -31,10 +31,11 @@ namespace BudgetAnalyser.ReportsCatalog
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             SpendingTrendController = uiContext.SpendingTrendController;
             this.analysisFactory = uiContext.AnalysisFactory;
-
-            MessagingGate.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessagingGate.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
         public ICommand AnalyseStatementCommand
@@ -109,7 +110,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private GlobalFilterCriteria RequestCurrentFilter()
         {
             var currentFilterMessage = new RequestFilterMessage(this);
-            MessagingGate.Send(currentFilterMessage);
+            MessengerInstance.Send(currentFilterMessage);
             return currentFilterMessage.Criteria;
         }
     }

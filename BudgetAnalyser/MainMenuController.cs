@@ -25,7 +25,7 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
-            MessagingGate.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            uiContext.Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }
 
         public ICommand BudgetCommand

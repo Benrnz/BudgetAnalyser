@@ -29,14 +29,14 @@ namespace BudgetAnalyser.Filtering
         private FilterMode filterMode;
 
         public GlobalFilterController(
-            [NotNull] IUserMessageBox userMessageBox,
+            [NotNull] UiContext uiContext,
             [NotNull] GlobalDateFilterViewLoader dateViewLoader,
             [NotNull] GlobalAccountTypeFilterViewLoader accountViewLoader,
             [NotNull] IAccountTypeRepository accountTypeRepository)
         {
-            if (userMessageBox == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException("userMessageBox");
+                throw new ArgumentNullException("uiContext");
             }
 
             if (dateViewLoader == null)
@@ -57,14 +57,15 @@ namespace BudgetAnalyser.Filtering
             this.dateView = dateViewLoader;
             this.accountView = accountViewLoader;
             this.accountTypeRepository = accountTypeRepository;
-            this.userMessageBox = userMessageBox;
+            this.userMessageBox = uiContext.UserPrompts.MessageBox;
             Criteria = new GlobalFilterCriteria();
 
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessagingGate.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
-            MessagingGate.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance.Register<ApplicationStateLoadFinishedMessage>(this, OnApplicationStateLoadFinished);
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
+            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
         }
 
         public string AccountTypeSummary
@@ -254,7 +255,7 @@ namespace BudgetAnalyser.Filtering
         private void SendFilterAppliedMessage()
         {
             UpdateSummaries();
-            Messenger.Send(new FilterAppliedMessage(this, Criteria));
+            MessengerInstance.Send(new FilterAppliedMessage(this, Criteria));
         }
 
         private void UpdateSummaries()

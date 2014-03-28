@@ -12,6 +12,7 @@ using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;
+using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
@@ -29,15 +30,22 @@ namespace BudgetAnalyser
             [NotNull] IBudgetAnalysisView analysisFactory,
             [NotNull] IBackgroundProcessingJobMetadata backgroundJobMetadata,
             [NotNull] Func<IWaitCursor> waitCursorFactory,
-            [NotNull] UserPrompts userPrompts)
+            [NotNull] UserPrompts userPrompts,
+            [NotNull] IMessenger messenger)
         {
             if (waitCursorFactory == null)
             {
                 throw new ArgumentNullException("waitCursorFactory");
             }
+
             if (userPrompts == null)
             {
                 throw new ArgumentNullException("userPrompts");
+            }
+
+            if (messenger == null)
+            {
+                throw new ArgumentNullException("messenger");
             }
 
             if (analysisFactory == null)
@@ -54,6 +62,7 @@ namespace BudgetAnalyser
             AnalysisFactory = analysisFactory;
             BackgroundJob = backgroundJobMetadata;
             UserPrompts = userPrompts;
+            Messenger = messenger;
         }
 
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
@@ -78,6 +87,8 @@ namespace BudgetAnalyser
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
         public MainMenuController MainMenuController { get; set; }
+        public IMessenger Messenger { get; private set; }
+        public NewRuleController NewRuleController { get; set; }
         public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
 

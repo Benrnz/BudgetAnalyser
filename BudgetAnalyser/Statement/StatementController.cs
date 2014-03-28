@@ -68,11 +68,12 @@ namespace BudgetAnalyser.Statement
             this.recentFileManager = recentFileManager;
             this.demoFileHelper = demoFileHelper;
 
-            MessagingGate.Register<FilterAppliedMessage>(this, OnFilterApplied);
-            MessagingGate.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessagingGate.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessagingGate.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
-            MessagingGate.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterApplied);
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
         }
 
         public AppliedRulesController AppliedRulesController
@@ -212,7 +213,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.shellDialogCorrelationId = Guid.NewGuid();
-            MessagingGate.Send(
+            MessengerInstance.Send(
                 new RequestShellDialogMessage(
                     new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
@@ -244,13 +245,18 @@ namespace BudgetAnalyser.Statement
         public void NotifyOfEdit()
         {
             ViewModel.Dirty = true;
-            Messenger.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
+            MessengerInstance.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
         }
 
         public void NotifyOfReset()
         {
             ViewModel.Dirty = false;
-            Messenger.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
+            MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
+        }
+
+        public void RegisterListener<T>(object listener, Action<T> handler)
+        {
+            MessengerInstance.Register(listener, handler);
         }
 
         private bool CanExecuteCloseStatementCommand()
@@ -300,7 +306,7 @@ namespace BudgetAnalyser.Statement
 
                 ViewModel.Statement = statementModel;
                 var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                Messenger.Send(requestCurrentFilterMessage);
+                MessengerInstance.Send(requestCurrentFilterMessage);
                 if (requestCurrentFilterMessage.Criteria != null)
                 {
                     ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
@@ -310,7 +316,7 @@ namespace BudgetAnalyser.Statement
                 ViewModel.TriggerRefreshTotalsRow();
             }
 
-            MessagingGate.Send(new StatementReadyMessage(ViewModel.Statement));
+            MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
             return true;
         }
 
@@ -364,13 +370,13 @@ namespace BudgetAnalyser.Statement
                 }
 
                 RaisePropertyChanged(() => ViewModel);
-                Messenger.Send(new TransactionsChangedMessage());
+                MessengerInstance.Send(new TransactionsChangedMessage());
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
             }
             finally
             {
-                MessagingGate.Send(new StatementReadyMessage(ViewModel.Statement));
+                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
                 BackgroundJob.Finish();
             }
         }
@@ -436,7 +442,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Statement = null;
             NotifyOfReset();
             ViewModel.TriggerRefreshTotalsRow();
-            MessagingGate.Send(new StatementReadyMessage(null));
+            MessengerInstance.Send(new StatementReadyMessage(null));
         }
 
         private void OnDeleteTransactionCommandExecute()
