@@ -28,7 +28,6 @@ namespace BudgetAnalyser
         private bool doNotUseSaveButtonVisible;
         private bool initialised;
 
-        // TODO Upgrade all windows to be win8 style inline content, and not a separate window.
         public ShellController(
             [NotNull] UiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence)
