@@ -6,6 +6,10 @@ What is it?
 -----------
 It's a simple, low time investment budgeting app. It helps you keep to a monthly budget, see how much you can spend during the month and analyse past data to improve your budget.
 
+Why?
+----
+Some budgeting apps are complicated or time consuming and aren't very visual.  I wanted something that I can spend minutes with per month and to store data in a neutral manner (imported statement data is stored in CSV format and is Excel friendly).  This code is open source, so if it doesn't exactly suit you're budgeting style, then fork it, and change it.
+
 Features
 --------
  - Automatically match transactions with budget categories aka "Buckets".
