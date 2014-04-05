@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             Description = name;
-            Code = code.ToUpperInvariant();
+            Code = code;
             Id = Guid.NewGuid();
         }
 
@@ -108,11 +108,13 @@ namespace BudgetAnalyser.Engine.Budget
                 validationMessages.AppendFormat("Budget Bucket {0} is invalid, Code must be a small textual code.", Code);
                 retval = false;
             }
-
-            if (Code.Length > 7)
+            else
             {
-                validationMessages.AppendFormat("Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", Code, Description);
-                retval = false;
+                if (Code.Length > 7)
+                {
+                    validationMessages.AppendFormat("Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", Code, Description);
+                    retval = false;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(Description))

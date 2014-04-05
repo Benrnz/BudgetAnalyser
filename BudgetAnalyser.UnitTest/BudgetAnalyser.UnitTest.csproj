@@ -74,7 +74,9 @@
     <Compile Include="AccountTypeRepositoryTest.cs" />
     <Compile Include="AmexAccountTest.cs" />
     <Compile Include="BankImportUtilitiesTest.cs" />
+    <Compile Include="BudgetBucketTest.cs" />
     <Compile Include="BudgetCollectionTest.cs" />
+    <Compile Include="InMemoryBudgetBucketRepositoryTest.cs" />
     <Compile Include="ChequeAccountTest.cs" />
     <Compile Include="DataLedgerBookTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="TestData\LedgerBookTestData.cs" />
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="VisaAccountTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpendingGraphAnalyserTest.cs" />

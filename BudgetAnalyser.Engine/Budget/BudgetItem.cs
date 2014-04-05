@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public virtual decimal Amount { get; set; }
 
-        public virtual BudgetBucket Bucket { get; set; }
+        public BudgetBucket Bucket { get; set; }
 
         public override bool Equals(object obj)
         {

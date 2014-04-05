@@ -69,7 +69,7 @@
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
     <Compile Include="Budget\BudgetBucket.cs" />
-    <Compile Include="Budget\BudgetBucketRepository.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\BudgetCollection.cs" />
     <Compile Include="Budget\BudgetCurrencyContext.cs" />
     <Compile Include="Budget\BudgetException.cs" />

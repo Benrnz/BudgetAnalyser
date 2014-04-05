@@ -6,18 +6,20 @@ namespace BudgetAnalyser.Engine.Budget
     {
         public SurplusBucket()
         {
-            Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
-            Code = "SURPLUS";
+            this.Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
+            this.Code = "SURPLUS";
         }
 
         public SurplusBucket(string code, string description) : base(code, description)
         {
-            Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
+            this.Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
         }
 
         public override string TypeDescription
         {
             get { return "Calculated Surplus"; }
         }
+
+        public const string SurplusCode = "SURPLUS";
     }
 }

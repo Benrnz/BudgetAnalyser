@@ -16,7 +16,7 @@ namespace BudgetAnalyser.UnitTest
     {
         public SpendingGraphAnalyserTest()
         {
-            SurplusTestBucket = new SurplusBucket("SURPLUS", "foo");
+            SurplusTestBucket = new SurplusBucket(SurplusBucket.SurplusCode, "foo");
         }
 
         private BudgetBucket SurplusTestBucket { get; set; }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.UnitTest
         //private StatementModel CreateStatementModel(out BudgetModel budgetModel)
         //{
         //    // TODO this is shite.
-        //    var bucketRepository = new BudgetBucketRepository();
+        //    var bucketRepository = new InMemoryBudgetBucketRepository();
         //    var budgets = new BudgetModelImporter(bucketRepository).LoadBudgetData(@"C:\Development\Brees_Unfuddle\BudgetAnalyserProject\Trunk\TestData\BudgetModel.xml");
         //    budgetModel = budgets.CurrentActiveBudget;
         //    var mock = new Mock<IUserMessageBox>();

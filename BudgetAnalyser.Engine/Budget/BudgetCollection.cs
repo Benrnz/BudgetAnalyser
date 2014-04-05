@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public void Initialise()
         {
-            foreach (var model in this)
+            foreach (BudgetModel model in this)
             {
                 model.Initialise();
             }

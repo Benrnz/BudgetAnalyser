@@ -5,6 +5,15 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     internal static class BudgetModelTestData
     {
+        public static BudgetCollection CreateCollectionWith1And2()
+        {
+            return new BudgetCollection( new[]
+            {
+                CreateTestData1(),
+                CreateTestData2(),
+            });
+        }
+
         /// <summary>
         /// A budget model that is effective from 1/1/2013
         /// </summary>
@@ -40,7 +49,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new Income
                 {
                     Amount = 1500M,
-                    Bucket = new IncomeBudgetBucket("PAY", "Pay"),
+                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
                 });
 
             return budget;
@@ -81,7 +90,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new Income
                 {
                     Amount = 1600M,
-                    Bucket = new IncomeBudgetBucket("PAY", "Pay"),
+                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
                 });
 
             return budget;
