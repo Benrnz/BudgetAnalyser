@@ -12,9 +12,19 @@ namespace BudgetAnalyser.Engine.Budget
 
         public BudgetBucket Bucket { get; set; }
 
+        public static bool operator ==(BudgetItem left, BudgetItem right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BudgetItem left, BudgetItem right)
+        {
+            return !Equals(left, right);
+        }
+
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (ReferenceEquals(null, obj))
             {
                 return false;
             }
@@ -24,32 +34,25 @@ namespace BudgetAnalyser.Engine.Budget
                 return true;
             }
 
-            var otherBudget = obj as BudgetItem;
-            if (otherBudget == null)
-            {
-                return false;
-            }
-
-            if (Bucket == null || otherBudget.Bucket == null)
-            {
-                return false;
-            }
-
-            return Bucket.Code == otherBudget.Bucket.Code;
+            var other = obj as BudgetItem;
+            return other != null && Equals(other);
         }
 
         public override int GetHashCode()
         {
-            if (Bucket == null)
+            unchecked
             {
-                return 0;
+                return (Bucket != null ? Bucket.GetHashCode() * GetType().GetHashCode() : 0);
             }
+        }
 
-            return Bucket.Code.GetHashCode();
+        protected bool Equals(BudgetItem other)
+        {
+            return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)

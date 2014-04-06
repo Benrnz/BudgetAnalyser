@@ -77,6 +77,9 @@
     <Compile Include="BudgetBucketTest.cs" />
     <Compile Include="BudgetCollectionTest.cs" />
     <Compile Include="BudgetCurrencyContextTest.cs" />
+    <Compile Include="BudgetItemTest.cs" />
+    <Compile Include="ExpenseTest.cs" />
+    <Compile Include="IncomeTest.cs" />
     <Compile Include="InMemoryBudgetBucketRepositoryTest.cs" />
     <Compile Include="ChequeAccountTest.cs" />
     <Compile Include="DataLedgerBookTest.cs" />

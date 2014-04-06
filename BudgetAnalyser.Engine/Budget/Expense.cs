@@ -36,6 +36,12 @@ namespace BudgetAnalyser.Engine.Budget
                 retval = false;
             }
 
+            if (string.IsNullOrWhiteSpace(Bucket.Description))
+            {
+                validationMessages.AppendFormat("Expense with Amount {0:C} is invalid, Description can not be blank.", Amount);
+                retval = false;
+            }
+            
             return retval;
         }
     }
