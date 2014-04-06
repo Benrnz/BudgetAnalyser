@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public BudgetCollection Load(string fileName)
         {
-            if (!File.Exists(fileName))
+            if (!FileExists(fileName))
             {
                 throw new FileNotFoundException("File not found.", fileName);
             }
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Budget
             object serialised;
             try
             {
-                serialised = XamlServices.Load(fileName); // Will always succeed without exceptions even if bad file format, but will return null.
+                serialised = LoadFromDisk(fileName); // May return null for some errors.
             }
             catch (XamlObjectWriterException ex)
             {
@@ -75,8 +75,28 @@ namespace BudgetAnalyser.Engine.Budget
 
         public void Save(BudgetCollection budgetData)
         {
-            string serialised = XamlServices.Save(budgetData);
-            File.WriteAllText(budgetData.FileName, serialised);
+            string serialised = Serialise(budgetData);
+            WriteToDisk(budgetData.FileName, serialised);
+        }
+
+        protected virtual bool FileExists(string filename)
+        {
+            return File.Exists(filename);
+        }
+
+        protected virtual object LoadFromDisk(string filename)
+        {
+            return XamlServices.Load(filename);
+        }
+
+        protected virtual string Serialise(BudgetCollection budgetData)
+        {
+            return XamlServices.Save(budgetData);
+        }
+
+        protected virtual void WriteToDisk(string filename, string data)
+        {
+            File.WriteAllText(filename, data);
         }
     }
 }
