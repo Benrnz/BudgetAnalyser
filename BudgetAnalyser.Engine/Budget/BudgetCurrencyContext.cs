@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
-    ///     A transient wrapper class to indicate a budgets active state in relation to other budgets in the collection.
+    ///     A transient wrapper class to indicate a budget's active state in relation to other budgets in the collection.
     ///     This class will tell you if a budget is active, future dated, or has past and is archived.
     /// </summary>
-    public class BudgetCurrencyContext : INotifyPropertyChanged
+    public class BudgetCurrencyContext
     {
         private readonly BudgetCollection budgets;
 
@@ -36,8 +34,9 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel"/>.
+        /// </summary>
         public bool BudgetActive
         {
             get { return this.budgets.IsCurrentBudget(Model); }
@@ -57,14 +56,15 @@ namespace BudgetAnalyser.Engine.Budget
         {
             get
             {
-                List<BudgetModel> orderedBudgets = this.budgets.OrderByDescending(b => b.EffectiveFrom).ToList();
-                int myIndex = orderedBudgets.IndexOf(Model);
+                int myIndex = budgets.IndexOf(Model);
                 if (myIndex == 0)
                 {
+                    // There is no superceding budget, so this budget is effective indefinitely.
+                    // I'd rather return null here because returning 31/12/9999 is just weird, and looks stupid when displayed to user.
                     return null;
                 }
 
-                BudgetModel nextBudget = orderedBudgets[myIndex - 1];
+                BudgetModel nextBudget = this.budgets[myIndex - 1];
                 return nextBudget.EffectiveFrom;
             }
         }
@@ -75,15 +75,5 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public BudgetModel Model { get; private set; }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
     }
 }

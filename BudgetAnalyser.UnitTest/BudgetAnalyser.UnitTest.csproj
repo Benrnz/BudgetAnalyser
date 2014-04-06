@@ -76,6 +76,7 @@
     <Compile Include="BankImportUtilitiesTest.cs" />
     <Compile Include="BudgetBucketTest.cs" />
     <Compile Include="BudgetCollectionTest.cs" />
+    <Compile Include="BudgetCurrencyContextTest.cs" />
     <Compile Include="InMemoryBudgetBucketRepositoryTest.cs" />
     <Compile Include="ChequeAccountTest.cs" />
     <Compile Include="DataLedgerBookTest.cs" />
@@ -106,6 +107,10 @@
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
       <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
       <Name>BudgetAnalyser.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rees.TestUtilities\Rees.TestUtilities.csproj">
+      <Project>{6c5e0904-a517-4c31-9234-9686b38f1726}</Project>
+      <Name>Rees.TestUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

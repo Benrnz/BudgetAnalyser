@@ -67,12 +67,7 @@ namespace BudgetAnalyser.Engine.Budget
                 return false;
             }
 
-            if (this.Any(b => b.EffectiveFrom > budget.EffectiveFrom && b.EffectiveFrom < DateTime.Now))
-            {
-                return false;
-            }
-
-            return true;
+            return this.Any(b => b.EffectiveFrom <= budget.EffectiveFrom);
         }
 
         public bool IsCurrentBudget(BudgetModel budget)
