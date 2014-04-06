@@ -40,16 +40,6 @@ namespace BudgetAnalyser.Engine.Budget
             get { return Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount); }
         }
 
-        public BudgetModel Clone()
-        {
-            return new BudgetModel
-            {
-                Expenses = Expenses.ToList(),
-                Incomes = Incomes.ToList(),
-                LastModifiedComment = "Cloned from " + Name,
-            };
-        }
-
         public void Initialise()
         {
             Expenses = Expenses.OrderByDescending(e => e.Amount).ToList();

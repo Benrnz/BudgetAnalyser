@@ -63,6 +63,7 @@ namespace BudgetAnalyser
             
 
             // Instantiate and store all controllers...
+            // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
             var container = builder.Build();
             var uiContext = container.Resolve<UiContext>();
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
@@ -75,12 +76,12 @@ namespace BudgetAnalyser
             uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
             uiContext.SpendingTrendController = container.Resolve<SpendingTrendController>();
             uiContext.StatementController = container.Resolve<StatementController>();
+            uiContext.NewRuleController = container.Resolve<NewRuleController>();
             uiContext.RulesController = container.Resolve<RulesController>();
             uiContext.MainMenuController = container.Resolve<MainMenuController>();
             uiContext.DashboardController = container.Resolve<DashboardController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
-            uiContext.NewRuleController = container.Resolve<NewRuleController>();
             
             // Kick it off
             ShellController = container.Resolve<ShellController>();
