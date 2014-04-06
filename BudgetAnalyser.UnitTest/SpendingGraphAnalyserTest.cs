@@ -1,13 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
-using BudgetAnalyser.Engine.Statement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest
 {
@@ -16,7 +9,7 @@ namespace BudgetAnalyser.UnitTest
     {
         public SpendingGraphAnalyserTest()
         {
-            SurplusTestBucket = new SurplusBucket(SurplusBucket.SurplusCode, "foo");
+            SurplusTestBucket = new SurplusBucket();
         }
 
         private BudgetBucket SurplusTestBucket { get; set; }

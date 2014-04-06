@@ -52,6 +52,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
                 });
 
+            budget.Initialise();
             return budget;
         }
 
@@ -93,6 +94,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
                 });
 
+            budget.Initialise();
             return budget;
         }
     }

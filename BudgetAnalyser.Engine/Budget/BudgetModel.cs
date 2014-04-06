@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Budget
             retval &= Incomes.OfType<IModelValidate>().ToList().All(i => i.Validate(validationMessages));
             retval &= Expenses.OfType<IModelValidate>().ToList().All(e => e.Validate(validationMessages));
 
-            if (Expenses.Any(e => e.Bucket.Code == "SURPLUS"))
+            if (Expenses.Any(e => e.Bucket.Code == SurplusBucket.SurplusCode))
             {
                 validationMessages.AppendFormat("You can not use SURPLUS as an expense code.");
                 retval = false;
@@ -70,6 +70,7 @@ namespace BudgetAnalyser.Engine.Budget
                 .GroupBy(i => i.Bucket.Code)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);
+
             foreach (string duplicateCode in duplicates)
             {
                 retval = false;

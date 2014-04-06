@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Budget
                 .Distinct()
                 .ToDictionary(e => e.Bucket.Code, e => e.Bucket);
 
-            SurplusBucket = new SurplusBucket(Budget.SurplusBucket.SurplusCode, "A special bucket to allocate against any discretionary spending.");
+            SurplusBucket = new SurplusBucket();
             buckets.Add(Budget.SurplusBucket.SurplusCode, SurplusBucket);
 
             buckets.Add(JournalBucket.JournalCode, new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate against internal transfers."));
