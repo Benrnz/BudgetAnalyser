@@ -30,7 +30,7 @@
     </Color>
 
     <Color x:Key="SelectedItemRowColor">
-        DarkGreen
+        #014F01
     </Color>
 
     <Color x:Key="TextColor">

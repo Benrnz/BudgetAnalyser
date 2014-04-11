@@ -1,7 +1,38 @@
-﻿namespace BudgetAnalyser.Engine
+﻿using System.Linq;
+
+namespace BudgetAnalyser.Engine
 {
     public static class StringExtension
     {
+        private static char[] Vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'A','E', 'I', 'O', 'U' };
+
+        public static string AOrAn(this string instance, bool properCase = false)
+        {
+            if (string.IsNullOrWhiteSpace(instance))
+            {
+                return instance;
+            }
+
+            bool useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
+
+            if (properCase && useAn)
+            {
+                return "An";
+            }
+
+            if (properCase)
+            {
+                return "A";
+            }
+
+            if (useAn)
+            {
+                return "an";
+            }
+
+            return "a";
+        }
+
         public static string Truncate(this string instance, int truncateToLength, bool useEllipses = false)
         {
             if (string.IsNullOrWhiteSpace(instance))

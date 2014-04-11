@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -51,6 +52,19 @@ namespace BudgetAnalyser.Engine.Budget
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
         }
 
+        public string Summary
+        {
+            get
+            {
+                return string.Format(
+                    CultureInfo.CurrentCulture, 
+                    "{0} {1}: {2}", 
+                    Bucket.TypeDescription.AOrAn(properCase: true),
+                    EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name), 
+                    Bucket.Description);
+            }
+        }
+
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -59,6 +73,47 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
+        {
+            if (string.IsNullOrWhiteSpace(sentence1) || string.IsNullOrWhiteSpace(sentence2))
+            {
+                return string.Empty;
+            }
+
+            sentence1 = sentence1.Trim();
+            sentence2 = sentence2.Trim();
+
+            string lastWord;
+            int wordIndex = sentence1.LastIndexOf(' ');
+            if (wordIndex <= 0)
+            {
+                lastWord = sentence1;
+            }
+            else
+            {
+                lastWord = sentence1.Substring(wordIndex + 1);
+            }
+
+            string firstWord;
+            wordIndex = sentence2.IndexOf(' ');
+            if (wordIndex <= 0)
+            {
+                firstWord = sentence2;
+                wordIndex = firstWord.Length;
+            }
+            else
+            {
+                firstWord = sentence2.Substring(0, wordIndex);
+            }
+
+            if (lastWord == firstWord)
+            {
+                return string.Format("{0}{1}", sentence1, sentence2.Substring(wordIndex));
+            }
+
+            return string.Format("{0} {1}", sentence1, sentence2);
         }
     }
 }

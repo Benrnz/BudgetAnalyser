@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        private void OnOnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue != null)
             {
