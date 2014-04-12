@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Budget
                 return string.Format(
                     CultureInfo.CurrentCulture, 
                     "{0} {1}: {2}", 
-                    Bucket.TypeDescription.AOrAn(properCase: true),
+                    Bucket.TypeDescription.AnOrA(properCase: true),
                     EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name), 
                     Bucket.Description);
             }

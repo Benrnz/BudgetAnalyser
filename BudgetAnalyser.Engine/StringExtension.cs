@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine
     {
         private static char[] Vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'A','E', 'I', 'O', 'U' };
 
-        public static string AOrAn(this string instance, bool properCase = false)
+        public static string AnOrA(this string instance, bool properCase = false)
         {
             if (string.IsNullOrWhiteSpace(instance))
             {

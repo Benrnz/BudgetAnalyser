@@ -7,6 +7,62 @@ namespace BudgetAnalyser.UnitTest
     public class StringExtensionTest
     {
         [TestMethod]
+        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            var result = "Apple or banana".AnOrA(true);
+            Assert.AreEqual("An", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            var result = "apple or banana".AnOrA(true);
+            Assert.AreEqual("An", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            var result = "Apple or banana".AnOrA();
+            Assert.AreEqual("an", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            var result = "apple or banana".AnOrA();
+            Assert.AreEqual("an", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            var result = "banana or apple".AnOrA(true);
+            Assert.AreEqual("A", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            var result = "banana or apple".AnOrA(true);
+            Assert.AreEqual("A", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            var result = "banana or apple".AnOrA();
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            var result = "banana or apple".AnOrA();
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
         public void TruncateEmptyStringTo9()
         {
             Assert.AreEqual(string.Empty, string.Empty.Truncate(9));
