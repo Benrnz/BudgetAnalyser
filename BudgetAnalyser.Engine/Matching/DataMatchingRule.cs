@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.Matching
     {
         public decimal? Amount { get; set; }
 
-        public Guid BucketId { get; set; }
+        public string BucketCode { get; set; }
 
         public string Description { get; set; }
 

@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Matching
             return new MatchingRule(this.bucketRepository)
             {
                 Amount = rule.Amount,
-                BucketId = rule.BucketId,
+                BucketCode = rule.BucketCode,
                 Description = rule.Description,
                 LastMatch = rule.LastMatch,
                 MatchCount = rule.MatchCount,

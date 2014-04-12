@@ -12,20 +12,6 @@ namespace BudgetAnalyser.UnitTest
         private const string NotSpecified = "NotSpecified";
 
         [TestMethod]
-        public void CtorShouldAllocateIdThruCodeNameCtor()
-        {
-            BudgetBucket subject = CreateSubject("Foo", "Bar");
-            Assert.AreNotEqual(Guid.Empty, subject.Id);
-        }
-
-        [TestMethod]
-        public void CtorShouldAllocateIdThruDefaultCtor()
-        {
-            BudgetBucket subject = CreateSubject();
-            Assert.AreNotEqual(Guid.Empty, subject.Id);
-        }
-
-        [TestMethod]
         public void CtorShouldAllocateUpperCaseCode()
         {
             BudgetBucket subject = CreateSubject("Foo", "Bar");

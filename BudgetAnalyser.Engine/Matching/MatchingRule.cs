@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -38,17 +37,17 @@ namespace BudgetAnalyser.Engine.Matching
 
         public BudgetBucket Bucket
         {
-            get { return this.bucketRepository.Buckets.FirstOrDefault(b => b.Id == BucketId); }
+            get { return this.bucketRepository.GetByCode(BucketCode); }
 
             set
             {
                 if (value == null)
                 {
-                    BucketId = Guid.Empty;
+                    BucketCode = null;
                     return;
                 }
 
-                BucketId = value.Id;
+                BucketCode = value.Code;
             }
         }
 
@@ -86,7 +85,8 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         public string TransactionType { get; set; }
-        internal Guid BucketId { get; set; }
+
+        internal string BucketCode { get; set; }
 
         public bool Match(Transaction transaction)
         {

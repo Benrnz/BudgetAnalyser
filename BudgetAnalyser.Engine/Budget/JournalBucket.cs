@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Budget
+﻿namespace BudgetAnalyser.Engine.Budget
 {
     public class JournalBucket : BudgetBucket
     {
@@ -11,7 +9,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public JournalBucket(string code, string description) : base(code, description)
         {
-            this.Id = new Guid("23839a12-ffcc-4fd1-905c-9cd2ffe3a54d");
+            // this.Id = new Guid("23839a12-ffcc-4fd1-905c-9cd2ffe3a54d");
         }
 
         public const string JournalCode = "JOURNAL";

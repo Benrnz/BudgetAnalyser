@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BudgetAnalyser.Engine.Budget
+﻿namespace BudgetAnalyser.Engine.Budget
 {
     public class SurplusBucket : BudgetBucket
     {
@@ -9,7 +7,7 @@ namespace BudgetAnalyser.Engine.Budget
         public SurplusBucket()
             : base(SurplusCode, "A special bucket to allocate against any discretionary spending.")
         {
-            Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
+            // Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
         }
 
         public override string TypeDescription

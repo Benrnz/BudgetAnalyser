@@ -136,7 +136,7 @@ namespace BudgetAnalyser.SpendingTrend
             {
                 BucketSpendingController chartController = this.bucketSpendingFactory();
                 IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
-                    .Join(customChart.BucketIds, bucket => bucket.Id, id => id, (bucket, id) => bucket);
+                    .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
                 chartController.LoadCustomChart(statementModel, budgetModel, buckets, criteria, ledgerBookModel, customChart.Name);
                 listOfCharts.Insert(0, chartController);
             }
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.SpendingTrend
             ChartControllers.Insert(0, newChart);
             var persistChart = new CustomAggregateSpendingGraph
             {
-                BucketIds = buckets.Select(b => b.Id).ToList(),
+                BucketIds = buckets.Select(b => b.Code).ToList(),
                 Name = this.addUserDefinedSpendingChartController.ChartTitle,
             };
 

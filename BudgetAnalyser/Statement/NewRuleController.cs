@@ -223,7 +223,7 @@ namespace BudgetAnalyser.Statement
                     rule.Reference1,
                     rule.Reference2,
                     rule.Reference3,
-                    this.budgetBucketRepository.Buckets.Single(b => b.Id == rule.Bucket.Id).Code,
+                    this.budgetBucketRepository.Buckets.Single(b => b.Code == rule.Bucket.Code).Code,
                     rule.TransactionType
                 }));
 

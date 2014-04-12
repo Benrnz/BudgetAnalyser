@@ -86,8 +86,7 @@
           MaxWidth="320">
         <ListBox Grid.Row="2"
                  ItemsSource="{Binding Rules}"
-                 SelectedItem="{Binding SelectedRule}"
-                 Style="{StaticResource BudgetItemList}">
+                 SelectedItem="{Binding SelectedRule}">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding DeleteRuleCommand}"

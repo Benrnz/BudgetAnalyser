@@ -138,8 +138,7 @@
                        VerticalAlignment="Top" />
         </Grid>
         <ListBox Grid.Row="3"
-                 ItemsSource="{Binding Analysis.Analyses, Mode=OneWay}"
-                 Style="{StaticResource BudgetItemList}" />
+                 ItemsSource="{Binding Analysis.Analyses, Mode=OneWay}" />
         <Grid Grid.Row="3"
               Margin="10,20,25,0">
             <Grid.ColumnDefinitions>

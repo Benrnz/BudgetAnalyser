@@ -13,12 +13,7 @@ namespace BudgetAnalyser.Engine.Budget
     public abstract class BudgetBucket : IModelValidate
     {
         private string doNotUseCode;
-
-        protected BudgetBucket()
-        {
-            Id = Guid.NewGuid();
-        }
-
+        protected BudgetBucket() { }
         protected BudgetBucket(string code, string name)
         {
             if (code == null)
@@ -33,9 +28,9 @@ namespace BudgetAnalyser.Engine.Budget
 
             Description = name;
             Code = code;
-            Id = Guid.NewGuid();
         }
 
+        public Guid? Id { get; set; }
         public string Code
         {
             get { return this.doNotUseCode; }
@@ -44,9 +39,6 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public string Description { get; set; }
-
-        [XmlAttribute]
-        public Guid Id { get; set; }
 
         public virtual string TypeDescription
         {

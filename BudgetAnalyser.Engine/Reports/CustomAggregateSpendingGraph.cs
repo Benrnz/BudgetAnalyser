@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BudgetAnalyser.Engine.Reports
 {
     public class CustomAggregateSpendingGraph
     {
-        public List<Guid> BucketIds { get; set; }
+        public List<string> BucketIds { get; set; }
 
         public string Name { get; set; }
     }

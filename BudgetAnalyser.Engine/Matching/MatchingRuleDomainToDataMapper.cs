@@ -8,7 +8,7 @@
             return new DataMatchingRule
             {
                 Amount = rule.Amount,
-                BucketId = rule.BucketId,
+                BucketCode = rule.BucketCode,
                 Description = rule.Description,
                 LastMatch = rule.LastMatch,
                 MatchCount = rule.MatchCount,
