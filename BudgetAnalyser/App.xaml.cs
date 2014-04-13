@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using BudgetAnalyser.Engine;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
 
@@ -14,6 +16,8 @@ namespace BudgetAnalyser
     /// </summary>
     public partial class App : Application
     {
+        private ILogger logger;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -28,6 +32,9 @@ namespace BudgetAnalyser
 
             var compositionRoot = new CompositionRoot();
             compositionRoot.RegisterIoCMappings();
+            this.logger = compositionRoot.Logger;
+            this.logger.LogAlways(() => "=========== Budget Analyser Starting ===========");
+            this.logger.LogAlways(() => compositionRoot.ShellController.DashboardController.VersionString);
             var initialisableShell = compositionRoot.ShellController as IInitializableController;
             if (initialisableShell != null)
             {
@@ -35,20 +42,20 @@ namespace BudgetAnalyser
             }
 
             compositionRoot.ShellWindow.DataContext = compositionRoot.ShellController;
+            this.logger.LogInfo(() => "Initialisation finished.");
             compositionRoot.ShellWindow.Show();
         }
 
-        private static void LogUnhandledException(string origin, object ex)
+        private void LogUnhandledException(string origin, object ex)
         {
-            //Logger.Instance.WriteEntry(string.Empty);
-            //Logger.Instance.WriteEntry("=====================================================================================");
-            //Logger.Instance.WriteEntry(DateTime.Now);
-            //Logger.Instance.WriteEntry("Unhandled exception was thrown from orgin: " + origin);
-            //string message = ex.ToString();
-            //Logger.Instance.WriteEntry(message);
+            var builder = new StringBuilder();
+            builder.AppendLine(string.Empty);
+            builder.AppendLine("=====================================================================================");
+            builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
+            builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
+            builder.AppendLine(ex.ToString());
+            this.logger.LogError(builder.ToString);
 
-            //new WindowsMessageBox().Show(TypeVisualiser.Properties.Resources.Application_An_Unhandled_Exception_Occurred, (object)message);
-            Debug.WriteLine(ex.ToString());
             Current.Shutdown();
         }
 
@@ -56,6 +63,7 @@ namespace BudgetAnalyser
         {
             Current.Exit -= OnApplicationExit;
             Messenger.Default.Send(new ShutdownMessage());
+            this.logger.LogAlways(() => "Application Exiting");
         }
 
         private void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -86,6 +86,7 @@ namespace BudgetAnalyser
         public LedgerBookController LedgerBookController { get; set; }
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
+        public ILogger Logger { get; set; }
         public MainMenuController MainMenuController { get; set; }
         public IMessenger Messenger { get; private set; }
         public NewRuleController NewRuleController { get; set; }

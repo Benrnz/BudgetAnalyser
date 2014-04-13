@@ -45,6 +45,9 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.3.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=273cb7bd5f6ca8af, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rees.UserInteraction.Wpf.1.0.1\Rees.UserInteraction.Contracts.dll</HintPath>
@@ -68,6 +71,7 @@
     <Compile Include="Account\MiscellaneousAccountType.cs" />
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
+    <Compile Include="BudgetAnalyserLog4NetLogger.cs" />
     <Compile Include="Budget\BudgetBucket.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\BudgetCollection.cs" />
@@ -87,7 +91,10 @@
     <Compile Include="Budget\SpentMonthlyExpense.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
+    <Compile Include="Matching\IMatchMaker.cs" />
+    <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\Transaction.cs" />

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -9,6 +8,18 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public class BankImportUtilities
     {
+        private readonly ILogger logger;
+
+        public BankImportUtilities([NotNull] ILogger logger)
+        {
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
+            this.logger = logger;
+        }
+
         internal virtual void AbortIfFileDoesntExist(string fileName, IUserMessageBox messageBox)
         {
             if (!File.Exists(fileName))
@@ -57,7 +68,7 @@ namespace BudgetAnalyser.Engine.Statement
             DateTime retval;
             if (!DateTime.TryParse(stringToParse, out retval))
             {
-                Debug.WriteLine("Unable to parse date: " + stringToParse);
+                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse date: " + stringToParse);
                 return DateTime.MinValue;
             }
 
@@ -80,7 +91,7 @@ namespace BudgetAnalyser.Engine.Statement
             Decimal retval;
             if (!Decimal.TryParse(stringToParse, out retval))
             {
-                Debug.WriteLine("Unable to parse decimal: " + stringToParse);
+                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
                 return 0;
             }
 

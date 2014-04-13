@@ -14,15 +14,22 @@ namespace BudgetAnalyser
     {
         private static readonly object SyncRoot = new object();
         private readonly IMessenger defaultMessenger;
+        private readonly ILogger logger;
 
-        public ConcurrentMessenger([NotNull] IMessenger defaultMessenger)
+        public ConcurrentMessenger([NotNull] IMessenger defaultMessenger, [NotNull] ILogger logger)
         {
             if (defaultMessenger == null)
             {
                 throw new ArgumentNullException("defaultMessenger");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.defaultMessenger = defaultMessenger;
+            this.logger = logger;
         }
 
         public void Register<TMessage>(object recipient, Action<TMessage> action)
@@ -32,7 +39,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Register(recipient, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Register {0}", recipient);
+            this.logger.LogInfo(() => string.Format("IMessenger.Register {0} for Message: {1}", recipient, typeof(TMessage).Name));
         }
 
         public void Register<TMessage>(object recipient, object token, Action<TMessage> action)
@@ -42,7 +49,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Register(recipient, token, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Register {0} with token {1}", recipient, token);
+            this.logger.LogInfo(() => string.Format("IMessenger.Register {0} with token {1} for Message: {2}", recipient, token, typeof(TMessage).Name));
         }
 
         public void Register<TMessage>(object recipient, object token, bool receiveDerivedMessagesToo, Action<TMessage> action)
@@ -52,7 +59,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Register(recipient, token, receiveDerivedMessagesToo, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Register {0} with token {1} include derived messages.", recipient, token);
+            this.logger.LogInfo(() => string.Format("IMessenger.Register {0} with token {1} for Message: {2} include derived messages.", recipient, token, typeof(TMessage).Name));
         }
 
         public void Register<TMessage>(object recipient, bool receiveDerivedMessagesToo, Action<TMessage> action)
@@ -62,25 +69,25 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Register(recipient, receiveDerivedMessagesToo, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Register {0} include derived messages.", recipient);
+            this.logger.LogInfo(() => string.Format("IMessenger.Register {0} for Message {1} include derived messages.", recipient, typeof(TMessage).Name));
         }
 
         public void Send<TMessage>(TMessage message)
         {
             this.defaultMessenger.Send(message);
-            System.Diagnostics.Debug.WriteLine("IMessenger.Send {0}", message);
+            this.logger.LogInfo(() => string.Format("IMessenger.Send {0}", message));
         }
 
         public void Send<TMessage, TTarget>(TMessage message)
         {
             this.defaultMessenger.Send<TMessage, TTarget>(message);
-            System.Diagnostics.Debug.WriteLine("IMessenger.Send {0} to target {1}", message, typeof(TTarget).FullName);
+            this.logger.LogInfo(() => string.Format("IMessenger.Send {0} to target {1}", message, typeof(TTarget).FullName));
         }
 
         public void Send<TMessage>(TMessage message, object token)
         {
             this.defaultMessenger.Send(message, token);
-            System.Diagnostics.Debug.WriteLine("IMessenger.Send {0} with token {1}", message, token);
+            this.logger.LogInfo(() => string.Format("IMessenger.Send {0} with token {1}", message, token));
         }
 
         public void Unregister(object recipient)
@@ -90,7 +97,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Unregister(recipient);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Unregister {0}", recipient);
+            this.logger.LogInfo(() => string.Format("IMessenger.Unregister {0}", recipient));
         }
 
         public void Unregister<TMessage>(object recipient)
@@ -100,7 +107,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Unregister(recipient);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Unregister {0}", recipient);
+            this.logger.LogInfo(() => string.Format("IMessenger.Unregister {0}", recipient));
         }
 
         public void Unregister<TMessage>(object recipient, object token)
@@ -110,7 +117,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Unregister<TMessage>(recipient, token);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Unregister {0} with token {1}", recipient, token);
+            this.logger.LogInfo(() => string.Format("IMessenger.Unregister {0} with token {1}", recipient, token));
         }
 
         public void Unregister<TMessage>(object recipient, Action<TMessage> action)
@@ -120,7 +127,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Unregister(recipient, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Unregister {0}", recipient);
+            this.logger.LogInfo(() => string.Format("IMessenger.Unregister {0}", recipient));
         }
 
         public void Unregister<TMessage>(object recipient, object token, Action<TMessage> action)
@@ -130,7 +137,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Unregister(recipient, token, action);
             }
 
-            System.Diagnostics.Debug.WriteLine("IMessenger.Unregister {0} with token {1}", recipient, token);
+            this.logger.LogInfo(() => string.Format("IMessenger.Unregister {0} with token {1}", recipient, token));
         }
     }
 }

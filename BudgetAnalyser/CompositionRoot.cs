@@ -3,6 +3,7 @@ using System.Windows;
 using Autofac;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -25,13 +26,14 @@ namespace BudgetAnalyser
 
         public ShellController ShellController { get; private set; }
         public Window ShellWindow { get; private set; }
+        public ILogger Logger { get; private set; }
 
         public void RegisterIoCMappings()
         {
             var builder = new ContainerBuilder();
 
-            Engine.DefaultIoCRegistrations.RegisterDefaultMappings(builder);
-            Engine.IoC.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
+            DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+            IoC.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
 
 
             // Wait Cursor Builder
@@ -65,7 +67,19 @@ namespace BudgetAnalyser
             // Instantiate and store all controllers...
             // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
             var container = builder.Build();
+
+            Logger = container.Resolve<ILogger>();
+
+            // Kick it off
+            ConstructUiContext(container);
+            ShellController = container.Resolve<ShellController>();
+            ShellWindow = new ShellWindow { DataContext = ShellController };
+        }
+
+        private void ConstructUiContext(IContainer container)
+        {
             var uiContext = container.Resolve<UiContext>();
+            uiContext.Logger = Logger;
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
             uiContext.BudgetPieController = container.Resolve<BudgetPieController>();
             uiContext.BudgetController = container.Resolve<BudgetController>();
@@ -82,11 +96,6 @@ namespace BudgetAnalyser
             uiContext.DashboardController = container.Resolve<DashboardController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
-            
-            // Kick it off
-            ShellController = container.Resolve<ShellController>();
-            ShellWindow = new ShellWindow { DataContext = ShellController };
         }
-
     }
 }

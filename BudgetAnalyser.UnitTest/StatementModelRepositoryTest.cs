@@ -2,6 +2,7 @@
 using System.Security.AccessControl;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -135,7 +136,7 @@ namespace BudgetAnalyser.UnitTest
 
         private StatementModel CreateStatementModelTestData()
         {
-            return new StatementModel();
+            return new StatementModel(new FakeLogger());
         }
 
         private Mock<IVersionedStatementModelImporter> ImporterMock { get; set; }

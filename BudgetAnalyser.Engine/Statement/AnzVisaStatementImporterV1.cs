@@ -16,9 +16,10 @@ namespace BudgetAnalyser.Engine.Statement
     {
         private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>();
         private readonly BankImportUtilities importUtilities;
+        private readonly ILogger logger;
         private readonly IUserMessageBox userMessageBox;
 
-        public AnzVisaStatementImporterV1([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
+        public AnzVisaStatementImporterV1([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
         {
             if (userMessageBox == null)
             {
@@ -30,8 +31,14 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("importUtilities");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.userMessageBox = userMessageBox;
             this.importUtilities = importUtilities;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -70,7 +77,7 @@ namespace BudgetAnalyser.Engine.Statement
                 transactions.Add(transaction);
             }
 
-            return new StatementModel
+            return new StatementModel(this.logger)
             {
                 FileName = fileName,
                 Imported = DateTime.Now,

@@ -1,6 +1,7 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -301,7 +302,7 @@ namespace BudgetAnalyser.UnitTest
         {
             BucketRepositoryMock = new Mock<IBudgetBucketRepository>();
 
-            return new BankImportUtilities();
+            return new BankImportUtilities(new FakeLogger());
         }
 
         private string[] CreateTestArray()

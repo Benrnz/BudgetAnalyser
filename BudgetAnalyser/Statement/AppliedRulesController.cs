@@ -13,14 +13,21 @@ namespace BudgetAnalyser.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AppliedRulesController
     {
+        private readonly IMatchMaker matchMacker;
         private readonly IUserMessageBox messageBox;
         private readonly StatementController statementController;
 
-        public AppliedRulesController([NotNull] UiContext uiContext)
+        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] IMatchMaker matchMacker)
         {
+            this.matchMacker = matchMacker;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
+            }
+
+            if (matchMacker == null)
+            {
+                throw new ArgumentNullException("matchMacker");
             }
 
             RulesController = uiContext.RulesController;
@@ -57,23 +64,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplyRulesCommandExecute()
         {
-            bool matchesOccured = false;
-            foreach (Transaction transaction in this.statementController.ViewModel.Statement.Transactions)
-            {
-                if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
-                {
-                    foreach (MatchingRule rule in RulesController.Rules)
-                    {
-                        if (rule.Match(transaction))
-                        {
-                            transaction.BudgetBucket = rule.Bucket;
-                            matchesOccured = true;
-                        }
-                    }
-                }
-            }
-
-            if (matchesOccured)
+            if (this.matchMacker.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
             {
                 RulesController.SaveRules();
             }

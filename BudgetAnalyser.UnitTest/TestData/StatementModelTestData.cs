@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
@@ -23,7 +24,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static StatementModel TestData1()
         {
-            var statement = new StatementModel
+            var statement = new StatementModel(new FakeLogger())
             {
                 FileName = @"C:\TestData1\FooStatement.csv",
                 Imported = new DateTime(2013, 08, 15),

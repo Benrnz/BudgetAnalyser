@@ -23,12 +23,14 @@ namespace BudgetAnalyser.Engine.Statement
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly BankImportUtilities importUtilities;
         private readonly IUserMessageBox userMessageBox;
+        private readonly ILogger logger;
 
         public BudgetAnalyserStatementImporterV1(
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] IUserMessageBox userMessageBox,
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] BankImportUtilities importUtilities)
+            [NotNull] BankImportUtilities importUtilities,
+            [NotNull] ILogger logger)
         {
             if (accountTypeRepository == null)
             {
@@ -50,10 +52,16 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("importUtilities");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.accountTypeRepository = accountTypeRepository;
             this.userMessageBox = userMessageBox;
             this.bucketRepository = bucketRepository;
             this.importUtilities = importUtilities;
+            this.logger = logger;
         }
 
         public bool IsValidFile(string fileName)
@@ -86,7 +94,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             long txnChecksum = ReadTransactionCheckSum(allLines[0]);
-            var statementModel = new StatementModel
+            var statementModel = new StatementModel(this.logger)
             {
                 FileName = fileName,
             };

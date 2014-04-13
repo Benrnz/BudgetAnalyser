@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public class StatementModel : INotifyPropertyChanged
     {
+        private readonly ILogger logger;
         private GlobalFilterCriteria currentFilter;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
@@ -20,8 +21,14 @@ namespace BudgetAnalyser.Engine.Statement
 
         private int fullDuration;
 
-        public StatementModel()
+        public StatementModel([NotNull] ILogger logger)
         {
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
+            this.logger = logger;
             ChangeHash = Guid.NewGuid();
         }
 
@@ -180,7 +187,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).ToList();
-            Debug.WriteLine("{0} Duplicates detected.", query.Sum(group => group.Count()));
+            this.logger.LogWarning(() => string.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
             Parallel.ForEach(query, duplicate =>
             {
                 foreach (Transaction txn in duplicate)
