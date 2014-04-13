@@ -293,6 +293,7 @@
                      ItemsSource="{Binding ViewModel.Statement.Transactions}"
                      KeyUp="OnTransactionListBoxKeyUp"
                      MouseDoubleClick="OnTransactionListBoxDoubleClick"
+                     ItemTemplate="{StaticResource TransactionTemplate1}"
                      SelectedItem="{Binding SelectedRow}"
                      SelectionMode="Single"
                      Visibility="{Binding ViewModel.HasTransactions, Converter={StaticResource BoolToVisConverter}}">

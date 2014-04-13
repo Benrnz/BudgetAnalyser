@@ -5,7 +5,7 @@
     <ControlTemplate x:Key="StandardListBoxItemControlTemplate"
                      TargetType="{x:Type ListBoxItem}">
         <Border x:Name="Root"
-                Background="{StaticResource TileBackgroundBrush}"
+                Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="1"
                 Padding="{TemplateBinding Padding}"
@@ -44,6 +44,10 @@
 
     <Style x:Key="StandardListBoxContainerStyle"
            TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Background"
+                Value="{StaticResource TileBackgroundBrush}" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Stretch" />
         <Setter Property="Margin"
@@ -62,7 +66,8 @@
     <Style TargetType="{x:Type ListBox}">
         <Setter Property="Background"
                 Value="{StaticResource MainBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
     </Style>
 
 </ResourceDictionary>

@@ -91,7 +91,6 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-
     <DataTemplate DataType="{x:Type statement1:EditingTransactionViewModel}">
         <Border x:Name="MainBorder"
                 Margin="0,1,2,1"
@@ -142,7 +141,7 @@
                 <TextBlock Text="Account"
                            Margin="5,2,5,2"
                            Grid.Column="8" />
-                
+
                 <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
                             Grid.Row="1"
                             HorizontalAlignment="Left"
@@ -213,101 +212,20 @@
         </Border>
     </DataTemplate>
 
-
     <Style x:Key="TransactionListBoxContainer"
-           TargetType="ListBoxItem">
-        <Setter Property="SnapsToDevicePixels"
-                Value="true" />
-        <Setter Property="ContentTemplate"
-                Value="{StaticResource TransactionTemplate1}" />
-        <Setter Property="Template">
-            <Setter.Value>
+           TargetType="ListBoxItem"
+           BasedOn="{StaticResource StandardListBoxContainerStyle}">
 
-                <ControlTemplate TargetType="ListBoxItem">
-                    <Border x:Name="Border"
-                            Margin="0,2,2,2"
-                            SnapsToDevicePixels="true">
-                        <ContentPresenter />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver"
-                                           Value="True" />
-                                <Condition Property="IsSelected"
-                                           Value="False" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.Setters>
-                                <Setter Property="Background"
-                                        TargetName="Border"
-                                        Value="{StaticResource ControlMouseOverBrush}" />
-                            </MultiTrigger.Setters>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver"
-                                           Value="False" />
-                                <Condition Property="IsSelected"
-                                           Value="True" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.Setters>
-                                <Setter Property="Background"
-                                        TargetName="Border"
-                                        Value="{StaticResource SelectedItemRowBrush}" />
-                            </MultiTrigger.Setters>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver"
-                                           Value="True" />
-                                <Condition Property="IsSelected"
-                                           Value="True" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.Setters>
-                                <Setter Property="Background"
-                                        TargetName="Border"
-                                        Value="{StaticResource SelectedItemRowBrush}" />
-                            </MultiTrigger.Setters>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver"
-                                           Value="False" />
-                                <Condition Property="IsSelected"
-                                           Value="False" />
-                                <Condition Property="ItemsControl.AlternationIndex"
-                                           Value="0" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.Setters>
-                                <Setter Property="Background"
-                                        TargetName="Border"
-                                        Value="{StaticResource TileBackgroundBrush}" />
-                            </MultiTrigger.Setters>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver"
-                                           Value="False" />
-                                <Condition Property="IsSelected"
-                                           Value="False" />
-                                <Condition Property="ItemsControl.AlternationIndex"
-                                           Value="1" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.Setters>
-                                <Setter Property="Background"
-                                        TargetName="Border"
-                                        Value="{StaticResource TileBackgroundAlternateBrush}" />
-                            </MultiTrigger.Setters>
-                        </MultiTrigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
         <Style.Triggers>
-            <Trigger Property="Tag"
-                     Value="True">
-                <Setter Property="ContentTemplate"
-                        Value="{StaticResource TransactionEditTemplate1}" />
+            <Trigger Property="ItemsControl.AlternationIndex"
+                     Value="0">
+                <Setter Property="Background"
+                        Value="{StaticResource TileBackgroundBrush}" />
+            </Trigger>
+            <Trigger Property="ItemsControl.AlternationIndex"
+                     Value="1">
+                <Setter Property="Background"
+                        Value="{StaticResource TileBackgroundAlternateBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
