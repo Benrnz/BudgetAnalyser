@@ -4,6 +4,13 @@ namespace BudgetAnalyser.Engine.Matching
 {
     public class DataMatchingRule
     {
+        public DataMatchingRule()
+        {
+            RuleId = Guid.NewGuid();
+        }
+
+        public Guid? RuleId { get; set; }
+
         public decimal? Amount { get; set; }
 
         public string BucketCode { get; set; }

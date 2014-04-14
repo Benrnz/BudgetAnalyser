@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Matching
                             transaction.BudgetBucket = rule.Bucket;
                             matchesOccured = true;
                             Transaction loggedTransaction = transaction;
-                            this.logger.LogInfo(() => string.Format("MatchMaker: Transaction Matched: {0} {1:C} {2} {3}", loggedTransaction.Date, loggedTransaction.Amount, loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code));
+                            this.logger.LogInfo(() => string.Format("MatchMaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount, loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
                         }
                     }
                 }

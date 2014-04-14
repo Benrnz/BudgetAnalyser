@@ -54,13 +54,13 @@
                 Value="1" />
         <Setter Property="Template"
                 Value="{StaticResource StandardListBoxItemControlTemplate}" />
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <Trigger Property="IsKeyboardFocusWithin"
                      Value="True">
                 <Setter Property="IsSelected"
                         Value="True" />
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
 
     <Style TargetType="{x:Type ListBox}">

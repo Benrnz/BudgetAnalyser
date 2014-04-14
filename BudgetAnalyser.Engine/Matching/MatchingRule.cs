@@ -15,6 +15,8 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference2;
         private string doNotUseReference3;
 
+        public Guid RuleId { get; internal set; }
+
         /// <summary>
         ///     Used any other time.
         /// </summary>

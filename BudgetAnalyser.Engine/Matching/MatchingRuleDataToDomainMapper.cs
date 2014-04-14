@@ -31,6 +31,7 @@ namespace BudgetAnalyser.Engine.Matching
                 Reference1 = rule.Reference1,
                 Reference2 = rule.Reference2,
                 Reference3 = rule.Reference3,
+                RuleId = rule.RuleId ?? Guid.Empty,
                 TransactionType = rule.TransactionType,
             };
         }

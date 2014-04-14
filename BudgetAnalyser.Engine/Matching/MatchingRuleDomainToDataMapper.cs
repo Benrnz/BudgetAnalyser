@@ -15,6 +15,7 @@
                 Reference1 = rule.Reference1,
                 Reference2 = rule.Reference2,
                 Reference3 = rule.Reference3,
+                RuleId = rule.RuleId,
                 TransactionType = rule.TransactionType,
             };
         }
