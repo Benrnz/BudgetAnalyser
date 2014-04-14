@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -89,9 +90,17 @@ namespace BudgetAnalyser.Statement
 
             if (NewRuleController.NewRule != null)
             {
-                Rules.Add(NewRuleController.NewRule);
+                Rules.AddingNew += OnAddingNewRuleToBindingList;
+                Rules.AddNew();
+                Rules.AddingNew -= OnAddingNewRuleToBindingList;
+                Rules.EndNew(0);
                 SaveRules();
             }
+        }
+
+        private void OnAddingNewRuleToBindingList(object s, AddingNewEventArgs e)
+        {
+            e.NewObject = this.NewRuleController.NewRule;
         }
 
         public void Initialize()

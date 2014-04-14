@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Matching
 {
-    [DebuggerDisplay("Rule: {Bucket} {Description} {Reference1} {Reference2} {Reference3}")]
+    [DebuggerDisplay("Rule: {Bucket} {RuleId}")]
     public class MatchingRule
     {
         private readonly IBudgetBucketRepository bucketRepository;
