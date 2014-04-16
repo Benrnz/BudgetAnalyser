@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
+using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.SpendingTrend;
 using BudgetAnalyser.Statement;

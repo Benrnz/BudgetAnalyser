@@ -8,6 +8,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
+using BudgetAnalyser.Matching;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;

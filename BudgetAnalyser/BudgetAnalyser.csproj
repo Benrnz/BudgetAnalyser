@@ -143,6 +143,18 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
+    <Compile Include="Matching\AppliedRulesController.cs" />
+    <Compile Include="Matching\CreateNewRuleView.xaml.cs">
+      <DependentUpon>CreateNewRuleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Matching\CreateNewRuleViewLoader.cs" />
+    <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
+    <Compile Include="Matching\MaintainRulesView.xaml.cs">
+      <DependentUpon>MaintainRulesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Matching\MaintainRulesViewLoader.cs" />
+    <Compile Include="Matching\NewRuleController.cs" />
+    <Compile Include="Matching\RulesController.cs" />
     <Compile Include="RequestShellDialogMessage.cs" />
     <Compile Include="ShellDialogResponse.cs" />
     <Compile Include="ShellDialogResponseMessage.cs" />
@@ -173,16 +185,10 @@
     <Compile Include="SpendingTrend\AddUserDefinedSpendingChartController.cs" />
     <Compile Include="SpendingTrend\CustomSpendingChartsV1.cs" />
     <Compile Include="SpendingTrend\SpendingTrendController.cs" />
-    <Compile Include="Statement\AppliedRulesController.cs" />
-    <Compile Include="Statement\MaintainRulesViewLoader.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
-    <Compile Include="Statement\CreateNewRuleViewLoader.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />
-    <Compile Include="Statement\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Statement\LastStatementLoadedV1.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
-    <Compile Include="Statement\NewRuleController.cs" />
-    <Compile Include="Statement\RulesController.cs" />
     <Compile Include="Statement\StatementController.cs" />
     <Compile Include="Statement\StatementFileManager.cs" />
     <Compile Include="Statement\StatementHasBeenModifiedMessage.cs" />
@@ -222,9 +228,6 @@
     <Compile Include="Filtering\GlobalAccountTypeFilterView.xaml.cs">
       <DependentUpon>GlobalAccountTypeFilterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statement\CreateNewRuleView.xaml.cs">
-      <DependentUpon>CreateNewRuleView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Filtering\GlobalDateFilterView.xaml.cs">
       <DependentUpon>GlobalDateFilterView.xaml</DependentUpon>
     </Compile>
@@ -246,9 +249,6 @@
     <Compile Include="Statement\LoadFileView.xaml.cs">
       <DependentUpon>LoadFileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statement\MaintainRulesView.xaml.cs">
-      <DependentUpon>MaintainRulesView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SpendingTrend\SpendingTrendView.xaml.cs">
       <DependentUpon>SpendingTrendView.xaml</DependentUpon>
     </Compile>
@@ -263,6 +263,14 @@
     <Page Include="MainMenuUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Matching\CreateNewRuleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Matching\MaintainRulesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ReportsCatalog\ReportsCatalogUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -376,10 +384,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Statement\CreateNewRuleView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Filtering\GlobalDateFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -405,10 +409,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Statement\LoadFileView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Statement\MaintainRulesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
