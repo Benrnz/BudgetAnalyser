@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("matchMacker");
             }
 
-            this.RulesController = uiContext.RulesController;
+            RulesController = uiContext.RulesController;
             this.statementController = uiContext.StatementController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteApplyRulesCommand()
         {
-            return this.RulesController.Rules.Any();
+            return RulesController.RulesGroupedByBucket.Any();
         }
 
         private bool CanExecuteCreateRuleCommand()
@@ -64,9 +64,9 @@ namespace BudgetAnalyser.Matching
 
         private void OnApplyRulesCommandExecute()
         {
-            if (this.matchMacker.Match(this.statementController.ViewModel.Statement.Transactions, this.RulesController.Rules))
+            if (this.matchMacker.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
             {
-                this.RulesController.SaveRules();
+                RulesController.SaveRules();
             }
         }
 
@@ -78,12 +78,12 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            this.RulesController.CreateNewRuleFromTransaction(this.statementController.SelectedRow);
+            RulesController.CreateNewRuleFromTransaction(this.statementController.SelectedRow);
         }
 
         private void OnShowRulesCommandExecute()
         {
-            this.RulesController.Show();
+            RulesController.Show();
         }
     }
 }

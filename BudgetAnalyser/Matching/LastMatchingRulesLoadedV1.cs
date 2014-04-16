@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Matching
 
         public T AdaptModel<T>()
         {
-            return (T)this.Model;
+            return (T)Model;
         }
     }
 }

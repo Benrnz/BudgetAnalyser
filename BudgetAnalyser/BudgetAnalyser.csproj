@@ -155,6 +155,7 @@
     <Compile Include="Matching\MaintainRulesViewLoader.cs" />
     <Compile Include="Matching\NewRuleController.cs" />
     <Compile Include="Matching\RulesController.cs" />
+    <Compile Include="Matching\RulesGroupedByBucket.cs" />
     <Compile Include="RequestShellDialogMessage.cs" />
     <Compile Include="ShellDialogResponse.cs" />
     <Compile Include="ShellDialogResponseMessage.cs" />

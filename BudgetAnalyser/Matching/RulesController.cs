@@ -20,10 +20,11 @@ namespace BudgetAnalyser.Matching
     /// </summary>
     public class RulesController : ControllerBase, IInitializableController
     {
-        // BUG Deleting a rule then adding a new one doesnt update the edit rules list to make the new rule appear in the list.
         private readonly IViewLoader maintainRulesViewLoader;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
+        private RulesGroupedByBucket addNewGroup;
+        private MatchingRule addingNewRule;
 
         /// <summary>
         ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
@@ -50,10 +51,10 @@ namespace BudgetAnalyser.Matching
             this.maintainRulesViewLoader = maintainRulesViewLoader;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
-            this.NewRuleController = uiContext.NewRuleController;
-            this.Rules = new BindingList<MatchingRule>();
+            NewRuleController = uiContext.NewRuleController;
+            RulesGroupedByBucket = new BindingList<RulesGroupedByBucket>();
 
-            this.MessengerInstance = uiContext.Messenger;
+            MessengerInstance = uiContext.Messenger;
             uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
@@ -65,7 +66,9 @@ namespace BudgetAnalyser.Matching
 
         public NewRuleController NewRuleController { get; private set; }
 
-        public BindingList<MatchingRule> Rules { get; private set; }
+        public IEnumerable<MatchingRule> Rules { get; private set; }
+        public BindingList<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
+        //public BindingList<MatchingRule> Rules { get; private set; }
 
         public MatchingRule SelectedRule { get; set; }
 
@@ -77,23 +80,24 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            this.NewRuleController.Initialize();
-            this.NewRuleController.Bucket = transaction.BudgetBucket;
-            this.NewRuleController.Description = transaction.Description;
-            this.NewRuleController.Reference1 = transaction.Reference1;
-            this.NewRuleController.Reference2 = transaction.Reference2;
-            this.NewRuleController.Reference3 = transaction.Reference3;
-            this.NewRuleController.TransactionType = transaction.TransactionType.Name;
-            this.NewRuleController.Amount = transaction.Amount;
-            this.NewRuleController.ShowDialog(this.Rules);
+            NewRuleController.Initialize();
+            NewRuleController.Bucket = transaction.BudgetBucket;
+            NewRuleController.Description = transaction.Description;
+            NewRuleController.Reference1 = transaction.Reference1;
+            NewRuleController.Reference2 = transaction.Reference2;
+            NewRuleController.Reference3 = transaction.Reference3;
+            NewRuleController.TransactionType = transaction.TransactionType.Name;
+            NewRuleController.Amount = transaction.Amount;
+            NewRuleController.ShowDialog(Rules);
 
-            if (this.NewRuleController.NewRule != null)
+            if (NewRuleController.NewRule != null)
             {
-                this.Rules.AddingNew += OnAddingNewRuleToBindingList;
-                this.Rules.AddNew();
-                this.Rules.AddingNew -= OnAddingNewRuleToBindingList;
-                this.Rules.EndNew(0);
-                SaveRules();
+                AddToList(NewRuleController.NewRule);
+                //Rules.AddingNew += OnAddingNewGroup;
+                //Rules.AddNew();
+                //Rules.AddingNew -= OnAddingNewGroup;
+                //Rules.EndNew(0);
+                //SaveRules();
             }
         }
 
@@ -111,9 +115,10 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public virtual void SaveRules()
+        public void SaveRules()
         {
-            this.ruleRepository.SaveRules(this.Rules, GetFileName());
+            this.ruleRepository.SaveRules(Rules, GetFileName());
+            Rules = RulesGroupedByBucket.SelectMany(g => g.Rules).OrderBy(r => r.Description);
         }
 
         public void Show()
@@ -132,21 +137,58 @@ namespace BudgetAnalyser.Matching
             return this.rulesFileName;
         }
 
-        protected virtual void LoadRules()
+        protected void LoadRules()
         {
-            this.Rules = new BindingList<MatchingRule>(this.ruleRepository.LoadRules(GetFileName())
+            List<MatchingRule> rules = this.ruleRepository.LoadRules(GetFileName())
                 .OrderBy(r => r.Description)
-                .ToList());
+                .ToList();
+
+            Rules = rules;
+
+            IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
+                .Select(group => new RulesGroupedByBucket(group.Key, group));
+
+            RulesGroupedByBucket = new BindingList<RulesGroupedByBucket>(grouped.ToList());
+        }
+
+        private void AddToList(MatchingRule rule)
+        {
+            RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(group => group.Bucket == rule.Bucket);
+            if (existingGroup == null)
+            {
+                this.addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
+                RulesGroupedByBucket.AddingNew += OnAddingNewGroup;
+                RulesGroupedByBucket.AddNew();
+                RulesGroupedByBucket.AddingNew -= OnAddingNewGroup;
+                RulesGroupedByBucket.EndNew(0);
+                this.addNewGroup = null;
+            }
+            else
+            {
+                this.addingNewRule = rule;
+                existingGroup.Rules.AddingNew += OnAddingNewRuleToGroup;
+                existingGroup.Rules.AddNew();
+                existingGroup.Rules.AddingNew -= OnAddingNewRuleToGroup;
+                existingGroup.Rules.EndNew(0);
+                this.addingNewRule = null;
+            }
+
+            SaveRules();
         }
 
         private bool CanExecuteDeleteRuleCommand()
         {
-            return this.SelectedRule != null;
+            return SelectedRule != null;
         }
 
-        private void OnAddingNewRuleToBindingList(object s, AddingNewEventArgs e)
+        private void OnAddingNewGroup(object sender, AddingNewEventArgs addingNewEventArgs)
         {
-            e.NewObject = this.NewRuleController.NewRule;
+            addingNewEventArgs.NewObject = this.addNewGroup;
+        }
+
+        private void OnAddingNewRuleToGroup(object sender, AddingNewEventArgs addingNewEventArgs)
+        {
+            addingNewEventArgs.NewObject = this.addingNewRule;
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -171,7 +213,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnDeleteRuleCommandExecute()
         {
-            if (this.SelectedRule == null)
+            if (SelectedRule == null)
             {
                 return;
             }
@@ -179,10 +221,21 @@ namespace BudgetAnalyser.Matching
             bool? certainty = this.questionBox.Show("Delete this rule?", "Are you sure?");
             if (certainty != null && certainty.Value)
             {
-                this.Rules.Remove(this.SelectedRule);
-                this.SelectedRule = null;
-                SaveRules();
+                RemoveRule();
             }
+        }
+
+        private void RemoveRule()
+        {
+            RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(g => g.Bucket == SelectedRule.Bucket);
+            if (existingGroup == null)
+            {
+                return;
+            }
+
+            existingGroup.Rules.Remove(SelectedRule);
+            SelectedRule = null;
+            SaveRules();
         }
     }
 }

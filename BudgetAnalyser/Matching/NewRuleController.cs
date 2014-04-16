@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseAmount = value;
-                RaisePropertyChanged(() => this.Amount);
+                RaisePropertyChanged(() => Amount);
                 UpdateSimilarRules();
             }
         }
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseDescription = value;
-                RaisePropertyChanged(() => this.Description);
+                RaisePropertyChanged(() => Description);
                 UpdateSimilarRules();
             }
         }
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference1 = value;
-                RaisePropertyChanged(() => this.Reference1);
+                RaisePropertyChanged(() => Reference1);
                 UpdateSimilarRules();
             }
         }
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference2 = value;
-                RaisePropertyChanged(() => this.Reference2);
+                RaisePropertyChanged(() => Reference2);
                 UpdateSimilarRules();
             }
         }
@@ -110,7 +110,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference3 = value;
-                RaisePropertyChanged(() => this.Reference3);
+                RaisePropertyChanged(() => Reference3);
                 UpdateSimilarRules();
             }
         }
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Matching
 
         public string Title
         {
-            get { return "New Matching Rule for: " + this.Bucket.Description; }
+            get { return "New Matching Rule for: " + Bucket.Description; }
         }
 
         public string TransactionType
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseTransactionType = value;
-                RaisePropertyChanged(() => this.TransactionType);
+                RaisePropertyChanged(() => TransactionType);
                 UpdateSimilarRules();
             }
         }
@@ -148,7 +148,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseAmount = value;
-                RaisePropertyChanged(() => this.UseAmount);
+                RaisePropertyChanged(() => UseAmount);
             }
         }
 
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference1 = value;
-                RaisePropertyChanged(() => this.UseReference1);
+                RaisePropertyChanged(() => UseReference1);
             }
         }
 
@@ -172,7 +172,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference2 = value;
-                RaisePropertyChanged(() => this.UseReference2);
+                RaisePropertyChanged(() => UseReference2);
             }
         }
 
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference3 = value;
-                RaisePropertyChanged(() => this.UseReference3);
+                RaisePropertyChanged(() => UseReference3);
             }
         }
 
@@ -194,28 +194,28 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseTransactionType = value;
-                RaisePropertyChanged(() => this.UseTransactionType);
+                RaisePropertyChanged(() => UseTransactionType);
             }
         }
 
         public void Initialize()
         {
-            this.UseDescription = true;
-            this.UseReference1 = false;
-            this.UseReference2 = false;
-            this.UseReference3 = false;
-            this.Description = null;
-            this.Reference1 = null;
-            this.Reference2 = null;
-            this.Reference3 = null;
-            this.SimilarRules = null;
+            UseDescription = true;
+            UseReference1 = false;
+            UseReference2 = false;
+            UseReference3 = false;
+            Description = null;
+            Reference1 = null;
+            Reference2 = null;
+            Reference3 = null;
+            SimilarRules = null;
 
-            this.NewRule = null;
+            NewRule = null;
         }
 
         public void ShowDialog(IEnumerable<MatchingRule> allRules)
         {
-            this.SimilarRules = new List<object>(
+            SimilarRules = new List<object>(
                 allRules.Select(rule => new
                 {
                     rule.Amount,
@@ -243,43 +243,43 @@ namespace BudgetAnalyser.Matching
 
         private void OnCancelCommandExecute()
         {
-            this.NewRule = null;
+            NewRule = null;
             this.viewLoader.Close();
         }
 
         private void OnSaveCommandExecute()
         {
-            this.NewRule = new MatchingRule(this.budgetBucketRepository) { Bucket = this.Bucket };
+            NewRule = new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
 
-            if (this.Bucket == null)
+            if (Bucket == null)
             {
                 MessageBox.Show("Bucket cannot be null.");
                 return;
             }
 
-            if (this.UseDescription)
+            if (UseDescription)
             {
-                this.NewRule.Description = this.Description;
+                NewRule.Description = Description;
             }
 
-            if (this.UseReference1)
+            if (UseReference1)
             {
-                this.NewRule.Reference1 = this.Reference1;
+                NewRule.Reference1 = Reference1;
             }
 
-            if (this.UseReference2)
+            if (UseReference2)
             {
-                this.NewRule.Reference2 = this.Reference2;
+                NewRule.Reference2 = Reference2;
             }
 
-            if (this.UseReference3)
+            if (UseReference3)
             {
-                this.NewRule.Reference3 = this.Reference3;
+                NewRule.Reference3 = Reference3;
             }
 
-            if (this.UseTransactionType)
+            if (UseTransactionType)
             {
-                this.NewRule.TransactionType = this.TransactionType;
+                NewRule.TransactionType = TransactionType;
             }
 
             this.viewLoader.Close();
@@ -287,26 +287,26 @@ namespace BudgetAnalyser.Matching
 
         private void UpdateSimilarRules()
         {
-            if (this.SimilarRules == null)
+            if (SimilarRules == null)
             {
                 return;
             }
 
-            ICollectionView view = CollectionViewSource.GetDefaultView(this.SimilarRules);
+            ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
             view.Filter = item =>
             {
                 dynamic currentRule = item;
-                return this.Amount == currentRule.Amount
-                       || IsEqualButNotBlank(this.Description, currentRule.Description)
-                       || IsEqualButNotBlank(this.Reference1, currentRule.Reference1)
-                       || IsEqualButNotBlank(this.Reference2, currentRule.Reference2)
-                       || IsEqualButNotBlank(this.Reference3, currentRule.Reference3)
-                       || IsEqualButNotBlank(this.TransactionType, currentRule.TransactionType);
+                return Amount == currentRule.Amount
+                       || IsEqualButNotBlank(Description, currentRule.Description)
+                       || IsEqualButNotBlank(Reference1, currentRule.Reference1)
+                       || IsEqualButNotBlank(Reference2, currentRule.Reference2)
+                       || IsEqualButNotBlank(Reference3, currentRule.Reference3)
+                       || IsEqualButNotBlank(TransactionType, currentRule.TransactionType);
             };
 
-            this.SimilarRulesExist = !view.IsEmpty;
-            RaisePropertyChanged(() => this.SimilarRulesExist);
-            RaisePropertyChanged(() => this.SimilarRules);
+            SimilarRulesExist = !view.IsEmpty;
+            RaisePropertyChanged(() => SimilarRulesExist);
+            RaisePropertyChanged(() => SimilarRules);
         }
     }
 }
