@@ -179,6 +179,7 @@ namespace BudgetAnalyser.LedgerBook
 
             set
             {
+                if (value == this.doNotUseShown) return;
                 this.doNotUseShown = value;
                 if (!string.IsNullOrWhiteSpace(this.pendingFileName))
                 {

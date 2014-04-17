@@ -48,6 +48,7 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return this.doNotUseShown; }
             set
             {
+                if (value == this.doNotUseShown) return;
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }

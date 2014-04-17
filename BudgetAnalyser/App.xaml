@@ -10,7 +10,8 @@
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
-             xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog">
+             xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
+             xmlns:matching="clr-namespace:BudgetAnalyser.Matching">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -61,6 +62,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
                 <reportsCatalog:ReportsCatalogUserControl />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type matching:RulesController}">
+                <matching:EditRulesUserControl />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

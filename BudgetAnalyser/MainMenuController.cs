@@ -43,7 +43,6 @@ namespace BudgetAnalyser
             }
         }
 
-
         public ICommand DashboardCommand
         {
             get { return new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand); }
@@ -111,6 +110,11 @@ namespace BudgetAnalyser
 
         private void AfterTabExecutedCommon()
         {
+            foreach (var controller in this.uiContext.ShowableControllers)
+            {
+                controller.Shown = false;
+            }
+
             this.uiContext.DashboardController.Shown = DashboardToggle;
             this.uiContext.StatementController.Shown = TransactionsToggle;
             this.uiContext.LedgerBookController.Shown = LedgerBookToggle;

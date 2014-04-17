@@ -16,15 +16,16 @@ using Rees.Wpf.ApplicationState;
 namespace BudgetAnalyser.Matching
 {
     /// <summary>
-    ///     The Controller for <see cref="MaintainRulesView" /> .
+    ///     The Controller for <see cref="EditRulesUserControl" /> .
     /// </summary>
-    public class RulesController : ControllerBase, IInitializableController
+    public class RulesController : ControllerBase, IInitializableController, IShowableController
     {
-        private readonly IViewLoader maintainRulesViewLoader;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
         private RulesGroupedByBucket addNewGroup;
         private MatchingRule addingNewRule;
+
+        private bool doNotUseShown;
 
         /// <summary>
         ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
@@ -35,7 +36,6 @@ namespace BudgetAnalyser.Matching
 
         public RulesController(
             [NotNull] UiContext uiContext,
-            [NotNull] MaintainRulesViewLoader maintainRulesViewLoader,
             [NotNull] IMatchingRuleRepository ruleRepository)
         {
             if (uiContext == null)
@@ -43,12 +43,6 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (maintainRulesViewLoader == null)
-            {
-                throw new ArgumentNullException("maintainRulesViewLoader");
-            }
-
-            this.maintainRulesViewLoader = maintainRulesViewLoader;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
             NewRuleController = uiContext.NewRuleController;
@@ -64,6 +58,11 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
         }
 
+        public ICommand CloseCommand
+        {
+            get { return new RelayCommand(() => Shown = false); }
+        }
+
         public NewRuleController NewRuleController { get; private set; }
 
         public IEnumerable<MatchingRule> Rules { get; private set; }
@@ -71,6 +70,17 @@ namespace BudgetAnalyser.Matching
         //public BindingList<MatchingRule> Rules { get; private set; }
 
         public MatchingRule SelectedRule { get; set; }
+
+        public bool Shown
+        {
+            get { return this.doNotUseShown; }
+            set
+            {
+                if (value == this.doNotUseShown) return;
+                this.doNotUseShown = value;
+                RaisePropertyChanged(() => Shown);
+            }
+        }
 
         public void CreateNewRuleFromTransaction(Transaction transaction)
         {
@@ -119,11 +129,6 @@ namespace BudgetAnalyser.Matching
         {
             this.ruleRepository.SaveRules(Rules, GetFileName());
             Rules = RulesGroupedByBucket.SelectMany(g => g.Rules).OrderBy(r => r.Description);
-        }
-
-        public void Show()
-        {
-            this.maintainRulesViewLoader.Show(this);
         }
 
         protected virtual string GetFileName()

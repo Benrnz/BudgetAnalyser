@@ -7,6 +7,7 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.LedgerBook;
+using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
@@ -86,6 +87,11 @@ namespace BudgetAnalyser
         public MainMenuController MainMenuController
         {
             get { return this.uiContext.MainMenuController; }
+        }
+
+        public RulesController RulesController
+        {
+            get { return this.uiContext.RulesController; }
         }
 
         public bool OkButtonVisible

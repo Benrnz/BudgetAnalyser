@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnShowRulesCommandExecute()
         {
-            RulesController.Show();
+            RulesController.Shown = true;
         }
     }
 }

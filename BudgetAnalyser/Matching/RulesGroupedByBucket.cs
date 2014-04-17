@@ -9,6 +9,9 @@ using BudgetAnalyser.Engine.Matching;
 
 namespace BudgetAnalyser.Matching
 {
+    /// <summary>
+    /// A class that models a group of matching rules grouped by a single <see cref="BudgetBucket"/>.
+    /// </summary>
     public class RulesGroupedByBucket : INotifyPropertyChanged
     {
         private BudgetBucket bucket;

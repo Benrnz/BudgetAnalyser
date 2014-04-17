@@ -217,6 +217,7 @@ namespace BudgetAnalyser.Budget
 
             set
             {
+                if (value == this.doNotUseShownBudget) return;
                 this.doNotUseShownBudget = value;
                 RaisePropertyChanged(() => Shown);
                 BudgetMenuItemName = this.doNotUseShownBudget ? CloseBudgetMenuName : EditBudgetMenuName;

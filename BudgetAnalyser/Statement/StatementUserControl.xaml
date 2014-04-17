@@ -57,9 +57,8 @@
                       BorderBrush="{StaticResource ButtonStrokeBrush}"
                       BorderThickness="3">
                     <Menu.Resources>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground"
-                                    Value="{StaticResource ButtonGlyphBrush}" />
+                        <Style TargetType="{x:Type TextBlock}"
+                               BasedOn="{StaticResource TextBlock.ContextMenuStyle}">
                         </Style>
                     </Menu.Resources>
                     <MenuItem Style="{StaticResource RoundMenuItemButton}">

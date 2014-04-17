@@ -37,7 +37,12 @@
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
-            
+            <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource BoolToVisConverter}}">
+                <ContentPresenter Content="{Binding RulesController}"
+                                  VerticalAlignment="Stretch" />
+            </Grid>
+
+            <!-- Shell Pop Up Dialog -->
             <Grid Background="#cc000000"
                   KeyUp="OnShellDialogKeyUp"
                   Visibility="{Binding PopUpDialogContent, Converter={StaticResource NullToVisConverter}}">

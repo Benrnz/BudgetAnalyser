@@ -130,6 +130,7 @@ namespace BudgetAnalyser.Budget
 
             set
             {
+                if (value == this.doNotUseShown) return;
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }

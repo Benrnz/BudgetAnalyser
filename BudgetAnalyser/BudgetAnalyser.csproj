@@ -148,11 +148,10 @@
       <DependentUpon>CreateNewRuleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Matching\CreateNewRuleViewLoader.cs" />
-    <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
-    <Compile Include="Matching\MaintainRulesView.xaml.cs">
-      <DependentUpon>MaintainRulesView.xaml</DependentUpon>
+    <Compile Include="Matching\EditRulesUserControl.xaml.cs">
+      <DependentUpon>EditRulesUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Matching\MaintainRulesViewLoader.cs" />
+    <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Matching\NewRuleController.cs" />
     <Compile Include="Matching\RulesController.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
@@ -269,9 +268,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Matching\MaintainRulesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Matching\EditRulesUserControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReportsCatalog\ReportsCatalogUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>

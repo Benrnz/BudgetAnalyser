@@ -146,6 +146,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return this.doNotUseShown; }
             set
             {
+                if (value == this.doNotUseShown) return;
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
