@@ -4,18 +4,10 @@
 
     <!-- DataContext must be BudgetCurrencyContext -->
     <StackPanel Orientation="Horizontal">
-        <Border BorderBrush="{StaticResource ControlBorderBrush}"
-                Background="{StaticResource SecondaryBackgroundBrush}"
-                BorderThickness="2"
-                CornerRadius="3"
-                Height="25"
-                Margin="5"
+        <Border Style="{StaticResource Badge.Border1}"
                 ToolTip="This budget is the current active budget for today."
                 Visibility="{Binding BudgetActive, Converter={StaticResource BoolToVisConverter}}">
-            <TextBlock FontSize="12"
-                       FontWeight="Bold"
-                       Margin="3"
-                       Foreground="{StaticResource MainBackgroundBrush}"
+            <TextBlock Style="{StaticResource Badge.Text}"
                        Text="Active" />
         </Border>
         <Border BorderBrush="{StaticResource ControlBorderBrush}"

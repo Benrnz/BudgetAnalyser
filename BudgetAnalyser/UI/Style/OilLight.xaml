@@ -20,6 +20,58 @@
     <SolidColorBrush x:Key="OilLightTextBrush"
                      Color="{StaticResource OilLightTextColor}" />
 
+    <Style x:Key="Badge.Text"
+           TargetType="TextBlock">
+        <Setter Property="FontSize"
+                Value="12" />
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="Margin"
+                Value="3" />
+        <Setter Property="Foreground"
+                Value="{StaticResource MainBackgroundBrush}" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+    </Style>
+
+    <Style x:Key="Badge.Border1"
+           TargetType="Border">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="Background"
+                Value="{StaticResource SecondaryBackgroundBrush}" />
+        <Setter Property="BorderThickness"
+                Value="2" />
+        <Setter Property="CornerRadius"
+                Value="3" />
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Margin"
+                Value="5" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+    </Style>
+
+    <Style x:Key="Badge.Border2"
+           TargetType="Border">
+        <Setter Property="Background"
+                Value="{StaticResource TileBackgroundAlternateBrush}" />
+        <Setter Property="CornerRadius"
+                Value="3" />
+        <Setter Property="Height"
+                Value="25" />
+        <Setter Property="Width"
+                Value="35" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+    </Style>
+
     <Style x:Key="WarningOilLightStyle"
            TargetType="Border">
         <Setter Property="CornerRadius"

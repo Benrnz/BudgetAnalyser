@@ -7,18 +7,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:matching="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine"
         xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
+        xmlns:matching1="clr-namespace:BudgetAnalyser.Matching"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Background="{StaticResource MainBackgroundBrush}"
         Height="500"
         Icon="..\UI\Assets\PieChart.png"
-        MaxWidth="320"
         Title="Maintain Matching Rules"
         Width="320">
     <!-- Data Context = RulesController -->
 
     <Window.Resources>
         <converters1:BucketToColourConverter x:Key="BucketToColourConverter" />
-        <converters2:ZeroToBlankConverter x:Key="ZeroToBlankConverter" />
         <converters1:MatchingRuleDescriptorConverter x:Key="RuleDescriptorConverter" />
+        <converters2:ZeroToBlankConverter x:Key="ZeroToBlankConverter" />
 
         <DataTemplate DataType="{x:Type matching:MatchingRule}">
             <Border Background="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}"
@@ -80,13 +81,39 @@
                 </Grid>
             </Border>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type matching1:RulesGroupedByBucket}">
+            <Expander IsExpanded="False"
+                      Style="{StaticResource Expander.Style1}">
+                <Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Bucket.Code}" />
+
+                        <Border Grid.Column="1"
+                                Style="{StaticResource Badge.Border2}">
+                            <TextBlock Style="{StaticResource Badge.Text}"
+                                       Text="{Binding RulesCount, StringFormat=F0, TargetNullValue={x:Static sys:String.Empty}}" />
+                        </Border>
+                    </Grid>
+                </Expander.Header>
+                <ScrollViewer MaxHeight="300"
+                              VerticalScrollBarVisibility="Visible">
+                    <ListBox ItemsSource="{Binding Rules}"
+                             ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}" />
+                </ScrollViewer>
+            </Expander>
+        </DataTemplate>
+
     </Window.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}"
-          MaxWidth="320">
-        <ListBox Grid.Row="2"
-                 ItemsSource="{Binding Rules}"
-                 SelectedItem="{Binding SelectedRule}">
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <ListBox ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
+                 ItemsSource="{Binding RulesGroupedByBucket}">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding DeleteRuleCommand}"
