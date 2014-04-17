@@ -33,7 +33,7 @@
                        Margin="3"
                        Text="Future" />
         </Border>
-        <TextBlock Style="{StaticResource TextBlockHeading1}"
+        <TextBlock Style="{StaticResource TextBlock.Heading1}"
                    Text="{Binding Model.Name}" />
     </StackPanel>
 </UserControl>

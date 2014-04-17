@@ -38,7 +38,7 @@
                     Grid.Row="1"
                     Width="475">
             <budget:BudgetModelNameUserControl />
-            <TextBlock Style="{StaticResource TextBlockParagraph}"
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding FileName}"
                        ToolTip="{Binding FileName}" />
         </StackPanel>

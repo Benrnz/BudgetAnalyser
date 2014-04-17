@@ -14,14 +14,14 @@
         </Grid.ColumnDefinitions>
         <TextBlock Text="{Binding Narrative}" />
         <TextBlock Grid.Column="1"
-                   Style="{StaticResource TextBlockNumber}"
+                   Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Credit, StringFormat=N}"
                    Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}" />
         <TextBlock Grid.Column="2"
                    Text="CR"
                    Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}"/>
         <TextBlock Grid.Column="3"
-                   Style="{StaticResource TextBlockNumber}"
+                   Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Debit, StringFormat=N}"
                    Visibility="{Binding Debit, Converter={StaticResource ZeroToVisibilityConverter}}" />
         <TextBlock Grid.Column="4"

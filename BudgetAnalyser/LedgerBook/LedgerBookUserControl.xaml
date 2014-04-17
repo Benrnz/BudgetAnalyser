@@ -14,7 +14,7 @@
         </Style>
 
         <Style x:Key="LedgerBookTextBlockNumber"
-               BasedOn="{StaticResource TextBlockNumber}"
+               BasedOn="{StaticResource TextBlock.Number}"
                TargetType="TextBlock">
             <Setter Property="FontSize"
                     Value="12" />
@@ -23,7 +23,7 @@
         </Style>
 
         <Style x:Key="LedgerBookTextBlockHeading"
-               BasedOn="{StaticResource TextBlockParagraph}"
+               BasedOn="{StaticResource TextBlock.Paragraph}"
                TargetType="TextBlock">
             <Setter Property="FontSize"
                     Value="12" />
@@ -34,7 +34,7 @@
         </Style>
 
         <Style x:Key="LedgerBookTextBlockOther"
-               BasedOn="{StaticResource TextBlockParagraph}"
+               BasedOn="{StaticResource TextBlock.Paragraph}"
                TargetType="TextBlock">
             <Setter Property="FontSize"
                     Value="12" />
@@ -84,7 +84,7 @@
                     HorizontalAlignment="Left"
                     Style="{StaticResource UnlockButton}"
                     ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
-            <TextBlock Style="{StaticResource TextBlockHeading1}"
+            <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />
             <Border Style="{StaticResource WarningOilLightStyle}"
@@ -112,11 +112,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Style="{StaticResource TextBlockParagraph}"
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding LedgerBook.Modified, StringFormat=D}"
                        ToolTip="Last modified date and time" />
             <TextBlock Grid.Column="1"
-                       Style="{StaticResource TextBlockParagraph}"
+                       Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding LedgerBook.FileName}"
                        ToolTip="{Binding LedgerBook.FileName}" />
             <Border BorderBrush="{StaticResource ControlBorderBrush}"

@@ -35,35 +35,35 @@
                     <ColumnDefinition SharedSizeGroup="I"
                                       Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource TransactionTextBlockStyle}"
+                <TextBlock Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Date, StringFormat=\{0:d\}}"
                            ToolTip="{Binding Date, StringFormat=\{0:D\}}" />
                 <TextBlock Grid.Column="1"
-                           Style="{StaticResource TransactionTextBlockNumber}"
+                           Style="{StaticResource TextBlock.TransactionNumber}"
                            Text="{Binding Amount, StringFormat=\{0:N\}}" />
                 <TextBlock Grid.Column="2"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Description}"
                            ToolTip="{Binding Description}" />
                 <TextBlock Grid.Column="3"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            MinWidth="120"
                            Text="{Binding BudgetBucket, Converter={StaticResource BudgetBucketToStringConverter}}"
                            ToolTip="{Binding BudgetBucket}" />
                 <TextBlock Grid.Column="4"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Reference1}"
                            ToolTip="{Binding Reference1}" />
                 <TextBlock Grid.Column="5"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Reference2}"
                            ToolTip="{Binding Reference2}" />
                 <TextBlock Grid.Column="6"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Reference3}"
                            ToolTip="{Binding Reference3}" />
                 <TextBlock Grid.Column="7"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
                 <Image Grid.Column="8"
@@ -151,7 +151,7 @@
                             TabIndex="2" />
                 <TextBlock Grid.Column="1"
                            Grid.Row="1"
-                           Style="{StaticResource TransactionTextBlockNumber}"
+                           Style="{StaticResource TextBlock.TransactionNumber}"
                            Text="{Binding Amount, StringFormat=\{0:N\}}" />
                 <TextBox Grid.Column="2"
                          HorizontalAlignment="Left"
@@ -195,7 +195,7 @@
                          VerticalAlignment="Top" />
                 <TextBlock Grid.Column="7"
                            Grid.Row="1"
-                           Style="{StaticResource TransactionTextBlockStyle}"
+                           Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
                 <Image Grid.Column="8"

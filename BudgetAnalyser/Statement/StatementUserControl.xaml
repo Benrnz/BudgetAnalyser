@@ -40,9 +40,9 @@
             </Grid.ColumnDefinitions>
             <StackPanel Margin="8,2,2,2"
                         Orientation="Horizontal">
-                <TextBlock Style="{StaticResource TextBlockHeading1}"
+                <TextBlock Style="{StaticResource TextBlock.Heading1}"
                            Text="{Binding ViewModel.StatementName}" />
-                <TextBlock Style="{StaticResource TextBlockHeading1}" 
+                <TextBlock Style="{StaticResource TextBlock.Heading1}" 
                            Text="*"
                            Visibility="{Binding ViewModel.Dirty, Converter={StaticResource BoolToVisConverter}}"/>
             </StackPanel>

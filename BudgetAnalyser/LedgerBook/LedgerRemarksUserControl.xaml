@@ -6,7 +6,7 @@
             <Button Command="{Binding CloseCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource CloseButton}" />
-            <TextBlock Style="{StaticResource TextBlockHeading1}"
+            <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="Remarks" />
         </StackPanel>
         <TextBox Text="{Binding Remarks}"

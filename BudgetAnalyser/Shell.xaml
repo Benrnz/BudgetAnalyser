@@ -54,7 +54,7 @@
                 <Border Background="{StaticResource PopUpBackground}"
                         Grid.Row="1">
                     <StackPanel>
-                        <TextBlock Style="{StaticResource TextBlockHeading1}" Text="{Binding PopUpTitle}"/>
+                        <TextBlock Style="{StaticResource TextBlock.Heading1}" Text="{Binding PopUpTitle}"/>
                         <ContentPresenter Content="{Binding PopUpDialogContent}"
                                           Margin="10" />
                         <StackPanel HorizontalAlignment="Right"

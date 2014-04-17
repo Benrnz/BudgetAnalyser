@@ -18,7 +18,7 @@
                     HorizontalAlignment="Left"
                     Style="{StaticResource NewButton}"
                     ToolTip="Add new transaction" />
-            <TextBlock Style="{StaticResource TextBlockHeading1}"
+            <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding Title}" />
         </StackPanel>
         <Border Background="{StaticResource MainBackgroundBrush}"
@@ -58,21 +58,21 @@
                           Margin="5"
                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}">
                     <GroupBox.Header>
-                        <TextBlock Style="{StaticResource TextBlockParagraph}"
+                        <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                    Text="Transaction Type" />
                     </GroupBox.Header>
                     <StackPanel>
                         <RadioButton GroupName="TransactionType"
                                      IsChecked="{Binding NewTransactionIsCredit}">
                             <RadioButton.Content>
-                                <TextBlock Style="{StaticResource TextBlockParagraph}"
+                                <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                            Text="Credit Transaction" />
                             </RadioButton.Content>
                         </RadioButton>
                         <RadioButton GroupName="TransactionType"
                                      IsChecked="{Binding NewTransactionIsDebit}">
                             <RadioButton.Content>
-                                <TextBlock Style="{StaticResource TextBlockParagraph}"
+                                <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                            Text="Debit Transaction" />
                             </RadioButton.Content>
                         </RadioButton>
@@ -80,7 +80,7 @@
                 </GroupBox>
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource TextBlockParagraph}"
+                    <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                Text="Narrative:" />
                     <TextBox x:Name="NewTransactionNarrativeTextBox"
                              FontSize="11"
@@ -90,7 +90,7 @@
                 <StackPanel Grid.Column="1"
                             Grid.Row="1"
                             Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource TextBlockParagraph}"
+                    <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                Text="Amount:" />
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              FontSize="11"
@@ -101,7 +101,7 @@
                     <CheckBox IsChecked="{Binding NewTransactionIsReversal}"
                               VerticalAlignment="Center">
                         <CheckBox.Content>
-                            <TextBlock Style="{StaticResource TextBlockParagraph}"
+                            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                                        Text="Reversal?" />
                         </CheckBox.Content>
                     </CheckBox>
@@ -119,7 +119,7 @@
                         Orientation="Horizontal">
                 <TextBlock HorizontalAlignment="Right"
                            Text="Net Amount: " />
-                <TextBlock Style="{StaticResource TextBlockNumber}"
+                <TextBlock Style="{StaticResource TextBlock.Number}"
                            Text="{Binding TransactionsTotal, StringFormat=N}" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Right"
@@ -127,10 +127,10 @@
                         Orientation="Horizontal">
                 <TextBlock HorizontalAlignment="Right"
                            Text="Closing Balance: " />
-                <TextBlock Style="{StaticResource TextBlockNumber}"
+                <TextBlock Style="{StaticResource TextBlock.Number}"
                            Text="{Binding LedgerEntry.Balance, StringFormat=N}" />
             </StackPanel>
-            <TextBlock Style="{StaticResource TextBlockParagraph}"
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
                        Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource BoolToVisConverter}}">
                 <Run>
@@ -139,7 +139,7 @@
                     are paid. Only newly added Ledger Entries can be modified, after saving the Ledger Book it becomes readonly.
                 </Run>
             </TextBlock>
-            <TextBlock Style="{StaticResource TextBlockParagraph}"
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
                        Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}">
                 <Run>
