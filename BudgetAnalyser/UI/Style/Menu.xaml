@@ -1,15 +1,21 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <SolidColorBrush x:Key="Menu.Static.Background"
                      Color="#FFF0F0F0" />
 
     <Style x:Key="RoundMenuButton"
            TargetType="{x:Type Menu}">
+        <Setter Property="Foreground"
+                Value="{StaticResource ButtonGlyphBrush}" />
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ButtonStrokeBrush}" />
+        <Setter Property="BorderThickness"
+                Value="3" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
-        <Setter Property="Background"
-                Value="{StaticResource MainBackgroundBrush}" />
         <Setter Property="FontFamily"
                 Value="{DynamicResource {x:Static SystemFonts.MenuFontFamilyKey}}" />
         <Setter Property="FontSize"
@@ -18,8 +24,6 @@
                 Value="{DynamicResource {x:Static SystemFonts.MenuFontStyleKey}}" />
         <Setter Property="FontWeight"
                 Value="{DynamicResource {x:Static SystemFonts.MenuFontWeightKey}}" />
-        <Setter Property="Foreground"
-                Value="{DynamicResource TextBrush}" />
         <Setter Property="Height"
                 Value="40" />
         <Setter Property="Margin"
@@ -42,36 +46,35 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <SolidColorBrush x:Key="MenuItem.Highlight.Background"
                      Color="#3D26A0DA" />
-    
+
     <SolidColorBrush x:Key="MenuItem.Highlight.Border"
                      Color="#FF26A0DA" />
-    
+
     <SolidColorBrush x:Key="Menu.Disabled.Foreground"
                      Color="#FF707070" />
-    
+
     <SolidColorBrush x:Key="MenuItem.Highlight.Disabled.Background"
                      Color="#0A000000" />
-    
+
     <SolidColorBrush x:Key="MenuItem.Highlight.Disabled.Border"
                      Color="#21000000" />
-    
+
     <SolidColorBrush x:Key="MenuItem.Selected.Border"
                      Color="#FF26A0DA" />
-    
+
     <SolidColorBrush x:Key="MenuItem.Selected.Background"
                      Color="#3D26A0DA" />
-    
+
     <Geometry x:Key="Checkmark">F1 M 10.0,1.2 L 4.7,9.1 L 4.5,9.1 L 0,5.2 L 1.3,3.5 L 4.3,6.1L 8.3,0 L 10.0,1.2 Z</Geometry>
-    
+
     <SolidColorBrush x:Key="Menu.Static.Foreground"
                      Color="#FF212121" />
-    
-    <ControlTemplate
-        x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-        TargetType="{x:Type MenuItem}">
+
+    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+                     TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -184,15 +187,15 @@
             </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <SolidColorBrush x:Key="Menu.Static.Border"
                      Color="#FF999999" />
-    
+
     <SolidColorBrush x:Key="Menu.Static.Separator"
                      Color="#FFD7D7D7" />
-    
+
     <Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
-    
+
     <Style x:Key="MenuScrollButton"
            BasedOn="{x:Null}"
            TargetType="{x:Type RepeatButton}">
@@ -214,11 +217,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter" />
-    
+
     <Geometry x:Key="DownArrow">M 0,0 L 3.5,4 L 7,0 Z</Geometry>
-    
+
     <Style x:Key="{ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}"
            BasedOn="{x:Null}"
            TargetType="{x:Type ScrollViewer}">
@@ -295,9 +298,8 @@
         </Setter>
     </Style>
 
-    <ControlTemplate
-        x:Key="{ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-        TargetType="{x:Type MenuItem}">
+    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+                     TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -421,10 +423,9 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
-    <ControlTemplate
-        x:Key="{ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-        TargetType="{x:Type MenuItem}">
+
+    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+                     TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -507,12 +508,11 @@
             </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Geometry x:Key="RightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
-    
-    <ControlTemplate
-        x:Key="{ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-        TargetType="{x:Type MenuItem}">
+
+    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+                     TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -669,7 +669,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style x:Key="RoundMenuItemButton"
            TargetType="{x:Type MenuItem}">
         <Setter Property="HorizontalContentAlignment"

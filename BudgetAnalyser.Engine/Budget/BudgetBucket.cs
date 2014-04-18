@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0} {1}", Code, Description);
+            return string.Format(CultureInfo.CurrentCulture, "[{0}] {1}", Code, Description);
         }
 
         public bool Validate(StringBuilder validationMessages)

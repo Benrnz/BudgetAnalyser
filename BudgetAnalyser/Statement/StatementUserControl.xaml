@@ -51,11 +51,7 @@
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                         Orientation="Horizontal">
                 <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
-                      Style="{StaticResource RoundMenuButton}"
-                      Foreground="{StaticResource ButtonGlyphBrush}"
-                      Background="{StaticResource ButtonBackgroundBrush}"
-                      BorderBrush="{StaticResource ButtonStrokeBrush}"
-                      BorderThickness="3">
+                      Style="{StaticResource RoundMenuButton}">
                     <Menu.Resources>
                         <Style TargetType="{x:Type TextBlock}"
                                BasedOn="{StaticResource TextBlock.ContextMenuStyle}">

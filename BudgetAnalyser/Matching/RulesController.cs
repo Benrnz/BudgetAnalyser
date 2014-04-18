@@ -21,13 +21,20 @@ namespace BudgetAnalyser.Matching
     /// </summary>
     public class RulesController : ControllerBase, IInitializableController, IShowableController
     {
+        public const string BucketSortKey = "Bucket";
+        public const string DescriptionSortKey = "Description";
+        public const string MatchesSortKey = "Matches";
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
         private RulesGroupedByBucket addNewGroup;
         private MatchingRule addingNewRule;
+        private bool doNotUseFlatListBoxVisibility;
+        private bool doNotUseGroupByListBoxVisibility;
         private MatchingRule doNotUseSelectedRule;
 
         private bool doNotUseShown;
+
+        private string doNotUseSortBy;
 
         /// <summary>
         ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
@@ -55,6 +62,8 @@ namespace BudgetAnalyser.Matching
             uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
+        public event EventHandler SortChanged;
+
         public ICommand CloseCommand
         {
             get { return new RelayCommand(() => Shown = false); }
@@ -65,11 +74,30 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
         }
 
+        public bool FlatListBoxVisibility
+        {
+            get { return this.doNotUseFlatListBoxVisibility; }
+            set
+            {
+                this.doNotUseFlatListBoxVisibility = value;
+                RaisePropertyChanged(() => FlatListBoxVisibility);
+            }
+        }
+
+        public bool GroupByListBoxVisibility
+        {
+            get { return this.doNotUseGroupByListBoxVisibility; }
+            set
+            {
+                this.doNotUseGroupByListBoxVisibility = value;
+                RaisePropertyChanged(() => GroupByListBoxVisibility);
+            }
+        }
+
         public NewRuleController NewRuleController { get; private set; }
 
-        public IEnumerable<MatchingRule> Rules { get; private set; }
+        public ObservableCollection<MatchingRule> Rules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; set; }
-        //public BindingList<MatchingRule> Rules { get; private set; }
 
         public MatchingRule SelectedRule
         {
@@ -93,6 +121,43 @@ namespace BudgetAnalyser.Matching
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
+        }
+
+        public string SortBy
+        {
+            get { return this.doNotUseSortBy; }
+            set
+            {
+                this.doNotUseSortBy = value;
+                RaisePropertyChanged(() => SortBy);
+                GroupByListBoxVisibility = false;
+                FlatListBoxVisibility = false;
+                switch (this.doNotUseSortBy)
+                {
+                    case BucketSortKey:
+                        GroupByListBoxVisibility = true;
+                        break;
+
+                    case MatchesSortKey:
+                    case DescriptionSortKey:
+                        FlatListBoxVisibility = true;
+                        break;
+
+                    default:
+                        throw new ArgumentException(this.doNotUseSortBy + " is not a valid sort by argument.");
+                }
+
+                EventHandler handler = SortChanged;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public ICommand SortCommand
+        {
+            get { return new RelayCommand<string>(OnSortCommandExecute); }
         }
 
         public void CreateNewRuleFromTransaction(Transaction transaction)
@@ -141,7 +206,7 @@ namespace BudgetAnalyser.Matching
         public void SaveRules()
         {
             this.ruleRepository.SaveRules(Rules, GetFileName());
-            Rules = RulesGroupedByBucket.SelectMany(g => g.Rules).OrderBy(r => r.Description);
+            Rules = new ObservableCollection<MatchingRule>(RulesGroupedByBucket.SelectMany(g => g.Rules).OrderBy(r => r.Description));
         }
 
         protected virtual string GetFileName()
@@ -161,10 +226,12 @@ namespace BudgetAnalyser.Matching
                 .OrderBy(r => r.Description)
                 .ToList();
 
-            Rules = rules;
+            Rules = new ObservableCollection<MatchingRule>(rules);
+            SortBy = BucketSortKey;
 
             IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
-                .Select(group => new RulesGroupedByBucket(group.Key, group));
+                .Select(group => new RulesGroupedByBucket(group.Key, group))
+                .OrderBy(group => group.Bucket.Code);
 
             RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(grouped.ToList());
         }
@@ -243,6 +310,12 @@ namespace BudgetAnalyser.Matching
             {
                 RemoveRule();
             }
+        }
+
+        private void OnSortCommandExecute(string sortBy)
+        {
+            // TODO
+            SortBy = sortBy;
         }
 
         private void RemoveRule()
