@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
@@ -24,6 +25,7 @@ namespace BudgetAnalyser.Matching
         public const string BucketSortKey = "Bucket";
         public const string DescriptionSortKey = "Description";
         public const string MatchesSortKey = "Matches";
+        private readonly ILogger logger;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
         private RulesGroupedByBucket addNewGroup;
@@ -35,6 +37,8 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseShown;
 
         private string doNotUseSortBy;
+
+        private Guid debugId = Guid.NewGuid();
 
         /// <summary>
         ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
@@ -52,6 +56,8 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("uiContext");
             }
 
+            this.logger = uiContext.Logger;
+            this.logger.LogInfo(() => "RulesController Constructed with Id: " + this.debugId);
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
             NewRuleController = uiContext.NewRuleController;
@@ -61,6 +67,16 @@ namespace BudgetAnalyser.Matching
             uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
+
+        /// <summary>
+        ///     These events are required because the ListBoxes do not update when items are added. God only knows why.
+        /// </summary>
+        public event EventHandler RuleAdded;
+
+        /// <summary>
+        ///     These events are required because the ListBoxes do not update when items are removed. God only knows why.
+        /// </summary>
+        public event EventHandler RuleRemoved;
 
         public event EventHandler SortChanged;
 
@@ -206,7 +222,6 @@ namespace BudgetAnalyser.Matching
         public void SaveRules()
         {
             this.ruleRepository.SaveRules(Rules, GetFileName());
-            Rules = new ObservableCollection<MatchingRule>(RulesGroupedByBucket.SelectMany(g => g.Rules).OrderBy(r => r.Description));
         }
 
         protected virtual string GetFileName()
@@ -242,25 +257,25 @@ namespace BudgetAnalyser.Matching
             if (existingGroup == null)
             {
                 this.addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
-                //RulesGroupedByBucket.AddingNew += OnAddingNewGroup;
-                //RulesGroupedByBucket.AddNew();
-                //RulesGroupedByBucket.AddingNew -= OnAddingNewGroup;
-                //RulesGroupedByBucket.EndNew(0);
                 RulesGroupedByBucket.Add(this.addNewGroup);
+                Rules.Add(rule);
                 this.addNewGroup = null;
             }
             else
             {
                 this.addingNewRule = rule;
-                //existingGroup.Rules.AddingNew += OnAddingNewRuleToGroup;
-                //existingGroup.Rules.AddNew();
-                //existingGroup.Rules.AddingNew -= OnAddingNewRuleToGroup;
-                //existingGroup.Rules.EndNew(0);
                 existingGroup.Rules.Add(this.addingNewRule);
+                Rules.Add(rule);
                 this.addingNewRule = null;
             }
 
             SaveRules();
+            this.logger.LogInfo(() => "Matching Rule Added: " + rule);
+            EventHandler handler = RuleAdded;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         private bool CanExecuteDeleteRuleCommand()
@@ -326,9 +341,28 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            existingGroup.Rules.Remove(SelectedRule);
+            bool success1 = existingGroup.Rules.Remove(SelectedRule);
+            bool success2 = Rules.Remove(SelectedRule);
+            MatchingRule removedRule = SelectedRule;
             SelectedRule = null;
             SaveRules();
+
+            this.logger.LogInfo(() => "Matching Rule is being Removed: " + removedRule);
+            if (!success1)
+            {
+                this.logger.LogWarning(() => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
+            }
+
+            if (!success2)
+            {
+                this.logger.LogWarning(() => "Matching Rule was not removed successfully from the flat list: " + removedRule);
+            }
+
+            EventHandler handler = RuleRemoved;
+            if (handler != null)
+            {
+                handler(removedRule, EventArgs.Empty);
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             this.bucketRepository = bucketRepository;
+            RuleId = Guid.NewGuid();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
