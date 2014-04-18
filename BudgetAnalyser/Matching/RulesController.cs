@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace BudgetAnalyser.Matching
         private readonly IMatchingRuleRepository ruleRepository;
         private RulesGroupedByBucket addNewGroup;
         private MatchingRule addingNewRule;
+        private MatchingRule doNotUseSelectedRule;
 
         private bool doNotUseShown;
 
@@ -46,16 +48,11 @@ namespace BudgetAnalyser.Matching
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
             NewRuleController = uiContext.NewRuleController;
-            RulesGroupedByBucket = new BindingList<RulesGroupedByBucket>();
+            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
 
             MessengerInstance = uiContext.Messenger;
             uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-        }
-
-        public ICommand DeleteRuleCommand
-        {
-            get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
         }
 
         public ICommand CloseCommand
@@ -63,20 +60,36 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(() => Shown = false); }
         }
 
+        public ICommand DeleteRuleCommand
+        {
+            get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
+        }
+
         public NewRuleController NewRuleController { get; private set; }
 
         public IEnumerable<MatchingRule> Rules { get; private set; }
-        public BindingList<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
+        public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; set; }
         //public BindingList<MatchingRule> Rules { get; private set; }
 
-        public MatchingRule SelectedRule { get; set; }
+        public MatchingRule SelectedRule
+        {
+            get { return this.doNotUseSelectedRule; }
+            set
+            {
+                this.doNotUseSelectedRule = value;
+                RaisePropertyChanged(() => SelectedRule);
+            }
+        }
 
         public bool Shown
         {
             get { return this.doNotUseShown; }
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
@@ -153,7 +166,7 @@ namespace BudgetAnalyser.Matching
             IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
                 .Select(group => new RulesGroupedByBucket(group.Key, group));
 
-            RulesGroupedByBucket = new BindingList<RulesGroupedByBucket>(grouped.ToList());
+            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(grouped.ToList());
         }
 
         private void AddToList(MatchingRule rule)
@@ -162,19 +175,21 @@ namespace BudgetAnalyser.Matching
             if (existingGroup == null)
             {
                 this.addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
-                RulesGroupedByBucket.AddingNew += OnAddingNewGroup;
-                RulesGroupedByBucket.AddNew();
-                RulesGroupedByBucket.AddingNew -= OnAddingNewGroup;
-                RulesGroupedByBucket.EndNew(0);
+                //RulesGroupedByBucket.AddingNew += OnAddingNewGroup;
+                //RulesGroupedByBucket.AddNew();
+                //RulesGroupedByBucket.AddingNew -= OnAddingNewGroup;
+                //RulesGroupedByBucket.EndNew(0);
+                RulesGroupedByBucket.Add(this.addNewGroup);
                 this.addNewGroup = null;
             }
             else
             {
                 this.addingNewRule = rule;
-                existingGroup.Rules.AddingNew += OnAddingNewRuleToGroup;
-                existingGroup.Rules.AddNew();
-                existingGroup.Rules.AddingNew -= OnAddingNewRuleToGroup;
-                existingGroup.Rules.EndNew(0);
+                //existingGroup.Rules.AddingNew += OnAddingNewRuleToGroup;
+                //existingGroup.Rules.AddNew();
+                //existingGroup.Rules.AddingNew -= OnAddingNewRuleToGroup;
+                //existingGroup.Rules.EndNew(0);
+                existingGroup.Rules.Add(this.addingNewRule);
                 this.addingNewRule = null;
             }
 

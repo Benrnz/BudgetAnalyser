@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,7 +16,7 @@ namespace BudgetAnalyser.Matching
     public class RulesGroupedByBucket : INotifyPropertyChanged
     {
         private BudgetBucket bucket;
-        private BindingList<MatchingRule> rules;
+        private ObservableCollection<MatchingRule> rules;
 
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
@@ -30,7 +31,7 @@ namespace BudgetAnalyser.Matching
             }
 
             Bucket = bucket;
-            Rules = new BindingList<MatchingRule>(rules.ToList());
+            Rules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
         public BudgetBucket Bucket
@@ -43,10 +44,10 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public BindingList<MatchingRule> Rules
+        public ObservableCollection<MatchingRule> Rules
         {
             get { return this.rules; }
-            private set
+            set
             {
                 this.rules = value;
                 OnPropertyChanged();

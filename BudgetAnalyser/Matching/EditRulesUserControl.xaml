@@ -77,15 +77,24 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <StackPanel Grid.ColumnSpan="2"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
             <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource CloseButton}" />
+                    Style="{StaticResource LeftButton}" 
+                    ToolTip="Back to transactions view"/>
         </StackPanel>
-        <ListBox Grid.Row="1"
+
+        <TextBlock Grid.Row="1"
+                   Margin="5"
+                   Style="{StaticResource TextBlock.Heading1}"
+                   Text="Matching Rules" />
+
+        <ListBox Grid.Row="2"
                  ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
                  ItemsSource="{Binding RulesGroupedByBucket}">
             <ListBox.ContextMenu>
@@ -103,6 +112,130 @@
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1" Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+            <Border 
+                    Background="{StaticResource TileBackgroundBrush}"
+                    Margin="52,5,5,-2"
+                    Width="100"
+                    Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}">
+                <TextBlock Style="{StaticResource TextBlock.Heading1}"
+                           Text="Details"
+                           Margin="5" />
+            </Border>
+            <Button Style="{StaticResource CloseButton}"
+                    Command="{Binding DeleteRuleCommand}"
+                    ToolTip="Delete Rule"
+                    Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}"/>
+        </StackPanel>
+        
+        <Border Background="{StaticResource TileBackgroundBrush}"
+                BorderThickness="2"
+                Margin="50,0,5,5"
+                Grid.Row="2"
+                Grid.Column="1"
+                Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}">
+            <Grid Margin="5"
+                  VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <Style x:Key="TextBlock.RuleDataStyle"
+                           TargetType="TextBlock"
+                           BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Background"
+                                Value="{StaticResource TileBackgroundAlternateBrush}" />
+                        <Setter Property="HorizontalAlignment"
+                                Value="Stretch" />
+                        <Setter Property="Padding"
+                                Value="3,1,3,1" />
+                    </Style>
+                </Grid.Resources>
+
+                <TextBlock Text="This rule was last matched to a transaction on: "
+                           Style="{StaticResource TextBlock.LabelStyle}" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding SelectedRule.LastMatch, StringFormat=g}"
+                           Style="{StaticResource TextBlock.RuleDataStyle}" />
+                <TextBlock Grid.Row="1"
+                           Text="This rule has been matched"
+                           Style="{StaticResource TextBlock.LabelStyle}" />
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            Margin="2"
+                            Background="{StaticResource TileBackgroundAlternateBrush}">
+                    <TextBlock Text="{Binding SelectedRule.MatchCount}" />
+                    <TextBlock Text=" times" />
+                </StackPanel>
+                <TextBlock Grid.Row="2"
+                           Text="Match by description:"
+                           Style="{StaticResource TextBlock.LabelStyle}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding SelectedRule.Description}"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Visibility="{Binding SelectedRule.Description, Converter={StaticResource NullToVisConverter}}" />
+                <TextBlock Grid.Row="3"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Match by amount:" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding SelectedRule.Amount}"
+                           Visibility="{Binding SelectedRule.Amount, Converter={StaticResource NullToVisConverter}}"
+                           Style="{StaticResource TextBlock.RuleDataStyle}" />
+                <TextBlock Grid.Row="4"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Match by references:" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Visibility="{Binding SelectedRule.Reference1, Converter={StaticResource NullToVisConverter}}"
+                           Text="{Binding SelectedRule.Reference1}" />
+                <TextBlock Grid.Row="5"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Text="{Binding SelectedRule.Reference2}"
+                           Visibility="{Binding SelectedRule.Reference2, Converter={StaticResource NullToVisConverter}}" />
+                <TextBlock Grid.Row="6"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Text="{Binding SelectedRule.Reference3}"
+                           Visibility="{Binding SelectedRule.Reference3, Converter={StaticResource NullToVisConverter}}" />
+                <TextBlock Grid.Row="7"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Match by transaction type:" />
+                <TextBlock Grid.Row="7"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Text="{Binding SelectedRule.TransactionType}"
+                           Visibility="{Binding SelectedRule.TransactionType, Converter={StaticResource NullToVisConverter}}" />
+                <TextBlock Grid.Row="8"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Rule ID:" />
+                <TextBlock Grid.Row="8"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.RuleDataStyle}"
+                           Text="{Binding SelectedRule.RuleId}" />
+            </Grid>
+        </Border>
     </Grid>
 
 </UserControl>

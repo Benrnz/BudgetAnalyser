@@ -61,6 +61,10 @@
         DarkSeaGreen
     </Color>
 
+    <Color x:Key="TextBlock.LabelColour">
+        DarkSeaGreen
+    </Color>
+
     <Color x:Key="Shadow">
         Black
     </Color>
@@ -102,6 +106,9 @@
     </Color>
 
     <SolidColorBrush x:Key="PopUpBackground" Color="#FF003300" />
+
+    <SolidColorBrush x:Key="TextBlock.LabelBrush"
+                     Color="{StaticResource TextBlock.LabelColour}" />
 
     <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource BorderLightColor}" />
 
