@@ -4,7 +4,7 @@
         xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
         xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
         Icon="..\UI\Assets\PieChart.png"
-        Title="Spending Trend View"
+        Title="'Spent Monthly Bucket' Graphs"
         Width="610">
 
     <Window.Resources>

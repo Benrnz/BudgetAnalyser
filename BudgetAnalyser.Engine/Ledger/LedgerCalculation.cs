@@ -7,6 +7,11 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, GlobalFilterCriteria filter)
         {
+            if (ledgerBook == null)
+            {
+                return null;
+            }
+
             if (filter.Cleared)
             {
                 return ledgerBook.DatedEntries.FirstOrDefault();
