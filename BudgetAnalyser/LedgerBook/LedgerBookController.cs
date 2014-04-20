@@ -39,7 +39,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         private LedgerEntryLine newLedgerLine;
 
-        private string pendingFileName;
+        private string ledgerBookFileName;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
@@ -181,12 +181,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 if (value == this.doNotUseShown) return;
                 this.doNotUseShown = value;
-                if (!string.IsNullOrWhiteSpace(this.pendingFileName))
-                {
-                    LoadLedgerBookFromFile(this.pendingFileName);
-                    this.pendingFileName = null;
-                }
-
                 RaisePropertyChanged(() => Shown);
             }
         }
@@ -257,12 +251,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteCloseLedgerBookCommand()
         {
-            return LedgerBook != null || !string.IsNullOrWhiteSpace(this.pendingFileName);
+            return LedgerBook != null || !string.IsNullOrWhiteSpace(this.ledgerBookFileName);
         }
 
         private bool CanExecuteNewLedgerBookCommand()
         {
-            return LedgerBook == null && string.IsNullOrWhiteSpace(this.pendingFileName);
+            return LedgerBook == null && string.IsNullOrWhiteSpace(this.ledgerBookFileName);
         }
 
         private bool CanExecuteSaveCommand()
@@ -390,14 +384,20 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             var lastLedgerBookFileName = message.RehydratedModels[typeof(LastLedgerBookLoadedV1)].AdaptModel<string>();
-            this.pendingFileName = lastLedgerBookFileName;
+            this.ledgerBookFileName = lastLedgerBookFileName;
+
+            if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
+            {
+                LoadLedgerBookFromFile(this.ledgerBookFileName);
+                this.ledgerBookFileName = null;
+            }
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             var lastLedgerBook = new LastLedgerBookLoadedV1
             {
-                Model = LedgerBook == null ? this.pendingFileName : LedgerBook.FileName,
+                Model = LedgerBook == null ? this.ledgerBookFileName : LedgerBook.FileName,
             };
             message.PersistThisModel(lastLedgerBook);
         }
@@ -433,7 +433,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             CheckIfSaveRequired();
             LedgerBook = null;
-            this.pendingFileName = null;
+            this.ledgerBookFileName = null;
             MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
