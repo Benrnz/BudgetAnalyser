@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -28,8 +27,6 @@ namespace BudgetAnalyser.Matching
         private readonly ILogger logger;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
-        private RulesGroupedByBucket addNewGroup;
-        private MatchingRule addingNewRule;
         private bool doNotUseFlatListBoxVisibility;
         private bool doNotUseGroupByListBoxVisibility;
         private MatchingRule doNotUseSelectedRule;
@@ -37,8 +34,6 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseShown;
 
         private string doNotUseSortBy;
-
-        private Guid debugId = Guid.NewGuid();
 
         /// <summary>
         ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
@@ -57,7 +52,6 @@ namespace BudgetAnalyser.Matching
             }
 
             this.logger = uiContext.Logger;
-            this.logger.LogInfo(() => "RulesController Constructed with Id: " + this.debugId);
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.ruleRepository = ruleRepository;
             NewRuleController = uiContext.NewRuleController;
@@ -256,17 +250,14 @@ namespace BudgetAnalyser.Matching
             RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(group => group.Bucket == rule.Bucket);
             if (existingGroup == null)
             {
-                this.addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
-                RulesGroupedByBucket.Add(this.addNewGroup);
+                var addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
+                RulesGroupedByBucket.Add(addNewGroup);
                 Rules.Add(rule);
-                this.addNewGroup = null;
             }
             else
             {
-                this.addingNewRule = rule;
-                existingGroup.Rules.Add(this.addingNewRule);
+                existingGroup.Rules.Add(rule);
                 Rules.Add(rule);
-                this.addingNewRule = null;
             }
 
             SaveRules();
@@ -281,16 +272,6 @@ namespace BudgetAnalyser.Matching
         private bool CanExecuteDeleteRuleCommand()
         {
             return SelectedRule != null;
-        }
-
-        private void OnAddingNewGroup(object sender, AddingNewEventArgs addingNewEventArgs)
-        {
-            addingNewEventArgs.NewObject = this.addNewGroup;
-        }
-
-        private void OnAddingNewRuleToGroup(object sender, AddingNewEventArgs addingNewEventArgs)
-        {
-            addingNewEventArgs.NewObject = this.addingNewRule;
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
