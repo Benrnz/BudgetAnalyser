@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Matching
         private readonly ILogger logger;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly IMatchingRuleRepository ruleRepository;
+        private bool doNotUseEditingRule;
         private bool doNotUseFlatListBoxVisibility;
         private bool doNotUseGroupByListBoxVisibility;
         private MatchingRule doNotUseSelectedRule;
@@ -84,6 +85,31 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
         }
 
+        public ICommand EditRuleCommand
+        {
+            get { return new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null); }
+        }
+
+        public bool EditingRule
+        {
+            get { return this.doNotUseEditingRule; }
+            private set
+            {
+                this.doNotUseEditingRule = value;
+                RaisePropertyChanged(() => EditingRule);
+                RaisePropertyChanged(() => ShowReadonlyRuleDetails);
+            }
+        }
+
+        public bool ShowReadonlyRuleDetails
+        {
+            get
+            {
+                var result = SelectedRule != null && !EditingRule;
+                return result;
+            }
+        }
+
         public bool FlatListBoxVisibility
         {
             get { return this.doNotUseFlatListBoxVisibility; }
@@ -109,6 +135,11 @@ namespace BudgetAnalyser.Matching
         public ObservableCollection<MatchingRule> Rules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; set; }
 
+        public ICommand SaveRuleCommand
+        {
+            get { return new RelayCommand(OnSaveRuleCommandExecute, () => SelectedRule != null && EditingRule); }
+        }
+
         public MatchingRule SelectedRule
         {
             get { return this.doNotUseSelectedRule; }
@@ -116,6 +147,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseSelectedRule = value;
                 RaisePropertyChanged(() => SelectedRule);
+                RaisePropertyChanged(() => ShowReadonlyRuleDetails);
             }
         }
 
@@ -308,6 +340,17 @@ namespace BudgetAnalyser.Matching
             }
         }
 
+        private void OnEditRuleCommandExecute()
+        {
+            EditingRule = true;
+        }
+
+        private void OnSaveRuleCommandExecute()
+        {
+            EditingRule = false;
+            SaveRules();
+        }
+
         private void OnSortCommandExecute(string sortBy)
         {
             // TODO
@@ -316,6 +359,11 @@ namespace BudgetAnalyser.Matching
 
         private void RemoveRule()
         {
+            if (EditingRule)
+            {
+                EditingRule = false;
+            }
+
             RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(g => g.Bucket == SelectedRule.Bucket);
             if (existingGroup == null)
             {
