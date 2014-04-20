@@ -4,6 +4,9 @@
     <Color x:Key="BorderLightColor">
         #FF211AA9
     </Color>
+    <Color x:Key="ToolTip.BackgroundColour">
+        NavajoWhite
+    </Color>
 
     <Color x:Key="BorderDarkColor">
         #FF444444
@@ -105,7 +108,12 @@
         DarkOrange
     </Color>
 
-    <SolidColorBrush x:Key="PopUpBackground" Color="#FF003300" />
+    <Color x:Key="Popup.Background">#FF003300</Color>
+
+    <SolidColorBrush x:Key="ToolTip.Background"
+                     Color="{StaticResource ToolTip.BackgroundColour}" />
+
+    <SolidColorBrush x:Key="PopUpBackground" Color="{StaticResource Popup.Background}" />
 
     <SolidColorBrush x:Key="TextBlock.LabelBrush"
                      Color="{StaticResource TextBlock.LabelColour}" />

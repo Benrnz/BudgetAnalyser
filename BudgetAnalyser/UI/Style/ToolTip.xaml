@@ -1,21 +1,40 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style TargetType="{x:Type ToolTip}">
+
+    <Style TargetType="ToolTip">
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
+        <Setter Property="HasDropShadow"
+                Value="True" />
         <Setter Property="Template">
             <Setter.Value>
 
                 <ControlTemplate TargetType="ToolTip">
-                    <StackPanel>
-                        <TextBlock Background="{StaticResource TextBrush}"
-                                   FontWeight="Bold"
+                    <Border x:Name="Border"
+                            Background="{StaticResource ToolTip.Background}"
+                            BorderBrush="{StaticResource ControlBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Height="{TemplateBinding Height}"
+                            Margin="0,0,0,50"
+                            MaxWidth="600"
+                            MinHeight="30"
+                            MinWidth="100"
+                            Width="{TemplateBinding Width}">
+                        <Border.Effect>
+                            <DropShadowEffect  Direction="315" />
+                        </Border.Effect>
+                        <TextBlock FontStyle="Italic"
                                    Foreground="{StaticResource MainBackgroundBrush}"
-                                   Padding="10"
-                                   Text="{TemplateBinding Content}" />
-                    </StackPanel>
+                                   HorizontalAlignment="Left"
+                                   Margin="4"
+                                   Text="{TemplateBinding Content}"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Top" />
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
 </ResourceDictionary>
