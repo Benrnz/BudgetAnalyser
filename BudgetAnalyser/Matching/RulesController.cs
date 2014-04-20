@@ -66,12 +66,12 @@ namespace BudgetAnalyser.Matching
         /// <summary>
         ///     These events are required because the ListBoxes do not update when items are added. God only knows why.
         /// </summary>
-        public event EventHandler RuleAdded;
+        public event EventHandler<MatchingRuleEventArgs> RuleAdded;
 
         /// <summary>
         ///     These events are required because the ListBoxes do not update when items are removed. God only knows why.
         /// </summary>
-        public event EventHandler RuleRemoved;
+        public event EventHandler<MatchingRuleEventArgs> RuleRemoved;
 
         public event EventHandler SortChanged;
 
@@ -294,10 +294,10 @@ namespace BudgetAnalyser.Matching
 
             SaveRules();
             this.logger.LogInfo(() => "Matching Rule Added: " + rule);
-            EventHandler handler = RuleAdded;
+            var handler = RuleAdded;
             if (handler != null)
             {
-                handler(this, EventArgs.Empty);
+                handler(this, new MatchingRuleEventArgs { Rule = rule });
             }
         }
 
@@ -387,10 +387,10 @@ namespace BudgetAnalyser.Matching
                 this.logger.LogWarning(() => "Matching Rule was not removed successfully from the flat list: " + removedRule);
             }
 
-            EventHandler handler = RuleRemoved;
+            var handler = RuleRemoved;
             if (handler != null)
             {
-                handler(removedRule, EventArgs.Empty);
+                handler(removedRule, new MatchingRuleEventArgs { Rule = removedRule });
             }
         }
     }

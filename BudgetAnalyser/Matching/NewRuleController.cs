@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Matching
 
         public string Title
         {
-            get { return "New Matching Rule for: " + Bucket.Description; }
+            get { return "New Matching Rule for: " + Bucket; }
         }
 
         public string TransactionType

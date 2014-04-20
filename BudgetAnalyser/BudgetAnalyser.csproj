@@ -153,6 +153,7 @@
     </Compile>
     <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Matching\NewRuleController.cs" />
+    <Compile Include="Matching\MatchingRuleEventArgs.cs" />
     <Compile Include="Matching\RulesController.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
     <Compile Include="RequestShellDialogMessage.cs" />

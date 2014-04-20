@@ -86,6 +86,12 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
+            // Must account for when rules are deleted - this method gets called for adding and deleting to the selection.
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+
             var selectedRule = (MatchingRule)e.AddedItems[0];
 
             // Chosen not to use Data Binding here.  The rule list box inside the group data template does not deselect the selected item when a different 
@@ -94,9 +100,9 @@ namespace BudgetAnalyser.Matching
             Controller.SelectedRule = selectedRule;
         }
 
-        private void OnRuleAdded(object sender, EventArgs e)
+        private void OnRuleAdded(object sender, MatchingRuleEventArgs e)
         {
-            var rule = (MatchingRule)sender;
+            MatchingRule rule = e.Rule;
             var flatList = (ObservableCollection<MatchingRule>)this.FlatListBox.ItemsSource;
             if (flatList.All(r => r.RuleId != rule.RuleId))
             {
