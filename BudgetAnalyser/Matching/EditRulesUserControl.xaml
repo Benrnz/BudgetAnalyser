@@ -64,8 +64,9 @@
                 <ScrollViewer MaxHeight="300"
                               VerticalScrollBarVisibility="Visible">
                     <ListBox ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
-                             ItemsSource="{Binding Rules}"
-                             SelectedItem="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}, AncestorLevel=1}, Path=DataContext.SelectedRule}" />
+                             SelectionChanged="OnGroupListBoxRuleSelectionChanged"
+                             Loaded="OnGroupListBoxLoaded"
+                             ItemsSource="{Binding Rules}" />
                 </ScrollViewer>
             </Expander>
         </DataTemplate>

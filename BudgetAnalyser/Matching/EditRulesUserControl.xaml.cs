@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ namespace BudgetAnalyser.Matching
     /// </summary>
     public partial class EditRulesUserControl : UserControl
     {
+        private bool backgroundUpdate;
         private string currentSort;
 
         public EditRulesUserControl()
@@ -43,6 +45,53 @@ namespace BudgetAnalyser.Matching
                 Controller.RuleAdded += OnRuleAdded;
                 this.currentSort = Controller.SortBy;
             }
+        }
+
+        private void OnGroupListBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            var listBox = e.OriginalSource as ListBox;
+            if (listBox == null)
+            {
+                return;
+            }
+
+            Debug.WriteLine("EditRulesUserControl: Subscribing to SelectedRule change event");
+            Controller.PropertyChanged += (s, eventArgs) =>
+            {
+                // Ensure all other listboxes deselect their currently selected item when another is chosen in different listbox.
+                if (eventArgs.PropertyName == "SelectedRule")
+                {
+                    Debug.WriteLine("EditRulesUserControl: SelectedRule Changed handled by a listbox");
+                    if (listBox.SelectedItem == null || Controller.SelectedRule == null)
+                    {
+                        return;
+                    }
+
+                    if (listBox.SelectedItem.Equals(Controller.SelectedRule))
+                    {
+                        return;
+                    }
+
+                    this.backgroundUpdate = true;
+                    listBox.SelectedItem = null;
+                    this.backgroundUpdate = false;
+                }
+            };
+        }
+
+        private void OnGroupListBoxRuleSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.backgroundUpdate)
+            {
+                return;
+            }
+
+            var selectedRule = (MatchingRule)e.AddedItems[0];
+
+            // Chosen not to use Data Binding here.  The rule list box inside the group data template does not deselect the selected item when a different 
+            // rule is chosen in a different group.  This is a big problem, because if code is written to deselect it manually (set it to null), this triggers data binding
+            // to update the controller, which then deselects the rule the user has just chosen.
+            Controller.SelectedRule = selectedRule;
         }
 
         private void OnRuleAdded(object sender, EventArgs e)

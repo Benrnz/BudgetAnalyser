@@ -63,7 +63,7 @@ namespace BudgetAnalyser
         {
             Current.Exit -= OnApplicationExit;
             Messenger.Default.Send(new ShutdownMessage());
-            this.logger.LogAlways(() => "Application Exiting");
+            this.logger.LogAlways(() => "=========== Application Exiting ===========");
         }
 
         private void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
