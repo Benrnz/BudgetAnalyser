@@ -5,7 +5,8 @@
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding CloseCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource CloseButton}" />
+                    Style="{StaticResource LeftButton}"
+                    ToolTip="Close and go back"/>
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="Remarks" />
         </StackPanel>

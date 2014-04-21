@@ -74,7 +74,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <Button Style="{StaticResource CloseButton}" />
+            <Button Style="{StaticResource LeftButton}"
+                    ToolTip="Close and go back"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="All budgets from the file:" />

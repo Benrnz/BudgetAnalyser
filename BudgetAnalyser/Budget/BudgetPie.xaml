@@ -3,11 +3,11 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d"
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
 
@@ -57,28 +57,32 @@
     <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!-- Expense Pie -->
+            <!-- Pie charts -->
             <RowDefinition Height="*" />
             <!-- Expense Pie Slice Details -->
             <RowDefinition Height="Auto" />
-            <!-- Income Pie -->
-            <RowDefinition Height="*" />
-            <!-- Income Pie Slice Details -->
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!-- Expense Pie -->
+            <ColumnDefinition Width="*" />
+            <!-- Income Pie -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Button Command="{Binding CloseCommand}"
-                HorizontalAlignment="Right"
-                Style="{StaticResource CloseButton}"
+                HorizontalAlignment="Left"
+                Style="{StaticResource LeftButton}"
+                ToolTip="Close and go back"
                 VerticalAlignment="Top" />
         <!-- Expense Pie -->
         <Border x:Name="ExpenseBorder"
                 Background="{StaticResource DebitBackgroundLightBrush}"
+                Grid.Column="1"
                 Grid.Row="1"
-                Grid.RowSpan="2"
                 HorizontalAlignment="Stretch"
                 Margin="5"
                 VerticalAlignment="Stretch" />
         <chartingToolkit:Chart BorderThickness="0"
+                               Grid.Column="1"
                                Grid.Row="1"
                                Height="{Binding ElementName=ExpenseBorder, Path=ActualHeight}"
                                Margin="10"
@@ -92,7 +96,8 @@
                                        LegendItemStyle="{StaticResource LegendItemStyle}"
                                        SelectionChanged="OnExpenseChartSelectionChanged" />
         </chartingToolkit:Chart>
-        <StackPanel Grid.Row="2"
+        <StackPanel Grid.Column="1"
+                    Grid.Row="2"
                     Margin="15,-10,15,15"
                     Orientation="Horizontal">
             <TextBlock Margin="2"
@@ -107,13 +112,14 @@
         <!-- Income Pie -->
         <Border x:Name="IncomeBorder"
                 Background="{StaticResource CreditBackground2Brush}"
-                Grid.Row="3"
-                Grid.RowSpan="2"
+                Grid.Column="0"
+                Grid.Row="1"
                 HorizontalAlignment="Stretch"
                 Margin="5"
                 VerticalAlignment="Stretch" />
         <chartingToolkit:Chart BorderThickness="0"
-                               Grid.Row="3"
+                               Grid.Column="0"
+                               Grid.Row="1"
                                Height="{Binding ElementName=IncomeBorder, Path=ActualHeight}"
                                Margin="10"
                                Title="Income Pie"
@@ -126,7 +132,8 @@
                                        LegendItemStyle="{StaticResource LegendItemStyle}"
                                        SelectionChanged="OnIncomeChartSelectionChanged" />
         </chartingToolkit:Chart>
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Column="0"
+                    Grid.Row="2"
                     Margin="15,-10,15,15"
                     Orientation="Horizontal">
             <TextBlock Margin="2"

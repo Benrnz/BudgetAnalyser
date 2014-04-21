@@ -26,7 +26,8 @@
         <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource CloseButton}" />
+            <Button Style="{StaticResource LeftButton}" 
+                    ToolTip="Close and go back"/>
         </StackPanel>
         <Grid Grid.Row="1"
               Grid.RowSpan="3">

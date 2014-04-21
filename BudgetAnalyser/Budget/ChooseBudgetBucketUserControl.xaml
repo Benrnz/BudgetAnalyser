@@ -9,9 +9,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Style="{StaticResource CloseButton}"
+            <Button Style="{StaticResource LeftButton}"
                     Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Left" />
+                    HorizontalAlignment="Left"
+                    ToolTip="Close and go back"/>
             <TextBlock Margin="10,2,2,2"
                        Text="Budget Buckets" />
         </StackPanel>

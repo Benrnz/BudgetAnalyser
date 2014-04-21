@@ -13,7 +13,8 @@
                     Orientation="Horizontal">
             <Button Command="{Binding CloseTransactionsViewCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource CloseButton}" />
+                    Style="{StaticResource LeftButton}"
+                    ToolTip="Close and go back"/>
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource NewButton}"
