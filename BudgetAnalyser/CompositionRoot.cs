@@ -9,7 +9,7 @@ using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.SpendingTrend;
+using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Statement;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -54,7 +54,7 @@ namespace BudgetAnalyser
                 .SingleInstance();
 
 
-            builder.RegisterInstance<Func<BucketSpendingController>>(() => new BucketSpendingController(new SpendingGraphAnalyser()));
+            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new SpendingGraphAnalyser()));
 
 
             // Register Messenger Singleton from MVVM Light
@@ -89,7 +89,7 @@ namespace BudgetAnalyser
             uiContext.GlobalFilterController = container.Resolve<GlobalFilterController>();
             uiContext.LedgerTransactionsController = container.Resolve<LedgerTransactionsController>();
             uiContext.LedgerBookController = container.Resolve<LedgerBookController>();
-            uiContext.SpendingTrendController = container.Resolve<SpendingTrendController>();
+            uiContext.CurrentMonthBurnDownGraphsController = container.Resolve<CurrentMonthBurnDownGraphsController>();
             uiContext.StatementController = container.Resolve<StatementController>();
             uiContext.NewRuleController = container.Resolve<NewRuleController>();
             uiContext.RulesController = container.Resolve<RulesController>();

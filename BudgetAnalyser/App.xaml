@@ -8,7 +8,7 @@
              xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
-             xmlns:spendingTrend="clr-namespace:BudgetAnalyser.SpendingTrend"
+             xmlns:burndown="clr-namespace:BudgetAnalyser.BurnDownGraphs"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
              xmlns:matching="clr-namespace:BudgetAnalyser.Matching">
@@ -51,8 +51,8 @@
             <DataTemplate DataType="{x:Type budget:BudgetPieController}">
                 <budget:BudgetPie />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type budget:BucketSpendingController}">
-                <spendingTrend:BucketSpendingLineChart />
+            <DataTemplate DataType="{x:Type burndown:BucketBurnDownController}">
+                <burndown:BucketBurnDownLineChart />
             </DataTemplate>
             <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
                 <ledgerBook:LedgerBookUserControl />

@@ -11,7 +11,7 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.SpendingTrend;
+using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
@@ -99,7 +99,7 @@ namespace BudgetAnalyser
             get { return Controllers.OfType<IShowableController>(); }
         }
 
-        public SpendingTrendController SpendingTrendController { get; set; }
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
         public StatementController StatementController { get; set; }
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }

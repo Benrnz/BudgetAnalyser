@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
-using BudgetAnalyser.SpendingTrend;
+using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.ReportsCatalog
         public ReportsCatalogController(UiContext uiContext)
         {
             this.waitCursorFactory = uiContext.WaitCursorFactory;
-            SpendingTrendController = uiContext.SpendingTrendController;
+            this.CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
             
             MessengerInstance = uiContext.Messenger;
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteAnalyseStatementCommand); }
         }
 
-        public SpendingTrendController SpendingTrendController { get; private set; }
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
 
         private bool CanExecuteAnalyseStatementCommand()
         {
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             using (this.waitCursorFactory())
             {
-                SpendingTrendController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
+                this.CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
             }
         }
 
