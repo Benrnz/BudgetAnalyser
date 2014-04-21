@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Widget
         public RemainingActualSurplusWidget()
         {
             Category = "Monthly Budget";
-            DetailedText = "Surplus A";
+            DetailedText = "Actual Bank Surplus";
             Name = "Surplus A";
             Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
             this.standardStyle = "WidgetStandardStyle3";

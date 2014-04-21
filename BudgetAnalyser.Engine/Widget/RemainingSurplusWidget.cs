@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.Widget
     {
         public RemainingSurplusWidget()
         {
-            DetailedText = "Surplus B";
+            DetailedText = "Budgeted Surplus";
             Name = "Surplus B";
             DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, surplus cannot be calculated.";
             RemainingBudgetToolTip = "Remaining Surplus for period is {0:C}";

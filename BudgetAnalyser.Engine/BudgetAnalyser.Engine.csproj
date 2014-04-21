@@ -161,6 +161,7 @@
     <Compile Include="Widget\ProgressBarWidget.cs" />
     <Compile Include="Widget\ReflectionWidgetRepository.cs" />
     <Compile Include="Widget\RemainingBudgetBucketWidget.cs" />
+    <Compile Include="Widget\RemainingHairWidget.cs" />
     <Compile Include="Widget\RemainingClothesWidget.cs" />
     <Compile Include="Widget\RemainingFuelWidget.cs" />
     <Compile Include="Widget\RemainingFoodWidget.cs" />

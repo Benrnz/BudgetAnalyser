@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -30,8 +29,7 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             // Filter has already been checked for null and for cleared status.
-            monthlyBudget += LedgerCalculation.LocateApplicableLedgerBalance(this.ledgerBook, Filter, BucketCode);
-            return monthlyBudget;
+            return LedgerCalculation.LocateApplicableLedgerBalance(this.ledgerBook, Filter, BucketCode);
         }
 
         protected override void SetAdditionalDependencies(object[] input)
