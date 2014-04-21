@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Serialization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -10,9 +13,10 @@ namespace BudgetAnalyser.Engine.Budget
     [XmlInclude(typeof(IncomeBudgetBucket))]
     [XmlInclude(typeof(SpentMonthlyExpense))]
     [XmlInclude(typeof(SavedUpForExpense))]
-    public abstract class BudgetBucket : IModelValidate
+    public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged
     {
         private string doNotUseCode;
+        private string doNotUseDescription;
         protected BudgetBucket() { }
         protected BudgetBucket(string code, string name)
         {
@@ -31,14 +35,27 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public Guid? Id { get; set; }
+
         public string Code
         {
             get { return this.doNotUseCode; }
 
-            set { this.doNotUseCode = value.ToUpperInvariant(); }
+            set
+            {
+                this.doNotUseCode = value.ToUpperInvariant();
+                OnPropertyChanged();
+            }
         }
 
-        public string Description { get; set; }
+        public string Description
+        {
+            get { return this.doNotUseDescription; }
+            set
+            {
+                this.doNotUseDescription = value; 
+                OnPropertyChanged();
+            }
+        }
 
         public virtual string TypeDescription
         {
@@ -116,6 +133,18 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return retval;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

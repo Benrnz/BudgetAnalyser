@@ -137,9 +137,17 @@ namespace BudgetAnalyser.Budget
                 else
                 {
                     Incomes = new BindingList<Income>(this.doNotUseModel.Model.Incomes.ToList());
-                    Incomes.ToList().ForEach(i => i.PropertyChanged += OnIncomeAmountPropertyChanged);
+                    Incomes.ToList().ForEach(i =>
+                    {
+                        i.PropertyChanged += OnIncomeAmountPropertyChanged;
+                        i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                    });
                     Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses);
-                    Expenses.ToList().ForEach(e => e.PropertyChanged += OnExpenseAmountPropertyChanged);
+                    Expenses.ToList().ForEach(e =>
+                    {
+                        e.PropertyChanged += OnExpenseAmountPropertyChanged;
+                        e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                    });
                 }
 
                 RaisePropertyChanged(() => Incomes);
@@ -425,6 +433,7 @@ namespace BudgetAnalyser.Budget
             if (expenseItem != null)
             {
                 expenseItem.PropertyChanged -= OnExpenseAmountPropertyChanged;
+                expenseItem.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
                 Expenses.Remove(expenseItem);
                 return;
             }
@@ -433,6 +442,7 @@ namespace BudgetAnalyser.Budget
             if (incomeItem != null)
             {
                 incomeItem.PropertyChanged -= OnIncomeAmountPropertyChanged;
+                incomeItem.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
                 Incomes.Remove(incomeItem);
             }
         }
@@ -524,7 +534,9 @@ namespace BudgetAnalyser.Budget
             foreach (BudgetItem item in items)
             {
                 item.PropertyChanged -= OnIncomeAmountPropertyChanged;
+                item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
                 item.PropertyChanged -= OnExpenseAmountPropertyChanged;
+                item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
             }
         }
 
