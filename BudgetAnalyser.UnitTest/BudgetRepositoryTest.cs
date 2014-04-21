@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenBucketRepositoryIsNull()
         {
-            new BudgetRepository(null);
+            new XamlOnDiskBudgetRepository(null);
             Assert.Fail();
         }
 
@@ -149,9 +149,9 @@ namespace BudgetAnalyser.UnitTest
             this.mockBucketRepository = new Mock<IBudgetBucketRepository>();
         }
 
-        private BudgetRepositoryTestHarness CreateSubject()
+        private XamlOnDiskBudgetRepositoryTestHarness CreateSubject()
         {
-            return new BudgetRepositoryTestHarness(this.mockBucketRepository.Object);
+            return new XamlOnDiskBudgetRepositoryTestHarness(this.mockBucketRepository.Object);
         }
     }
 }

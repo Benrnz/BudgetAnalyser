@@ -4,9 +4,9 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
-    public class BudgetRepositoryTestHarness : BudgetRepository
+    public class XamlOnDiskBudgetRepositoryTestHarness : XamlOnDiskBudgetRepository
     {
-        public BudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
+        public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
             : base(bucketRepository)
         {
         }

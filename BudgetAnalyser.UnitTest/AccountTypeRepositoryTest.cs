@@ -12,7 +12,7 @@ namespace BudgetAnalyser.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingEmptyKeyEntryShouldThrow()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             subject.Add(string.Empty, CreateTestData());
             Assert.Fail();
         }
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void AddingNewEntryShouldBeRetrievableByKey()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             AmexAccount data = CreateTestData();
             subject.Add("Key12", data);
             Assert.AreSame(data, subject.GetByKey("Key12"));
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void AddingDuplicateEntryShouldNotThrow()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             AmexAccount data = CreateTestData();
             subject.Add("Key12", data);
             var data2 = CreateTestData();
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void GetOrCreateNewDuplicateEntryShouldNotThrow()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             var result1 = subject.GetOrCreateNew("Key12");
             var result2 = subject.GetOrCreateNew("Key12");
 
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullEntryShouldThrow()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             subject.Add("Key12", null);
             Assert.Fail();
         }
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.UnitTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullKeyEntryShouldThrow()
         {
-            AccountTypeRepository subject = CreateSubject();
+            InMemoryAccountTypeRepository subject = CreateSubject();
             subject.Add(null, CreateTestData());
             Assert.Fail();
         }
@@ -112,9 +112,9 @@ namespace BudgetAnalyser.UnitTest
             return new AmexAccount("Key12");
         }
 
-        private AccountTypeRepository CreateSubject()
+        private InMemoryAccountTypeRepository CreateSubject()
         {
-            return new AccountTypeRepository();
+            return new InMemoryAccountTypeRepository();
         }
     }
 }

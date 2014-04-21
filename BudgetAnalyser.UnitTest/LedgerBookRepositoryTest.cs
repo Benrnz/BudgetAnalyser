@@ -138,7 +138,7 @@ namespace BudgetAnalyser.UnitTest
             book.Output();
         }
 
-        private LedgerBookRepository ArrangeAndAct()
+        private XamlOnDiskLedgerBookRepository ArrangeAndAct()
         {
             RatesBucket = new SavedUpForExpense(TestDataConstants.RatesBucketCode, "Foo");
             CarMtcBucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Foo");
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.UnitTest
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PowerBucketCode)).Returns(PowerBucket);
 
             var dataToDomainMapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object);
-            var subject = new LedgerBookRepository(dataToDomainMapper, new LedgerDomainToDataMapper());
+            var subject = new XamlOnDiskLedgerBookRepository(dataToDomainMapper, new LedgerDomainToDataMapper());
 
             return subject;
         }

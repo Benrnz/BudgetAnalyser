@@ -95,7 +95,6 @@
     <Compile Include="LedgerBook_ReconcileTest.cs" />
     <Compile Include="LedgerDataToDomainMapperTest.cs" />
     <Compile Include="MastercardAccountTest.cs" />
-    <Compile Include="StatementModelRepositoryTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
@@ -103,7 +102,7 @@
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
-    <Compile Include="TestHarness\BudgetRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="VisaAccountTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

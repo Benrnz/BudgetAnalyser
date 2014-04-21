@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Statement
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
-        private readonly IStatementModelRepository statementModelRepository;
+        private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
         private readonly IViewLoader viewLoader;
         private bool actionButtonReady;
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Statement
         public LoadFileController([NotNull] LoadFileViewLoader viewLoader,
             [NotNull] UiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] IStatementModelRepository statementModelRepository)
+            [NotNull] IVersionedStatementModelRepository statementModelRepository)
         {
             if (viewLoader == null)
             {

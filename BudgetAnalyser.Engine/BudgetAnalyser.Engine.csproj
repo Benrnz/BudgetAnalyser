@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\AccountType.cs" />
-    <Compile Include="Account\AccountTypeRepository.cs" />
+    <Compile Include="Account\InMemoryAccountTypeRepository.cs" />
     <Compile Include="Account\ChequeAccount.cs" />
     <Compile Include="Account\AmexAccount.cs" />
     <Compile Include="Account\IAccountTypeRepository.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
     <Compile Include="Budget\BudgetModel.cs" />
-    <Compile Include="Budget\BudgetRepository.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="Budget\Expense.cs" />
     <Compile Include="Budget\ExpenseBudgetBucket.cs" />
     <Compile Include="Budget\IBudgetBucketRepository.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Ledger\ILedgerBookRepository.cs" />
-    <Compile Include="Ledger\LedgerBookRepository.cs" />
+    <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
     <Compile Include="Matching\DataMatchingRule.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Matching\MatchingRule.cs" />
     <Compile Include="Matching\MatchingRuleDataToDomainMapper.cs" />
     <Compile Include="Matching\MatchingRuleDomainToDataMapper.cs" />
-    <Compile Include="Matching\MatchingRuleRepository.cs" />
+    <Compile Include="Matching\XamlOnDiskMatchingRuleRepository.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
     <Compile Include="IModelValidate.cs" />
@@ -144,12 +144,10 @@
     <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />
     <Compile Include="Statement\BankImportUtilities.cs" />
     <Compile Include="Statement\BankStatementImporterRepository.cs" />
-    <Compile Include="Statement\BudgetAnalyserStatementImporterV1.cs" />
+    <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1.cs" />
     <Compile Include="Statement\IBankStatementImporter.cs" />
     <Compile Include="Statement\IBankStatementImporterRepository.cs" />
-    <Compile Include="Statement\IStatementModelRepository.cs" />
-    <Compile Include="Statement\BudgetAnalyserStatementModelRepository.cs" />
-    <Compile Include="Statement\IVersionedStatementModelImporter.cs" />
+    <Compile Include="Statement\IVersionedStatementModelRepository.cs" />
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="Widget\AccountFilterWidget.cs" />
