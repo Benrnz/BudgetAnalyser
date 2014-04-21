@@ -43,15 +43,15 @@ namespace BudgetAnalyser.Engine.Reports
             StatementModel statementModel,
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
-            GlobalFilterCriteria filterCriteria,
+            DateTime beginDate,
             LedgerBook ledgerBook)
         {
             ZeroLine = null;
             BudgetLine = null;
             ActualSpending = null;
 
-            Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(statementModel, filterCriteria);
-            var earliestDate = chartData.Keys.Min(k => k);
+            Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(statementModel, beginDate);
+            var earliestDate = beginDate;
             var latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
 
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             var query = statementModel.Transactions
                 .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
-                .Where(t => t.Date >= filterCriteria.BeginDate && t.Date <= filterCriteria.EndDate)
+                .Where(t => t.Date >= earliestDate && t.Date <= latestDate)
                 .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
                 .OrderBy(t => t.Date)
                 .AsParallel();
@@ -103,6 +103,7 @@ namespace BudgetAnalyser.Engine.Reports
             {
                 return budgetModel.Surplus;
             }
+
             Expense budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
             if (budget != null)
             {
@@ -166,26 +167,10 @@ namespace BudgetAnalyser.Engine.Reports
             return 0;
         }
 
-        private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(StatementModel statementModel, GlobalFilterCriteria criteria)
+        private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(StatementModel statementModel, DateTime beginDate)
         {
-            DateTime startDate, end;
-            if (criteria.BeginDate == null)
-            {
-                startDate = statementModel.Transactions.Min(t => t.Date);
-            }
-            else
-            {
-                startDate = criteria.BeginDate.Value;
-            }
-
-            if (criteria.EndDate == null)
-            {
-                end = statementModel.Transactions.Max(t => t.Date);
-            }
-            else
-            {
-                end = criteria.EndDate.Value;
-            }
+            DateTime startDate = beginDate;
+            DateTime end = beginDate.AddMonths(1).AddDays(-1);
 
             var data = new Dictionary<DateTime, decimal>();
             DateTime current = startDate;

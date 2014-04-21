@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
@@ -22,9 +22,10 @@ namespace BudgetAnalyser.BurnDownGraphs
         private readonly Func<BucketBurnDownController> bucketSpendingFactory;
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly IViewLoader viewLoader;
+        private DateTime beginDate;
         private BudgetModel budget;
         private List<CustomAggregateBurnDownGraph> customCharts = new List<CustomAggregateBurnDownGraph>();
-        private GlobalFilterCriteria doNotUseCriteria;
+        private string doNotUseDateRangeDescription;
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
@@ -73,13 +74,23 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
-        public GlobalFilterCriteria Criteria
+        //public GlobalFilterCriteria Criteria
+        //{
+        //    get { return this.doNotUseCriteria; }
+        //    set
+        //    {
+        //        this.doNotUseCriteria = value;
+        //        RaisePropertyChanged(() => Criteria);
+        //    }
+        //}
+
+        public string DateRangeDescription
         {
-            get { return this.doNotUseCriteria; }
-            set
+            get { return this.doNotUseDateRangeDescription; }
+            private set
             {
-                this.doNotUseCriteria = value;
-                RaisePropertyChanged(() => Criteria);
+                this.doNotUseDateRangeDescription = value;
+                RaisePropertyChanged(() => DateRangeDescription);
             }
         }
 
@@ -104,23 +115,41 @@ namespace BudgetAnalyser.BurnDownGraphs
             }
         }
 
-        public void Close()
+        public void Load(
+            [NotNull] StatementModel statementModel,
+            [NotNull] BudgetModel budgetModel,
+            [NotNull] GlobalFilterCriteria criteria,
+            Engine.Ledger.LedgerBook ledgerBookModel)
         {
-            ChartControllers = null;
-            this.viewLoader.Close();
-        }
+            if (statementModel == null)
+            {
+                throw new ArgumentNullException("statementModel");
+            }
 
-        public void Load(StatementModel statementModel, BudgetModel budgetModel, GlobalFilterCriteria criteria, Engine.Ledger.LedgerBook ledgerBookModel)
-        {
+            if (budgetModel == null)
+            {
+                throw new ArgumentNullException("budgetModel");
+            }
+
+            if (criteria == null)
+            {
+                throw new ArgumentNullException("criteria");
+            }
+
+            this.beginDate = CalculateBeginDate(criteria);
+            DateRangeDescription = string.Format(CultureInfo.CurrentCulture, "For the month starting {0:D} to {1:D} inclusive.", this.beginDate, this.beginDate.AddMonths(1).AddDays(-1));
+
             this.statement = statementModel;
             this.budget = budgetModel;
             this.ledgerBook = ledgerBookModel;
             var listOfCharts = new List<BucketBurnDownController>(this.budgetBucketRepository.Buckets.Count());
 
-            foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets.Where(b => b is SpentMonthlyExpense))
+            foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
+                .Where(b => b is ExpenseBudgetBucket)
+                .OrderBy(b => b.Code))
             {
                 BucketBurnDownController chartController = this.bucketSpendingFactory();
-                chartController.Load(statementModel, budgetModel, bucket, criteria, ledgerBookModel);
+                chartController.Load(statementModel, budgetModel, bucket, this.beginDate, ledgerBookModel);
                 listOfCharts.Add(chartController);
             }
 
@@ -129,7 +158,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             // Put surplus at the top.
             listOfCharts.Insert(
                 0,
-                this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, criteria, ledgerBookModel));
+                this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, this.beginDate, ledgerBookModel));
 
             // Put any custom charts on top.
             foreach (CustomAggregateBurnDownGraph customChart in this.customCharts)
@@ -137,14 +166,33 @@ namespace BudgetAnalyser.BurnDownGraphs
                 BucketBurnDownController chartController = this.bucketSpendingFactory();
                 IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
                     .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
-                chartController.LoadCustomChart(statementModel, budgetModel, buckets, criteria, ledgerBookModel, customChart.Name);
+                chartController.LoadCustomChart(statementModel, budgetModel, buckets, this.beginDate, ledgerBookModel, customChart.Name);
                 listOfCharts.Insert(0, chartController);
             }
 
             ChartControllers = new BindingList<BucketBurnDownController>(listOfCharts);
-            Criteria = criteria;
             this.viewLoader.Show(this);
             RaisePropertyChanged(() => ChartControllers);
+        }
+
+        private DateTime CalculateBeginDate(GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared)
+            {
+                return DateTime.Today.AddMonths(-1);
+            }
+
+            if (criteria.BeginDate != null)
+            {
+                return criteria.BeginDate.Value;
+            }
+
+            if (criteria.EndDate == null)
+            {
+                return DateTime.Today.AddMonths(-1);
+            }
+
+            return criteria.EndDate.Value.AddMonths(-1);
         }
 
         private void OnAddChartCommandExecuted()
@@ -156,7 +204,7 @@ namespace BudgetAnalyser.BurnDownGraphs
 
             List<BudgetBucket> buckets = this.addUserDefinedBurnDownController.SelectedBuckets.ToList();
             BucketBurnDownController newChart = this.bucketSpendingFactory();
-            newChart.LoadCustomChart(this.statement, this.budget, buckets, Criteria, this.ledgerBook, this.addUserDefinedBurnDownController.ChartTitle);
+            newChart.LoadCustomChart(this.statement, this.budget, buckets, this.beginDate, this.ledgerBook, this.addUserDefinedBurnDownController.ChartTitle);
             ChartControllers.Insert(0, newChart);
             var persistChart = new CustomAggregateBurnDownGraph
             {

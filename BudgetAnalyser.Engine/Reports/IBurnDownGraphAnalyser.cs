@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Reports
             StatementModel statementModel, 
             BudgetModel budgetModel, 
             IEnumerable<BudgetBucket> buckets, 
-            GlobalFilterCriteria criteria,
+            DateTime beginDate,
             LedgerBook ledgerBook);
     }
 }

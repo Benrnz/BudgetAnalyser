@@ -1,8 +1,7 @@
 ﻿<Window x:Class="BudgetAnalyser.BurnDownGraphs.CurrentMonthBurnDownGraphsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
         xmlns:spendingTrend="clr-namespace:BudgetAnalyser.BurnDownGraphs"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="..\UI\Assets\PieChart.png"
         Title="Current Month Burndown Graphs"
         Width="610">
@@ -19,20 +18,17 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="2"
-                    Grid.Row="0"
+        
+        <StackPanel Grid.Row="0"
+                    Margin="2"
                     Orientation="Horizontal">
-            <TextBlock Text="{Binding Criteria.Description, StringFormat=d}" />
-            <Border Style="{StaticResource WarningOilLightStyle}"
-                    Visibility="{Binding Criteria.Cleared, Converter={StaticResource BoolToVis2Converter}}">
-                <TextBlock Text="No Filter"
-                           Style="{StaticResource WarningLightTextStyle}"
-                           ToolTip="There is no global filter currently in affect to limit the date range." />
-            </Border>
+            <TextBlock Text="{Binding DateRangeDescription}"
+                       Style="{StaticResource TextBlock.Paragraph}"/>
         </StackPanel>
+        
         <ListBox x:Name="ChartsList"
-                 Grid.Row="1"
                  Background="{StaticResource MainBackgroundBrush}"
+                 Grid.Row="1"
                  ItemsSource="{Binding ChartControllers}"
                  Margin="20"
                  ScrollViewer.CanContentScroll="False"

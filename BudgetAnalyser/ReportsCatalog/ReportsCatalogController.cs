@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
+using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -10,7 +11,6 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
-using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -22,16 +22,16 @@ namespace BudgetAnalyser.ReportsCatalog
         private readonly IBudgetAnalysisView analysisFactory;
         private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
+        private Engine.Ledger.LedgerBook currentLedgerBook;
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
-        private Engine.Ledger.LedgerBook currentLedgerBook;
 
         public ReportsCatalogController(UiContext uiContext)
         {
             this.waitCursorFactory = uiContext.WaitCursorFactory;
-            this.CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
+            CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
-            
+
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
@@ -43,12 +43,17 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnAnalyseStatementCommandExecute, CanExecuteAnalyseStatementCommand); }
         }
 
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
+
         public bool Shown
         {
             get { return this.doNotUseShown; }
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
@@ -58,8 +63,6 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteAnalyseStatementCommand); }
         }
-
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
 
         private bool CanExecuteAnalyseStatementCommand()
         {
@@ -99,7 +102,7 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             using (this.waitCursorFactory())
             {
-                this.CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
+                CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
             }
         }
 
