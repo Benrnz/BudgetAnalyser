@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest
         //[TestMethod]
         //public void TestMethod1()
         //{
-        //    SpendingGraphAnalyser subject = CreateSubject();
+        //    BurnDownGraphAnalyser subject = CreateSubject();
         //    BudgetModel budgetModel;
         //    StatementModel statementModel = CreateStatementModel(out budgetModel);
         //    var criteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 5, 1), EndDate = new DateTime(2013, 5, 31) };
@@ -43,9 +43,9 @@ namespace BudgetAnalyser.UnitTest
         //    return statementImporter.ImportFromFile(@"C:\Development\Brees_Unfuddle\BudgetAnalyserProject\Trunk\TestData\8Months.csv", budgetModel, new ChequeAccount("Cheque"));
         //}
 
-        private SpendingGraphAnalyser CreateSubject()
+        private BurnDownGraphAnalyser CreateSubject()
         {
-            var analyser = new SpendingGraphAnalyser();
+            var analyser = new BurnDownGraphAnalyser();
             return analyser;
         }
     }

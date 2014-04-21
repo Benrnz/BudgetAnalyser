@@ -23,7 +23,7 @@ namespace BudgetAnalyser.BurnDownGraphs
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly IViewLoader viewLoader;
         private BudgetModel budget;
-        private List<CustomAggregateSpendingGraph> customCharts = new List<CustomAggregateSpendingGraph>();
+        private List<CustomAggregateBurnDownGraph> customCharts = new List<CustomAggregateBurnDownGraph>();
         private GlobalFilterCriteria doNotUseCriteria;
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.BurnDownGraphs
                 this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, criteria, ledgerBookModel));
 
             // Put any custom charts on top.
-            foreach (CustomAggregateSpendingGraph customChart in this.customCharts)
+            foreach (CustomAggregateBurnDownGraph customChart in this.customCharts)
             {
                 BucketBurnDownController chartController = this.bucketSpendingFactory();
                 IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             BucketBurnDownController newChart = this.bucketSpendingFactory();
             newChart.LoadCustomChart(this.statement, this.budget, buckets, Criteria, this.ledgerBook, this.addUserDefinedBurnDownController.ChartTitle);
             ChartControllers.Insert(0, newChart);
-            var persistChart = new CustomAggregateSpendingGraph
+            var persistChart = new CustomAggregateBurnDownGraph
             {
                 BucketIds = buckets.Select(b => b.Code).ToList(),
                 Name = this.addUserDefinedBurnDownController.ChartTitle,
@@ -171,7 +171,7 @@ namespace BudgetAnalyser.BurnDownGraphs
         {
             if (message.RehydratedModels.ContainsKey(typeof(CustomBurnDownChartsV1)))
             {
-                this.customCharts = message.RehydratedModels[typeof(CustomBurnDownChartsV1)].AdaptModel<List<CustomAggregateSpendingGraph>>();
+                this.customCharts = message.RehydratedModels[typeof(CustomBurnDownChartsV1)].AdaptModel<List<CustomAggregateBurnDownGraph>>();
             }
         }
 
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.BurnDownGraphs
         private void OnRemoveChartCommandExecuted()
         {
             ChartControllers.Remove(SelectedChart);
-            CustomAggregateSpendingGraph chart = this.customCharts.FirstOrDefault(c => c.Name == SelectedChart.ChartTitle);
+            CustomAggregateBurnDownGraph chart = this.customCharts.FirstOrDefault(c => c.Name == SelectedChart.ChartTitle);
             this.customCharts.Remove(chart);
         }
 

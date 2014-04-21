@@ -54,7 +54,7 @@ namespace BudgetAnalyser
                 .SingleInstance();
 
 
-            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new SpendingGraphAnalyser()));
+            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new BurnDownGraphAnalyser()));
 
 
             // Register Messenger Singleton from MVVM Light

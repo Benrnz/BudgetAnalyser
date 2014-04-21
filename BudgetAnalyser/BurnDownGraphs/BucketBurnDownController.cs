@@ -14,18 +14,18 @@ namespace BudgetAnalyser.BurnDownGraphs
 {
     public class BucketBurnDownController : ControllerBase
     {
-        private readonly ISpendingGraphAnalyser spendingGraphAnalyser;
+        private readonly IBurnDownGraphAnalyser burnDownGraphAnalyser;
         private List<KeyValuePair<DateTime, decimal>> doNotUseActualSpending;
         private List<KeyValuePair<DateTime, decimal>> doNotUseTrendLine;
 
-        public BucketBurnDownController([NotNull] ISpendingGraphAnalyser spendingGraphAnalyser)
+        public BucketBurnDownController([NotNull] IBurnDownGraphAnalyser burnDownGraphAnalyser)
         {
-            if (spendingGraphAnalyser == null)
+            if (burnDownGraphAnalyser == null)
             {
-                throw new ArgumentNullException("spendingGraphAnalyser");
+                throw new ArgumentNullException("burnDownGraphAnalyser");
             }
 
-            this.spendingGraphAnalyser = spendingGraphAnalyser;
+            this.burnDownGraphAnalyser = burnDownGraphAnalyser;
         }
 
         public List<KeyValuePair<DateTime, decimal>> ActualSpending
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             this.ActualSpendingLabel = this.Bucket.Code;
             this.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
 
-            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, criteria, ledgerBook);
+            this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, criteria, ledgerBook);
             CopyOutputFromAnalyser();
 
             return this;
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             this.ChartTitle = chartTitle;
             this.ActualSpendingLabel = "Combined Spending";
             this.Bucket = null;
-            this.spendingGraphAnalyser.Analyse(statementModel, budgetModel, buckets, criteria, ledgerBook);
+            this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, buckets, criteria, ledgerBook);
             CopyOutputFromAnalyser();
 
             return this;
@@ -103,11 +103,11 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         private void CopyOutputFromAnalyser()
         {
-            this.ActualSpendingAxesMinimum = this.spendingGraphAnalyser.ActualSpendingAxesMinimum;
-            this.ActualSpending = this.spendingGraphAnalyser.ActualSpending;
-            this.BudgetLine = this.spendingGraphAnalyser.BudgetLine;
-            this.ZeroLine = this.spendingGraphAnalyser.ZeroLine;
-            this.NetWorth = this.spendingGraphAnalyser.NetWorth;
+            this.ActualSpendingAxesMinimum = this.burnDownGraphAnalyser.ActualSpendingAxesMinimum;
+            this.ActualSpending = this.burnDownGraphAnalyser.ActualSpending;
+            this.BudgetLine = this.burnDownGraphAnalyser.BudgetLine;
+            this.ZeroLine = this.burnDownGraphAnalyser.ZeroLine;
+            this.NetWorth = this.burnDownGraphAnalyser.NetWorth;
         }
     }
 }
