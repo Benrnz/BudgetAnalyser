@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository, IApplicationHookEvent
+    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository, IApplicationHookEventPublisher
     {
         private readonly IMatchingRuleDataToDomainMapper dataToDomainMapper;
         private readonly IMatchingRuleDomainToDataMapper domainToDataMapper;

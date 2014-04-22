@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository, IApplicationHookEvent
+    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository, IApplicationHookEventPublisher
     {
         private readonly ILedgerDataToDomainMapper dataToDomainMapper;
         private readonly ILedgerDomainToDataMapper domainToDataMapper;

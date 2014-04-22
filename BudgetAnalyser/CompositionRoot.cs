@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using Autofac;
 using BudgetAnalyser.Budget;
@@ -21,13 +24,15 @@ using Rees.Wpf.UserInteraction;
 
 namespace BudgetAnalyser
 {
-    public class CompositionRoot
+    public class CompositionRoot 
     {
         private const string InputBoxView = "InputBoxView";
 
         public ShellController ShellController { get; private set; }
         public Window ShellWindow { get; private set; }
         public ILogger Logger { get; private set; }
+
+        public IContainer Container { get; private set; }
 
         public void RegisterIoCMappings()
         {
@@ -59,15 +64,16 @@ namespace BudgetAnalyser
 
             // Register Messenger Singleton from MVVM Light
             builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
-            
+
             // Explicit object creation below is necessary to correctly register with IoC container.
             // ReSharper disable once RedundantDelegateCreation
             builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
-            
+
 
             // Instantiate and store all controllers...
             // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
             var container = builder.Build();
+            Container = container;
 
             Logger = container.Resolve<ILogger>();
 
@@ -75,6 +81,9 @@ namespace BudgetAnalyser
             ConstructUiContext(container);
             ShellController = container.Resolve<ShellController>();
             ShellWindow = new ShellWindow { DataContext = ShellController };
+
+            // Trigger instantiation of all Application hook subscribers. Unless we ask for these to be constructed, they won't be.
+            container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
         }
 
         private void ConstructUiContext(IContainer container)

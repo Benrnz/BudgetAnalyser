@@ -2,7 +2,7 @@
 
 namespace BudgetAnalyser.Engine
 {
-    public interface IApplicationHookEvent
+    public interface IApplicationHookEventPublisher
     {
         event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
     }

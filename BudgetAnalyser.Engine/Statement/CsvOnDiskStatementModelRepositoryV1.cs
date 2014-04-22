@@ -14,7 +14,7 @@ using Rees.UserInteraction.Contracts;
 namespace BudgetAnalyser.Engine.Statement
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository, IApplicationHookEvent
+    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository, IApplicationHookEventPublisher
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
 

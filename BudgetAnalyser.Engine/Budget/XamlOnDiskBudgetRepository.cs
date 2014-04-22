@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEvent
+    public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
         public XamlOnDiskBudgetRepository([NotNull] IBudgetBucketRepository bucketRepository)
         {

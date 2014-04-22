@@ -13,7 +13,7 @@ namespace BudgetAnalyser
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application, IApplicationHookEvent
+    public partial class App : Application, IApplicationHookEventPublisher
     {
         private ILogger logger;
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;

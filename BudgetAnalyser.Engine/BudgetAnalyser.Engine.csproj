@@ -93,9 +93,12 @@
     <Compile Include="Budget\SpentMonthlyExpense.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
-    <Compile Include="IApplicationHookEvent.cs" />
+    <Compile Include="IApplicationHookEventPublisher.cs" />
+    <Compile Include="IApplicationHookSubscriber.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
+    <Compile Include="BatchFileApplicationHookSubscriber.cs" />
+    <Compile Include="LoggingApplicationHookSubscriber.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
