@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
+    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository, IApplicationHookEvent
     {
         private readonly IMatchingRuleDataToDomainMapper dataToDomainMapper;
         private readonly IMatchingRuleDomainToDataMapper domainToDataMapper;
@@ -28,6 +28,8 @@ namespace BudgetAnalyser.Engine.Matching
             this.dataToDomainMapper = dataToDomainMapper;
             this.domainToDataMapper = domainToDataMapper;
         }
+
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public bool Exists(string fileName)
         {
@@ -63,6 +65,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             IEnumerable<DataMatchingRule> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
             XamlServices.Save(fileName, dataEntities.ToList());
+
+            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "MatchingRuleRepository"));
+            }
         }
     }
 }

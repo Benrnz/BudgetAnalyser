@@ -34,7 +34,7 @@ namespace BudgetAnalyser
             var builder = new ContainerBuilder();
 
             DefaultIoCRegistrations.RegisterDefaultMappings(builder);
-            IoC.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
+            AutoRegisterWithIoCProcessor.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
 
 
             // Wait Cursor Builder

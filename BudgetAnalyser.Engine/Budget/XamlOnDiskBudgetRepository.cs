@@ -1,13 +1,14 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net.Mime;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskBudgetRepository : IBudgetRepository
+    public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEvent
     {
         public XamlOnDiskBudgetRepository([NotNull] IBudgetBucketRepository bucketRepository)
         {
@@ -18,6 +19,8 @@ namespace BudgetAnalyser.Engine.Budget
 
             BudgetBucketRepository = bucketRepository;
         }
+
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
@@ -77,6 +80,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             string serialised = Serialise(budgetData);
             WriteToDisk(budgetData.FileName, serialised);
+
+            var handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "BudgetRepository"));
+            }
         }
 
         protected virtual bool FileExists(string filename)

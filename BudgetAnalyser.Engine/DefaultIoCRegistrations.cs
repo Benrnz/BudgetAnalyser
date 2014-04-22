@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine
         /// <param name="builder">Autofac's builder object. AUTOFAC IS ISOLATED TO THIS CLASS AND METHOD ONLY.</param>
         public static void RegisterDefaultMappings(ContainerBuilder builder)
         {
-            IoC.RegisterAutoMappingsFromAssembly(builder, typeof(DefaultIoCRegistrations).Assembly);
+            AutoRegisterWithIoCProcessor.RegisterAutoMappingsFromAssembly(builder, typeof(DefaultIoCRegistrations).Assembly);
 
             // Everything else
             builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());

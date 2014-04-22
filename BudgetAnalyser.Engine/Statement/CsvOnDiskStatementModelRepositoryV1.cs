@@ -14,7 +14,7 @@ using Rees.UserInteraction.Contracts;
 namespace BudgetAnalyser.Engine.Statement
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
+    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository, IApplicationHookEvent
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
 
@@ -22,8 +22,8 @@ namespace BudgetAnalyser.Engine.Statement
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly BankImportUtilities importUtilities;
-        private readonly IUserMessageBox userMessageBox;
         private readonly ILogger logger;
+        private readonly IUserMessageBox userMessageBox;
 
         public CsvOnDiskStatementModelRepositoryV1(
             [NotNull] IAccountTypeRepository accountTypeRepository,
@@ -63,6 +63,8 @@ namespace BudgetAnalyser.Engine.Statement
             this.importUtilities = importUtilities;
             this.logger = logger;
         }
+
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public bool IsValidFile(string fileName)
         {
@@ -202,6 +204,12 @@ namespace BudgetAnalyser.Engine.Statement
                     writer.Close();
                 }
             }
+
+            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "StatementModelRepository"));
+            }
         }
 
         protected virtual AccountType FetchAccountType(string[] array, int index)
@@ -256,7 +264,7 @@ namespace BudgetAnalyser.Engine.Statement
                 txnCheckSum *= 397; // also prime 
                 foreach (Transaction txn in model.AllTransactions)
                 {
-                    txnCheckSum += (long)txn.Amount*100;
+                    txnCheckSum += (long)txn.Amount * 100;
                     txnCheckSum *= 829;
                 }
             }

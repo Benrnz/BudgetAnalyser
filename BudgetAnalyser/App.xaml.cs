@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows;
@@ -14,9 +13,10 @@ namespace BudgetAnalyser
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : Application, IApplicationHookEvent
     {
         private ILogger logger;
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -61,6 +61,12 @@ namespace BudgetAnalyser
 
         private void OnApplicationExit(object sender, ExitEventArgs e)
         {
+            var handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "Exiting"));
+            }
+
             Current.Exit -= OnApplicationExit;
             Messenger.Default.Send(new ShutdownMessage());
             this.logger.LogAlways(() => "=========== Application Exiting ===========");

@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
+    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository, IApplicationHookEvent
     {
         private readonly ILedgerDataToDomainMapper dataToDomainMapper;
         private readonly ILedgerDomainToDataMapper domainToDataMapper;
@@ -27,6 +27,8 @@ namespace BudgetAnalyser.Engine.Ledger
             this.dataToDomainMapper = dataToDomainMapper;
             this.domainToDataMapper = domainToDataMapper;
         }
+
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public bool Exists(string fileName)
         {
@@ -79,6 +81,12 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.Checksum = CalculateChecksum(dataEntity);
 
             XamlServices.Save(dataEntity.FileName, dataEntity);
+
+            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository"));
+            }
         }
 
         private double CalculateChecksum(DataLedgerBook dataEntity)
