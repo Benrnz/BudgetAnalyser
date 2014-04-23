@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -9,11 +10,18 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class LedgerBook : IModelValidate
     {
+        private readonly ILogger logger;
         private readonly List<Ledger> newlyAddedLedgers = new List<Ledger>();
         private List<LedgerEntryLine> datedEntries;
 
-        public LedgerBook(string name, DateTime modified, string fileName)
+        public LedgerBook(string name, DateTime modified, string fileName, [NotNull] ILogger logger)
         {
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
+            this.logger = logger;
             Name = name;
             Modified = modified;
             FileName = fileName;
@@ -182,6 +190,19 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
             {
+                var uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                int count = 0;
+                this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
+                foreach (var transaction in uncategorised)
+                {
+                    count++;
+                    this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: Transaction: " + transaction.Id + transaction.BudgetBucket);
+                    if (count > 5)
+                    {
+                        this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
+                    }
+                }
+
                 throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.");
             }
         }

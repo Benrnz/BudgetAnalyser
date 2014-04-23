@@ -3,6 +3,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -178,7 +179,7 @@ namespace BudgetAnalyser.UnitTest
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RegoBucketCode)).Returns(RegoBucket);
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.CarMtcBucketCode)).Returns(CarMtcBucket);
 
-            var mapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object);
+            var mapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object, new FakeLogger());
             return mapper.Map(TestData);
         }
 

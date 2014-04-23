@@ -29,7 +29,7 @@
             <Button Command="{Binding ClearCommand}"
                     Style="{StaticResource ClearButton}" />
             <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource OkButton}"
+                    Style="{StaticResource OkRoundButton}"
                     ToolTip="Apply Filter and Close" />
         </StackPanel>
     </Grid>

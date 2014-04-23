@@ -33,6 +33,8 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseShown;
         private Engine.Ledger.LedgerBook ledgerBook;
 
+        private readonly ILogger logger;
+
         /// <summary>
         ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
         ///     it also indicates the ledger row can be edited.
@@ -68,6 +70,7 @@ namespace BudgetAnalyser.LedgerBook
             this.inputBox = uiContext.UserPrompts.InputBox;
             this.ledgerRepository = ledgerRepository;
             this.demoFileHelper = demoFileHelper;
+            this.logger = uiContext.Logger;
             ChooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
             AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
@@ -469,7 +472,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnNewLedgerBookCommandExecuted()
         {
-            LedgerBook = new Engine.Ledger.LedgerBook("New Ledger Book 1", DateTime.Now, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "LedgerBook1.xml"));
+            LedgerBook = new Engine.Ledger.LedgerBook("New Ledger Book 1", DateTime.Now, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "LedgerBook1.xml"), this.logger);
             this.dirty = true;
         }
 

@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -13,7 +14,8 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class LedgerBookRepositoryTest
     {
-        private const string LoadFileName = @"C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
+        // TODO this is shite:
+        private const string LoadFileName = @"C:\Foo\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
 
         private BudgetBucket CarMtcBucket { get; set; }
         private BudgetBucket RatesBucket { get; set; }
@@ -25,7 +27,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void Save_ShouldSaveTheXmlFile()
         {
-            var fileName = @"C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile.xml";
+            var fileName = @"C:\Foo\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile.xml";
             File.Delete(fileName);
 
             var subject = ArrangeAndAct();
@@ -38,7 +40,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void Save_ShouldSaveTheXmlFile3()
         {
-            var fileName = @"C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml";
+            var fileName = @"C:\Foo\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml";
             File.Delete(fileName);
 
             var subject = ArrangeAndAct();
@@ -155,7 +157,7 @@ namespace BudgetAnalyser.UnitTest
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PhoneBucketCode)).Returns(PhoneBucket);
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PowerBucketCode)).Returns(PowerBucket);
 
-            var dataToDomainMapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object);
+            var dataToDomainMapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object, new FakeLogger());
             var subject = new XamlOnDiskLedgerBookRepository(dataToDomainMapper, new LedgerDomainToDataMapper());
 
             return subject;

@@ -58,23 +58,23 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="OkButton"
+    <!--<Style x:Key="OkButton"
            BasedOn="{StaticResource SquareButtonBaseStyle}"
            TargetType="Button">
         <Setter Property="IsDefault"
                 Value="True" />
         <Setter Property="Content"
                 Value="_Ok" />
-    </Style>
+    </Style>-->
 
-    <Style x:Key="CancelButton"
+    <!--<Style x:Key="CancelButton"
            TargetType="Button"
            BasedOn="{StaticResource SquareButtonBaseStyle}">
         <Setter Property="IsCancel"
                 Value="True" />
         <Setter Property="Content"
                 Value="Cancel" />
-    </Style>
+    </Style>-->
 
     <!-- Circular Buttons -->
     <Style x:Key="CloseButton"

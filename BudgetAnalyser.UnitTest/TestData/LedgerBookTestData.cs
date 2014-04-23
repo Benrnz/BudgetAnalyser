@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
@@ -17,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook("Test Data 1 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml");
+            var book = new LedgerBook("Test Data 1 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
 
             var list = new List<LedgerEntryLine>
             {
@@ -102,7 +103,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml");
+            var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
 
             var list = new List<LedgerEntryLine>
             {
@@ -200,7 +201,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var clothesLedger = new Ledger { BudgetBucket = new SavedUpForExpense("CLOTHES", "") };
             var docLedger = new Ledger { BudgetBucket = new SavedUpForExpense("DOC", "") };
 
-            var book = new LedgerBook("Rees Budget 2014", new DateTime(2013, 12, 22), @"C:\Development\Brees_Unfuddle\Rees Budget Accounts\ReesLedger2014.xml");
+            var book = new LedgerBook("Smith Budget 2014", new DateTime(2013, 12, 22), @"C:\Foo\SmithLedger2014.xml", new FakeLogger());
 
             var list = new List<LedgerEntryLine>
             {

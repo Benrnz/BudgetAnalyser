@@ -12,20 +12,27 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private static readonly Dictionary<string, Ledger> CachedLedgers = new Dictionary<string, Ledger>();
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly ILogger logger;
 
-        public LedgerDataToDomainMapper([NotNull] IBudgetBucketRepository bucketRepository)
+        public LedgerDataToDomainMapper([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] ILogger logger)
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.bucketRepository = bucketRepository;
+            this.logger = logger;
         }
 
         public LedgerBook Map(DataLedgerBook dataBook)
         {
-            var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName);
+            var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName, this.logger);
             book.SetDatedEntries(MapLines(dataBook.DatedEntries));
 
             var messages = new StringBuilder();
