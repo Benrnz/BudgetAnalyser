@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Engine.Ledger
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository"));
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository", ApplicationHookEventArgs.Save));
             }
         }
 

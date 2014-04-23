@@ -79,9 +79,10 @@ namespace BudgetAnalyser.Engine
                     }
 
                     var commandLine = string.Format(
-                        "{0} {1} {2} \"{3}\" \"{4}\"",
+                        "{0} {1} {2} {3} \"{4}\" \"{5}\"",
                         FileName,
                         args.EventType,
+                        args.EventSubCategory,
                         args.Origin,
                         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         sender);

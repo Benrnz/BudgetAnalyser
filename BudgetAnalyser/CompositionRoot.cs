@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using Autofac;
 using BudgetAnalyser.Budget;
@@ -32,9 +30,7 @@ namespace BudgetAnalyser
         public Window ShellWindow { get; private set; }
         public ILogger Logger { get; private set; }
 
-        public IContainer Container { get; private set; }
-
-        public void RegisterIoCMappings()
+        public void RegisterIoCMappings(Application app)
         {
             var builder = new ContainerBuilder();
 
@@ -69,11 +65,11 @@ namespace BudgetAnalyser
             // ReSharper disable once RedundantDelegateCreation
             builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
 
+            builder.RegisterInstance(app).As<IApplicationHookEventPublisher>();
 
             // Instantiate and store all controllers...
             // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
             var container = builder.Build();
-            Container = container;
 
             Logger = container.Resolve<ILogger>();
 

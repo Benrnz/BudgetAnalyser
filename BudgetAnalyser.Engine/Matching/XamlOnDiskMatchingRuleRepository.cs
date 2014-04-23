@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Matching
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "MatchingRuleRepository"));
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "MatchingRuleRepository", ApplicationHookEventArgs.Save));
             }
         }
     }

@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Budget
             var handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "BudgetRepository"));
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "BudgetRepository", ApplicationHookEventArgs.Save));
             }
         }
 

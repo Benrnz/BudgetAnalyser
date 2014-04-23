@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Statement
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "StatementModelRepository"));
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "StatementModelRepository", ApplicationHookEventArgs.Save));
             }
         }
 

@@ -31,7 +31,7 @@ namespace BudgetAnalyser
             Current.Exit += OnApplicationExit;
 
             var compositionRoot = new CompositionRoot();
-            compositionRoot.RegisterIoCMappings();
+            compositionRoot.RegisterIoCMappings(this);
             this.logger = compositionRoot.Logger;
             this.logger.LogAlways(() => "=========== Budget Analyser Starting ===========");
             this.logger.LogAlways(() => compositionRoot.ShellController.DashboardController.VersionString);
@@ -64,7 +64,7 @@ namespace BudgetAnalyser
             var handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "Exiting"));
+                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "App.xaml.cs", ApplicationHookEventArgs.Exit));
             }
 
             Current.Exit -= OnApplicationExit;
