@@ -196,7 +196,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 foreach (var transaction in uncategorised)
                 {
                     count++;
-                    this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: Transaction: " + transaction.Id + transaction.BudgetBucket);
+                    Transaction transactionCopy = transaction;
+                    this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id + transactionCopy.BudgetBucket);
                     if (count > 5)
                     {
                         this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");

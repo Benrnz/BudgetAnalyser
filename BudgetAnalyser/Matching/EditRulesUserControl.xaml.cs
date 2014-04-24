@@ -55,7 +55,6 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            Debug.WriteLine("EditRulesUserControl: Subscribing to SelectedRule change event");
             Controller.PropertyChanged += (s, eventArgs) =>
             {
                 // Ensure all other listboxes deselect their currently selected item when another is chosen in different listbox.

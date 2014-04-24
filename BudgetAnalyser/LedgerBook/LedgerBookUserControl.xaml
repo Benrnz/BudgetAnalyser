@@ -164,7 +164,7 @@
               Visibility="{Binding ShowPopup, Converter={StaticResource BoolToVisConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.25*" />
-                <RowDefinition Height="0.5*"
+                <RowDefinition Height="*"
                                MaxHeight="500"
                                MinHeight="100" />
                 <RowDefinition Height="0.25*" />
