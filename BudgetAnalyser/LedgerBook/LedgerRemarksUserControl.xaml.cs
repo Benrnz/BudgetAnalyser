@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -10,6 +13,14 @@ namespace BudgetAnalyser.LedgerBook
         public LedgerRemarksUserControl()
         {
             InitializeComponent();
+        }
+
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => RemarksTextBox.Focus());
+            }
         }
     }
 }
