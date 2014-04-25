@@ -11,8 +11,12 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private readonly ILedgerDataToDomainMapper dataToDomainMapper;
         private readonly ILedgerDomainToDataMapper domainToDataMapper;
+        private readonly ILogger logger;
 
-        public XamlOnDiskLedgerBookRepository([NotNull] ILedgerDataToDomainMapper dataToDomainMapper, [NotNull] ILedgerDomainToDataMapper domainToDataMapper)
+        public XamlOnDiskLedgerBookRepository(
+            [NotNull] ILedgerDataToDomainMapper dataToDomainMapper, 
+            [NotNull] ILedgerDomainToDataMapper domainToDataMapper, 
+            [NotNull] ILogger logger)
         {
             if (dataToDomainMapper == null)
             {
@@ -24,8 +28,14 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException("domainToDataMapper");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.dataToDomainMapper = dataToDomainMapper;
             this.domainToDataMapper = domainToDataMapper;
+            this.logger = logger;
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
@@ -87,6 +97,11 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository", ApplicationHookEventArgs.Save));
             }
+        }
+
+        public LedgerBook CreateNew(string name, string fileName)
+        {
+            return new LedgerBook(name, DateTime.Now, fileName, this.logger);
         }
 
         protected virtual bool FileExistsOnDisk(string fileName)

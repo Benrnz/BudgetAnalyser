@@ -64,9 +64,9 @@
                     Style="{StaticResource SaveButton}" />
             <Button Command="{Binding LoadLedgerBookCommand}"
                     Style="{StaticResource LoadButton}" />
-            <Button Command="{Binding NewLedgerBookCommand}"
+            <Button Command="{Binding AddNewLedgerBookCommand}"
                     Style="{StaticResource NewButton}"
-                    ToolTip="New Ledger Book" />
+                    ToolTip="Create New Ledger Book" />
             <Button Command="{Binding CloseLedgerBookCommand}"
                     Style="{StaticResource ClearButton}"
                     ToolTip="Close Ledger Book" />

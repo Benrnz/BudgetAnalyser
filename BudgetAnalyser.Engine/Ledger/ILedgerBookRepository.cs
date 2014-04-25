@@ -7,5 +7,7 @@
 
         void Save(LedgerBook book);
         void Save(LedgerBook book, string fileName);
+
+        LedgerBook CreateNew(string name, string fileName);
     }
 }

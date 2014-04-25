@@ -22,9 +22,11 @@ namespace BudgetAnalyser.LedgerBook
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUserInputBox inputBox;
         private readonly ILedgerBookRepository ledgerRepository;
+        private readonly ILogger logger;
         private readonly IUserMessageBox messageBox;
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
+        private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
         private readonly Func<IWaitCursor> waitCursorFactory;
 
         private bool dirty;
@@ -33,15 +35,13 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseShown;
         private Engine.Ledger.LedgerBook ledgerBook;
 
-        private readonly ILogger logger;
+        private string ledgerBookFileName;
 
         /// <summary>
         ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
         ///     it also indicates the ledger row can be edited.
         /// </summary>
         private LedgerEntryLine newLedgerLine;
-
-        private string ledgerBookFileName;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
@@ -64,6 +64,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
+            this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
@@ -86,6 +87,11 @@ namespace BudgetAnalyser.LedgerBook
         public event EventHandler LedgerBookUpdated;
 
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; private set; }
+
+        public ICommand AddNewLedgerBookCommand
+        {
+            get { return new RelayCommand(OnAddNewLedgerBookCommandExecuted, CanExecuteNewLedgerBookCommand); }
+        }
 
         public ICommand AddNewLedgerCommand
         {
@@ -128,11 +134,6 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand LoadLedgerBookCommand
         {
             get { return new RelayCommand(OnLoadLedgerBookCommandExecute, CanExecuteCloseCommand); }
-        }
-
-        public ICommand NewLedgerBookCommand
-        {
-            get { return new RelayCommand(OnNewLedgerBookCommandExecuted, CanExecuteNewLedgerBookCommand); }
         }
 
         public bool NoBudgetLoaded
@@ -182,7 +183,10 @@ namespace BudgetAnalyser.LedgerBook
 
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
@@ -350,6 +354,33 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        private void OnAddNewLedgerBookCommandExecuted()
+        {
+            IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
+            saveFileDialog.AddExtension = true;
+            saveFileDialog.CheckPathExists = true;
+            saveFileDialog.DefaultExt = ".xml";
+            saveFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
+            saveFileDialog.Title = "Choose a LedgerBook xml file name.";
+            bool? result = saveFileDialog.ShowDialog();
+            if (result == null || !result.Value)
+            {
+                return;
+            }
+
+            string fileName = saveFileDialog.FileName;
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return;
+            }
+
+            OnCloseLedgerBookCommandExecuted();
+
+            LedgerBook = this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", fileName);
+            this.dirty = true;
+            MessengerInstance.Send(new LedgerBookReadyMessage(LedgerBook));
+        }
+
         private void OnAddNewLedgerCommandExecuted()
         {
             ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
@@ -470,15 +501,10 @@ namespace BudgetAnalyser.LedgerBook
             LoadLedgerBookFromFile(fileName);
         }
 
-        private void OnNewLedgerBookCommandExecuted()
-        {
-            LedgerBook = new Engine.Ledger.LedgerBook("New Ledger Book 1", DateTime.Now, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "LedgerBook1.xml"), this.logger);
-            this.dirty = true;
-        }
-
         private void OnSaveLedgerBookCommandExecute()
         {
-            this.ledgerRepository.Save(LedgerBook); 
+            this.ledgerRepository.Save(LedgerBook);
+            this.dirty = false;
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

@@ -15,7 +15,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public XamlOnDiskLedgerBookRepositoryTestHarness(
             [NotNull] ILedgerDataToDomainMapper dataToDomainMapper,
             [NotNull] ILedgerDomainToDataMapper domainToDataMapper
-            ) : base(dataToDomainMapper, domainToDataMapper)
+            ) : base(dataToDomainMapper, domainToDataMapper, new FakeLogger())
         {
         }
 

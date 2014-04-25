@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Statement
     ///     analyser statement file or a downloaded bank statement export to merge or load. If the filename is already known
     ///     it is loaded with no prompting, otherwise the user is prompted for a filename.
     ///     It also is responsible for saving  any open statement file into a budget analyser statement file.
-    ///     To function it orchestrates across the  <see cref="IStatementModelRepository" /> and the
+    ///     To function it orchestrates across the  <see cref="IVersionedStatementModelRepository" /> and the
     ///     <see cref="IBankStatementImporterRepository" />.
     /// </summary>
     public interface IStatementFileManager
