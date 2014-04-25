@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public bool Exists(string fileName)
         {
-            return File.Exists(fileName);
+            return FileExistsOnDisk(fileName);
         }
 
         public LedgerBook Load(string fileName)
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Ledger
             DataLedgerBook dataEntity;
             try
             {
-                dataEntity = XamlServices.Load(fileName) as DataLedgerBook;
+                dataEntity = LoadXamlFromDisk(fileName);
             }
             catch (Exception ex)
             {
@@ -80,13 +80,28 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.FileName = fileName;
             dataEntity.Checksum = CalculateChecksum(dataEntity);
 
-            XamlServices.Save(dataEntity.FileName, dataEntity);
+            SaveXamlFileToDisk(dataEntity);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
                 handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository", ApplicationHookEventArgs.Save));
             }
+        }
+
+        protected virtual bool FileExistsOnDisk(string fileName)
+        {
+            return File.Exists(fileName);
+        }
+
+        protected virtual DataLedgerBook LoadXamlFromDisk(string fileName)
+        {
+            return XamlServices.Load(fileName) as DataLedgerBook;
+        }
+
+        protected virtual void SaveXamlFileToDisk(DataLedgerBook dataEntity)
+        {
+            XamlServices.Save(dataEntity.FileName, dataEntity);
         }
 
         private double CalculateChecksum(DataLedgerBook dataEntity)

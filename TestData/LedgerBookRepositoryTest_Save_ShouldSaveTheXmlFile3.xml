@@ -1,0 +1,99 @@
+﻿<DataLedgerBook Checksum="15321.7" FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml" Modified="2013-12-22" Name="Rees Budget 2014" xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <DataLedgerBook.DatedEntries>
+    <scg:List x:TypeArguments="DataLedgerEntryLine" Capacity="4">
+      <DataLedgerEntryLine BankBalance="10738" Date="2013-11-15" Remarks="Opening entries">
+        <DataLedgerEntryLine.BankBalanceAdjustments>
+          <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="0" />
+        </DataLedgerEntryLine.BankBalanceAdjustments>
+        <DataLedgerEntryLine.Entries>
+          <scg:List x:TypeArguments="DataLedgerEntry" Capacity="16">
+            <DataLedgerEntry Balance="573" BucketCode="RATES">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="573" Debit="0" Id="c76267ec-e4e4-44e5-9cf0-793ce7812be4" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="200" BucketCode="POWER">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="200" Debit="0" Id="b663d31a-b6ea-4b76-a1ea-9fd571063711" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="215" BucketCode="PHNET">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="215" Debit="0" Id="f134028e-2b50-4e68-b61e-5c48ee2bbeb6" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="50" BucketCode="WATER">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="50" Debit="0" Id="913e9a15-9ff4-4be3-b3d0-eddd531db3bd" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="100" BucketCode="INSHOME">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="100" Debit="0" Id="4bb973a3-c6c6-4bea-a234-03ad8167a83f" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="421" BucketCode="INSCAR">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="421" Debit="0" Id="e305369b-38fd-4112-b3d1-f7575b64b550" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="1626" BucketCode="INSLIFE">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="1626" Debit="0" Id="1231620d-3e17-4f69-9003-f7f9699de838" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="163" BucketCode="CAR MTC">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="163" Debit="0" Id="c3edcd9f-2674-44cb-afbf-1b6035553917" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="434.73" BucketCode="REGO">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="434.73" Debit="0" Id="25f2bdac-4585-4f4a-8580-17a165c0932b" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="105" BucketCode="HAIRCUT">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="105" Debit="0" Id="f86dc2a9-508b-40cf-a411-78ed698c254c" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="403.56" BucketCode="CLOTHES">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="403.56" Debit="0" Id="204f1b26-cd30-4f2b-adc4-87030de9a82b" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+            <DataLedgerEntry Balance="292.41" BucketCode="DOC">
+              <DataLedgerEntry.Transactions>
+                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
+                  <DataLedgerTransaction Credit="292.41" Debit="0" Id="cc34aceb-01ac-4dfb-aa43-9a25b8ac933a" Narrative="Opening ledger balance" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                </scg:List>
+              </DataLedgerEntry.Transactions>
+            </DataLedgerEntry>
+          </scg:List>
+        </DataLedgerEntryLine.Entries>
+      </DataLedgerEntryLine>
+    </scg:List>
+  </DataLedgerBook.DatedEntries>
+</DataLedgerBook>
