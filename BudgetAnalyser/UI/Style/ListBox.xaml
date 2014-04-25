@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vsm="clr-namespace:System.Windows;assembly=PresentationFramework">
 
-    <ControlTemplate x:Key="StandardListBoxItemControlTemplate"
+    <ControlTemplate x:Key="ListBoxItem.StandardControlTemplate"
                      TargetType="{x:Type ListBoxItem}">
         <Border x:Name="Root"
                 Background="{TemplateBinding Background}"
@@ -42,7 +42,24 @@
         </Border>
     </ControlTemplate>
 
-    <Style x:Key="StandardListBoxContainerStyle"
+    <ControlTemplate x:Key="ListBoxItem.NoVisualStatesControlTemplate"
+                     TargetType="{x:Type ListBoxItem}">
+        <Border x:Name="Root"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="1"
+                Padding="{TemplateBinding Padding}"
+                SnapsToDevicePixels="True">
+            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Border>
+    </ControlTemplate>
+    
+    <Style x:Key="ListBox.StandardContainerStyle"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background"
                 Value="{StaticResource TileBackgroundBrush}" />
@@ -53,14 +70,21 @@
         <Setter Property="Margin"
                 Value="1" />
         <Setter Property="Template"
-                Value="{StaticResource StandardListBoxItemControlTemplate}" />
-        <!--<Style.Triggers>
-            <Trigger Property="IsKeyboardFocusWithin"
-                     Value="True">
-                <Setter Property="IsSelected"
-                        Value="True" />
-            </Trigger>
-        </Style.Triggers>-->
+                Value="{StaticResource ListBoxItem.StandardControlTemplate}" />
+    </Style>
+
+    <Style x:Key="ListBox.NoVisualStatesContainerStyle"
+           TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Background"
+                Value="{StaticResource TileBackgroundBrush}" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="Margin"
+                Value="1" />
+        <Setter Property="Template"
+                Value="{StaticResource ListBoxItem.NoVisualStatesControlTemplate}" />
     </Style>
 
     <Style TargetType="{x:Type ListBox}">

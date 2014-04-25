@@ -63,7 +63,7 @@
                 </Expander.Header>
                 <ScrollViewer MaxHeight="300"
                               VerticalScrollBarVisibility="Visible">
-                    <ListBox ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
+                    <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                              SelectionChanged="OnGroupListBoxRuleSelectionChanged"
                              Loaded="OnGroupListBoxLoaded"
                              ItemsSource="{Binding Rules}" />
@@ -141,13 +141,13 @@
         <ListBox x:Name="GroupedByListBox"
                  ContextMenu="{StaticResource RuleContextMenu}"
                  Grid.Row="2"
-                 ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
+                 ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding RulesGroupedByBucket}"
                  Visibility="{Binding GroupByListBoxVisibility, Converter={StaticResource BoolToVisConverter}}" />
         <ListBox x:Name="FlatListBox"
                  ContextMenu="{StaticResource RuleContextMenu}"
                  Grid.Row="2"
-                 ItemContainerStyle="{StaticResource StandardListBoxContainerStyle}"
+                 ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding Rules}"
                  SelectedItem="{Binding SelectedRule}"
                  Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource BoolToVisConverter}}" />

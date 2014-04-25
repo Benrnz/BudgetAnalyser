@@ -153,8 +153,8 @@
                     Value="200" />
         </Style>
 
-        <Style x:Key="BudgetListBoxContainerStyle"
-               BasedOn="{StaticResource StandardListBoxContainerStyle}"
+        <Style x:Key="ListBox.BudgetContainerStyle"
+               BasedOn="{StaticResource ListBox.StandardContainerStyle}"
                TargetType="{x:Type ListBoxItem}">
             <Setter Property="BorderBrush"
                     Value="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}" />
@@ -211,7 +211,7 @@
                            Text="Incomes" />
                 <ListBox x:Name="Incomes"
                          IsTextSearchEnabled="False"
-                         ItemContainerStyle="{StaticResource BudgetListBoxContainerStyle}"
+                         ItemContainerStyle="{StaticResource ListBox.BudgetContainerStyle}"
                          ItemsSource="{Binding Incomes}"
                          ItemTemplate="{StaticResource IncomeTemplate}"
                          SelectionMode="Single" />
@@ -239,7 +239,7 @@
                            Text="Expenses" />
                 <ListBox x:Name="Expenses"
                          IsTextSearchEnabled="False"
-                         ItemContainerStyle="{StaticResource BudgetListBoxContainerStyle}"
+                         ItemContainerStyle="{StaticResource ListBox.BudgetContainerStyle}"
                          ItemsSource="{Binding Expenses}"
                          ItemTemplate="{StaticResource ExpenseTemplate}"
                          SelectionMode="Single" />

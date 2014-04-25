@@ -296,7 +296,7 @@
 
                     <Style TargetType="ListBox">
                         <Setter Property="ItemContainerStyle"
-                                Value="{StaticResource TransactionListBoxContainer}" />
+                                Value="{StaticResource ListBox.TransactionContainer}" />
                         <Setter Property="HorizontalAlignment"
                                 Value="Stretch" />
                         <Setter Property="SnapsToDevicePixels"

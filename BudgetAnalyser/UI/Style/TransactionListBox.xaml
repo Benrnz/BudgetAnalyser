@@ -212,9 +212,9 @@
         </Border>
     </DataTemplate>
 
-    <Style x:Key="TransactionListBoxContainer"
+    <Style x:Key="ListBox.TransactionContainer"
            TargetType="ListBoxItem"
-           BasedOn="{StaticResource StandardListBoxContainerStyle}">
+           BasedOn="{StaticResource ListBox.StandardContainerStyle}">
 
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
