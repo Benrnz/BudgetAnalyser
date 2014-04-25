@@ -38,9 +38,9 @@ namespace BudgetAnalyser.ReportsCatalog
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
-        public ICommand AnalyseStatementCommand
+        public ICommand OverallBudgetPerformanceCommand
         {
-            get { return new RelayCommand(OnAnalyseStatementCommandExecute, CanExecuteAnalyseStatementCommand); }
+            get { return new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
 
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
@@ -61,10 +61,10 @@ namespace BudgetAnalyser.ReportsCatalog
 
         public ICommand SpendingTrendCommand
         {
-            get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteAnalyseStatementCommand); }
+            get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
 
-        private bool CanExecuteAnalyseStatementCommand()
+        private bool CanExecuteOverallBudgetPerformanceCommand()
         {
             return this.currentStatementModel != null
                    && this.currentStatementModel.Transactions.Any()
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.ReportsCatalog
                    && this.budgets.CurrentActiveBudget != null;
         }
 
-        private void OnAnalyseStatementCommandExecute()
+        private void OnOverallBudgetPerformanceCommandExecute()
         {
             OverallPerformanceBudgetAnalysis analysis;
             using (this.waitCursorFactory())

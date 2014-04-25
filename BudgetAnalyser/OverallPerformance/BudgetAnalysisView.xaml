@@ -14,7 +14,7 @@
         <converters1:PercentToColorConverter x:Key="PercentToColorConverter" />
         <converters1:BucketToVisibilityConverter x:Key="BucketToVisibilityConverter" />
 
-        <DataTemplate DataType="{x:Type reports:BucketAnalysis}">
+        <DataTemplate DataType="{x:Type reports:BucketPerformanceAnalysis}">
             <Grid ToolTip="{Binding Bucket.Description}">
                 <Grid Height="35"
                       Margin="1">

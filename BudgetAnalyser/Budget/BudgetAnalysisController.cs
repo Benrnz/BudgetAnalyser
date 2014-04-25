@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Budget
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {
-                var bucketAnalysis = x as BucketAnalysis;
+                var bucketAnalysis = x as BucketPerformanceAnalysis;
                 if (bucketAnalysis == null)
                 {
                     return true;

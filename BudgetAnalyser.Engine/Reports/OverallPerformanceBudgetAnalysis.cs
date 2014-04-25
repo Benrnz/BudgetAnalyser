@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.Reports
             this.bucketRepository = bucketRepository;
         }
 
-        public List<BucketAnalysis> Analyses { get; private set; }
+        public List<BucketPerformanceAnalysis> Analyses { get; private set; }
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
@@ -77,8 +77,8 @@ namespace BudgetAnalyser.Engine.Reports
 
             CalculateTotalsAndAverage(beginDate);
 
-            Analyses = new List<BucketAnalysis>();
-            var list = new List<BucketAnalysis>();
+            Analyses = new List<BucketPerformanceAnalysis>();
+            var list = new List<BucketPerformanceAnalysis>();
             foreach (BudgetBucket bucket in this.bucketRepository.Buckets)
             {
                 BudgetBucket bucketCopy = bucket;
@@ -90,12 +90,12 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal budgetedTotal = CalculateBudgetedTotalAmount(beginDate, b => b.Surplus);
                     decimal perMonthBudget = budgetedTotal / DurationInMonths; // Calc an average in case multiple budgets are used and the budgeted amounts are different.
-                    var surplusAnalysis = new BucketAnalysis
+                    var surplusAnalysis = new BucketPerformanceAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
                         Balance = budgetedTotal - totalSpent,
-                        BudgetTotal = budgetedTotal * DurationInMonths,
+                        BudgetTotal = budgetedTotal,
                         Budget = perMonthBudget, 
                         AverageSpend = -averageSpend,
                         BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildExpenseFinder(bucket));
                     decimal perMonthBudget = totalBudget / DurationInMonths;
-                    var analysis = new BucketAnalysis
+                    var analysis = new BucketPerformanceAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildIncomeFinder(bucket));
                     decimal perMonthBudget = totalBudget / DurationInMonths;
-                    var analysis = new BucketAnalysis
+                    var analysis = new BucketPerformanceAnalysis
                     {
                         Bucket = bucket,
                         TotalSpent = totalSpent,
