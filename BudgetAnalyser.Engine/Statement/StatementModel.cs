@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -16,7 +15,7 @@ namespace BudgetAnalyser.Engine.Statement
         private GlobalFilterCriteria currentFilter;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
-        private List<Transaction> doNotUseTransactions;
+        private IEnumerable<Transaction> doNotUseTransactions;
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
 
         private int fullDuration;
@@ -33,7 +32,6 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public IEnumerable<AccountType> AccountTypes { get; private set; }
 
         public IEnumerable<Transaction> AllTransactions
         {
@@ -43,8 +41,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
-        /// The hash does not persist between Application Loads.
+        ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
+        ///     The hash does not persist between Application Loads.
         /// </summary>
         public Guid ChangeHash { get; private set; }
 
@@ -69,7 +67,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             private set
             {
-                this.doNotUseTransactions = value.ToList();
+                this.doNotUseTransactions = value;
                 ChangeHash = Guid.NewGuid();
                 OnPropertyChanged();
             }
@@ -118,6 +116,15 @@ namespace BudgetAnalyser.Engine.Statement
 
         public void Filter(GlobalFilterCriteria criteria)
         {
+            if (criteria == null)
+            {
+                ChangeHash = Guid.NewGuid();
+                Transactions = AllTransactions.ToList();
+                DurationInMonths = this.fullDuration;
+                Filtered = false;
+                return;
+            }
+
             if (criteria.BeginDate > criteria.EndDate)
             {
                 throw new ArgumentException("End date must be after the begin date.");
@@ -166,7 +173,6 @@ namespace BudgetAnalyser.Engine.Statement
             this.duplicates = null;
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
             DurationInMonths = this.fullDuration;
-            AccountTypes = mergedTransactions.Select(t => t.AccountType).Distinct().ToList();
             Filter(this.currentFilter);
             SubscribeToTransactionChangedEvents();
         }
@@ -212,7 +218,6 @@ namespace BudgetAnalyser.Engine.Statement
             AllTransactions = Transactions;
             this.fullDuration = DurationInMonths;
             this.duplicates = null;
-            AccountTypes = Transactions.Select(t => t.AccountType).Distinct().ToList();
             OnPropertyChanged("Transactions");
             SubscribeToTransactionChangedEvents();
             return this;
@@ -232,9 +237,9 @@ namespace BudgetAnalyser.Engine.Statement
         {
             switch (propertyChangedEventArgs.PropertyName)
             {
-                case "Amount":
-                case "BudgetBucket":
-                case "Date":
+                case Transaction.AmountPropertyName:
+                case Transaction.BucketPropertyName:
+                case Transaction.DatePropertyName:
                     ChangeHash = Guid.NewGuid();
                     break;
             }
@@ -247,10 +252,10 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            foreach (Transaction transaction in AllTransactions)
+            Parallel.ForEach(AllTransactions, transaction =>
             {
                 transaction.PropertyChanged += OnTransactionPropertyChanged;
-            }
+            });
         }
 
         private void UnsubscribeToTransactionChangedEvents()
@@ -260,10 +265,10 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            foreach (Transaction transaction in AllTransactions)
+            Parallel.ForEach(AllTransactions, transaction =>
             {
                 transaction.PropertyChanged -= OnTransactionPropertyChanged;
-            }
+            });
         }
     }
 }

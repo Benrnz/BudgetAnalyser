@@ -18,6 +18,9 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
+        public const string SortByBucketKey = "Bucket";
+        public const string SortByDateKey = "Date";
+
         private readonly DemoFileHelper demoFileHelper;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
@@ -199,10 +202,18 @@ namespace BudgetAnalyser.Statement
             get { return this.doNotUseShown; }
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
+        }
+
+        public ICommand SortCommand
+        {
+            get { return new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand); }
         }
 
         public StatementViewModel ViewModel { get; private set; }
@@ -274,6 +285,11 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable;
+        }
+
+        private bool CanExecuteSortCommand()
+        {
+            return BackgroundJob.MenuAvailable && ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
         }
 
         private bool Load(string fullFileName)
@@ -536,6 +552,12 @@ namespace BudgetAnalyser.Statement
 
                 this.shellDialogCorrelationId = Guid.Empty;
             }
+        }
+
+        private void OnSortCommandExecute()
+        {
+            // The bindings are processed before commands, so the bound boolean for SortByBucket will be set to true by now.
+            ViewModel.UpdateGroupedByBucket();
         }
 
         private bool PromptToSaveIfDirty()

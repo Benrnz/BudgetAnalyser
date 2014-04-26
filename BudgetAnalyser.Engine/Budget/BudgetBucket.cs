@@ -13,11 +13,15 @@ namespace BudgetAnalyser.Engine.Budget
     [XmlInclude(typeof(IncomeBudgetBucket))]
     [XmlInclude(typeof(SpentMonthlyExpense))]
     [XmlInclude(typeof(SavedUpForExpense))]
-    public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged
+    public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, IComparable
     {
         private string doNotUseCode;
         private string doNotUseDescription;
-        protected BudgetBucket() { }
+
+        protected BudgetBucket()
+        {
+        }
+
         protected BudgetBucket(string code, string name)
         {
             if (code == null)
@@ -34,7 +38,7 @@ namespace BudgetAnalyser.Engine.Budget
             Code = code;
         }
 
-        public Guid? Id { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Code
         {
@@ -52,10 +56,13 @@ namespace BudgetAnalyser.Engine.Budget
             get { return this.doNotUseDescription; }
             set
             {
-                this.doNotUseDescription = value; 
+                this.doNotUseDescription = value;
                 OnPropertyChanged();
             }
         }
+
+        // TODO get rid of Id:
+        public Guid? Id { get; set; }
 
         public virtual string TypeDescription
         {
@@ -86,6 +93,17 @@ namespace BudgetAnalyser.Engine.Budget
         public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public int CompareTo(object obj)
+        {
+            var otherBucket = obj as BudgetBucket;
+            if (otherBucket == null)
+            {
+                return -1;
+            }
+
+            return string.Compare(Code, otherBucket.Code, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -134,8 +152,6 @@ namespace BudgetAnalyser.Engine.Budget
 
             return retval;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

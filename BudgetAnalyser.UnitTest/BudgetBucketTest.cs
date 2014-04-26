@@ -12,6 +12,33 @@ namespace BudgetAnalyser.UnitTest
         private const string NotSpecified = "NotSpecified";
 
         [TestMethod]
+        public void Comparable_HairBucketIsLessThanPower()
+        {
+            var hairBucket = TestData.StatementModelTestData.HairBucket;
+            var powerBucket = TestData.StatementModelTestData.PowerBucket;
+
+            Assert.IsTrue(hairBucket.CompareTo(powerBucket) < 0);
+        }
+
+        [TestMethod]
+        public void Comparable_PhoneBucketIsGreaterThanHair()
+        {
+            var hairBucket = TestData.StatementModelTestData.HairBucket;
+            var phoneBucket = TestData.StatementModelTestData.PhoneBucket;
+
+            Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);
+        }
+
+        [TestMethod]
+        public void Comparable_PhoneBucketIsEqualToAnotherInstance()
+        {
+            var phoneBucket = TestData.StatementModelTestData.PhoneBucket;
+            var phooneBucket2 = CreateSubject(TestData.TestDataConstants.PhoneBucketCode, "Foo");
+
+            Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
+        }
+
+        [TestMethod]
         public void CtorShouldAllocateUpperCaseCode()
         {
             BudgetBucket subject = CreateSubject("Foo", "Bar");

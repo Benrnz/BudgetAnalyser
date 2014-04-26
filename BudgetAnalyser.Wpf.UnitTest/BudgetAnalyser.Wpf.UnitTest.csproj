@@ -70,11 +70,16 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statement\StatementViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
       <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
       <Name>BudgetAnalyser.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj">
+      <Project>{d2a141e8-73f2-4c1a-8d31-a744968aeed9}</Project>
+      <Name>BudgetAnalyser.UnitTest</Name>
     </ProjectReference>
     <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.csproj">
       <Project>{3f2f3bc6-153d-4fd5-b819-6c456be2dc25}</Project>

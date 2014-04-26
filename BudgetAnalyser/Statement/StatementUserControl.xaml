@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -42,14 +43,47 @@
                         Orientation="Horizontal">
                 <TextBlock Style="{StaticResource TextBlock.Heading1}"
                            Text="{Binding ViewModel.StatementName}" />
-                <TextBlock Style="{StaticResource TextBlock.Heading1}" 
+                <TextBlock Style="{StaticResource TextBlock.Heading1}"
                            Text="*"
-                           Visibility="{Binding ViewModel.Dirty, Converter={StaticResource BoolToVisConverter}}"/>
+                           Visibility="{Binding ViewModel.Dirty, Converter={StaticResource BoolToVisConverter}}" />
             </StackPanel>
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                         Orientation="Horizontal">
+                <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
+                      Style="{StaticResource RoundMenuButton}">
+                    <Menu.Resources>
+                        <Style TargetType="{x:Type TextBlock}"
+                               BasedOn="{StaticResource TextBlock.ContextMenuStyle}">
+                        </Style>
+                    </Menu.Resources>
+                    <MenuItem Style="{StaticResource RoundMenuItemButton}">
+                        <MenuItem.Header>
+                            <TextBlock Text="Sort..."
+                                       FontSize="14"
+                                       Foreground="{StaticResource ButtonGlyphBrush}" />
+                        </MenuItem.Header>
+                        <MenuItem Command="{Binding SortCommand}"
+                                  CommandParameter="{x:Static statement:StatementController.SortByDateKey}"
+                                  ToolTip="Sort by Date (Ascending)"
+                                  IsCheckable="True"
+                                  IsChecked="{Binding ViewModel.SortByDate}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Date (Ascending)" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <MenuItem Command="{Binding SortCommand}"
+                                  CommandParameter="{x:Static statement:StatementController.SortByBucketKey}"
+                                  ToolTip="Group by Bucket then sort by Date (Ascending)"
+                                  IsCheckable="True"
+                                  IsChecked="{Binding ViewModel.SortByBucket}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Bucket (Ascending)" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
                 <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                       Style="{StaticResource RoundMenuButton}">
                     <Menu.Resources>
@@ -171,10 +205,9 @@
                                    Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border
-                    Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
-                    Style="{StaticResource WarningOilLightStyle}"
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
+                <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+                        Style="{StaticResource WarningOilLightStyle}"
+                        Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WarningLightTextStyle}"
                                    Text="Difference: " />

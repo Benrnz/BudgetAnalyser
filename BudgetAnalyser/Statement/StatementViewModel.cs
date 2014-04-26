@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -17,8 +18,11 @@ namespace BudgetAnalyser.Statement
         private readonly IBudgetBucketRepository budgetBucketRepository;
 
         private string doNotUseBucketFilter;
+
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
+        private ObservableCollection<TransactionGroupedByBucket> doNotUseGroupedByBucket;
+        private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
 
         public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository)
@@ -29,6 +33,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.budgetBucketRepository = budgetBucketRepository;
+            SortByDate = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -131,6 +136,16 @@ namespace BudgetAnalyser.Statement
             get { return BudgetBuckets.Union(new[] { UncategorisedFilter }).OrderBy(b => b); }
         }
 
+        public ObservableCollection<TransactionGroupedByBucket> GroupedByBucket
+        {
+            get { return this.doNotUseGroupedByBucket; }
+            private set
+            {
+                this.doNotUseGroupedByBucket = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool HasTransactions
         {
             get { return Statement != null && Statement.Transactions.Any(); }
@@ -146,14 +161,52 @@ namespace BudgetAnalyser.Statement
             get { return Statement.Transactions.Min(t => t.Date); }
         }
 
+        public bool SortByBucket
+        {
+            get { return !this.doNotUseSortByDate; }
+            set
+            {
+                this.doNotUseSortByDate = !value;
+                OnPropertyChanged("SortByDate");
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SortByDate
+        {
+            get { return this.doNotUseSortByDate; }
+            set
+            {
+                this.doNotUseSortByDate = value;
+                OnPropertyChanged("SortByBucket");
+                OnPropertyChanged();
+            }
+        }
+
         public StatementModel Statement
         {
             get { return this.doNotUseStatement; }
 
             set
             {
+                if (this.doNotUseStatement != null)
+                {
+                    this.doNotUseStatement.PropertyChanged -= OnStatementPropertyChanged;
+                }
+
                 this.doNotUseStatement = value;
+                this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
                 OnPropertyChanged();
+                UpdateGroupedByBucket();
+            }
+        }
+
+        private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
+            if (propertyChangedEventArgs.PropertyName == "Transactions")
+            {
+                UpdateGroupedByBucket();
             }
         }
 
@@ -267,6 +320,8 @@ namespace BudgetAnalyser.Statement
             OnPropertyChanged("TotalCount");
             OnPropertyChanged("HasTransactions");
             OnPropertyChanged("StatementName");
+            OnPropertyChanged("MinTransactionDate");
+            OnPropertyChanged("MaxTransactionDate");
 
             if (Statement == null)
             {
@@ -279,6 +334,23 @@ namespace BudgetAnalyser.Statement
                     ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
                         duplicates.Sum(group => group.Count()))
                     : null;
+            }
+        }
+
+        public void UpdateGroupedByBucket()
+        {
+            if (SortByBucket)
+            {
+                IEnumerable<TransactionGroupedByBucket> query = Statement.Transactions
+                    .GroupBy(t => t.BudgetBucket)
+                    .OrderBy(g => g.Key)
+                    .Select(group => new TransactionGroupedByBucket(group, group.Key));
+                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucket>(query);
+            }
+            else
+            {
+                // Do it later - its not shown right now.
+                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucket>();
             }
         }
 

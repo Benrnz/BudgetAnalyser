@@ -7,9 +7,13 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
-    [DebuggerDisplay("{Date} {Amount} {Description} {BudgetBucket}")]
+    [DebuggerDisplay("Transaction: {Date} {Amount} {Description} {BudgetBucket}")]
     public class Transaction : INotifyPropertyChanged, IComparable
     {
+        public const string AmountPropertyName = "Amount";
+        public const string BucketPropertyName = "BudgetBucket";
+        public const string DatePropertyName = "Date";
+
         private BudgetBucket budgetBucket;
         private AccountType doNotUseAccountType;
         private decimal doNotUseAmount;
