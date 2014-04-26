@@ -346,6 +346,7 @@ namespace BudgetAnalyser.Statement
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucket(group, group.Key));
                 GroupedByBucket = new ObservableCollection<TransactionGroupedByBucket>(query);
+                BucketFilter = string.Empty;
             }
             else
             {

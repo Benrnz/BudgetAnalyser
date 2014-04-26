@@ -295,7 +295,8 @@
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        Visibility="{Binding ViewModel.SortByDate, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock HorizontalAlignment="Right"
                            Margin="4"
                            Text="Budget Bucket Filter" />

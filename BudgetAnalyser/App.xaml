@@ -28,10 +28,10 @@
                 <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollViewer.xaml" />
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
+                <ResourceDictionary Source="UI/Style/Expander.xaml" />
                 <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
-                <ResourceDictionary Source="UI/Style/Expander.xaml" />
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
