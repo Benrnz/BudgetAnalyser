@@ -18,7 +18,7 @@
                             <ColorAnimation Duration="0:0:0.5"
                                             Storyboard.TargetName="Root"
                                             Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                            To="{StaticResource ControlMouseOverColor}">
+                                            To="{StaticResource Colour.ControlMouseOver}">
                             </ColorAnimation>
                         </Storyboard>
                     </vsm:VisualState>
@@ -27,7 +27,7 @@
                             <ColorAnimation Duration="0:0:0.5"
                                             Storyboard.TargetName="Root"
                                             Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                            To="{StaticResource SelectedItemRowColor}">
+                                            To="{StaticResource Colour.SelectedItem}">
                             </ColorAnimation>
                         </Storyboard>
                     </vsm:VisualState>

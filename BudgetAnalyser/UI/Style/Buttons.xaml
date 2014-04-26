@@ -8,7 +8,7 @@
                      Color="{StaticResource ButtonChromeColor}" />
 
     <SolidColorBrush x:Key="ButtonDisabledBrush"
-                     Color="{StaticResource MainBackground}" />
+                     Color="{StaticResource Colour.MainBackground}" />
 
     <Color x:Key="ButtonBackgroundColor">
         #FF2C6F8E

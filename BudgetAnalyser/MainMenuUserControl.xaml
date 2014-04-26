@@ -30,7 +30,7 @@
                                                 Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
                                                 Storyboard.TargetName="MainGrid">
                                                 <EasingColorKeyFrame KeyTime="0:0:0.05"
-                                                                     Value="{StaticResource ControlMouseOverColor}" />
+                                                                     Value="{StaticResource Colour.ControlMouseOver}" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </vsm:VisualState>
@@ -43,7 +43,7 @@
                                                 Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
                                                 Storyboard.TargetName="MainGrid">
                                                 <EasingColorKeyFrame KeyTime="0:0:0.05"
-                                                                     Value="{StaticResource SelectedItemRowColor}" />
+                                                                     Value="{StaticResource Colour.SelectedItem}" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </vsm:VisualState>

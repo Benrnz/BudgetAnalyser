@@ -11,9 +11,9 @@
                                      EndPoint="0,1">
                     <LinearGradientBrush.GradientStops>
                         <GradientStopCollection>
-                            <GradientStop Color="{StaticResource BorderLightColor}"
+                            <GradientStop Color="{StaticResource Colour.BorderLight}"
                                           Offset="0.0" />
-                            <GradientStop Color="{StaticResource BorderDarkColor}"
+                            <GradientStop Color="{StaticResource Colour.BorderDark}"
                                           Offset="1.0" />
                         </GradientStopCollection>
                     </LinearGradientBrush.GradientStops>
@@ -66,7 +66,7 @@
                                             Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                             Storyboard.TargetName="HeaderBorder">
                                             <EasingColorKeyFrame KeyTime="0"
-                                                                 Value="{StaticResource ControlMouseOverColor}" />
+                                                                 Value="{StaticResource Colour.ControlMouseOver}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>
@@ -82,9 +82,9 @@
                                                      EndPoint="0,1">
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="{StaticResource BorderLightColor}"
+                                            <GradientStop Color="{StaticResource Colour.BorderLight}"
                                                           Offset="0.0" />
-                                            <GradientStop Color="{StaticResource BorderDarkColor}"
+                                            <GradientStop Color="{StaticResource Colour.BorderDark}"
                                                           Offset="1.0" />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
@@ -97,9 +97,9 @@
                                                      EndPoint="0,1">
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="{StaticResource ControlLightColor}"
+                                            <GradientStop Color="{StaticResource Colour.ControlLight}"
                                                           Offset="0.0" />
-                                            <GradientStop Color="{StaticResource ControlMediumColor}"
+                                            <GradientStop Color="{StaticResource Colour.ControlMedium}"
                                                           Offset="1.0" />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
@@ -146,16 +146,16 @@
                             <Border Name="HeaderBorder"
                                     BorderThickness="0,1,0,1">
                                 <Border.Background>
-                                    <SolidColorBrush Color="{StaticResource ControlLightColor}" />
+                                    <SolidColorBrush Color="{StaticResource Colour.ControlLight}" />
                                 </Border.Background>
                                 <Border.BorderBrush>
                                     <LinearGradientBrush StartPoint="0,0"
                                                          EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{StaticResource BorderLightColor}"
+                                                <GradientStop Color="{StaticResource Colour.BorderLight}"
                                                               Offset="0.0" />
-                                                <GradientStop Color="{StaticResource BorderDarkColor}"
+                                                <GradientStop Color="{StaticResource Colour.BorderDark}"
                                                               Offset="1.0" />
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>
@@ -195,7 +195,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
                                                                       Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0"
-                                                                 Value="{StaticResource SelectedItemRowColor}" />
+                                                                 Value="{StaticResource Colour.SelectedItem}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>
@@ -204,7 +204,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
                                                                       Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0"
-                                                                 Value="{StaticResource SelectedItemRowColor}" />
+                                                                 Value="{StaticResource Colour.SelectedItem}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>

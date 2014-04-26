@@ -2,15 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vsm="clr-namespace:System.Windows;assembly=PresentationFramework">
 
-    <Color x:Key="DisabledForegroundColor">#FF888888</Color>
-    <Color x:Key="ControlLightColor">White</Color>
-    <Color x:Key="ControlMediumColor">#FF7381F9</Color>
-    <Color x:Key="ControlPressedColor">#FF211AA9</Color>
-    <Color x:Key="GlyphColor">#FF000000</Color>
-    <Color x:Key="BorderLightColor">#FFCCCCCC</Color>
-    <Color x:Key="BorderMediumColor">#FF888888</Color>
-    <Color x:Key="BorderDarkColor">#FF444444</Color>
-
     <Style x:Key="ScrollBarLineButton"
            TargetType="{x:Type RepeatButton}">
         <Setter Property="SnapsToDevicePixels"
@@ -35,7 +26,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
                                                                       Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0"
-                                                                 Value="{StaticResource ControlPressedColor}" />
+                                                                 Value="{StaticResource Colour.ControlPressed}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>
@@ -44,7 +35,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Arrow"
                                                                       Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0"
-                                                                 Value="{StaticResource DisabledForegroundColor}" />
+                                                                 Value="{StaticResource Colour.DisabledForeground}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>
@@ -55,7 +46,7 @@
                               VerticalAlignment="Center"
                               Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}">
                             <Path.Fill>
-                                <SolidColorBrush Color="{StaticResource GlyphColor}" />
+                                <SolidColorBrush Color="{StaticResource Colour.Glyph}" />
                             </Path.Fill>
                         </Path>
                     </Border>
