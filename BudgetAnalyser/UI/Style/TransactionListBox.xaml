@@ -3,9 +3,11 @@
                     xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
                     xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
                     xmlns:statement="clr-namespace:BudgetAnalyser.Engine.Statement;assembly=BudgetAnalyser.Engine"
-                    xmlns:statement1="clr-namespace:BudgetAnalyser.Statement">
+                    xmlns:statement1="clr-namespace:BudgetAnalyser.Statement"
+                    xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
 
     <converters:BudgetBucketToStringConverter x:Key="BudgetBucketToStringConverter" />
+    <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
 
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type statement:Transaction}">
@@ -212,6 +214,76 @@
         </Border>
     </DataTemplate>
 
+    <DataTemplate x:Key="GroupedByBucketTemplate"
+                  DataType="statement:TransactionGroupedByBucket">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition MinWidth="75" 
+                                  Width="*"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Badge.Border2}"
+                    ToolTip="Total number of transactions in this bucket for the date range.">
+                <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                           Text="{Binding TotalCount}" />
+            </Border>
+            
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Bucket.Code}"
+                       ToolTip="{Binding Bucket.Description}" />
+            
+            <Border Style="{StaticResource Badge.BorderLarge}"
+                    Grid.Column="2"
+                    ToolTip="Total debits in this bucket for the date range."
+                    Visibility="{Binding TotalDebits, Converter={StaticResource Converter.ZeroToVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding TotalDebits, StringFormat=C}"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                    <TextBlock Text="DR"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Style="{StaticResource Badge.BorderLarge}"
+                    Grid.Column="3"
+                    ToolTip="Total credits in this bucket for the date range."
+                    Visibility="{Binding TotalCredits, Converter={StaticResource Converter.ZeroToVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding TotalCredits, StringFormat=C}"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                    <TextBlock Text="CR"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Badge.BorderLarge}"
+                    Grid.Column="4"
+                    ToolTip="Difference between total debits and total credits."
+                    Visibility="{Binding TotalDifference, Converter={StaticResource Converter.ZeroToVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ê"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                               FontFamily="Webdings" />
+                    <TextBlock Text="{Binding TotalDifference, StringFormat=C}"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Badge.BorderLarge}"
+                    Grid.Column="5"
+                    ToolTip="Average debit in this bucket for the date range."
+                    Visibility="{Binding AverageDebit, Converter={StaticResource Converter.ZeroToVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Avg"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                    <TextBlock Text="{Binding AverageDebit, StringFormat=C}"
+                               Style="{StaticResource Badge.TextBlock.WarningLightStyle}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
     <Style x:Key="ListBox.TransactionContainer"
            TargetType="ListBoxItem"
            BasedOn="{StaticResource ListBox.StandardContainerStyle}">

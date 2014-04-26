@@ -7,7 +7,7 @@
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
-        <converters1:BucketToColourConverter x:Key="BucketToColourConverter" />
+        <converters1:BucketToColourConverter x:Key="Converter.BucketToColour" />
 
         <Style x:Key="BudgetItemTextBox"
                BasedOn="{StaticResource BudgetTile}"
@@ -66,12 +66,12 @@
 
                             <ControlTemplate>
                                 <StackPanel x:Name="ContentContainer"
-                                            Background="{Binding Bucket, Converter={StaticResource BucketToColourConverter}}">
+                                            Background="{Binding Bucket, Converter={StaticResource Converter.BucketToColour}}">
                                     <TextBlock Foreground="{StaticResource MainBackgroundBrush}"
                                                Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
-                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource BoolToVis2Converter}}" />
+                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
                             </ControlTemplate>
                         </Button.Template>
@@ -124,7 +124,7 @@
                                     <TextBlock Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
-                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource BoolToVis2Converter}}" />
+                                               Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
                             </ControlTemplate>
                         </Button.Template>
@@ -157,7 +157,7 @@
                BasedOn="{StaticResource ListBox.StandardContainerStyle}"
                TargetType="{x:Type ListBoxItem}">
             <Setter Property="BorderBrush"
-                    Value="{Binding Path=Bucket, Converter={StaticResource BucketToColourConverter}}" />
+                    Value="{Binding Path=Bucket, Converter={StaticResource Converter.BucketToColour}}" />
         </Style>
     </UserControl.Resources>
 
@@ -304,7 +304,7 @@
         <Grid Background="{StaticResource MainBackgroundBrush}"
               Grid.ColumnSpan="2"
               Grid.RowSpan="5"
-              Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource BoolToVisConverter}}">
+              Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource Converter.BoolToVis}}">
             <ContentPresenter Content="{Binding BudgetPieController}"
                               VerticalAlignment="Top" />
         </Grid>

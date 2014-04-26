@@ -15,9 +15,9 @@
                  Text="{Binding Remarks}"
                  MinLines="2"
                  TextWrapping="Wrap"
-                 Visibility="{Binding IsReadOnly, Converter={StaticResource NotBoolToVisConverter}}" />
+                 Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}" />
         <TextBlock Text="{Binding Remarks}"
                    TextWrapping="Wrap"
-                   Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVisConverter}}" />
+                   Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.BoolToVis}}" />
     </StackPanel>
 </UserControl>

@@ -87,23 +87,23 @@
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />
-            <Border Style="{StaticResource WarningOilLightStyle}"
-                    Visibility="{Binding NoStatementLoaded, Converter={StaticResource BoolToVisConverter}}">
+            <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                    Visibility="{Binding NoStatementLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Statement"
-                           Style="{StaticResource WarningLightTextStyle}"
+                           Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            ToolTip="Warning! No statement is loaded, therefore adding a reconciliation will not auto-match transactions." />
             </Border>
-            <Border Style="{StaticResource WarningOilLightStyle}"
-                    Visibility="{Binding NoBudgetLoaded, Converter={StaticResource BoolToVisConverter}}">
+            <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                    Visibility="{Binding NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Budget"
-                           Style="{StaticResource WarningLightTextStyle}"
+                           Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            ToolTip="Warning! No budget is loaded, therefore adding a reconciliation will not auto credit ledgers with budgeted amounts." />
             </Border>
         </StackPanel>
 
         <!-- Main Content -->
         <Grid Grid.Row="1"
-              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource NotBoolToVisConverter}}">
+              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource Converter.NotBoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -136,7 +136,7 @@
               Height="200"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
-              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource BoolToVisConverter}}"
+              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource Converter.BoolToVis}}"
               Width="500">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -161,7 +161,7 @@
         <!-- Transactions view -->
         <Grid Background="Transparent"
               Grid.Row="1"
-              Visibility="{Binding ShowPopup, Converter={StaticResource BoolToVisConverter}}">
+              Visibility="{Binding ShowPopup, Converter={StaticResource Converter.BoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.25*" />
                 <RowDefinition Height="*"
@@ -182,17 +182,17 @@
 
                 <Grid>
                     <ledgerBook:LedgerRemarksUserControl DataContext="{Binding LedgerRemarksController}"
-                                                         Visibility="{Binding Shown, Converter={StaticResource BoolToVisConverter}}" />
+                                                         Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
 
                     <ledgerBook:LedgerTransactionsUserControl DataContext="{Binding LedgerTransactionsController}"
-                                                              Visibility="{Binding Shown, Converter={StaticResource BoolToVisConverter}}" />
+                                                              Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
 
                     <budget:ChooseBudgetBucketUserControl DataContext="{Binding ChooseBudgetBucketController}"
-                                                          Visibility="{Binding Shown, Converter={StaticResource BoolToVisConverter}}" />
+                                                          Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
 
                     <ledgerBook:AddLedgerReconciliationUserControl
                         DataContext="{Binding AddLedgerReconciliationController}"
-                        Visibility="{Binding Shown, Converter={StaticResource BoolToVisConverter}}" />
+                        Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
             <Border Background="{StaticResource MainBackgroundBrush}"

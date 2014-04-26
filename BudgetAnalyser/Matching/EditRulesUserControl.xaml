@@ -143,21 +143,21 @@
                  Grid.Row="2"
                  ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding RulesGroupedByBucket}"
-                 Visibility="{Binding GroupByListBoxVisibility, Converter={StaticResource BoolToVisConverter}}" />
+                 Visibility="{Binding GroupByListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}" />
         <ListBox x:Name="FlatListBox"
                  ContextMenu="{StaticResource RuleContextMenu}"
                  Grid.Row="2"
                  ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding Rules}"
                  SelectedItem="{Binding SelectedRule}"
-                 Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource BoolToVisConverter}}" />
+                 Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}" />
         <StackPanel Grid.Column="1"
                     Grid.Row="1"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
             <Border Background="{StaticResource TileBackgroundBrush}"
                     Margin="52,5,5,-2"
-                    Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}"
+                    Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}"
                     Width="100">
                 <TextBlock Margin="5"
                            Style="{StaticResource TextBlock.Heading1}"
@@ -166,22 +166,22 @@
             <Button Command="{Binding DeleteRuleCommand}"
                     Style="{StaticResource CloseButton}"
                     ToolTip="Delete Rule"
-                    Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}" />
+                    Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}" />
             <Button Style="{StaticResource UnlockButton}"
                     Command="{Binding EditRuleCommand}"
                     ToolTip="Edit Rule"
-                    Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                    Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Style="{StaticResource SaveButton}"
                     Command="{Binding SaveRuleCommand}"
                     ToolTip="Save Rule"
-                    Visibility="{Binding EditingRule, Converter={StaticResource BoolToVisConverter}}" />
+                    Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
         <Border Background="{StaticResource TileBackgroundBrush}"
                 BorderThickness="2"
                 Grid.Column="1"
                 Grid.Row="2"
                 Margin="50,0,5,5"
-                Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisConverter}}">
+                Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}">
             <Grid Margin="5"
                   VerticalAlignment="Top">
                 <Grid.RowDefinitions>
@@ -250,11 +250,11 @@
                            Grid.Row="3"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.Description}"
-                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                          Grid.Row="3"
                          Text="{Binding SelectedRule.Description}"
-                         Visibility="{Binding EditingRule, Converter={StaticResource BoolToVisConverter}}"/>
+                         Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}"/>
                 
                 <TextBlock Grid.Row="4"
                            Grid.Column="0"
@@ -264,11 +264,11 @@
                            Grid.Row="4"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.Amount}"
-                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                            Grid.Row="4"
                            Text="{Binding SelectedRule.Amount}"
-                         Visibility="{Binding EditingRule, Converter={StaticResource BoolToVisConverter}}" />
+                         Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
 
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
@@ -278,31 +278,31 @@
                            Grid.Row="5"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.Reference1}"
-                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                            Grid.Row="5"
                            Text="{Binding SelectedRule.Reference1}"
-                         Visibility="{Binding EditingRule, Converter={StaticResource BoolToVis2Converter}}" />
+                         Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis2}}" />
 
                 <TextBlock Grid.Column="1"
                            Grid.Row="6"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.Reference2}"
-                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                          Grid.Row="6"
                          Text="{Binding SelectedRule.Reference2}"
-                         Visibility="{Binding EditingRule, Converter={StaticResource BoolToVis2Converter}}" />
+                         Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis2}}" />
 
                 <TextBlock Grid.Column="1"
                            Grid.Row="7"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.Reference3}"
-                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBox Grid.Column="1"
                          Grid.Row="7"
                          Text="{Binding SelectedRule.Reference3}"
-                         Visibility="{Binding EditingRule, Converter={StaticResource BoolToVis2Converter}}" />
+                         Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis2}}" />
 
                 <TextBlock Grid.Row="8"
                            Grid.Column="0"
@@ -312,7 +312,7 @@
                            Grid.Row="8"
                            Style="{StaticResource TextBlock.RuleDataStyle}"
                            Text="{Binding SelectedRule.TransactionType}"
-                           Visibility="{Binding SelectedRule.TransactionType, Converter={StaticResource NullToVisConverter}}" />
+                           Visibility="{Binding SelectedRule.TransactionType, Converter={StaticResource Converter.NullToVis}}" />
                 <TextBlock Grid.Row="9"
                            Grid.Column="0"
                            Style="{StaticResource TextBlock.LabelStyle}"

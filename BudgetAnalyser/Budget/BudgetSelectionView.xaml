@@ -17,7 +17,7 @@
     <!-- DataContext must be BudgetController -->
 
     <Window.Resources>
-        <converters1:BudgetNameViewModelConverter x:Key="BudgetNameViewModelConverter" />
+        <converters1:BudgetNameViewModelConverter x:Key="Converter.BudgetNameViewModel" />
 
         <DataTemplate DataType="{x:Type budget:BudgetModel}">
             <Button Style="{x:Null}"
@@ -34,7 +34,7 @@
                             </Grid.RowDefinitions>
                             <budget1:BudgetModelNameUserControl>
                                 <budget1:BudgetModelNameUserControl.DataContext>
-                                    <MultiBinding Converter="{StaticResource BudgetNameViewModelConverter}">
+                                    <MultiBinding Converter="{StaticResource Converter.BudgetNameViewModel}">
                                         <MultiBinding.Bindings>
                                             <Binding Path="." />
                                             <Binding

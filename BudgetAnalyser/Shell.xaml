@@ -17,27 +17,27 @@
             <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />
         </Grid>
         <Grid>
-            <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding StatementController}"
                                   DataContext="{Binding StatementController}" />
             </Grid>
-            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding BudgetController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
-            <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding LedgerBookController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
-            <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding DashboardController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
-            <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
-            <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource BoolToVisConverter}}">
+            <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding RulesController}"
                                   VerticalAlignment="Stretch" />
             </Grid>
@@ -45,7 +45,7 @@
             <!-- Shell Pop Up Dialog -->
             <Grid Background="#cc000000"
                   KeyUp="OnShellDialogKeyUp"
-                  Visibility="{Binding PopUpDialogContent, Converter={StaticResource NullToVisConverter}}">
+                  Visibility="{Binding PopUpDialogContent, Converter={StaticResource Converter.NullToVis}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
@@ -63,17 +63,17 @@
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Save"
                                     Style="{StaticResource SaveButton}"
-                                    Visibility="{Binding SaveButtonVisible, Converter={StaticResource BoolToVisConverter}}" />
+                                    Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Ok"
                                     IsDefault="False"
                                     IsCancel="{Binding DialogOkIsCancel}"
                                     Style="{StaticResource OkRoundButton}"
-                                    Visibility="{Binding OkButtonVisible, Converter={StaticResource BoolToVisConverter}}" />
+                                    Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Cancel"
                                     Style="{StaticResource CloseButton}"
-                                    Visibility="{Binding CancelButtonVisible, Converter={StaticResource BoolToVisConverter}}" />
+                                    Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

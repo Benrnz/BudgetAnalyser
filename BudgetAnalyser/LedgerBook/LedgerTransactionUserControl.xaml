@@ -16,16 +16,16 @@
         <TextBlock Grid.Column="1"
                    Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Credit, StringFormat=N}"
-                   Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}" />
+                   Visibility="{Binding Credit, Converter={StaticResource Converter.ZeroToVisibility}}" />
         <TextBlock Grid.Column="2"
                    Text="CR"
-                   Visibility="{Binding Credit, Converter={StaticResource ZeroToVisibilityConverter}}"/>
+                   Visibility="{Binding Credit, Converter={StaticResource Converter.ZeroToVisibility}}"/>
         <TextBlock Grid.Column="3"
                    Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Debit, StringFormat=N}"
-                   Visibility="{Binding Debit, Converter={StaticResource ZeroToVisibilityConverter}}" />
+                   Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}" />
         <TextBlock Grid.Column="4"
-                   Visibility="{Binding Debit, Converter={StaticResource ZeroToVisibilityConverter}}"
+                   Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}"
                    Text="DR" />
         <Button Style="{StaticResource CloseButton}"
                 Grid.Column="5"
@@ -34,7 +34,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 ToolTip="Remove"
-                Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisConverter}}">
+                Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Converter.BoolToVis}}">
             <Button.LayoutTransform>
                 <ScaleTransform CenterX="0.5"
                                 CenterY="0.5"

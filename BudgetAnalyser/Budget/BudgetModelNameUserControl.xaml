@@ -6,7 +6,7 @@
     <StackPanel Orientation="Horizontal">
         <Border Style="{StaticResource Badge.Border1}"
                 ToolTip="This budget is the current active budget for today."
-                Visibility="{Binding BudgetActive, Converter={StaticResource BoolToVisConverter}}">
+                Visibility="{Binding BudgetActive, Converter={StaticResource Converter.BoolToVis}}">
             <TextBlock Style="{StaticResource Badge.Text}"
                        Text="Active" />
         </Border>
@@ -17,7 +17,7 @@
                 Height="25"
                 Margin="5"
                 ToolTip="This budget is old, and is not current for today's or future transactions."
-                Visibility="{Binding BudgetArchived, Converter={StaticResource BoolToVisConverter}}">
+                Visibility="{Binding BudgetArchived, Converter={StaticResource Converter.BoolToVis}}">
             <TextBlock FontSize="11"
                        Margin="3"
                        Text="Archived" />
@@ -28,7 +28,7 @@
                 Height="25"
                 Margin="5"
                 ToolTip="This budget is a future dated budget and has not yet being applied to transactions."
-                Visibility="{Binding BudgetInFuture, Converter={StaticResource BoolToVisConverter}}">
+                Visibility="{Binding BudgetInFuture, Converter={StaticResource Converter.BoolToVis}}">
             <TextBlock FontSize="11"
                        Margin="3"
                        Text="Future" />

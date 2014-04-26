@@ -8,13 +8,13 @@
              MinWidth="200">
 
     <UserControl.Resources>
-        <converters1:TextToStaticResourceConverter x:Key="TextToStaticResourceConverter" />
+        <converters1:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
 
         <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
-            <Border Style="{Binding WidgetStyle, Converter={StaticResource TextToStaticResourceConverter}}"
+            <Border Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
                     ToolTip="{Binding ToolTip}"
-                    Visibility="{Binding Visibility, Converter={StaticResource BoolToVisConverter}}">
-                <Grid Style="{Binding ColourStyleName, Converter={StaticResource TextToStaticResourceConverter}}">
+                    Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
+                <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
@@ -29,7 +29,7 @@
                                  Minimum="{Binding Minimum}"
                                  ToolTip="{Binding ToolTip}"
                                  Value="{Binding Value}"
-                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BoolToVisConverter}}" />
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource Converter.BoolToVis}}" />
                     <TextBlock Grid.Row="1"
                                Margin="4,0,4,4"
                                Style="{StaticResource TextBlock.Paragraph}"
@@ -40,16 +40,16 @@
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
                             Style="{StaticResource ModernTileButton}"
-                            Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
+                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type widget:Widget}">
-            <Border Style="{Binding WidgetStyle, Converter={StaticResource TextToStaticResourceConverter}}"
+            <Border Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
                     ToolTip="{Binding ToolTip}"
-                    Visibility="{Binding Visibility, Converter={StaticResource BoolToVisConverter}}">
-                <Grid Style="{Binding ColourStyleName, Converter={StaticResource TextToStaticResourceConverter}}">
+                    Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
+                <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -60,12 +60,12 @@
                     </Grid.RowDefinitions>
                     <Image HorizontalAlignment="Left"
                            Margin="5"
-                           Source="{Binding ImageResourceName, Converter={StaticResource TextToStaticResourceConverter}}"
+                           Source="{Binding ImageResourceName, Converter={StaticResource Converter.TextToStaticResource}}"
                            VerticalAlignment="Top"
                            Width="40" />
                     <Image HorizontalAlignment="Left"
                            Margin="40,25,0,0"
-                           Source="{Binding ImageResourceName2, Converter={StaticResource TextToStaticResourceConverter}}"
+                           Source="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToStaticResource}}"
                            VerticalAlignment="Top"
                            Width="20" />
                     <TextBlock FontSize="24"
@@ -82,7 +82,7 @@
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
                             Style="{StaticResource ModernTileButton}"
-                            Visibility="{Binding Clickable, Converter={StaticResource BoolToVisConverter}}" />
+                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>

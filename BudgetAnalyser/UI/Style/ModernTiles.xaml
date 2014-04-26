@@ -93,7 +93,7 @@
 
     <Style x:Key="WidgetWarningStyle"
            TargetType="Panel">
-        <Setter Property="Background" Value="{StaticResource WarningOilLightBrush}" />
+        <Setter Property="Background" Value="{StaticResource Brush.WarningOilLight}" />
     </Style>
 
     <Style x:Key="WidgetStandardStyle"

@@ -126,7 +126,7 @@
     <Compile Include="Converters\ConverterHelper.cs" />
     <Compile Include="Converters\MatchingRuleDescriptorConverter.cs" />
     <Compile Include="Converters\NumberSignToColorConverter.cs" />
-    <Compile Include="Converters\PercentToColorConverter.cs" />
+    <Compile Include="Converters\PercentToColourConverter.cs" />
     <Compile Include="Dashboard\DashboardController.cs" />
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>

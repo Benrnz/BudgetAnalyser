@@ -11,8 +11,8 @@
         Width="740">
 
     <Window.Resources>
-        <converters1:PercentToColorConverter x:Key="PercentToColorConverter" />
-        <converters1:BucketToVisibilityConverter x:Key="BucketToVisibilityConverter" />
+        <converters1:PercentToColourConverter x:Key="Converter.PercentToColour" />
+        <converters1:BucketToVisibilityConverter x:Key="Converter.BucketToVisibility" />
 
         <DataTemplate DataType="{x:Type reports:BucketPerformanceAnalysis}">
             <Grid ToolTip="{Binding Bucket.Description}">
@@ -27,15 +27,15 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Border
-                        Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Expense}"
+                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Expense}"
                         Grid.ColumnSpan="2"
                         Grid.RowSpan="2"
-                        Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Expense}" />
+                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Expense}" />
                     <Border
-                        Background="{Binding Percent, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Income}"
+                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Income}"
                         Grid.ColumnSpan="2"
                         Grid.RowSpan="2"
-                        Visibility="{Binding Bucket, Converter={StaticResource BucketToVisibilityConverter}, ConverterParameter=Income}" />
+                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Income}" />
                     <TextBlock FontSize="12"
                                FontWeight="Bold"
                                HorizontalAlignment="Left"
@@ -101,7 +101,7 @@
         <TextBlock Grid.Row="1"
                    Foreground="{StaticResource ImportantHighlightLightBrush}"
                    Text="Warning! This time period covers multiple budgets"
-                   Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource BoolToVisConverter}}" />
+                   Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource Converter.BoolToVis}}" />
         <Grid Grid.Row="2"
               Height="6"
               Margin="10,20,25,0">
@@ -158,7 +158,7 @@
                        Width="1" />
         </Grid>
         <StackPanel
-            Background="{Binding OverallPerformance, Converter={StaticResource PercentToColorConverter}, ConverterParameter=Performance}"
+            Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
             Grid.Row="4"
             Margin="2,4,2,4"
             Orientation="Horizontal"

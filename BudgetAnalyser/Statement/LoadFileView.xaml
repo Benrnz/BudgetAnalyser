@@ -61,7 +61,7 @@
                                       Margin="3"
                                       SelectedItem="{Binding SelectedExistingAccountName}"
                                       ToolTip="{Binding AccountNameHelp}"
-                                      Visibility="{Binding ElementName=RadioExisting, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                      Visibility="{Binding ElementName=RadioExisting, Path=IsChecked, Converter={StaticResource Converter.BoolToVis}}"
                                       Width="130" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -76,7 +76,7 @@
                                      Margin="3"
                                      Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}"
                                      ToolTip="{Binding AccountNameHelp}"
-                                     Visibility="{Binding ElementName=RadioNew, Path=IsChecked, Converter={StaticResource BoolToVisConverter}}"
+                                     Visibility="{Binding ElementName=RadioNew, Path=IsChecked, Converter={StaticResource Converter.BoolToVis}}"
                                      Width="150" />
                         </StackPanel>
                     </StackPanel>
@@ -86,7 +86,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="2"
                            Text="Suggested Date Range"
-                           Visibility="{Binding SuggestedDateRange, Converter={StaticResource NullToVisConverter}}" />
+                           Visibility="{Binding SuggestedDateRange, Converter={StaticResource Converter.NullToVis}}" />
                 <TextBlock Margin="2"
                            Text="{Binding SuggestedDateRange}" />
             </StackPanel>

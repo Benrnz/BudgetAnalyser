@@ -45,7 +45,7 @@
                   Margin="5,-5,5,5"
                   TabIndex="9"
                   IsVisibleChanged="OnNewTransactionVisibilityChanged"
-                  Visibility="{Binding AddingNewTransaction, Converter={StaticResource BoolToVisConverter}}">
+                  Visibility="{Binding AddingNewTransaction, Converter={StaticResource Converter.BoolToVis}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -59,7 +59,7 @@
                           Margin="5"
                           BorderBrush="Transparent"
                           BorderThickness="0"
-                          Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}">
+                          Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel>
                         <RadioButton GroupName="TransactionType"
                                      IsChecked="{Binding NewTransactionIsCredit}"
@@ -128,14 +128,14 @@
                         Orientation="Horizontal">
                 <TextBlock HorizontalAlignment="Right"
                            Text="Closing Balance: "
-                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}" />
+                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBlock Style="{StaticResource TextBlock.Number}"
                            Text="{Binding LedgerEntry.Balance, StringFormat=N}"
-                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}"/>
+                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}"/>
             </StackPanel>
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
-                       Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource BoolToVisConverter}}">
+                       Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}">
                 <Run>
                     Use a balance adjustment to affect the bank balance.  For example if you have entered the bank balance, but a Visa payment is yet to go out
                     add a new Balance Adjustment Transaction to decrease the ledger balance to give an accurate picture how much surplus remains once all bills
@@ -144,7 +144,7 @@
             </TextBlock>
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
-                       Visibility="{Binding InLedgerEntryMode, Converter={StaticResource BoolToVisConverter}}">
+                       Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}">
                 <Run>
                     You can use this to manually add a new transaction that has not yet appeared on the statement. But only newly added Ledger Entries can
                     be modified, after saving the Ledger Book it becomes readonly.

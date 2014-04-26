@@ -77,7 +77,7 @@
             </StackPanel>
             <StackPanel Grid.ColumnSpan="2"
                         Grid.Row="7"
-                        Visibility="{Binding SimilarRulesExist, Converter={StaticResource BoolToVisConverter}}">
+                        Visibility="{Binding SimilarRulesExist, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock FontWeight="Bold"
                            Margin="2"
                            Text="WARNING Similar rules already exist:" />

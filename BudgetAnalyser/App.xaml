@@ -24,23 +24,24 @@
                 <ResourceDictionary Source="UI/Style/ListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/DatePicker.xaml" />
                 <ResourceDictionary Source="UI/Style/ToolTip.xaml" />
-                <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/ListView.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollBar.xaml" />
                 <ResourceDictionary Source="UI/Style/ScrollViewer.xaml" />
                 <ResourceDictionary Source="UI/Style/OilLight.xaml" />
+                <ResourceDictionary Source="UI/Style/TransactionListBox.xaml" />
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
                 <ResourceDictionary Source="UI/Style/Expander.xaml" />
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-            <converters:NotBoolToVisibilityConverter x:Key="NotBoolToVisConverter" />
-            <converters:BoolToVisibility2Converter x:Key="BoolToVis2Converter" />
-            <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
-            <converters:NotNullToVisibilityConverter x:Key="NotNullToVisConverter" />
-            <converters:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+            <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
+            <converters:NotBoolToVisibilityConverter x:Key="Converter.NotBoolToVis" />
+            <converters:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
+            <converters:NullToVisibilityConverter x:Key="Converter.NullToVis" />
+            <converters:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis" />
+            <converters:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility"/>
+            <converters:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
 
             <DataTemplate DataType="{x:Type statement:StatementController}">
                 <statement:StatementUserControl />
