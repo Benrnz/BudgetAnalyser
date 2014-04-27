@@ -20,8 +20,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ProgressBar Background="Transparent"
-                                 BorderBrush="{StaticResource TextBrush}"
-                                 Foreground="{StaticResource TextBrush}"
+                                 BorderBrush="{StaticResource Brush.DefaultText}"
+                                 Foreground="{StaticResource Brush.DefaultText}"
                                  BorderThickness="1"
                                  Height="30"
                                  Margin="4"
@@ -88,7 +88,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -109,7 +109,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
         <TextBlock FontSize="10"
-                   Foreground="{StaticResource TileBackgroundBrush}"
+                   Foreground="{StaticResource Brush.TileBackground}"
                    Grid.ColumnSpan="3"
                    Grid.Row="2"
                    HorizontalAlignment="Right"

@@ -20,12 +20,12 @@
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="0">
                 <Setter Property="Background"
-                        Value="{StaticResource TileBackgroundBrush}" />
+                        Value="{StaticResource Brush.TileBackground}" />
             </Trigger>
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="1">
                 <Setter Property="Background"
-                        Value="{StaticResource TileBackgroundAlternateBrush}" />
+                        Value="{StaticResource Brush.TileBackgroundAlternate}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -38,12 +38,12 @@
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="0">
                 <Setter Property="Background"
-                        Value="{StaticResource TileBackgroundAlternateBrush}" />
+                        Value="{StaticResource Brush.TileBackgroundAlternate}" />
             </Trigger>
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="1">
                 <Setter Property="Background"
-                        Value="{StaticResource TileBackgroundBrush}" />
+                        Value="{StaticResource Brush.TileBackground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -127,7 +127,7 @@
                 <DataTrigger.Setters>
                     <Setter Property="Background"
                             TargetName="MainBorder"
-                            Value="{StaticResource ImportantHighlightLightBrush}" />
+                            Value="{StaticResource Brush.ImportantHighlightLight}" />
                 </DataTrigger.Setters>
             </DataTrigger>
         </DataTemplate.Triggers>
@@ -136,7 +136,7 @@
 
     <DataTemplate DataType="{x:Type statement1:EditingTransactionViewModel}">
         <Border x:Name="MainBorder"
-                BorderBrush="{StaticResource TextBrush}"
+                BorderBrush="{StaticResource Brush.DefaultText}"
                 BorderThickness="1"
                 DataContext="{Binding Transaction}"
                 Margin="0,1,2,1"

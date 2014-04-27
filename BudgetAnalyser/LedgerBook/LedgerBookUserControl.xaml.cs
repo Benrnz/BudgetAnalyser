@@ -17,18 +17,18 @@ namespace BudgetAnalyser.LedgerBook
     /// </summary>
     public partial class LedgerBookUserControl
     {
-        private const string BankBalanceBackground = "TileBackgroundAlternateBrush";
-        private const string BankBalanceTextBrush = "TextBrush";
+        private const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
+        private const string BankBalanceTextBrush = "Brush.DefaultText";
         private const string DateFormat = "d-MMM-yy";
         private const string HeadingStyle = "LedgerBookTextBlockHeading";
         private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
-        private const string LightBorderBrush = "BorderLightBrush";
+        private const string LightBorderBrush = "Brush.BorderLight";
 
-        private const string NormalHighlightBackground = "TileBackgroundBrush";
+        private const string NormalHighlightBackground = "Brush.TileBackground";
         private const string NormalStyle = "LedgerBookTextBlockOther";
         private const string NumberStyle = "LedgerBookTextBlockNumber";
-        private const string SurplusBackground = "TileBackgroundAlternateBrush";
-        private const string SurplusTextBrush = "CreditBackground1Brush";
+        private const string SurplusBackground = "Brush.TileBackgroundAlternate";
+        private const string SurplusTextBrush = "Brush.CreditBackground1";
         private static readonly GridLength MediumGridWidth = new GridLength(100);
         private static readonly GridLength SmallGridWidth = new GridLength(60);
 

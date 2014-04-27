@@ -6,11 +6,11 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
-                Value="{StaticResource TextBrush}" />
+                Value="{StaticResource Brush.DefaultText}" />
         <Setter Property="Margin"
                 Value="3" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource ControlBorderBrush}" />
+                Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="Padding"
@@ -19,7 +19,7 @@
 
     <Style TargetType="DatePickerTextBox">
         <Setter Property="Background"
-                Value="{StaticResource MainBackgroundBrush}" />
+                Value="{StaticResource Brush.MainBackground}" />
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -27,8 +27,8 @@
 
     <Style TargetType="Calendar"
            x:Key="CalendarStyle">
-        <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="Background" Value="{StaticResource Brush.MainBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="BorderThickness" Value="2" />
     </Style>
 </ResourceDictionary>

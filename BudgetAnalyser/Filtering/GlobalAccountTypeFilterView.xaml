@@ -6,7 +6,7 @@
         ResizeMode="NoResize"
         Title="Global Filters"
         Width="300"
-        Background="{StaticResource MainBackgroundBrush}"
+        Background="{StaticResource Brush.MainBackground}"
         WindowState="Normal">
 
     <Grid>

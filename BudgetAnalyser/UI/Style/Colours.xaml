@@ -1,69 +1,17 @@
-<ResourceDictionary 
+﻿<ResourceDictionary 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="Colour.ControlLight">
-        Black
-    </Color>
-
-    <Color x:Key="Colour.ControlMedium">
-        #FF211AA9
-    </Color>
-
-    <Color x:Key="Colour.ControlPressed">
-        #FF211AA9
-    </Color>
-
-    <Color x:Key="Colour.Glyph">
+    <Color x:Key="Colour.BorderDark">
         #FF444444
-    </Color>
-
-    <Color x:Key="Colour.BorderMedium">
-        #FF888888
-    </Color>
-
-    <Color x:Key="Colour.DisabledBorderDark">
-        #FF888888
     </Color>
 
     <Color x:Key="Colour.BorderLight">
         #FF211AA9
     </Color>
 
-    <Color x:Key="ToolTip.BackgroundColour">
-        NavajoWhite
-    </Color>
-
-    <Color x:Key="Colour.BorderDark">
-        #FF444444
-    </Color>
-
-    <Color x:Key="Colour.TileBackground">
-        #FF363636
-    </Color>
-
-    <Color x:Key="Colour.TileBackgroundAlternate">
-        #FF262626
-    </Color>
-
-    <Color x:Key="Colour.ControlMouseOver">
-        #FF3843C4
-    </Color>
-
-    <Color x:Key="Colour.DisabledControlDark">
-        #FFC5CBF9
-    </Color>
-
-    <Color x:Key="Colour.DisabledForeground">
+    <Color x:Key="Colour.BorderMedium">
         #FF888888
-    </Color>
-
-    <Color x:Key="Colour.SelectedItem">
-        #014F01
-    </Color>
-
-    <Color x:Key="Colour.TextDefault">
-        White
     </Color>
 
     <Color x:Key="Colour.Burndown.GraphLine">
@@ -78,84 +26,138 @@
         DarkRed
     </Color>
 
-    <Color x:Key="Colour.MainBackground">
-        Black
-    </Color>
-
-    <Color x:Key="Colour.SecondaryBackground">
-        Tan
-    </Color>
-
-    <Color x:Key="Colour.TertiaryBackground">
-        DarkSeaGreen
-    </Color>
-
-    <Color x:Key="Colour.TextBlock.Label">
-        DarkSeaGreen
-    </Color>
-
-    <Color x:Key="Colour.Shadow">
-        Black
-    </Color>
-
-    <Color x:Key="Colour.Debit1">
-        DarkRed
-    </Color>
-
     <Color x:Key="Colour.Credit1">
         DarkGreen
-    </Color>
-
-    <Color x:Key="Colour.DebitLight">
-        LightCoral
     </Color>
 
     <Color x:Key="Colour.Credit2">
         LightGreen
     </Color>
 
-    <Color x:Key="Colour.NeutralNumber">
+    <Color x:Key="Colour.ControlLight">
         Black
     </Color>
 
-    <Color x:Key="Colour.ImportantHighlightLight">
-        #FFEF1954
+    <Color x:Key="Colour.ControlMedium">
+        #FF211AA9
+    </Color>
+
+    <Color x:Key="Colour.ControlPressed">
+        #FF211AA9
+    </Color>
+
+    <Color x:Key="Colour.ControlMouseOver">
+        #FF3843C4
+    </Color>
+
+    <Color x:Key="Colour.Debit1">
+        DarkRed
     </Color>
 
     <Color x:Key="Colour.DebitBackground2">
         Red
     </Color>
 
+    <Color x:Key="Colour.DebitLight">
+        LightCoral
+    </Color>
+
+    <Color x:Key="Colour.DisabledBorderDark">
+        #FF888888
+    </Color>
+
+    <Color x:Key="Colour.DisabledControlDark">
+        #FFC5CBF9
+    </Color>
+
+    <Color x:Key="Colour.DisabledForeground">
+        #FF888888
+    </Color>
+    
+    <Color x:Key="Colour.Glyph">
+        #FF444444
+    </Color>
+
+    <Color x:Key="Colour.ImportantHighlightLight">
+        #FFEF1954
+    </Color>
+
+    <Color x:Key="Colour.MainBackground">
+        Black
+    </Color>
+
+    <Color x:Key="Colour.NeutralNumber">
+        Black
+    </Color>
+
     <Color x:Key="Colour.NotSoBadDebit">
         Purple
+    </Color>
+
+    <Color x:Key="Colour.Popup.Background">
+        #FF003300
+    </Color>
+
+    <Color x:Key="Colour.SecondaryBackground">
+        Tan
+    </Color>
+
+    <Color x:Key="Colour.SelectedItem">
+        #014F01
+    </Color>
+
+    <Color x:Key="Colour.Shadow">
+        Black
     </Color>
 
     <Color x:Key="Colour.SlightDebit">
         DarkOrange
     </Color>
 
-    <Color x:Key="Popup.Background">
-        #FF003300
+    <Color x:Key="Colour.TextBlock.Label">
+        DarkSeaGreen
     </Color>
 
+    <Color x:Key="Colour.TextDefault">
+        White
+    </Color>
+
+    <Color x:Key="Colour.TertiaryBackground">
+        DarkSeaGreen
+    </Color>
+
+    <Color x:Key="Colour.TileBackground">
+        #FF363636
+    </Color>
+
+    <Color x:Key="Colour.TileBackgroundAlternate">
+        #FF262626
+    </Color>
+
+    <Color x:Key="Colour.ToolTip.Background">
+        NavajoWhite
+    </Color>
+
+    
+    
     <SolidColorBrush 
-        x:Key="ToolTip.Background" 
-        Color="{StaticResource ToolTip.BackgroundColour}" />
+        x:Key="Brush.ToolTip.Background" 
+        Color="{StaticResource Colour.ToolTip.Background}" />
 
     <SolidColorBrush 
-        x:Key="PopUpBackground" 
-        Color="{StaticResource Popup.Background}" />
+        x:Key="Brush.PopUpBackground" 
+        Color="{StaticResource Colour.Popup.Background}" />
 
     <SolidColorBrush 
-        x:Key="TextBlock.LabelBrush" 
+        x:Key="Brush.TextBlock.Label" 
         Color="{StaticResource Colour.TextBlock.Label}" />
 
     <SolidColorBrush 
-        x:Key="BorderLightBrush" 
+        x:Key="Brush.BorderLight" 
         Color="{StaticResource Colour.BorderLight}" />
 
     <LinearGradientBrush 
-        x:Key="ControlBorderBrush" 
+        x:Key="Brush.ControlBorder" 
         EndPoint="0,1" 
         StartPoint="0,0">
         <GradientStop 
@@ -167,11 +169,11 @@
     </LinearGradientBrush>
 
     <SolidColorBrush 
-        x:Key="TileBackgroundBrush" 
+        x:Key="Brush.TileBackground" 
         Color="{StaticResource Colour.TileBackground}" />
 
     <SolidColorBrush 
-        x:Key="TileBackgroundAlternateBrush" 
+        x:Key="Brush.TileBackgroundAlternate" 
         Color="{StaticResource Colour.TileBackgroundAlternate}" />
 
     <SolidColorBrush 
@@ -183,27 +185,27 @@
         Color="{StaticResource Colour.SelectedItem}" />
 
     <SolidColorBrush 
-        x:Key="TextBrush" 
+        x:Key="Brush.DefaultText" 
         Color="{StaticResource Colour.TextDefault}" />
 
     <SolidColorBrush 
-        x:Key="SlightDebitBrush" 
+        x:Key="Brush.SlightDebit" 
         Color="{StaticResource Colour.SlightDebit}" />
 
     <SolidColorBrush 
-        x:Key="NotSoBadDebitBrush" 
+        x:Key="Brush.NotSoBadDebit" 
         Color="{StaticResource Colour.NotSoBadDebit}" />
 
     <SolidColorBrush 
-        x:Key="DebitBackground2Brush" 
+        x:Key="Brush.DebitBackground2" 
         Color="{StaticResource Colour.DebitBackground2}" />
 
     <SolidColorBrush 
-        x:Key="ImportantHighlightLightBrush" 
+        x:Key="Brush.ImportantHighlightLight" 
         Color="{StaticResource Colour.ImportantHighlightLight}" />
 
     <SolidColorBrush 
-        x:Key="NeutralNumberBackgroundBrush" 
+        x:Key="Brush.NeutralNumberBackground" 
         Color="{StaticResource Colour.NeutralNumber}" />
 
     <SolidColorBrush 
@@ -215,39 +217,39 @@
         Color="{StaticResource Colour.DebitLight}" />
 
     <SolidColorBrush 
-        x:Key="CreditBackground1Brush" 
+        x:Key="Brush.CreditBackground1" 
         Color="{StaticResource Colour.Credit1}" />
 
     <SolidColorBrush 
-        x:Key="DebitBackground1Brush" 
+        x:Key="Brush.DebitBackground1" 
         Color="{StaticResource Colour.Debit1}" />
 
     <SolidColorBrush 
-        x:Key="ShadowBrush" 
+        x:Key="Brush.Shadow" 
         Color="{StaticResource Colour.Shadow}" />
 
     <SolidColorBrush 
-        x:Key="SpendingGraphLineBrush" 
+        x:Key="Brush.Brurndown.GraphLine" 
         Color="{StaticResource Colour.Burndown.GraphLine}" />
 
     <SolidColorBrush 
-        x:Key="BudgetGraphLineBrush" 
+        x:Key="Brush.Brurndown.BudgetGraphLine" 
         Color="{StaticResource Colour.Burndown.BudgetGraphLine}" />
 
     <SolidColorBrush 
-        x:Key="ZeroGraphLineBrush" 
+        x:Key="Brush.Brurndown.ZeroGraphLine" 
         Color="{StaticResource Colour.Burndown.ZeroGraphLine}" />
 
     <SolidColorBrush 
-        x:Key="MainBackgroundBrush" 
+        x:Key="Brush.MainBackground" 
         Color="{StaticResource Colour.MainBackground}" />
 
     <SolidColorBrush 
-        x:Key="SecondaryBackgroundBrush" 
+        x:Key="Brush.SecondaryBackground" 
         Color="{StaticResource Colour.SecondaryBackground}" />
 
     <SolidColorBrush 
-        x:Key="TertiaryBackgroundBrush" 
+        x:Key="Brush.TertiaryBackground" 
         Color="{StaticResource Colour.TertiaryBackground}" />
 
 </ResourceDictionary>

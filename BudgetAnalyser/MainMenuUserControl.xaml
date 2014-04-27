@@ -61,7 +61,7 @@
 
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />

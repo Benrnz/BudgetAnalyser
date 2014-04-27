@@ -10,8 +10,8 @@
             <TextBlock Style="{StaticResource Badge.Text}"
                        Text="Active" />
         </Border>
-        <Border BorderBrush="{StaticResource ControlBorderBrush}"
-                Background="{StaticResource TileBackgroundBrush}"
+        <Border BorderBrush="{StaticResource Brush.ControlBorder}"
+                Background="{StaticResource Brush.TileBackground}"
                 BorderThickness="2"
                 CornerRadius="3"
                 Height="25"
@@ -22,7 +22,7 @@
                        Margin="3"
                        Text="Archived" />
         </Border>
-        <Border BorderBrush="{StaticResource ControlBorderBrush}"
+        <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 CornerRadius="3"
                 Height="25"

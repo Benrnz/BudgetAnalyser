@@ -11,8 +11,8 @@
 
                 <ControlTemplate TargetType="ToolTip">
                     <Border x:Name="Border"
-                            Background="{StaticResource ToolTip.Background}"
-                            BorderBrush="{StaticResource ControlBorderBrush}"
+                            Background="{StaticResource Brush.ToolTip.Background}"
+                            BorderBrush="{StaticResource Brush.ControlBorder}"
                             BorderThickness="1"
                             CornerRadius="3"
                             Height="{TemplateBinding Height}"
@@ -25,7 +25,7 @@
                             <DropShadowEffect  Direction="315" />
                         </Border.Effect>
                         <TextBlock FontStyle="Italic"
-                                   Foreground="{StaticResource MainBackgroundBrush}"
+                                   Foreground="{StaticResource Brush.MainBackground}"
                                    HorizontalAlignment="Left"
                                    Margin="4"
                                    Text="{TemplateBinding Content}"

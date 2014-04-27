@@ -5,7 +5,7 @@
         ResizeMode="NoResize"
         Loaded="OnLoaded"
         Title="{Binding Heading}"
-        Background="{StaticResource MainBackgroundBrush}"
+        Background="{StaticResource Brush.MainBackground}"
         Width="400"
         WindowStyle="SingleBorderWindow">
 
@@ -21,7 +21,7 @@
         <TextBox x:Name="InputTextBox"
                  Grid.Row="1"
                  Margin="10"
-                 Background="{StaticResource TileBackgroundBrush}"
+                 Background="{StaticResource Brush.TileBackground}"
                  Text="{Binding Input}"
                  VerticalAlignment="Stretch"
                  VerticalScrollBarVisibility="Visible" />

@@ -5,19 +5,19 @@ namespace BudgetAnalyser.Converters
 {
     public static class ConverterHelper
     {
-        private const string CreditBackground1 = "CreditBackground1Brush";
-        private const string DebitBackground1 = "DebitBackground1Brush";
+        private const string CreditBackground1 = "Brush.CreditBackground1";
+        private const string DebitBackground1 = "Brush.DebitBackground1";
 
-        private const string DebitBackground2 = "DebitBackground2Brush";
+        private const string DebitBackground2 = "Brush.DebitBackground2";
 
-        private const string NeutralNumberBackground = "NeutralNumberBackgroundBrush";
+        private const string NeutralNumberBackground = "Brush.NeutralNumberBackground";
 
-        private const string NotSoBadDebit = "NotSoBadDebitBrush";
-        private const string SecondaryBackground = "SecondaryBackgroundBrush";
+        private const string NotSoBadDebit = "Brush.NotSoBadDebit";
+        private const string SecondaryBackground = "Brush.SecondaryBackground";
 
-        private const string SlightDebit = "SlightDebitBrush";
+        private const string SlightDebit = "Brush.SlightDebit";
 
-        private const string TertiaryBackground = "TertiaryBackgroundBrush";
+        private const string TertiaryBackground = "Brush.TertiaryBackground";
 
         public static readonly Brush CreditBackground1Brush = Application.Current.Resources[CreditBackground1] as Brush;
 

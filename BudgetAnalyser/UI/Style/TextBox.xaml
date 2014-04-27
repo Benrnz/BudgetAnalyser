@@ -15,11 +15,11 @@
         <Setter Property="MinWidth" Value="130" />
         <Setter Property="Margin" Value="3" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="Background" Value="{StaticResource TileBackgroundAlternateBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource Brush.TileBackgroundAlternate}" />
+        <Setter Property="Foreground" Value="{StaticResource Brush.DefaultText}" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>

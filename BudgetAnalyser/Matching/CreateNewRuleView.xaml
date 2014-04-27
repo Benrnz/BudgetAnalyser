@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Background="{StaticResource MainBackgroundBrush}"
+        Background="{StaticResource Brush.MainBackground}"
         Height="400"
         Icon="..\UI\Assets\PieChart.png"
         Title="{Binding Title}"
@@ -81,7 +81,7 @@
                 <TextBlock FontWeight="Bold"
                            Margin="2"
                            Text="WARNING Similar rules already exist:" />
-                <Border BorderBrush="{StaticResource ControlBorderBrush}"
+                <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                         Margin="10"
                         BorderThickness="1">
                     <Grid IsSharedSizeScope="True"
@@ -120,7 +120,7 @@
                             <ItemsControl.ItemTemplate>
 
                                 <DataTemplate>
-                                    <Grid Background="{StaticResource TileBackgroundBrush}"
+                                    <Grid Background="{StaticResource Brush.TileBackground}"
                                           Margin="2">
                                         <Grid.Resources>
                                             <Style TargetType="TextBlock"

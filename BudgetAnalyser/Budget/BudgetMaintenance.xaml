@@ -20,7 +20,7 @@
                 <Trigger Property="IsMouseOver"
                          Value="True">
                     <Setter Property="BorderBrush"
-                            Value="{StaticResource TextBrush}" />
+                            Value="{StaticResource Brush.DefaultText}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -61,13 +61,13 @@
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
-                            Foreground="{StaticResource MainBackgroundBrush}">
+                            Foreground="{StaticResource Brush.MainBackground}">
                         <Button.Template>
 
                             <ControlTemplate>
                                 <StackPanel x:Name="ContentContainer"
                                             Background="{Binding Bucket, Converter={StaticResource Converter.BucketToColour}}">
-                                    <TextBlock Foreground="{StaticResource MainBackgroundBrush}"
+                                    <TextBlock Foreground="{StaticResource Brush.MainBackground}"
                                                Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
@@ -115,12 +115,12 @@
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
-                            Foreground="{StaticResource MainBackgroundBrush}">
+                            Foreground="{StaticResource Brush.MainBackground}">
                         <Button.Template>
 
                             <ControlTemplate>
                                 <StackPanel x:Name="ContentContainer"
-                                            Background="{StaticResource CreditBackground1Brush}">
+                                            Background="{StaticResource Brush.CreditBackground1}">
                                     <TextBlock Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
@@ -161,7 +161,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".5*" />
             <ColumnDefinition Width=".5*" />
@@ -205,7 +205,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       Margin="2">
             <StackPanel>
-                <TextBlock Foreground="{StaticResource CreditBackground1Brush}"
+                <TextBlock Foreground="{StaticResource Brush.CreditBackground1}"
                            HorizontalAlignment="Left"
                            Style="{StaticResource TotalStyle}"
                            Text="Incomes" />
@@ -217,7 +217,7 @@
                          SelectionMode="Single" />
             </StackPanel>
         </ScrollViewer>
-        <Button Background="{StaticResource CreditBackground1Brush}"
+        <Button Background="{StaticResource Brush.CreditBackground1}"
                 Command="{Binding AddNewIncomeCommand}"
                 Grid.Row="2"
                 Style="{StaticResource BudgetButton}">
@@ -233,7 +233,7 @@
                       HorizontalScrollBarVisibility="Hidden"
                       Margin="2">
             <StackPanel>
-                <TextBlock Foreground="{StaticResource DebitBackground1Brush}"
+                <TextBlock Foreground="{StaticResource Brush.DebitBackground1}"
                            HorizontalAlignment="Left"
                            Style="{StaticResource TotalStyle}"
                            Text="Expenses" />
@@ -249,7 +249,7 @@
                     Grid.Row="2"
                     HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
-            <Button Background="{StaticResource DebitBackground1Brush}"
+            <Button Background="{StaticResource Brush.DebitBackground1}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
@@ -260,7 +260,7 @@
                     <budget:SpentMonthlyExpense />
                 </Button.CommandParameter>
             </Button>
-            <Button Background="{StaticResource DebitBackground2Brush}"
+            <Button Background="{StaticResource Brush.DebitBackground2}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
@@ -301,7 +301,7 @@
             <TextBlock Style="{StaticResource TotalStyle}"
                        Text="{Binding Surplus, StringFormat=C}" />
         </StackPanel>
-        <Grid Background="{StaticResource MainBackgroundBrush}"
+        <Grid Background="{StaticResource Brush.MainBackground}"
               Grid.ColumnSpan="2"
               Grid.RowSpan="5"
               Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource Converter.BoolToVis}}">

@@ -85,7 +85,7 @@
         </ContextMenu>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
@@ -155,7 +155,7 @@
                     Grid.Row="1"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Border Background="{StaticResource TileBackgroundBrush}"
+            <Border Background="{StaticResource Brush.TileBackground}"
                     Margin="52,5,5,-2"
                     Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}"
                     Width="100">
@@ -176,7 +176,7 @@
                     ToolTip="Save Rule"
                     Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
-        <Border Background="{StaticResource TileBackgroundBrush}"
+        <Border Background="{StaticResource Brush.TileBackground}"
                 BorderThickness="2"
                 Grid.Column="1"
                 Grid.Row="2"
@@ -206,7 +206,7 @@
                            BasedOn="{StaticResource {x:Type TextBlock}}"
                            TargetType="TextBlock">
                         <Setter Property="Background"
-                                Value="{StaticResource TileBackgroundAlternateBrush}" />
+                                Value="{StaticResource Brush.TileBackgroundAlternate}" />
                         <Setter Property="HorizontalAlignment"
                                 Value="Stretch" />
                         <Setter Property="Padding"
@@ -234,7 +234,7 @@
                            Grid.Column="0"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="This rule has been matched" />
-                <StackPanel Background="{StaticResource TileBackgroundAlternateBrush}"
+                <StackPanel Background="{StaticResource Brush.TileBackgroundAlternate}"
                             Grid.Column="1"
                             Grid.Row="2"
                             Margin="2"

@@ -3,7 +3,7 @@
         xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
-        Background="{StaticResource MainBackgroundBrush}"
+        Background="{StaticResource Brush.MainBackground}"
         Height="650"
         Icon="..\UI\Assets\PieChart.png"
         MinWidth="550"
@@ -55,7 +55,7 @@
                                Text="{Binding AverageSpend, StringFormat=C}" />
                 </Grid>
                 <ProgressBar Background="Transparent"
-                             Foreground="{StaticResource ShadowBrush}"
+                             Foreground="{StaticResource Brush.Shadow}"
                              HorizontalAlignment="Stretch"
                              Margin="1"
                              Maximum="2"
@@ -99,7 +99,7 @@
                          VerticalContentAlignment="Center" />
         </StackPanel>
         <TextBlock Grid.Row="1"
-                   Foreground="{StaticResource ImportantHighlightLightBrush}"
+                   Foreground="{StaticResource Brush.ImportantHighlightLight}"
                    Text="Warning! This time period covers multiple budgets"
                    Visibility="{Binding Analysis.UsesMultipleBudgets, Converter={StaticResource Converter.BoolToVis}}" />
         <Grid Grid.Row="2"
@@ -111,13 +111,13 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Border BorderBrush="{StaticResource ShadowBrush}"
+            <Border BorderBrush="{StaticResource Brush.Shadow}"
                     BorderThickness="1,0,0,1" />
             <TextBlock HorizontalAlignment="Left"
                        Margin="0,-15,0,0"
                        Text="0%"
                        VerticalAlignment="Top" />
-            <Border BorderBrush="{StaticResource ShadowBrush}"
+            <Border BorderBrush="{StaticResource Brush.Shadow}"
                     BorderThickness="1,0,0,1"
                     Grid.Column="1" />
             <TextBlock Grid.Column="1"
@@ -125,10 +125,10 @@
                        Margin="0,-15,0,0"
                        Text="100%"
                        VerticalAlignment="Top" />
-            <Border BorderBrush="{StaticResource ShadowBrush}"
+            <Border BorderBrush="{StaticResource Brush.Shadow}"
                     BorderThickness="1,0,0,1"
                     Grid.Column="2" />
-            <Border BorderBrush="{StaticResource ShadowBrush}"
+            <Border BorderBrush="{StaticResource Brush.Shadow}"
                     BorderThickness="1,0,1,1"
                     Grid.Column="3" />
             <TextBlock Grid.Column="3"
@@ -152,7 +152,7 @@
                        Grid.RowSpan="2"
                        HorizontalAlignment="Left"
                        Margin="0,-20,0,0"
-                       Stroke="{StaticResource ShadowBrush}"
+                       Stroke="{StaticResource Brush.Shadow}"
                        StrokeDashArray="1 2 0.6"
                        StrokeThickness="1"
                        Width="1" />
@@ -163,7 +163,7 @@
             Margin="2,4,2,4"
             Orientation="Horizontal"
             TextBlock.FontWeight="Bold"
-            TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
+            TextBlock.Foreground="{StaticResource Brush.MainBackground}">
             <TextBlock Margin="4,4,1,4"
                        Text="Avg Expenses " />
             <TextBlock Margin="0,4,0,4"

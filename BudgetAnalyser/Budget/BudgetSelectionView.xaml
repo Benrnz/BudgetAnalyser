@@ -4,7 +4,7 @@
         xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
         xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
         xmlns:budget1="clr-namespace:BudgetAnalyser.Budget"
-        Background="{StaticResource MainBackgroundBrush}"
+        Background="{StaticResource Brush.MainBackground}"
         Height="320"
         Icon="..\UI\Assets\PieChart.png"
         ResizeMode="NoResize"
@@ -26,7 +26,7 @@
                 <Button.Template>
                     <ControlTemplate>
                         <Grid x:Name="BudgetTemplateGrid"
-                              Background="{StaticResource TileBackgroundBrush}"
+                              Background="{StaticResource Brush.TileBackground}"
                               Margin="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition />

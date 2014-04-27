@@ -29,7 +29,7 @@
         <Setter Property="Margin"
                 Value="3" />
         <Setter Property="Foreground"
-                Value="{StaticResource MainBackgroundBrush}" />
+                Value="{StaticResource Brush.MainBackground}" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
@@ -39,9 +39,9 @@
     <Style x:Key="Badge.Border1"
            TargetType="Border">
         <Setter Property="BorderBrush"
-                Value="{StaticResource ControlBorderBrush}" />
+                Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="Background"
-                Value="{StaticResource SecondaryBackgroundBrush}" />
+                Value="{StaticResource Brush.SecondaryBackground}" />
         <Setter Property="BorderThickness"
                 Value="2" />
         <Setter Property="CornerRadius"
@@ -59,7 +59,7 @@
     <Style x:Key="Badge.Border2"
            TargetType="Border">
         <Setter Property="Background"
-                Value="{StaticResource TileBackgroundAlternateBrush}" />
+                Value="{StaticResource Brush.TileBackgroundAlternate}" />
         <Setter Property="CornerRadius"
                 Value="3" />
         <Setter Property="Height"
@@ -75,7 +75,7 @@
     <Style x:Key="Badge.BorderLarge"
            TargetType="Border">
         <Setter Property="Background"
-                Value="{StaticResource TileBackgroundAlternateBrush}" />
+                Value="{StaticResource Brush.TileBackgroundAlternate}" />
         <Setter Property="CornerRadius"
                 Value="3" />
         <Setter Property="Height"

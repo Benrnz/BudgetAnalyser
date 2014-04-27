@@ -54,7 +54,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!-- Pie charts -->

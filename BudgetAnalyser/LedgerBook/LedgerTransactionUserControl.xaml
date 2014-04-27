@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Margin="1"
-          Background="{StaticResource TileBackgroundBrush}">
+          Background="{StaticResource Brush.TileBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" MinWidth="80" />

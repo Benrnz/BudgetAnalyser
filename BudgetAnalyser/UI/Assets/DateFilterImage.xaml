@@ -19,7 +19,7 @@
                             </GeometryDrawing>
                         </DrawingGroup.Children>
                     </DrawingGroup>
-                    <GeometryDrawing Brush="{StaticResource TextBrush}"
+                    <GeometryDrawing Brush="{StaticResource Brush.DefaultText}"
                                      Pen="{x:Null}">
                         <GeometryDrawing.Geometry>
                             <PathGeometry
@@ -50,7 +50,7 @@
                             </GeometryDrawing>
                         </DrawingGroup.Children>
                     </DrawingGroup>
-                    <GeometryDrawing Brush="{StaticResource TextBrush}"
+                    <GeometryDrawing Brush="{StaticResource Brush.DefaultText}"
                                      Pen="{x:Null}">
                         <GeometryDrawing.Geometry>
                             <PathGeometry

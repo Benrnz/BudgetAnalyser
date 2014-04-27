@@ -10,7 +10,7 @@
         <Setter Property="Margin"
                 Value="2" />
         <Setter Property="Foreground"
-                Value="{StaticResource TextBrush}" />
+                Value="{StaticResource Brush.DefaultText}" />
         <Setter Property="TextTrimming"
                 Value="CharacterEllipsis" />
         <Setter Property="TextWrapping"
@@ -27,7 +27,7 @@
     <Style x:Key="TextBlock.LabelStyle"
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="{StaticResource TextBlock.LabelBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.TextBlock.Label}"/>
         <Setter Property="FontSize" Value="15"/>
     </Style>
     
@@ -47,7 +47,7 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
-                Value="{StaticResource TextBrush}" />
+                Value="{StaticResource Brush.DefaultText}" />
     </Style>
 
     <Style x:Key="TextBlock.Heading1"

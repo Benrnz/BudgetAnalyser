@@ -13,7 +13,7 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -27,7 +27,7 @@
         </StackPanel>
         
         <ListBox x:Name="ChartsList"
-                 Background="{StaticResource MainBackgroundBrush}"
+                 Background="{StaticResource Brush.MainBackground}"
                  Grid.Row="1"
                  ItemsSource="{Binding ChartControllers}"
                  Margin="20"

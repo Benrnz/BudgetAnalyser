@@ -22,8 +22,8 @@
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding Title}" />
         </StackPanel>
-        <Border Background="{StaticResource MainBackgroundBrush}"
-                BorderBrush="{StaticResource ControlBorderBrush}"
+        <Border Background="{StaticResource Brush.MainBackground}"
+                BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.Row="1"
                 Margin="5,10,5,10">
@@ -39,7 +39,7 @@
             </ScrollViewer>
         </Border>
 
-        <GroupBox Background="{StaticResource PopUpBackground}"
+        <GroupBox Background="{StaticResource Brush.PopUpBackground}"
                   Grid.Row="1"
                   Header="Add Transaction"
                   Margin="5,-5,5,5"

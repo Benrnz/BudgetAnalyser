@@ -62,7 +62,7 @@
                     Modifiers="Control" />
     </UserControl.InputBindings>
 
-    <Grid Background="{StaticResource MainBackgroundBrush}">
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <!-- Menu bar -->
             <RowDefinition Height="Auto" />
@@ -214,13 +214,13 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal"
                         SnapsToDevicePixels="True"
-                        TextBlock.Foreground="{StaticResource MainBackgroundBrush}">
-                <TextBlock Background="{StaticResource NeutralNumberBackgroundBrush}"
+                        TextBlock.Foreground="{StaticResource Brush.MainBackground}">
+                <TextBlock Background="{StaticResource Brush.NeutralNumberBackground}"
                            Margin="4"
                            Padding="4"
                            Text="Loading Data..."
                            Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.NotBoolToVis}}" />
-                <Border Background="{StaticResource CreditBackground1Brush}"
+                <Border Background="{StaticResource Brush.CreditBackground1}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -231,7 +231,7 @@
                                    Text="{Binding ViewModel.TotalCredits, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource DebitBackground1Brush}"
+                <Border Background="{StaticResource Brush.DebitBackground1}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -253,7 +253,7 @@
                                    Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource DebitBackground1Brush}"
+                <Border Background="{StaticResource Brush.DebitBackground1}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -264,7 +264,7 @@
                                    Text="{Binding ViewModel.AverageDebit, StringFormat=C}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
+                <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -275,7 +275,7 @@
                                    Text="{Binding ViewModel.TotalCount}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource NeutralNumberBackgroundBrush}"
+                <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -286,7 +286,7 @@
                                    Text="{Binding ViewModel.Statement.DurationInMonths}" />
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource ImportantHighlightLightBrush}"
+                <Border Background="{StaticResource Brush.ImportantHighlightLight}"
                         Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                         Visibility="{Binding ViewModel.DuplicateSummary, Converter={StaticResource Converter.NullToVis}}">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-             Background="{StaticResource MainBackgroundBrush}"
+             Background="{StaticResource Brush.MainBackground}"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -70,7 +70,7 @@
             <Button Command="{Binding CloseLedgerBookCommand}"
                     Style="{StaticResource ClearButton}"
                     ToolTip="Close Ledger Book" />
-            <Border BorderBrush="{StaticResource ControlBorderBrush}"
+            <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="1,0,0,0"
                     Width="1"
                     Margin="10,0,10,0" />
@@ -119,7 +119,7 @@
                        Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding LedgerBook.FileName}"
                        ToolTip="{Binding LedgerBook.FileName}" />
-            <Border BorderBrush="{StaticResource ControlBorderBrush}"
+            <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     CornerRadius="3"
                     Grid.ColumnSpan="2"
@@ -169,10 +169,10 @@
                                MinHeight="100" />
                 <RowDefinition Height="0.25*" />
             </Grid.RowDefinitions>
-            <Border Background="{StaticResource MainBackgroundBrush}"
+            <Border Background="{StaticResource Brush.MainBackground}"
                     Opacity="0.7" />
-            <Border Background="{StaticResource PopUpBackground}"
-                    BorderBrush="{StaticResource ControlBorderBrush}"
+            <Border Background="{StaticResource Brush.PopUpBackground}"
+                    BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     Grid.Row="1"
                     Margin="-6,0,-6,0">
@@ -195,7 +195,7 @@
                         Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
-            <Border Background="{StaticResource MainBackgroundBrush}"
+            <Border Background="{StaticResource Brush.MainBackground}"
                     Grid.Row="2"
                     Opacity="0.7" />
         </Grid>

@@ -62,7 +62,7 @@
     <Style x:Key="ListBox.StandardContainerStyle"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background"
-                Value="{StaticResource TileBackgroundBrush}" />
+                Value="{StaticResource Brush.TileBackground}" />
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />
         <Setter Property="HorizontalContentAlignment"
@@ -76,7 +76,7 @@
     <Style x:Key="ListBox.NoVisualStatesContainerStyle"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background"
-                Value="{StaticResource TileBackgroundBrush}" />
+                Value="{StaticResource Brush.TileBackground}" />
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />
         <Setter Property="HorizontalContentAlignment"
@@ -89,7 +89,7 @@
 
     <Style TargetType="{x:Type ListBox}">
         <Setter Property="Background"
-                Value="{StaticResource MainBackgroundBrush}" />
+                Value="{StaticResource Brush.MainBackground}" />
         <Setter Property="BorderBrush"
                 Value="Transparent" />
     </Style>

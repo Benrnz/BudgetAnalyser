@@ -14,7 +14,7 @@
         <Style x:Key="MainLineDataPointStyle"
                TargetType="{x:Type chartingToolkit:DataPoint}">
             <Setter Property="Background"
-                    Value="{StaticResource SpendingGraphLineBrush}" />
+                    Value="{StaticResource Brush.Brurndown.GraphLine}" />
             <Setter Property="Template"
                     Value="{x:Null}" />
         </Style>
@@ -22,7 +22,7 @@
         <Style x:Key="BudgetLineDataPointStyle"
                TargetType="{x:Type chartingToolkit:DataPoint}">
             <Setter Property="Background"
-                    Value="{StaticResource BudgetGraphLineBrush}" />
+                    Value="{StaticResource Brush.Brurndown.BudgetGraphLine}" />
             <Setter Property="Template"
                     Value="{x:Null}" />
         </Style>
@@ -30,7 +30,7 @@
         <Style x:Key="ZeroLineDataPointStyle"
                TargetType="{x:Type chartingToolkit:DataPoint}">
             <Setter Property="Background"
-                    Value="{StaticResource ZeroGraphLineBrush}" />
+                    Value="{StaticResource Brush.Brurndown.ZeroGraphLine}" />
             <Setter Property="Template"
                     Value="{x:Null}" />
         </Style>
@@ -38,7 +38,7 @@
         <Style x:Key="DashedPolyLine"
                TargetType="{x:Type Polyline}">
             <Setter Property="Stroke"
-                    Value="{StaticResource BudgetGraphLineBrush}" />
+                    Value="{StaticResource Brush.Brurndown.BudgetGraphLine}" />
             <Setter Property="StrokeDashArray"
                     Value="4, 2" />
         </Style>
