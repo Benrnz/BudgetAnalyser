@@ -99,12 +99,17 @@ namespace BudgetAnalyser.Statement
 
         public ICommand DeleteTransactionCommand
         {
-            get { return new RelayCommand(OnDeleteTransactionCommandExecute, CanExecuteDeleteTransactionCommand); }
+            get { return new RelayCommand(OnDeleteTransactionCommandExecute, HasSelectedRow); }
         }
 
         public ICommand DemoStatementCommand
         {
             get { return new RelayCommand(OnDemoStatementCommandExecuted, CanExecuteOpenStatementCommand); }
+        }
+
+        public ICommand EditTransactionCommand
+        {
+            get { return new RelayCommand(OnEditTransactionCommandExecute, HasSelectedRow); }
         }
 
         public ICommand MergeStatementCommand
@@ -218,24 +223,6 @@ namespace BudgetAnalyser.Statement
 
         public StatementViewModel ViewModel { get; private set; }
 
-        public void BeginEditTransaction()
-        {
-            if (SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
-            {
-                return;
-            }
-
-            this.shellDialogCorrelationId = Guid.NewGuid();
-            MessengerInstance.Send(
-                new RequestShellDialogMessage(
-                    new EditingTransactionViewModel { Transaction = SelectedRow },
-                    ShellDialogType.Ok)
-                {
-                    CorrelationId = this.shellDialogCorrelationId,
-                    Title = "Edit Transaction",
-                });
-        }
-
         public void Initialize()
         {
             if (this.initialised)
@@ -277,11 +264,6 @@ namespace BudgetAnalyser.Statement
             return BackgroundJob.MenuAvailable && ViewModel.Statement != null;
         }
 
-        private bool CanExecuteDeleteTransactionCommand()
-        {
-            return SelectedRow != null;
-        }
-
         private bool CanExecuteOpenStatementCommand()
         {
             return BackgroundJob.MenuAvailable;
@@ -290,6 +272,11 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteSortCommand()
         {
             return BackgroundJob.MenuAvailable && ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
+        }
+
+        private bool HasSelectedRow()
+        {
+            return SelectedRow != null;
         }
 
         private bool Load(string fullFileName)
@@ -483,6 +470,24 @@ namespace BudgetAnalyser.Statement
         private void OnDemoStatementCommandExecuted()
         {
             OnOpenStatementExecute(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
+        }
+
+        private void OnEditTransactionCommandExecute()
+        {
+            if (SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
+            {
+                return;
+            }
+
+            this.shellDialogCorrelationId = Guid.NewGuid();
+            MessengerInstance.Send(
+                new RequestShellDialogMessage(
+                    new EditingTransactionViewModel { Transaction = SelectedRow },
+                    ShellDialogType.Ok)
+                {
+                    CorrelationId = this.shellDialogCorrelationId,
+                    Title = "Edit Transaction",
+                });
         }
 
         private void OnFilterApplied(FilterAppliedMessage message)

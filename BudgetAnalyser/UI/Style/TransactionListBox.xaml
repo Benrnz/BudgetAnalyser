@@ -48,6 +48,43 @@
         </Style.Triggers>
     </Style>
 
+    <ContextMenu x:Key="TransactionContextMenu"
+                 HasDropShadow="true">
+        <ContextMenu.Resources>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground"
+                        Value="Black" />
+            </Style>
+        </ContextMenu.Resources>
+        <MenuItem Command="{Binding AppliedRulesController.ApplyRulesCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Apply Matching Rules" />
+            </MenuItem.Header>
+        </MenuItem>
+        <MenuItem Command="{Binding AppliedRulesController.CreateRuleCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Create Rule" />
+            </MenuItem.Header>
+        </MenuItem>
+        <MenuItem Command="{Binding AppliedRulesController.ShowRulesCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Edit Rules" />
+            </MenuItem.Header>
+        </MenuItem>
+        <Separator />
+        <MenuItem Command="{Binding EditTransactionCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Edit Transaction" />
+            </MenuItem.Header>
+        </MenuItem>
+        <MenuItem Command="{Binding DeleteTransactionCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Delete Transaction" />
+            </MenuItem.Header>
+        </MenuItem>
+    </ContextMenu>
+
 
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type statement:Transaction}">
@@ -325,17 +362,14 @@
                 </Grid>
             </Expander.Header>
             <Expander.Content>
-                <ListBox IsTextSearchEnabled="False"
+                <ListBox ContextMenu="{StaticResource TransactionContextMenu}"
+                         IsTextSearchEnabled="False"
                          ItemContainerStyle="{StaticResource ListBox.TransactionContainer2}"
                          ItemsSource="{Binding Transactions}"
                          ItemTemplate="{StaticResource TransactionTemplate1}"
+                         SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.SelectedRow}"
                          SelectionMode="Single"
                          Visibility="{Binding HasTransactions, Converter={StaticResource Converter.BoolToVis}}" />
-                <!--
-                    // TODO need a plan for these bindings...
-                         SelectedItem="{Binding SelectedRow}"
-                         ContextMenu="{StaticResource TransactionContextMenu}"
-                -->
             </Expander.Content>
         </Expander>
     </DataTemplate>

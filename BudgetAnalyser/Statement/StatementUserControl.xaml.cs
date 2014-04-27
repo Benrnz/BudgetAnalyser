@@ -85,16 +85,6 @@ namespace BudgetAnalyser.Statement
             ApplyFilter();
         }
 
-        /// <summary>
-        ///     Edit a transaction in the list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnEditTransaction(object sender, RoutedEventArgs e)
-        {
-            Controller.BeginEditTransaction();
-        }
-
         private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             Controller.NotifyOfClosing();
@@ -114,14 +104,20 @@ namespace BudgetAnalyser.Statement
 
         private void OnTransactionListBoxDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            OnEditTransaction(sender, e);
+            if (Controller.EditTransactionCommand.CanExecute(null))
+            {
+                Controller.EditTransactionCommand.Execute(null);
+            }
         }
 
         private void OnTransactionListBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter || e.Key == Key.Return)
             {
-                OnEditTransaction(sender, e);
+                if (Controller.EditTransactionCommand.CanExecute(null))
+                {
+                    Controller.EditTransactionCommand.Execute(null);
+                }
             }
         }
 
