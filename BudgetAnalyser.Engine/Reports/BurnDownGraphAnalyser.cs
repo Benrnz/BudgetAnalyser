@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Reports
         public void Analyse(
             StatementModel statementModel,
             BudgetModel budgetModel,
-            IEnumerable<BudgetBucket> buckets,
+            IEnumerable<BudgetBucket> bucketsSubset,
             DateTime beginDate,
             LedgerBook ledgerBook)
         {
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Reports
             var latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
 
-            List<BudgetBucket> bucketsCopy = buckets.ToList();
+            List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
 
             var query = statementModel.Transactions
                 .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
@@ -139,7 +139,17 @@ namespace BudgetAnalyser.Engine.Reports
                 }
                 else
                 {
-                    budgetTotal += bucketsCopy.Sum(bucket => GetLedgerBalance(applicableLine, bucket));
+                    budgetTotal += bucketsCopy.Sum(bucket =>
+                    {
+                        var ledgerBal = GetLedgerBalance(applicableLine, bucket);
+                        if (ledgerBal < 0)
+                        {
+                            // The Ledger line might not actually have a ledger for the given bucket.
+                            return GetBudgetModelTotalForBucket(budgetModel, bucket);
+                        }
+
+                        return ledgerBal;
+                    });
                 }
             }
 
@@ -150,7 +160,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (applicableLine == null)
             {
-                return 0;
+                return -1;
             }
 
             if (bucket is SurplusBucket)
@@ -164,7 +174,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return ledger.Balance;
             }
 
-            return 0;
+            return -1;
         }
 
         private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(StatementModel statementModel, DateTime beginDate)
