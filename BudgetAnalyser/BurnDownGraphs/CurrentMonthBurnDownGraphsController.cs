@@ -74,16 +74,6 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
-        //public GlobalFilterCriteria Criteria
-        //{
-        //    get { return this.doNotUseCriteria; }
-        //    set
-        //    {
-        //        this.doNotUseCriteria = value;
-        //        RaisePropertyChanged(() => Criteria);
-        //    }
-        //}
-
         public string DateRangeDescription
         {
             get { return this.doNotUseDateRangeDescription; }
@@ -153,7 +143,7 @@ namespace BudgetAnalyser.BurnDownGraphs
                 listOfCharts.Add(chartController);
             }
 
-            listOfCharts = listOfCharts.OrderByDescending(x => x.NetWorth).ToList();
+            listOfCharts = listOfCharts.OrderBy(x => x.Bucket).ToList();
 
             // Put surplus at the top.
             listOfCharts.Insert(
