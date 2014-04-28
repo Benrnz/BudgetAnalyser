@@ -61,9 +61,6 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        // TODO get rid of Id:
-        public Guid? Id { get; set; }
-
         public virtual string TypeDescription
         {
             get { return GetType().Name; }
