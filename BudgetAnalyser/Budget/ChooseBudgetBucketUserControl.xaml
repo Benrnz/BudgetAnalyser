@@ -9,7 +9,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Style="{StaticResource LeftButton}"
+            <Button Style="{StaticResource Button.Round.Left}"
                     Command="{Binding CancelCommand}"
                     HorizontalAlignment="Left"
                     ToolTip="Close and go back"/>
@@ -30,7 +30,7 @@
                       TabIndex="1"
                       ToolTip="{Binding Selected}"
                       VerticalAlignment="Top" />
-            <Button Style="{StaticResource OkRoundButton}"
+            <Button Style="{StaticResource Button.Round.Ok}"
                     Command="{Binding CloseCommand}"
                     HorizontalAlignment="Left" />
         </StackPanel>

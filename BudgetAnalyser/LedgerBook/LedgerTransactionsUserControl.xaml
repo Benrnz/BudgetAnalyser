@@ -13,11 +13,11 @@
                     Orientation="Horizontal">
             <Button Command="{Binding CloseTransactionsViewCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource LeftButton}"
+                    Style="{StaticResource Button.Round.Left}"
                     ToolTip="Close and go back"/>
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource NewButton}"
+                    Style="{StaticResource Button.Round.New}"
                     ToolTip="Add new transaction" />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding Title}" />
@@ -96,7 +96,7 @@
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              Text="{Binding NewTransactionAmount}" />
                     <Button Command="{Binding ZeroNetAmountCommand}"
-                            Style="{StaticResource ClearButton}"
+                            Style="{StaticResource Button.Round.Clear}"
                             ToolTip="Set amount to zero the net change for this ledger." />
                     <CheckBox IsChecked="{Binding NewTransactionIsReversal}"
                               VerticalAlignment="Center">
@@ -108,7 +108,7 @@
                 <Button Grid.Row="1" 
                         Grid.Column="1" 
                         Command="{Binding AddTransactionCommand}"
-                        Style="{StaticResource SaveButton}"
+                        Style="{StaticResource Button.Round.Save}"
                         HorizontalAlignment="Right"
                         ToolTip="Add new transaction" />
             </Grid>

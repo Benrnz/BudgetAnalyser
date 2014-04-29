@@ -13,7 +13,7 @@
                     Orientation="Horizontal">
             <Button Command="{Binding CancelCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource CloseButton}" />
+                    Style="{StaticResource Button.Round.Close}" />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="New Reconciliation" />
         </StackPanel>
@@ -32,7 +32,7 @@
             <Button Command="{Binding OkCommand}"
                     HorizontalAlignment="Left"
                     Margin="20,2,2,2"
-                    Style="{StaticResource OkRoundButton}" />
+                    Style="{StaticResource Button.Round.Ok}" />
         </StackPanel>
         <TextBlock Grid.Row="2"
                    Margin="10,30,10,10"

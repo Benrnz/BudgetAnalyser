@@ -29,7 +29,7 @@
                  ToolTip="{Binding FileName}" />
         <Button Command="{Binding BrowseForFileCommand}"
                 Grid.Column="2"
-                Style="{StaticResource BuildButton}" />
+                Style="{StaticResource Button.Round.Build}" />
         <StackPanel Grid.ColumnSpan="3"
                     Grid.Row="1">
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
@@ -96,9 +96,9 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Command="{Binding CancelCommand}"
-                    Style="{StaticResource CloseButton}" />
+                    Style="{StaticResource Button.Round.Close}" />
             <Button Command="{Binding ActionCommand}"
-                    Style="{StaticResource LoadButton}"
+                    Style="{StaticResource Button.Round.Load}"
                     ToolTip="{Binding ActionButtonText}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"

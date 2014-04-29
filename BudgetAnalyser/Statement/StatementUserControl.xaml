@@ -155,16 +155,16 @@
                     </MenuItem>
                 </Menu>
                 <Button Command="{Binding OpenStatementCommand}"
-                        Style="{StaticResource NewButton}"
+                        Style="{StaticResource Button.Round.New}"
                         ToolTip="Load Transactions (Ctrl+O)" />
                 <Button Command="{Binding CloseStatementCommand}"
-                        Style="{StaticResource ClearButton}"
+                        Style="{StaticResource Button.Round.Clear}"
                         ToolTip="Close Transactions (Ctrl+X)" />
                 <Button Command="{Binding SaveStatementCommand}"
-                        Style="{StaticResource SaveButton}"
+                        Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeStatementCommand}"
-                        Style="{StaticResource LoadButton}"
+                        Style="{StaticResource Button.Round.Load}"
                         ToolTip="Merge in new Transactions" />
             </StackPanel>
         </Grid>
@@ -301,7 +301,7 @@
                             Visibility="{Binding ViewModel.Statement, Converter={StaticResource Converter.NotNullToVis}}">
                     <Button Command="{Binding DemoStatementCommand}"
                             Margin="20,20,4,20"
-                            Style="{StaticResource HappyButton}"
+                            Style="{StaticResource Button.Round.Smiley}"
                             ToolTip="Load a demo set of transactions" />
                     <TextBlock Text="Load a demonstration set of transactions." />
                 </StackPanel>

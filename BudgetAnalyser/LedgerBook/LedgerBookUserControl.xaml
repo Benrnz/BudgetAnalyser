@@ -61,28 +61,28 @@
         <!-- Toolbar -->
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding SaveLedgerBookCommand}"
-                    Style="{StaticResource SaveButton}" />
+                    Style="{StaticResource Button.Round.Save}" />
             <Button Command="{Binding LoadLedgerBookCommand}"
-                    Style="{StaticResource LoadButton}" />
+                    Style="{StaticResource Button.Round.Load}" />
             <Button Command="{Binding AddNewLedgerBookCommand}"
-                    Style="{StaticResource NewButton}"
+                    Style="{StaticResource Button.Round.New}"
                     ToolTip="Create New Ledger Book" />
             <Button Command="{Binding CloseLedgerBookCommand}"
-                    Style="{StaticResource ClearButton}"
+                    Style="{StaticResource Button.Round.Clear}"
                     ToolTip="Close Ledger Book" />
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="1,0,0,0"
                     Width="1"
                     Margin="10,0,10,0" />
-            <Button Style="{StaticResource PlusRButton}"
+            <Button Style="{StaticResource Button.Round.PlusR}"
                     ToolTip="Add new reconciliation"
                     Command="{Binding AddNewReconciliationCommand}" />
-            <Button Style="{StaticResource PlusLButton}"
+            <Button Style="{StaticResource Button.Round.PlusL}"
                     ToolTip="Add new ledger"
                     Command="{Binding AddNewLedgerCommand}" />
             <Button Command="{Binding UnlockLedgerLineCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource UnlockButton}"
+                    Style="{StaticResource Button.Round.Unlock}"
                     ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding LedgerBook.Name}"
@@ -144,14 +144,14 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding LoadLedgerBookCommand}"
-                        Style="{StaticResource LoadButton}" />
+                        Style="{StaticResource Button.Round.Load}" />
                 <TextBlock HorizontalAlignment="Center"
                            Text="No Ledger Book loaded. Load one now:" />
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1">
                 <Button Command="{Binding DemoLedgerBookCommand}"
-                        Style="{StaticResource HappyButton}"
+                        Style="{StaticResource Button.Round.Smiley}"
                         ToolTip="Demo LedgerBook" />
                 <TextBlock HorizontalAlignment="Center"
                            Text="Show a sample LedgerBook" />

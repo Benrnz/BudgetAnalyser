@@ -62,17 +62,17 @@
                                     Orientation="Horizontal">
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Save"
-                                    Style="{StaticResource SaveButton}"
+                                    Style="{StaticResource Button.Round.Save}"
                                     Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Ok"
                                     IsDefault="False"
                                     IsCancel="{Binding DialogOkIsCancel}"
-                                    Style="{StaticResource OkRoundButton}"
+                                    Style="{StaticResource Button.Round.Ok}"
                                     Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                             <Button Command="{Binding DialogCommand}"
                                     CommandParameter="Cancel"
-                                    Style="{StaticResource CloseButton}"
+                                    Style="{StaticResource Button.Round.Close}"
                                     Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
                         </StackPanel>
                     </StackPanel>

@@ -27,9 +27,9 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Command="{Binding ClearCommand}"
-                    Style="{StaticResource ClearButton}" />
+                    Style="{StaticResource Button.Round.Clear}" />
             <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource OkRoundButton}"
+                    Style="{StaticResource Button.Round.Ok}"
                     ToolTip="Apply Filter and Close" />
         </StackPanel>
     </Grid>

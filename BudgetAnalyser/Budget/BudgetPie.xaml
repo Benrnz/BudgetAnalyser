@@ -70,7 +70,7 @@
         </Grid.ColumnDefinitions>
         <Button Command="{Binding CloseCommand}"
                 HorizontalAlignment="Left"
-                Style="{StaticResource LeftButton}"
+                Style="{StaticResource Button.Round.Left}"
                 ToolTip="Close and go back"
                 VerticalAlignment="Top" />
         <!-- Expense Pie -->

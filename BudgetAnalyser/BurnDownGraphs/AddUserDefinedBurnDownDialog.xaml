@@ -57,10 +57,10 @@
         <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource LeftButton}" ToolTip="Close and go back"/>
+            <Button Style="{StaticResource Button.Round.Left}" ToolTip="Close and go back"/>
             <Button Click="AddChartOnClick"
                     IsDefault="True"
-                    Style="{StaticResource SaveButton}" />
+                    Style="{StaticResource Button.Round.Save}" />
         </StackPanel>
         <TextBlock Grid.ColumnSpan="3"
                    Grid.Row="1"
@@ -83,10 +83,10 @@
                     Grid.Row="2">
             <Button Command="{Binding AddSelectedCommand}"
                     CommandParameter="{Binding ElementName=UnselectedBucketsList, Path=SelectedItem}"
-                    Style="{StaticResource RightButton}" />
+                    Style="{StaticResource Button.Round.Right}" />
             <Button Command="{Binding RemoveSelectedCommand}"
                     CommandParameter="{Binding ElementName=SelectedBucketsList, Path=SelectedItem}"
-                    Style="{StaticResource LeftButton}" />
+                    Style="{StaticResource Button.Round.Left}" />
         </StackPanel>
         <TextBlock Grid.Row="3"
                    Margin="2"

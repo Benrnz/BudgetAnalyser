@@ -1,39 +1,25 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="ButtonChromeColor">
-        #FFBEE6FD
-    </Color>
     <SolidColorBrush x:Key="ButtonChromeBrush"
-                     Color="{StaticResource ButtonChromeColor}" />
+                     Color="{StaticResource Colour.Button.Chrome}" />
 
     <SolidColorBrush x:Key="ButtonDisabledBrush"
                      Color="{StaticResource Colour.MainBackground}" />
 
-    <Color x:Key="ButtonBackgroundColor">
-        #FF2C6F8E
-    </Color>
-
     <SolidColorBrush x:Key="ButtonBackgroundBrush"
-                     Color="{StaticResource ButtonBackgroundColor}" />
+                     Color="{StaticResource Colour.Button.Background}" />
 
-    <Color x:Key="ButtonStokeColor">
-        #AA333333
-    </Color>
-
-    <Color x:Key="ButtonGlyphColor">
-        #FF333333
-    </Color>
 
     <SolidColorBrush x:Key="ButtonStrokeBrush"
-                     Color="{StaticResource ButtonStokeColor}" />
+                     Color="{StaticResource Colour.Button.Stroke}" />
 
     <SolidColorBrush x:Key="ButtonGlyphBrush"
-                     Color="{StaticResource ButtonGlyphColor}" />
+                     Color="{StaticResource Colour.Button.Glyph}" />
 
 
     <!-- Rectangular Buttons -->
-    <Style x:Key="SquareButtonBaseStyle"
+    <Style x:Key="Button.Square.BaseStyle"
            TargetType="Button">
         <Setter Property="Margin"
                 Value="5" />
@@ -58,26 +44,166 @@
         </Style.Triggers>
     </Style>
 
-    <!--<Style x:Key="OkButton"
-           BasedOn="{StaticResource SquareButtonBaseStyle}"
-           TargetType="Button">
-        <Setter Property="IsDefault"
-                Value="True" />
-        <Setter Property="Content"
-                Value="_Ok" />
-    </Style>-->
-
-    <!--<Style x:Key="CancelButton"
-           TargetType="Button"
-           BasedOn="{StaticResource SquareButtonBaseStyle}">
-        <Setter Property="IsCancel"
-                Value="True" />
-        <Setter Property="Content"
-                Value="Cancel" />
-    </Style>-->
-
     <!-- Circular Buttons -->
-    <Style x:Key="CloseButton"
+    <Style x:Key="Button.Round.All"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="-1,-1,0,0"
+                                   Text="All"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="All" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.Build"
+           TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="24"
+                                   Margin="-1,-1,0,0"
+                                   FontWeight="Bold"
+                                   Text="..." />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Build" />
+    </Style>
+
+    <Style x:Key="Button.Round.Clear"
+           TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Ellipse Height="15"
+                                 Width="15"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Stroke="{StaticResource ButtonGlyphBrush}"
+                                 StrokeThickness="2" />
+                        <Path Data="M19,0 L0,16"
+                              HorizontalAlignment="Center"
+                              Margin="12.5,14.75,12.5,15"
+                              StrokeThickness="2"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              VerticalAlignment="Center"
+                              Height="10.25"
+                              Stretch="Fill"
+                              Width="15" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Clear all filters" />
+    </Style>
+
+    <Style x:Key="Button.Round.Close"
            TargetType="{x:Type Button}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -130,7 +256,7 @@
                 Value="True" />
     </Style>
 
-    <Style x:Key="InfoButton"
+    <Style x:Key="Button.Round.Info"
            TargetType="{x:Type Button}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -183,7 +309,188 @@
                 Value="False" />
     </Style>
 
-    <Style x:Key="OkRoundButton"
+    <Style x:Key="Button.Round.Left"
+           TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Text="&lt;"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Margin="0,2,0,0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="22"
+                                   FontFamily="Segoe Script"
+                                   FontWeight="Bold" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="IsCancel"
+                Value="False" />
+    </Style>
+
+    <Style x:Key="Button.Round.Load"
+           TargetType="Button">
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Load" />
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Path Data="M6,0 L20,0 L20,18 L6,18 L6,0"
+                              Fill="{StaticResource ButtonStrokeBrush}"
+                              HorizontalAlignment="Left"
+                              Margin="8,12,10,10"
+                              StrokeThickness="1"
+                              VerticalAlignment="Top" />
+                        <Path Data="M0,10 L14,10 L18,18 L4,18 L0,10"
+                              Fill="{StaticResource ButtonGlyphBrush}"
+                              HorizontalAlignment="Left"
+                              Margin="8,12,10,10"
+                              Stroke="{StaticResource ButtonStrokeBrush}"
+                              StrokeThickness="1"
+                              VerticalAlignment="Top" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.New"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Rectangle Height="15"
+                                   Width="15"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Stroke="{StaticResource ButtonGlyphBrush}"
+                                   StrokeThickness="2" />
+                        <Path Data="M19,0 L0,16"
+                              HorizontalAlignment="Center"
+                              Margin="22.25,12.5,12.5,22.75"
+                              StrokeThickness="2"
+                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              VerticalAlignment="Center"
+                              Height="4.75"
+                              Stretch="Fill"
+                              Width="5.25"
+                              RenderTransformOrigin="0.5,0.5">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="-1" />
+                                    <SkewTransform />
+                                    <RotateTransform />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                                   FontFamily="Segoe UI"
+                                   FontSize="16"
+                                   Margin="24,3,0,0"
+                                   HorizontalAlignment="Left"
+                                   Text="*"
+                                   VerticalAlignment="Top" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="New" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.Ok"
            TargetType="{x:Type Button}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -236,7 +543,211 @@
                 Value="True" />
     </Style>
 
-    <Style x:Key="SaveButton"
+    <Style x:Key="Button.Round.Pie"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Ellipse Stroke="{StaticResource ButtonGlyphBrush}"
+                                 HorizontalAlignment="Center"
+                                 Width="20"
+                                 Height="20"
+                                 StrokeThickness="2"
+                                 VerticalAlignment="Center" />
+                        <Path Data="M19,9.5 L19,19 L25,12"
+                              Margin="1"
+                              StrokeThickness="2"
+                              Stroke="{StaticResource ButtonGlyphBrush}" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Pie Graph" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.PlusL"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                                   FontWeight="Bold"
+                                   FontFamily="Segoe UI"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center"
+                                   Margin="-1,-1,0,0"
+                                   Text="+L"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.PlusR"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="-1,-1,0,0"
+                                   Text="+R"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Button.Round.Right"
+           TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate>
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Text="&gt;"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Margin="0,2,0,0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="22"
+                                   FontFamily="Segoe Script"
+                                   FontWeight="Bold" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Move Right" />
+        <Setter Property="IsCancel"
+                Value="False" />
+    </Style>
+
+    <Style x:Key="Button.Round.Save"
            TargetType="Button">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -288,7 +799,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SaveAsButton"
+    <Style x:Key="Button.Round.SaveAs"
            TargetType="Button">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -350,276 +861,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="LoadButton"
-           TargetType="Button">
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Load" />
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate>
-                    <Grid>
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <Path Data="M6,0 L20,0 L20,18 L6,18 L6,0"
-                              Fill="{StaticResource ButtonStrokeBrush}"
-                              HorizontalAlignment="Left"
-                              Margin="8,12,10,10"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top" />
-                        <Path Data="M0,10 L14,10 L18,18 L4,18 L0,10"
-                              Fill="{StaticResource ButtonGlyphBrush}"
-                              HorizontalAlignment="Left"
-                              Margin="8,12,10,10"
-                              Stroke="{StaticResource ButtonStrokeBrush}"
-                              StrokeThickness="1"
-                              VerticalAlignment="Top" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="BuildButton"
-           TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate>
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="24"
-                                   Margin="-1,-1,0,0"
-                                   FontWeight="Bold"
-                                   Text="..." />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Build" />
-    </Style>
-
-    <Style x:Key="ClearButton"
-           TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate>
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <Ellipse Height="15"
-                                 Width="15"
-                                 HorizontalAlignment="Center"
-                                 VerticalAlignment="Center"
-                                 Stroke="{StaticResource ButtonGlyphBrush}"
-                                 StrokeThickness="2" />
-                        <Path Data="M19,0 L0,16"
-                              HorizontalAlignment="Center"
-                              Margin="12.5,14.75,12.5,15"
-                              StrokeThickness="2"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
-                              VerticalAlignment="Center"
-                              Height="10.25"
-                              Stretch="Fill"
-                              Width="15" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Clear all filters" />
-    </Style>
-
-    <Style x:Key="LeftButton"
-           TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate>
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Text="&lt;"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
-                                   Margin="0,2,0,0"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22"
-                                   FontFamily="Segoe Script"
-                                   FontWeight="Bold" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Move Left" />
-        <Setter Property="IsCancel"
-                Value="False" />
-    </Style>
-
-    <Style x:Key="RightButton"
-           TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate>
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Text="&gt;"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
-                                   Margin="0,2,0,0"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22"
-                                   FontFamily="Segoe Script"
-                                   FontWeight="Bold" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Move Right" />
-        <Setter Property="IsCancel"
-                Value="False" />
-    </Style>
-
-    <Style x:Key="NewButton"
+    <Style x:Key="Button.Round.Smiley"
            TargetType="{x:Type Button}">
         <Setter Property="Background"
                 Value="{StaticResource ButtonBackgroundBrush}" />
@@ -638,89 +880,40 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <Rectangle Height="15"
-                                   Width="15"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Stroke="{StaticResource ButtonGlyphBrush}"
-                                   StrokeThickness="2" />
-                        <Path Data="M19,0 L0,16"
-                              HorizontalAlignment="Center"
-                              Margin="22.25,12.5,12.5,22.75"
-                              StrokeThickness="2"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
-                              VerticalAlignment="Center"
-                              Height="4.75"
-                              Stretch="Fill"
-                              Width="5.25"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="-1" />
-                                    <SkewTransform />
-                                    <RotateTransform />
-                                    <TranslateTransform />
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
-                                   FontFamily="Segoe UI"
-                                   FontSize="16"
-                                   Margin="24,3,0,0"
-                                   HorizontalAlignment="Left"
-                                   Text="*"
-                                   VerticalAlignment="Top" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Clear all filters" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+                        <Image RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.5"
+                                                ScaleY="0.5" />
+                            </Image.RenderTransform>
+                            <Image.Source>
+                                <DrawingImage>
+                                    <DrawingImage.Drawing>
+                                        <DrawingGroup Opacity="1">
+                                            <DrawingGroup.Children>
+                                                <DrawingGroup Opacity="1">
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="{x:Null}">
+                                                            <GeometryDrawing.Geometry>
+                                                                <PathGeometry FillRule="Nonzero"
+                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
+                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                                 Pen="{x:Null}">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="Nonzero"
+                                                                      Figures="M96,256.847991943359C142.884994506836,283.903991699219 198.024993896484,299.380004882813 256,299.380004882813 313.975006103516,299.380004882813 369.114990234375,283.976989746094 416,256.920013427734 408.713012695313,346.139007568359 339.436004638672,416 256,416 172.565994262695,416 103.289001464844,346.063995361328 96,256.847991943359z M351.999969482422,127.999992370605C357.524749755859,127.999992370605,363.049560546875,130.143585205078,367.999969482422,134.430770874023C377.900817871094,143.005157470703,384,158.851257324219,384,176C384,193.148742675781 377.900848388672,208.994842529297 368.000030517578,217.569213867188 358.099212646484,226.143600463867 345.90087890625,226.143600463867 336.000030517578,217.569229125977C326.099182128906,208.994842529297,320,193.148742675781,320,176C320,158.851257324219,326.099151611328,143.005157470703,335.999969482422,134.430786132813C340.950378417969,130.143585205078,346.475158691406,128,351.999969482422,127.999992370605z M159.999969482422,127.999992370605C165.524765014648,127.999992370605,171.049560546875,130.143585205078,175.999969482422,134.430770874023C185.900817871094,143.005157470703,191.999984741211,158.851257324219,192,176C192.000015258789,193.148742675781 185.900863647461,208.994842529297 176.000030517578,217.569213867188 166.099197387695,226.143600463867 153.900863647461,226.143600463867 144.000030517578,217.569229125977C134.099182128906,208.994842529297,128.000015258789,193.148742675781,128,176C127.999984741211,158.851257324219,134.099136352539,143.005157470703,143.999969482422,134.430786132813C148.950378417969,130.143585205078,154.475173950195,128,159.999969482422,127.999992370605z M256,48C141.125,48 48,141.125 48,256 48,370.875 141.125,464 256,464 370.875,464 464,370.875 464,256 464,141.125 370.875,48 256,48z M256,0C397.385009765625,0 512,114.61499786377 512,256 512,397.385009765625 397.385009765625,512 256,512 114.61499786377,512 0,397.385009765625 0,256 0,114.61499786377 114.61499786377,0 256,0z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Source>
+                        </Image>
 
-    <Style x:Key="PlusLButton"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
-                                   FontWeight="Bold"
-                                   FontFamily="Segoe UI"
-                                   FontSize="18"
-                                   HorizontalAlignment="Center"
-                                   Margin="-1,-1,0,0"
-                                   Text="+L"
-                                   VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -743,159 +936,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="PlusRButton"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
-                                   HorizontalAlignment="Center"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Margin="-1,-1,0,0"
-                                   Text="+R"
-                                   VerticalAlignment="Center" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="AllButton"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
-                                   HorizontalAlignment="Center"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Margin="-1,-1,0,0"
-                                   Text="All"
-                                   VerticalAlignment="Center" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="All" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="PieButton"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <Ellipse Stroke="{StaticResource ButtonGlyphBrush}"
-                                 HorizontalAlignment="Center"
-                                 Width="20"
-                                 Height="20"
-                                 StrokeThickness="2"
-                                 VerticalAlignment="Center" />
-                        <Path Data="M19,9.5 L19,19 L25,12"
-                              Margin="1"
-                              StrokeThickness="2"
-                              Stroke="{StaticResource ButtonGlyphBrush}" />
-
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Setter Property="ToolTip"
-                Value="Pie Graph" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="UnlockButton"
+    <Style x:Key="Button.Round.Unlock"
            TargetType="{x:Type Button}">
         <Setter Property="Background"
                 Value="{StaticResource ButtonBackgroundBrush}" />
@@ -960,81 +1001,8 @@
                 Value="40" />
         <Setter Property="Height"
                 Value="40" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    
-    <Style x:Key="HappyButton"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <Image RenderTransformOrigin="0.5,0.5">
-                            <Image.RenderTransform>
-                                <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
-                            </Image.RenderTransform>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <DrawingGroup Opacity="1">
-                                            <DrawingGroup.Children>
-                                                <DrawingGroup Opacity="1">
-                                                    <DrawingGroup.Children>
-                                                        <GeometryDrawing Brush="{x:Null}">
-                                                            <GeometryDrawing.Geometry>
-                                                                <PathGeometry FillRule="Nonzero"
-                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
-                                                            </GeometryDrawing.Geometry>
-                                                        </GeometryDrawing>
-                                                    </DrawingGroup.Children>
-                                                </DrawingGroup>
-                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
-                                                                 Pen="{x:Null}">
-                                                    <GeometryDrawing.Geometry>
-                                                        <PathGeometry FillRule="Nonzero"
-                                                                      Figures="M96,256.847991943359C142.884994506836,283.903991699219 198.024993896484,299.380004882813 256,299.380004882813 313.975006103516,299.380004882813 369.114990234375,283.976989746094 416,256.920013427734 408.713012695313,346.139007568359 339.436004638672,416 256,416 172.565994262695,416 103.289001464844,346.063995361328 96,256.847991943359z M351.999969482422,127.999992370605C357.524749755859,127.999992370605,363.049560546875,130.143585205078,367.999969482422,134.430770874023C377.900817871094,143.005157470703,384,158.851257324219,384,176C384,193.148742675781 377.900848388672,208.994842529297 368.000030517578,217.569213867188 358.099212646484,226.143600463867 345.90087890625,226.143600463867 336.000030517578,217.569229125977C326.099182128906,208.994842529297,320,193.148742675781,320,176C320,158.851257324219,326.099151611328,143.005157470703,335.999969482422,134.430786132813C340.950378417969,130.143585205078,346.475158691406,128,351.999969482422,127.999992370605z M159.999969482422,127.999992370605C165.524765014648,127.999992370605,171.049560546875,130.143585205078,175.999969482422,134.430770874023C185.900817871094,143.005157470703,191.999984741211,158.851257324219,192,176C192.000015258789,193.148742675781 185.900863647461,208.994842529297 176.000030517578,217.569213867188 166.099197387695,226.143600463867 153.900863647461,226.143600463867 144.000030517578,217.569229125977C134.099182128906,208.994842529297,128.000015258789,193.148742675781,128,176C127.999984741211,158.851257324219,134.099136352539,143.005157470703,143.999969482422,134.430786132813C148.950378417969,130.143585205078,154.475173950195,128,159.999969482422,127.999992370605z M256,48C141.125,48 48,141.125 48,256 48,370.875 141.125,464 256,464 370.875,464 464,370.875 464,256 464,141.125 370.875,48 256,48z M256,0C397.385009765625,0 512,114.61499786377 512,256 512,397.385009765625 397.385009765625,512 256,512 114.61499786377,512 0,397.385009765625 0,256 0,114.61499786377 114.61499786377,0 256,0z" />
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingGroup.Children>
-                                        </DrawingGroup>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
+        <Setter Property="ToolTip"
+                Value="Unlock" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">

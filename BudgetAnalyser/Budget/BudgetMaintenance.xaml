@@ -145,7 +145,7 @@
         </Style>
 
         <Style x:Key="BudgetButton"
-               BasedOn="{StaticResource SquareButtonBaseStyle}"
+               BasedOn="{StaticResource Button.Square.BaseStyle}"
                TargetType="Button">
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
@@ -185,19 +185,19 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Command="{Binding ShowPieCommand}"
-                    Style="{StaticResource PieButton}" />
+                    Style="{StaticResource Button.Round.Pie}" />
             <Button Command="{Binding ShowAllCommand}"
-                    Style="{StaticResource AllButton}"
+                    Style="{StaticResource Button.Round.All}"
                     ToolTip="Show all budgets within the loaded budget file, and select one to view." />
             <Button Command="{Binding DetailsCommand}"
-                    Style="{StaticResource InfoButton}" />
+                    Style="{StaticResource Button.Round.Info}" />
             <Button Command="{Binding LoadBudgetCommand}"
                     Margin="2,3,2,1"
-                    Style="{StaticResource LoadButton}" />
+                    Style="{StaticResource Button.Round.Load}" />
             <Button Command="{Binding SaveAsCommand}"
-                    Style="{StaticResource SaveAsButton}" />
+                    Style="{StaticResource Button.Round.SaveAs}" />
             <Button Command="{Binding DemoBudgetCommand}"
-                    Style="{StaticResource HappyButton}" />
+                    Style="{StaticResource Button.Round.Smiley}" />
         </StackPanel>
         <!-- Incomes List -->
         <ScrollViewer x:Name="IncomesListScrollViewer"

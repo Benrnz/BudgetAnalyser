@@ -99,7 +99,7 @@
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
             <Button Command="{Binding CloseCommand}"
-                    Style="{StaticResource LeftButton}"
+                    Style="{StaticResource Button.Round.Left}"
                     ToolTip="Back to transactions view" />
             <Menu Style="{StaticResource RoundMenuButton}">
                 <Menu.Resources>
@@ -164,14 +164,14 @@
                            Text="Details" />
             </Border>
             <Button Command="{Binding DeleteRuleCommand}"
-                    Style="{StaticResource CloseButton}"
+                    Style="{StaticResource Button.Round.Close}"
                     ToolTip="Delete Rule"
                     Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}" />
-            <Button Style="{StaticResource UnlockButton}"
+            <Button Style="{StaticResource Button.Round.Unlock}"
                     Command="{Binding EditRuleCommand}"
                     ToolTip="Edit Rule"
                     Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
-            <Button Style="{StaticResource SaveButton}"
+            <Button Style="{StaticResource Button.Round.Save}"
                     Command="{Binding SaveRuleCommand}"
                     ToolTip="Save Rule"
                     Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
