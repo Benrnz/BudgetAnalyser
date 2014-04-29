@@ -9,6 +9,8 @@ namespace BudgetAnalyser.Engine.Matching
             RuleId = Guid.NewGuid();
         }
 
+        public DateTime? Created { get; set; }
+
         public Guid? RuleId { get; set; }
 
         public decimal? Amount { get; set; }

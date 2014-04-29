@@ -34,6 +34,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             this.bucketRepository = bucketRepository;
             RuleId = Guid.NewGuid();
+            Created = DateTime.Now;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -64,6 +65,8 @@ namespace BudgetAnalyser.Engine.Matching
                 OnPropertyChanged();
             }
         }
+
+        public DateTime Created { get; internal set; }
 
         public string Description
         {

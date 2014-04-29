@@ -21,10 +21,11 @@ namespace BudgetAnalyser.Engine.Matching
 
         public MatchingRule Map(DataMatchingRule rule)
         {
-            return new MatchingRule(this.bucketRepository)
+            var domainRule = new MatchingRule(this.bucketRepository)
             {
                 Amount = rule.Amount,
                 BucketCode = rule.BucketCode,
+                Created = rule.Created ?? DateTime.Now,
                 Description = rule.Description,
                 LastMatch = rule.LastMatch,
                 MatchCount = rule.MatchCount,
@@ -34,6 +35,8 @@ namespace BudgetAnalyser.Engine.Matching
                 RuleId = rule.RuleId ?? Guid.Empty,
                 TransactionType = rule.TransactionType,
             };
+
+            return domainRule;
         }
     }
 }

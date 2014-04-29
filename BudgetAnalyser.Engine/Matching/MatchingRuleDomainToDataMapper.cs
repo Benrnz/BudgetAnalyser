@@ -9,6 +9,7 @@
             {
                 Amount = rule.Amount,
                 BucketCode = rule.BucketCode,
+                Created = rule.Created,
                 Description = rule.Description,
                 LastMatch = rule.LastMatch,
                 MatchCount = rule.MatchCount,
