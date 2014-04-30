@@ -22,7 +22,6 @@ namespace BudgetAnalyser.UnitTest.TestData
             var budget = new BudgetModel
             {
                 EffectiveFrom = new DateTime(2013, 01, 01),
-                Id = Guid.NewGuid(),
                 Name = TestDataConstants.Budget1Name,
             };
 
@@ -64,7 +63,6 @@ namespace BudgetAnalyser.UnitTest.TestData
             var budget = new BudgetModel
             {
                 EffectiveFrom = new DateTime(2014, 01, 20),
-                Id = Guid.NewGuid(),
                 Name = TestDataConstants.Budget2Name,
             };
 
