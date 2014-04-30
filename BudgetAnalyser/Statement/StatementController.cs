@@ -427,7 +427,7 @@ namespace BudgetAnalyser.Statement
 
             if (oldBudget != null
                 && (oldBudget.Expenses.Any() || oldBudget.Incomes.Any())
-                && oldBudget.Id != ViewModel.BudgetModel.Id
+                && oldBudget.Name != ViewModel.BudgetModel.Name
                 && ViewModel.Statement != null
                 && ViewModel.Statement.AllTransactions.Any())
             {

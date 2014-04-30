@@ -41,7 +41,7 @@
         <Setter Property="BorderBrush"
                 Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="Background"
-                Value="{StaticResource Brush.SecondaryBackground}" />
+                Value="{StaticResource Brush.CreditBackground1}" />
         <Setter Property="BorderThickness"
                 Value="2" />
         <Setter Property="CornerRadius"

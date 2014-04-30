@@ -195,7 +195,12 @@ namespace BudgetAnalyser.Statement
                 }
 
                 this.doNotUseStatement = value;
-                this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
+
+                if (this.doNotUseStatement != null)
+                {
+                    this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
+                }
+
                 OnPropertyChanged();
                 UpdateGroupedByBucket();
             }
