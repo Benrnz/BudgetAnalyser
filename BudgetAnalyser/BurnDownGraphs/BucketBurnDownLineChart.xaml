@@ -6,8 +6,8 @@
              xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
 
@@ -43,26 +43,26 @@
                     Value="4, 2" />
         </Style>
 
-        <Style TargetType="{x:Type chartingToolkit:NumericAxisLabel}"
-               x:Key="AxesLabelStyle">
+        <Style x:Key="AxesLabelStyle"
+               TargetType="{x:Type chartingToolkit:NumericAxisLabel}">
             <Setter Property="Template">
                 <Setter.Value>
+
                     <ControlTemplate TargetType="{x:Type chartingToolkit:NumericAxisLabel}">
                         <TextBlock FontSize="10"
-                                   Foreground="Black"
                                    Text="{TemplateBinding FormattedContent}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}"
-               x:Key="DateTimeAxesLabelStyle">
+        <Style x:Key="DateTimeAxesLabelStyle"
+               TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}">
             <Setter Property="Template">
                 <Setter.Value>
+
                     <ControlTemplate TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}">
                         <TextBlock FontSize="10"
-                                   Foreground="Black"
                                    Text="{TemplateBinding FormattedContent}" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -75,15 +75,13 @@
                     Value="{x:Null}" />
         </Style>
 
-        <Style TargetType="visualizationToolkit:Title"
-               x:Key="TitleStyle">
-            <Setter Property="TextBox.Foreground"
-                    Value="Black" />
+        <Style x:Key="TitleStyle"
+               TargetType="visualizationToolkit:Title">
             <Setter Property="Template">
                 <Setter.Value>
+
                     <ControlTemplate TargetType="visualizationToolkit:Title">
-                        <TextBlock Foreground="Black"
-                                   FontWeight="Bold"
+                        <TextBlock FontWeight="Bold"
                                    Text="{TemplateBinding Content}" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -95,43 +93,39 @@
         <Border HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch" />
         <chartingToolkit:Chart Height="500"
+                               LegendStyle="{StaticResource LegendStyle}"
                                Margin="5"
-                               TitleStyle="{StaticResource TitleStyle}"
                                Title="{Binding ChartTitle}"
+                               TitleStyle="{StaticResource TitleStyle}"
                                VerticalAlignment="Top"
-                               Width="500"
-                               LegendStyle="{StaticResource LegendStyle}">
-
+                               Width="500">
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource MainLineDataPointStyle}"
                                         DependentValuePath="Value"
                                         IsSelectionEnabled="False"
                                         ItemsSource="{Binding ActualSpending}"
                                         Title="{Binding ActualSpendingLabel}">
                 <chartingToolkit:LineSeries.DependentRangeAxis>
-                    <chartingToolkit:LinearAxis Orientation="Y"
-                                                Title="$"
+                    <chartingToolkit:LinearAxis AxisLabelStyle="{StaticResource AxesLabelStyle}"
                                                 Minimum="{Binding ActualSpendingAxesMinimum}"
-                                                AxisLabelStyle="{StaticResource AxesLabelStyle}"
-                                                Foreground="Black" />
+                                                Orientation="Y"
+                                                Title="$" />
                 </chartingToolkit:LineSeries.DependentRangeAxis>
                 <chartingToolkit:LineSeries.IndependentValueBinding>
                     <Binding Path="Key"
                              StringFormat="d/MMM/yy" />
                 </chartingToolkit:LineSeries.IndependentValueBinding>
                 <chartingToolkit:LineSeries.IndependentAxis>
-                    <chartingToolkit:DateTimeAxis Orientation="X"
-                                                  AxisLabelStyle="{StaticResource DateTimeAxesLabelStyle}" />
+                    <chartingToolkit:DateTimeAxis AxisLabelStyle="{StaticResource DateTimeAxesLabelStyle}"
+                                                  Orientation="X" />
                 </chartingToolkit:LineSeries.IndependentAxis>
             </chartingToolkit:LineSeries>
-
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource BudgetLineDataPointStyle}"
-                                        PolylineStyle="{StaticResource DashedPolyLine}"
                                         DependentValuePath="Value"
                                         IndependentValuePath="Key"
                                         IsSelectionEnabled="False"
                                         ItemsSource="{Binding BudgetLine}"
+                                        PolylineStyle="{StaticResource DashedPolyLine}"
                                         Title="Budget Line" />
-
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource ZeroLineDataPointStyle}"
                                         DependentValuePath="Value"
                                         IndependentValuePath="Key"

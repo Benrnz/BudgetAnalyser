@@ -70,7 +70,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             DateTime beginDate,
             Engine.Ledger.LedgerBook ledgerBook)
         {
-            Background = ConverterHelper.SecondaryBackgroundBrush;
+            Background = ConverterHelper.TileBackgroundBrush;
             Bucket = bucket;
             ActualSpendingLabel = Bucket.Code;
             ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             string chartTitle)
         {
             IsCustomChart = true;
-            Background = ConverterHelper.TertiaryBackgroundBrush;
+            Background = ConverterHelper.SecondaryBackgroundBrush;
             ChartTitle = chartTitle;
             ActualSpendingLabel = "Combined Spending";
             Bucket = null;

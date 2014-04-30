@@ -4,12 +4,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="..\UI\Assets\PieChart.png"
         Title="Current Month Burndown Graphs"
-        Width="610">
+        ResizeMode="NoResize"
+        Width="580">
 
     <Window.Resources>
 
         <DataTemplate DataType="{x:Type spendingTrend:BucketBurnDownController}">
-            <spendingTrend:BucketBurnDownLineChart Background="{Binding Background}" />
+            <spendingTrend:BucketBurnDownLineChart Background="{Binding Background}"
+                                                   Margin="0,2,0,0" />
         </DataTemplate>
     </Window.Resources>
 
@@ -18,44 +20,45 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <StackPanel Grid.Row="0"
                     Margin="2"
                     Orientation="Horizontal">
             <TextBlock Text="{Binding DateRangeDescription}"
-                       Style="{StaticResource TextBlock.Paragraph}"/>
+                       Style="{StaticResource TextBlock.Paragraph}" />
         </StackPanel>
-        
-        <ListBox x:Name="ChartsList"
-                 Background="{StaticResource Brush.MainBackground}"
-                 Grid.Row="1"
-                 ItemsSource="{Binding ChartControllers}"
-                 Margin="20"
-                 ScrollViewer.CanContentScroll="False"
-                 SelectedItem="{Binding SelectedChart}">
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <ContextMenu.Resources>
 
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground"
-                                    Value="Black" />
-                        </Style>
-                    </ContextMenu.Resources>
-                    <MenuItem Command="{Binding AddChartCommand}">
-                        <MenuItem.Header>
-                            <TextBlock Text="Add Chart" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem Command="{Binding RemoveChartCommand}"
-                              CommandParameter="{Binding ElementName=ChartsList, Path=SelectedItem}">
-                        <MenuItem.Header>
-                            <TextBlock Text="Remove Chart" />
-                        </MenuItem.Header>
-                    </MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListBox>
+        <ScrollViewer Grid.Row="1"
+                      Margin="2,20,2,2">
+            <ItemsControl x:Name="ChartsList"
+                          Background="{StaticResource Brush.MainBackground}"
+                          ItemsSource="{Binding ChartControllers}"
+                          ScrollViewer.CanContentScroll="False">
+
+                <ItemsControl.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.Resources>
+
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground"
+                                        Value="Black" />
+                            </Style>
+                        </ContextMenu.Resources>
+                        <MenuItem Command="{Binding AddChartCommand}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Add Chart" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                        <MenuItem Command="{Binding RemoveChartCommand}"
+                                  CommandParameter="{Binding ElementName=ChartsList, Path=SelectedItem}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Remove Chart" />
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </ContextMenu>
+                </ItemsControl.ContextMenu>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 
 </Window>

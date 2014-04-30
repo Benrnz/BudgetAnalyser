@@ -116,7 +116,7 @@
     </Color>
 
     <Color x:Key="Colour.SecondaryBackground">
-        Tan
+        #253236
     </Color>
 
     <Color x:Key="Colour.SelectedItem">
@@ -137,10 +137,6 @@
 
     <Color x:Key="Colour.TextDefault">
         White
-    </Color>
-
-    <Color x:Key="Colour.TertiaryBackground">
-        DarkSeaGreen
     </Color>
 
     <Color x:Key="Colour.TileBackground">
@@ -264,9 +260,5 @@
     <SolidColorBrush 
         x:Key="Brush.SecondaryBackground" 
         Color="{StaticResource Colour.SecondaryBackground}" />
-
-    <SolidColorBrush 
-        x:Key="Brush.TertiaryBackground" 
-        Color="{StaticResource Colour.TertiaryBackground}" />
 
 </ResourceDictionary>
