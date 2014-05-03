@@ -80,6 +80,9 @@
     <Compile Include="BudgetCurrencyContextTest.cs" />
     <Compile Include="BudgetItemTest.cs" />
     <Compile Include="BudgetModelTest.cs" />
+    <Compile Include="BudgetCollectionToDataBudgetCollectionMapperTest.cs" />
+    <Compile Include="DataBudgetCollectionToBudgetCollectionMapperTest.cs" />
+    <Compile Include="DataBudgetModelToBudgetModelMapperTest.cs" />
     <Compile Include="BudgetRepositoryTest.cs" />
     <Compile Include="ExpenseTest.cs" />
     <Compile Include="IncomeTest.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="LedgerBookRepositoryTest.cs" />
+    <Compile Include="BudgetModelToDataBudgetModelMapperTest.cs" />
     <Compile Include="LedgerBookToDataLedgerBookMapperTest.cs" />
     <Compile Include="LedgerBook_DataTest.cs" />
     <Compile Include="LedgerBook_ReconcileTest.cs" />
@@ -134,6 +138,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml">
       <Link>TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoBudget.xml">
+      <Link>TestData\DemoBudget.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\BudgetAnalyser\BudgetModel.xml">
+      <Link>TestData\BudgetModel.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Choose>

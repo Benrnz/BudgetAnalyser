@@ -9,14 +9,32 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
-        public XamlOnDiskBudgetRepository([NotNull] IBudgetBucketRepository bucketRepository)
+        private readonly BudgetCollectionToDataBudgetCollectionMapper toDataMapper;
+        private readonly DataBudgetCollectionToBudgetCollectionMapper toDomainMapper;
+
+        public XamlOnDiskBudgetRepository(
+            [NotNull] IBudgetBucketRepository bucketRepository,
+            [NotNull] BudgetCollectionToDataBudgetCollectionMapper toDataMapper,
+            [NotNull] DataBudgetCollectionToBudgetCollectionMapper toDomainMapper)
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
             }
 
+            if (toDataMapper == null)
+            {
+                throw new ArgumentNullException("toDataMapper");
+            }
+
+            if (toDomainMapper == null)
+            {
+                throw new ArgumentNullException("toDomainMapper");
+            }
+
             BudgetBucketRepository = bucketRepository;
+            this.toDataMapper = toDataMapper;
+            this.toDomainMapper = toDomainMapper;
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
@@ -55,20 +73,21 @@ namespace BudgetAnalyser.Engine.Budget
             }
             catch (XamlObjectWriterException ex)
             {
-                throw new FileFormatException("The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
+                throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName), ex);
             }
             catch (Exception ex)
             {
                 throw new FileFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
-            var correctFormat = serialised as BudgetCollection;
-            if (correctFormat == null)
+            var correctDataFormat = serialised as DataBudgetCollection;
+            if (correctDataFormat == null)
             {
                 throw new FileFormatException(
                     string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", fileName));
             }
 
+            var correctFormat = this.toDomainMapper.Map(correctDataFormat);
             correctFormat.FileName = fileName;
             BudgetBucketRepository.Initialise(correctFormat);
             correctFormat.Initialise();
@@ -77,8 +96,9 @@ namespace BudgetAnalyser.Engine.Budget
 
         public void Save(BudgetCollection budgetData)
         {
-            string serialised = Serialise(budgetData);
-            WriteToDisk(budgetData.FileName, serialised);
+            var dataFormat = this.toDataMapper.Map(budgetData);
+            string serialised = Serialise(dataFormat);
+            WriteToDisk(dataFormat.FileName, serialised);
 
             var handler = ApplicationEvent;
             if (handler != null)
@@ -97,7 +117,7 @@ namespace BudgetAnalyser.Engine.Budget
             return XamlServices.Load(filename);
         }
 
-        protected virtual string Serialise(BudgetCollection budgetData)
+        protected virtual string Serialise(DataBudgetCollection budgetData)
         {
             return XamlServices.Save(budgetData);
         }

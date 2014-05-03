@@ -8,7 +8,7 @@
             return new DataMatchingRule
             {
                 Amount = rule.Amount,
-                BucketCode = rule.BucketCode,
+                BucketCode = rule.BucketCode, // Its important to use the BucketCode not the Bucket. See below.
                 Created = rule.Created,
                 Description = rule.Description,
                 LastMatch = rule.LastMatch,
@@ -19,6 +19,9 @@
                 RuleId = rule.RuleId,
                 TransactionType = rule.TransactionType,
             };
+
+            // Bucket can be null, while BucketCode will always be the string read from the persistence file.  The currently loaded budget model may not have a bucket
+            // that matches that code. So its important to preserve the code.
         }
     }
 }

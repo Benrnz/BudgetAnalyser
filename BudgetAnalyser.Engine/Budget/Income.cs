@@ -4,22 +4,6 @@ namespace BudgetAnalyser.Engine.Budget
 {
     public class Income : BudgetItem, IModelValidate
     {
-        private decimal amount;
-
-        public override decimal Amount
-        {
-            get { return this.amount; }
-            set
-            {
-                if (value == this.amount)
-                {
-                    return;
-                }
-                this.amount = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool Validate(StringBuilder validationMessages)
         {
             bool retval = Bucket.Validate(validationMessages);

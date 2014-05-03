@@ -271,6 +271,7 @@ namespace BudgetAnalyser.Matching
             SortBy = BucketSortKey;
 
             IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
+                .Where(group => group.Key != null) // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
                 .Select(group => new RulesGroupedByBucket(group.Key, group))
                 .OrderBy(group => group.Bucket.Code);
 

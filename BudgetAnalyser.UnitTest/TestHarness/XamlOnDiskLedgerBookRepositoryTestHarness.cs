@@ -30,7 +30,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         protected override DataLedgerBook LoadXamlFromDisk(string fileName)
         {
-            // Using an old Embedded Resource
             // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
             Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))

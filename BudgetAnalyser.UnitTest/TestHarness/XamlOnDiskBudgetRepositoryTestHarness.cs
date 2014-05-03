@@ -7,7 +7,9 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     public class XamlOnDiskBudgetRepositoryTestHarness : XamlOnDiskBudgetRepository
     {
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
-            : base(bucketRepository)
+            : base(bucketRepository,
+                new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()),
+                new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()))
         {
         }
 
@@ -23,7 +25,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             {
                 return base.FileExists(filename);
             }
-            return this.FileExistsMock(filename);
+            return FileExistsMock(filename);
         }
 
         protected override object LoadFromDisk(string filename)
@@ -32,7 +34,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             {
                 return base.LoadFromDisk(filename);
             }
-            return this.LoadFromDiskMock(filename);
+            return LoadFromDiskMock(filename);
         }
 
         protected override void WriteToDisk(string filename, string data)

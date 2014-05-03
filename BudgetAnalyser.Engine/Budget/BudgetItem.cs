@@ -7,9 +7,26 @@ namespace BudgetAnalyser.Engine.Budget
 {
     public abstract class BudgetItem : INotifyPropertyChanged
     {
+        private decimal doNotUseAmount;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public virtual decimal Amount { get; set; }
+        public decimal Amount
+        {
+            get
+            {
+                return this.doNotUseAmount;
+            }
+            set
+            {
+                if (value == this.doNotUseAmount)
+                {
+                    return;
+                }
+                this.doNotUseAmount = value;
+                OnPropertyChanged();
+            }
+        }
 
         public BudgetBucket Bucket { get; set; }
 

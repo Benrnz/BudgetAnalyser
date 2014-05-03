@@ -7,11 +7,13 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public static BudgetCollection CreateCollectionWith1And2()
         {
-            return new BudgetCollection( new[]
+            var collection = new BudgetCollection( new[]
             {
                 CreateTestData1(),
                 CreateTestData2(),
             });
+            collection.FileName = @"C:\Temp\Foo.xaml";
+            return collection;
         }
 
         /// <summary>

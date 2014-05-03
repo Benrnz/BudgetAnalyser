@@ -75,6 +75,12 @@
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
     <Compile Include="BudgetAnalyserLog4NetLogger.cs" />
     <Compile Include="Budget\BudgetBucket.cs" />
+    <Compile Include="Budget\DataBudgetCollectionToBudgetCollectionMapper.cs" />
+    <Compile Include="Budget\BudgetCollectionToDataBudgetCollectionMapper.cs" />
+    <Compile Include="Budget\DataBudgetModelToBudgetModelMapper .cs" />
+    <Compile Include="Budget\BudgetModelToDataBudgetModelMapper.cs" />
+    <Compile Include="Budget\DataBudgetCollection.cs" />
+    <Compile Include="Budget\DataBudgetModel.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\BudgetCollection.cs" />
     <Compile Include="Budget\BudgetCurrencyContext.cs" />
