@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine
                     }
 
                     var commandLine = string.Format(
-                        "{0} {1} {2} {3} \"{4}\" \"{5}\"",
+                        "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\"",
                         FileName,
                         args.EventType,
                         args.EventSubCategory,
@@ -93,9 +93,11 @@ namespace BudgetAnalyser.Engine
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardError = false,
-                        RedirectStandardOutput = false
+                        RedirectStandardOutput = false,
                     };
-                    Process.Start(processInfo);
+                    var process = Process.Start(processInfo);
+                    process.WaitForExit(5000);
+                    this.logger.LogInfo(() => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
                 });
         }
     }
