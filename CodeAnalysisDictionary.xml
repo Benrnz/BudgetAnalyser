@@ -7,7 +7,9 @@
     </Unrecognized>
     <Recognized>
       <Word>Api</Word>
+      <Word>Analyse</Word>
       <Word>Analyser</Word>
+      <Word>Colour</Word>
       <Word>Deserialise</Word>
       <Word>Deserialiser</Word>
       <Word>Hidable</Word>
@@ -15,6 +17,7 @@
       <Word>initialised</Word>
       <Word>Serialise</Word>
       <Word>Serialiser</Word>
+      <Word>Uncategorised</Word>
       <Word>Xaml</Word>
     </Recognized>
     <Deprecated>

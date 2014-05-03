@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Matching
     /// </summary>
     public class RulesGroupedByBucket : INotifyPropertyChanged
     {
-        private BudgetBucket bucket;
+        private BudgetBucket doNotUseBucket;
         private ObservableCollection<MatchingRule> rules;
 
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
@@ -30,16 +30,16 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("rules");
             }
 
-            Bucket = bucket;
+            this.doNotUseBucket = bucket;
             Rules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
         public BudgetBucket Bucket
         {
-            get { return this.bucket; }
+            get { return this.doNotUseBucket; }
             private set
             {
-                this.bucket = value;
+                this.doNotUseBucket = value;
                 OnPropertyChanged();
             }
         }
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Matching
         public ObservableCollection<MatchingRule> Rules
         {
             get { return this.rules; }
-            set
+            private set
             {
                 this.rules = value;
                 OnPropertyChanged();

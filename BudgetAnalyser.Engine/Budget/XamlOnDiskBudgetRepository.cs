@@ -90,7 +90,6 @@ namespace BudgetAnalyser.Engine.Budget
             var correctFormat = this.toDomainMapper.Map(correctDataFormat);
             correctFormat.FileName = fileName;
             BudgetBucketRepository.Initialise(correctFormat);
-            correctFormat.Initialise();
             return correctFormat;
         }
 

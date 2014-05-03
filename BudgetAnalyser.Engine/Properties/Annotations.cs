@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.CodeDom.Compiler;
 
 namespace BudgetAnalyser.Engine.Annotations
 {
@@ -30,6 +31,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// }
     /// </code>
     /// </example>
+    [GeneratedCode("Resharper", "v8")]
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
@@ -99,6 +101,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class StringFormatMethodAttribute : Attribute
     {
         /// <summary>
@@ -132,6 +135,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class InvokerParameterNameAttribute : Attribute
     {
     }
@@ -200,6 +204,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     </list>
     /// </example>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
         public NotifyPropertyChangedInvocatorAttribute()
@@ -235,6 +240,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class CanBeNullAttribute : Attribute
     {
     }
@@ -252,6 +258,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class NotNullAttribute : Attribute
     {
     }
@@ -311,6 +318,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     </list>
     /// </examples>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class ContractAnnotationAttribute : Attribute
     {
         public ContractAnnotationAttribute([NotNull] string fdt) : this(fdt, false)
@@ -355,6 +363,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class CannotApplyEqualityOperatorAttribute : Attribute
     {
     }
@@ -376,6 +385,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </example>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     [BaseTypeRequired(typeof(Attribute))]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class BaseTypeRequiredAttribute : Attribute
     {
         /// <summary>
@@ -397,6 +407,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
     ///     so this symbol will not be marked as unused (as well as by other usage inspections)
     /// </summary>
+    [GeneratedCode("Resharper", "v8")]
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
     public sealed class UsedImplicitlyAttribute : Attribute
     {
@@ -440,6 +451,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     to not mark symbols marked with such attributes as unused (as well as by other usage inspections)
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class MeansImplicitUseAttribute : Attribute
     {
         [UsedImplicitly]
@@ -478,6 +490,7 @@ namespace BudgetAnalyser.Engine.Annotations
     }
 
     [Flags]
+    [GeneratedCode("Resharper", "v8")]
     public enum ImplicitUseKindFlags
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
@@ -509,6 +522,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     <see cref="UsedImplicitlyAttribute" />
     /// </summary>
     [Flags]
+    [GeneratedCode("Resharper", "v8")]
     public enum ImplicitUseTargetFlags
     {
         Default = Itself,
@@ -530,6 +544,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     This attribute is intended to mark publicly available API which should not be removed and so is treated as used.
     /// </summary>
     [MeansImplicitUse]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class PublicAPIAttribute : Attribute
     {
         public PublicAPIAttribute()
@@ -547,6 +562,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class InstantHandleAttribute : Attribute
     {
     }
@@ -572,6 +588,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///  </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Method, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class PureAttribute : Attribute
     {
     }
@@ -581,6 +598,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     Path can be relative or absolute, starting from web root (~).
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public class PathReferenceAttribute : Attribute
     {
         public PathReferenceAttribute()
@@ -604,6 +622,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     If applied to a method, the MVC action name is calculated implicitly from the context.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcActionAttribute : Attribute
     {
         public AspMvcActionAttribute()
@@ -623,6 +642,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC araa.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcAreaAttribute : PathReferenceAttribute
     {
         [UsedImplicitly]
@@ -644,6 +664,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     If applied to a method, the MVC controller name is calculated implicitly from the context.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcControllerAttribute : Attribute
     {
         public AspMvcControllerAttribute()
@@ -663,6 +684,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC Master.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcMasterAttribute : Attribute
     {
     }
@@ -671,6 +693,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcModelTypeAttribute : Attribute
     {
     }
@@ -680,6 +703,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     If applied to a method, the MVC partial view name is calculated implicitly from the context.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute
     {
     }
@@ -688,6 +712,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Allows disabling all inspections for MVC views within a class or a method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcSupressViewErrorAttribute : Attribute
     {
     }
@@ -696,6 +721,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcDisplayTemplateAttribute : Attribute
     {
     }
@@ -704,6 +730,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcEditorTemplateAttribute : Attribute
     {
     }
@@ -713,6 +740,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     If applied to a method, the MVC view name is calculated implicitly from the context.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcViewAttribute : PathReferenceAttribute
     {
     }
@@ -732,6 +760,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class AspMvcActionSelectorAttribute : Attribute
     {
     }
@@ -742,6 +771,7 @@ namespace BudgetAnalyser.Engine.Annotations
     ///     Razor attribute. Indicates that a parameter or a method is a Razor section.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method, Inherited = true)]
+    [GeneratedCode("Resharper", "v8")]
     public sealed class RazorSectionAttribute : Attribute
     {
     }

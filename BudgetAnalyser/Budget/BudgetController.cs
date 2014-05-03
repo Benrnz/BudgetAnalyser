@@ -118,6 +118,7 @@ namespace BudgetAnalyser.Budget
 
         public BudgetPieController BudgetPieController { get; private set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -263,7 +264,7 @@ namespace BudgetAnalyser.Budget
             this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
         }
 
-        protected virtual string GetDefaultFileName()
+        protected virtual string BuildDefaultFileName()
         {
             string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             return Path.Combine(path, "BudgetModel.xml");
@@ -323,7 +324,7 @@ namespace BudgetAnalyser.Budget
 
         private void HandleBudgetFileExceptions(string message)
         {
-            string defaultFileName = GetDefaultFileName();
+            string defaultFileName = BuildDefaultFileName();
             this.messageBox.Show("Budget File", "{0}\n{1}", message, defaultFileName);
             LoadBudget(defaultFileName);
         }

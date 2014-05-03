@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.budgetBucketRepository = budgetBucketRepository;
-            SortByDate = true;
+            this.doNotUseSortByDate = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

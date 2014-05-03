@@ -26,8 +26,13 @@ namespace BudgetAnalyser.ReportsCatalog
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
 
-        public ReportsCatalogController(UiContext uiContext)
+        public ReportsCatalogController([NotNull] UiContext uiContext)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;

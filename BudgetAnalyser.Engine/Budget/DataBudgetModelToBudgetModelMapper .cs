@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -10,12 +11,11 @@ namespace BudgetAnalyser.Engine.Budget
             var model = new BudgetModel
             {
                 EffectiveFrom = data.EffectiveFrom,
-                LastModified = data.LastModified,
+                LastModified = data.LastModified ?? DateTime.Now,
                 LastModifiedComment = data.LastModifiedComment,
                 Name = data.Name,
             };
 
-            // TODO is this really necessary? Could just make the lists internal and set them.
             var expenses = new List<Expense>(data.Expenses);
             var incomes = new List<Income>(data.Incomes);
             model.Update(incomes, expenses);

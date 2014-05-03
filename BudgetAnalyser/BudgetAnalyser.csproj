@@ -28,6 +28,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -141,6 +142,7 @@
     <Compile Include="Filtering\GlobalFilterController.cs" />
     <Compile Include="Filtering\PersistentFiltersV1.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
     <Compile Include="Matching\AppliedRulesController.cs" />
@@ -474,9 +476,9 @@
     <Resource Include="UI\Assets\PieChart.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\CodeAnalysisDictionary.xml">
+    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">
       <Link>CodeAnalysisDictionary.xml</Link>
-    </Resource>
+    </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">

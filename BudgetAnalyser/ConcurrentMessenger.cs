@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using GalaSoft.MvvmLight.Messaging;
@@ -39,7 +40,7 @@ namespace BudgetAnalyser
                 this.defaultMessenger.Register(recipient, action);
             }
 
-            this.logger.LogInfo(() => string.Format("IMessenger.Register {0} for Message: {1}", recipient, typeof(TMessage).Name));
+            this.logger.LogInfo(() => string.Format(CultureInfo.CurrentCulture, "IMessenger.Register {0} for Message: {1}", recipient, typeof(TMessage).Name));
         }
 
         public void Register<TMessage>(object recipient, object token, Action<TMessage> action)

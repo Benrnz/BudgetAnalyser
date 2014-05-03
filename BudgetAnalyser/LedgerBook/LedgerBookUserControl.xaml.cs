@@ -141,7 +141,7 @@ namespace BudgetAnalyser.LedgerBook
             bankBalanceTextBlock.Foreground = FindResource(BankBalanceTextBrush) as Brush;
             bankBalanceTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
 
-            Border remarksBorder = AddBorderToGridCell(grid, true, false, column, 0);
+            AddBorderToGridCell(grid, true, false, column, 0);
             AddContentToGrid(grid, "Remarks", ref column, 0, HeadingStyle);
         }
 

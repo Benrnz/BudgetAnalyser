@@ -34,12 +34,19 @@ namespace BudgetAnalyser.Dashboard
         private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
-        public DashboardController(UiContext uiContext, [NotNull] IWidgetRepository widgetRepository, [NotNull] IBudgetBucketRepository bucketRepository)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification="Timer is needed for the lifetime of the controller, and controller is single instance")]
+        public DashboardController([NotNull] UiContext uiContext, [NotNull] IWidgetRepository widgetRepository, [NotNull] IBudgetBucketRepository bucketRepository)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
             if (widgetRepository == null)
             {
                 throw new ArgumentNullException("widgetRepository");
             }
+
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");

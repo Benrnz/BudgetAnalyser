@@ -15,11 +15,6 @@ namespace BudgetAnalyser.LedgerBook
             InitializeComponent();
         }
 
-        private LedgerTransactionsController Controller
-        {
-            get { return DataContext as LedgerTransactionsController; }
-        }
-
         private void OnNewTransactionVisibilityChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue)

@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public List<KeyValuePair<string, decimal>> ExpensePieChartValues { get; private set; }
+        public IEnumerable<KeyValuePair<string, decimal>> ExpensePieChartValues { get; private set; }
 
         public KeyValuePair<string, decimal> ExpenseSelectedItem
         {
@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public List<KeyValuePair<string, decimal>> IncomePieChartValues { get; private set; }
+        public IEnumerable<KeyValuePair<string, decimal>> IncomePieChartValues { get; private set; }
 
         public KeyValuePair<string, decimal> IncomeSelectedItem
         {
@@ -147,8 +147,13 @@ namespace BudgetAnalyser.Budget
             IncomePieChartValues = null;
         }
 
-        public void Load(BudgetModel model)
+        public void Load([NotNull] BudgetModel model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             this.budgetModel = model;
             this.surplus = new Expense { Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
             List<KeyValuePair<string, decimal>> list =

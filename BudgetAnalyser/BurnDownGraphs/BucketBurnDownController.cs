@@ -14,8 +14,8 @@ namespace BudgetAnalyser.BurnDownGraphs
     public class BucketBurnDownController : ControllerBase
     {
         private readonly IBurnDownGraphAnalyser burnDownGraphAnalyser;
-        private List<KeyValuePair<DateTime, decimal>> doNotUseActualSpending;
-        private List<KeyValuePair<DateTime, decimal>> doNotUseTrendLine;
+        private IEnumerable<KeyValuePair<DateTime, decimal>> doNotUseActualSpending;
+        private IEnumerable<KeyValuePair<DateTime, decimal>> doNotUseTrendLine;
 
         public BucketBurnDownController([NotNull] IBurnDownGraphAnalyser burnDownGraphAnalyser)
         {
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             this.burnDownGraphAnalyser = burnDownGraphAnalyser;
         }
 
-        public List<KeyValuePair<DateTime, decimal>> ActualSpending
+        public IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending
         {
             get { return this.doNotUseActualSpending; }
 
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         public BudgetBucket Bucket { get; private set; }
 
-        public List<KeyValuePair<DateTime, decimal>> BudgetLine
+        public IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine
         {
             get { return this.doNotUseTrendLine; }
 
@@ -61,15 +61,19 @@ namespace BudgetAnalyser.BurnDownGraphs
         public bool IsCustomChart { get; private set; }
         public decimal NetWorth { get; private set; }
 
-        public List<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
+        public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
         public BucketBurnDownController Load(
             StatementModel statementModel,
-            BudgetModel budgetModel,
-            BudgetBucket bucket,
+            BudgetModel budgetModel, 
+            [NotNull] BudgetBucket bucket,
             DateTime beginDate,
             Engine.Ledger.LedgerBook ledgerBook)
         {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException("bucket");
+            }
             Background = ConverterHelper.TileBackgroundBrush;
             Bucket = bucket;
             ActualSpendingLabel = Bucket.Code;

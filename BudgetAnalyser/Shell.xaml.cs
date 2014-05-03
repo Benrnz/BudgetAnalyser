@@ -25,7 +25,7 @@ namespace BudgetAnalyser
 
         private void OnShellDialogKeyUp(object sender, KeyEventArgs e)
         {
-            if (Controller.PopUpDialogContent == null)
+            if (Controller.PopupDialogContent == null)
             {
                 return;
             }

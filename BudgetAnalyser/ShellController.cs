@@ -24,8 +24,8 @@ namespace BudgetAnalyser
         private bool doNotUseCancelButtonVisible;
         private bool doNotUseOkButtonVisible;
 
-        private object doNotUsePopUpDialogContent;
-        private string doNotUsePopUpTitle;
+        private object doNotUsePopupDialogContent;
+        private string doNotUsePopupTitle;
         private bool doNotUseSaveButtonVisible;
         private bool initialised;
 
@@ -105,23 +105,23 @@ namespace BudgetAnalyser
             }
         }
 
-        public object PopUpDialogContent
+        public object PopupDialogContent
         {
-            get { return this.doNotUsePopUpDialogContent; }
+            get { return this.doNotUsePopupDialogContent; }
             set
             {
-                this.doNotUsePopUpDialogContent = value;
-                RaisePropertyChanged(() => PopUpDialogContent);
+                this.doNotUsePopupDialogContent = value;
+                RaisePropertyChanged(() => this.PopupDialogContent);
             }
         }
 
-        public string PopUpTitle
+        public string PopupTitle
         {
-            get { return this.doNotUsePopUpTitle; }
+            get { return this.doNotUsePopupTitle; }
             set
             {
-                this.doNotUsePopUpTitle = value;
-                RaisePropertyChanged(() => PopUpTitle);
+                this.doNotUsePopupTitle = value;
+                RaisePropertyChanged(() => this.PopupTitle);
             }
         }
 
@@ -150,6 +150,7 @@ namespace BudgetAnalyser
             get { return this.uiContext.StatementController; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Data binding")]
         public string WindowTitle
         {
             get { return "Budget Analyser"; }
@@ -179,7 +180,7 @@ namespace BudgetAnalyser
 
         private bool CanDialogCommandExecute(string arg)
         {
-            return PopUpDialogContent != null && !string.IsNullOrWhiteSpace(arg) && BackgroundJob.MenuAvailable;
+            return this.PopupDialogContent != null && !string.IsNullOrWhiteSpace(arg) && BackgroundJob.MenuAvailable;
         }
 
         private void OnDialogCommandExecute(string commandType)
@@ -191,25 +192,25 @@ namespace BudgetAnalyser
                 {
                     case "Ok":
                     case "Save":
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(this.PopupDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     case "Cancel":
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopUpDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(this.PopupDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     default:
                         throw new NotSupportedException("Unsupported command type received from Dialog Popup on Shell view. " + commandType);
                 }
 
-                PopUpDialogContent = null;
+                this.PopupDialogContent = null;
             });
         }
 
         private void OnPopUpDialogRequested(RequestShellDialogMessage message)
         {
-            PopUpTitle = message.Title;
-            PopUpDialogContent = message.Content;
+            this.PopupTitle = message.Title;
+            this.PopupDialogContent = message.Content;
             OkButtonVisible = message.DialogType == ShellDialogType.Ok || message.DialogType == ShellDialogType.OkCancel;
             SaveButtonVisible = message.DialogType == ShellDialogType.SaveCancel;
             CancelButtonVisible = message.DialogType != ShellDialogType.Ok;

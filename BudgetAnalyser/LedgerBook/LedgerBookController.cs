@@ -22,7 +22,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly DemoFileHelper demoFileHelper;
         private readonly IUserInputBox inputBox;
         private readonly ILedgerBookRepository ledgerRepository;
-        private readonly ILogger logger;
         private readonly IUserMessageBox messageBox;
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -71,7 +70,6 @@ namespace BudgetAnalyser.LedgerBook
             this.inputBox = uiContext.UserPrompts.InputBox;
             this.ledgerRepository = ledgerRepository;
             this.demoFileHelper = demoFileHelper;
-            this.logger = uiContext.Logger;
             ChooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
             AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
@@ -345,11 +343,11 @@ namespace BudgetAnalyser.LedgerBook
                 }
                 catch (FileFormatException ex)
                 {
-                    this.messageBox.Show(ex, "Unable to load the requested LedgerBook file");
+                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
                 }
                 catch (FileNotFoundException ex)
                 {
-                    this.messageBox.Show(ex, "Unable to load the requested LedgerBook file");
+                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
                 }
             }
         }
@@ -402,7 +400,7 @@ namespace BudgetAnalyser.LedgerBook
             AddLedgerReconciliationController.Shown = false;
             RaisePropertyChanged(() => ShowPopup);
 
-            if (AddLedgerReconciliationController.Cancelled)
+            if (AddLedgerReconciliationController.Canceled)
             {
                 return;
             }
@@ -477,9 +475,9 @@ namespace BudgetAnalyser.LedgerBook
             {
                 LoadLedgerBookFromFile(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
             }
-            catch
+            catch (IOException)
             {
-                this.messageBox.Show("Unable to find the demo LedgerBook file.");
+                this.messageBox.Show("Unable to find the demo Ledger-Book file.");
             }
         }
 

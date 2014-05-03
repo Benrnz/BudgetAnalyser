@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Gets the date and time the budget model was last modified by the user.
         /// </summary>
-        public DateTime LastModified { get; set; }
+        public DateTime? LastModified { get; set; }
 
         /// <summary>
         ///     Gets an optional comment than can be given when a change is made to the budget model.

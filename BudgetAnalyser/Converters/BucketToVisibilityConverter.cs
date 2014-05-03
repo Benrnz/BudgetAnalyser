@@ -16,19 +16,22 @@ namespace BudgetAnalyser.Converters
                 return Visibility.Visible;
             }
 
-            if (parameter.ToString() == "Expense")
+            if (parameter != null)
             {
-                if (bucket is SurplusBucket)
+                if (parameter.ToString() == "Expense")
                 {
-                    return Visibility.Visible;
+                    if (bucket is SurplusBucket)
+                    {
+                        return Visibility.Visible;
+                    }
+
+                    return bucket is ExpenseBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
                 }
 
-                return bucket is ExpenseBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            if (parameter.ToString() == "Income")
-            {
-                return bucket is IncomeBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
+                if (parameter.ToString() == "Income")
+                {
+                    return bucket is IncomeBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
+                }
             }
 
             return Visibility.Visible;

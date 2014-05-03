@@ -30,6 +30,7 @@ namespace BudgetAnalyser.Budget
             this.bucketRepository = bucketRepository;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection type is necessary")]
         public virtual OverallPerformanceBudgetAnalysis Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
             var analysis = new OverallPerformanceBudgetAnalysis(statement, budgets, this.bucketRepository);

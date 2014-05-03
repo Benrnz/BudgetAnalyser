@@ -13,21 +13,21 @@ namespace BudgetAnalyser.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AppliedRulesController
     {
-        private readonly IMatchMaker matchMacker;
+        private readonly IMatchmaker matchmaker;
         private readonly IUserMessageBox messageBox;
         private readonly StatementController statementController;
 
-        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] IMatchMaker matchMacker)
+        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] IMatchmaker matchmaker)
         {
-            this.matchMacker = matchMacker;
+            this.matchmaker = matchmaker;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (matchMacker == null)
+            if (matchmaker == null)
             {
-                throw new ArgumentNullException("matchMacker");
+                throw new ArgumentNullException("matchmaker");
             }
 
             RulesController = uiContext.RulesController;
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnApplyRulesCommandExecute()
         {
-            if (this.matchMacker.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
+            if (this.matchmaker.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
             {
                 RulesController.SaveRules();
             }

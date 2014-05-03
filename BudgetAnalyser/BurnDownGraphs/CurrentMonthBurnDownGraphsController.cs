@@ -34,8 +34,8 @@ namespace BudgetAnalyser.BurnDownGraphs
             [NotNull] Func<BucketBurnDownController> bucketSpendingFactory,
             [NotNull] CurrentMonthBurnDownGraphsViewLoader viewLoader,
             [NotNull] AddUserDefinedBurnDownController addUserDefinedBurnDownController,
-            [NotNull] IBudgetBucketRepository budgetBucketRepository,
-            UiContext uiContext)
+            [NotNull] IBudgetBucketRepository budgetBucketRepository, 
+            [NotNull] UiContext uiContext)
         {
             if (bucketSpendingFactory == null)
             {
@@ -55,6 +55,11 @@ namespace BudgetAnalyser.BurnDownGraphs
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
+            }
+
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
             }
 
             this.bucketSpendingFactory = bucketSpendingFactory;
@@ -165,7 +170,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             RaisePropertyChanged(() => ChartControllers);
         }
 
-        private DateTime CalculateBeginDate(GlobalFilterCriteria criteria)
+        private static DateTime CalculateBeginDate(GlobalFilterCriteria criteria)
         {
             if (criteria.Cleared)
             {

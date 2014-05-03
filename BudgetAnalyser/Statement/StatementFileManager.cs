@@ -16,6 +16,7 @@ namespace BudgetAnalyser.Statement
     ///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow mulitple threads
     ///     to use it at the same time.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification="Used by IoC")]
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class StatementFileManager : IStatementFileManager
     {
@@ -106,8 +107,13 @@ namespace BudgetAnalyser.Statement
         ///     Statement file format.
         ///     Saving and preserving bank statement files is not supported.
         /// </summary>
-        public void Save(StatementModel statementModel)
+        public void Save([NotNull] StatementModel statementModel)
         {
+            if (statementModel == null)
+            {
+                throw new ArgumentNullException("statementModel");
+            }
+
             this.statementModelRepository.Save(statementModel, statementModel.FileName);
         }
 

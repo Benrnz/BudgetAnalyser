@@ -28,7 +28,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnCancelCommandExecuted); }
         }
 
-        public bool Cancelled { get; private set; }
+        public bool Canceled { get; private set; }
 
         public DateTime Date
         {
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.LedgerBook
                 if (value)
                 {
                     Date = DateTime.Today;
-                    Cancelled = false;
+                    this.Canceled = false;
                 }
 
                 RaisePropertyChanged(() => Shown);
@@ -74,13 +74,13 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnCancelCommandExecuted()
         {
-            Cancelled = true;
+            this.Canceled = true;
             Close();
         }
 
         private void OnOkCommandExecuted()
         {
-            Cancelled = false;
+            this.Canceled = false;
             Close();
         }
     }

@@ -19,13 +19,13 @@ namespace BudgetAnalyser.Budget
             var button = sender as Button;
             if (button == null)
             {
-                throw new InvalidOperationException("Expected ItemsControl item to be a button so click is captured.");
+                throw new InvalidOperationException("Expected Items-Control item to be a button so click is captured.");
             }
 
             var budget = button.DataContext as BudgetModel;
             if (budget == null)
             {
-                throw new InvalidOperationException("Expected DataContext of button to be a BudgetModel.");
+                throw new InvalidOperationException("Expected Data-Context of button to be a Budget-Model.");
             }
 
             Close();

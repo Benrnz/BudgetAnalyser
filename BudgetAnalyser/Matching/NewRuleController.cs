@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(OnSaveCommandExecute); }
         }
 
-        public List<object> SimilarRules { get; private set; }
+        public IEnumerable<object> SimilarRules { get; private set; }
 
         public bool SimilarRulesExist { get; private set; }
 
@@ -231,7 +231,7 @@ namespace BudgetAnalyser.Matching
             this.viewLoader.ShowDialog(this);
         }
 
-        private bool IsEqualButNotBlank(string operand1, string operand2)
+        private static bool IsEqualButNotBlank(string operand1, string operand2)
         {
             if (string.IsNullOrWhiteSpace(operand1) || string.IsNullOrWhiteSpace(operand2))
             {

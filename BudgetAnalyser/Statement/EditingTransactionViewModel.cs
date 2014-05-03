@@ -11,8 +11,16 @@ namespace BudgetAnalyser.Statement
             get { return this.doNotUseTransaction; }
             set
             {
+                if (value == null)
+                {
+                    OriginalHash = 0;
+                }
+                else
+                {
+                    OriginalHash = value.GetEqualityHashCode();
+                }
+
                 this.doNotUseTransaction = value;
-                OriginalHash = value.GetEqualityHashCode();
             }
         }
 

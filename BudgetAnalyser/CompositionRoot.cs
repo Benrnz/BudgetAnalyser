@@ -30,6 +30,7 @@ namespace BudgetAnalyser
         public Window ShellWindow { get; private set; }
         public ILogger Logger { get; private set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification="IoC Config")]
         public void RegisterIoCMappings(Application app)
         {
             var builder = new ContainerBuilder();

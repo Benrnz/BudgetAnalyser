@@ -7,11 +7,11 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class MatchMaker : IMatchMaker
+    public class Matchmaker : IMatchmaker
     {
         private readonly ILogger logger;
 
-        public MatchMaker([NotNull] ILogger logger)
+        public Matchmaker([NotNull] ILogger logger)
         {
             if (logger == null)
             {
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Matching
                             transaction.BudgetBucket = rule.Bucket;
                             matchesOccured = true;
                             Transaction loggedTransaction = transaction;
-                            this.logger.LogInfo(() => string.Format("MatchMaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount, loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
+                            this.logger.LogInfo(() => string.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount, loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
                         }
                     }
                 }

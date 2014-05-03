@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using Rees.Wpf;
@@ -45,8 +47,13 @@ namespace BudgetAnalyser.Budget
 
         public double OverallPerformance { get; private set; }
 
-        public void Load(OverallPerformanceBudgetAnalysis overallPerformanceBudgetAnalysis)
+        public void Load([NotNull] OverallPerformanceBudgetAnalysis overallPerformanceBudgetAnalysis)
         {
+            if (overallPerformanceBudgetAnalysis == null)
+            {
+                throw new ArgumentNullException("overallPerformanceBudgetAnalysis");
+            }
+
             Analysis = overallPerformanceBudgetAnalysis;
             OverallPerformance = (double)overallPerformanceBudgetAnalysis.OverallPerformance;
             ExpenseFilter = true;

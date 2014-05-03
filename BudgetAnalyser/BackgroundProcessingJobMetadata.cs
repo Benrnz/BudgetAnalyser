@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -10,9 +11,9 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BackgroundProcessingJobMetadata : IBackgroundProcessingJobMetadata, INotifyPropertyChanged
     {
-        private string description;
+        private string doNotUseDescription;
         private bool jobRunning;
-        private bool menuAvailable;
+        private bool doNotUseMenuAvailable;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BackgroundProcessingJobMetadata()
@@ -24,20 +25,20 @@ namespace BudgetAnalyser
 
         public string Description
         {
-            get { return this.description; }
+            get { return this.doNotUseDescription; }
             private set
             {
-                this.description = value;
+                this.doNotUseDescription = value;
                 OnPropertyChanged();
             }
         }
 
         public bool MenuAvailable
         {
-            get { return this.menuAvailable; }
+            get { return this.doNotUseMenuAvailable; }
             private set
             {
-                this.menuAvailable = value;
+                this.doNotUseMenuAvailable = value;
                 OnPropertyChanged();
             }
         }
@@ -58,7 +59,7 @@ namespace BudgetAnalyser
         {
             if (this.jobRunning)
             {
-                throw new InvalidOperationException(string.Format("A Background job is already running ({0}), and another was attempting to start ({1}).", Description, description));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "A Background job is already running ({0}), and another was attempting to start ({1}).", Description, description));
             }
 
             Description = description;

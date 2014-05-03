@@ -97,11 +97,11 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseEditingRule = value;
                 RaisePropertyChanged(() => EditingRule);
-                RaisePropertyChanged(() => ShowReadonlyRuleDetails);
+                RaisePropertyChanged(() => this.ShowReadOnlyRuleDetails);
             }
         }
 
-        public bool ShowReadonlyRuleDetails
+        public bool ShowReadOnlyRuleDetails
         {
             get
             {
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Matching
         public NewRuleController NewRuleController { get; private set; }
 
         public ObservableCollection<MatchingRule> Rules { get; private set; }
-        public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; set; }
+        public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
         public ICommand SaveRuleCommand
         {
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseSelectedRule = value;
                 RaisePropertyChanged(() => SelectedRule);
-                RaisePropertyChanged(() => ShowReadonlyRuleDetails);
+                RaisePropertyChanged(() => this.ShowReadOnlyRuleDetails);
             }
         }
 
@@ -202,8 +202,13 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand<string>(OnSortCommandExecute); }
         }
 
-        public void CreateNewRuleFromTransaction(Transaction transaction)
+        public void CreateNewRuleFromTransaction([NotNull] Transaction transaction)
         {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
+            }
+
             if (transaction.BudgetBucket == null || string.IsNullOrWhiteSpace(transaction.BudgetBucket.Code))
             {
                 MessageBox.Show("Select a Bucket code first.");
@@ -240,17 +245,17 @@ namespace BudgetAnalyser.Matching
             catch (FileNotFoundException)
             {
                 // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                this.ruleRepository.SaveRules(new List<MatchingRule>(), GetFileName());
+                this.ruleRepository.SaveRules(new List<MatchingRule>(), BuildDefaultFileName());
                 LoadRules();
             }
         }
 
         public void SaveRules()
         {
-            this.ruleRepository.SaveRules(Rules, GetFileName());
+            this.ruleRepository.SaveRules(Rules, BuildDefaultFileName());
         }
 
-        protected virtual string GetFileName()
+        protected virtual string BuildDefaultFileName()
         {
             if (string.IsNullOrWhiteSpace(this.rulesFileName))
             {
@@ -263,7 +268,7 @@ namespace BudgetAnalyser.Matching
 
         protected void LoadRules()
         {
-            List<MatchingRule> rules = this.ruleRepository.LoadRules(GetFileName())
+            List<MatchingRule> rules = this.ruleRepository.LoadRules(BuildDefaultFileName())
                 .OrderBy(r => r.Description)
                 .ToList();
 

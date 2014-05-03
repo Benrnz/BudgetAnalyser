@@ -77,6 +77,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
         public string AccountNameHelp
         {
             get { return "When importing a new bank statement file, you must select what account type the statement comes from.\nThis allows merging of multiple accounts into one file."; }

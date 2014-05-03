@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Filtering
             this.accountView = accountViewLoader;
             this.accountTypeRepository = accountTypeRepository;
             this.userMessageBox = uiContext.UserPrompts.MessageBox;
-            Criteria = new GlobalFilterCriteria();
+            this.doNotUseCriteria = new GlobalFilterCriteria();
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
