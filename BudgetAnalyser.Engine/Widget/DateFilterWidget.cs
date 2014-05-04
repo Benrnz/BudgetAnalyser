@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Widget
 {
@@ -7,6 +9,7 @@ namespace BudgetAnalyser.Engine.Widget
         private string doNotUseImageResourceName2;
         private readonly string standardStyleName;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed ok here")]
         public DateFilterWidget()
         {
             Category = "Global Filter";
@@ -30,8 +33,13 @@ namespace BudgetAnalyser.Engine.Widget
             }
         }
 
-        public override void Update(params object[] input)
+        public override void Update([NotNull] params object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             if (!ValidateUpdateInput(input))
             {
                 return;

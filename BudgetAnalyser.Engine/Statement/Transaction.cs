@@ -147,6 +147,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with 
         /// UI controls such as ListBox.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification="Following GetHashCode")]
         public int GetEqualityHashCode()
         {
             unchecked

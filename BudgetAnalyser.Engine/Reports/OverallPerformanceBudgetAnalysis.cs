@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -13,6 +14,7 @@ namespace BudgetAnalyser.Engine.Reports
         private readonly BudgetCollection budgets;
         private readonly StatementModel statement;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
         public OverallPerformanceBudgetAnalysis([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (statement == null)
@@ -35,7 +37,7 @@ namespace BudgetAnalyser.Engine.Reports
             this.bucketRepository = bucketRepository;
         }
 
-        public List<BucketPerformanceAnalysis> Analyses { get; private set; }
+        public IEnumerable<BucketPerformanceAnalysis> Analyses { get; private set; }
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
@@ -98,7 +100,7 @@ namespace BudgetAnalyser.Engine.Reports
                         BudgetTotal = budgetedTotal,
                         Budget = perMonthBudget, 
                         AverageSpend = -averageSpend,
-                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
+                        BudgetComparedToAverage = string.Format(CultureInfo.CurrentCulture, "Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(surplusAnalysis);
                     continue;
@@ -117,7 +119,7 @@ namespace BudgetAnalyser.Engine.Reports
                         BudgetTotal = totalBudget,
                         Budget = perMonthBudget,
                         AverageSpend = -averageSpend,
-                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
+                        BudgetComparedToAverage = string.Format(CultureInfo.CurrentCulture, "Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(analysis);
                     continue;
@@ -136,7 +138,7 @@ namespace BudgetAnalyser.Engine.Reports
                         BudgetTotal = totalBudget,
                         Budget = perMonthBudget,
                         AverageSpend = averageSpend,
-                        BudgetComparedToAverage = string.Format("Budget per Month: {0:C}, Actual per month: {1:C}", perMonthBudget, -averageSpend)
+                        BudgetComparedToAverage = string.Format(CultureInfo.CurrentCulture, "Budget per Month: {0:C}, Actual per month: {1:C}", perMonthBudget, -averageSpend)
                     };
                     list.Add(analysis);
                 }

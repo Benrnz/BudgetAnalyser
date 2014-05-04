@@ -1,10 +1,18 @@
-﻿namespace BudgetAnalyser.Engine.Matching
+﻿using System;
+using BudgetAnalyser.Engine.Annotations;
+
+namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MatchingRuleDomainToDataMapper : IMatchingRuleDomainToDataMapper
     {
-        public DataMatchingRule Map(MatchingRule rule)
+        public DataMatchingRule Map([NotNull] MatchingRule rule)
         {
+            if (rule == null)
+            {
+                throw new ArgumentNullException("rule");
+            }
+
             return new DataMatchingRule
             {
                 Amount = rule.Amount,

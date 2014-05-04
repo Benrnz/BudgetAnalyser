@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
-    /// A thread-safe in memory implementation of <see cref="IBudgetBucketRepository"/>.
-    /// This repository does not need to be persisted, because it uses the <see cref="BudgetCollection"/> as the source of truth.
-    /// Thread safety is built in to allow multiple threads to load data from statements asynchronously.
+    ///     A thread-safe in memory implementation of <see cref="IBudgetBucketRepository" />.
+    ///     This repository does not need to be persisted, because it uses the <see cref="BudgetCollection" /> as the source of
+    ///     truth.
+    ///     Thread safety is built in to allow multiple threads to load data from statements asynchronously.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
@@ -23,8 +26,13 @@ namespace BudgetAnalyser.Engine.Budget
 
         public BudgetBucket SurplusBucket { get; private set; }
 
-        public BudgetBucket GetByCode(string code)
+        public BudgetBucket GetByCode([NotNull] string code)
         {
+            if (code == null)
+            {
+                throw new ArgumentNullException("code");
+            }
+
             string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
@@ -34,8 +42,18 @@ namespace BudgetAnalyser.Engine.Budget
             return null;
         }
 
-        public BudgetBucket GetOrAdd(string code, Func<BudgetBucket> factory)
+        public BudgetBucket GetOrAdd([NotNull] string code, [NotNull] Func<BudgetBucket> factory)
         {
+            if (code == null)
+            {
+                throw new ArgumentNullException("code");
+            }
+
+            if (factory == null)
+            {
+                throw new ArgumentNullException("factory");
+            }
+
             string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
@@ -55,8 +73,14 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public void Initialise(BudgetCollection budgetCollectionModel)
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
+        public void Initialise([NotNull] BudgetCollection budgetCollectionModel)
         {
+            if (budgetCollectionModel == null)
+            {
+                throw new ArgumentNullException("budgetCollectionModel");
+            }
+
             if (!this.subscribedToBudgetValidation)
             {
                 budgetCollectionModel.Validating += (s, e) => Initialise(s as BudgetCollection);
@@ -83,8 +107,13 @@ namespace BudgetAnalyser.Engine.Budget
             this.lookupTable = buckets;
         }
 
-        public bool IsValidCode(string code)
+        public bool IsValidCode([NotNull] string code)
         {
+            if (code == null)
+            {
+                throw new ArgumentNullException("code");
+            }
+
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
         }
     }

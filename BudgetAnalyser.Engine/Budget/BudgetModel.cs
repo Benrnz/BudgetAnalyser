@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -17,9 +18,9 @@ namespace BudgetAnalyser.Engine.Budget
 
         public DateTime EffectiveFrom { get; set; }
 
-        public List<Expense> Expenses { get; private set; }
+        public IEnumerable<Expense> Expenses { get; private set; }
 
-        public List<Income> Incomes { get; private set; }
+        public IEnumerable<Income> Incomes { get; private set; }
 
         /// <summary>
         ///     Gets the date and time the budget model was last modified by the user.
@@ -60,7 +61,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             if (Expenses.Any(e => e.Bucket.Code == SurplusBucket.SurplusCode))
             {
-                validationMessages.AppendFormat("You can not use SURPLUS as an expense code.");
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "You can not use SURPLUS as an expense code.");
                 retval = false;
             }
 
@@ -72,7 +73,7 @@ namespace BudgetAnalyser.Engine.Budget
             foreach (string duplicateCode in duplicates)
             {
                 retval = false;
-                validationMessages.AppendFormat("Expense {0} is listed multiple time, each bucket must have a different name.", duplicateCode);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Expense {0} is listed multiple time, each bucket must have a different name.", duplicateCode);
             }
 
             return retval;

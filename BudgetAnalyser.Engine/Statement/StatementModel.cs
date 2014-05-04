@@ -163,8 +163,13 @@ namespace BudgetAnalyser.Engine.Statement
             Filtered = true;
         }
 
-        public void Merge(StatementModel additionalModel)
+        public void Merge([NotNull] StatementModel additionalModel)
         {
+            if (additionalModel == null)
+            {
+                throw new ArgumentNullException("additionalModel");
+            }
+
             UnsubscribeToTransactionChangedEvents();
             ChangeHash = Guid.NewGuid();
             Imported = additionalModel.Imported;
@@ -177,8 +182,13 @@ namespace BudgetAnalyser.Engine.Statement
             SubscribeToTransactionChangedEvents();
         }
 
-        public void RemoveTransaction(Transaction transaction)
+        public void RemoveTransaction([NotNull] Transaction transaction)
         {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
+            }
+
             transaction.PropertyChanged -= OnTransactionPropertyChanged;
             ChangeHash = Guid.NewGuid();
             this.doNotUseAllTransactions.Remove(transaction);
@@ -193,7 +203,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).ToList();
-            this.logger.LogWarning(() => string.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            this.logger.LogWarning(() => this.logger.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
             Parallel.ForEach(query, duplicate =>
             {
                 foreach (Transaction txn in duplicate)

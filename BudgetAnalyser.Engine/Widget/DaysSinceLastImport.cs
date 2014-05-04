@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widget
@@ -16,8 +17,13 @@ namespace BudgetAnalyser.Engine.Widget
             Clickable = true;
         }
 
-        public override void Update(params object[] input)
+        public override void Update([NotNull] params object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             if (!ValidateUpdateInput(input))
             {
                 Visibility = false;
@@ -33,7 +39,7 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             LargeNumber = days.ToString(CultureInfo.CurrentCulture);
-            ToolTip = string.Format("It's been {0} days since new transactions have been imported.", LargeNumber);
+            ToolTip = string.Format(CultureInfo.CurrentCulture, "It's been {0} days since new transactions have been imported.", LargeNumber);
             if (days >= 7)
             {
                 ColourStyleName = WidgetWarningStyle;

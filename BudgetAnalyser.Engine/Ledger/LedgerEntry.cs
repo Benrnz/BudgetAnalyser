@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -43,7 +44,7 @@ namespace BudgetAnalyser.Engine.Ledger
             Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
             Ledger = ledger;
             this.transactions = new List<LedgerTransaction>();
-            this.isNew = true;
+            this.isNew = isNew;
         }
 
         public decimal Balance { get; private set; }
@@ -63,8 +64,13 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return this.transactions; }
         }
 
-        public void AddTransaction(LedgerTransaction newTransaction)
+        public void AddTransaction([NotNull] LedgerTransaction newTransaction)
         {
+            if (newTransaction == null)
+            {
+                throw new ArgumentNullException("newTransaction");
+            }
+
             this.transactions.Add(newTransaction);
             decimal newBalance = Balance + (newTransaction.Credit - newTransaction.Debit);
             Balance = newBalance > 0 ? newBalance : 0;

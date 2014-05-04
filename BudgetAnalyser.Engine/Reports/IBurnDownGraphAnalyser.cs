@@ -8,15 +8,15 @@ namespace BudgetAnalyser.Engine.Reports
 {
     public interface IBurnDownGraphAnalyser
     {
-        List<KeyValuePair<DateTime, decimal>> ActualSpending { get; }
+        IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending { get; }
         decimal ActualSpendingAxesMinimum { get; }
-        List<KeyValuePair<DateTime, decimal>> BudgetLine { get; }
+        IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine { get; }
         decimal NetWorth { get; }
-        List<KeyValuePair<DateTime, decimal>> ZeroLine { get; }
+        IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; }
         void Analyse(
             StatementModel statementModel, 
-            BudgetModel budgetModel, 
-            IEnumerable<BudgetBucket> buckets, 
+            BudgetModel budgetModel,
+            IEnumerable<BudgetBucket> bucketsSubset, 
             DateTime beginDate,
             LedgerBook ledgerBook);
     }

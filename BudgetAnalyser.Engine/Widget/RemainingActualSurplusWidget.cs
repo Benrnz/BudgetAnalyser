@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
@@ -22,8 +24,13 @@ namespace BudgetAnalyser.Engine.Widget
             this.standardStyle = "WidgetStandardStyle3";
         }
 
-        public override void Update(params object[] input)
+        public override void Update([NotNull] params object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             if (!ValidateUpdateInput(input))
             {
                 Visibility = false;
@@ -56,7 +63,7 @@ namespace BudgetAnalyser.Engine.Widget
                 ColourStyleName = this.standardStyle;
             }
 
-            ToolTip = string.Format("Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
+            ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
         }
 
         private static decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)

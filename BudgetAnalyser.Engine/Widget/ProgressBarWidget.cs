@@ -26,6 +26,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Required for Data binding")]
         public bool ProgressBarVisibility
         {
             get { return true; }

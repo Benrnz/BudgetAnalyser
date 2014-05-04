@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -67,8 +68,14 @@ namespace BudgetAnalyser.Engine.Budget
             return CurrentActiveBudget == budget;
         }
 
-        public bool IsFutureBudget(BudgetModel budget)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Better for consistency with other methods here")]
+        public bool IsFutureBudget([NotNull] BudgetModel budget)
         {
+            if (budget == null)
+            {
+                throw new ArgumentNullException("budget");
+            }
+
             return budget.EffectiveFrom > DateTime.Now;
         }
 

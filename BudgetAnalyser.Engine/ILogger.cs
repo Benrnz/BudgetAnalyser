@@ -9,5 +9,7 @@ namespace BudgetAnalyser.Engine
         void LogError(Func<string> logEntryBuilder);
         void LogError(Exception ex, Func<string> logEntryBuilder);
         void LogAlways(Func<string> logEntryBuilder);
+
+        string Format(string formatTemplate, params object[] parameters);
     }
 }

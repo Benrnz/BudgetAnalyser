@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC]
     public class DataBudgetModelToBudgetModelMapper
     {
-        public virtual BudgetModel Map(DataBudgetModel data)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Prefered usage with IoC")]
+        public BudgetModel Map([NotNull] DataBudgetModel data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
             var model = new BudgetModel
             {
                 EffectiveFrom = data.EffectiveFrom,

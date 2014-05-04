@@ -36,6 +36,7 @@ namespace BudgetAnalyser.Engine.Matching
             return File.Exists(fileName);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataMatchingRule")]
         public IEnumerable<MatchingRule> LoadRules(string fileName)
         {
             if (!Exists(fileName))
@@ -55,7 +56,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             if (dataEntities == null)
             {
-                throw new FileFormatException("Derserialised MatchingRules are not of type List<DataMatchingRule>");
+                throw new FileFormatException("Derserialised Matching-Rules are not of type List<DataMatchingRule>");
             }
 
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));

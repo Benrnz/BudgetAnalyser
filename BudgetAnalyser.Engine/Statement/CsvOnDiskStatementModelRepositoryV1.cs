@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Statement
             // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
             if (txnChecksum > 1 && txnChecksum != calcTxnCheckSum)
             {
-                throw new StatementModelCheckSumException(
+                throw new StatementModelChecksumException(
                     calcTxnCheckSum.ToString(CultureInfo.InvariantCulture),
                     string.Format(
                         CultureInfo.CurrentCulture,
@@ -154,8 +154,13 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public void Save(StatementModel model, string fileName)
+        public void Save([NotNull] StatementModel model, string fileName)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             IEnumerable<Transaction> transactionsToSave = model.Filtered ? model.AllTransactions : model.Transactions;
 
             using (var stream = new FileStream(fileName, FileMode.Create))
@@ -185,7 +190,7 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.Amount);
                         line.Append(",");
 
-                        line.Append(transaction.Date.ToString("dd-MMM-yyyy"));
+                        line.Append(transaction.Date.ToString("O"));
                         line.Append(",");
 
                         line.Append(transaction.BudgetBucket == null ? string.Empty : transaction.BudgetBucket.Code);

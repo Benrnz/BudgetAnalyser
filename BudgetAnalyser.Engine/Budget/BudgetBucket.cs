@@ -34,8 +34,8 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("name");
             }
 
-            Description = name;
-            Code = code;
+            this.doNotUseDescription = name;
+            this.doNotUseCode = code.ToUpperInvariant();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,6 +46,11 @@ namespace BudgetAnalyser.Engine.Budget
 
             set
             {
+                if (value == null)
+                {
+                    value = string.Empty;
+                }
+
                 this.doNotUseCode = value.ToUpperInvariant();
                 OnPropertyChanged();
             }
@@ -87,9 +92,39 @@ namespace BudgetAnalyser.Engine.Budget
             return obj1.Equals(obj2);
         }
 
+        public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException("obj1");
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException("obj2");
+            }
+
+            return obj1.CompareTo(obj2) > 0;
+        }
+
         public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
         {
             return !(obj1 == obj2);
+        }
+
+        public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException("obj1");
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException("obj2");
+            }
+
+            return obj1.CompareTo(obj2) < 0;
         }
 
         public int CompareTo(object obj)
@@ -124,8 +159,13 @@ namespace BudgetAnalyser.Engine.Budget
             return string.Format(CultureInfo.CurrentCulture, "[{0}] {1}", Code, Description);
         }
 
-        public bool Validate(StringBuilder validationMessages)
+        public bool Validate([NotNull] StringBuilder validationMessages)
         {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
             bool retval = true;
             if (string.IsNullOrWhiteSpace(Code))
             {

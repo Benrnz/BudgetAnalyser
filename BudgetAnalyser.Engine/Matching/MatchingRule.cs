@@ -196,8 +196,13 @@ namespace BudgetAnalyser.Engine.Matching
             return RuleId.GetHashCode();
         }
 
-        public bool Match(Transaction transaction)
+        public bool Match([NotNull] Transaction transaction)
         {
+            if (transaction == null)
+            {
+                throw new ArgumentNullException("transaction");
+            }
+
             bool matched = false;
             if (!string.IsNullOrWhiteSpace(Description))
             {

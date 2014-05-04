@@ -1,11 +1,18 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     public class Expense : BudgetItem, IModelValidate
     {
-        public bool Validate(StringBuilder validationMessages)
+        public bool Validate([NotNull] StringBuilder validationMessages)
         {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
             bool retval = Bucket.Validate(validationMessages);
 
             if (retval && Amount <= 0)

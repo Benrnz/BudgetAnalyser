@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.UnitTest.TestData
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 Name = TestDataConstants.Budget1Name,
             };
 
-            budget.Expenses.AddRange(new[]
+            var expenses = new List<Expense>(new[]
             {
                 new Expense
                 {
@@ -46,14 +47,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }
             });
 
-            budget.Incomes.Add(
-                new Income
-                {
-                    Amount = 1500M,
-                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                });
+            var incomes = new List<Income>(new[] 
+            {
+                    new Income
+                    {
+                        Amount = 1500M,
+                        Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
+                    }
+            });
 
-            budget.Initialise();
+            budget.Update(incomes, expenses);
             return budget;
         }
 
@@ -68,7 +71,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 Name = TestDataConstants.Budget2Name,
             };
 
-            budget.Expenses.AddRange(new[]
+            var expenses = new List<Expense>(new[]
             {
                 new Expense
                 {
@@ -87,14 +90,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }
             });
 
-            budget.Incomes.Add(
+            var incomes = new List<Income>(new[] 
+            {
                 new Income
                 {
                     Amount = 1600M,
                     Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                });
+                }
+            });
 
-            budget.Initialise();
+            budget.Update(incomes, expenses);
             return budget;
         }
     }

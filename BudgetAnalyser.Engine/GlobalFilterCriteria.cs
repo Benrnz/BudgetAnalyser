@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
@@ -17,7 +18,7 @@ namespace BudgetAnalyser.Engine
 
         public GlobalFilterCriteria()
         {
-            Cleared = true;
+            this.doNotUseCleared = true;
         }
 
         public AccountType AccountType
@@ -103,8 +104,13 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public bool Validate(StringBuilder validationMessages)
+        public bool Validate([NotNull] StringBuilder validationMessages)
         {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
             if (Cleared)
             {
                 BeginDate = null;
@@ -134,8 +140,13 @@ namespace BudgetAnalyser.Engine
             return valid;
         }
 
-        protected bool Equals(GlobalFilterCriteria other)
+        protected bool Equals([NotNull] GlobalFilterCriteria other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
             return Equals(this.doNotUseAccountType, other.doNotUseAccountType)
                    && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate)
                    && this.doNotUseCleared.Equals(other.doNotUseCleared)

@@ -14,12 +14,18 @@ namespace BudgetAnalyser.Engine.Reports
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BurnDownGraphAnalyser : IBurnDownGraphAnalyser
     {
+        private List<KeyValuePair<DateTime, decimal>> actualSpending;
+        private List<KeyValuePair<DateTime, decimal>> budgetLine;
+
         /// <summary>
         ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
         ///     friendly with the graph control than a dictionary.
         ///     These values shows actual spending over the month.
         /// </summary>
-        public List<KeyValuePair<DateTime, decimal>> ActualSpending { get; private set; }
+        public IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending
+        {
+            get { return this.actualSpending; }
+        }
 
         public decimal ActualSpendingAxesMinimum { get; private set; }
 
@@ -28,7 +34,10 @@ namespace BudgetAnalyser.Engine.Reports
         ///     These values shows how the budget should be spent in a linear fashion over the month.
         ///     Using a List of Key Value Pairs is more friendly with the graph control than a dictionary.
         /// </summary>
-        public List<KeyValuePair<DateTime, decimal>> BudgetLine { get; private set; }
+        public IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine
+        {
+            get { return this.budgetLine; }
+        }
 
         public decimal NetWorth { get; private set; }
 
@@ -37,20 +46,25 @@ namespace BudgetAnalyser.Engine.Reports
         ///     friendly with the graph control than a dictionary.
         ///     These values are used draw a horizontal zero line on the graph.
         /// </summary>
-        public List<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
+        public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
         public void Analyse(
-            StatementModel statementModel,
+            [NotNull] StatementModel statementModel,
             BudgetModel budgetModel,
             IEnumerable<BudgetBucket> bucketsSubset,
             DateTime beginDate,
             LedgerBook ledgerBook)
         {
-            ZeroLine = null;
-            BudgetLine = null;
-            ActualSpending = null;
+            if (statementModel == null)
+            {
+                throw new ArgumentNullException("statementModel");
+            }
 
-            Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(statementModel, beginDate);
+            ZeroLine = null;
+            this.budgetLine = null;
+            this.actualSpending = null;
+
+            Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(beginDate);
             var earliestDate = beginDate;
             var latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
@@ -72,12 +86,12 @@ namespace BudgetAnalyser.Engine.Reports
             decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
 
             decimal runningTotal = budgetTotal;
-            ActualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
+            this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
             foreach (var day in chartData)
             {
                 NetWorth += day.Value;
                 runningTotal -= day.Value;
-                ActualSpending.Add(new KeyValuePair<DateTime, decimal>(day.Key, runningTotal));
+                this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day.Key, runningTotal));
             }
 
             CalculateBudgetLineValues(budgetTotal);
@@ -177,7 +191,7 @@ namespace BudgetAnalyser.Engine.Reports
             return -1;
         }
 
-        private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(StatementModel statementModel, DateTime beginDate)
+        private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(DateTime beginDate)
         {
             DateTime startDate = beginDate;
             DateTime end = beginDate.AddMonths(1).AddDays(-1);
@@ -195,13 +209,13 @@ namespace BudgetAnalyser.Engine.Reports
 
         private void CalculateBudgetLineValues(decimal budgetTotal)
         {
-            decimal average = budgetTotal / ActualSpending.Count;
+            decimal average = budgetTotal / this.actualSpending.Count;
 
-            BudgetLine = new List<KeyValuePair<DateTime, decimal>>();
+            this.budgetLine = new List<KeyValuePair<DateTime, decimal>>();
             int iteration = 0;
             foreach (var day in ActualSpending)
             {
-                BudgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
+                this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
             }
         }
     }

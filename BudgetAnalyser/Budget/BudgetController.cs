@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Budget
                         i.PropertyChanged += OnIncomeAmountPropertyChanged;
                         i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
                     });
-                    Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses);
+                    Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses.ToList());
                     Expenses.ToList().ForEach(e =>
                     {
                         e.PropertyChanged += OnExpenseAmountPropertyChanged;

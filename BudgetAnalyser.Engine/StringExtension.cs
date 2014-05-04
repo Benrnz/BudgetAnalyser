@@ -53,6 +53,7 @@ namespace BudgetAnalyser.Engine
             return instance.Substring(0, truncateToLength);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification="This is the simplest approach.")]
         public static string Truncate(this string instance, int truncateToLength, ref bool isEmpty, bool useEllipses = false, string prefix = null)
         {
             if (string.IsNullOrWhiteSpace(instance))

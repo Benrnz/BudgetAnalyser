@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using BudgetAnalyser.Engine;
 
@@ -35,6 +36,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
             System.Diagnostics.Debug.WriteLine("LOG ALWAYS:");
             System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+        }
+
+        public string Format(string format, params object[] parameters)
+        {
+            return string.Format(CultureInfo.InvariantCulture, format, parameters);
         }
     }
 }

@@ -11,12 +11,18 @@ namespace BudgetAnalyser.Engine.Budget
         /// No need for a data type for <see cref="Income"/>, <see cref="Expenses"/>, <see cref="BudgetItem"/>, 
         /// as these have no properties that need to be private.
         /// </summary>
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
         public List<Expense> Expenses { get; set; }
 
         /// <summary>
         /// No need for a data type for <see cref="Income"/>, <see cref="Expenses"/>, <see cref="BudgetItem"/>, 
         /// as these have no properties that need to be private.
         /// </summary>
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
         public List<Income> Incomes { get; set; }
 
         /// <summary>

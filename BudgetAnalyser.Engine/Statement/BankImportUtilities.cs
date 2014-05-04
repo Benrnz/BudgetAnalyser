@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -98,6 +99,7 @@ namespace BudgetAnalyser.Engine.Statement
             return retval;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Preferable with IoC")]
         internal Guid SafeArrayFetchGuid([NotNull] string[] array, int index)
         {
             if (array == null)
@@ -120,6 +122,7 @@ namespace BudgetAnalyser.Engine.Statement
             return result;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
         internal string SafeArrayFetchString([NotNull] string[] array, int index)
         {
             if (array == null)
@@ -137,7 +140,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
         {
-            throw new IndexOutOfRangeException(string.Format("Index {0} is out of range for array with length {1}.", index, array.Length));
+            throw new IndexOutOfRangeException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
         }
     }
 }

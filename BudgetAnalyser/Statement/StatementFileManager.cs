@@ -186,7 +186,7 @@ namespace BudgetAnalyser.Statement
                 this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
                 return null;
             }
-            catch (StatementModelCheckSumException ex)
+            catch (StatementModelChecksumException ex)
             {
                 this.messageBox.Show("The file being loaded is corrupt. The internal checksum does not match the transactions.\nFile Checksum:" + ex.FileChecksum);
                 return null;

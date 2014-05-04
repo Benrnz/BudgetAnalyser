@@ -19,8 +19,14 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetModelMapper = budgetModelMapper;
         }
 
-        public BudgetCollection Map(DataBudgetCollection budgetCollection)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom Collection")]
+        public BudgetCollection Map([NotNull] DataBudgetCollection budgetCollection)
         {
+            if (budgetCollection == null)
+            {
+                throw new ArgumentNullException("budgetCollection");
+            }
+
             var collection = new BudgetCollection(budgetCollection.Budgets.Select(d => this.budgetModelMapper.Map(d)))
             {
                 FileName = budgetCollection.FileName,

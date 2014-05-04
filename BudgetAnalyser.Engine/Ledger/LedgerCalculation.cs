@@ -1,15 +1,22 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
     public static class LedgerCalculation
     {
-        public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, GlobalFilterCriteria filter)
+        public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
         {
             if (ledgerBook == null)
             {
                 return null;
+            }
+
+            if (filter == null)
+            {
+                throw new ArgumentNullException("filter");
             }
 
             if (filter.Cleared)

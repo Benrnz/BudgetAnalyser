@@ -19,33 +19,33 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Action<string, string> WriteToDiskMock { get; set; }
 
-        protected override bool FileExists(string filename)
+        protected override bool FileExists(string fileName)
         {
             if (FileExistsMock == null)
             {
-                return base.FileExists(filename);
+                return base.FileExists(fileName);
             }
-            return FileExistsMock(filename);
+            return FileExistsMock(fileName);
         }
 
-        protected override object LoadFromDisk(string filename)
+        protected override object LoadFromDisk(string fileName)
         {
             if (LoadFromDiskMock == null)
             {
-                return base.LoadFromDisk(filename);
+                return base.LoadFromDisk(fileName);
             }
-            return LoadFromDiskMock(filename);
+            return LoadFromDiskMock(fileName);
         }
 
-        protected override void WriteToDisk(string filename, string data)
+        protected override void WriteToDisk(string fileName, string data)
         {
             if (WriteToDiskMock == null)
             {
-                base.WriteToDisk(filename, data);
+                base.WriteToDisk(fileName, data);
             }
             else
             {
-                WriteToDiskMock(filename, data);
+                WriteToDiskMock(fileName, data);
             }
         }
     }

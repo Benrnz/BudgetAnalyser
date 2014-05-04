@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -8,42 +9,51 @@ namespace BudgetAnalyser.Engine.Statement
     ///     match the data.
     /// </summary>
     [Serializable]
-    public class StatementModelCheckSumException : Exception
+    public class StatementModelChecksumException : Exception
     {
+        public StatementModelChecksumException() : base()
+        {
+        }
+
+        [UsedImplicitly]
+        public StatementModelChecksumException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="StatementModelCheckSumException" /> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         /// <param name="checksum">The actual checksum of the file.</param>
-        public StatementModelCheckSumException(string checksum)
+        public StatementModelChecksumException(string checksum)
         {
             FileChecksum = checksum;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="StatementModelCheckSumException" /> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         /// <param name="checksum">The actual checksum of the file.</param>
         /// <param name="message">The message.</param>
-        public StatementModelCheckSumException(string checksum, string message)
+        public StatementModelChecksumException(string checksum, string message)
             : base(message)
         {
             FileChecksum = checksum;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="StatementModelCheckSumException" /> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         /// <param name="checksum">The actual checksum of the file.</param>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public StatementModelCheckSumException(string checksum, string message, Exception innerException)
+        public StatementModelChecksumException(string checksum, string message, Exception innerException)
             : base(message, innerException)
         {
             FileChecksum = checksum;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="StatementModelCheckSumException" /> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object
@@ -58,7 +68,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     The class name is null or
         ///     <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
-        protected StatementModelCheckSumException(SerializationInfo info, StreamingContext context)
+        protected StatementModelChecksumException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

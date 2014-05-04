@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
+using BudgetAnalyser.Engine.Annotations;
 using log4net;
 using log4net.Config;
 using log4net.Core;
@@ -13,19 +15,52 @@ namespace BudgetAnalyser.Engine
     ///     IDisposable should be implemented.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class BudgetAnalyserLog4NetLogger : ILogger
+    public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
     {
         private readonly ReaderWriterLockSlim alwaysLogLock = new ReaderWriterLockSlim();
         private readonly ILog log4NetLogger = LogManager.GetLogger("Budget Analyser Diagnostic Log");
+        private bool disposed = false;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed, ok here, required for testing")]
         public BudgetAnalyserLog4NetLogger()
         {
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor
             ConfigureLog4Net();
         }
 
-        public void LogAlways(Func<string> logEntryBuilder)
+        ~BudgetAnalyserLog4NetLogger()
         {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public string Format(string formatTemplate, params object[] parameters)
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
+            return string.Format(CultureInfo.CurrentCulture, formatTemplate, parameters);
+        }
+
+        public void LogAlways([NotNull] Func<string> logEntryBuilder)
+        {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException("logEntryBuilder");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             Level currentLevel = GetCurrentLogLevel();
             this.alwaysLogLock.EnterWriteLock();
             try
@@ -41,32 +76,71 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public void LogError(Func<string> logEntryBuilder)
+        public void LogError([NotNull] Func<string> logEntryBuilder)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException("logEntryBuilder");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
             if (this.log4NetLogger.IsErrorEnabled)
             {
                 SynchroniseWithAlwaysLog(() => this.log4NetLogger.Error(logEntryBuilder()));
             }
         }
 
-        public void LogError(Exception ex, Func<string> logEntryBuilder)
+        public void LogError(Exception ex, [NotNull] Func<string> logEntryBuilder)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException("logEntryBuilder");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             if (this.log4NetLogger.IsErrorEnabled)
             {
                 SynchroniseWithAlwaysLog(() => this.log4NetLogger.Error(logEntryBuilder(), ex));
             }
         }
 
-        public void LogInfo(Func<string> logEntryBuilder)
+        public void LogInfo([NotNull] Func<string> logEntryBuilder)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException("logEntryBuilder");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             if (this.log4NetLogger.IsInfoEnabled)
             {
                 SynchroniseWithAlwaysLog(() => this.log4NetLogger.Info(logEntryBuilder()));
             }
         }
 
-        public void LogWarning(Func<string> logEntryBuilder)
+        public void LogWarning([NotNull] Func<string> logEntryBuilder)
         {
+            if (logEntryBuilder == null)
+            {
+                throw new ArgumentNullException("logEntryBuilder");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
+            }
+
             if (this.log4NetLogger.IsWarnEnabled)
             {
                 SynchroniseWithAlwaysLog(() => this.log4NetLogger.Warn(logEntryBuilder()));
@@ -76,6 +150,14 @@ namespace BudgetAnalyser.Engine
         protected virtual void ConfigureLog4Net()
         {
             XmlConfigurator.Configure();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.alwaysLogLock.Dispose();
+            }
         }
 
         private Level GetCurrentLogLevel()

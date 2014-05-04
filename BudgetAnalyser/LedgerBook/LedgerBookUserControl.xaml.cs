@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,7 +111,7 @@ namespace BudgetAnalyser.LedgerBook
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
                 Grid.SetColumnSpan(border, ledger.BudgetBucket is SpentMonthlyExpense ? 1 : 2);
-                string tooltip = string.Format("{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
+                string tooltip = string.Format(CultureInfo.CurrentCulture, "{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
                 TextBlock ledgerTitle = AddContentToGrid(border, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, tooltip);
                 ledgerTitle.HorizontalAlignment = HorizontalAlignment.Center;
                 column--; // Ledger heading shares a column with other Ledger Headings
@@ -194,7 +195,7 @@ namespace BudgetAnalyser.LedgerBook
 
                 int column = 0;
                 Border dateBorder = AddBorderToGridCell(grid, false, true, column, row);
-                AddContentToGrid(dateBorder, line.Date.ToString(DateFormat), ref column, row, NormalStyle);
+                AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref column, row, NormalStyle);
 
                 foreach (Ledger ledger in allLedgers)
                 {
@@ -216,26 +217,26 @@ namespace BudgetAnalyser.LedgerBook
                     if (ledger.BudgetBucket is SpentMonthlyExpense)
                     {
                         AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
-                        AddHyperlinkToGrid(grid, balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref column, row, NumberStyle, parameter: entry);
                     }
                     else
                     {
                         AddBorderToGridCell(parent: grid, hasBackground: true, hasBorder: false, column: column, row: row);
-                        AddHyperlinkToGrid(grid, netAmount.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        AddHyperlinkToGrid(grid, netAmount.ToString("N", CultureInfo.CurrentCulture), ref column, row, NumberStyle, parameter: entry);
                         AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
-                        AddHyperlinkToGrid(grid, balance.ToString("N"), ref column, row, NumberStyle, parameter: entry);
+                        AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref column, row, NumberStyle, parameter: entry);
                     }
                 }
 
                 Border surplusBorder = AddBorderToGridCell(grid, SurplusBackground, false, column, row);
-                TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N"), ref column, row, ImportantNumberStyle);
+                TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle);
                 surplusText.Foreground = FindResource(SurplusTextBrush) as Brush;
 
-                AddHyperlinkToGrid(grid, line.TotalBalanceAdjustments.ToString("N"), ref column, row, ImportantNumberStyle, parameter: line);
+                AddHyperlinkToGrid(grid, line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle, parameter: line);
 
                 Border bankBalanceBorder = AddBorderToGridCell(grid, BankBalanceBackground, false, column, row);
-                TextBlock bankBalanceText = AddContentToGrid(bankBalanceBorder, line.LedgerBalance.ToString("N"), ref column, row, ImportantNumberStyle,
-                    string.Format("Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.BankBalance));
+                TextBlock bankBalanceText = AddContentToGrid(bankBalanceBorder, line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle,
+                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.BankBalance));
                 bankBalanceText.Foreground = FindResource(BankBalanceTextBrush) as Brush;
 
                 TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref column, row, NormalStyle, line.Remarks);

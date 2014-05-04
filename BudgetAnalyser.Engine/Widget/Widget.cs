@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Engine.Widget
         private bool doNotUseVisibility;
         private string doNotUseWidgetStyle;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed, ok here")]
         protected Widget()
         {
             Name = GetType().Name;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
@@ -64,8 +65,13 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        protected bool Equals(BudgetItem other)
+        protected bool Equals([NotNull] BudgetItem other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
         }
 
@@ -92,7 +98,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        private string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
+        private static string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
         {
             if (string.IsNullOrWhiteSpace(sentence1) || string.IsNullOrWhiteSpace(sentence2))
             {
@@ -127,10 +133,10 @@ namespace BudgetAnalyser.Engine.Budget
 
             if (lastWord == firstWord)
             {
-                return string.Format("{0}{1}", sentence1, sentence2.Substring(wordIndex));
+                return string.Format(CultureInfo.CurrentCulture, "{0}{1}", sentence1, sentence2.Substring(wordIndex));
             }
 
-            return string.Format("{0} {1}", sentence1, sentence2);
+            return string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     [AutoRegisterWithIoC]
-    public class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
+    public sealed class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
     {
         private const string BatchFileName = "BudgetAnalyserHooks.bat";
         private readonly ILogger logger;
@@ -35,7 +36,7 @@ namespace BudgetAnalyser.Engine
 
             foreach (IApplicationHookEventPublisher publisher in this.publishers)
             {
-                publisher.ApplicationEvent += OnEventOccured;
+                publisher.ApplicationEvent += OnEventOccurred;
             }
         }
 
@@ -59,11 +60,13 @@ namespace BudgetAnalyser.Engine
             this.logger.LogInfo(() => "BatchFileApplicationHookSubscriber is being disposed.");
             foreach (IApplicationHookEventPublisher publisher in this.publishers)
             {
-                publisher.ApplicationEvent -= OnEventOccured;
+                publisher.ApplicationEvent -= OnEventOccurred;
             }
+
+            GC.SuppressFinalize(this);
         }
 
-        public void OnEventOccured(object sender, ApplicationHookEventArgs args)
+        public void OnEventOccurred(object sender, ApplicationHookEventArgs args)
         {
             if (this.isDisposed)
             {
@@ -75,14 +78,17 @@ namespace BudgetAnalyser.Engine
                 {
                     if (!File.Exists(FileName))
                     {
-                        File.CreateText(FileName);
+                        using (File.CreateText(FileName))
+                        {
+                        }
                     }
 
                     var commandLine = string.Format(
+                        CultureInfo.CurrentCulture,
                         "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\"",
                         FileName,
                         args.EventType,
-                        args.EventSubCategory,
+                        args.EventSubcategory,
                         args.Origin,
                         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         sender);

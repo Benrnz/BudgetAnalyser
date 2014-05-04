@@ -1,12 +1,19 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerDomainToDataMapper : ILedgerDomainToDataMapper
     {
-        public DataLedgerBook Map(LedgerBook domainBook)
+        public DataLedgerBook Map([NotNull] LedgerBook domainBook)
         {
+            if (domainBook == null)
+            {
+                throw new ArgumentNullException("domainBook");
+            }
+
             var dataBook = new DataLedgerBook
             {
                 DatedEntries = domainBook.DatedEntries.Select(MapLine).ToList(),

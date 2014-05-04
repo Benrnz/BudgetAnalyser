@@ -3,13 +3,24 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Builder;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
     public static class AutoRegisterWithIoCProcessor
     {
-        public static void RegisterAutoMappingsFromAssembly(ContainerBuilder builder, Assembly assembly)
+        public static void RegisterAutoMappingsFromAssembly([NotNull] ContainerBuilder builder, [NotNull] Assembly assembly)
         {
+            if (builder == null)
+            {
+                throw new ArgumentNullException("builder");
+            }
+
+            if (assembly == null)
+            {
+                throw new ArgumentNullException("assembly");
+            }
+
             Type[] allTypes = assembly.GetTypes()
                 .Where(t => !t.IsAbstract && t.IsClass && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null)
                 .ToArray();

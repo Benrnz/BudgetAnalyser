@@ -12,6 +12,8 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class BudgetModelTest
     {
+        public StringBuilder Logs { get; private set; }
+
         [TestMethod]
         public void AfterConstructionEffectiveDateIsValidDate()
         {
@@ -141,17 +143,18 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void SurplusCannotBeUsedInTheExpenseList()
         {
-            var subject = TestData.BudgetModelTestData.CreateTestData1();
+            BudgetModel subject = BudgetModelTestData.CreateTestData1();
 
-            subject.Expenses.Add(new Expense { Amount = 445M, Bucket = new SurplusBucket() });
+            List<Expense> myExpenses = subject.Expenses.ToList();
+            myExpenses.Add(new Expense { Amount = 445M, Bucket = new SurplusBucket() });
+            List<Income> myIncomes = subject.Incomes.ToList();
+            subject.Update(myIncomes, myExpenses);
 
-            var result = subject.Validate(Logs);
+            bool result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
             Assert.IsTrue(Logs.Length > 0);
         }
-
-        public StringBuilder Logs { get; private set; }
 
         [TestInitialize]
         public void TestInitialize()

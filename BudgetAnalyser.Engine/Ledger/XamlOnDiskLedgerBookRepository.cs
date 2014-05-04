@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xaml;
@@ -59,7 +60,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (dataEntity == null)
             {
-                throw new FileFormatException(string.Format("The specified file {0} is not of type DataLedgerBook", fileName));
+                throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", fileName));
             }
 
             if (dataEntity.Checksum == null)
@@ -79,8 +80,13 @@ namespace BudgetAnalyser.Engine.Ledger
             return this.dataToDomainMapper.Map(dataEntity);
         }
 
-        public void Save(LedgerBook book)
+        public void Save([NotNull] LedgerBook book)
         {
+            if (book == null)
+            {
+                throw new ArgumentNullException("book");
+            }
+
             Save(book, book.FileName);
         }
 
@@ -114,12 +120,17 @@ namespace BudgetAnalyser.Engine.Ledger
             return XamlServices.Load(fileName) as DataLedgerBook;
         }
 
-        protected virtual void SaveXamlFileToDisk(DataLedgerBook dataEntity)
+        protected virtual void SaveXamlFileToDisk([NotNull] DataLedgerBook dataEntity)
         {
+            if (dataEntity == null)
+            {
+                throw new ArgumentNullException("dataEntity");
+            }
+
             XamlServices.Save(dataEntity.FileName, dataEntity);
         }
 
-        private double CalculateChecksum(DataLedgerBook dataEntity)
+        private static double CalculateChecksum(DataLedgerBook dataEntity)
         {
             unchecked
             {

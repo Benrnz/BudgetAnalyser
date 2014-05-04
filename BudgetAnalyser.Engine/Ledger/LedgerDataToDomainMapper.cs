@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
@@ -30,8 +31,13 @@ namespace BudgetAnalyser.Engine.Ledger
             this.logger = logger;
         }
 
-        public LedgerBook Map(DataLedgerBook dataBook)
+        public LedgerBook Map([NotNull] DataLedgerBook dataBook)
         {
+            if (dataBook == null)
+            {
+                throw new ArgumentNullException("dataBook");
+            }
+
             var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName, this.logger);
             book.SetDatedEntries(MapLines(dataBook.DatedEntries));
 
@@ -101,21 +107,21 @@ namespace BudgetAnalyser.Engine.Ledger
             return listOfLines.ToList();
         }
 
-        private List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
+        private static List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
         {
             var list = new List<LedgerTransaction>();
             foreach (DataLedgerTransaction dataTransaction in dataTransactions)
             {
                 if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
                 {
-                    throw new FileFormatException(string.Format("A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
                         dataTransaction.Credit - dataTransaction.Debit));
                 }
 
                 Type transactionType = Type.GetType(dataTransaction.TransactionType);
                 if (transactionType == null)
                 {
-                    throw new FileFormatException(string.Format("Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
                         dataTransaction.Credit - dataTransaction.Debit));
                 }
 

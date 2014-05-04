@@ -19,8 +19,13 @@ namespace BudgetAnalyser.Engine.Matching
             this.bucketRepository = bucketRepository;
         }
 
-        public MatchingRule Map(DataMatchingRule rule)
+        public MatchingRule Map([NotNull] DataMatchingRule rule)
         {
+            if (rule == null)
+            {
+                throw new ArgumentNullException("rule");
+            }
+
             var domainRule = new MatchingRule(this.bucketRepository)
             {
                 Amount = rule.Amount,

@@ -144,7 +144,12 @@ namespace BudgetAnalyser.UnitTest
 
             int count = subject.Buckets.Count();
 
-            collection.CurrentActiveBudget.Expenses.Add(new Expense { Amount = 12.22M, Bucket = new SavedUpForExpense("Foo", "Bar") });
+            var myExpenses = collection.CurrentActiveBudget.Expenses.ToList();
+            var myIncomes = collection.CurrentActiveBudget.Incomes.ToList();
+
+            myExpenses.Add(new Expense { Amount = 12.22M, Bucket = new SavedUpForExpense("Foo", "Bar") });
+            collection.CurrentActiveBudget.Update(myIncomes, myExpenses);
+
             var builder = new StringBuilder();
             collection.Validate(builder);
 

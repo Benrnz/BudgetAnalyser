@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     [AutoRegisterWithIoC]
-    public class LoggingApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
+    public sealed class LoggingApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
     {
         private readonly ILogger logger;
         private readonly IEnumerable<IApplicationHookEventPublisher> publishers;
@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine
 
             foreach (IApplicationHookEventPublisher publisher in this.publishers)
             {
-                publisher.ApplicationEvent += OnEventOccured;
+                publisher.ApplicationEvent += OnEventOccurred;
             }
         }
 
@@ -40,11 +40,13 @@ namespace BudgetAnalyser.Engine
             this.logger.LogInfo(() => "LoggingApplicationHookSubscriber is being disposed.");
             foreach (IApplicationHookEventPublisher publisher in this.publishers)
             {
-                publisher.ApplicationEvent -= OnEventOccured;
+                publisher.ApplicationEvent -= OnEventOccurred;
             }
+
+            GC.SuppressFinalize(this);
         }
 
-        public void OnEventOccured(object sender, ApplicationHookEventArgs args)
+        public void OnEventOccurred(object sender, ApplicationHookEventArgs args)
         {
             if (this.isDisposed)
             {

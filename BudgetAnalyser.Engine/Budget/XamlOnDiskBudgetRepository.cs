@@ -41,8 +41,14 @@ namespace BudgetAnalyser.Engine.Budget
 
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
-        public BudgetCollection CreateNew(string fileName)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        public BudgetCollection CreateNew([NotNull] string fileName)
         {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = DateTime.Today,
@@ -59,6 +65,7 @@ namespace BudgetAnalyser.Engine.Budget
             return newCollection;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
         public BudgetCollection Load(string fileName)
         {
             if (!FileExists(fileName))
@@ -93,9 +100,10 @@ namespace BudgetAnalyser.Engine.Budget
             return correctFormat;
         }
 
-        public void Save(BudgetCollection budgetData)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        public void Save(BudgetCollection budget)
         {
-            var dataFormat = this.toDataMapper.Map(budgetData);
+            var dataFormat = this.toDataMapper.Map(budget);
             string serialised = Serialise(dataFormat);
             WriteToDisk(dataFormat.FileName, serialised);
 
@@ -106,14 +114,14 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        protected virtual bool FileExists(string filename)
+        protected virtual bool FileExists(string fileName)
         {
-            return File.Exists(filename);
+            return File.Exists(fileName);
         }
 
-        protected virtual object LoadFromDisk(string filename)
+        protected virtual object LoadFromDisk(string fileName)
         {
-            return XamlServices.Load(filename);
+            return XamlServices.Load(fileName);
         }
 
         protected virtual string Serialise(DataBudgetCollection budgetData)
@@ -121,9 +129,9 @@ namespace BudgetAnalyser.Engine.Budget
             return XamlServices.Save(budgetData);
         }
 
-        protected virtual void WriteToDisk(string filename, string data)
+        protected virtual void WriteToDisk(string fileName, string data)
         {
-            File.WriteAllText(filename, data);
+            File.WriteAllText(fileName, data);
         }
     }
 }

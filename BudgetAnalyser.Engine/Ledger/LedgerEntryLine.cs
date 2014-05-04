@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -140,11 +142,16 @@ namespace BudgetAnalyser.Engine.Ledger
             return false;
         }
 
-        public bool Validate(StringBuilder validationMessages)
+        public bool Validate([NotNull] StringBuilder validationMessages)
         {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
             if (!Entries.Any())
             {
-                validationMessages.AppendFormat("The Ledger Entry does not contain any entries, either delete it or add entries.");
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
                 return false;
             }
 
@@ -158,7 +165,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
         /// <param name="startDateIncl">The date for this ledger line.</param>
-        internal void AddNew(IDictionary<Ledger, LedgerEntry> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
+        internal void AddNew(IEnumerable<KeyValuePair<Ledger, LedgerEntry>> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
         {
             if (!this.isNew)
             {
@@ -206,7 +213,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return this;
         }
 
-        private IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
+        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
         {
             if (!filteredStatementTransactions.Any())
             {

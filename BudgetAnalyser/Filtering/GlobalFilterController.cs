@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
@@ -271,12 +272,12 @@ namespace BudgetAnalyser.Filtering
 
             if (Criteria.BeginDate != null)
             {
-                DateSummaryLine1 = "Filtered from: " + Criteria.BeginDate.Value.ToString("dd-MMM-yy");
+                DateSummaryLine1 = string.Format(CultureInfo.CurrentCulture, "Filtered from: {0:d}", Criteria.BeginDate.Value);
             }
 
             if (Criteria.EndDate != null)
             {
-                DateSummaryLine2 = "up until: " + Criteria.EndDate.Value.ToString("dd-MMM-yy");
+                DateSummaryLine2 = string.Format(CultureInfo.CurrentCulture, "up until: {0:d}", Criteria.EndDate.Value);
             }
 
             if (Criteria.AccountType != null)

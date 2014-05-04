@@ -86,10 +86,10 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             LargeNumber = number.ToString(CultureInfo.CurrentCulture);
-            DetailedText = string.Format("{0}\n{1}\n{2}", this.statementName, this.budgetName, this.ledgerBookName);
+            DetailedText = string.Format(CultureInfo.CurrentCulture, "{0}\n{1}\n{2}", this.statementName, this.budgetName, this.ledgerBookName);
         }
 
-        private string ShortenFileName([NotNull] string fileName)
+        private static string ShortenFileName([NotNull] string fileName)
         {
             if (fileName == null)
             {

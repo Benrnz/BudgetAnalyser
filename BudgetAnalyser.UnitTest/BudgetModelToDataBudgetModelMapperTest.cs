@@ -57,14 +57,14 @@ namespace BudgetAnalyser.UnitTest
         public void ExpensesCountShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Expenses.Count, result.Expenses.Count);
+            Assert.AreEqual(TestData.Expenses.Count(), result.Expenses.Count);
         }
 
         [TestMethod]
         public void IncomesCountShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Incomes.Count, result.Incomes.Count);
+            Assert.AreEqual(TestData.Incomes.Count(), result.Incomes.Count);
         }
 
         [TestMethod]

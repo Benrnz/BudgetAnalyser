@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         BudgetBucket GetOrAdd(string code, Func<BudgetBucket> factory);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom Collection")]
         void Initialise(BudgetCollection budgetCollectionModel);
 
         bool IsValidCode(string code);

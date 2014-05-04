@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
@@ -112,11 +113,16 @@ namespace BudgetAnalyser.Engine.Ledger
             return newLine;
         }
 
-        public bool Validate(StringBuilder validationMessages)
+        public bool Validate([NotNull] StringBuilder validationMessages)
         {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
             if (string.IsNullOrWhiteSpace(FileName))
             {
-                validationMessages.AppendFormat("A ledger book must have a file name.");
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "A ledger book must have a file name.");
                 return false;
             }
 
@@ -126,7 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 DateTime thisDate = line.Date;
                 if (thisDate >= last)
                 {
-                    validationMessages.AppendFormat("Duplicate and or out of sequence dates exist in the dated entries for this Ledger Book.");
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the dated entries for this Ledger Book.");
                     return false;
                 }
 

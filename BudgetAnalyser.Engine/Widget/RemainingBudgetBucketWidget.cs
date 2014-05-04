@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -26,8 +27,13 @@ namespace BudgetAnalyser.Engine.Widget
         protected GlobalFilterCriteria Filter { get; private set; }
         protected string RemainingBudgetToolTip { get; set; }
 
-        public override void Update(params object[] input)
+        public override void Update([NotNull] params object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             if (!ValidateUpdateInput(input))
             {
                 Visibility = false;

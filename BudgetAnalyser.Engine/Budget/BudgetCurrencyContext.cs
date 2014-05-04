@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BudgetCollection budgets;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
             if (budgets == null)

@@ -2,6 +2,6 @@
 {
     public interface IApplicationHookSubscriber
     {
-        void OnEventOccured(object sender, ApplicationHookEventArgs args);
+        void OnEventOccurred(object sender, ApplicationHookEventArgs args);
     }
 }

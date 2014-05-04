@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 
 namespace BudgetAnalyser.Engine.Widget
@@ -32,8 +33,13 @@ namespace BudgetAnalyser.Engine.Widget
             return LedgerCalculation.LocateApplicableLedgerBalance(this.ledgerBook, Filter, BucketCode);
         }
 
-        protected override void SetAdditionalDependencies(object[] input)
+        protected override void SetAdditionalDependencies([NotNull] object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             base.SetAdditionalDependencies(input);
             this.ledgerBook = (LedgerBook)input[4];
         }
