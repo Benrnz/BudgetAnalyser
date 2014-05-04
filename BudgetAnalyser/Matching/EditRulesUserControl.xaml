@@ -170,7 +170,7 @@
             <Button Style="{StaticResource Button.Round.Unlock}"
                     Command="{Binding EditRuleCommand}"
                     ToolTip="Edit Rule"
-                    Visibility="{Binding ShowReadonlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
+                    Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Style="{StaticResource Button.Round.Save}"
                     Command="{Binding SaveRuleCommand}"
                     ToolTip="Save Rule"
