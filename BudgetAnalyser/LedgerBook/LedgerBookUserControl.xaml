@@ -171,7 +171,7 @@
             </Grid.RowDefinitions>
             <Border Background="{StaticResource Brush.MainBackground}"
                     Opacity="0.7" />
-            <Border Background="{StaticResource Brush.PopUpBackground}"
+            <Border Background="{StaticResource Brush.PopupBackground}"
                     BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     Grid.Row="1"

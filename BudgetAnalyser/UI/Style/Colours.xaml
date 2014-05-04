@@ -158,7 +158,7 @@
         Color="{StaticResource Colour.ToolTip.Background}" />
 
     <SolidColorBrush 
-        x:Key="Brush.PopUpBackground" 
+        x:Key="Brush.PopupBackground" 
         Color="{StaticResource Colour.Popup.Background}" />
 
     <SolidColorBrush 
