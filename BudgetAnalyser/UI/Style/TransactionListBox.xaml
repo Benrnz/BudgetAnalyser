@@ -84,7 +84,8 @@
             </MenuItem.Header>
         </MenuItem>
     </ContextMenu>
-
+   
+    
 
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type statement:Transaction}">

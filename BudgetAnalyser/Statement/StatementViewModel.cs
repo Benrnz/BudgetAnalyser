@@ -16,17 +16,23 @@ namespace BudgetAnalyser.Statement
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly StatementController statementController;
 
         private string doNotUseBucketFilter;
 
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
-        private ObservableCollection<TransactionGroupedByBucket> doNotUseGroupedByBucket;
+        private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
 
-        public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public StatementViewModel([NotNull] StatementController controller, [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
+            if (controller == null)
+            {
+                throw new ArgumentNullException("controller");
+            }
+
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
@@ -34,6 +40,7 @@ namespace BudgetAnalyser.Statement
 
             this.budgetBucketRepository = budgetBucketRepository;
             this.doNotUseSortByDate = true;
+            this.statementController = controller;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -136,7 +143,7 @@ namespace BudgetAnalyser.Statement
             get { return BudgetBuckets.Union(new[] { UncategorisedFilter }).OrderBy(b => b); }
         }
 
-        public ObservableCollection<TransactionGroupedByBucket> GroupedByBucket
+        public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
         {
             get { return this.doNotUseGroupedByBucket; }
             private set
@@ -202,15 +209,6 @@ namespace BudgetAnalyser.Statement
                 }
 
                 OnPropertyChanged();
-                UpdateGroupedByBucket();
-            }
-        }
-
-        private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
-            if (propertyChangedEventArgs.PropertyName == "Transactions")
-            {
                 UpdateGroupedByBucket();
             }
         }
@@ -346,17 +344,17 @@ namespace BudgetAnalyser.Statement
         {
             if (SortByBucket)
             {
-                IEnumerable<TransactionGroupedByBucket> query = Statement.Transactions
+                IEnumerable<TransactionGroupedByBucketViewModel> query = Statement.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
-                    .Select(group => new TransactionGroupedByBucket(group, group.Key));
-                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucket>(query);
+                    .Select(group => new TransactionGroupedByBucketViewModel(group, group.Key, this.statementController));
+                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(query);
                 BucketFilter = string.Empty;
             }
             else
             {
                 // Do it later - its not shown right now.
-                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucket>();
+                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
             }
         }
 
@@ -367,6 +365,15 @@ namespace BudgetAnalyser.Statement
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            // Caters for deleting a transaction. Could be more efficient if it becomes a problem.
+            if (propertyChangedEventArgs.PropertyName == "Transactions")
+            {
+                UpdateGroupedByBucket();
             }
         }
     }

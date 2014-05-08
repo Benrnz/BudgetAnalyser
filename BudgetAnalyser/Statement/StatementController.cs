@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("demoFileHelper");
             }
 
-            ViewModel = new StatementViewModel(budgetBucketRepository);
+            ViewModel = new StatementViewModel(this, budgetBucketRepository);
             this.uiContext = uiContext;
             this.statementFileManager = statementFileManager;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };

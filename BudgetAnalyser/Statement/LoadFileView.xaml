@@ -43,7 +43,7 @@
                           Margin="3">
                     <GroupBox.Header>
                         <TextBlock Margin="3"
-                                   Text="Account Name"
+                                   Text="Source Account Name"
                                    ToolTip="{Binding AccountNameHelp}" />
                     </GroupBox.Header>
                     <StackPanel>
