@@ -97,7 +97,6 @@ namespace BudgetAnalyser.Statement
 
             set
             {
-                // TODO Change to a multi-select drop down and allow one or many buckets to be selected.
                 this.doNotUseBucketFilter = value;
                 OnPropertyChanged();
                 TriggerRefreshTotalsRow();
@@ -312,6 +311,11 @@ namespace BudgetAnalyser.Statement
         public decimal TotalDifference
         {
             get { return TotalCredits + TotalDebits; }
+        }
+
+        public void TriggerRefreshBucketFilter()
+        {
+            OnPropertyChanged("BucketFilter");
         }
 
         public void TriggerRefreshTotalsRow()

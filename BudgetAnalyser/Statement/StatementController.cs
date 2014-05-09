@@ -504,6 +504,7 @@ namespace BudgetAnalyser.Statement
 
             ViewModel.Statement.Filter(message.Criteria);
             ViewModel.TriggerRefreshTotalsRow();
+            ViewModel.TriggerRefreshBucketFilter();
         }
 
         private void OnMergeStatementCommandExecute()

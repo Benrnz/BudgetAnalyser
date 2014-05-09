@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Statement
             get { return (StatementController)DataContext; }
         }
 
-        private void ApplyFilter()
+        private void ApplyBucketFilter()
         {
             ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.ViewModel.Statement.Transactions);
             if (string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            ApplyFilter();
+            ApplyBucketFilter();
         }
 
         private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -123,14 +123,14 @@ namespace BudgetAnalyser.Statement
 
         private void OnTransactionsChanged(TransactionsChangedMessage message)
         {
-            ApplyFilter();
+            ApplyBucketFilter();
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "BucketFilter")
             {
-                ApplyFilter();
+                ApplyBucketFilter();
             }
         }
     }
