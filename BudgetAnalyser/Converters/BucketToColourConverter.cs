@@ -11,17 +11,17 @@ namespace BudgetAnalyser.Converters
         {
             if (value is SpentMonthlyExpenseBucket)
             {
-                return ConverterHelper.DebitBackground1Brush;
+                return ConverterHelper.SpentMonthlyBucketBrush;
             }
 
             if (value is SavedUpForExpenseBucket)
             {
-                return ConverterHelper.DebitBackground2Brush;
+                return ConverterHelper.AccumulatedBucketBrush;
             }
 
             if (value is IncomeBudgetBucket)
             {
-                return ConverterHelper.CreditBackground1Brush;
+                return ConverterHelper.IncomeBucketBrush;
             }
 
             return ConverterHelper.NeutralNumberBackgroundBrush;
