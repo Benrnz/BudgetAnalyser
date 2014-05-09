@@ -4,7 +4,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="..\UI\Assets\PieChart.png"
         Title="Current Month Burndown Graphs"
-        ResizeMode="NoResize"
         Width="580">
 
     <Window.Resources>
