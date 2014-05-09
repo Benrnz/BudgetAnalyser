@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
@@ -7,7 +8,7 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC]
     public class DataBudgetModelToBudgetModelMapper
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Prefered usage with IoC")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
         public BudgetModel Map([NotNull] DataBudgetModel data)
         {
             if (data == null)

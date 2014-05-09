@@ -65,8 +65,8 @@ namespace BudgetAnalyser.Engine.Reports
             this.actualSpending = null;
 
             Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(beginDate);
-            var earliestDate = beginDate;
-            var latestDate = chartData.Keys.Max(k => k);
+            DateTime earliestDate = beginDate;
+            DateTime latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
 
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
@@ -155,7 +155,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     budgetTotal += bucketsCopy.Sum(bucket =>
                     {
-                        var ledgerBal = GetLedgerBalance(applicableLine, bucket);
+                        decimal ledgerBal = GetLedgerBalance(applicableLine, bucket);
                         if (ledgerBal < 0)
                         {
                             // The Ledger line might not actually have a ledger for the given bucket.

@@ -14,10 +14,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public decimal Amount
         {
-            get
-            {
-                return this.doNotUseAmount;
-            }
+            get { return this.doNotUseAmount; }
             set
             {
                 if (value == this.doNotUseAmount)
@@ -30,6 +27,19 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public BudgetBucket Bucket { get; set; }
+
+        public string Summary
+        {
+            get
+            {
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    "{0} {1}: {2}",
+                    Bucket.TypeDescription.AnOrA(true),
+                    EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
+                    Bucket.Description);
+            }
+        }
 
         public static bool operator ==(BudgetItem left, BudgetItem right)
         {
@@ -73,19 +83,6 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
-        }
-
-        public string Summary
-        {
-            get
-            {
-                return string.Format(
-                    CultureInfo.CurrentCulture, 
-                    "{0} {1}: {2}", 
-                    Bucket.TypeDescription.AnOrA(properCase: true),
-                    EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name), 
-                    Bucket.Description);
-            }
         }
 
         [NotifyPropertyChangedInvocator]

@@ -50,6 +50,41 @@ namespace BudgetAnalyser.Engine.Ledger
             return book;
         }
 
+        private static List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
+        {
+            var list = new List<LedgerTransaction>();
+            foreach (DataLedgerTransaction dataTransaction in dataTransactions)
+            {
+                if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
+                {
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
+                        dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
+                }
+
+                Type transactionType = Type.GetType(dataTransaction.TransactionType);
+                if (transactionType == null)
+                {
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
+                        dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
+                }
+
+                var transaction = Activator.CreateInstance(transactionType, dataTransaction.Id) as LedgerTransaction;
+                if (transaction == null)
+                {
+                    throw new FileFormatException("Invalid transaction type encountered: " + dataTransaction.TransactionType);
+                }
+
+                transaction.Credit = dataTransaction.Credit;
+                transaction.Debit = dataTransaction.Debit;
+                transaction.Narrative = dataTransaction.Narrative;
+                list.Add(transaction);
+            }
+
+            return list;
+        }
+
         private LedgerEntry MapEntry(DataLedgerEntry dataEntry, LedgerEntry previousEntry)
         {
             var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry);
@@ -105,39 +140,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return listOfLines.ToList();
-        }
-
-        private static List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
-        {
-            var list = new List<LedgerTransaction>();
-            foreach (DataLedgerTransaction dataTransaction in dataTransactions)
-            {
-                if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
-                {
-                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
-                        dataTransaction.Credit - dataTransaction.Debit));
-                }
-
-                Type transactionType = Type.GetType(dataTransaction.TransactionType);
-                if (transactionType == null)
-                {
-                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}", dataTransaction.Narrative,
-                        dataTransaction.Credit - dataTransaction.Debit));
-                }
-
-                var transaction = Activator.CreateInstance(transactionType, dataTransaction.Id) as LedgerTransaction;
-                if (transaction == null)
-                {
-                    throw new FileFormatException("Invalid transaction type encountered: " + dataTransaction.TransactionType);
-                }
-
-                transaction.Credit = dataTransaction.Credit;
-                transaction.Debit = dataTransaction.Debit;
-                transaction.Narrative = dataTransaction.Narrative;
-                list.Add(transaction);
-            }
-
-            return list;
         }
     }
 }

@@ -9,9 +9,9 @@ namespace BudgetAnalyser.Engine.Widget
 {
     public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
+        private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
         private StatementModel statement;
-        private readonly string standardStyle;
 
         protected RemainingBudgetBucketWidget()
         {
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Widget
 
             Visibility = true;
             decimal totalBudget = MonthlyBudgetAmount()
-                                      *Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
+                                  * Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Widget
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
 
-            if (remainingBudget < 0.2M*totalBudget)
+            if (remainingBudget < 0.2M * totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }

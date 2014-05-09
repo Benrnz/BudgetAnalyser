@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -19,7 +20,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetModelMapper = budgetModelMapper;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom Collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom Collection")]
         public BudgetCollection Map([NotNull] DataBudgetCollection budgetCollection)
         {
             if (budgetCollection == null)

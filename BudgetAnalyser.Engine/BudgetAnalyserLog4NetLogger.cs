@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
@@ -21,7 +22,7 @@ namespace BudgetAnalyser.Engine
         private readonly ILog log4NetLogger = LogManager.GetLogger("Budget Analyser Diagnostic Log");
         private bool disposed = false;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed, ok here, required for testing")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here, required for testing")]
         public BudgetAnalyserLog4NetLogger()
         {
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor

@@ -262,10 +262,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            Parallel.ForEach(AllTransactions, transaction =>
-            {
-                transaction.PropertyChanged += OnTransactionPropertyChanged;
-            });
+            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
         }
 
         private void UnsubscribeToTransactionChangedEvents()
@@ -275,10 +272,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            Parallel.ForEach(AllTransactions, transaction =>
-            {
-                transaction.PropertyChanged -= OnTransactionPropertyChanged;
-            });
+            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
         }
     }
 }

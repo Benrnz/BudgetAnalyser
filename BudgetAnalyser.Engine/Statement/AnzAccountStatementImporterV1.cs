@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.Statement
                 transactions.Add(transaction);
             }
 
-            var statement = new StatementModel(this.logger)
+            StatementModel statement = new StatementModel(this.logger)
             {
                 FileName = fileName,
                 Imported = DateTime.Now,

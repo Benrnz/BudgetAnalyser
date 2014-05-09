@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -13,7 +14,7 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BudgetCollection budgets;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
             if (budgets == null)
@@ -36,7 +37,7 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
-        /// Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel"/>.
+        ///     Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel" />.
         /// </summary>
         public bool BudgetActive
         {
@@ -57,7 +58,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             get
             {
-                int myIndex = budgets.IndexOf(Model);
+                int myIndex = this.budgets.IndexOf(Model);
                 if (myIndex == 0)
                 {
                     // There is no superceding budget, so this budget is effective indefinitely.

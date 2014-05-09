@@ -113,6 +113,17 @@ namespace BudgetAnalyser.Engine.Ledger
             return newLine;
         }
 
+        public LedgerEntryLine UnlockMostRecentLine()
+        {
+            LedgerEntryLine line = DatedEntries.FirstOrDefault();
+            if (line != null)
+            {
+                line.Unlock();
+            }
+
+            return line;
+        }
+
         public bool Validate([NotNull] StringBuilder validationMessages)
         {
             if (validationMessages == null)
@@ -196,10 +207,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
             {
-                var uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                IEnumerable<Transaction> uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
                 int count = 0;
                 this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
-                foreach (var transaction in uncategorised)
+                foreach (Transaction transaction in uncategorised)
                 {
                     count++;
                     Transaction transactionCopy = transaction;
@@ -212,17 +223,6 @@ namespace BudgetAnalyser.Engine.Ledger
 
                 throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.");
             }
-        }
-
-        public LedgerEntryLine UnlockMostRecentLine()
-        {
-            var line = DatedEntries.FirstOrDefault();
-            if (line != null)
-            {
-                line.Unlock();
-            }
-
-            return line;
         }
     }
 }

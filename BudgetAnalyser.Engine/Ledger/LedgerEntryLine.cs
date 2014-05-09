@@ -16,15 +16,15 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
+        private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
+        private List<LedgerEntry> entries = new List<LedgerEntry>();
+
         /// <summary>
         ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
         ///     loading from file.
         ///     This variable is intentionally not persisted.
         /// </summary>
         private bool isNew;
-
-        private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
-        private List<LedgerEntry> entries = new List<LedgerEntry>();
 
         /// <summary>
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />. This constructor is used by deserialisation.
@@ -159,9 +159,13 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Called by <see cref="LedgerBook.Reconcile"/>. It builds the contents of the new ledger line based on budget and statement input.
+        ///     Called by <see cref="LedgerBook.Reconcile" />. It builds the contents of the new ledger line based on budget and
+        ///     statement input.
         /// </summary>
-        /// <param name="previousEntries">A collection of previous <see cref="LedgerEntry"/>s to construct the running balance for the entries this line contains.</param>
+        /// <param name="previousEntries">
+        ///     A collection of previous <see cref="LedgerEntry" />s to construct the running balance for
+        ///     the entries this line contains.
+        /// </param>
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
         /// <param name="startDateIncl">The date for this ledger line.</param>
@@ -213,6 +217,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return this;
         }
 
+        internal void Unlock()
+        {
+            this.isNew = true;
+        }
+
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
         {
             if (!filteredStatementTransactions.Any())
@@ -233,11 +242,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return new List<LedgerTransaction>();
-        }
-
-        internal void Unlock()
-        {
-            this.isNew = true;
         }
     }
 }

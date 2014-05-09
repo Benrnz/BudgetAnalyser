@@ -114,13 +114,13 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Called by <see cref="LedgerBook.Reconcile"/>. Sets up this new Entry with transactions.
-        /// ALSO USED BY Persistence.
+        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
+        ///     ALSO USED BY Persistence.
         /// </summary>
         /// <param name="newTransactions">The list of new transactions for this entry.</param>
         /// <param name="reconciliationMode">
-        /// Set this to true if performing a reconciliation and as a result adding this new Entry.
-        /// Set this to false, default, when rehydrating from file.
+        ///     Set this to true if performing a reconciliation and as a result adding this new Entry.
+        ///     Set this to false, default, when rehydrating from file.
         /// </param>
         internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions, bool reconciliationMode = false)
         {

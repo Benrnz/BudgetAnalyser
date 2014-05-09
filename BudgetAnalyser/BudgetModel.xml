@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <DataBudgetCollection FileName="C:\Temp\BudgetModel.xml"
                       xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                       xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"

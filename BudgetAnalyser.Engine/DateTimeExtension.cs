@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine
     {
         public static int DurationInMonths(this DateTime minDate, DateTime maxDate)
         {
-            var durationInMonths = (int)Math.Round(maxDate.Subtract(minDate).TotalDays/30, 0);
+            var durationInMonths = (int)Math.Round(maxDate.Subtract(minDate).TotalDays / 30, 0);
             if (durationInMonths <= 0)
             {
                 durationInMonths = 1;

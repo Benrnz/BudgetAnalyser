@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             bool matchesOccured = false;
-            var copyOfRules = rules.ToList();
+            List<MatchingRule> copyOfRules = rules.ToList();
             foreach (Transaction transaction in transactions)
             {
                 if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
@@ -46,7 +46,10 @@ namespace BudgetAnalyser.Engine.Matching
                             transaction.BudgetBucket = rule.Bucket;
                             matchesOccured = true;
                             Transaction loggedTransaction = transaction;
-                            this.logger.LogInfo(() => this.logger.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount, loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
+                            this.logger.LogInfo(
+                                () =>
+                                    this.logger.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount,
+                                        loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
                         }
                     }
                 }

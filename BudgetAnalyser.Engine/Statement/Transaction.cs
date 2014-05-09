@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
@@ -142,12 +143,13 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction"/>.
-        /// <see cref="Object.GetHashCode"/> cannot be used because it is intended to show instance reference equivalence. It will
-        /// give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with 
-        /// UI controls such as ListBox.
+        ///     Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction" />.
+        ///     <see cref="Object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It
+        ///     will
+        ///     give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with
+        ///     UI controls such as ListBox.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification="Following GetHashCode")]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Following GetHashCode")]
         public int GetEqualityHashCode()
         {
             unchecked

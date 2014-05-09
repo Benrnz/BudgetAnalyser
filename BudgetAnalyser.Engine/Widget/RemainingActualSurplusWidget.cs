@@ -10,10 +10,10 @@ namespace BudgetAnalyser.Engine.Widget
 {
     public class RemainingActualSurplusWidget : ProgressBarWidget
     {
-        private StatementModel statement;
+        private readonly string standardStyle;
         private GlobalFilterCriteria filter;
         private LedgerBook ledgerBook;
-        private string standardStyle;
+        private StatementModel statement;
 
         public RemainingActualSurplusWidget()
         {
@@ -48,13 +48,13 @@ namespace BudgetAnalyser.Engine.Widget
             }
 
             Visibility = true;
-            var openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
-            var remainingBalance = openingBalance + CalculateSurplusSpend(this.statement);
+            decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
+            decimal remainingBalance = openingBalance + CalculateSurplusSpend(this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
             Value = Convert.ToDouble(remainingBalance);
             Minimum = 0;
-            if (remainingBalance < 0.2M*openingBalance)
+            if (remainingBalance < 0.2M * openingBalance)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Widget
 
         private static decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
         {
-            var line = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filter);
+            LedgerEntryLine line = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filter);
             return line == null ? 0 : line.CalculatedSurplus;
         }
 

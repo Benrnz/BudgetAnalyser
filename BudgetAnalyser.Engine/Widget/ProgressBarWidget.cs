@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.Engine.Widget
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BudgetAnalyser.Engine.Widget
 {
     public abstract class ProgressBarWidget : Widget
     {
@@ -26,7 +28,7 @@
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification="Required for Data binding")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for Data binding")]
         public bool ProgressBarVisibility
         {
             get { return true; }

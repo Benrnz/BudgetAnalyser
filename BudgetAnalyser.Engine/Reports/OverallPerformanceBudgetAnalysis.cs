@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
@@ -14,7 +15,7 @@ namespace BudgetAnalyser.Engine.Reports
         private readonly BudgetCollection budgets;
         private readonly StatementModel statement;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public OverallPerformanceBudgetAnalysis([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (statement == null)
@@ -73,7 +74,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             List<BudgetModel> budgetsInvolved = this.budgets.ForDates(beginDate, endDate).ToList();
             UsesMultipleBudgets = budgetsInvolved.Count() > 1;
-            BudgetModel currentBudget = budgetsInvolved.Last();  // Use most recent budget as the current
+            BudgetModel currentBudget = budgetsInvolved.Last(); // Use most recent budget as the current
 
             DurationInMonths = StatementModel.CalculateDuration(criteria, this.statement.Transactions);
 
@@ -98,7 +99,7 @@ namespace BudgetAnalyser.Engine.Reports
                         TotalSpent = -totalSpent,
                         Balance = budgetedTotal - totalSpent,
                         BudgetTotal = budgetedTotal,
-                        Budget = perMonthBudget, 
+                        Budget = perMonthBudget,
                         AverageSpend = -averageSpend,
                         BudgetComparedToAverage = string.Format(CultureInfo.CurrentCulture, "Budget per Month: {0:C}, Actual per Month: {1:C}", perMonthBudget, -averageSpend)
                     };
@@ -240,12 +241,12 @@ namespace BudgetAnalyser.Engine.Reports
             AverageSpend = totalExpensesSpend / DurationInMonths; // Expected to be negative
             AverageSurplus = totalSurplusSpend / DurationInMonths; // Expected to be negative
 
-            for (var month = 0; month < DurationInMonths; month++)
+            for (int month = 0; month < DurationInMonths; month++)
             {
-                var budget = this.budgets.ForDate(beginDate.AddMonths(month));
-                TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);    
+                BudgetModel budget = this.budgets.ForDate(beginDate.AddMonths(month));
+                TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);
             }
-            
+
             OverallPerformance = AverageSpend + TotalBudgetExpenses;
         }
     }

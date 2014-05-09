@@ -9,13 +9,10 @@ namespace BudgetAnalyser.Engine.Matching
             RuleId = Guid.NewGuid();
         }
 
-        public DateTime? Created { get; set; }
-
-        public Guid? RuleId { get; set; }
-
         public decimal? Amount { get; set; }
 
         public string BucketCode { get; set; }
+        public DateTime? Created { get; set; }
 
         public string Description { get; set; }
 
@@ -28,6 +25,7 @@ namespace BudgetAnalyser.Engine.Matching
         public string Reference2 { get; set; }
 
         public string Reference3 { get; set; }
+        public Guid? RuleId { get; set; }
 
         public string TransactionType { get; set; }
     }

@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Widget
     public class RemainingFuelWidget : RemainingBudgetBucketWidget
     {
         private LedgerBook ledgerBook;
-        
+
         public RemainingFuelWidget()
         {
             DetailedText = "Fuel";

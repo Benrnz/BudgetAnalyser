@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Reports;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetModelMapper = budgetModelMapper;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public DataBudgetCollection Map([NotNull] BudgetCollection budgetCollection)
         {
             if (budgetCollection == null)
@@ -37,27 +37,27 @@ namespace BudgetAnalyser.Engine.Budget
 
             // Rationalise the buckets to ensure the same object is used for repeated uses of the same bucket. Only one bucket can exist with each unique code.
             var bucketRegister = new Dictionary<string, BudgetBucket>();
-            foreach (var model in collection.Budgets)
+            foreach (DataBudgetModel model in collection.Budgets)
             {
-                foreach (var income in model.Incomes)
+                foreach (Income income in model.Incomes)
                 {
                     IncludeBucket(bucketRegister, income.Bucket);
                 }
 
-                foreach (var expense in model.Expenses)
+                foreach (Expense expense in model.Expenses)
                 {
                     IncludeBucket(bucketRegister, expense.Bucket);
                 }
             }
 
-            foreach (var model in collection.Budgets)
+            foreach (DataBudgetModel model in collection.Budgets)
             {
-                foreach (var income in model.Incomes)
+                foreach (Income income in model.Incomes)
                 {
                     income.Bucket = bucketRegister[income.Bucket.Code];
                 }
 
-                foreach (var expense in model.Expenses)
+                foreach (Expense expense in model.Expenses)
                 {
                     expense.Bucket = bucketRegister[expense.Bucket.Code];
                 }

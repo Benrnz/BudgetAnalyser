@@ -7,6 +7,17 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public static class LedgerCalculation
     {
+        public static decimal LocateApplicableLedgerBalance(LedgerBook ledgerBook, GlobalFilterCriteria filter, string bucketCode)
+        {
+            LedgerEntryLine line = LocateApplicableLedgerLine(ledgerBook, filter);
+            if (line == null)
+            {
+                return 0;
+            }
+
+            return (from ledgerEntry in line.Entries where ledgerEntry.Ledger.BudgetBucket.Code == bucketCode select ledgerEntry.Balance).FirstOrDefault();
+        }
+
         public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
         {
             if (ledgerBook == null)
@@ -33,17 +44,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return line;
-        }
-
-        public static decimal LocateApplicableLedgerBalance(LedgerBook ledgerBook, GlobalFilterCriteria filter, string bucketCode)
-        {
-            var line = LocateApplicableLedgerLine(ledgerBook, filter);
-            if (line == null)
-            {
-                return 0;
-            }
-
-            return (from ledgerEntry in line.Entries where ledgerEntry.Ledger.BudgetBucket.Code == bucketCode select ledgerEntry.Balance).FirstOrDefault();
         }
     }
 }

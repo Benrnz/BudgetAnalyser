@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Reports
 {
     /// <summary>
-    /// A Data Transfer Object to contain the output of a bucket spending analysis.
+    ///     A Data Transfer Object to contain the output of a bucket spending analysis.
     /// </summary>
     public class BucketPerformanceAnalysis
     {
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         public double Percent
         {
-            get { return (double)Math.Round(TotalSpent/BudgetTotal, 2); }
+            get { return (double)Math.Round(TotalSpent / BudgetTotal, 2); }
         }
 
         public string Summary

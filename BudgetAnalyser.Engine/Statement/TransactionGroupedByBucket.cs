@@ -19,8 +19,6 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public BudgetBucket Bucket { get; private set; }
-
         public decimal AverageDebit
         {
             get
@@ -39,6 +37,8 @@ namespace BudgetAnalyser.Engine.Statement
                 return 0;
             }
         }
+
+        public BudgetBucket Bucket { get; private set; }
 
         public bool HasTransactions
         {

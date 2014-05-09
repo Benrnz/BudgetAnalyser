@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
@@ -23,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widget
         private bool doNotUseVisibility;
         private string doNotUseWidgetStyle;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         protected Widget()
         {
             Name = GetType().Name;

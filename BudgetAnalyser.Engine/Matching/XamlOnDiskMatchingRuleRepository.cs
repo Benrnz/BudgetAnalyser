@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xaml;
@@ -36,7 +37,7 @@ namespace BudgetAnalyser.Engine.Matching
             return File.Exists(fileName);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataMatchingRule")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataMatchingRule")]
         public IEnumerable<MatchingRule> LoadRules(string fileName)
         {
             if (!Exists(fileName))

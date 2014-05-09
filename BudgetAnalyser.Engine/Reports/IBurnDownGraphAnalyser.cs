@@ -13,10 +13,11 @@ namespace BudgetAnalyser.Engine.Reports
         IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine { get; }
         decimal NetWorth { get; }
         IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; }
+
         void Analyse(
-            StatementModel statementModel, 
+            StatementModel statementModel,
             BudgetModel budgetModel,
-            IEnumerable<BudgetBucket> bucketsSubset, 
+            IEnumerable<BudgetBucket> bucketsSubset,
             DateTime beginDate,
             LedgerBook ledgerBook);
     }

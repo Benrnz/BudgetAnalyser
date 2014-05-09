@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine
                         }
                     }
 
-                    var commandLine = string.Format(
+                    string commandLine = string.Format(
                         CultureInfo.CurrentCulture,
                         "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\"",
                         FileName,
@@ -101,7 +101,7 @@ namespace BudgetAnalyser.Engine
                         RedirectStandardError = false,
                         RedirectStandardOutput = false,
                     };
-                    var process = Process.Start(processInfo);
+                    Process process = Process.Start(processInfo);
                     process.WaitForExit(5000);
                     this.logger.LogInfo(() => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
                 });

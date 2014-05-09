@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Statement
     [Serializable]
     public class StatementModelChecksumException : Exception
     {
-        public StatementModelChecksumException() : base()
+        public StatementModelChecksumException()
         {
         }
 

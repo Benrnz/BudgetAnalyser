@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Xaml;
@@ -41,7 +42,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection CreateNew([NotNull] string fileName)
         {
             if (fileName == null)
@@ -65,7 +66,7 @@ namespace BudgetAnalyser.Engine.Budget
             return newCollection;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection Load(string fileName)
         {
             if (!FileExists(fileName))
@@ -80,7 +81,8 @@ namespace BudgetAnalyser.Engine.Budget
             }
             catch (XamlObjectWriterException ex)
             {
-                throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName), ex);
+                throw new FileFormatException(
+                    string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName), ex);
             }
             catch (Exception ex)
             {
@@ -94,20 +96,20 @@ namespace BudgetAnalyser.Engine.Budget
                     string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", fileName));
             }
 
-            var correctFormat = this.toDomainMapper.Map(correctDataFormat);
+            BudgetCollection correctFormat = this.toDomainMapper.Map(correctDataFormat);
             correctFormat.FileName = fileName;
             BudgetBucketRepository.Initialise(correctFormat);
             return correctFormat;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public void Save(BudgetCollection budget)
         {
-            var dataFormat = this.toDataMapper.Map(budget);
+            DataBudgetCollection dataFormat = this.toDataMapper.Map(budget);
             string serialised = Serialise(dataFormat);
             WriteToDisk(dataFormat.FileName, serialised);
 
-            var handler = ApplicationEvent;
+            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
                 handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "BudgetRepository", ApplicationHookEventArgs.Save));

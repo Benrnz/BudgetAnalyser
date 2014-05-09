@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Budget
                 validationMessages.AppendFormat("Expense with Amount {0:C} is invalid, Description can not be blank.", Amount);
                 retval = false;
             }
-            
+
             return retval;
         }
     }

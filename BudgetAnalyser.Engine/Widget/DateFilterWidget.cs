@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -6,10 +7,10 @@ namespace BudgetAnalyser.Engine.Widget
 {
     public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {
-        private string doNotUseImageResourceName2;
         private readonly string standardStyleName;
+        private string doNotUseImageResourceName2;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification="Reviewed ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed ok here")]
         public DateFilterWidget()
         {
             Category = "Global Filter";

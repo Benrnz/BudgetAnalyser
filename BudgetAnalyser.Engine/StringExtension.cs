@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace BudgetAnalyser.Engine
 {
     public static class StringExtension
     {
-        private static char[] Vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'A','E', 'I', 'O', 'U' };
+        private static readonly char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
 
         public static string AnOrA(this string instance, bool properCase = false)
         {
@@ -53,7 +54,7 @@ namespace BudgetAnalyser.Engine
             return instance.Substring(0, truncateToLength);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification="This is the simplest approach.")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification = "This is the simplest approach.")]
         public static string Truncate(this string instance, int truncateToLength, ref bool isEmpty, bool useEllipses = false, string prefix = null)
         {
             if (string.IsNullOrWhiteSpace(instance))

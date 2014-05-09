@@ -14,12 +14,12 @@ namespace BudgetAnalyser.Engine
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public GlobalFilterCriteria()
         {
             this.doNotUseCleared = true;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public AccountType AccountType
         {
