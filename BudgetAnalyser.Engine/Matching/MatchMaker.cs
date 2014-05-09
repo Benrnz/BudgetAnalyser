@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 
@@ -34,12 +35,12 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             bool matchesOccured = false;
-            List<MatchingRule> copyOfRules = rules.ToList();
-            foreach (Transaction transaction in transactions)
+            this.logger.LogInfo(() => this.logger.Format("Matchmaker: Matching operation started."));
+            Parallel.ForEach(transactions, transaction =>
             {
                 if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
                 {
-                    foreach (MatchingRule rule in copyOfRules)
+                    foreach (MatchingRule rule in rules.ToList())
                     {
                         if (rule.Match(transaction))
                         {
@@ -53,8 +54,9 @@ namespace BudgetAnalyser.Engine.Matching
                         }
                     }
                 }
-            }
+            });
 
+            this.logger.LogInfo(() => this.logger.Format("Matchmaker: Matching operation finished."));
             return matchesOccured;
         }
     }
