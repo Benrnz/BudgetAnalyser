@@ -23,7 +23,7 @@ namespace BudgetAnalyser
     ///     Controllers required by the <see cref="ShellController" /> grouped together for convenience.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class UiContext
+    public class UiContext : IUiContext
     {
         private List<ControllerBase> controllers;
 

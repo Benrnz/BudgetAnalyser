@@ -33,17 +33,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new Expense
                 {
                     Amount = 95M,
-                    Bucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
                 }, 
                 new Expense
                 {
                     Amount = 55M,
-                    Bucket = new SpentMonthlyExpense(TestDataConstants.HairBucketCode, "Hair cuts"),
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
                 },
                 new Expense
                 {
                     Amount = 175M,
-                    Bucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power"),
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
                 }
             });
 
@@ -76,17 +76,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new Expense
                 {
                     Amount = 100M,
-                    Bucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
                 }, 
                 new Expense
                 {
                     Amount = 65M,
-                    Bucket = new SpentMonthlyExpense(TestDataConstants.HairBucketCode, "Hair cuts"),
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
                 },
                 new Expense
                 {
                     Amount = 185M,
-                    Bucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power"),
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
                 }
             });
 

@@ -9,12 +9,12 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is SpentMonthlyExpense)
+            if (value is SpentMonthlyExpenseBucket)
             {
                 return ConverterHelper.DebitBackground1Brush;
             }
 
-            if (value is SavedUpForExpense)
+            if (value is SavedUpForExpenseBucket)
             {
                 return ConverterHelper.DebitBackground2Brush;
             }

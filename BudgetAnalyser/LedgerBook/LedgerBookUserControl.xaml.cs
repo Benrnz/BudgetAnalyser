@@ -110,13 +110,13 @@ namespace BudgetAnalyser.LedgerBook
             {
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
-                Grid.SetColumnSpan(border, ledger.BudgetBucket is SpentMonthlyExpense ? 1 : 2);
+                Grid.SetColumnSpan(border, ledger.BudgetBucket is SpentMonthlyExpenseBucket ? 1 : 2);
                 string tooltip = string.Format(CultureInfo.CurrentCulture, "{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
                 TextBlock ledgerTitle = AddContentToGrid(border, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, tooltip);
                 ledgerTitle.HorizontalAlignment = HorizontalAlignment.Center;
                 column--; // Ledger heading shares a column with other Ledger Headings
 
-                if (!(ledger.BudgetBucket is SpentMonthlyExpense))
+                if (!(ledger.BudgetBucket is SpentMonthlyExpenseBucket))
                 {
                     TextBlock ledgerTxnsHeading = AddContentToGrid(grid, "Txns", ref column, 0, HeadingStyle, "Transactions");
                     ledgerTxnsHeading.Margin = new Thickness(5, 30, 5, 2);
@@ -168,7 +168,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             foreach (var ledger in Controller.LedgerBook.Ledgers)
             {
-                if (ledger.BudgetBucket is SpentMonthlyExpense)
+                if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                 {
                     // Spent Monthly ledgers only have a balance column
                     grid.ColumnDefinitions.Add(new ColumnDefinition { Width = SmallGridWidth });
@@ -214,7 +214,7 @@ namespace BudgetAnalyser.LedgerBook
                         netAmount = entry.NetAmount;
                     }
 
-                    if (ledger.BudgetBucket is SpentMonthlyExpense)
+                    if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                     {
                         AddBorderToGridCell(parent: grid, hasBackground: false, hasBorder: true, column: column, row: row);
                         AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref column, row, NumberStyle, parameter: entry);

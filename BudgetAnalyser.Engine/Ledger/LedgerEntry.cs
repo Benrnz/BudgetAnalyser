@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions, bool reconciliationMode = false)
         {
             this.transactions = newTransactions;
-            if (reconciliationMode && Ledger.BudgetBucket is SpentMonthlyExpense && NetAmount != 0)
+            if (reconciliationMode && Ledger.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
             {
                 // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
                 LedgerTransaction zeroingTransaction = null;

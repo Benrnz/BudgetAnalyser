@@ -14,9 +14,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData1()
         {
-            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
             var book = new LedgerBook("Test Data 1 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
 
@@ -99,9 +99,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData2()
         {
-            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
             var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
 
@@ -188,18 +188,18 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData3()
         {
-            var ratesLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.RatesBucketCode, "Rates ") };
-            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Poo bar") };
-            var waterLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense("WATER", "Poo bar") };
-            var houseInsLedger = new Ledger { BudgetBucket = new SpentMonthlyExpense("INSHOME", "Poo bar") };
-            var carInsLedger = new Ledger { BudgetBucket = new SavedUpForExpense("INSCAR", "Poo bar") };
-            var lifeInsLedger = new Ledger { BudgetBucket = new SavedUpForExpense("INSLIFE", "Poo bar") };
-            var carMtcLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Poo bar") };
-            var regoLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.RegoBucketCode, "") };
-            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpense(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var clothesLedger = new Ledger { BudgetBucket = new SavedUpForExpense("CLOTHES", "") };
-            var docLedger = new Ledger { BudgetBucket = new SavedUpForExpense("DOC", "") };
+            var ratesLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
+            var powerLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var waterLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket("WATER", "Poo bar") };
+            var houseInsLedger = new Ledger { BudgetBucket = new SpentMonthlyExpenseBucket("INSHOME", "Poo bar") };
+            var carInsLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
+            var lifeInsLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
+            var carMtcLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
+            var regoLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
+            var hairLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var clothesLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
+            var docLedger = new Ledger { BudgetBucket = new SavedUpForExpenseBucket("DOC", "") };
 
             var book = new LedgerBook("Smith Budget 2014", new DateTime(2013, 12, 22), @"C:\Foo\SmithLedger2014.xml", new FakeLogger());
 

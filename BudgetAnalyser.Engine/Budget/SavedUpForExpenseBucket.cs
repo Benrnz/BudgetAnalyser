@@ -1,20 +1,20 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
-    public class SpentMonthlyExpense : ExpenseBudgetBucket
+    public class SavedUpForExpenseBucket : ExpenseBudgetBucket
     {
-        public SpentMonthlyExpense()
+        public SavedUpForExpenseBucket()
         {
             // Default constructor required for deserialisation.
         }
 
-        public SpentMonthlyExpense(string code, string name)
+        public SavedUpForExpenseBucket(string code, string name)
             : base(code, name)
         {
         }
 
         public override string TypeDescription
         {
-            get { return "Spent Monthly Expense"; }
+            get { return "Accumulated Expense"; }
         }
     }
 }

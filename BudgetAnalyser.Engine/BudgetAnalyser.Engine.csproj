@@ -96,8 +96,8 @@
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
     <Compile Include="Budget\JournalBucket.cs" />
-    <Compile Include="Budget\SavedUpForExpense.cs" />
-    <Compile Include="Budget\SpentMonthlyExpense.cs" />
+    <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
+    <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
     <Compile Include="IApplicationHookEventPublisher.cs" />

@@ -170,9 +170,9 @@ namespace BudgetAnalyser.UnitTest
 
         private LedgerBook ArrangeAndAct()
         {
-            RatesBucket = new SavedUpForExpense(TestDataConstants.RatesBucketCode, "Foo");
-            CarMtcBucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Foo");
-            RegoBucket = new SavedUpForExpense(TestDataConstants.RegoBucketCode, "Foo");
+            RatesBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Foo");
+            CarMtcBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo");
+            RegoBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "Foo");
 
             var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RatesBucketCode)).Returns(RatesBucket);

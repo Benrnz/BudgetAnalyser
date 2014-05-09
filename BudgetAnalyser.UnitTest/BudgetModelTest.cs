@@ -53,8 +53,8 @@ namespace BudgetAnalyser.UnitTest
 
             var expenses = new List<Expense>
             {
-                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpense("Horse", "Shit") },
-                new Expense { Amount = 9999, Bucket = new SavedUpForExpense("Foo", "Bar") },
+                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
+                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") },
             };
 
             subject.Update(subject.Incomes, expenses);
@@ -69,8 +69,8 @@ namespace BudgetAnalyser.UnitTest
 
             var expenses = new List<Expense>
             {
-                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpense("Horse", "Shit") },
-                new Expense { Amount = 9999, Bucket = new SavedUpForExpense("Foo", "Bar") },
+                new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
+                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") },
             };
 
             subject.Update(subject.Incomes, expenses);

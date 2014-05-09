@@ -2,16 +2,47 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.UnitTest.TestData;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Rees.UserInteraction.Contracts;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.Wpf.UnitTest.Statement
 {
     [TestClass]
     public class StatementViewModelTest
     {
+        private StatementController FakeStatetmentController { get; set; }
+        private Mock<IBudgetBucketRepository> MockBucketRepo { get; set; }
+
+        private Mock<IUiContext> MockUiContext { get; set; }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            MockBucketRepo = new Mock<IBudgetBucketRepository>();
+
+            MockUiContext = new Mock<IUiContext>();
+            // Todo Need message, yesnobox, waitcursorfactory, backgroundjob, appliedrulescontroller
+
+            FakeStatetmentController = new StatementController(
+                MockUiContext.Object, 
+                new Mock<IStatementFileManager>().Object, 
+                MockBucketRepo.Object, 
+                new Mock<IRecentFileManager>().Object, 
+                new DemoFileHelper()
+                );
+        }
+
+        private static IWaitCursor WaitCursorFactory()
+        {
+            return new Mock<IWaitCursor>().Object;
+        }
+
         [TestMethod]
         public void BudgetBucketsShouldIncludeBlank()
         {
@@ -59,14 +90,14 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = new StatementViewModel(new Mock<IBudgetBucketRepository>().Object);
+            var subject = new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object);
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = new StatementViewModel(new Mock<IBudgetBucketRepository>().Object);
+            var subject = new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object);
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
@@ -263,9 +294,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange()
         {
-            var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
-
-            return new StatementViewModel(bucketRepositoryMock.Object)
+            return new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object)
             {
                 Statement = StatementModelTestData.TestData1(),
             };
@@ -273,9 +302,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange2()
         {
-            var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
-
-            return new StatementViewModel(bucketRepositoryMock.Object)
+            return new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object)
             {
                 Statement = StatementModelTestData.TestData2(),
             };

@@ -61,7 +61,9 @@
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
-                            Foreground="{StaticResource Brush.MainBackground}">
+                            Foreground="{StaticResource Brush.MainBackground}"
+                            Margin="10,2,2,2"
+                            Width="12">
                         <Button.Template>
 
                             <ControlTemplate>
@@ -71,6 +73,7 @@
                                                Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
                                                Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
                             </ControlTemplate>
@@ -115,14 +118,17 @@
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
-                            Foreground="{StaticResource Brush.MainBackground}">
+                            Foreground="{StaticResource Brush.MainBackground}"
+                            Margin="10,2,2,2"
+                            Width="12">
                         <Button.Template>
 
                             <ControlTemplate>
                                 <StackPanel x:Name="ContentContainer"
-                                            Background="{StaticResource Brush.CreditBackground1}">
+                                            Background="{Binding Bucket, Converter={StaticResource Converter.BucketToColour}}">
                                     <TextBlock Margin="1"
                                                Text="x"
+                                               HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
@@ -257,7 +263,7 @@
                                Text="New Spent Monthly Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
-                    <budget:SpentMonthlyExpense />
+                    <budget:SpentMonthlyExpenseBucket />
                 </Button.CommandParameter>
             </Button>
             <Button Background="{StaticResource Brush.DebitBackground2}"
@@ -268,7 +274,7 @@
                                Text="New Saved up for Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
-                    <budget:SavedUpForExpense />
+                    <budget:SavedUpForExpenseBucket />
                 </Button.CommandParameter>
             </Button>
         </StackPanel>

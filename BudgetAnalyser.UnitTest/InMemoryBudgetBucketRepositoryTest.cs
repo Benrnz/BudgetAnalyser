@@ -147,7 +147,7 @@ namespace BudgetAnalyser.UnitTest
             var myExpenses = collection.CurrentActiveBudget.Expenses.ToList();
             var myIncomes = collection.CurrentActiveBudget.Incomes.ToList();
 
-            myExpenses.Add(new Expense { Amount = 12.22M, Bucket = new SavedUpForExpense("Foo", "Bar") });
+            myExpenses.Add(new Expense { Amount = 12.22M, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") });
             collection.CurrentActiveBudget.Update(myIncomes, myExpenses);
 
             var builder = new StringBuilder();
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.UnitTest
                 string code = "AAA";
                 try
                 {
-                    typedSubject.GetOrAdd(code, () => new SavedUpForExpense(code, "GFoo 123"));
+                    typedSubject.GetOrAdd(code, () => new SavedUpForExpenseBucket(code, "GFoo 123"));
                 }
                 catch (Exception ex)
                 {

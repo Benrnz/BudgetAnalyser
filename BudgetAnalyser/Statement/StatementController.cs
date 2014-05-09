@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Statement
         private readonly DemoFileHelper demoFileHelper;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
-        private readonly UiContext uiContext;
+        private readonly IUiContext uiContext;
         private Transaction doNotUseSelectedRow;
         private bool doNotUseShown;
         private bool initialised;
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Statement
         private string waitingForBudgetToLoad;
 
         public StatementController(
-            [NotNull] UiContext uiContext,
+            [NotNull] IUiContext uiContext,
             [NotNull] IStatementFileManager statementFileManager,
             [NotNull] IBudgetBucketRepository budgetBucketRepository,
             [NotNull] IRecentFileManager recentFileManager,

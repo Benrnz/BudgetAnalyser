@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Budget
 
         public BudgetPieController BudgetPieController { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -226,7 +226,11 @@ namespace BudgetAnalyser.Budget
 
             set
             {
-                if (value == this.doNotUseShownBudget) return;
+                if (value == this.doNotUseShownBudget)
+                {
+                    return;
+                }
+
                 this.doNotUseShownBudget = value;
                 RaisePropertyChanged(() => Shown);
                 BudgetMenuItemName = this.doNotUseShownBudget ? CloseBudgetMenuName : EditBudgetMenuName;
@@ -270,7 +274,7 @@ namespace BudgetAnalyser.Budget
             return Path.Combine(path, "BudgetModel.xml");
         }
 
-        protected virtual bool SaveToDiskAsXml()
+        protected virtual bool SaveBudgetCollection()
         {
             string input = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
             if (input == null)
@@ -279,6 +283,7 @@ namespace BudgetAnalyser.Budget
             }
 
             CurrentBudget.Model.LastModifiedComment = input;
+            CurrentBudget.Model.LastModified = DateTime.Now;
             this.budgetRepository.Save(Budgets);
             return true;
         }
@@ -359,13 +364,13 @@ namespace BudgetAnalyser.Budget
             this.dirty = true;
             Expense newExpense = Expenses.AddNew();
             newExpense.Amount = 0;
-            if (expense is SpentMonthlyExpense)
+            if (expense is SpentMonthlyExpenseBucket)
             {
-                newExpense.Bucket = new SpentMonthlyExpense(string.Empty, string.Empty);
+                newExpense.Bucket = new SpentMonthlyExpenseBucket(string.Empty, string.Empty);
             }
-            else if (expense is SavedUpForExpense)
+            else if (expense is SavedUpForExpenseBucket)
             {
-                newExpense.Bucket = new SavedUpForExpense(string.Empty, string.Empty);
+                newExpense.Bucket = new SavedUpForExpenseBucket(string.Empty, string.Empty);
             }
             else
             {
@@ -423,7 +428,8 @@ namespace BudgetAnalyser.Budget
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)
         {
-            var response = this.questionBox.Show("Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.", "Delete Budget Bucket");
+            bool? response = this.questionBox.Show("Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.",
+                "Delete Budget Bucket");
             if (response == null || response.Value == false)
             {
                 return;
@@ -552,7 +558,7 @@ namespace BudgetAnalyser.Budget
                 return false;
             }
 
-            if (SaveToDiskAsXml())
+            if (SaveBudgetCollection())
             {
                 this.dirty = false;
                 return true;

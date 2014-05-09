@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest
     public class StatementModelTest
     {
         private readonly AccountType cheque = new ChequeAccount("Cheque");
-        private readonly BudgetBucket expense1 = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, string.Empty);
+        private readonly BudgetBucket expense1 = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, string.Empty);
         private readonly BudgetBucket income = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, string.Empty);
         private readonly BudgetBucket surplus = new SurplusBucket();
         private readonly TransactionType transactionType = new NamedTransaction("Something");

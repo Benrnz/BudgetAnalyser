@@ -58,7 +58,7 @@ namespace BudgetAnalyser.UnitTest
         public void MustBeAnIncomeBucket()
         {
             var subject = CreateSubject();
-            subject.Bucket = new SavedUpForExpense("Foo", "Bar");
+            subject.Bucket = new SavedUpForExpenseBucket("Foo", "Bar");
 
             var result = subject.Validate(Logs);
 

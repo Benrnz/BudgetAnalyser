@@ -11,11 +11,11 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public static readonly ChequeAccount ChequeAccount = new ChequeAccount("Cheque");
         public static readonly VisaAccount VisaAccount = new VisaAccount("Visa");
-        public static readonly SpentMonthlyExpense PowerBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Power");
-        public static readonly SpentMonthlyExpense PhoneBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Phone");
-        public static readonly SpentMonthlyExpense HairBucket = new SpentMonthlyExpense(TestDataConstants.HairBucketCode, "Haircuts");
-        public static readonly SpentMonthlyExpense RegoBucket = new SpentMonthlyExpense(TestDataConstants.RegoBucketCode, "Car registratios");
-        public static readonly SpentMonthlyExpense CarMtcBucket = new SpentMonthlyExpense(TestDataConstants.CarMtcBucketCode, "Car Maintenance");
+        public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
+        public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
+        public static readonly SpentMonthlyExpenseBucket HairBucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Haircuts");
+        public static readonly SpentMonthlyExpenseBucket RegoBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RegoBucketCode, "Car registratios");
+        public static readonly SpentMonthlyExpenseBucket CarMtcBucket = new SpentMonthlyExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car Maintenance");
         public static readonly NamedTransaction TransactionType = new NamedTransaction("Bill Payment");
         public static readonly IncomeBudgetBucket IncomeBucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Salary");
 

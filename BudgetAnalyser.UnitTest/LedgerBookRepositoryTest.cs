@@ -127,12 +127,12 @@ namespace BudgetAnalyser.UnitTest
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()
         {
-            RatesBucket = new SavedUpForExpense(TestDataConstants.RatesBucketCode, "Foo");
-            CarMtcBucket = new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Foo");
-            RegoBucket = new SavedUpForExpense(TestDataConstants.RegoBucketCode, "Foo");
-            HairBucket = new SavedUpForExpense(TestDataConstants.HairBucketCode, "Foo");
-            PhoneBucket = new SpentMonthlyExpense(TestDataConstants.PhoneBucketCode, "Foo");
-            PowerBucket = new SpentMonthlyExpense(TestDataConstants.PowerBucketCode, "Foo");
+            RatesBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Foo");
+            CarMtcBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo");
+            RegoBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "Foo");
+            HairBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Foo");
+            PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo");
+            PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Foo");
 
             var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RatesBucketCode)).Returns(RatesBucket);

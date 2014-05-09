@@ -53,12 +53,12 @@ namespace BudgetAnalyser.UnitTest
 
         private BudgetBucket CreateBucket1()
         {
-            return new SavedUpForExpense(TestDataConstants.CarMtcBucketCode, "Foo bar");
+            return new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo bar");
         }
 
         private BudgetBucket CreateBucket2()
         {
-            return new SavedUpForExpense(TestDataConstants.PowerBucketCode, "Foo bar");
+            return new SavedUpForExpenseBucket(TestDataConstants.PowerBucketCode, "Foo bar");
         }
 
         private BudgetBucket CreateBucket3()

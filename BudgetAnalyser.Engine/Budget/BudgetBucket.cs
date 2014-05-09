@@ -10,9 +10,6 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget
 {
     [DebuggerDisplay("BudgetBucket {Code} {Description}")]
-    [XmlInclude(typeof(IncomeBudgetBucket))]
-    [XmlInclude(typeof(SpentMonthlyExpense))]
-    [XmlInclude(typeof(SavedUpForExpense))]
     public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, IComparable
     {
         private string doNotUseCode;

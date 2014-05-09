@@ -23,9 +23,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException("budgetedExpense");
             }
 
-            if (!(budgetedExpense.Bucket is SavedUpForExpense))
+            if (!(budgetedExpense.Bucket is SavedUpForExpenseBucket))
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Given budgeted expense {0} is not a {1}.", GetType().Name, typeof(SavedUpForExpense).Name));
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Given budgeted expense {0} is not a {1}.", GetType().Name, typeof(SavedUpForExpenseBucket).Name));
             }
 
             return WithNarrative(budgetedExpense.Bucket.ToString()).WithAmount(budgetedExpense.Amount);

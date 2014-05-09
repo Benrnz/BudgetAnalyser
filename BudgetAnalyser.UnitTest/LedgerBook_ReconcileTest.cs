@@ -54,7 +54,7 @@ namespace BudgetAnalyser.UnitTest
         public void UsingTestData1_AddLedger_ShouldAddToLedgersCollection()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
-            book.AddLedger(new SavedUpForExpense("FOO", "Foo bar"));
+            book.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"));
 
             Assert.IsTrue(book.Ledgers.Any(l => l.BudgetBucket.Code == "FOO"));
         }
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.UnitTest
         public void UsingTestData1_AddLedger_ShouldBeIncludedInNextReconcile()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
-            book.AddLedger(new SavedUpForExpense("FOO", "Foo bar"));
+            book.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"));
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
 
