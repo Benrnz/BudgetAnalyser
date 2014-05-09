@@ -16,32 +16,32 @@
           <scg:List x:TypeArguments="Expense" Capacity="6">
             <Expense Amount="1200.00">
               <Expense.Bucket>
-                <SpentMonthlyExpense Code="RENT" Description="Rent for my bachelor pad"/>
+                <SpentMonthlyExpenseBucket Code="RENT" Description="Rent for my bachelor pad"/>
               </Expense.Bucket>
             </Expense>
             <Expense Amount="400.00">
               <Expense.Bucket>
-                <SpentMonthlyExpense Code="FOOD" Description="Groceries, staples, and necessities" />
+                <SpentMonthlyExpenseBucket Code="FOOD" Description="Groceries, staples, and necessities" />
               </Expense.Bucket>
             </Expense>
             <Expense Amount="37.00">
               <Expense.Bucket>
-                <SpentMonthlyExpense Code="WATER" Description="Water Rates"/>
+                <SpentMonthlyExpenseBucket Code="WATER" Description="Water Rates"/>
               </Expense.Bucket>
             </Expense>
             <Expense Amount="100.00">
               <Expense.Bucket>
-                <SpentMonthlyExpense Code="INSHOME" Description="Home and Contents Insurance" />
+                <SpentMonthlyExpenseBucket Code="INSHOME" Description="Home and Contents Insurance" />
               </Expense.Bucket>
             </Expense>
             <Expense Amount="45.00">
               <Expense.Bucket>
-                <SavedUpForExpense Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" />
+                <SavedUpForExpenseBucket Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" />
               </Expense.Bucket>
             </Expense>
             <Expense Amount="1.00">
               <Expense.Bucket>
-                <SavedUpForExpense Code="FEES" Description="Bank Fees" />
+                <SavedUpForExpenseBucket Code="FEES" Description="Bank Fees" />
               </Expense.Bucket>
             </Expense>
           </scg:List>

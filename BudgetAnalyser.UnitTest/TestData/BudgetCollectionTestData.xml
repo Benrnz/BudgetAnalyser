@@ -16,17 +16,17 @@
           <scg:List x:TypeArguments="Expense" Capacity="3">
             <Expense Amount="185">
               <Expense.Bucket>
-                <SpentMonthlyExpense x:Name="__ReferenceID0" Code="POWER" Description="Power" />
+                <SpentMonthlyExpenseBucket x:Name="__ReferenceID0" Code="POWER" Description="Power" />
               </Expense.Bucket>
             </Expense>
             <Expense Amount="100">
               <Expense.Bucket>
-                <SavedUpForExpense x:Name="__ReferenceID1" Code="CAR MTC" Description="Car maintenance" />
+                <SavedUpForExpenseBucket x:Name="__ReferenceID1" Code="CAR MTC" Description="Car maintenance" />
               </Expense.Bucket>
             </Expense>
             <Expense Amount="65">
               <Expense.Bucket>
-                <SpentMonthlyExpense x:Name="__ReferenceID2" Code="HAIRCUT" Description="Hair cuts" />
+                <SpentMonthlyExpenseBucket x:Name="__ReferenceID2" Code="HAIRCUT" Description="Hair cuts" />
               </Expense.Bucket>
             </Expense>
           </scg:List>
