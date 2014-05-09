@@ -97,16 +97,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseEditingRule = value;
                 RaisePropertyChanged(() => EditingRule);
-                RaisePropertyChanged(() => this.ShowReadOnlyRuleDetails);
-            }
-        }
-
-        public bool ShowReadOnlyRuleDetails
-        {
-            get
-            {
-                var result = SelectedRule != null && !EditingRule;
-                return result;
+                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
             }
         }
 
@@ -147,7 +138,16 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseSelectedRule = value;
                 RaisePropertyChanged(() => SelectedRule);
-                RaisePropertyChanged(() => this.ShowReadOnlyRuleDetails);
+                RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
+            }
+        }
+
+        public bool ShowReadOnlyRuleDetails
+        {
+            get
+            {
+                bool result = SelectedRule != null && !EditingRule;
+                return result;
             }
         }
 
@@ -276,7 +276,8 @@ namespace BudgetAnalyser.Matching
             SortBy = BucketSortKey;
 
             IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
-                .Where(group => group.Key != null) // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
+                .Where(group => group.Key != null)
+                // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
                 .Select(group => new RulesGroupedByBucket(group.Key, group))
                 .OrderBy(group => group.Bucket.Code);
 
@@ -300,7 +301,7 @@ namespace BudgetAnalyser.Matching
 
             SaveRules();
             this.logger.LogInfo(() => "Matching Rule Added: " + rule);
-            var handler = RuleAdded;
+            EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
             if (handler != null)
             {
                 handler(this, new MatchingRuleEventArgs { Rule = rule });
@@ -393,7 +394,7 @@ namespace BudgetAnalyser.Matching
                 this.logger.LogWarning(() => "Matching Rule was not removed successfully from the flat list: " + removedRule);
             }
 
-            var handler = RuleRemoved;
+            EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
             if (handler != null)
             {
                 handler(removedRule, new MatchingRuleEventArgs { Rule = removedRule });
