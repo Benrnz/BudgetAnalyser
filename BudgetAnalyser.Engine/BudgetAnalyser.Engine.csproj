@@ -110,6 +110,7 @@
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementModel.cs" />
+    <Compile Include="Statement\UnexpectedIndexException.cs" />
     <Compile Include="Statement\Transaction.cs" />
     <Compile Include="Statement\TransactionGroupedByBucket.cs" />
     <Compile Include="Statement\TransactionListExtension.cs" />

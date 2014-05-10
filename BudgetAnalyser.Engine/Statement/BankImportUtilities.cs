@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
         {
-            throw new IndexOutOfRangeException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
+            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
         }
     }
 }
