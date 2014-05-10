@@ -1,4 +1,4 @@
-﻿using BudgetAnalyser.Engine.Widget;
+﻿using BudgetAnalyser.Engine.Widgets;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.Dashboard

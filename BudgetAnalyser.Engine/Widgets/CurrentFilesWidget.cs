@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class CurrentFilesWidget : Widget
     {
@@ -29,8 +29,13 @@ namespace BudgetAnalyser.Engine.Widget
         public bool HasLedgerBook { get; private set; }
         public bool HasStatement { get; private set; }
 
-        public override void Update(params object[] input)
+        public override void Update([NotNull] params object[] input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
             if (!ValidateUpdateInput(input))
             {
                 return;

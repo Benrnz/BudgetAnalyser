@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public abstract class ProgressBarWidget : Widget
     {

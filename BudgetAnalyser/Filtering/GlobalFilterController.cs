@@ -8,7 +8,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Widget;
+using BudgetAnalyser.Engine.Widgets;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;

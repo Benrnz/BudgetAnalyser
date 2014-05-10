@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="Ledger" />s for a
+    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerColumn" />s for a
     ///     date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
         /// <param name="startDateIncl">The date for this ledger line.</param>
-        internal void AddNew(IEnumerable<KeyValuePair<Ledger, LedgerEntry>> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
+        internal void AddNew(IEnumerable<KeyValuePair<LedgerColumn, LedgerEntry>> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
         {
             if (!this.isNew)
             {
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
             foreach (var previousEntry in previousEntries)
             {
-                Ledger ledger = previousEntry.Key;
+                LedgerColumn ledger = previousEntry.Key;
                 var newEntry = new LedgerEntry(ledger, previousEntry.Value, true);
                 Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledger.BudgetBucket.Code);
                 var transactions = new List<LedgerTransaction>();
@@ -229,7 +229,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return new List<LedgerTransaction>();
             }
 
-            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.Ledger.BudgetBucket).ToList();
+            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
             if (transactions.Any())
             {
                 IEnumerable<DebitLedgerTransaction> newLedgerTransactions = transactions.Select(t => new DebitLedgerTransaction

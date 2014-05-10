@@ -157,7 +157,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBucketCode()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Ledger.BudgetBucket.Code,
+            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code,
                 result.DatedEntries.First().Entries.First().BucketCode);
         }
 

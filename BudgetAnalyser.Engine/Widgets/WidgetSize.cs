@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Engine.Widget
+﻿namespace BudgetAnalyser.Engine.Widgets
 {
     public enum WidgetSize
     {

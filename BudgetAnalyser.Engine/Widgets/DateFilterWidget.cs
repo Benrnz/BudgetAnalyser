@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {

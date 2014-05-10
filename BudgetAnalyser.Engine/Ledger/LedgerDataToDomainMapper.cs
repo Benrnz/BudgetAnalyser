@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerDataToDomainMapper : ILedgerDataToDomainMapper
     {
-        private static readonly Dictionary<string, Ledger> CachedLedgers = new Dictionary<string, Ledger>();
+        private static readonly Dictionary<string, LedgerColumn> CachedLedgers = new Dictionary<string, LedgerColumn>();
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly ILogger logger;
 
@@ -92,14 +92,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return entry;
         }
 
-        private Ledger MapLedger(string budgetBucketCode)
+        private LedgerColumn MapLedger(string budgetBucketCode)
         {
             if (CachedLedgers.ContainsKey(budgetBucketCode))
             {
                 return CachedLedgers[budgetBucketCode];
             }
 
-            var ledger = new Ledger { BudgetBucket = this.bucketRepository.GetByCode(budgetBucketCode) };
+            var ledger = new LedgerColumn { BudgetBucket = this.bucketRepository.GetByCode(budgetBucketCode) };
             if (ledger.BudgetBucket == null)
             {
                 throw new FileFormatException("Invalid Budget Bucket Code: " + budgetBucketCode);
@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     var entries = new List<LedgerEntry>();
                     foreach (DataLedgerEntry entry in line.Entries)
                     {
-                        LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket.Code == entry.BucketCode);
+                        LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket.Code == entry.BucketCode);
                         entries.Add(MapEntry(entry, previousEntry));
                     }
 

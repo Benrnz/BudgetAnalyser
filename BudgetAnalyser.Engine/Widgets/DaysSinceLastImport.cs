@@ -3,7 +3,7 @@ using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class DaysSinceLastImport : Widget
     {

@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return 0;
             }
 
-            return (from ledgerEntry in line.Entries where ledgerEntry.Ledger.BudgetBucket.Code == bucketCode select ledgerEntry.Balance).FirstOrDefault();
+            return (from ledgerEntry in line.Entries where ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode select ledgerEntry.Balance).FirstOrDefault();
         }
 
         public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)

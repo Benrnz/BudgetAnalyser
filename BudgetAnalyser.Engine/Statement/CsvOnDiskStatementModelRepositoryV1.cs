@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.Amount);
                         line.Append(",");
 
-                        line.Append(transaction.Date.ToString("O"));
+                        line.Append(transaction.Date.ToString("O", CultureInfo.InvariantCulture));
                         line.Append(",");
 
                         line.Append(transaction.BudgetBucket == null ? string.Empty : transaction.BudgetBucket.Code);

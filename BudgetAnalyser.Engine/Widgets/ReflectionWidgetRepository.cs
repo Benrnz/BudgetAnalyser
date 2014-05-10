@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class ReflectionWidgetRepository : IWidgetRepository

@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var dataEntry = new DataLedgerEntry
             {
                 Balance = entry.Balance,
-                BucketCode = entry.Ledger.BudgetBucket.Code,
+                BucketCode = entry.LedgerColumn.BudgetBucket.Code,
                 Transactions = entry.Transactions.Select(MapTransaction).ToList()
             };
 

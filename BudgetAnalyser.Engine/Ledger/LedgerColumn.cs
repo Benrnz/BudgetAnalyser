@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     [DebuggerDisplay("Ledger({BudgetBucket})")]
-    public class Ledger
+    public class LedgerColumn
     {
         public BudgetBucket BudgetBucket { get; internal set; }
 
@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
 
-            var otherLedger = obj as Ledger;
+            var otherLedger = obj as LedgerColumn;
             if (otherLedger == null)
             {
                 return false;

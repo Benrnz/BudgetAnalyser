@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
@@ -20,21 +19,20 @@ namespace BudgetAnalyser.BurnDownGraphs
     {
         private readonly AddUserDefinedBurnDownController addUserDefinedBurnDownController;
         private readonly Func<BucketBurnDownController> bucketSpendingFactory;
-        private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly BurnDownChartsBuilder chartBuilder;
         private readonly IViewLoader viewLoader;
-        private DateTime beginDate;
         private BudgetModel budget;
-        private List<CustomAggregateBurnDownGraph> customCharts = new List<CustomAggregateBurnDownGraph>();
         private string doNotUseDateRangeDescription;
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
+        private DateTime beginDate;
 
         public CurrentMonthBurnDownGraphsController(
             [NotNull] Func<BucketBurnDownController> bucketSpendingFactory,
             [NotNull] CurrentMonthBurnDownGraphsViewLoader viewLoader,
             [NotNull] AddUserDefinedBurnDownController addUserDefinedBurnDownController,
-            [NotNull] IBudgetBucketRepository budgetBucketRepository, 
+            [NotNull] IBudgetBucketRepository budgetBucketRepository,
             [NotNull] UiContext uiContext)
         {
             if (bucketSpendingFactory == null)
@@ -65,7 +63,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             this.bucketSpendingFactory = bucketSpendingFactory;
             this.viewLoader = viewLoader;
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController;
-            this.budgetBucketRepository = budgetBucketRepository;
+            this.chartBuilder = new BurnDownChartsBuilder(budgetBucketRepository, this.bucketSpendingFactory);
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
@@ -131,63 +129,17 @@ namespace BudgetAnalyser.BurnDownGraphs
                 throw new ArgumentNullException("criteria");
             }
 
-            this.beginDate = CalculateBeginDate(criteria);
-            DateRangeDescription = string.Format(CultureInfo.CurrentCulture, "For the month starting {0:D} to {1:D} inclusive.", this.beginDate, this.beginDate.AddMonths(1).AddDays(-1));
-
             this.statement = statementModel;
             this.budget = budgetModel;
             this.ledgerBook = ledgerBookModel;
-            var listOfCharts = new List<BucketBurnDownController>(this.budgetBucketRepository.Buckets.Count());
 
-            foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
-                .Where(b => b is ExpenseBudgetBucket)
-                .OrderBy(b => b.Code))
-            {
-                BucketBurnDownController chartController = this.bucketSpendingFactory();
-                chartController.Load(statementModel, budgetModel, bucket, this.beginDate, ledgerBookModel);
-                listOfCharts.Add(chartController);
-            }
+            this.chartBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
+            this.beginDate = this.chartBuilder.Results.BeginDate;
+            DateRangeDescription = this.chartBuilder.Results.DateRangeDescription;
+            ChartControllers = new BindingList<BucketBurnDownController>(this.chartBuilder.Results.Charts.ToList());
 
-            listOfCharts = listOfCharts.OrderBy(x => x.Bucket).ToList();
-
-            // Put surplus at the top.
-            listOfCharts.Insert(
-                0,
-                this.bucketSpendingFactory().Load(statementModel, budgetModel, this.budgetBucketRepository.SurplusBucket, this.beginDate, ledgerBookModel));
-
-            // Put any custom charts on top.
-            foreach (CustomAggregateBurnDownGraph customChart in this.customCharts)
-            {
-                BucketBurnDownController chartController = this.bucketSpendingFactory();
-                IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
-                    .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
-                chartController.LoadCustomChart(statementModel, budgetModel, buckets, this.beginDate, ledgerBookModel, customChart.Name);
-                listOfCharts.Insert(0, chartController);
-            }
-
-            ChartControllers = new BindingList<BucketBurnDownController>(listOfCharts);
             this.viewLoader.Show(this);
             RaisePropertyChanged(() => ChartControllers);
-        }
-
-        private static DateTime CalculateBeginDate(GlobalFilterCriteria criteria)
-        {
-            if (criteria.Cleared)
-            {
-                return DateTime.Today.AddMonths(-1);
-            }
-
-            if (criteria.BeginDate != null)
-            {
-                return criteria.BeginDate.Value;
-            }
-
-            if (criteria.EndDate == null)
-            {
-                return DateTime.Today.AddMonths(-1);
-            }
-
-            return criteria.EndDate.Value.AddMonths(-1);
         }
 
         private void OnAddChartCommandExecuted()
@@ -207,27 +159,29 @@ namespace BudgetAnalyser.BurnDownGraphs
                 Name = this.addUserDefinedBurnDownController.ChartTitle,
             };
 
-            this.customCharts.Add(persistChart);
+            this.chartBuilder.CustomCharts = this.chartBuilder.CustomCharts.Union(new[] {persistChart}).ToList();
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
             if (message.RehydratedModels.ContainsKey(typeof(CustomBurnDownChartsV1)))
             {
-                this.customCharts = message.RehydratedModels[typeof(CustomBurnDownChartsV1)].AdaptModel<List<CustomAggregateBurnDownGraph>>();
+                this.chartBuilder.CustomCharts = message.RehydratedModels[typeof(CustomBurnDownChartsV1)].AdaptModel<List<CustomAggregateBurnDownGraph>>();
             }
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            message.PersistThisModel(new CustomBurnDownChartsV1 { Model = this.customCharts });
+            message.PersistThisModel(new CustomBurnDownChartsV1 { Model = this.chartBuilder.CustomCharts });
         }
 
         private void OnRemoveChartCommandExecuted()
         {
             ChartControllers.Remove(SelectedChart);
-            CustomAggregateBurnDownGraph chart = this.customCharts.FirstOrDefault(c => c.Name == SelectedChart.ChartTitle);
-            this.customCharts.Remove(chart);
+            var customCharts = this.chartBuilder.CustomCharts.ToList();
+            CustomAggregateBurnDownGraph chart = customCharts.FirstOrDefault(c => c.Name == SelectedChart.ChartTitle);
+            customCharts.Remove(chart);
+            this.chartBuilder.CustomCharts = customCharts;
         }
 
         private bool RemoveChartCommandCanExecute()

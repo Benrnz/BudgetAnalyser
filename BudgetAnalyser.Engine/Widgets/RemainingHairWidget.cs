@@ -4,18 +4,18 @@ using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
-    public class RemainingFoodWidget : RemainingBudgetBucketWidget
+    public class RemainingHairWidget : RemainingBudgetBucketWidget
     {
         private LedgerBook ledgerBook;
 
-        public RemainingFoodWidget()
+        public RemainingHairWidget()
         {
-            DetailedText = "Food";
-            DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, remaining food budget cannot be calculated.";
-            RemainingBudgetToolTip = "Remaining Food budget for period is {0:C}";
-            BucketCode = "FOOD";
+            DetailedText = "Hair cuts / beauty";
+            DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, remaining haircut budget cannot be calculated.";
+            RemainingBudgetToolTip = "Remaining Hair cut budget for period is {0:C}";
+            BucketCode = "HAIRCUT";
             List<Type> baseDependencies = Dependencies.ToList();
             baseDependencies.Add(typeof(LedgerBook));
             Dependencies = baseDependencies.ToArray();

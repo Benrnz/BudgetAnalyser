@@ -106,7 +106,7 @@ namespace BudgetAnalyser.LedgerBook
             Border dateBorder = AddBorderToGridCell(grid, true, true, column, 0);
             AddContentToGrid(dateBorder, "Date", ref column, 0, HeadingStyle);
 
-            foreach (Ledger ledger in Controller.LedgerBook.Ledgers)
+            foreach (LedgerColumn ledger in Controller.LedgerBook.Ledgers)
             {
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
@@ -184,7 +184,7 @@ namespace BudgetAnalyser.LedgerBook
         private void AddLedgerEntryLines(Grid grid)
         {
             int row = 1;
-            List<Ledger> allLedgers = Controller.LedgerBook.Ledgers.ToList();
+            List<LedgerColumn> allLedgers = Controller.LedgerBook.Ledgers.ToList();
             foreach (LedgerEntryLine line in Controller.LedgerBook.DatedEntries)
             {
                 if (row >= 13)
@@ -197,9 +197,9 @@ namespace BudgetAnalyser.LedgerBook
                 Border dateBorder = AddBorderToGridCell(grid, false, true, column, row);
                 AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref column, row, NormalStyle);
 
-                foreach (Ledger ledger in allLedgers)
+                foreach (LedgerColumn ledger in allLedgers)
                 {
-                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.Ledger.Equals(ledger));
+                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
                     decimal balance, netAmount;
 
                     if (entry == null)

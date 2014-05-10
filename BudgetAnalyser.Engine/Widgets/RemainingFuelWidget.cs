@@ -4,7 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class RemainingFuelWidget : RemainingBudgetBucketWidget
     {

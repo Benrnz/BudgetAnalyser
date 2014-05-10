@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger
     public class LedgerBook : IModelValidate
     {
         private readonly ILogger logger;
-        private readonly List<Ledger> newlyAddedLedgers = new List<Ledger>();
+        private readonly List<LedgerColumn> newlyAddedLedgers = new List<LedgerColumn>();
         private List<LedgerEntryLine> datedEntries;
 
         public LedgerBook(string name, DateTime modified, string fileName, [NotNull] ILogger logger)
@@ -36,12 +36,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public string FileName { get; private set; }
 
-        public IEnumerable<Ledger> Ledgers
+        public IEnumerable<LedgerColumn> Ledgers
         {
             get
             {
                 return this.datedEntries.SelectMany(e => e.Entries)
-                    .Select(e => e.Ledger)
+                    .Select(e => e.LedgerColumn)
                     .Union(this.newlyAddedLedgers)
                     .Distinct()
                     .OrderBy(l => l.BudgetBucket.Code);
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            this.newlyAddedLedgers.Add(new Ledger { BudgetBucket = budgetBucket });
+            this.newlyAddedLedgers.Add(new LedgerColumn { BudgetBucket = budgetBucket });
         }
 
         /// <summary>
@@ -94,14 +94,14 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var newLine = new LedgerEntryLine(date, bankBalance);
-            var previousEntries = new Dictionary<Ledger, LedgerEntry>();
+            var previousEntries = new Dictionary<LedgerColumn, LedgerEntry>();
             LedgerEntryLine previousLine = this.datedEntries.FirstOrDefault();
-            foreach (Ledger ledger in Ledgers)
+            foreach (LedgerColumn ledger in Ledgers)
             {
                 LedgerEntry previousEntry = null;
                 if (previousLine != null)
                 {
-                    previousEntry = previousLine.Entries.FirstOrDefault(e => e.Ledger.Equals(ledger));
+                    previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
                 }
 
                 previousEntries.Add(ledger, previousEntry);

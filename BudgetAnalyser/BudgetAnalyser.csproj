@@ -119,6 +119,8 @@
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="BurnDownGraphs\BucketBurnDownController.cs" />
+    <Compile Include="BurnDownGraphs\BurnDownChartBuilderResults.cs" />
+    <Compile Include="BurnDownGraphs\BurnDownChartsBuilder.cs" />
     <Compile Include="ConcurrentMessenger.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
     <Compile Include="Converters\BucketToVisibilityConverter.cs" />

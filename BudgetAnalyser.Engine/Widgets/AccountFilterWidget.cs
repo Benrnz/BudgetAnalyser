@@ -2,7 +2,7 @@
 using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class AccountFilterWidget : Widget
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public interface IWidgetWithAdditionalImage : INotifyPropertyChanged
     {

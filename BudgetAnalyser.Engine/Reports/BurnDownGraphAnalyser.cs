@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return applicableLine.CalculatedSurplus;
             }
 
-            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.Ledger.BudgetBucket == bucket);
+            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == bucket);
             if (ledger != null)
             {
                 return ledger.Balance;

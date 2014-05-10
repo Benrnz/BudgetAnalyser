@@ -7,11 +7,11 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A single entry on a <see cref="Ledger" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This
+    ///     A single entry on a <see cref="LedgerColumn" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This
     ///     instance can contain one or
     ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="BudgetBucket" /> for this date.
     ///     Possible transactions
-    ///     include budgeted 'saved up for expenses' credited into this <see cref="Ledger" /> and all statement transactions
+    ///     include budgeted 'saved up for expenses' credited into this <see cref="LedgerColumn" /> and all statement transactions
     ///     that are debitted to this
     ///     budget bucket ledger.
     /// </summary>
@@ -29,27 +29,27 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Used only by persistence.
         /// </summary>
-        internal LedgerEntry(Ledger ledger, LedgerEntry previousLedgerEntry)
+        internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry)
         {
             Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
-            Ledger = ledger;
+            this.LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
         }
 
         /// <summary>
         ///     Used when adding a new entry for a new reconciliation.
         /// </summary>
-        internal LedgerEntry(Ledger ledger, LedgerEntry previousLedgerEntry, bool isNew)
+        internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry, bool isNew)
         {
             Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
-            Ledger = ledger;
+            this.LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
             this.isNew = isNew;
         }
 
         public decimal Balance { get; private set; }
 
-        public Ledger Ledger { get; private set; }
+        public LedgerColumn LedgerColumn { get; private set; }
 
         /// <summary>
         ///     The total net affect of all transactions in this entry.  Debits will be negative.
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions, bool reconciliationMode = false)
         {
             this.transactions = newTransactions;
-            if (reconciliationMode && Ledger.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
+            if (reconciliationMode && this.LedgerColumn.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
             {
                 // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
                 LedgerTransaction zeroingTransaction = null;

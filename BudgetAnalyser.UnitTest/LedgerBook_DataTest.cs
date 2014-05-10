@@ -98,7 +98,7 @@ namespace BudgetAnalyser.UnitTest
         public void UsingTestData1_FirstLineHairEntryShouldHaveBalance120()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First().Entries.First(e => e.Ledger.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var subject = result.DatedEntries.First().Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
             Assert.AreEqual(120, subject.Balance);
         }
 

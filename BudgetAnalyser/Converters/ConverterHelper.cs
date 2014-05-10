@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Converters
         private const string SlightDebit = "Brush.SlightDebit";
         private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
         private const string TileBackground = "Brush.TileBackground";
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly Brush AccumulatedBucketBrush = Application.Current.Resources[AccumulatedBucket] as Brush;
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]

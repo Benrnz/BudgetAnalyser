@@ -42,7 +42,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                         foreach (var transaction in entry.Transactions)
                         {
                             Console.WriteLine("          {0} {1} {2} {3}", 
-                                entry.Ledger.BudgetBucket.Code.PadRight(6), 
+                                entry.LedgerColumn.BudgetBucket.Code.PadRight(6), 
                                 (transaction.Credit.ToString("N") + "Cr").PadRight(8), 
                                 (transaction.Debit.ToString("N") + "Dr").PadRight(8), 
                                 transaction.Narrative);

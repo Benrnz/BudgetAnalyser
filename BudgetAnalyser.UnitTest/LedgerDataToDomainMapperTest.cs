@@ -87,7 +87,7 @@ namespace BudgetAnalyser.UnitTest
         public void ShouldMapLineEntryBucketCode()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.DatedEntries.First().Entries.First().Ledger.BudgetBucket.Code;
+            string subject = result.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code;
             Assert.AreEqual(TestData.DatedEntries.First().Entries.First().BucketCode, subject);
             Assert.IsNotNull(subject);
         }

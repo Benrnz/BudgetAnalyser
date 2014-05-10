@@ -4,7 +4,7 @@ using System.Linq;
 using Autofac;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.Engine.Widget;
+using BudgetAnalyser.Engine.Widgets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest

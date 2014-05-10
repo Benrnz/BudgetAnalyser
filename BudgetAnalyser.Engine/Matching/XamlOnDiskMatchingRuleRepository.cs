@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             if (dataEntities == null)
             {
-                throw new FileFormatException("Derserialised Matching-Rules are not of type List<DataMatchingRule>");
+                throw new FileFormatException("Deserialised Matching-Rules are not of type List<DataMatchingRule>");
             }
 
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));

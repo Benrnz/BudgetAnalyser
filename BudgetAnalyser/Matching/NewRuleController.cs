@@ -285,6 +285,7 @@ namespace BudgetAnalyser.Matching
             this.viewLoader.Close();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
         private void UpdateSimilarRules()
         {
             if (SimilarRules == null)

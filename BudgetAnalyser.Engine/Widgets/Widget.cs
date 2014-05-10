@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public abstract class Widget : INotifyPropertyChanged
     {

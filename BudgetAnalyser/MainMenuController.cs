@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Widget;
+using BudgetAnalyser.Engine.Widgets;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 

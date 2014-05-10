@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.Widget
+namespace BudgetAnalyser.Engine.Widgets
 {
     public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     {
