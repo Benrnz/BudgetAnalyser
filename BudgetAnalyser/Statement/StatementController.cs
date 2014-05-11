@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterApplied);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessage);
+            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
         }
 
@@ -406,7 +406,7 @@ namespace BudgetAnalyser.Statement
             message.PersistThisModel(lastStatement);
         }
 
-        private void OnBudgetReadyMessage(BudgetReadyMessage message)
+        private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
             if (!message.ActiveBudget.BudgetActive)
             {
@@ -435,6 +435,8 @@ namespace BudgetAnalyser.Statement
                     "WARNING! By loading a different budget with a Statement loaded data loss may occur. There may be budget categories used in the Statement that do not exist in the loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
                     "Data Loss Wanring!");
             }
+
+            ViewModel.TriggerRefreshBucketFilterList();
         }
 
         private void OnCloseStatementExecute()

@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Budget
         private readonly IBudgetRepository budgetRepository;
         private readonly IViewLoader budgetSelectionLoader;
         private readonly DemoFileHelper demoFileHelper;
+        private readonly IBudgetBucketRepository bucketRepo;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
@@ -47,7 +48,8 @@ namespace BudgetAnalyser.Budget
             [NotNull] UiContext uiContext,
             [NotNull] BudgetDetailsViewLoader budgetDetailsViewLoader,
             [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
-            [NotNull] DemoFileHelper demoFileHelper)
+            [NotNull] DemoFileHelper demoFileHelper, 
+            [NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (budgetRepository == null)
             {
@@ -73,9 +75,15 @@ namespace BudgetAnalyser.Budget
             {
                 throw new ArgumentNullException("demoFileHelper");
             }
+            
+            if (bucketRepo == null)
+            {
+                throw new ArgumentNullException("bucketRepo");
+            }
 
             this.budgetSelectionLoader = budgetSelectionLoader;
             this.demoFileHelper = demoFileHelper;
+            this.bucketRepo = bucketRepo;
             this.budgetRepository = budgetRepository;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
@@ -89,7 +97,6 @@ namespace BudgetAnalyser.Budget
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-
 
             var budget = new BudgetModel();
             CurrentBudget = new BudgetCurrencyContext(new BudgetCollection(new[] { budget }), budget);
@@ -561,6 +568,18 @@ namespace BudgetAnalyser.Budget
             if (SaveBudgetCollection())
             {
                 this.dirty = false;
+                foreach (var income in CurrentBudget.Model.Incomes)
+                {
+                    Income incomeCopy = income;
+                    this.bucketRepo.GetOrAdd(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
+                }
+
+                foreach (var expense in CurrentBudget.Model.Expenses)
+                {
+                    Expense expenseCopy = expense;
+                    this.bucketRepo.GetOrAdd(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
+                }
+
                 return true;
             }
 

@@ -344,6 +344,12 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        public void TriggerRefreshBucketFilterList()
+        {
+            OnPropertyChanged("FilterBudgetBuckets");
+            OnPropertyChanged("BudgetBuckets");
+        }
+
         public void UpdateGroupedByBucket()
         {
             if (SortByBucket)
