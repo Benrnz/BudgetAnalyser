@@ -13,7 +13,7 @@ namespace BudgetAnalyser.UnitTest
         private Mock<IBudgetBucketRepository> BucketRepositoryMock { get; set; }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void FetchBudgetBucketWithNegativeOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof (UnexpectedIndexException))]
         public void FetchBudgetBucketWithOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchDateWithNegativeOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchDatetWithOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.UnitTest
 
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchDecimalWithNegativeOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -179,7 +179,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchDecimaltWithOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -192,7 +192,7 @@ namespace BudgetAnalyser.UnitTest
 
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchGuidWithNegativeOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -238,7 +238,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchGuidtWithOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -251,7 +251,7 @@ namespace BudgetAnalyser.UnitTest
 
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchStringWithNegativeOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
@@ -287,7 +287,7 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(UnexpectedIndexException))]
         public void SafeArrayFetchStringtWithOutOfRangeIndexShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();

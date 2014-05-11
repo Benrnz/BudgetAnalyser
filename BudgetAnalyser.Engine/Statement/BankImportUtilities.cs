@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("array");
             }
 
-            if (index > array.Length - 1)
+            if (index > array.Length - 1 || index < 0)
             {
                 ThrowIndexOutOfRangeException(array, index);
             }
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("array");
             }
 
-            if (index > array.Length - 1)
+            if (index > array.Length - 1 || index < 0)
             {
                 ThrowIndexOutOfRangeException(array, index);
             }
@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("array");
             }
 
-            if (index > array.Length - 1)
+            if (index > array.Length - 1 || index < 0)
             {
                 ThrowIndexOutOfRangeException(array, index);
             }
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("array");
             }
 
-            if (index > array.Length - 1)
+            if (index > array.Length - 1 || index < 0)
             {
                 ThrowIndexOutOfRangeException(array, index);
             }
