@@ -21,13 +21,11 @@ namespace BudgetAnalyser.Budget
     {
         private const string CloseBudgetMenuName = "Close _Budget";
         private const string EditBudgetMenuName = "Edit Current _Budget";
-
-        private readonly IViewLoader budgetDetailsViewLoader;
+        private readonly IBudgetBucketRepository bucketRepo;
 
         private readonly IBudgetRepository budgetRepository;
         private readonly IViewLoader budgetSelectionLoader;
         private readonly DemoFileHelper demoFileHelper;
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
@@ -46,9 +44,8 @@ namespace BudgetAnalyser.Budget
         public BudgetController(
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext uiContext,
-            [NotNull] BudgetDetailsViewLoader budgetDetailsViewLoader,
             [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
-            [NotNull] DemoFileHelper demoFileHelper, 
+            [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (budgetRepository == null)
@@ -61,11 +58,6 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (budgetDetailsViewLoader == null)
-            {
-                throw new ArgumentNullException("budgetDetailsViewLoader");
-            }
-
             if (budgetSelectionLoader == null)
             {
                 throw new ArgumentNullException("budgetSelectionLoader");
@@ -75,7 +67,7 @@ namespace BudgetAnalyser.Budget
             {
                 throw new ArgumentNullException("demoFileHelper");
             }
-            
+
             if (bucketRepo == null)
             {
                 throw new ArgumentNullException("bucketRepo");
@@ -90,7 +82,6 @@ namespace BudgetAnalyser.Budget
             this.fileOpenDialogFactory = uiContext.UserPrompts.OpenFileFactory;
             this.fileSaveDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.inputBox = uiContext.UserPrompts.InputBox;
-            this.budgetDetailsViewLoader = budgetDetailsViewLoader;
             BudgetPieController = uiContext.BudgetPieController;
             Shown = false;
 
@@ -468,7 +459,8 @@ namespace BudgetAnalyser.Budget
 
         private void OnDetailsCommandExecute()
         {
-            this.budgetDetailsViewLoader.ShowDialog(CurrentBudget);
+            var popUpRequest = new RequestShellDialogMessage(CurrentBudget, ShellDialogType.Ok);
+            MessengerInstance.Send(popUpRequest);
         }
 
         private void OnExpenseAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)
@@ -568,13 +560,13 @@ namespace BudgetAnalyser.Budget
             if (SaveBudgetCollection())
             {
                 this.dirty = false;
-                foreach (var income in CurrentBudget.Model.Incomes)
+                foreach (Income income in CurrentBudget.Model.Incomes)
                 {
                     Income incomeCopy = income;
                     this.bucketRepo.GetOrAdd(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
                 }
 
-                foreach (var expense in CurrentBudget.Model.Expenses)
+                foreach (Expense expense in CurrentBudget.Model.Expenses)
                 {
                     Expense expenseCopy = expense;
                     this.bucketRepo.GetOrAdd(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);

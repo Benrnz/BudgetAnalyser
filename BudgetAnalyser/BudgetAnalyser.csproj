@@ -112,7 +112,9 @@
     <Compile Include="Budget\BudgetAnalysisController.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetController.cs" />
-    <Compile Include="Budget\BudgetDetailsViewLoader.cs" />
+    <Compile Include="Budget\BudgetDetailsView.xaml.cs">
+      <DependentUpon>BudgetDetailsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Budget\BudgetPieController.cs" />
     <Compile Include="Budget\BudgetReadyMessage.cs" />
     <Compile Include="Budget\BudgetSelectionViewLoader.cs" />
@@ -214,9 +216,6 @@
     <Compile Include="OverallPerformance\BudgetAnalysisView.xaml.cs">
       <DependentUpon>BudgetAnalysisView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Budget\BudgetDetailsView.xaml.cs">
-      <DependentUpon>BudgetDetailsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Budget\BudgetModelNameUserControl.xaml.cs">
       <DependentUpon>BudgetModelNameUserControl.xaml</DependentUpon>
     </Compile>
@@ -263,6 +262,10 @@
       <DependentUpon>StatementUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPrompts.cs" />
+    <Page Include="Budget\BudgetDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dashboard\DashboardUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -364,10 +367,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OverallPerformance\BudgetAnalysisView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Budget\BudgetDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

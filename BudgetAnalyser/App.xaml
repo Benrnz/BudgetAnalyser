@@ -11,7 +11,8 @@
              xmlns:burndown="clr-namespace:BudgetAnalyser.BurnDownGraphs"
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
-             xmlns:matching="clr-namespace:BudgetAnalyser.Matching">
+             xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
+             xmlns:budget1="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -46,27 +47,39 @@
             <DataTemplate DataType="{x:Type statement:StatementController}">
                 <statement:StatementUserControl />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type budget:BudgetController}">
                 <budget:BudgetMaintenance />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type budget:BudgetPieController}">
                 <budget:BudgetPie />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type burndown:BucketBurnDownController}">
                 <burndown:BucketBurnDownLineChart />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
                 <ledgerBook:LedgerBookUserControl />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type dashboard:DashboardController}">
                 <dashboard:DashboardUserControl />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
                 <reportsCatalog:ReportsCatalogUserControl />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type matching:RulesController}">
                 <matching:EditRulesUserControl />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type budget1:BudgetCurrencyContext}">
+                <budget:BudgetDetailsView />
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
