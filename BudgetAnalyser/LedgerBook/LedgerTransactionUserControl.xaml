@@ -27,7 +27,7 @@
         <TextBlock Grid.Column="4"
                    Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}"
                    Text="DR" />
-        <Button Style="{StaticResource Button.Round.Close}"
+        <Button Style="{StaticResource Button.Round.Cross}"
                 Grid.Column="5"
                 Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
                 CommandParameter="{Binding .}"

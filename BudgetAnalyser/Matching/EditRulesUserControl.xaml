@@ -164,7 +164,7 @@
                            Text="Details" />
             </Border>
             <Button Command="{Binding DeleteRuleCommand}"
-                    Style="{StaticResource Button.Round.Close}"
+                    Style="{StaticResource Button.Round.Cross}"
                     ToolTip="Delete Rule"
                     Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}" />
             <Button Style="{StaticResource Button.Round.Unlock}"

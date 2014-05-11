@@ -28,7 +28,7 @@
         <StackPanel Grid.Row="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource Button.Round.Close}"
+            <Button Style="{StaticResource Button.Round.Cross}"
                     Click="OnCancelButtonClick" />
             <Button Style="{StaticResource Button.Round.Save}"
                     Click="OnOkButtonClick" />

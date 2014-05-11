@@ -13,7 +13,7 @@
                     Orientation="Horizontal">
             <Button Command="{Binding CancelCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Close}" />
+                    Style="{StaticResource Button.Round.Cross}" />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="New Reconciliation" />
         </StackPanel>

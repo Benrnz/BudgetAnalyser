@@ -203,7 +203,7 @@
                 Value="Clear all filters" />
     </Style>
 
-    <Style x:Key="Button.Round.Close"
+    <Style x:Key="Button.Round.Cross"
            TargetType="{x:Type Button}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
@@ -434,38 +434,14 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <Rectangle Height="15"
-                                   Width="15"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Stroke="{StaticResource ButtonGlyphBrush}"
-                                   StrokeThickness="2" />
-                        <Path Data="M19,0 L0,16"
-                              HorizontalAlignment="Center"
-                              Margin="22.25,12.5,12.5,22.75"
-                              StrokeThickness="2"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
-                              VerticalAlignment="Center"
-                              Height="4.75"
-                              Stretch="Fill"
-                              Width="5.25"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="-1" />
-                                    <SkewTransform />
-                                    <RotateTransform />
-                                    <TranslateTransform />
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
                         <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
                                    FontFamily="Segoe UI"
-                                   FontSize="16"
-                                   Margin="24,3,0,0"
-                                   HorizontalAlignment="Left"
-                                   Text="*"
-                                   VerticalAlignment="Top" />
+                                   FontWeight="Bold"
+                                   FontSize="38"
+                                   Margin="1,-8,0,0"
+                                   HorizontalAlignment="Center"
+                                   Text="+"
+                                   VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

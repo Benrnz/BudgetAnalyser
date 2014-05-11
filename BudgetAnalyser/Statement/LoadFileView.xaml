@@ -96,7 +96,7 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Command="{Binding CancelCommand}"
-                    Style="{StaticResource Button.Round.Close}" />
+                    Style="{StaticResource Button.Round.Cross}" />
             <Button Command="{Binding ActionCommand}"
                     Style="{StaticResource Button.Round.Load}"
                     ToolTip="{Binding ActionButtonText}" />
