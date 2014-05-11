@@ -223,7 +223,7 @@
                          SelectionMode="Single" />
             </StackPanel>
         </ScrollViewer>
-        <Button Background="{StaticResource Brush.CreditBackground1}"
+        <Button Background="{StaticResource Brush.BudgetBucket.Income}"
                 Command="{Binding AddNewIncomeCommand}"
                 Grid.Row="2"
                 Style="{StaticResource BudgetButton}">
@@ -255,7 +255,7 @@
                     Grid.Row="2"
                     HorizontalAlignment="Stretch"
                     Orientation="Horizontal">
-            <Button Background="{StaticResource Brush.DebitBackground1}"
+            <Button Background="{StaticResource Brush.BudgetBucket.SpentMonthly}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
@@ -266,7 +266,7 @@
                     <budget:SpentMonthlyExpenseBucket />
                 </Button.CommandParameter>
             </Button>
-            <Button Background="{StaticResource Brush.DebitBackground2}"
+            <Button Background="{StaticResource Brush.BudgetBucket.Accumulated}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
