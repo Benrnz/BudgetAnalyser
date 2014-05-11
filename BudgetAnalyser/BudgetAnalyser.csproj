@@ -117,7 +117,10 @@
     </Compile>
     <Compile Include="Budget\BudgetPieController.cs" />
     <Compile Include="Budget\BudgetReadyMessage.cs" />
-    <Compile Include="Budget\BudgetSelectionViewLoader.cs" />
+    <Compile Include="Budget\BudgetSelectionView.xaml.cs">
+      <DependentUpon>BudgetSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\BudgetSelectionViewModel.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="BurnDownGraphs\BucketBurnDownController.cs" />
@@ -225,9 +228,6 @@
     <Compile Include="Budget\BudgetMaintenance.xaml.cs">
       <DependentUpon>BudgetMaintenance.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Budget\BudgetSelectionView.xaml.cs">
-      <DependentUpon>BudgetSelectionView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Budget\ChooseBudgetBucketUserControl.xaml.cs">
       <DependentUpon>ChooseBudgetBucketUserControl.xaml</DependentUpon>
     </Compile>
@@ -263,6 +263,10 @@
     </Compile>
     <Compile Include="UserPrompts.cs" />
     <Page Include="Budget\BudgetDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\BudgetSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -381,10 +385,6 @@
     <Page Include="Budget\BudgetMaintenance.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Budget\BudgetSelectionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Budget\ChooseBudgetBucketUserControl.xaml">
       <SubType>Designer</SubType>

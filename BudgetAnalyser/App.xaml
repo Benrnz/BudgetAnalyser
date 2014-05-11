@@ -44,28 +44,37 @@
             <converters:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility"/>
             <converters:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
 
-            <DataTemplate DataType="{x:Type statement:StatementController}">
-                <statement:StatementUserControl />
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type budget:BudgetController}">
-                <budget:BudgetMaintenance />
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type budget:BudgetPieController}">
-                <budget:BudgetPie />
-            </DataTemplate>
-            
+            <!-- Data Templates -->
             <DataTemplate DataType="{x:Type burndown:BucketBurnDownController}">
                 <burndown:BucketBurnDownLineChart />
             </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
-                <ledgerBook:LedgerBookUserControl />
+
+            <DataTemplate DataType="{x:Type budget:BudgetController}">
+                <budget:BudgetMaintenance />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type budget1:BudgetCurrencyContext}">
+                <budget:BudgetDetailsView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type budget:BudgetPieController}">
+                <budget:BudgetPie />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type budget:BudgetSelectionViewModel}">
+                <budget:BudgetSelectionView/>
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type dashboard:DashboardController}">
                 <dashboard:DashboardUserControl />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
+                <ledgerBook:LedgerBookUserControl />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type statement:StatementController}">
+                <statement:StatementUserControl />
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
@@ -74,10 +83,6 @@
             
             <DataTemplate DataType="{x:Type matching:RulesController}">
                 <matching:EditRulesUserControl />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type budget1:BudgetCurrencyContext}">
-                <budget:BudgetDetailsView />
             </DataTemplate>
 
         </ResourceDictionary>

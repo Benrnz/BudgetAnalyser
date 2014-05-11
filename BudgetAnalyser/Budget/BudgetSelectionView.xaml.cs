@@ -1,35 +1,18 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Budget
 {
-    public partial class BudgetSelectionView : Window
+    /// <summary>
+    ///     Interaction logic for BudgetSelectionView.xaml
+    /// </summary>
+    public partial class BudgetSelectionView : UserControl
     {
         public BudgetSelectionView()
         {
             InitializeComponent();
-        }
-
-        private void OnBudgetClick(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button == null)
-            {
-                throw new InvalidOperationException("Expected Items-Control item to be a button so click is captured.");
-            }
-
-            var budget = button.DataContext as BudgetModel;
-            if (budget == null)
-            {
-                throw new InvalidOperationException("Expected Data-Context of button to be a Budget-Model.");
-            }
-
-            Close();
-            ((BudgetController)DataContext).ShowOtherBudget(budget);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -24,7 +24,6 @@ namespace BudgetAnalyser.Budget
         private readonly IBudgetBucketRepository bucketRepo;
 
         private readonly IBudgetRepository budgetRepository;
-        private readonly IViewLoader budgetSelectionLoader;
         private readonly DemoFileHelper demoFileHelper;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
@@ -38,13 +37,13 @@ namespace BudgetAnalyser.Budget
         private decimal expenseTotal;
         private decimal incomeTotal;
         private bool loading;
+        private Guid popUpCorrelationId;
         private decimal surplus;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext uiContext,
-            [NotNull] BudgetSelectionViewLoader budgetSelectionLoader,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IBudgetBucketRepository bucketRepo)
         {
@@ -58,11 +57,6 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (budgetSelectionLoader == null)
-            {
-                throw new ArgumentNullException("budgetSelectionLoader");
-            }
-
             if (demoFileHelper == null)
             {
                 throw new ArgumentNullException("demoFileHelper");
@@ -73,7 +67,6 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("bucketRepo");
             }
 
-            this.budgetSelectionLoader = budgetSelectionLoader;
             this.demoFileHelper = demoFileHelper;
             this.bucketRepo = bucketRepo;
             this.budgetRepository = budgetRepository;
@@ -88,6 +81,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
 
             var budget = new BudgetModel();
             CurrentBudget = new BudgetCurrencyContext(new BudgetCollection(new[] { budget }), budget);
@@ -252,18 +246,6 @@ namespace BudgetAnalyser.Budget
         public string TruncatedFileName
         {
             get { return Budgets.FileName.TruncateLeft(100, true); }
-        }
-
-        public void SelectOtherBudget()
-        {
-            this.budgetSelectionLoader.ShowDialog(this);
-        }
-
-        public void ShowOtherBudget(BudgetModel budgetToShow)
-        {
-            CurrentBudget = new BudgetCurrencyContext(Budgets, budgetToShow);
-            Shown = true;
-            this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
         }
 
         protected virtual string BuildDefaultFileName()
@@ -503,7 +485,28 @@ namespace BudgetAnalyser.Budget
 
             this.dirty = false;
             string fileName = GetFileNameFromUserForOpen();
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return;
+            }
+
             LoadBudget(fileName);
+        }
+
+        private void OnPopUpResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (message.CorrelationId != this.popUpCorrelationId)
+            {
+                return;
+            }
+
+            var viewModel = (BudgetSelectionViewModel)message.Content;
+            if (viewModel.Selected == null || viewModel.Selected == CurrentBudget.Model)
+            {
+                return;
+            }
+
+            ShowOtherBudget(viewModel.Selected);
         }
 
         private void OnSaveAsCommandExecute()
@@ -576,6 +579,23 @@ namespace BudgetAnalyser.Budget
             }
 
             return false;
+        }
+
+        private void SelectOtherBudget()
+        {
+            this.popUpCorrelationId = Guid.NewGuid();
+            var popUpRequest = new RequestShellDialogMessage(new BudgetSelectionViewModel { Budgets = Budgets }, ShellDialogType.Ok)
+            {
+                CorrelationId = this.popUpCorrelationId,
+            };
+            MessengerInstance.Send(popUpRequest);
+        }
+
+        private void ShowOtherBudget(BudgetModel budgetToShow)
+        {
+            CurrentBudget = new BudgetCurrencyContext(Budgets, budgetToShow);
+            Shown = true;
+            this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
         }
 
         private void ValidateAndClose()
