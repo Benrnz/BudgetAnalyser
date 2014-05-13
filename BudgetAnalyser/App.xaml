@@ -73,6 +73,10 @@
                 <ledgerBook:LedgerBookUserControl />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type statement:LoadFileController}">
+                <statement:LoadFileView />
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type statement:StatementController}">
                 <statement:StatementUserControl />
             </DataTemplate>

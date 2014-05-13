@@ -1,14 +1,10 @@
-﻿<Window x:Class="BudgetAnalyser.Statement.LoadFileView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="305"
-        Icon="..\UI\Assets\PieChart.png"
-        ResizeMode="NoResize"
-        Title="{Binding WindowTitle}"
-        Width="500"
-        WindowState="Normal">
+﻿<UserControl x:Class="BudgetAnalyser.Statement.LoadFileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Grid Background="{StaticResource Brush.MainBackground}">
+    <!-- DataContext LoadFileController -->
+    
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -111,4 +107,4 @@
         </StackPanel>
     </Grid>
 
-</Window>
+</UserControl>

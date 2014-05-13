@@ -483,7 +483,7 @@ namespace BudgetAnalyser.Statement
 
             this.shellDialogCorrelationId = Guid.NewGuid();
             MessengerInstance.Send(
-                new RequestShellDialogMessage(
+                new ShellDialogRequestMessage(
                     new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
                 {

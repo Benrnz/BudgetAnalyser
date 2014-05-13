@@ -46,7 +46,7 @@ namespace BudgetAnalyser
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
-            MessengerInstance.Register<RequestShellDialogMessage>(this, OnPopUpDialogRequested);
+            MessengerInstance.Register<ShellDialogRequestMessage>(this, OnPopUpDialogRequested);
 
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
@@ -208,7 +208,7 @@ namespace BudgetAnalyser
             });
         }
 
-        private void OnPopUpDialogRequested(RequestShellDialogMessage message)
+        private void OnPopUpDialogRequested(ShellDialogRequestMessage message)
         {
             PopupTitle = message.Title;
             PopupDialogContent = message.Content;

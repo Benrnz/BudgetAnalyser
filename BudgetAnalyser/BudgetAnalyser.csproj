@@ -151,6 +151,7 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="IShellDialogInteractivity.cs" />
     <Compile Include="IUiContext.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
     <Compile Include="Matching\AppliedRulesController.cs" />
@@ -166,14 +167,16 @@
     <Compile Include="Matching\MatchingRuleEventArgs.cs" />
     <Compile Include="Matching\RulesController.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
-    <Compile Include="RequestShellDialogMessage.cs" />
+    <Compile Include="ShellDialogRequestMessage.cs" />
     <Compile Include="ShellDialogResponse.cs" />
     <Compile Include="ShellDialogResponseMessage.cs" />
     <Compile Include="ShellDialogType.cs" />
     <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
     <Compile Include="Statement\EditingTransactionViewModel.cs" />
-    <Compile Include="Statement\LoadFileViewLoader.cs" />
+    <Compile Include="Statement\LoadFileView.xaml.cs">
+      <DependentUpon>LoadFileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IShowableController.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationController.cs" />
     <Compile Include="LedgerBook\LastLedgerBookLoadedV1.cs" />
@@ -252,9 +255,6 @@
     <Compile Include="LedgerBook\LedgerTransactionUserControl.xaml.cs">
       <DependentUpon>LedgerTransactionUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statement\LoadFileView.xaml.cs">
-      <DependentUpon>LoadFileView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml.cs">
       <DependentUpon>CurrentMonthBurnDownGraphsView.xaml</DependentUpon>
     </Compile>
@@ -289,6 +289,10 @@
     <Page Include="ReportsCatalog\ReportsCatalogUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Statement\LoadFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Assets\DateFilterImage.xaml">
       <SubType>Designer</SubType>
@@ -415,10 +419,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LedgerBook\LedgerTransactionUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Statement\LoadFileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,7 +20,6 @@ namespace BudgetAnalyser.Statement
         private readonly IUserMessageBox messageBox;
         private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
-        private readonly IViewLoader viewLoader;
         private bool actionButtonReady;
         private string doNotUseAccountName;
         private string doNotUseActionButtonText;
@@ -30,18 +29,14 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseNewAccountName;
         private string doNotUseSelectedExistingAccountName;
         private string windowTitle;
+        private Guid popUpCorrelationId;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LoadFileController([NotNull] LoadFileViewLoader viewLoader,
+        public LoadFileController(
             [NotNull] UiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] IVersionedStatementModelRepository statementModelRepository)
         {
-            if (viewLoader == null)
-            {
-                throw new ArgumentNullException("viewLoader");
-            }
-
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
@@ -59,10 +54,27 @@ namespace BudgetAnalyser.Statement
 
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.statementModelRepository = statementModelRepository;
-            this.viewLoader = viewLoader;
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
             this.accountTypeRepository = accountTypeRepository;
             UseExistingAccountName = true;
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellPopUpResponseReceived);
+        }
+
+        private void OnShellPopUpResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (this.popUpCorrelationId != message.CorrelationId)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(AccountName))
+            {
+                AccountName = SelectedExistingAccountName;
+            }
+
+            // TODO
         }
 
         public string AccountName
@@ -308,8 +320,9 @@ namespace BudgetAnalyser.Statement
             {
                 AccountName = SelectedExistingAccountName;
             }
-
-            this.viewLoader.Close();
+            
+            // TODO
+            //this.viewLoader.Close();
         }
 
         private void OnBrowseForFileCommandExecute()
@@ -338,7 +351,8 @@ namespace BudgetAnalyser.Statement
         private void OnCancelCommandExecute()
         {
             FileName = null;
-            this.viewLoader.Close();
+            // TODO
+            //this.viewLoader.Close();
         }
 
         private void RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)
@@ -351,11 +365,10 @@ namespace BudgetAnalyser.Statement
             List<string> listOfNames = PrepareAccountNames(existingAccountNamesCopy);
             ExistingAccountNames = listOfNames;
             SelectedExistingAccountName = listOfNames.First();
-            this.viewLoader.ShowDialog(this);
-            if (string.IsNullOrWhiteSpace(AccountName))
-            {
-                AccountName = SelectedExistingAccountName;
-            }
+            
+            this.popUpCorrelationId = Guid.NewGuid();
+            var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel) { CorrelationId = this.popUpCorrelationId };
+            MessengerInstance.Send(popRequest);
         }
     }
 }
