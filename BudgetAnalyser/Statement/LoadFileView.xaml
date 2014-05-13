@@ -4,7 +4,7 @@
 
     <!-- DataContext LoadFileController -->
     
-    <Grid>
+    <Grid Margin="50,0,50,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -13,7 +13,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Margin="3"
@@ -87,19 +86,9 @@
                            Text="{Binding SuggestedDateRange}" />
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.ColumnSpan="3"
-                    Grid.Row="2"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-            <Button Command="{Binding CancelCommand}"
-                    Style="{StaticResource Button.Round.Cross}" />
-            <Button Command="{Binding ActionCommand}"
-                    Style="{StaticResource Button.Round.Load}"
-                    ToolTip="{Binding ActionButtonText}" />
-        </StackPanel>
         <StackPanel Orientation="Horizontal"
                     Grid.ColumnSpan="3"
-                    Grid.Row="3">
+                    Grid.Row="2">
             <Image Source="../UI/Assets/warning.png"
                    Height="20"
                    Margin="5" />

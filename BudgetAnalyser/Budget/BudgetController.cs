@@ -9,6 +9,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;

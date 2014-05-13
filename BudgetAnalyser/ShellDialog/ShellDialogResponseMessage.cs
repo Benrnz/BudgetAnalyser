@@ -1,20 +1,19 @@
 ﻿using System;
 using GalaSoft.MvvmLight.Messaging;
 
-namespace BudgetAnalyser
+namespace BudgetAnalyser.ShellDialog
 {
     public class ShellDialogResponseMessage : MessageBase
     {
-        public ShellDialogResponseMessage(object content, ShellDialogResponse response)
+        public ShellDialogResponseMessage(object content, ShellDialogButton response)
         {
             Content = content;
             Response = response;
         }
 
+        public object Content { get; private set; }
         public Guid CorrelationId { get; set; }
 
-        public object Content { get; private set; }
-
-        public ShellDialogResponse Response { get; private set; }
+        public ShellDialogButton Response { get; private set; }
     }
 }

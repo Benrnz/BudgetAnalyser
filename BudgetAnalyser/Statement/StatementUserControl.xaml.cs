@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.ShellDialog;
 
 namespace BudgetAnalyser.Statement
 {

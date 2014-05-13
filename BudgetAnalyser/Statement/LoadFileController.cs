@@ -8,13 +8,14 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
-    public class LoadFileController : ControllerBase
+    public class LoadFileController : ControllerBase, IShellDialogInteractivity
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
@@ -28,7 +29,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseFileTypeSelectionReady;
         private bool doNotUseNewAccountName;
         private string doNotUseSelectedExistingAccountName;
-        private string windowTitle;
+        private string doNotUseTitle;
         private Guid popUpCorrelationId;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -59,22 +60,7 @@ namespace BudgetAnalyser.Statement
             UseExistingAccountName = true;
 
             MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellPopUpResponseReceived);
-        }
-
-        private void OnShellPopUpResponseReceived(ShellDialogResponseMessage message)
-        {
-            if (this.popUpCorrelationId != message.CorrelationId)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(AccountName))
-            {
-                AccountName = SelectedExistingAccountName;
-            }
-
-            // TODO
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public string AccountName
@@ -119,6 +105,21 @@ namespace BudgetAnalyser.Statement
         public ICommand BrowseForFileCommand
         {
             get { return new RelayCommand(OnBrowseForFileCommandExecute); }
+        }
+
+        public bool CanExecuteCancelButton
+        {
+            get { return true; }
+        }
+
+        public bool CanExecuteOkButton
+        {
+            get { return this.actionButtonReady; }
+        }
+
+        public bool CanExecuteSaveButton
+        {
+            get { return false; }
         }
 
         public ICommand CancelCommand
@@ -173,6 +174,16 @@ namespace BudgetAnalyser.Statement
 
         public string SuggestedDateRange { get; private set; }
 
+        public string Title
+        {
+            get { return this.doNotUseTitle; }
+            private set
+            {
+                this.doNotUseTitle = value;
+                RaisePropertyChanged(() => Title);
+            }
+        }
+
         public bool UseExistingAccountName
         {
             get { return this.doNotUseExistingAccountName; }
@@ -195,21 +206,11 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public string WindowTitle
-        {
-            get { return this.windowTitle; }
-            private set
-            {
-                this.windowTitle = value;
-                RaisePropertyChanged(() => WindowTitle);
-            }
-        }
-
         public void RequestUserInputForMerging(StatementModel currentStatement)
         {
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
-            WindowTitle = "Merge Statement";
+            Title = "Merge Statement";
             ActionButtonText = "Merge";
             if (currentStatement != null)
             {
@@ -241,7 +242,7 @@ namespace BudgetAnalyser.Statement
         {
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
-            WindowTitle = "Open Statement";
+            Title = "Open Statement";
             ActionButtonText = "Open";
             RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
@@ -320,7 +321,7 @@ namespace BudgetAnalyser.Statement
             {
                 AccountName = SelectedExistingAccountName;
             }
-            
+
             // TODO
             //this.viewLoader.Close();
         }
@@ -355,6 +356,21 @@ namespace BudgetAnalyser.Statement
             //this.viewLoader.Close();
         }
 
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (this.popUpCorrelationId != message.CorrelationId)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(AccountName))
+            {
+                AccountName = SelectedExistingAccountName;
+            }
+
+            // TODO
+        }
+
         private void RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)
         {
             UseExistingAccountName = true;
@@ -365,7 +381,7 @@ namespace BudgetAnalyser.Statement
             List<string> listOfNames = PrepareAccountNames(existingAccountNamesCopy);
             ExistingAccountNames = listOfNames;
             SelectedExistingAccountName = listOfNames.First();
-            
+
             this.popUpCorrelationId = Guid.NewGuid();
             var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel) { CorrelationId = this.popUpCorrelationId };
             MessengerInstance.Send(popRequest);

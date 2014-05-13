@@ -10,6 +10,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
+using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -77,7 +78,7 @@ namespace BudgetAnalyser
 
         public ICommand DialogCommand
         {
-            get { return new RelayCommand<string>(OnDialogCommandExecute, CanDialogCommandExecute); }
+            get { return new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand); }
         }
 
         public bool DialogOkIsCancel
@@ -179,25 +180,47 @@ namespace BudgetAnalyser
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
 
-        private bool CanDialogCommandExecute(string arg)
+        private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
-            return PopupDialogContent != null && !string.IsNullOrWhiteSpace(arg) && BackgroundJob.MenuAvailable;
+            var baseResult = PopupDialogContent != null && BackgroundJob.MenuAvailable;
+            if (!baseResult)
+            {
+                return false;
+            }
+
+            var dialogInteractivity = PopupDialogContent as IShellDialogInteractivity;
+            if (dialogInteractivity == null)
+            {
+                return true;
+            }
+
+            switch (arg)
+            {
+                case ShellDialogButton.Cancel:
+                    return dialogInteractivity.CanExecuteCancelButton;
+                case ShellDialogButton.Ok:
+                    return dialogInteractivity.CanExecuteOkButton;
+                case ShellDialogButton.Save:
+                    return dialogInteractivity.CanExecuteSaveButton;
+            }
+
+            return true;
         }
 
-        private void OnDialogCommandExecute(string commandType)
+        private void OnDialogCommandExecute(ShellDialogButton commandType)
         {
             // Delay execution so that keyed events happen
             Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
                 switch (commandType)
                 {
-                    case "Ok":
-                    case "Save":
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogResponse.Ok) { CorrelationId = this.dialogCorrelationId });
+                    case ShellDialogButton.Ok:
+                    case ShellDialogButton.Save:
+                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogButton.Ok) { CorrelationId = this.dialogCorrelationId });
                         break;
 
-                    case "Cancel":
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogResponse.Cancel) { CorrelationId = this.dialogCorrelationId });
+                    case ShellDialogButton.Cancel:
+                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogButton.Cancel) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     default:

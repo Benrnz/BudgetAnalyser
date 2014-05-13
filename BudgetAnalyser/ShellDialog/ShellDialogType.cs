@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser
+﻿namespace BudgetAnalyser.ShellDialog
 {
     public enum ShellDialogType
     {

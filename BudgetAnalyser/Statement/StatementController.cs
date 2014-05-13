@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
+using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
@@ -549,7 +550,7 @@ namespace BudgetAnalyser.Statement
         {
             if (message.CorrelationId != Guid.Empty && message.CorrelationId == this.shellDialogCorrelationId)
             {
-                if (message.Response == ShellDialogResponse.Ok)
+                if (message.Response == ShellDialogButton.Ok)
                 {
                     var viewModel = (EditingTransactionViewModel)message.Content;
                     if (viewModel.HasChanged)

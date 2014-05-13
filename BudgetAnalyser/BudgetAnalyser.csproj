@@ -151,7 +151,7 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
-    <Compile Include="IShellDialogInteractivity.cs" />
+    <Compile Include="ShellDialog\IShellDialogInteractivity.cs" />
     <Compile Include="IUiContext.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
     <Compile Include="Matching\AppliedRulesController.cs" />
@@ -167,10 +167,10 @@
     <Compile Include="Matching\MatchingRuleEventArgs.cs" />
     <Compile Include="Matching\RulesController.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
-    <Compile Include="ShellDialogRequestMessage.cs" />
-    <Compile Include="ShellDialogResponse.cs" />
-    <Compile Include="ShellDialogResponseMessage.cs" />
-    <Compile Include="ShellDialogType.cs" />
+    <Compile Include="ShellDialog\ShellDialogRequestMessage.cs" />
+    <Compile Include="ShellDialog\ShellDialogButton.cs" />
+    <Compile Include="ShellDialog\ShellDialogResponseMessage.cs" />
+    <Compile Include="ShellDialog\ShellDialogType.cs" />
     <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
     <Compile Include="Statement\EditingTransactionViewModel.cs" />

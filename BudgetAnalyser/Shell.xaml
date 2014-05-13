@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog"
         Background="{StaticResource Brush.MainBackground}"
         Height="350"
         Icon="UI\Assets\PieChart.png"
@@ -61,19 +62,28 @@
                                     Margin="10"
                                     Orientation="Horizontal">
                             <Button Command="{Binding DialogCommand}"
-                                    CommandParameter="Save"
                                     Style="{StaticResource Button.Round.Save}"
-                                    Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
+                                    Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                                <Button.CommandParameter>
+                                    <shellDialog:ShellDialogButton>Save</shellDialog:ShellDialogButton>
+                                </Button.CommandParameter>
+                            </Button>
                             <Button Command="{Binding DialogCommand}"
-                                    CommandParameter="Ok"
                                     IsDefault="False"
                                     IsCancel="{Binding DialogOkIsCancel}"
                                     Style="{StaticResource Button.Round.Ok}"
-                                    Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
+                                    Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                                <Button.CommandParameter>
+                                    <shellDialog:ShellDialogButton>Ok</shellDialog:ShellDialogButton>
+                                </Button.CommandParameter>
+                            </Button>
                             <Button Command="{Binding DialogCommand}"
-                                    CommandParameter="Cancel"
                                     Style="{StaticResource Button.Round.Cross}"
-                                    Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}" />
+                                    Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                                <Button.CommandParameter>
+                                    <shellDialog:ShellDialogButton>Cancel</shellDialog:ShellDialogButton>
+                                </Button.CommandParameter>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </Border>
