@@ -585,7 +585,7 @@ namespace BudgetAnalyser.Budget
         private void SelectOtherBudget()
         {
             this.popUpCorrelationId = Guid.NewGuid();
-            var popUpRequest = new ShellDialogRequestMessage(new BudgetSelectionViewModel { Budgets = Budgets }, ShellDialogType.Ok)
+            var popUpRequest = new ShellDialogRequestMessage(new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
             {
                 CorrelationId = this.popUpCorrelationId,
             };

@@ -17,7 +17,7 @@
                     ToolTip="Close and go back"/>
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.New}"
+                    Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add new transaction" />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding Title}" />

@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
+    // TODO Reconsider basing this on List<T>, a better might be ICollection<T> or IEnumerable<T>
     public class BudgetCollection : List<BudgetModel>, IModelValidate
     {
         public BudgetCollection()

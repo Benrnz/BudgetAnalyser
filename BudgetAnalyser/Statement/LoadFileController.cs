@@ -23,7 +23,6 @@ namespace BudgetAnalyser.Statement
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
         private bool actionButtonReady;
         private string doNotUseAccountName;
-        private string doNotUseActionButtonText;
         private bool doNotUseExistingAccountName;
         private string doNotUseFileName;
         private bool doNotUseFileTypeSelectionReady;
@@ -86,22 +85,6 @@ namespace BudgetAnalyser.Statement
             get { return this.accountTypeRepository.GetOrCreateNew(AccountName); }
         }
 
-        public string ActionButtonText
-        {
-            get { return this.doNotUseActionButtonText; }
-
-            private set
-            {
-                this.doNotUseActionButtonText = value;
-                RaisePropertyChanged(() => ActionButtonText);
-            }
-        }
-
-        public ICommand ActionCommand
-        {
-            get { return new RelayCommand(OnActionCommandExecute, ActionCommandCanExecute); }
-        }
-
         public ICommand BrowseForFileCommand
         {
             get { return new RelayCommand(OnBrowseForFileCommandExecute); }
@@ -120,11 +103,6 @@ namespace BudgetAnalyser.Statement
         public bool CanExecuteSaveButton
         {
             get { return false; }
-        }
-
-        public ICommand CancelCommand
-        {
-            get { return new RelayCommand(OnCancelCommandExecute); }
         }
 
         public IEnumerable<string> ExistingAccountNames { get; private set; }
@@ -211,7 +189,6 @@ namespace BudgetAnalyser.Statement
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Merge Statement";
-            ActionButtonText = "Merge";
             if (currentStatement != null)
             {
                 DateTime lastTransactionDate = currentStatement.AllTransactions.Max(t => t.Date).Date.AddDays(1);
@@ -243,7 +220,6 @@ namespace BudgetAnalyser.Statement
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Open Statement";
-            ActionButtonText = "Open";
             RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
@@ -315,17 +291,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void OnActionCommandExecute()
-        {
-            if (UseExistingAccountName)
-            {
-                AccountName = SelectedExistingAccountName;
-            }
-
-            // TODO
-            //this.viewLoader.Close();
-        }
-
         private void OnBrowseForFileCommandExecute()
         {
             IUserPromptOpenFile dialog = this.userPromptOpenFileFactory();
@@ -347,13 +312,6 @@ namespace BudgetAnalyser.Statement
             }
 
             FileName = dialog.FileName;
-        }
-
-        private void OnCancelCommandExecute()
-        {
-            FileName = null;
-            // TODO
-            //this.viewLoader.Close();
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -389,7 +347,11 @@ namespace BudgetAnalyser.Statement
             SelectedExistingAccountName = listOfNames.First();
 
             this.popUpCorrelationId = Guid.NewGuid();
-            var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel) { CorrelationId = this.popUpCorrelationId };
+            var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.popUpCorrelationId, 
+                Title = Title
+            };
             MessengerInstance.Send(popRequest);
         }
     }

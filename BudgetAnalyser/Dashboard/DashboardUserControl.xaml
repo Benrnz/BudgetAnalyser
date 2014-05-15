@@ -74,7 +74,7 @@
                     <TextBlock Grid.ColumnSpan="2"
                                Grid.Row="1"
                                Margin="4,0,4,4"
-                               Style="{StaticResource TextBlock.Paragraph}"
+                               Style="{StaticResource TextBlock.Widget.Paragraph}"
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"

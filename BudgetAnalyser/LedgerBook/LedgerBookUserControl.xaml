@@ -65,7 +65,7 @@
             <Button Command="{Binding LoadLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Load}" />
             <Button Command="{Binding AddNewLedgerBookCommand}"
-                    Style="{StaticResource Button.Round.New}"
+                    Style="{StaticResource Button.Round.Add}"
                     ToolTip="Create New Ledger Book" />
             <Button Command="{Binding CloseLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Clear}"

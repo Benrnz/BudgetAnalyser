@@ -155,7 +155,7 @@
                     </MenuItem>
                 </Menu>
                 <Button Command="{Binding OpenStatementCommand}"
-                        Style="{StaticResource Button.Round.New}"
+                        Style="{StaticResource Button.Round.Load}"
                         ToolTip="Load Transactions (Ctrl+O)" />
                 <Button Command="{Binding CloseStatementCommand}"
                         Style="{StaticResource Button.Round.Clear}"
@@ -164,7 +164,7 @@
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeStatementCommand}"
-                        Style="{StaticResource Button.Round.Load}"
+                        Style="{StaticResource Button.Round.Add}"
                         ToolTip="Merge in new Transactions" />
             </StackPanel>
         </Grid>
