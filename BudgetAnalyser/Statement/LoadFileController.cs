@@ -363,12 +363,18 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                Reset();
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(AccountName))
             {
                 AccountName = SelectedExistingAccountName;
             }
 
-            // TODO
+            // FileName is already set by data binding.
         }
 
         private void RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)

@@ -24,7 +24,8 @@
                  ToolTip="{Binding FileName}" />
         <Button Command="{Binding BrowseForFileCommand}"
                 Grid.Column="2"
-                Style="{StaticResource Button.Round.Build}" />
+                Style="{StaticResource Button.Round.Build}" 
+                ToolTip="Browse for a file..."/>
         <StackPanel Grid.ColumnSpan="3"
                     Grid.Row="1">
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
