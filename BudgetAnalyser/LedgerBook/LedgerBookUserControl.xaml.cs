@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using BudgetAnalyser.Converters;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -111,8 +112,19 @@ namespace BudgetAnalyser.LedgerBook
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
                 Grid.SetColumnSpan(border, ledger.BudgetBucket is SpentMonthlyExpenseBucket ? 1 : 2);
+
+                // Heading stripe to indicate SpentMonthly or SavedUpFor expenses.
+                var stripe = new Border()
+                {
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    BorderThickness = new Thickness(0, 6, 0, 0),
+                    BorderBrush = ledger.BudgetBucket is SpentMonthlyExpenseBucket ? ConverterHelper.SpentMonthlyBucketBrush : ConverterHelper.AccumulatedBucketBrush,
+                };
+                border.Child = stripe;
+
                 string tooltip = string.Format(CultureInfo.CurrentCulture, "{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
-                TextBlock ledgerTitle = AddContentToGrid(border, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, tooltip);
+                TextBlock ledgerTitle = AddContentToGrid(stripe, ledger.BudgetBucket.Code, ref column, 0, HeadingStyle, tooltip);
                 ledgerTitle.HorizontalAlignment = HorizontalAlignment.Center;
                 column--; // Ledger heading shares a column with other Ledger Headings
 

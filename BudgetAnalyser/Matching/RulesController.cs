@@ -228,11 +228,6 @@ namespace BudgetAnalyser.Matching
             if (NewRuleController.NewRule != null)
             {
                 AddToList(NewRuleController.NewRule);
-                //Rules.AddingNew += OnAddingNewGroup;
-                //Rules.AddNew();
-                //Rules.AddingNew -= OnAddingNewGroup;
-                //Rules.EndNew(0);
-                //SaveRules();
             }
         }
 
