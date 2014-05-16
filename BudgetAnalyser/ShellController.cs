@@ -23,6 +23,7 @@ namespace BudgetAnalyser
         private readonly IPersistApplicationState statePersistence;
         private readonly UiContext uiContext;
         private Guid dialogCorrelationId;
+        private ShellDialogType dialogType;
         private bool doNotUseCancelButtonVisible;
         private bool doNotUseOkButtonVisible;
 
@@ -74,6 +75,34 @@ namespace BudgetAnalyser
         public DashboardController DashboardController
         {
             get { return this.uiContext.DashboardController; }
+        }
+
+        public string DialogActionToolTip
+        {
+            get
+            {
+                var customTooltips = PopupDialogContent as IShellDialogToolTips;
+                if (customTooltips == null)
+                {
+                    return this.dialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
+                }
+
+                return customTooltips.ActionButtonToolTip;
+            }
+        }
+
+        public string DialogCloseToolTip
+        {
+            get
+            {
+                var customTooltips = PopupDialogContent as IShellDialogToolTips;
+                if (customTooltips == null)
+                {
+                    return "Close";
+                }
+
+                return customTooltips.CloseButtonToolTip;
+            }
         }
 
         public ICommand DialogCommand
@@ -182,7 +211,7 @@ namespace BudgetAnalyser
 
         private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
-            var baseResult = PopupDialogContent != null && BackgroundJob.MenuAvailable;
+            bool baseResult = PopupDialogContent != null && BackgroundJob.MenuAvailable;
             if (!baseResult)
             {
                 return false;
@@ -235,10 +264,14 @@ namespace BudgetAnalyser
         {
             PopupTitle = message.Title;
             PopupDialogContent = message.Content;
+            this.dialogType = message.DialogType;
             OkButtonVisible = message.DialogType == ShellDialogType.Ok || message.DialogType == ShellDialogType.OkCancel;
             SaveButtonVisible = message.DialogType == ShellDialogType.SaveCancel;
             CancelButtonVisible = message.DialogType != ShellDialogType.Ok;
             this.dialogCorrelationId = message.CorrelationId;
+
+            RaisePropertyChanged(() => DialogActionToolTip);
+            RaisePropertyChanged(() => DialogCloseToolTip);
         }
 
         private void OnShutdownRequested(ShutdownMessage message)

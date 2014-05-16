@@ -15,7 +15,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
-    public class LoadFileController : ControllerBase, IShellDialogInteractivity
+    public class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
@@ -189,6 +189,7 @@ namespace BudgetAnalyser.Statement
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Merge Statement";
+            ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
             if (currentStatement != null)
             {
                 DateTime lastTransactionDate = currentStatement.AllTransactions.Max(t => t.Date).Date.AddDays(1);
@@ -217,6 +218,7 @@ namespace BudgetAnalyser.Statement
 
         public void RequestUserInputForOpenFile()
         {
+            ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Open Statement";
@@ -349,10 +351,21 @@ namespace BudgetAnalyser.Statement
             this.popUpCorrelationId = Guid.NewGuid();
             var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
             {
-                CorrelationId = this.popUpCorrelationId, 
+                CorrelationId = this.popUpCorrelationId,
                 Title = Title
             };
             MessengerInstance.Send(popRequest);
+        }
+
+        public string ActionButtonToolTip
+        {
+            get;
+            private set;
+        }
+
+        public string CloseButtonToolTip
+        {
+            get { return "Cancel"; }
         }
     }
 }

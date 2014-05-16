@@ -89,6 +89,9 @@
                 <matching:EditRulesUserControl />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type matching:NewRuleController}">
+                <matching:NewRuleView />
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

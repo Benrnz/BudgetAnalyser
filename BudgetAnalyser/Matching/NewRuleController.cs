@@ -1,23 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
-using GalaSoft.MvvmLight.Command;
-using Rees.UserInteraction.Contracts;
+using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching
 {
-    public class NewRuleController : ControllerBase, IInitializableController
+    public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
-        private readonly IViewLoader viewLoader;
         private decimal doNotUseAmount;
         private string doNotUseDescription;
         private string doNotUseReference1;
@@ -29,12 +27,13 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseReference2;
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
+        private Guid shellDialogCorrelationId;
 
-        public NewRuleController([NotNull] CreateNewRuleViewLoader viewLoader, [NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public NewRuleController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
-            if (viewLoader == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException("viewLoader");
+                throw new ArgumentNullException("uiContext");
             }
 
             if (budgetBucketRepository == null)
@@ -42,8 +41,15 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("budgetBucketRepository");
             }
 
-            this.viewLoader = viewLoader;
             this.budgetBucketRepository = budgetBucketRepository;
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        }
+
+        public string ActionButtonToolTip
+        {
+            get { return "Save the new rule."; }
         }
 
         public decimal Amount
@@ -60,9 +66,24 @@ namespace BudgetAnalyser.Matching
 
         public BudgetBucket Bucket { get; set; }
 
-        public ICommand CancelCommand
+        public bool CanExecuteCancelButton
         {
-            get { return new RelayCommand(OnCancelCommandExecute); }
+            get { return true; }
+        }
+
+        public bool CanExecuteOkButton
+        {
+            get { return false; }
+        }
+
+        public bool CanExecuteSaveButton
+        {
+            get { return UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType; }
+        }
+
+        public string CloseButtonToolTip
+        {
+            get { return "Cancel"; }
         }
 
         public string Description
@@ -113,11 +134,6 @@ namespace BudgetAnalyser.Matching
                 RaisePropertyChanged(() => Reference3);
                 UpdateSimilarRules();
             }
-        }
-
-        public ICommand SaveCommand
-        {
-            get { return new RelayCommand(OnSaveCommandExecute); }
         }
 
         public IEnumerable<object> SimilarRules { get; private set; }
@@ -228,7 +244,14 @@ namespace BudgetAnalyser.Matching
                 }));
 
             UpdateSimilarRules();
-            this.viewLoader.ShowDialog(this);
+
+            this.shellDialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.SaveCancel)
+            {
+                CorrelationId = this.shellDialogCorrelationId,
+                Title = Title,
+            };
+            MessengerInstance.Send(dialogRequest);
         }
 
         private static bool IsEqualButNotBlank(string operand1, string operand2)
@@ -241,14 +264,13 @@ namespace BudgetAnalyser.Matching
             return operand1 == operand2;
         }
 
-        private void OnCancelCommandExecute()
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            NewRule = null;
-            this.viewLoader.Close();
-        }
+            if (message.CorrelationId != this.shellDialogCorrelationId)
+            {
+                return;
+            }
 
-        private void OnSaveCommandExecute()
-        {
             NewRule = new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
 
             if (Bucket == null)
@@ -281,11 +303,9 @@ namespace BudgetAnalyser.Matching
             {
                 NewRule.TransactionType = TransactionType;
             }
-
-            this.viewLoader.Close();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
         private void UpdateSimilarRules()
         {
             if (SimilarRules == null)

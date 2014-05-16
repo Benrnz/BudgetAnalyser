@@ -151,14 +151,13 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="Matching\NewRuleView.xaml.cs">
+      <DependentUpon>NewRuleView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShellDialog\IShellDialogInteractivity.cs" />
     <Compile Include="IUiContext.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
     <Compile Include="Matching\AppliedRulesController.cs" />
-    <Compile Include="Matching\CreateNewRuleView.xaml.cs">
-      <DependentUpon>CreateNewRuleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Matching\CreateNewRuleViewLoader.cs" />
     <Compile Include="Matching\EditRulesUserControl.xaml.cs">
       <DependentUpon>EditRulesUserControl.xaml</DependentUpon>
     </Compile>
@@ -170,6 +169,7 @@
     <Compile Include="ShellDialog\ShellDialogRequestMessage.cs" />
     <Compile Include="ShellDialog\ShellDialogButton.cs" />
     <Compile Include="ShellDialog\ShellDialogResponseMessage.cs" />
+    <Compile Include="ShellDialog\IShellDialogToolTips.cs" />
     <Compile Include="ShellDialog\ShellDialogType.cs" />
     <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
@@ -278,11 +278,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Matching\CreateNewRuleView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Matching\EditRulesUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Matching\NewRuleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
