@@ -94,10 +94,10 @@ namespace BudgetAnalyser.Budget
             this.filtered = true;
         }
 
-        public void ShowDialog()
+        public void ShowDialog(BudgetAnalyserFeature source)
         {
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Add New Ledger to Ledger Book",

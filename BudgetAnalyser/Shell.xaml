@@ -18,92 +18,40 @@
             <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />
         </Grid>
         <Grid>
+            
             <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding StatementController}"
                                   DataContext="{Binding StatementController}" />
+                <shellDialog:ShellDialogView DataContext="{Binding TransactionsDialog}" />
             </Grid>
+            
             <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding BudgetController}"
                                   VerticalAlignment="Stretch" />
+                <shellDialog:ShellDialogView DataContext="{Binding BudgetDialog}" />
             </Grid>
+            
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding LedgerBookController}"
                                   VerticalAlignment="Stretch" />
+                <shellDialog:ShellDialogView DataContext="{Binding LedgerBookDialog}" />
             </Grid>
+            
             <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding DashboardController}"
                                   VerticalAlignment="Stretch" />
+                <shellDialog:ShellDialogView DataContext="{Binding DashboardDialog}" />
             </Grid>
+            
             <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
+                <shellDialog:ShellDialogView DataContext="{Binding ReportsDialog}" />
             </Grid>
+            
             <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding RulesController}"
                                   VerticalAlignment="Stretch" />
-            </Grid>
-
-            <!-- Shell Pop Up Dialog -->
-            <Grid Background="#cc000000"
-                  KeyUp="OnShellDialogKeyUp"
-                  Visibility="{Binding DialogContent, Converter={StaticResource Converter.NullToVis}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height=".1*" />
-                    <RowDefinition Height=".6*"
-                                   MinHeight="75"
-                                   MaxHeight="600" />
-                    <RowDefinition Height=".3*" />
-                </Grid.RowDefinitions>
-                <Border Background="{StaticResource Brush.DialogBackground}"
-                        Grid.Row="1">
-                    <Border.Effect>
-                        <DropShadowEffect />
-                    </Border.Effect>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                                   Text="{Binding DialogTitle}" />
-                        <ContentPresenter Grid.Row="1"
-                                          Content="{Binding DialogContent}"
-                                          VerticalAlignment="Center"
-                                          Margin="10" />
-                        <StackPanel Grid.Row="2"
-                                    HorizontalAlignment="Right"
-                                    Margin="10"
-                                    Orientation="Horizontal">
-                            <Button Command="{Binding DialogCommand}"
-                                    ToolTip="{Binding DialogActionToolTip}"
-                                    Style="{StaticResource Button.Round.Save}"
-                                    Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
-                                <Button.CommandParameter>
-                                    <shellDialog:ShellDialogButton>Save</shellDialog:ShellDialogButton>
-                                </Button.CommandParameter>
-                            </Button>
-                            <Button Command="{Binding DialogCommand}"
-                                    IsDefault="False"
-                                    IsCancel="{Binding DialogOkIsCancel}"
-                                    ToolTip="{Binding DialogActionToolTip}"
-                                    Style="{StaticResource Button.Round.Ok}"
-                                    Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
-                                <Button.CommandParameter>
-                                    <shellDialog:ShellDialogButton>Ok</shellDialog:ShellDialogButton>
-                                </Button.CommandParameter>
-                            </Button>
-                            <Button Command="{Binding DialogCommand}"
-                                    Style="{StaticResource Button.Round.Cross}"
-                                    ToolTip="{Binding DialogCloseToolTip}"
-                                    Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
-                                <Button.CommandParameter>
-                                    <shellDialog:ShellDialogButton>Cancel</shellDialog:ShellDialogButton>
-                                </Button.CommandParameter>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </Border>
             </Grid>
         </Grid>
     </DockPanel>

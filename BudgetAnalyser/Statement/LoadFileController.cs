@@ -349,7 +349,7 @@ namespace BudgetAnalyser.Statement
             SelectedExistingAccountName = listOfNames.First();
 
             this.popUpCorrelationId = Guid.NewGuid();
-            var popRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            var popRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.popUpCorrelationId,
                 Title = Title

@@ -485,6 +485,7 @@ namespace BudgetAnalyser.Statement
             this.shellDialogCorrelationId = Guid.NewGuid();
             MessengerInstance.Send(
                 new ShellDialogRequestMessage(
+                    BudgetAnalyserFeature.Transactions, 
                     new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
                 {

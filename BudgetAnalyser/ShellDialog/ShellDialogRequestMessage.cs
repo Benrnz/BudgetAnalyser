@@ -5,8 +5,9 @@ namespace BudgetAnalyser.ShellDialog
 {
     public class ShellDialogRequestMessage : MessageBase
     {
-        public ShellDialogRequestMessage(object content, ShellDialogType type)
+        public ShellDialogRequestMessage(BudgetAnalyserFeature location, object content, ShellDialogType type)
         {
+            Location = location;
             Content = content;
             DialogType = type;
         }
@@ -23,6 +24,7 @@ namespace BudgetAnalyser.ShellDialog
         public Guid CorrelationId { get; set; }
 
         public ShellDialogType DialogType { get; private set; }
+        public BudgetAnalyserFeature Location { get; private set; }
 
         public string Title { get; set; }
     }

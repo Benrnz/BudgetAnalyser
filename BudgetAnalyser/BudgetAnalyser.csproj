@@ -108,6 +108,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BackgroundProcessingJobMetadata.cs" />
+    <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetAnalysisBuilder.cs" />
     <Compile Include="Budget\BudgetAnalysisController.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Matching\MatchingRuleEventArgs.cs" />
     <Compile Include="Matching\RulesController.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
+    <Compile Include="ShellDialog\ShellDialogController.cs" />
     <Compile Include="ShellDialog\ShellDialogRequestMessage.cs" />
     <Compile Include="ShellDialog\ShellDialogButton.cs" />
     <Compile Include="ShellDialog\ShellDialogResponseMessage.cs" />
@@ -174,6 +176,9 @@
     <Compile Include="ShellDialog\ShellDialogType.cs" />
     <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
+    <Compile Include="ShellDialog\ShellDialogView.xaml.cs">
+      <DependentUpon>ShellDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Statement\EditingTransactionViewModel.cs" />
     <Compile Include="Statement\LoadFileView.xaml.cs">
       <DependentUpon>LoadFileView.xaml</DependentUpon>
@@ -288,6 +293,10 @@
     <Page Include="ReportsCatalog\ReportsCatalogUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShellDialog\ShellDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Statement\LoadFileView.xaml">
       <SubType>Designer</SubType>

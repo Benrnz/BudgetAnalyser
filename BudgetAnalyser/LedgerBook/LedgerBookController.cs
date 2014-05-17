@@ -367,7 +367,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
             ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBudgetBucket, "Choose an Expense Budget Bucket");
-            ChooseBudgetBucketController.ShowDialog();
+            ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook);
         }
 
         private void OnAddNewReconciliationCommandExecuted()

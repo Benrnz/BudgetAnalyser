@@ -246,7 +246,7 @@ namespace BudgetAnalyser.Matching
             UpdateSimilarRules();
 
             this.shellDialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.SaveCancel)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
             {
                 CorrelationId = this.shellDialogCorrelationId,
                 Title = Title,

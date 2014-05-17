@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="BudgetAnalyser.ShellDialog.ShellDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog">
+
+    <!-- DataContext ShellDialogController -->
+    
+    <Grid Background="#cc000000"
+          KeyUp="OnShellDialogKeyUp"
+          Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".1*" />
+            <RowDefinition Height=".6*"
+                           MinHeight="75"
+                           MaxHeight="600" />
+            <RowDefinition Height=".3*" />
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource Brush.DialogBackground}"
+                Grid.Row="1">
+            <Border.Effect>
+                <DropShadowEffect />
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource TextBlock.Heading1}"
+                           Text="{Binding Title}" />
+                <ContentPresenter Grid.Row="1"
+                                  Content="{Binding Content}"
+                                  VerticalAlignment="Center"
+                                  Margin="10" />
+                <StackPanel Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            Margin="10"
+                            Orientation="Horizontal">
+                    <Button Command="{Binding DialogCommand}"
+                            ToolTip="{Binding ActionToolTip}"
+                            Style="{StaticResource Button.Round.Save}"
+                            Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                        <Button.CommandParameter>
+                            <shellDialog:ShellDialogButton>Save</shellDialog:ShellDialogButton>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Command="{Binding DialogCommand}"
+                            IsDefault="False"
+                            IsCancel="{Binding OkIsCancel}"
+                            ToolTip="{Binding ActionToolTip}"
+                            Style="{StaticResource Button.Round.Ok}"
+                            Visibility="{Binding OkButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                        <Button.CommandParameter>
+                            <shellDialog:ShellDialogButton>Ok</shellDialog:ShellDialogButton>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Command="{Binding DialogCommand}"
+                            Style="{StaticResource Button.Round.Cross}"
+                            ToolTip="{Binding CloseToolTip}"
+                            Visibility="{Binding CancelButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                        <Button.CommandParameter>
+                            <shellDialog:ShellDialogButton>Cancel</shellDialog:ShellDialogButton>
+                        </Button.CommandParameter>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -386,7 +386,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             IsReadOnly = !isNew;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.Ok)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = Title,

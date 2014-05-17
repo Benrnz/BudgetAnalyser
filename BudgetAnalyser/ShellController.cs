@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -12,7 +10,6 @@ using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 
@@ -22,14 +19,6 @@ namespace BudgetAnalyser
     {
         private readonly IPersistApplicationState statePersistence;
         private readonly UiContext uiContext;
-        private Guid dialogCorrelationId;
-        private ShellDialogType dialogType;
-        private bool doNotUseCancelButtonVisible;
-
-        private object doNotUseDialogContent;
-        private string doNotUseDialogTitle;
-        private bool doNotUseOkButtonVisible;
-        private bool doNotUseSaveButtonVisible;
         private bool initialised;
 
         public ShellController(
@@ -53,6 +42,12 @@ namespace BudgetAnalyser
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
             BackgroundJob = uiContext.BackgroundJob;
+
+            LedgerBookDialog = new ShellDialogController();
+            DashboardDialog = new ShellDialogController();
+            TransactionsDialog = new ShellDialogController();
+            BudgetDialog = new ShellDialogController();
+            ReportsDialog = new ShellDialogController();
         }
 
         public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
@@ -62,98 +57,25 @@ namespace BudgetAnalyser
             get { return this.uiContext.BudgetController; }
         }
 
-        public bool CancelButtonVisible
-        {
-            get { return this.doNotUseCancelButtonVisible; }
-            set
-            {
-                this.doNotUseCancelButtonVisible = value;
-                RaisePropertyChanged(() => CancelButtonVisible);
-            }
-        }
+        public ShellDialogController BudgetDialog { get; private set; }
 
         public DashboardController DashboardController
         {
             get { return this.uiContext.DashboardController; }
         }
 
-        public string DialogActionToolTip
-        {
-            get
-            {
-                var customTooltips = DialogContent as IShellDialogToolTips;
-                if (customTooltips == null)
-                {
-                    return this.dialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
-                }
-
-                return customTooltips.ActionButtonToolTip;
-            }
-        }
-
-        public string DialogCloseToolTip
-        {
-            get
-            {
-                var customTooltips = DialogContent as IShellDialogToolTips;
-                if (customTooltips == null)
-                {
-                    return "Close";
-                }
-
-                return customTooltips.CloseButtonToolTip;
-            }
-        }
-
-        public ICommand DialogCommand
-        {
-            get { return new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand); }
-        }
-
-        public object DialogContent
-        {
-            get { return this.doNotUseDialogContent; }
-            set
-            {
-                this.doNotUseDialogContent = value;
-                RaisePropertyChanged(() => DialogContent);
-            }
-        }
-
-        public bool DialogOkIsCancel
-        {
-            get { return OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible; }
-        }
-
-        public string DialogTitle
-        {
-            get { return this.doNotUseDialogTitle; }
-            set
-            {
-                this.doNotUseDialogTitle = value;
-                RaisePropertyChanged(() => DialogTitle);
-            }
-        }
+        public ShellDialogController DashboardDialog { get; private set; }
 
         public LedgerBookController LedgerBookController
         {
             get { return this.uiContext.LedgerBookController; }
         }
 
+        public ShellDialogController LedgerBookDialog { get; private set; }
+
         public MainMenuController MainMenuController
         {
             get { return this.uiContext.MainMenuController; }
-        }
-
-        public bool OkButtonVisible
-        {
-            get { return this.doNotUseOkButtonVisible; }
-            set
-            {
-                this.doNotUseOkButtonVisible = value;
-                RaisePropertyChanged(() => OkButtonVisible);
-                RaisePropertyChanged(() => DialogOkIsCancel);
-            }
         }
 
         public ReportsCatalogController ReportsCatalogController
@@ -161,25 +83,19 @@ namespace BudgetAnalyser
             get { return this.uiContext.ReportsCatalogController; }
         }
 
+        public ShellDialogController ReportsDialog { get; private set; }
+
         public RulesController RulesController
         {
             get { return this.uiContext.RulesController; }
-        }
-
-        public bool SaveButtonVisible
-        {
-            get { return this.doNotUseSaveButtonVisible; }
-            set
-            {
-                this.doNotUseSaveButtonVisible = value;
-                RaisePropertyChanged(() => SaveButtonVisible);
-            }
         }
 
         public StatementController StatementController
         {
             get { return this.uiContext.StatementController; }
         }
+
+        public ShellDialogController TransactionsDialog { get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
         public string WindowTitle
@@ -209,70 +125,39 @@ namespace BudgetAnalyser
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
 
-        private bool CanExecuteDialogCommand(ShellDialogButton arg)
-        {
-            bool baseResult = DialogContent != null && BackgroundJob.MenuAvailable;
-            if (!baseResult)
-            {
-                return false;
-            }
-
-            var dialogInteractivity = DialogContent as IShellDialogInteractivity;
-            if (dialogInteractivity == null)
-            {
-                return true;
-            }
-
-            switch (arg)
-            {
-                case ShellDialogButton.Cancel:
-                    return dialogInteractivity.CanExecuteCancelButton;
-                case ShellDialogButton.Ok:
-                    return dialogInteractivity.CanExecuteOkButton;
-                case ShellDialogButton.Save:
-                    return dialogInteractivity.CanExecuteSaveButton;
-            }
-
-            return true;
-        }
-
-        private void OnDialogCommandExecute(ShellDialogButton commandType)
-        {
-            // Delay execution so that keyed events happen
-            Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                switch (commandType)
-                {
-                    case ShellDialogButton.Ok:
-                    case ShellDialogButton.Save:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(DialogContent, ShellDialogButton.Ok) { CorrelationId = this.dialogCorrelationId });
-                        break;
-
-                    case ShellDialogButton.Cancel:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(DialogContent, ShellDialogButton.Cancel) { CorrelationId = this.dialogCorrelationId });
-                        break;
-
-                    default:
-                        throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
-                }
-
-                DialogContent = null;
-            });
-        }
-
         private void OnDialogRequested(ShellDialogRequestMessage message)
         {
-            DialogTitle = message.Title;
-            DialogContent = message.Content;
-            this.dialogType = message.DialogType;
+            ShellDialogController appropriateController;
+            switch (message.Location)
+            {
+                case BudgetAnalyserFeature.LedgerBook:
+                    appropriateController = LedgerBookDialog;
+                    break;
 
-            OkButtonVisible = message.DialogType == ShellDialogType.Ok || message.DialogType == ShellDialogType.OkCancel;
-            SaveButtonVisible = message.DialogType == ShellDialogType.SaveCancel;
-            CancelButtonVisible = message.DialogType != ShellDialogType.Ok;
-            this.dialogCorrelationId = message.CorrelationId;
+                case BudgetAnalyserFeature.Dashboard:
+                    appropriateController = DashboardDialog;
+                    break;
 
-            RaisePropertyChanged(() => DialogActionToolTip);
-            RaisePropertyChanged(() => DialogCloseToolTip);
+                case BudgetAnalyserFeature.Budget:
+                    appropriateController = BudgetDialog;
+                    break;
+
+                case BudgetAnalyserFeature.Transactions:
+                    appropriateController = TransactionsDialog;
+                    break;
+
+                case BudgetAnalyserFeature.Reports:
+                    appropriateController = ReportsDialog;
+                    break;
+
+                default:
+                    throw new NotSupportedException("The requested shell dialog location is not supported: " + message.Location);
+            }
+
+            appropriateController.Title = message.Title;
+            appropriateController.Content = message.Content;
+            appropriateController.DialogType = message.DialogType;
+            appropriateController.CorrelationId = message.CorrelationId;
         }
 
         private void OnShutdownRequested(ShutdownMessage message)

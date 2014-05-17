@@ -62,7 +62,7 @@ namespace BudgetAnalyser.LedgerBook
             Remarks = LedgerEntryLine.Remarks;
             IsReadOnly = !isNew;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.Ok)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
                 Title = "Ledger Entry Remarks",
                 CorrelationId = this.dialogCorrelationId,

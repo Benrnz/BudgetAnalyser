@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Filtering
             AccountTypes = accountTypeList;
             SelectedAccountType = Criteria.AccountType;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Global Filters - Account Type",
@@ -157,7 +157,7 @@ namespace BudgetAnalyser.Filtering
         {
             this.filterMode = FilterMode.Dates;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Global Filters - Date Range",

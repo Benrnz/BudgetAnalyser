@@ -76,7 +76,7 @@ namespace BudgetAnalyser.LedgerBook
             Date = DateTime.Today;
             Canceled = false;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "New Reconciliation",

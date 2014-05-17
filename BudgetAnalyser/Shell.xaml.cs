@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using BudgetAnalyser.ShellDialog;
 
 namespace BudgetAnalyser
 {
@@ -21,25 +22,6 @@ namespace BudgetAnalyser
         private ShellController Controller
         {
             get { return (ShellController)DataContext; }
-        }
-
-        private void OnShellDialogKeyUp(object sender, KeyEventArgs e)
-        {
-            if (Controller.DialogContent == null)
-            {
-                return;
-            }
-
-            if (e.Key == Key.Enter || e.Key == Key.Return)
-            {
-                Controller.DialogCommand.Execute("Ok");
-            }
-            else if (e.Key == Key.Escape)
-            {
-                Controller.DialogCommand.Execute("Cancel");
-            }
-
-            e.Handled = true;
         }
     }
 }

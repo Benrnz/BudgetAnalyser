@@ -442,7 +442,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnDetailsCommandExecute()
         {
-            var popUpRequest = new ShellDialogRequestMessage(CurrentBudget, ShellDialogType.Ok);
+            var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, CurrentBudget, ShellDialogType.Ok);
             MessengerInstance.Send(popUpRequest);
         }
 
@@ -585,7 +585,7 @@ namespace BudgetAnalyser.Budget
         private void SelectOtherBudget()
         {
             this.popUpCorrelationId = Guid.NewGuid();
-            var popUpRequest = new ShellDialogRequestMessage(new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
+            var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
             {
                 CorrelationId = this.popUpCorrelationId,
             };
