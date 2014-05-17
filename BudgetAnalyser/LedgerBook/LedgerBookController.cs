@@ -158,8 +158,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                return AddLedgerReconciliationController.Shown
-                       || LedgerTransactionsController.Shown;
+                return LedgerTransactionsController.Shown;
             }
         }
 
@@ -387,15 +386,12 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewReconciliationCommandExecuted()
         {
             AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
-            AddLedgerReconciliationController.Shown = true;
-            RaisePropertyChanged(() => ShowPopup);
+            AddLedgerReconciliationController.ShowDialog();
         }
 
         private void OnAddReconciliationComplete(object sender, EventArgs e)
         {
             AddLedgerReconciliationController.Complete -= OnAddReconciliationComplete;
-            AddLedgerReconciliationController.Shown = false;
-            RaisePropertyChanged(() => ShowPopup);
 
             if (AddLedgerReconciliationController.Canceled)
             {
@@ -434,7 +430,6 @@ namespace BudgetAnalyser.LedgerBook
         private void OnBudgetBucketChosen(object sender, EventArgs e)
         {
             ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
-            RaisePropertyChanged(() => ShowPopup);
             if (ChooseBudgetBucketController.Selected == null)
             {
                 return;
@@ -511,7 +506,6 @@ namespace BudgetAnalyser.LedgerBook
         private void OnShowRemarksCompleted(object sender, EventArgs e)
         {
             LedgerRemarksController.Completed -= OnShowRemarksCompleted;
-            RaisePropertyChanged(() => ShowPopup);
         }
 
         private void OnShowTransactionsCommandExecuted(object parameter)

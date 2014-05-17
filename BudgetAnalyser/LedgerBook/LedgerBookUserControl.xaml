@@ -183,10 +183,6 @@
                 <Grid>
                     <ledgerBook:LedgerTransactionsUserControl DataContext="{Binding LedgerTransactionsController}"
                                                               Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
-
-                    <ledgerBook:AddLedgerReconciliationUserControl
-                        DataContext="{Binding AddLedgerReconciliationController}"
-                        Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
             <Border Background="{StaticResource Brush.MainBackground}"

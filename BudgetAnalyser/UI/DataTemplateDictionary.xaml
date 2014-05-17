@@ -64,4 +64,8 @@
     <DataTemplate DataType="{x:Type budget:ChooseBudgetBucketController}">
         <budget:ChooseBudgetBucketUserControl/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type ledgerBook:AddLedgerReconciliationController}">
+        <ledgerBook:AddLedgerReconciliationUserControl/>
+    </DataTemplate>
 </ResourceDictionary>

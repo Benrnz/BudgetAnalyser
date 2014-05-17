@@ -6,19 +6,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="2,2,2,20"
-                    Orientation="Horizontal">
-            <Button Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Cross}" />
-            <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                       Text="New Reconciliation" />
-        </StackPanel>
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal">
             <TextBlock Text="Date:" />
             <DatePicker x:Name="ReconDate"
                         CalendarStyle="{StaticResource CalendarStyle}"
@@ -29,12 +19,8 @@
                        Text="Bank Balance:" />
             <TextBox GotFocus="OnUIElementGotFocus"
                      Text="{Binding BankBalance, StringFormat=N}" />
-            <Button Command="{Binding OkCommand}"
-                    HorizontalAlignment="Left"
-                    Margin="20,2,2,2"
-                    Style="{StaticResource Button.Round.Ok}" />
         </StackPanel>
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="1"
                    Margin="10,30,10,10"
                    Style="{StaticResource TextBlock.Paragraph}"
                    TextWrapping="Wrap">
