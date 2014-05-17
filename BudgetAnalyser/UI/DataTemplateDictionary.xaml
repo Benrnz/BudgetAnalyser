@@ -68,4 +68,8 @@
     <DataTemplate DataType="{x:Type ledgerBook:AddLedgerReconciliationController}">
         <ledgerBook:AddLedgerReconciliationUserControl/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type ledgerBook:LedgerTransactionsController}">
+        <ledgerBook:LedgerTransactionsUserControl/>
+    </DataTemplate>
 </ResourceDictionary>

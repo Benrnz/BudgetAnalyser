@@ -4,28 +4,39 @@
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
+        <Border Grid.Column="0"
+                Grid.RowSpan="3"
+                BorderThickness="24,0,0,0"
+                BorderBrush="{Binding LedgerEntry.LedgerColumn.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
+                Margin="-6,0,12,0"
+                ToolTip="{Binding LedgerEntry.LedgerColumn.BudgetBucket.TypeDescription}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"/>
+        
         <StackPanel Grid.Row="0"
+                    Grid.Column="1"
                     Orientation="Horizontal">
-            <Button Command="{Binding CloseTransactionsViewCommand}"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Left}"
-                    ToolTip="Close and go back"/>
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add new transaction" />
-            <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                       Text="{Binding Title}" />
         </StackPanel>
         <Border Background="{StaticResource Brush.MainBackground}"
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.Row="1"
+                Grid.Column="1"
                 Margin="5,10,5,10">
             <ScrollViewer VerticalScrollBarVisibility="Visible">
                 <ItemsControl ItemsSource="{Binding ShownTransactions}"
@@ -41,6 +52,7 @@
 
         <GroupBox Background="{StaticResource Brush.DialogBackground}"
                   Grid.Row="1"
+                  Grid.Column="1"
                   Header="Add Transaction"
                   Margin="5,-5,5,5"
                   TabIndex="9"
@@ -114,7 +126,8 @@
             </Grid>
         </GroupBox>
 
-        <StackPanel Grid.Row="2">
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1">
             <StackPanel HorizontalAlignment="Right"
                         Margin="2,2,60,2"
                         Orientation="Horizontal">

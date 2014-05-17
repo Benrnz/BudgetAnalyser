@@ -110,7 +110,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand DemoLedgerBookCommand
         {
-            get { return new RelayCommand(OnDemoLedgerBookCommandExecute, CanExecuteCloseCommand); }
+            get { return new RelayCommand(OnDemoLedgerBookCommandExecute); }
         }
 
         public Engine.Ledger.LedgerBook LedgerBook
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand LoadLedgerBookCommand
         {
-            get { return new RelayCommand(OnLoadLedgerBookCommandExecute, CanExecuteCloseCommand); }
+            get { return new RelayCommand(OnLoadLedgerBookCommandExecute); }
         }
 
         public bool NoBudgetLoaded
@@ -152,14 +152,6 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand SaveLedgerBookCommand
         {
             get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
-        }
-
-        public bool ShowPopup
-        {
-            get
-            {
-                return LedgerTransactionsController.Shown;
-            }
         }
 
         public ICommand ShowRemarksCommand
@@ -238,17 +230,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteAddNewLedgerCommand()
         {
-            return !ShowPopup && LedgerBook != null;
+            return LedgerBook != null;
         }
 
         private bool CanExecuteAddNewReconciliationCommand()
         {
-            return !ShowPopup && CurrentBudget != null && CurrentStatement != null && LedgerBook != null;
-        }
-
-        private bool CanExecuteCloseCommand()
-        {
-            return !ShowPopup;
+            return CurrentBudget != null && CurrentStatement != null && LedgerBook != null;
         }
 
         private bool CanExecuteCloseLedgerBookCommand()
@@ -500,7 +487,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             LedgerRemarksController.Completed += OnShowRemarksCompleted;
             LedgerRemarksController.Show(parameter, parameter == this.newLedgerLine);
-            RaisePropertyChanged(() => ShowPopup);
         }
 
         private void OnShowRemarksCompleted(object sender, EventArgs e)
@@ -523,20 +509,17 @@ namespace BudgetAnalyser.LedgerBook
             if (ledgerEntry != null)
             {
                 bool isNew = this.newLedgerLine != null && this.newLedgerLine.Entries.Any(e => e == ledgerEntry);
-                LedgerTransactionsController.Show(ledgerEntry, isNew);
+                LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
             }
             else
             {
-                LedgerTransactionsController.Show(ledgerEntryLine, ledgerEntryLine == this.newLedgerLine);
+                LedgerTransactionsController.ShowDialog(ledgerEntryLine, ledgerEntryLine == this.newLedgerLine);
             }
-
-            RaisePropertyChanged(() => ShowPopup);
         }
 
         private void OnShowTransactionsCompleted(object sender, LedgerTransactionEventArgs args)
         {
             LedgerTransactionsController.Complete -= OnShowTransactionsCompleted;
-            RaisePropertyChanged(() => ShowPopup);
 
             if (args.WasModified)
             {

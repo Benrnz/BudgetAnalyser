@@ -48,20 +48,30 @@
                   KeyUp="OnShellDialogKeyUp"
                   Visibility="{Binding DialogContent, Converter={StaticResource Converter.NullToVis}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height=".15*" />
+                    <RowDefinition Height=".7*"
+                                   MinHeight="100"
+                                   MaxHeight="800" />
+                    <RowDefinition Height=".15*" />
                 </Grid.RowDefinitions>
                 <Border Background="{StaticResource Brush.DialogBackground}"
                         Grid.Row="1">
                     <Border.Effect>
                         <DropShadowEffect />
                     </Border.Effect>
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource TextBlock.Heading1}" Text="{Binding DialogTitle}"/>
-                        <ContentPresenter Content="{Binding DialogContent}"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlock.Heading1}"
+                                   Text="{Binding DialogTitle}" />
+                        <ContentPresenter Grid.Row="1"
+                                          Content="{Binding DialogContent}"
                                           Margin="10" />
-                        <StackPanel HorizontalAlignment="Right"
+                        <StackPanel Grid.Row="2"
+                                    HorizontalAlignment="Right"
                                     Margin="10"
                                     Orientation="Horizontal">
                             <Button Command="{Binding DialogCommand}"
@@ -91,7 +101,7 @@
                                 </Button.CommandParameter>
                             </Button>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>

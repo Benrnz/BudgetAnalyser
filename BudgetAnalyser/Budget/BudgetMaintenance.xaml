@@ -7,7 +7,6 @@
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
-        <converters1:BucketToColourConverter x:Key="Converter.BucketToColour" />
 
         <Style x:Key="BudgetItemTextBox"
                BasedOn="{StaticResource BudgetTile}"

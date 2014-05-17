@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    public class LedgerTransactionsController : ControllerBase, IShowableController
+    public class LedgerTransactionsController : ControllerBase
     {
+        private Guid dialogCorrelationId;
         private bool doNotUseAddingNewTransaction;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
@@ -19,7 +23,6 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseNewTransactionIsDebit;
         private bool doNotUseNewTransactionIsReversal;
         private string doNotUseNewTransactionNarrative;
-        private bool doNotUseShown;
         private IEnumerable<LedgerTransaction> doNotUseShownTransactions;
         private string doNotUseTitle;
         private LedgerEntryLine entryLine;
@@ -27,8 +30,15 @@ namespace BudgetAnalyser.LedgerBook
         private bool isDeleteDirty;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController()
+        public LedgerTransactionsController([NotNull] UiContext uiContext)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             Reset();
         }
 
@@ -47,11 +57,6 @@ namespace BudgetAnalyser.LedgerBook
                 this.doNotUseAddingNewTransaction = value;
                 RaisePropertyChanged(() => AddingNewTransaction);
             }
-        }
-
-        public ICommand CloseTransactionsViewCommand
-        {
-            get { return new RelayCommand(OnCloseTransactionsViewCommandExecuted); }
         }
 
         public ICommand DeleteTransactionCommand
@@ -141,17 +146,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-            set
-            {
-                if (value == this.doNotUseShown) return;
-                this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
-            }
-        }
-
         public IEnumerable<LedgerTransaction> ShownTransactions
         {
             get { return this.doNotUseShownTransactions; }
@@ -184,11 +178,11 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         /// <summary>
-        /// Show the Ledger Transactions view for viewing and editing Ledger Transactions.
+        ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
         /// </summary>
         /// <param name="ledgerEntry"></param>
         /// <param name="isNew"></param>
-        public void Show(LedgerEntry ledgerEntry, bool isNew)
+        public void ShowDialog(LedgerEntry ledgerEntry, bool isNew)
         {
             if (ledgerEntry == null)
             {
@@ -197,15 +191,14 @@ namespace BudgetAnalyser.LedgerBook
 
             LedgerEntry = ledgerEntry;
             ShownTransactions = LedgerEntry.Transactions;
-            Title = "Ledger Entry Transactions";
-            IsReadOnly = !isNew;
-            Shown = true;
+            Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerColumn.BudgetBucket.Code);
+            ShowDialogCommon(isNew);
         }
 
         /// <summary>
-        /// Show the Ledger Transactions view, for viewing and editing Balance Adjustments
+        ///     Show the Ledger Transactions view, for viewing and editing Balance Adjustments
         /// </summary>
-        public void Show(LedgerEntryLine ledgerEntryLine, bool isNew)
+        public void ShowDialog(LedgerEntryLine ledgerEntryLine, bool isNew)
         {
             if (ledgerEntryLine == null)
             {
@@ -215,9 +208,8 @@ namespace BudgetAnalyser.LedgerBook
             LedgerEntry = null;
             ShownTransactions = ledgerEntryLine.BankBalanceAdjustments;
             Title = "Balance Adjustment Transactions";
-            IsReadOnly = !isNew;
             this.entryLine = ledgerEntryLine;
-            Shown = true;
+            ShowDialogCommon(isNew);
         }
 
         private bool CanExecuteAddTransactionCommand()
@@ -249,20 +241,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void OnCloseTransactionsViewCommandExecuted()
-        {
-            Shown = false;
-            Save();
-
-            EventHandler<LedgerTransactionEventArgs> handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new LedgerTransactionEventArgs(this.isAddDirty || this.isDeleteDirty));
-            }
-
-            Reset();
-        }
-
         private void OnDeleteTransactionCommandExecuted(LedgerTransaction obj)
         {
             if (IsReadOnly)
@@ -283,6 +261,24 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             RaisePropertyChanged(() => LedgerEntry);
+        }
+
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (message.CorrelationId != this.dialogCorrelationId)
+            {
+                return;
+            }
+
+            Save();
+
+            EventHandler<LedgerTransactionEventArgs> handler = Complete;
+            if (handler != null)
+            {
+                handler(this, new LedgerTransactionEventArgs(this.isAddDirty || this.isDeleteDirty));
+            }
+
+            Reset();
         }
 
         private void OnZeroNetAmountCommandExecuted()
@@ -384,6 +380,18 @@ namespace BudgetAnalyser.LedgerBook
                 LedgerEntry.AddTransaction(newTransaction);
                 ShownTransactions = LedgerEntry.Transactions.ToList();
             }
+        }
+
+        private void ShowDialogCommon(bool isNew)
+        {
+            IsReadOnly = !isNew;
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.Ok)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = Title,
+            };
+            MessengerInstance.Send(dialogRequest);
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿<Application xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="BudgetAnalyser.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
+             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
+             xmlns:converters1="clr-namespace:BudgetAnalyser.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="UI/ConvertersDictionary.xaml"/>
+                
                 <ResourceDictionary Source="UI/Style/Colours.xaml" />
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
                 <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
@@ -26,14 +29,6 @@
                 
                 <ResourceDictionary Source="UI/DataTemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
-            <converters:NotBoolToVisibilityConverter x:Key="Converter.NotBoolToVis" />
-            <converters:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
-            <converters:NullToVisibilityConverter x:Key="Converter.NullToVis" />
-            <converters:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis" />
-            <converters:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility"/>
-            <converters:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
 
         </ResourceDictionary>
     </Application.Resources>
