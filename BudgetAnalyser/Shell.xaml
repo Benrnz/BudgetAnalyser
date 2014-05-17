@@ -48,11 +48,11 @@
                   KeyUp="OnShellDialogKeyUp"
                   Visibility="{Binding DialogContent, Converter={StaticResource Converter.NullToVis}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height=".15*" />
-                    <RowDefinition Height=".7*"
+                    <RowDefinition Height=".1*" />
+                    <RowDefinition Height=".6*"
                                    MinHeight="75"
-                                   MaxHeight="800" />
-                    <RowDefinition Height=".15*" />
+                                   MaxHeight="600" />
+                    <RowDefinition Height=".3*" />
                 </Grid.RowDefinitions>
                 <Border Background="{StaticResource Brush.DialogBackground}"
                         Grid.Row="1">
@@ -69,6 +69,7 @@
                                    Text="{Binding DialogTitle}" />
                         <ContentPresenter Grid.Row="1"
                                           Content="{Binding DialogContent}"
+                                          VerticalAlignment="Center"
                                           Margin="10" />
                         <StackPanel Grid.Row="2"
                                     HorizontalAlignment="Right"

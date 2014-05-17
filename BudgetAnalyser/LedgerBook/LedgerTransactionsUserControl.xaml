@@ -5,16 +5,17 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
+        <!-- Stripe -->
         <Border Grid.Column="0"
                 Grid.RowSpan="3"
                 BorderThickness="24,0,0,0"
@@ -22,16 +23,58 @@
                 Margin="-6,0,12,0"
                 ToolTip="{Binding LedgerEntry.LedgerColumn.BudgetBucket.TypeDescription}"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Stretch"/>
-        
-        <StackPanel Grid.Row="0"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
+                VerticalAlignment="Stretch" />
+
+        <Grid Grid.Row="0"
+              Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add new transaction" />
-        </StackPanel>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Text="Net Amount: " />
+
+                <TextBlock Grid.Column="1"
+                           Style="{StaticResource TextBlock.Number}"
+                           Text="{Binding TransactionsTotal, StringFormat=N}" />
+
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Right"
+                           Text="Closing Balance: "
+                           VerticalAlignment="Top"
+                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Style="{StaticResource TextBlock.Number}"
+                           Text="{Binding LedgerEntry.Balance, StringFormat=N}"
+                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
+            </Grid>
+
+        </Grid>
+
         <Border Background="{StaticResource Brush.MainBackground}"
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
@@ -94,8 +137,8 @@
                 </GroupBox>
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal">
-                    <TextBlock Text="Narrative:" 
-                               Width="75"/>
+                    <TextBlock Text="Narrative:"
+                               Width="75" />
                     <TextBox x:Name="NewTransactionNarrativeTextBox"
                              MinWidth="200"
                              Text="{Binding NewTransactionNarrative}" />
@@ -117,8 +160,8 @@
                         </CheckBox.Content>
                     </CheckBox>
                 </StackPanel>
-                <Button Grid.Row="1" 
-                        Grid.Column="1" 
+                <Button Grid.Row="1"
+                        Grid.Column="1"
                         Command="{Binding AddTransactionCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         HorizontalAlignment="Right"
@@ -128,24 +171,7 @@
 
         <StackPanel Grid.Row="2"
                     Grid.Column="1">
-            <StackPanel HorizontalAlignment="Right"
-                        Margin="2,2,60,2"
-                        Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Right"
-                           Text="Net Amount: " />
-                <TextBlock Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding TransactionsTotal, StringFormat=N}" />
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Right"
-                        Margin="2,2,10,2"
-                        Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Right"
-                           Text="Closing Balance: "
-                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
-                <TextBlock Style="{StaticResource TextBlock.Number}"
-                           Text="{Binding LedgerEntry.Balance, StringFormat=N}"
-                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}"/>
-            </StackPanel>
+
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
                        Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}">

@@ -29,10 +29,12 @@
                                  Minimum="{Binding Minimum}"
                                  ToolTip="{Binding ToolTip}"
                                  Value="{Binding Value}"
+                                 VerticalAlignment="Top"
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource Converter.BoolToVis}}" />
                     <TextBlock Grid.Row="1"
                                Margin="4,0,4,4"
-                               Style="{StaticResource TextBlock.Paragraph}"
+                               VerticalAlignment="Bottom"
+                               Style="{StaticResource TextBlock.Widget.Paragraph}"
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
