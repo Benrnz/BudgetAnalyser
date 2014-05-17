@@ -144,8 +144,9 @@
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
     <Compile Include="Filtering\FilterMode.cs" />
     <Compile Include="Filtering\FilterStateV1.cs" />
-    <Compile Include="Filtering\GlobalAccountTypeFilterViewLoader.cs" />
-    <Compile Include="Filtering\GlobalDateFilterViewLoader.cs" />
+    <Compile Include="Filtering\GlobalDateFilterView.xaml.cs">
+      <DependentUpon>GlobalDateFilterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Filtering\GlobalFilterController.cs" />
     <Compile Include="Filtering\PersistentFiltersV1.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
@@ -234,12 +235,6 @@
     <Compile Include="Budget\ChooseBudgetBucketUserControl.xaml.cs">
       <DependentUpon>ChooseBudgetBucketUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Filtering\GlobalAccountTypeFilterView.xaml.cs">
-      <DependentUpon>GlobalAccountTypeFilterView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filtering\GlobalDateFilterView.xaml.cs">
-      <DependentUpon>GlobalDateFilterView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
@@ -271,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dashboard\DashboardUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filtering\GlobalDateFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -399,14 +398,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Budget\ChooseBudgetBucketUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filtering\GlobalAccountTypeFilterView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Filtering\GlobalDateFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

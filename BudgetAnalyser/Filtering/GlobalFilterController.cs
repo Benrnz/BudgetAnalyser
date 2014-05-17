@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -16,12 +17,11 @@ using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Filtering
 {
-    public class GlobalFilterController : ControllerBase
+    public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
         private readonly IAccountTypeRepository accountTypeRepository;
-        private readonly IViewLoader accountView;
-        private readonly IViewLoader dateView;
         private readonly IUserMessageBox userMessageBox;
+        private Guid dialogCorrelationId;
         private string doNotUseAccountTypeSummary;
         private GlobalFilterCriteria doNotUseCriteria;
         private string doNotUseDateSummaryLine1;
@@ -31,8 +31,6 @@ namespace BudgetAnalyser.Filtering
 
         public GlobalFilterController(
             [NotNull] UiContext uiContext,
-            [NotNull] GlobalDateFilterViewLoader dateViewLoader,
-            [NotNull] GlobalAccountTypeFilterViewLoader accountViewLoader,
             [NotNull] IAccountTypeRepository accountTypeRepository)
         {
             if (uiContext == null)
@@ -40,23 +38,11 @@ namespace BudgetAnalyser.Filtering
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (dateViewLoader == null)
-            {
-                throw new ArgumentNullException("dateViewLoader");
-            }
-
-            if (accountViewLoader == null)
-            {
-                throw new ArgumentNullException("accountViewLoader");
-            }
-
             if (accountTypeRepository == null)
             {
                 throw new ArgumentNullException("accountTypeRepository");
             }
 
-            this.dateView = dateViewLoader;
-            this.accountView = accountViewLoader;
             this.accountTypeRepository = accountTypeRepository;
             this.userMessageBox = uiContext.UserPrompts.MessageBox;
             this.doNotUseCriteria = new GlobalFilterCriteria();
@@ -67,6 +53,7 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
             MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public string AccountTypeSummary
@@ -81,14 +68,19 @@ namespace BudgetAnalyser.Filtering
 
         public IEnumerable<AccountType> AccountTypes { get; private set; }
 
+        public string ActionButtonToolTip
+        {
+            get { return "Apply filter and close."; }
+        }
+
         public ICommand ClearCommand
         {
             get { return new RelayCommand(OnClearCommandExecute); }
         }
 
-        public ICommand CloseCommand
+        public string CloseButtonToolTip
         {
-            get { return new RelayCommand(OnCloseCommandExecute); }
+            get { return "Cancel and do not change the filter."; }
         }
 
         public GlobalFilterCriteria Criteria
@@ -122,6 +114,16 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
+        public bool IsAccountFilterView
+        {
+            get { return this.filterMode == FilterMode.AccountType; }
+        }
+
+        public bool IsDateFilterView
+        {
+            get { return this.filterMode == FilterMode.Dates; }
+        }
+
         public AccountType SelectedAccountType
         {
             get { return this.doNotUseSelectedAccountType; }
@@ -140,13 +142,29 @@ namespace BudgetAnalyser.Filtering
             accountTypeList.Insert(0, null);
             AccountTypes = accountTypeList;
             SelectedAccountType = Criteria.AccountType;
-            this.accountView.ShowDialog(this);
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = "Global Filters - Account Type",
+            };
+            RaisePropertyChanged(() => IsAccountFilterView);
+            RaisePropertyChanged(() => IsDateFilterView);
+            MessengerInstance.Send(dialogRequest);
         }
 
         public void PromptUserForDates()
         {
             this.filterMode = FilterMode.Dates;
-            this.dateView.ShowDialog(this);
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = "Global Filters - Date Range",
+            };
+            RaisePropertyChanged(() => IsAccountFilterView);
+            RaisePropertyChanged(() => IsDateFilterView);
+            MessengerInstance.Send(dialogRequest);
         }
 
         private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
@@ -204,14 +222,20 @@ namespace BudgetAnalyser.Filtering
                     Criteria.AccountType = null;
                     break;
             }
-
-            this.accountView.Close();
-            this.dateView.Close();
-            SendFilterAppliedMessage();
         }
 
-        private void OnCloseCommandExecute()
+        private void OnGlobalFilterRequested(RequestFilterMessage message)
         {
+            message.Criteria = Criteria;
+        }
+
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (message.CorrelationId != this.dialogCorrelationId)
+            {
+                return;
+            }
+
             if (this.filterMode == FilterMode.AccountType)
             {
                 Criteria.AccountType = SelectedAccountType;
@@ -224,14 +248,7 @@ namespace BudgetAnalyser.Filtering
                 return;
             }
 
-            this.accountView.Close();
-            this.dateView.Close();
             SendFilterAppliedMessage();
-        }
-
-        private void OnGlobalFilterRequested(RequestFilterMessage message)
-        {
-            message.Criteria = Criteria;
         }
 
         private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)

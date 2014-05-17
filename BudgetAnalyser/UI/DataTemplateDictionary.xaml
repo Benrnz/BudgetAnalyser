@@ -7,7 +7,8 @@
                     xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
                     xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
                     xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
-                    xmlns:matching="clr-namespace:BudgetAnalyser.Matching">
+                    xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
+                    xmlns:filtering="clr-namespace:BudgetAnalyser.Filtering">
     <!-- Data Templates -->
     <DataTemplate DataType="{x:Type burndown:BucketBurnDownController}">
         <burndown:BucketBurnDownLineChart />
@@ -71,5 +72,9 @@
     
     <DataTemplate DataType="{x:Type ledgerBook:LedgerTransactionsController}">
         <ledgerBook:LedgerTransactionsUserControl/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type filtering:GlobalFilterController}">
+        <filtering:GlobalDateFilterView/>
     </DataTemplate>
 </ResourceDictionary>
