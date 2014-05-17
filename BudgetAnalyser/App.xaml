@@ -1,18 +1,7 @@
 ﻿<Application xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="BudgetAnalyser.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             mc:Ignorable="d"
-             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
-             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-             xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
-             xmlns:burndown="clr-namespace:BudgetAnalyser.BurnDownGraphs"
-             xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
-             xmlns:reportsCatalog="clr-namespace:BudgetAnalyser.ReportsCatalog"
-             xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
-             xmlns:budget1="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine">
+             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -34,6 +23,8 @@
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />
+                
+                <ResourceDictionary Source="UI/DataTemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
@@ -44,54 +35,6 @@
             <converters:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility"/>
             <converters:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
 
-            <!-- Data Templates -->
-            <DataTemplate DataType="{x:Type burndown:BucketBurnDownController}">
-                <burndown:BucketBurnDownLineChart />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type budget:BudgetController}">
-                <budget:BudgetMaintenance />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type budget1:BudgetCurrencyContext}">
-                <budget:BudgetDetailsView />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type budget:BudgetPieController}">
-                <budget:BudgetPie />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type budget:BudgetSelectionViewModel}">
-                <budget:BudgetSelectionView/>
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type dashboard:DashboardController}">
-                <dashboard:DashboardUserControl />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type ledgerBook:LedgerBookController}">
-                <ledgerBook:LedgerBookUserControl />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type statement:LoadFileController}">
-                <statement:LoadFileView />
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type statement:StatementController}">
-                <statement:StatementUserControl />
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type reportsCatalog:ReportsCatalogController}">
-                <reportsCatalog:ReportsCatalogUserControl />
-            </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type matching:RulesController}">
-                <matching:EditRulesUserControl />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type matching:NewRuleController}">
-                <matching:NewRuleView />
-            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,24 +1,30 @@
 ﻿using System;
-using System.Windows.Input;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
-using GalaSoft.MvvmLight.Command;
+using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    public class LedgerRemarksController : ControllerBase, IShowableController
+    public class LedgerRemarksController : ControllerBase
     {
+        private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntryLine doNotUseLedgerEntryLine;
         private string doNotUseRemarks;
-        private bool doNotUseShown;
+
+        public LedgerRemarksController([NotNull] UiContext uiContext)
+        {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        }
 
         public event EventHandler Completed;
-
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(OnCloseCommandExecuted); }
-        }
 
         public bool IsReadOnly
         {
@@ -50,27 +56,27 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-            set
-            {
-                if (value == this.doNotUseShown) return;
-                this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
-            }
-        }
-
         public void Show(LedgerEntryLine line, bool isNew)
         {
             LedgerEntryLine = line;
             Remarks = LedgerEntryLine.Remarks;
             IsReadOnly = !isNew;
-            Shown = true;
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.Ok)
+            {
+                Title = "Ledger Entry Remarks",
+                CorrelationId = this.dialogCorrelationId,
+            };
+            MessengerInstance.Send(dialogRequest);
         }
 
-        private void OnCloseCommandExecuted()
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
+            if (this.dialogCorrelationId != message.CorrelationId)
+            {
+                return;
+            }
+
             if (!IsReadOnly)
             {
                 LedgerEntryLine.UpdateRemarks(Remarks);
@@ -78,7 +84,6 @@ namespace BudgetAnalyser.LedgerBook
 
             LedgerEntryLine = null;
             Remarks = null;
-            Shown = false;
 
             EventHandler handler = Completed;
             if (handler != null)

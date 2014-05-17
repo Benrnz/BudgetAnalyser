@@ -116,10 +116,10 @@ namespace BudgetAnalyser.LedgerBook
                 // Heading stripe to indicate SpentMonthly or SavedUpFor expenses.
                 var stripe = new Border()
                 {
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
                     BorderThickness = new Thickness(0, 6, 0, 0),
                     BorderBrush = ledger.BudgetBucket is SpentMonthlyExpenseBucket ? ConverterHelper.SpentMonthlyBucketBrush : ConverterHelper.AccumulatedBucketBrush,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Top,
                 };
                 border.Child = stripe;
 

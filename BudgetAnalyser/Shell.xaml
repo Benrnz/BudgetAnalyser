@@ -46,17 +46,20 @@
             <!-- Shell Pop Up Dialog -->
             <Grid Background="#cc000000"
                   KeyUp="OnShellDialogKeyUp"
-                  Visibility="{Binding PopupDialogContent, Converter={StaticResource Converter.NullToVis}}">
+                  Visibility="{Binding DialogContent, Converter={StaticResource Converter.NullToVis}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource Brush.PopupBackground}"
+                <Border Background="{StaticResource Brush.DialogBackground}"
                         Grid.Row="1">
+                    <Border.Effect>
+                        <DropShadowEffect />
+                    </Border.Effect>
                     <StackPanel>
-                        <TextBlock Style="{StaticResource TextBlock.Heading1}" Text="{Binding PopupTitle}"/>
-                        <ContentPresenter Content="{Binding PopupDialogContent}"
+                        <TextBlock Style="{StaticResource TextBlock.Heading1}" Text="{Binding DialogTitle}"/>
+                        <ContentPresenter Content="{Binding DialogContent}"
                                           Margin="10" />
                         <StackPanel HorizontalAlignment="Right"
                                     Margin="10"

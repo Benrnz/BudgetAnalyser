@@ -5,21 +5,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Button Style="{StaticResource Button.Round.Left}"
-                    Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Left"
-                    ToolTip="Close and go back"/>
-            <TextBlock Margin="10,2,2,2"
-                       Text="Budget Buckets" />
-        </StackPanel>
-        <TextBlock Grid.Row="1"
-                   Text="{Binding FilterDescription}" />
+        <TextBlock Text="{Binding FilterDescription}" />
         <StackPanel Orientation="Horizontal"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="50,10,2,2">
             <ComboBox DisplayMemberPath="Code"
                       HorizontalAlignment="Left"
@@ -30,9 +20,6 @@
                       TabIndex="1"
                       ToolTip="{Binding Selected}"
                       VerticalAlignment="Top" />
-            <Button Style="{StaticResource Button.Round.Ok}"
-                    Command="{Binding CloseCommand}"
-                    HorizontalAlignment="Left" />
         </StackPanel>
     </Grid>
 </UserControl>

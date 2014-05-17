@@ -3,14 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               IsVisibleChanged="OnIsVisibleChanged">
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding CloseCommand}"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource Button.Round.Left}"
-                    ToolTip="Close and go back"/>
-            <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                       Text="Remarks" />
-        </StackPanel>
         <TextBox x:Name="RemarksTextBox" 
                  Text="{Binding Remarks}"
                  MinLines="2"

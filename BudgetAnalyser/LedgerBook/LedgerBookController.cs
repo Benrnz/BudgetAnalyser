@@ -158,10 +158,8 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                return ChooseBudgetBucketController.Shown
-                       || AddLedgerReconciliationController.Shown
-                       || LedgerTransactionsController.Shown
-                       || LedgerRemarksController.Shown;
+                return AddLedgerReconciliationController.Shown
+                       || LedgerTransactionsController.Shown;
             }
         }
 
@@ -382,9 +380,8 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewLedgerCommandExecuted()
         {
             ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
-            ChooseBudgetBucketController.Shown = true;
             ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBudgetBucket, "Choose an Expense Budget Bucket");
-            RaisePropertyChanged(() => ShowPopup);
+            ChooseBudgetBucketController.ShowDialog();
         }
 
         private void OnAddNewReconciliationCommandExecuted()
@@ -437,7 +434,6 @@ namespace BudgetAnalyser.LedgerBook
         private void OnBudgetBucketChosen(object sender, EventArgs e)
         {
             ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
-            ChooseBudgetBucketController.Shown = false;
             RaisePropertyChanged(() => ShowPopup);
             if (ChooseBudgetBucketController.Selected == null)
             {

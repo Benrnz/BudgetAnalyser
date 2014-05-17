@@ -39,7 +39,7 @@
             </ScrollViewer>
         </Border>
 
-        <GroupBox Background="{StaticResource Brush.PopupBackground}"
+        <GroupBox Background="{StaticResource Brush.DialogBackground}"
                   Grid.Row="1"
                   Header="Add Transaction"
                   Margin="5,-5,5,5"

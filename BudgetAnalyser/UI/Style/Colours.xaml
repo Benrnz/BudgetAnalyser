@@ -176,7 +176,7 @@
     <SolidColorBrush x:Key="Brush.ToolTip.Background"
                      Color="{StaticResource Colour.ToolTip.Background}" />
 
-    <SolidColorBrush x:Key="Brush.PopupBackground"
+    <SolidColorBrush x:Key="Brush.DialogBackground"
                      Color="{StaticResource Colour.Popup.Background}" />
 
     <SolidColorBrush x:Key="Brush.TextBlock.Label"

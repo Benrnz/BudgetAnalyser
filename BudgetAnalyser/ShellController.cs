@@ -25,10 +25,10 @@ namespace BudgetAnalyser
         private Guid dialogCorrelationId;
         private ShellDialogType dialogType;
         private bool doNotUseCancelButtonVisible;
-        private bool doNotUseOkButtonVisible;
 
-        private object doNotUsePopupDialogContent;
-        private string doNotUsePopupTitle;
+        private object doNotUseDialogContent;
+        private string doNotUseDialogTitle;
+        private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private bool initialised;
 
@@ -48,7 +48,7 @@ namespace BudgetAnalyser
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
-            MessengerInstance.Register<ShellDialogRequestMessage>(this, OnPopUpDialogRequested);
+            MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
 
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
@@ -81,7 +81,7 @@ namespace BudgetAnalyser
         {
             get
             {
-                var customTooltips = PopupDialogContent as IShellDialogToolTips;
+                var customTooltips = DialogContent as IShellDialogToolTips;
                 if (customTooltips == null)
                 {
                     return this.dialogType == ShellDialogType.SaveCancel ? "Save" : "Ok";
@@ -95,7 +95,7 @@ namespace BudgetAnalyser
         {
             get
             {
-                var customTooltips = PopupDialogContent as IShellDialogToolTips;
+                var customTooltips = DialogContent as IShellDialogToolTips;
                 if (customTooltips == null)
                 {
                     return "Close";
@@ -110,9 +110,29 @@ namespace BudgetAnalyser
             get { return new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand); }
         }
 
+        public object DialogContent
+        {
+            get { return this.doNotUseDialogContent; }
+            set
+            {
+                this.doNotUseDialogContent = value;
+                RaisePropertyChanged(() => DialogContent);
+            }
+        }
+
         public bool DialogOkIsCancel
         {
             get { return OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible; }
+        }
+
+        public string DialogTitle
+        {
+            get { return this.doNotUseDialogTitle; }
+            set
+            {
+                this.doNotUseDialogTitle = value;
+                RaisePropertyChanged(() => DialogTitle);
+            }
         }
 
         public LedgerBookController LedgerBookController
@@ -133,26 +153,6 @@ namespace BudgetAnalyser
                 this.doNotUseOkButtonVisible = value;
                 RaisePropertyChanged(() => OkButtonVisible);
                 RaisePropertyChanged(() => DialogOkIsCancel);
-            }
-        }
-
-        public object PopupDialogContent
-        {
-            get { return this.doNotUsePopupDialogContent; }
-            set
-            {
-                this.doNotUsePopupDialogContent = value;
-                RaisePropertyChanged(() => PopupDialogContent);
-            }
-        }
-
-        public string PopupTitle
-        {
-            get { return this.doNotUsePopupTitle; }
-            set
-            {
-                this.doNotUsePopupTitle = value;
-                RaisePropertyChanged(() => PopupTitle);
             }
         }
 
@@ -211,13 +211,13 @@ namespace BudgetAnalyser
 
         private bool CanExecuteDialogCommand(ShellDialogButton arg)
         {
-            bool baseResult = PopupDialogContent != null && BackgroundJob.MenuAvailable;
+            bool baseResult = DialogContent != null && BackgroundJob.MenuAvailable;
             if (!baseResult)
             {
                 return false;
             }
 
-            var dialogInteractivity = PopupDialogContent as IShellDialogInteractivity;
+            var dialogInteractivity = DialogContent as IShellDialogInteractivity;
             if (dialogInteractivity == null)
             {
                 return true;
@@ -245,26 +245,27 @@ namespace BudgetAnalyser
                 {
                     case ShellDialogButton.Ok:
                     case ShellDialogButton.Save:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogButton.Ok) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(DialogContent, ShellDialogButton.Ok) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     case ShellDialogButton.Cancel:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(PopupDialogContent, ShellDialogButton.Cancel) { CorrelationId = this.dialogCorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(DialogContent, ShellDialogButton.Cancel) { CorrelationId = this.dialogCorrelationId });
                         break;
 
                     default:
-                        throw new NotSupportedException("Unsupported command type received from Dialog Popup on Shell view. " + commandType);
+                        throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
                 }
 
-                PopupDialogContent = null;
+                DialogContent = null;
             });
         }
 
-        private void OnPopUpDialogRequested(ShellDialogRequestMessage message)
+        private void OnDialogRequested(ShellDialogRequestMessage message)
         {
-            PopupTitle = message.Title;
-            PopupDialogContent = message.Content;
+            DialogTitle = message.Title;
+            DialogContent = message.Content;
             this.dialogType = message.DialogType;
+
             OkButtonVisible = message.DialogType == ShellDialogType.Ok || message.DialogType == ShellDialogType.OkCancel;
             SaveButtonVisible = message.DialogType == ShellDialogType.SaveCancel;
             CancelButtonVisible = message.DialogType != ShellDialogType.Ok;

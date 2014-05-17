@@ -171,7 +171,7 @@
             </Grid.RowDefinitions>
             <Border Background="{StaticResource Brush.MainBackground}"
                     Opacity="0.7" />
-            <Border Background="{StaticResource Brush.PopupBackground}"
+            <Border Background="{StaticResource Brush.DialogBackground}"
                     BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     Grid.Row="1"
@@ -181,14 +181,8 @@
                 </Border.Effect>
 
                 <Grid>
-                    <ledgerBook:LedgerRemarksUserControl DataContext="{Binding LedgerRemarksController}"
-                                                         Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
-
                     <ledgerBook:LedgerTransactionsUserControl DataContext="{Binding LedgerTransactionsController}"
                                                               Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
-
-                    <budget:ChooseBudgetBucketUserControl DataContext="{Binding ChooseBudgetBucketController}"
-                                                          Visibility="{Binding Shown, Converter={StaticResource Converter.BoolToVis}}" />
 
                     <ledgerBook:AddLedgerReconciliationUserControl
                         DataContext="{Binding AddLedgerReconciliationController}"

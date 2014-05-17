@@ -2,25 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using GalaSoft.MvvmLight.Command;
+using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
-    public class ChooseBudgetBucketController : ControllerBase, IShowableController
+    public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IBudgetBucketRepository bucketRepository;
+        private Guid dialogCorrelationId;
         private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
         private string doNotUseFilterDescription;
-        private bool doNotUseShown;
         private bool filtered;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public ChooseBudgetBucketController([NotNull] IBudgetBucketRepository bucketRepository)
+        public ChooseBudgetBucketController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
@@ -28,9 +32,17 @@ namespace BudgetAnalyser.Budget
 
             this.bucketRepository = bucketRepository;
             BudgetBuckets = bucketRepository.Buckets.ToList();
+
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
         public event EventHandler Chosen;
+
+        public string ActionButtonToolTip
+        {
+            get { return "Select and use this Expense Budget Bucket."; }
+        }
 
         public IEnumerable<BudgetBucket> BudgetBuckets
         {
@@ -43,14 +55,24 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public ICommand CancelCommand
+        public bool CanExecuteCancelButton
         {
-            get { return new RelayCommand(OnCancelCommandExecuted); }
+            get { return true; }
         }
 
-        public ICommand CloseCommand
+        public bool CanExecuteOkButton
         {
-            get { return new RelayCommand(OnCloseCommandExecuted); }
+            get { return Selected != null; }
+        }
+
+        public bool CanExecuteSaveButton
+        {
+            get { return false; }
+        }
+
+        public string CloseButtonToolTip
+        {
+            get { return "Cancel"; }
         }
 
         public string FilterDescription
@@ -65,23 +87,22 @@ namespace BudgetAnalyser.Budget
 
         public BudgetBucket Selected { get; set; }
 
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-
-            set
-            {
-                if (value == this.doNotUseShown) return;
-                this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
-            }
-        }
-
         public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
         {
             FilterDescription = filterDescription;
             BudgetBuckets = this.bucketRepository.Buckets.Where(predicate).ToList();
             this.filtered = true;
+        }
+
+        public void ShowDialog()
+        {
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = "Add New Ledger to Ledger Book",
+            };
+            MessengerInstance.Send(dialogRequest);
         }
 
         private void CompleteSelection()
@@ -92,21 +113,21 @@ namespace BudgetAnalyser.Budget
                 handler(this, EventArgs.Empty);
             }
 
-            Shown = false;
             FilterDescription = null;
         }
 
-        private void OnCancelCommandExecuted()
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            ResetFilter();
+            if (this.dialogCorrelationId != message.CorrelationId)
+            {
+                return;
+            }
 
-            Selected = null;
-            CompleteSelection();
-        }
-
-        private void OnCloseCommandExecuted()
-        {
             ResetFilter();
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                Selected = null;
+            }
 
             CompleteSelection();
         }
