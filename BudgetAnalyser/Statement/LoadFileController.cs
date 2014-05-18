@@ -219,13 +219,13 @@ namespace BudgetAnalyser.Statement
             return RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
-        public void RequestUserInputForOpenFile()
+        public Task RequestUserInputForOpenFile()
         {
             ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Open Statement";
-            RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
+            return RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
         public void Reset()

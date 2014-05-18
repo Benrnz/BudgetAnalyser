@@ -283,29 +283,13 @@ namespace BudgetAnalyser.Statement
             return SelectedRow != null;
         }
 
-        private bool Load(string fullFileName)
+        private Task<bool> LoadInternal(string fullFileName)
         {
-            if (PromptToSaveIfDirty())
-            {
-                Save();
-            }
 
-            try
-            {
-                BackgroundJob.StartNew("Loading statement...", false);
-                return LoadInternal(fullFileName);
-            }
-            finally
-            {
-                BackgroundJob.Finish();
-            }
-        }
+            StatementModel statementModel = null;
+            var loadModelTask = Task.Factory.StartNew(() => statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName));
 
-        private bool LoadInternal(string fullFileName)
-        {
-            StatementModel statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName);
-
-            using (this.uiContext.WaitCursorFactory())
+            return loadModelTask.ContinueWith(t =>
             {
                 if (statementModel == null)
                 {
@@ -313,20 +297,24 @@ namespace BudgetAnalyser.Statement
                     return false;
                 }
 
-                ViewModel.Statement = statementModel;
-                var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                MessengerInstance.Send(requestCurrentFilterMessage);
-                if (requestCurrentFilterMessage.Criteria != null)
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                 {
-                    ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
-                }
+                    // Update all UI bound properties.
+                    ViewModel.Statement = statementModel;
+                    var requestCurrentFilterMessage = new RequestFilterMessage(this);
+                    MessengerInstance.Send(requestCurrentFilterMessage);
+                    if (requestCurrentFilterMessage.Criteria != null)
+                    {
+                        ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
+                    }
 
-                NotifyOfReset();
-                ViewModel.TriggerRefreshTotalsRow();
-            }
+                    NotifyOfReset();
+                    ViewModel.TriggerRefreshTotalsRow();
 
-            MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-            return true;
+                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+                });
+                return true;
+            });
         }
 
         private void LoadStatementFromApplicationState(string statementFileName)
@@ -529,23 +517,40 @@ namespace BudgetAnalyser.Statement
 
         private void OnOpenStatementExecute(string fullFileName)
         {
-            try
+            if (PromptToSaveIfDirty())
             {
-                if (!Load(fullFileName))
+                Save();
+            }
+
+            BackgroundJob.StartNew("Loading statement...", false);
+
+            // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
+            var task = LoadInternal(fullFileName);
+            task.ConfigureAwait(false);
+
+            // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
+            task.ContinueWith(t =>
+            {
+                BackgroundJob.Finish();
+                if (!t.IsFaulted && t.Result)
                 {
-                    return;
+                    // Update RecentFile list for successfully loaded files only. 
+                    UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.FileName));
                 }
 
-                UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.FileName));
-            }
-            catch (FileNotFoundException ex)
-            {
-                // When merging this exception will never be thrown.
-                if (!string.IsNullOrWhiteSpace(ex.FileName))
+                if (t.IsFaulted && t.Exception != null)
                 {
-                    UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
+                    var fileNotFoundException = t.Exception.InnerExceptions.FirstOrDefault(e => e is FileNotFoundException) as FileNotFoundException;
+                    if (fileNotFoundException != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(fileNotFoundException.FileName))
+                        {
+                            // Remove the bad file that caused the exception from the RecentFiles list.
+                            UpdateRecentFiles(this.recentFileManager.Remove(fileNotFoundException.FileName));
+                        }
+                    }
                 }
-            }
+            });
         }
 
         private void OnSaveStatementExecute()

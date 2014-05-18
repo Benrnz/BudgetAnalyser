@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Statement
                     break;
 
                 case OpenMode.Open:
-                    this.loadFileController.RequestUserInputForOpenFile();
+                    await this.loadFileController.RequestUserInputForOpenFile();
                     break;
             }
 
