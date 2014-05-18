@@ -352,6 +352,13 @@ namespace BudgetAnalyser.Statement
 
         public void UpdateGroupedByBucket()
         {
+            if (Statement == null)
+            {
+                // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
+                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
+                return;
+            }
+
             if (SortByBucket)
             {
                 IEnumerable<TransactionGroupedByBucketViewModel> query = Statement.Transactions
