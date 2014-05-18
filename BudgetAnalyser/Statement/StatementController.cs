@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine.Budget;
@@ -11,6 +13,7 @@ using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 using Rees.Wpf.RecentFiles;
@@ -360,12 +363,16 @@ namespace BudgetAnalyser.Statement
             Save();
             ViewModel.BucketFilter = null;
 
-            try
+            BackgroundJob.StartNew("Merging statement...", false);
+            StatementModel additionalModel = null;
+            var loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
+
+            IWaitCursor cursor = null;
+            loadModelTask.ContinueWith(t =>
             {
-                BackgroundJob.StartNew("Merging statement...", false);
-                StatementModel additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement);
-                using (this.uiContext.WaitCursorFactory())
+                try
                 {
+                    cursor = this.uiContext.WaitCursorFactory();
                     if (additionalModel == null)
                     {
                         // User cancelled.
@@ -373,18 +380,22 @@ namespace BudgetAnalyser.Statement
                     }
 
                     ViewModel.Statement.Merge(additionalModel);
-                }
 
-                RaisePropertyChanged(() => ViewModel);
-                MessengerInstance.Send(new TransactionsChangedMessage());
-                NotifyOfEdit();
-                ViewModel.TriggerRefreshTotalsRow();
-            }
-            finally
-            {
-                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-                BackgroundJob.Finish();
-            }
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                    {
+                        RaisePropertyChanged(() => ViewModel);
+                        MessengerInstance.Send(new TransactionsChangedMessage());
+                        NotifyOfEdit();
+                        ViewModel.TriggerRefreshTotalsRow();
+                    });
+                }
+                finally
+                {
+                    if (cursor != null) cursor.Dispose();
+                    BackgroundJob.Finish();
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
+                }
+            });
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -485,7 +496,7 @@ namespace BudgetAnalyser.Statement
             this.shellDialogCorrelationId = Guid.NewGuid();
             MessengerInstance.Send(
                 new ShellDialogRequestMessage(
-                    BudgetAnalyserFeature.Transactions, 
+                    BudgetAnalyserFeature.Transactions,
                     new EditingTransactionViewModel { Transaction = SelectedRow },
                     ShellDialogType.Ok)
                 {

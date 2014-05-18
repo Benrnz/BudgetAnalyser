@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- DataContext LoadFileController -->
-    
+
     <Grid Margin="50,0,50,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -13,6 +13,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Margin="3"
@@ -24,8 +25,9 @@
                  ToolTip="{Binding FileName}" />
         <Button Command="{Binding BrowseForFileCommand}"
                 Grid.Column="2"
-                Style="{StaticResource Button.Round.Build}" 
-                ToolTip="Browse for a file..."/>
+                Style="{StaticResource Button.Round.Build}"
+                ToolTip="Browse for a file..." />
+
         <StackPanel Grid.ColumnSpan="3"
                     Grid.Row="1">
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
@@ -42,8 +44,9 @@
                                    Text="Source Account Name"
                                    ToolTip="{Binding AccountNameHelp}" />
                     </GroupBox.Header>
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,80,0">
                             <RadioButton x:Name="RadioExisting"
                                          Content="Use an existing Name"
                                          Foreground="{StaticResource Brush.DefaultText}"
@@ -79,22 +82,28 @@
                 </GroupBox>
             </Border>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="2"
-                           Text="Suggested Date Range"
-                           Visibility="{Binding SuggestedDateRange, Converter={StaticResource Converter.NullToVis}}" />
-                <TextBlock Margin="2"
-                           Text="{Binding SuggestedDateRange}" />
-            </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal"
+
+        <StackPanel Grid.Row="2"
                     Grid.ColumnSpan="3"
-                    Grid.Row="2">
-            <Image Source="../UI/Assets/warning.png"
-                   Height="20"
-                   Margin="5" />
-            <TextBlock Text="WARNING: Only ANZ Bank CSV Statement files are supported." />
+                    Orientation="Horizontal">
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                       Text="Suggested Date Range"
+                       Visibility="{Binding SuggestedDateRange, Converter={StaticResource Converter.NullToVis}}" />
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                       Text="{Binding SuggestedDateRange}" />
         </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Grid.ColumnSpan="3"
+                    Orientation="Horizontal">
+            <Image Source="../UI/Assets/warning.png"
+                   Height="15"
+                   Margin="5" />
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                Text="WARNING: Only ANZ Bank CSV Statement files are supported." />
+        </StackPanel>
+
     </Grid>
 
 </UserControl>

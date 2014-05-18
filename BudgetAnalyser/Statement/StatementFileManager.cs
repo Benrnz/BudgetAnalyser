@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
@@ -71,7 +72,9 @@ namespace BudgetAnalyser.Statement
         /// </summary>
         public StatementModel ImportAndMergeBankStatement(StatementModel statementModel, bool throwIfFileNotFound = false)
         {
-            string fileName = GetFileNameFromUser(OpenMode.Merge, statementModel);
+            var task = GetFileNameFromUser(OpenMode.Merge, statementModel);
+            task.Wait();
+            var fileName = task.Result;
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 // User cancelled
@@ -91,7 +94,9 @@ namespace BudgetAnalyser.Statement
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                fileName = GetFileNameFromUser(OpenMode.Open);
+                var task = GetFileNameFromUser(OpenMode.Open);
+                task.Wait();
+                fileName = task.Result;
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
                     // User cancelled
@@ -129,12 +134,12 @@ namespace BudgetAnalyser.Statement
         ///     The user selected filename. All other required parameters are accessible from the
         ///     <see cref="LoadFileController" />.
         /// </returns>
-        private string GetFileNameFromUser(OpenMode mode, StatementModel statementModel = null)
+        private async Task<string> GetFileNameFromUser(OpenMode mode, StatementModel statementModel = null)
         {
             switch (mode)
             {
                 case OpenMode.Merge:
-                    this.loadFileController.RequestUserInputForMerging(statementModel);
+                    await this.loadFileController.RequestUserInputForMerging(statementModel);
                     break;
 
                 case OpenMode.Open:
@@ -148,10 +153,8 @@ namespace BudgetAnalyser.Statement
         private StatementModel LoadStatement(string fullFileName)
         {
             // TODO add generic UI to let user classify columns.
-            IWaitCursor waitCursor = null;
             try
             {
-                waitCursor = this.waitCursorFactory();
                 switch (this.loadFileController.LastFileWasBudgetAnalyserStatementFile)
                 {
                     case null:
@@ -194,10 +197,6 @@ namespace BudgetAnalyser.Statement
             finally
             {
                 this.loadFileController.Reset();
-                if (waitCursor != null)
-                {
-                    waitCursor.Dispose();
-                }
             }
         }
     }

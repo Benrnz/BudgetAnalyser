@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:budget="clr-namespace:BudgetAnalyser.Budget"
-                    xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
                     xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
                     xmlns:statement="clr-namespace:BudgetAnalyser.Engine.Statement;assembly=BudgetAnalyser.Engine"
                     xmlns:statement1="clr-namespace:BudgetAnalyser.Statement"

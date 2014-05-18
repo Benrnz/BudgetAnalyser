@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -61,6 +62,8 @@ namespace BudgetAnalyser.Statement
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
+
+        private Task fileSelectionTask;
 
         public string AccountName
         {
@@ -184,7 +187,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public void RequestUserInputForMerging(StatementModel currentStatement)
+        public Task RequestUserInputForMerging(StatementModel currentStatement)
         {
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
@@ -213,7 +216,7 @@ namespace BudgetAnalyser.Statement
                 SuggestedDateRange = string.Format(CultureInfo.CurrentCulture, "{0:d} to {1:d}", lastTransactionDate, maxDate);
             }
 
-            RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
+            return RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
         }
 
         public void RequestUserInputForOpenFile()
@@ -335,9 +338,12 @@ namespace BudgetAnalyser.Statement
             }
 
             // FileName is already set by data binding.
+
+            // Use the task to signal completion.
+            this.fileSelectionTask.Start();
         }
 
-        private void RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)
+        private Task RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)
         {
             UseExistingAccountName = true;
             UseNewAccountName = false;
@@ -354,7 +360,9 @@ namespace BudgetAnalyser.Statement
                 CorrelationId = this.popUpCorrelationId,
                 Title = Title
             };
+            this.fileSelectionTask = new Task(() => { });
             MessengerInstance.Send(popRequest);
+            return this.fileSelectionTask;
         }
 
         public string ActionButtonToolTip
