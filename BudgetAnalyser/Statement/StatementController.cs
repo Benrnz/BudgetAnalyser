@@ -283,41 +283,37 @@ namespace BudgetAnalyser.Statement
             return SelectedRow != null;
         }
 
-        private Task<bool> LoadInternal(string fullFileName)
+        private async Task<bool> LoadInternal(string fullFileName)
         {
-
             StatementModel statementModel = null;
-            var loadModelTask = Task.Factory.StartNew(() => statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName));
+            await Task.Run(() => statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName));
 
-            return loadModelTask.ContinueWith(t =>
+            if (statementModel == null)
             {
-                if (statementModel == null)
+                // User cancelled.
+                return false;
+            }
+
+            await Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            {
+                // Update all UI bound properties.
+                ViewModel.Statement = statementModel;
+                var requestCurrentFilterMessage = new RequestFilterMessage(this);
+                MessengerInstance.Send(requestCurrentFilterMessage);
+                if (requestCurrentFilterMessage.Criteria != null)
                 {
-                    // User cancelled.
-                    return false;
+                    ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                {
-                    // Update all UI bound properties.
-                    ViewModel.Statement = statementModel;
-                    var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                    MessengerInstance.Send(requestCurrentFilterMessage);
-                    if (requestCurrentFilterMessage.Criteria != null)
-                    {
-                        ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
-                    }
+                NotifyOfReset();
+                ViewModel.TriggerRefreshTotalsRow();
 
-                    NotifyOfReset();
-                    ViewModel.TriggerRefreshTotalsRow();
-
-                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-                });
-                return true;
+                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
             });
+            return true;
         }
 
-        private void LoadStatementFromApplicationState(string statementFileName)
+        private async void LoadStatementFromApplicationState(string statementFileName)
         {
             try
             {
@@ -334,7 +330,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                LoadInternal(statementFileName);
+                await LoadInternal(statementFileName);
             }
             catch (FileNotFoundException)
             {
@@ -344,46 +340,6 @@ namespace BudgetAnalyser.Statement
             {
                 BackgroundJob.Finish();
             }
-        }
-
-        private void Merge()
-        {
-            Save();
-            ViewModel.BucketFilter = null;
-
-            BackgroundJob.StartNew("Merging statement...", false);
-            StatementModel additionalModel = null;
-            var loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
-
-            IWaitCursor cursor = null;
-            loadModelTask.ContinueWith(t =>
-            {
-                try
-                {
-                    cursor = this.uiContext.WaitCursorFactory();
-                    if (additionalModel == null)
-                    {
-                        // User cancelled.
-                        return;
-                    }
-
-                    ViewModel.Statement.Merge(additionalModel);
-
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                    {
-                        RaisePropertyChanged(() => ViewModel);
-                        MessengerInstance.Send(new TransactionsChangedMessage());
-                        NotifyOfEdit();
-                        ViewModel.TriggerRefreshTotalsRow();
-                    });
-                }
-                finally
-                {
-                    if (cursor != null) cursor.Dispose();
-                    BackgroundJob.Finish();
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
-                }
-            });
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -512,7 +468,42 @@ namespace BudgetAnalyser.Statement
 
         private void OnMergeStatementCommandExecute()
         {
-            Merge();
+            Save();
+            ViewModel.BucketFilter = null;
+
+            BackgroundJob.StartNew("Merging statement...", false);
+            StatementModel additionalModel = null;
+            var loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
+
+            IWaitCursor cursor = null;
+            loadModelTask.ContinueWith(t =>
+            {
+                try
+                {
+                    cursor = this.uiContext.WaitCursorFactory();
+                    if (additionalModel == null)
+                    {
+                        // User cancelled.
+                        return;
+                    }
+
+                    ViewModel.Statement.Merge(additionalModel);
+
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                    {
+                        RaisePropertyChanged(() => ViewModel);
+                        MessengerInstance.Send(new TransactionsChangedMessage());
+                        NotifyOfEdit();
+                        ViewModel.TriggerRefreshTotalsRow();
+                    });
+                }
+                finally
+                {
+                    if (cursor != null) cursor.Dispose();
+                    BackgroundJob.Finish();
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
+                }
+            });
         }
 
         private void OnOpenStatementExecute(string fullFileName)

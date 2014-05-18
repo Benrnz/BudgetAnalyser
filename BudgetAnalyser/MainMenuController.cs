@@ -138,7 +138,7 @@ namespace BudgetAnalyser
 
         private bool CanExecuteDashboardCommand()
         {
-            return this.uiContext.BackgroundJob.MenuAvailable;
+            return true;
         }
 
         private bool CanExecuteLedgerBookCommand()
