@@ -10,7 +10,8 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerColumn" />s for a
+    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerColumn" />s
+    ///     for a
     ///     date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
@@ -220,6 +221,10 @@ namespace BudgetAnalyser.Engine.Ledger
         internal void Unlock()
         {
             this.isNew = true;
+            foreach (LedgerEntry entry in Entries)
+            {
+                entry.Unlock();
+            }
         }
 
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)

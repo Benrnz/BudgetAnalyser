@@ -7,11 +7,13 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A single entry on a <see cref="LedgerColumn" /> for a date (which comes from the <see cref="LedgerEntryLine" />). This
+    ///     A single entry on a <see cref="LedgerColumn" /> for a date (which comes from the <see cref="LedgerEntryLine" />).
+    ///     This
     ///     instance can contain one or
     ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="BudgetBucket" /> for this date.
     ///     Possible transactions
-    ///     include budgeted 'saved up for expenses' credited into this <see cref="LedgerColumn" /> and all statement transactions
+    ///     include budgeted 'saved up for expenses' credited into this <see cref="LedgerColumn" /> and all statement
+    ///     transactions
     ///     that are debitted to this
     ///     budget bucket ledger.
     /// </summary>
@@ -19,10 +21,11 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         /// <summary>
         ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-        ///     loading from file.
+        ///     loading from file.  An entry can be 'unlocked', this allows editing of this entry after it has been saved and
+        ///     reloaded. Only the most recent entries for a <see cref="LedgerEntryLine" /> can be unlocked.
         ///     This variable is intentionally not persisted.
         /// </summary>
-        private readonly bool isNew;
+        private bool isNew;
 
         private List<LedgerTransaction> transactions;
 
@@ -32,7 +35,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry)
         {
             Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
-            this.LedgerColumn = ledger;
+            LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
         }
 
@@ -42,7 +45,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry, bool isNew)
         {
             Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
-            this.LedgerColumn = ledger;
+            LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
             this.isNew = isNew;
         }
@@ -125,7 +128,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntry SetTransactions(List<LedgerTransaction> newTransactions, bool reconciliationMode = false)
         {
             this.transactions = newTransactions;
-            if (reconciliationMode && this.LedgerColumn.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
+            if (reconciliationMode && LedgerColumn.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
             {
                 // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
                 LedgerTransaction zeroingTransaction = null;
@@ -173,6 +176,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return this;
+        }
+
+        internal void Unlock()
+        {
+            this.isNew = true;
         }
     }
 }
