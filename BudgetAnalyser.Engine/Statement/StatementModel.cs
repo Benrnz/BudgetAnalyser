@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -170,16 +171,9 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("additionalModel");
             }
 
-            UnsubscribeToTransactionChangedEvents();
-            ChangeHash = Guid.NewGuid();
             Imported = additionalModel.Imported;
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.Transactions).ToList();
-            AllTransactions = mergedTransactions;
-            this.duplicates = null;
-            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
-            DurationInMonths = this.fullDuration;
-            Filter(this.currentFilter);
-            SubscribeToTransactionChangedEvents();
+
+            Merge(additionalModel.AllTransactions);
         }
 
         public void RemoveTransaction([NotNull] Transaction transaction)
@@ -193,6 +187,27 @@ namespace BudgetAnalyser.Engine.Statement
             ChangeHash = Guid.NewGuid();
             this.doNotUseAllTransactions.Remove(transaction);
             Filter(this.currentFilter);
+        }
+
+        public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+        {
+            var splinterTransaction1 = (Transaction)originalTransaction.Clone();
+            var splinterTransaction2 = (Transaction)originalTransaction.Clone();
+
+            splinterTransaction1.Amount = splinterAmount1;
+            splinterTransaction2.Amount = splinterAmount2;
+
+            splinterTransaction1.BudgetBucket = splinterBucket1;
+            splinterTransaction2.BudgetBucket = splinterBucket2;
+
+            if (splinterAmount1 + splinterAmount2 != originalTransaction.Amount)
+            {
+                throw new InvalidOperationException("The two new amounts do not add up to the original transaction value.");
+            }
+
+            RemoveTransaction(originalTransaction);
+
+            Merge(new[] { splinterTransaction1, splinterTransaction2 });
         }
 
         public IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
@@ -241,6 +256,19 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
+        {
+            UnsubscribeToTransactionChangedEvents();
+            ChangeHash = Guid.NewGuid();
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
+            AllTransactions = mergedTransactions;
+            this.duplicates = null;
+            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
+            DurationInMonths = this.fullDuration;
+            Filter(this.currentFilter);
+            SubscribeToTransactionChangedEvents();
         }
 
         private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

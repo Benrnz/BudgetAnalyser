@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetBucketUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- DataContext BudgetBucket -->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="["/>
+            <TextBlock Margin="0,2,0,2" Text="{Binding Code}" />
+            <TextBlock Text="]" />
+        </StackPanel>
+        <TextBlock Grid.Row="1"
+                   Margin="2,0,2,0"
+                   FontSize="11"
+                   FontStyle="Italic"
+                   Text="{Binding Description}"
+                   Style="{StaticResource TextBlock.Paragraph}" />
+    </Grid>
+</UserControl>

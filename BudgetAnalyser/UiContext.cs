@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
+using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
@@ -11,7 +12,6 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog;
-using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
@@ -81,7 +81,10 @@ namespace BudgetAnalyser
             get { return this.controllers ?? (this.controllers = DiscoverAllControllers()); }
         }
 
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
+
         public DashboardController DashboardController { get; set; }
+        public EditingTransactionController EditingTransactionController { get; set; }
 
         public GlobalFilterController GlobalFilterController { get; set; }
         public LedgerBookController LedgerBookController { get; set; }
@@ -99,7 +102,8 @@ namespace BudgetAnalyser
             get { return Controllers.OfType<IShowableController>(); }
         }
 
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
+        public SplitTransactionController SplitTransactionController { get; set; }
+
         public StatementController StatementController { get; set; }
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }

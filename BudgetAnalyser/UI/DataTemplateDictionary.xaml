@@ -77,4 +77,12 @@
     <DataTemplate DataType="{x:Type filtering:GlobalFilterController}">
         <filtering:GlobalDateFilterView/>
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type statement:SplitTransactionController}">
+        <statement:SplitTransactionView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type budget1:BudgetBucket}">
+        <budget:BudgetBucketUserControl/>
+    </DataTemplate>
 </ResourceDictionary>

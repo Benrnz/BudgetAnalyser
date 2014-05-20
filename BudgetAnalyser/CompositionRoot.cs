@@ -103,6 +103,8 @@ namespace BudgetAnalyser
             uiContext.DashboardController = container.Resolve<DashboardController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
+            uiContext.SplitTransactionController = container.Resolve<SplitTransactionController>();
+            uiContext.EditingTransactionController = container.Resolve<EditingTransactionController>();
         }
     }
 }

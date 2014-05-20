@@ -1,0 +1,117 @@
+﻿<UserControl x:Class="BudgetAnalyser.Statement.SplitTransactionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FocusManager.FocusedElement="{Binding ElementName=SplinterAmount1}">
+    <!-- DataContext SplitTransactionController -->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        
+        <Border BorderBrush="{StaticResource Brush.ControlBorder}"
+                BorderThickness="2"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+        <TextBlock Grid.Column="0"
+                   Grid.Row="0"
+                   Margin="20,2,5,2"
+                   Text="{Binding OriginalTransaction.Date, StringFormat=d}" />
+        <TextBlock Grid.Column="1"
+                   Grid.Row="0"
+                   Margin="5,2,5,2"
+                   Text="{Binding OriginalTransaction.Description}" />
+        <ComboBox Grid.Row="0"
+                  Grid.Column="2"
+                  Margin="5,2,5,2"
+                  ItemsSource="{Binding BudgetBuckets}"
+                  ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
+                  SelectedItem="{Binding SplinterBucket1}" />
+        <TextBox x:Name="SplinterAmount1"
+                 Grid.Column="3"
+                 Grid.Row="0"
+                 Margin="5,2,20,2"
+                 Text="{Binding SplinterAmount1, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+        
+        <Border BorderBrush="{StaticResource Brush.ControlBorder}"
+                BorderThickness="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+        <TextBlock Grid.Column="0"
+                   Grid.Row="2"
+                   Margin="20,2,5,2"
+                   Text="{Binding OriginalTransaction.Date, StringFormat=d}" />
+        <TextBlock Grid.Column="1"
+                   Grid.Row="2"
+                   Margin="5,2,5,2"
+                   Text="{Binding OriginalTransaction.Description}" />
+        <ComboBox Grid.Column="2"
+                  Grid.Row="2"
+                  ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
+                  ItemsSource="{Binding BudgetBuckets}"
+                  Margin="5,2,5,2"
+                  SelectedItem="{Binding SplinterBucket2}"/>
+        <TextBox Grid.Column="3"
+                 Grid.Row="2"
+                 Margin="5,2,20,2"
+                 Text="{Binding SplinterAmount2, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+        
+        <TextBlock Grid.Column="2"
+                   Grid.Row="4"
+                   HorizontalAlignment="Right"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Total Amount:" />
+        <Border Grid.Column="4"
+                Grid.Row="4"
+                Style="{StaticResource Badge.Border.RedOilLightStyle}"
+                ToolTip="{Binding InvalidMessage}"
+                Visibility="{Binding Valid, Converter={StaticResource Converter.NotBoolToVis}}">
+            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                       Text="INVALID" />
+        </Border>
+        <Border Grid.Column="4"
+                Grid.Row="4"
+                Style="{StaticResource Badge.Border.NominalOilLightStyle}"
+                Visibility="{Binding Valid, Converter={StaticResource Converter.BoolToVis}}">
+            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                       Text="Valid" />
+        </Border>
+        
+        <Border Grid.Column="3"
+                Grid.Row="4" 
+                BorderBrush="{StaticResource Brush.DefaultText}"
+                BorderThickness="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"/>
+        <Border Grid.Column="3"
+                Grid.Row="4"
+                BorderBrush="{StaticResource Brush.DefaultText}"
+                BorderThickness="1"
+                HorizontalAlignment="Stretch"
+                Margin="0,4,0,0"
+                VerticalAlignment="Top" />
+
+        <TextBlock Grid.Column="3"
+                   Grid.Row="4"
+                   Margin="2,6,2,2"
+                   Style="{StaticResource TextBlock.Number}"
+                   Text="{Binding TotalAmount, StringFormat=N}" />
+    </Grid>
+
+</UserControl>

@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
         {
-            if (message.Content is EditingTransactionViewModel)
+            if (message.Content is EditingTransactionController)
             {
                 ListBoxItem listBoxItem = GetSelectedListBoxItem();
                 if (listBoxItem != null)

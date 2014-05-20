@@ -80,6 +80,11 @@
                 <TextBlock Text="Delete Transaction" />
             </MenuItem.Header>
         </MenuItem>
+        <MenuItem Command="{Binding SplitTransactionCommand}">
+            <MenuItem.Header>
+                <TextBlock Text="Split Transaction" />
+            </MenuItem.Header>
+        </MenuItem>
     </ContextMenu>
    
     
@@ -169,7 +174,7 @@
     </DataTemplate>
 
 
-    <DataTemplate DataType="{x:Type statement1:EditingTransactionViewModel}">
+    <DataTemplate DataType="{x:Type statement1:EditingTransactionController}">
         <Border x:Name="MainBorder"
                 BorderBrush="{StaticResource Brush.DefaultText}"
                 BorderThickness="1"

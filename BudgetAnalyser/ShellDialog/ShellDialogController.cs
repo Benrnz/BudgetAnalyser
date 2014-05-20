@@ -157,7 +157,7 @@ namespace BudgetAnalyser.ShellDialog
                 {
                     case ShellDialogButton.Ok:
                     case ShellDialogButton.Save:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Ok) { CorrelationId = CorrelationId });
+                        MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
                         break;
 
                     case ShellDialogButton.Cancel:

@@ -96,6 +96,7 @@
                 Value="8" />
         <Setter Property="Background"
                 Value="{StaticResource Brush.WarningOilLight}" />
+        <Setter Property="MinWidth" Value="150"/>
     </Style>
 
     <Style x:Key="Badge.Border.RedOilLightStyle"
@@ -104,6 +105,14 @@
         <Setter Property="Background"
                 Value="{StaticResource Brush.RedOilLight}" />
     </Style>
+
+    <Style x:Key="Badge.Border.NominalOilLightStyle"
+           TargetType="Border"
+           BasedOn="{StaticResource Badge.Border.WarningOilLightStyle}">
+        <Setter Property="Background"
+                Value="{StaticResource Brush.CreditBackground1}" />
+    </Style>
+    
 
     <Style x:Key="Badge.TextBlock.WarningLightStyle"
            TargetType="TextBlock">

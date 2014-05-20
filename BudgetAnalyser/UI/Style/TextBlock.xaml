@@ -82,8 +82,6 @@
            BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment"
                 Value="Right" />
-        <Setter Property="VerticalAlignment"
-                Value="Top" />
     </Style>
 
     <Style x:Key="TextBlock.TransactionNumber"

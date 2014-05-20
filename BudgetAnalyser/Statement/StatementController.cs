@@ -116,6 +116,11 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnEditTransactionCommandExecute, HasSelectedRow); }
         }
 
+        public EditingTransactionController EditingTransactionController
+        {
+            get { return this.uiContext.EditingTransactionController; }
+        }
+
         public ICommand MergeStatementCommand
         {
             get { return new RelayCommand(OnMergeStatementCommandExecute, CanExecuteCloseStatementCommand); }
@@ -225,6 +230,16 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand); }
         }
 
+        public ICommand SplitTransactionCommand
+        {
+            get { return new RelayCommand(OnSplitTransactionCommandExecute, HasSelectedRow); }
+        }
+
+        public SplitTransactionController SplitTransactionController
+        {
+            get { return this.uiContext.SplitTransactionController; }
+        }
+
         public StatementViewModel ViewModel { get; private set; }
 
         public void Initialize()
@@ -276,6 +291,41 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteSortCommand()
         {
             return BackgroundJob.MenuAvailable && ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
+        }
+
+        private void DeleteTransaction()
+        {
+            ViewModel.Statement.RemoveTransaction(SelectedRow);
+            ViewModel.TriggerRefreshTotalsRow();
+            NotifyOfEdit();
+        }
+
+        private void FinaliseEditTransaction(ShellDialogResponseMessage message)
+        {
+            if (message.Response == ShellDialogButton.Ok)
+            {
+                var viewModel = (EditingTransactionController)message.Content;
+                if (viewModel.HasChanged)
+                {
+                    NotifyOfEdit();
+                }
+            }
+        }
+
+        private void FinaliseSplitTransaction(ShellDialogResponseMessage message)
+        {
+            if (message.Response == ShellDialogButton.Save)
+            {
+                ViewModel.Statement.SplitTransaction(
+                    SplitTransactionController.OriginalTransaction,
+                    SplitTransactionController.SplinterAmount1,
+                    SplitTransactionController.SplinterAmount2,
+                    SplitTransactionController.SplinterBucket1,
+                    SplitTransactionController.SplinterBucket2);
+
+                ViewModel.TriggerRefreshTotalsRow();
+                NotifyOfEdit();
+            }
         }
 
         private bool HasSelectedRow()
@@ -419,9 +469,7 @@ namespace BudgetAnalyser.Statement
                 "Are you sure you want to delete this transaction?", "Delete Transaction");
             if (confirm != null && confirm.Value)
             {
-                ViewModel.Statement.RemoveTransaction(SelectedRow);
-                ViewModel.TriggerRefreshTotalsRow();
-                NotifyOfEdit();
+                DeleteTransaction();
             }
         }
 
@@ -438,15 +486,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.shellDialogCorrelationId = Guid.NewGuid();
-            MessengerInstance.Send(
-                new ShellDialogRequestMessage(
-                    BudgetAnalyserFeature.Transactions,
-                    new EditingTransactionViewModel { Transaction = SelectedRow },
-                    ShellDialogType.Ok)
-                {
-                    CorrelationId = this.shellDialogCorrelationId,
-                    Title = "Edit Transaction",
-                });
+            EditingTransactionController.ShowDialog(SelectedRow, this.shellDialogCorrelationId);
         }
 
         private void OnFilterApplied(FilterAppliedMessage message)
@@ -473,7 +513,7 @@ namespace BudgetAnalyser.Statement
 
             BackgroundJob.StartNew("Merging statement...", false);
             StatementModel additionalModel = null;
-            var loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
+            Task<StatementModel> loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
 
             IWaitCursor cursor = null;
             loadModelTask.ContinueWith(t =>
@@ -499,7 +539,10 @@ namespace BudgetAnalyser.Statement
                 }
                 finally
                 {
-                    if (cursor != null) cursor.Dispose();
+                    if (cursor != null)
+                    {
+                        cursor.Dispose();
+                    }
                     BackgroundJob.Finish();
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
                 }
@@ -516,7 +559,7 @@ namespace BudgetAnalyser.Statement
             BackgroundJob.StartNew("Loading statement...", false);
 
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
-            var task = LoadInternal(fullFileName);
+            Task<bool> task = LoadInternal(fullFileName);
             task.ConfigureAwait(false);
 
             // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
@@ -558,13 +601,13 @@ namespace BudgetAnalyser.Statement
         {
             if (message.CorrelationId != Guid.Empty && message.CorrelationId == this.shellDialogCorrelationId)
             {
-                if (message.Response == ShellDialogButton.Ok)
+                if (message.Content is EditingTransactionController)
                 {
-                    var viewModel = (EditingTransactionViewModel)message.Content;
-                    if (viewModel.HasChanged)
-                    {
-                        NotifyOfEdit();
-                    }
+                    FinaliseEditTransaction(message);
+                }
+                else if (message.Content is SplitTransactionController)
+                {
+                    FinaliseSplitTransaction(message);
                 }
 
                 this.shellDialogCorrelationId = Guid.Empty;
@@ -575,6 +618,12 @@ namespace BudgetAnalyser.Statement
         {
             // The bindings are processed before commands, so the bound boolean for SortByBucket will be set to true by now.
             ViewModel.UpdateGroupedByBucket();
+        }
+
+        private void OnSplitTransactionCommandExecute()
+        {
+            this.shellDialogCorrelationId = Guid.NewGuid();
+            SplitTransactionController.ShowDialog(SelectedRow, this.shellDialogCorrelationId);
         }
 
         private bool PromptToSaveIfDirty()

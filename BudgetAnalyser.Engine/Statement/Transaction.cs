@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
-    [SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification="IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overiden.")]
+    [SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes",
+        Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overiden.")]
     [DebuggerDisplay("Transaction: {Date} {Amount} {Description} {BudgetBucket}")]
-    public class Transaction : INotifyPropertyChanged, IComparable
+    public class Transaction : INotifyPropertyChanged, IComparable, ICloneable
     {
         public const string AmountPropertyName = "Amount";
         public const string BucketPropertyName = "BudgetBucket";
@@ -131,6 +131,22 @@ namespace BudgetAnalyser.Engine.Statement
                 this.doNotUseTransactionType = value;
                 OnPropertyChanged();
             }
+        }
+
+        public object Clone()
+        {
+            return new Transaction
+            {
+                AccountType = AccountType,
+                Amount = Amount,
+                BudgetBucket = BudgetBucket,
+                Date = Date,
+                Description = Description,
+                Reference1 = Reference1,
+                Reference2 = Reference2,
+                Reference3 = Reference3,
+                TransactionType = TransactionType,
+            };
         }
 
         public int CompareTo(object obj)
