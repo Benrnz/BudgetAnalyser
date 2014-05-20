@@ -270,6 +270,11 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
+            if (AddingNewTransaction)
+            {
+                OnAddNewTransactionCommandExecuted();
+            }
+
             Save();
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
