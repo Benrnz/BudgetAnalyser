@@ -520,7 +520,7 @@ namespace BudgetAnalyser.Statement
             {
                 try
                 {
-                    cursor = this.uiContext.WaitCursorFactory();
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor = this.uiContext.WaitCursorFactory());
                     if (additionalModel == null)
                     {
                         // User cancelled.
@@ -541,8 +541,9 @@ namespace BudgetAnalyser.Statement
                 {
                     if (cursor != null)
                     {
-                        cursor.Dispose();
+                        Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor.Dispose());
                     }
+
                     BackgroundJob.Finish();
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
                 }

@@ -329,6 +329,7 @@ namespace BudgetAnalyser.Statement
             if (message.Response == ShellDialogButton.Cancel)
             {
                 Reset();
+                this.fileSelectionTask.Start();
                 return;
             }
 
