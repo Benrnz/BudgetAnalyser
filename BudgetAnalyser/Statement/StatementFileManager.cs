@@ -25,7 +25,6 @@ namespace BudgetAnalyser.Statement
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
         private readonly IVersionedStatementModelRepository statementModelRepository;
-        private readonly Func<IWaitCursor> waitCursorFactory;
 
         public StatementFileManager(
             [NotNull] LoadFileController loadFileController,
@@ -57,7 +56,6 @@ namespace BudgetAnalyser.Statement
             this.statementModelRepository = statementModelRepository;
             this.importerRepository = importerRepository;
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.waitCursorFactory = uiContext.WaitCursorFactory;
         }
 
         private enum OpenMode

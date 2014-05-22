@@ -16,13 +16,16 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
-    public class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
+    public sealed class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips, IDisposable
     {
+        // Track whether Dispose has been called. 
+
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
         private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
         private bool actionButtonReady;
+        private bool disposed;
         private string doNotUseAccountName;
         private bool doNotUseExistingAccountName;
         private string doNotUseFileName;
@@ -30,6 +33,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseNewAccountName;
         private string doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
+        private Task fileSelectionTask;
         private Guid popUpCorrelationId;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -63,7 +67,21 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        private Task fileSelectionTask;
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="LoadFileController" /> class.
+        ///     Use C# destructor syntax for finalization code.
+        ///     This destructor will run only if the Dispose method
+        ///     does not get called.
+        ///     It gives your base class the opportunity to finalize.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~LoadFileController()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            // Calling Dispose(false) is optimal in terms of 
+            // readability and maintainability. 
+            Dispose(false);
+        }
 
         public string AccountName
         {
@@ -88,6 +106,8 @@ namespace BudgetAnalyser.Statement
             get { return this.accountTypeRepository.GetOrCreateNew(AccountName); }
         }
 
+        public string ActionButtonToolTip { get; private set; }
+
         public ICommand BrowseForFileCommand
         {
             get { return new RelayCommand(OnBrowseForFileCommandExecute); }
@@ -106,6 +126,11 @@ namespace BudgetAnalyser.Statement
         public bool CanExecuteSaveButton
         {
             get { return false; }
+        }
+
+        public string CloseButtonToolTip
+        {
+            get { return "Cancel"; }
         }
 
         public IEnumerable<string> ExistingAccountNames { get; private set; }
@@ -187,8 +212,28 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        /// <summary>
+        ///     Implement IDisposable.
+        ///     Do not make this method virtual.
+        ///     A derived class should not be able to override this method
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Take yourself off the Finalization queue 
+            // to prevent finalization code for this object 
+            // from executing a second time. 
+            GC.SuppressFinalize(this);
+        }
+
         public Task RequestUserInputForMerging(StatementModel currentStatement)
         {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("LoadFileController.RequestUserInputForMerging");
+            } 
+
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Merge Statement";
@@ -221,6 +266,11 @@ namespace BudgetAnalyser.Statement
 
         public Task RequestUserInputForOpenFile()
         {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("LoadFileController.RequestUserInputForOpenFile");
+            }
+            
             ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
@@ -230,9 +280,47 @@ namespace BudgetAnalyser.Statement
 
         public void Reset()
         {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("LoadFileController.Reset");
+            } 
+
             LastFileWasBudgetAnalyserStatementFile = null;
             FileName = null;
             AccountName = null;
+        }
+
+        /// <summary>
+        ///     Dispose(bool disposing) executes in two distinct scenarios.
+        ///     If disposing equals true, the method has been called directly
+        ///     or indirectly by a user's code. Managed and unmanaged resources
+        ///     can be disposed.
+        ///     If disposing equals false, the method has been called by the
+        ///     runtime from inside the finalizer and you should not reference
+        ///     other objects. Only unmanaged resources can be disposed.
+        /// </summary>
+        /// <param name="disposing">
+        ///     <c>true</c> to release both managed and unmanaged
+        ///     resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
+        private void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed 
+                // and unmanaged resources. 
+                if (disposing)
+                {
+                    // Dispose managed resources. 
+                    if (this.fileSelectionTask != null)
+                    {
+                        this.fileSelectionTask.Dispose();
+                    }
+                }
+            }
+
+            this.disposed = true;
         }
 
         private static List<string> PrepareAccountNames(IEnumerable<string> existingAccountNames)
@@ -361,20 +449,15 @@ namespace BudgetAnalyser.Statement
                 CorrelationId = this.popUpCorrelationId,
                 Title = Title
             };
+
+            if (this.fileSelectionTask != null)
+            {
+                this.fileSelectionTask.Dispose();
+            }
+
             this.fileSelectionTask = new Task(() => { });
             MessengerInstance.Send(popRequest);
             return this.fileSelectionTask;
-        }
-
-        public string ActionButtonToolTip
-        {
-            get;
-            private set;
-        }
-
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
         }
     }
 }

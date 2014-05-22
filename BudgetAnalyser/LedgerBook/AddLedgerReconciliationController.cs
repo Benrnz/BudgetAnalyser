@@ -190,7 +190,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
                 else
                 {
-                    throw new InvalidOperationException("Failed to add any bank balances to LedgerBook reconciliation.");
+                    throw new InvalidOperationException("Failed to add any bank balances to Ledger Book reconciliation.");
                 }
             }
 

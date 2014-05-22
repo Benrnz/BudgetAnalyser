@@ -189,8 +189,28 @@ namespace BudgetAnalyser.Engine.Statement
             Filter(this.currentFilter);
         }
 
-        public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+        public void SplitTransaction(
+            [NotNull] Transaction originalTransaction, 
+            decimal splinterAmount1, 
+            decimal splinterAmount2, 
+            [NotNull] BudgetBucket splinterBucket1,
+            [NotNull] BudgetBucket splinterBucket2)
         {
+            if (originalTransaction == null)
+            {
+                throw new ArgumentNullException("originalTransaction");
+            }
+            
+            if (splinterBucket1 == null)
+            {
+                throw new ArgumentNullException("splinterBucket1");
+            }
+            
+            if (splinterBucket2 == null)
+            {
+                throw new ArgumentNullException("splinterBucket2");
+            }
+
             var splinterTransaction1 = (Transaction)originalTransaction.Clone();
             var splinterTransaction2 = (Transaction)originalTransaction.Clone();
 

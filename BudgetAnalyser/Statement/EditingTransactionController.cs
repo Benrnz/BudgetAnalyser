@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
@@ -7,8 +8,13 @@ namespace BudgetAnalyser.Statement
 {
     public class EditingTransactionController : ControllerBase
     {
-        public EditingTransactionController(UiContext uiContext)
+        public EditingTransactionController([NotNull] UiContext uiContext)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
             MessengerInstance = uiContext.Messenger;
         }
 
