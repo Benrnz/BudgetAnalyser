@@ -30,7 +30,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                 }
 
                 Console.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
-                Console.Write(line.BankBalance.ToString("N").PadRight(13));
+                Console.Write(line.TotalBankBalance.ToString("N").PadRight(13));
                 Console.Write(line.TotalBalanceAdjustments.ToString("N").PadRight(12));
                 Console.Write(line.LedgerBalance.ToString("N").PadRight(9));
                 Console.WriteLine();

@@ -248,7 +248,7 @@ namespace BudgetAnalyser.LedgerBook
 
                 Border bankBalanceBorder = AddBorderToGridCell(grid, BankBalanceBackground, false, column, row);
                 TextBlock bankBalanceText = AddContentToGrid(bankBalanceBorder, line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle,
-                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.BankBalance));
+                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.TotalBankBalance));
                 bankBalanceText.Foreground = FindResource(BankBalanceTextBrush) as Brush;
 
                 TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref column, row, NormalStyle, line.Remarks);

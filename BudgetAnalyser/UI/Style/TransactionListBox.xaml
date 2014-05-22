@@ -148,15 +148,8 @@
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
-                <Image Grid.Column="8"
-                       Height="20"
-                       HorizontalAlignment="Left"
-                       Margin="6,2,6,2"
-                       Source="{Binding AccountType.ImagePath}"
-                       Stretch="Uniform"
-                       ToolTip="{Binding AccountType.Name}"
-                       VerticalAlignment="Top"
-                       Width="62" />
+                <ContentPresenter Grid.Column="8"
+                       Content="{Binding AccountType}"/>
             </Grid>
         </Border>
         <DataTemplate.Triggers>

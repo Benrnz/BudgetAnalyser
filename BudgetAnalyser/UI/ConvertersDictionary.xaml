@@ -11,5 +11,6 @@
     <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
     <converters1:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
     <converters:BucketToColourConverter x:Key="Converter.BucketToColour" />
+    <converters:ImagePathConverter x:Key="Converter.ImagePath"/>
 
 </ResourceDictionary>

@@ -112,8 +112,23 @@ namespace BudgetAnalyser
 
             this.initialised = true;
 
-            IEnumerable<IPersistent> rehydratedModels = this.statePersistence.Load();
-            MessengerInstance.Send(new ApplicationStateLoadedMessage(rehydratedModels));
+            IList<IPersistent> rehydratedModels = this.statePersistence.Load().ToList();
+            if (!rehydratedModels.OfType<LastBudgetLoadedV1>().Any())
+            {
+                // Mandatory budget file.
+                rehydratedModels.Add(new LastBudgetLoadedV1());
+            }
+
+            // Create a distinct list of sequences.
+            var sequences = rehydratedModels.Select(persistentModel => persistentModel.Sequence).OrderBy(s => s).Distinct();
+
+            // Send state load messages in order.
+            foreach (var sequence in sequences)
+            {
+                int sequenceCopy = sequence;
+                MessengerInstance.Send(new ApplicationStateLoadedMessage(rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy)));
+            }
+
             MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());
 
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());

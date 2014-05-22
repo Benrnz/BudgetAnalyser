@@ -376,7 +376,6 @@ namespace BudgetAnalyser.Budget
             {
                 if (!message.RehydratedModels.ContainsKey(typeof(LastBudgetLoadedV1)))
                 {
-                    LoadDemoBudget();
                     return;
                 }
 

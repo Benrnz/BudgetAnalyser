@@ -49,7 +49,7 @@ namespace BudgetAnalyser.UnitTest
             LedgerBook testData2 = LedgerBookTestData.TestData2();
             LedgerEntryLine line = book.DatedEntries.First();
 
-            Assert.AreEqual(testData2.DatedEntries.First().BankBalance, line.BankBalance);
+            Assert.AreEqual(testData2.DatedEntries.First().TotalBankBalance, line.TotalBankBalance);
         }
 
         [TestMethod]

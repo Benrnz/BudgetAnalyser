@@ -81,7 +81,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5,10,5,10">
-            <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding ShownTransactions}"
                               Margin="5">
                     <ItemsControl.ItemTemplate>

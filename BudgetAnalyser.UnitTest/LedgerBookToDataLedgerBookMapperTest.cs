@@ -81,7 +81,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryShouldHaveSameBankBalance()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalance, result.DatedEntries.First().BankBalance);
+            Assert.AreEqual(TestData.DatedEntries.First().TotalBankBalance, result.DatedEntries.First().BankBalance);
         }
 
         [TestMethod]

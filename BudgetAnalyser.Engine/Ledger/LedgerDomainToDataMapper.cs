@@ -25,6 +25,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return dataBook;
         }
 
+        private DataBankBalance MapBankBalance(BankBalance bankBalance)
+        {
+            return new DataBankBalance { Account = bankBalance.Account.Name, Balance = bankBalance.Balance };
+        }
+
         private DataLedgerEntry MapEntry(LedgerEntry entry)
         {
             var dataEntry = new DataLedgerEntry
@@ -41,7 +46,8 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var dataLine = new DataLedgerEntryLine
             {
-                BankBalance = line.BankBalance,
+                BankBalance = line.TotalBankBalance,
+                BankBalances = line.BankBalances.Select(MapBankBalance).ToList(),
                 BankBalanceAdjustments = line.BankBalanceAdjustments.Select(MapTransaction).ToList(),
                 Date = line.Date,
                 Entries = line.Entries.Select(MapEntry).ToList(),

@@ -6,6 +6,8 @@ namespace BudgetAnalyser.Matching
     {
         public object Model { get; set; }
 
+        public int Sequence { get { return 100; } }
+        
         public T AdaptModel<T>()
         {
             return (T)Model;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -13,13 +14,23 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private static readonly Dictionary<string, LedgerColumn> CachedLedgers = new Dictionary<string, LedgerColumn>();
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILogger logger;
 
-        public LedgerDataToDomainMapper([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] ILogger logger)
+        public LedgerDataToDomainMapper(
+            [NotNull] ILogger logger,
+            [NotNull] IBudgetBucketRepository bucketRepository, 
+            [NotNull] IAccountTypeRepository accountTypeRepository
+            )
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
+            }
+            
+            if (accountTypeRepository == null)
+            {
+                throw new ArgumentNullException("accountTypeRepository");
             }
 
             if (logger == null)
@@ -28,6 +39,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.bucketRepository = bucketRepository;
+            this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
         }
 
@@ -109,6 +121,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledger;
         }
 
+        private IEnumerable<BankBalance> MapBankBalances(IEnumerable<DataBankBalance> dataBalances)
+        {
+            return dataBalances.Select(d => new BankBalance { Account = this.accountTypeRepository.GetByKey(d.Account), Balance = d.Balance });
+        }
+
         private List<LedgerEntryLine> MapLines(IEnumerable<DataLedgerEntryLine> dataLines)
         {
             List<DataLedgerEntryLine> localCopyOfLines = dataLines.Reverse().ToList(); // Now it is in ascending order starting at oldest date first.
@@ -116,7 +133,8 @@ namespace BudgetAnalyser.Engine.Ledger
             var listOfLines = new List<LedgerEntryLine>();
             foreach (DataLedgerEntryLine line in localCopyOfLines)
             {
-                var domainLine = new LedgerEntryLine(line.Date, line.BankBalance, line.Remarks);
+                var domainLine = new LedgerEntryLine(line.Date, MapBankBalances(line.BankBalances), line.Remarks);
+
                 domainLine.SetBalanceAdjustments(MapTransactions(line.BankBalanceAdjustments));
                 if (previousLine == null)
                 {

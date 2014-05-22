@@ -69,14 +69,14 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
         ///     <see cref="statement" />.
         /// </param>
-        /// <param name="bankBalance">The bank balance as at the <see cref="date" />.</param>
+        /// <param name="bankBalances">The bank balances as at the <see cref="date" /> to include in this new single line of the ledger book.</param>
         /// <param name="budget">The current budget.</param>
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         public LedgerEntryLine Reconcile(
             DateTime date,
-            decimal bankBalance,
+            IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,
             StatementModel statement = null,
             bool ignoreWarnings = false)
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
             }
 
-            var newLine = new LedgerEntryLine(date, bankBalance);
+            var newLine = new LedgerEntryLine(date, bankBalances);
             var previousEntries = new Dictionary<LedgerColumn, LedgerEntry>();
             LedgerEntryLine previousLine = this.datedEntries.FirstOrDefault();
             foreach (LedgerColumn ledger in Ledgers)

@@ -13,7 +13,8 @@
 
     <Style TargetType="TextBox">
         <Setter Property="MinWidth" Value="130" />
-        <Setter Property="Margin" Value="3" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="MinHeight" Value="30"/>
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="Background" Value="{StaticResource Brush.TileBackgroundAlternate}" />
         <Setter Property="Foreground" Value="{StaticResource Brush.DefaultText}" />

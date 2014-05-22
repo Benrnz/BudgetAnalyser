@@ -24,7 +24,7 @@ namespace BudgetAnalyser.UnitTest
         {
             var result = ArrangeAndAct();
             var subject = result.DatedEntries.First();
-            Assert.AreEqual(subject.LedgerBalance, subject.BankBalance);
+            Assert.AreEqual(subject.LedgerBalance, subject.TotalBankBalance);
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.UnitTest
         {
             var result = ArrangeAndAct();
             var subject = result.DatedEntries.First();
-            Assert.AreEqual(2950, subject.BankBalance);
+            Assert.AreEqual(2950, subject.TotalBankBalance);
         }
 
         [TestMethod]

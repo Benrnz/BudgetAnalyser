@@ -282,7 +282,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                this.newLedgerLine = LedgerBook.Reconcile(AddLedgerReconciliationController.Date, AddLedgerReconciliationController.BankBalance, CurrentBudget.Model, CurrentStatement, ignoreWarnings);
+                this.newLedgerLine = LedgerBook.Reconcile(
+                    AddLedgerReconciliationController.Date,
+                    AddLedgerReconciliationController.BankBalances,
+                    CurrentBudget.Model,
+                    CurrentStatement,
+                    ignoreWarnings);
                 this.dirty = true;
                 EventHandler handler = LedgerBookUpdated;
                 if (handler != null)

@@ -3,12 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              IsVisibleChanged="OnIsVisibleChanged">
 
+    <!-- DataContext AddLedgerReconciliationController -->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top">
             <TextBlock Text="Date:" />
             <DatePicker x:Name="ReconDate"
                         CalendarStyle="{StaticResource CalendarStyle}"
@@ -18,9 +26,45 @@
             <TextBlock Margin="20,2,2,2"
                        Text="Bank Balance:" />
             <TextBox GotFocus="OnUIElementGotFocus"
-                     Text="{Binding BankBalance, StringFormat=N}" />
+                     Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+            <ComboBox ItemsSource="{Binding BankAccounts}"
+                      SelectedItem="{Binding SelectedBankAccount}" />
+            <Button Command="{Binding AddBankBalanceCommand}"
+                    Style="{StaticResource Button.Round.Add}"
+                    ToolTip="Add Bank Balance" />
         </StackPanel>
-        <TextBlock Grid.Row="1"
+
+        <Border Background="{StaticResource Brush.MainBackground}"
+                BorderBrush="{StaticResource Brush.ControlBorder}"
+                BorderThickness="2"
+                Grid.Column="1"
+                Margin="5,10,5,10"
+                MinHeight="40"
+                VerticalAlignment="Top">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          MinWidth="250">
+                <ItemsControl ItemsSource="{Binding BankBalances}"
+                              Margin="5">
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                BorderThickness="0,2,0,0"
+                BorderBrush="{StaticResource Brush.DefaultText}"
+                HorizontalAlignment="Right"
+                Width="120">
+            <Border BorderThickness="0,2,0,0"
+                    BorderBrush="{StaticResource Brush.DefaultText}"
+                    Margin="0,2,0,0">
+                <TextBlock HorizontalAlignment="Right" 
+                           Text="{Binding BankBalanceTotal, StringFormat=N}" />
+            </Border>
+        </Border>
+
+        <TextBlock Grid.Row="1" 
+                   Grid.Column="0"
                    Margin="10,30,10,10"
                    Style="{StaticResource TextBlock.Paragraph}"
                    TextWrapping="Wrap">
@@ -29,7 +73,7 @@
                 The date field is used to date the ledger book line and also to find transactions to include.
                 Transactions will be found by searching one month prior to the given date, excluding the given date.
                 The idea is to use your pay day as the date, and perform adding a reconciliation once per month.
-                The bank balance is the balance as at the date given, after you pay has gone in.
+                The bank balance is the balance as at the date given, after your pay has been credited.
             </Run>
         </TextBlock>
     </Grid>

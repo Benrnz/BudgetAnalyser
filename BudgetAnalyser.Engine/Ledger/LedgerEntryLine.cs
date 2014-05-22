@@ -27,15 +27,17 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         private bool isNew;
 
+        private readonly List<BankBalance> bankBalancesList;
+
         /// <summary>
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />. This constructor is used by deserialisation.
         /// </summary>
         /// <param name="date">The date of the line</param>
-        /// <param name="bankBalance">The bank balance for this date.</param>
+        /// <param name="bankBalances">The bank balances for this date. The sum of which makes up the total bank balance for this entry line.</param>
         /// <param name="remarks">The remarks saved with this line.</param>
-        internal LedgerEntryLine(DateTime date, decimal bankBalance, string remarks)
+        internal LedgerEntryLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
         {
-            BankBalance = bankBalance;
+            this.bankBalancesList = bankBalances.ToList();
             Date = date;
             Remarks = remarks;
         }
@@ -45,15 +47,23 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     reconciling once a month.
         /// </summary>
         /// <param name="date">The date of the line</param>
-        /// <param name="bankBalance">The bank balance for this date.</param>
-        internal LedgerEntryLine(DateTime date, decimal bankBalance)
+        /// <param name="bankBalances">The bank balances for this date.</param>
+        internal LedgerEntryLine(DateTime date, IEnumerable<BankBalance> bankBalances)
         {
             this.isNew = true;
             Date = date;
-            BankBalance = bankBalance;
+            this.bankBalancesList = bankBalances.ToList();
         }
 
-        public decimal BankBalance { get; private set; }
+        public IEnumerable<BankBalance> BankBalances
+        {
+            get { return this.bankBalancesList; }
+        }
+
+        public decimal TotalBankBalance
+        {
+            get { return this.bankBalancesList.Sum(b => b.Balance); }
+        }
 
         public IEnumerable<LedgerTransaction> BankBalanceAdjustments
         {
@@ -74,7 +84,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public decimal LedgerBalance
         {
-            get { return BankBalance + TotalBalanceAdjustments; }
+            get { return TotalBankBalance + TotalBalanceAdjustments; }
         }
 
         public string Remarks { get; private set; }

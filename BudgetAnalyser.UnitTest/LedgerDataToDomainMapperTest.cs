@@ -70,8 +70,8 @@ namespace BudgetAnalyser.UnitTest
         {
             LedgerBook result = ArrangeAndAct();
             LedgerEntryLine subject = result.DatedEntries.First();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalance, subject.BankBalance);
-            Assert.AreNotEqual(0, subject.BankBalance);
+            Assert.AreEqual(TestData.DatedEntries.First().BankBalance, subject.TotalBankBalance);
+            Assert.AreNotEqual(0, subject.TotalBankBalance);
         }
 
         [TestMethod]
