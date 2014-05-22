@@ -27,10 +27,10 @@ namespace BudgetAnalyser.UnitTest
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the DataLedgerEntryLine. This is a trigger to update the mappers.")]
-        public void NumberOfDataLedgerLinePropertiesShouldBe5()
+        public void NumberOfDataLedgerLinePropertiesShouldBe6()
         {
             var dataProperties = CountProperties(typeof(DataLedgerEntryLine));
-            Assert.AreEqual(5, dataProperties);
+            Assert.AreEqual(6, dataProperties);
         }
 
         [TestMethod]

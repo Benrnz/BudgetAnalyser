@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestData;
@@ -179,7 +180,10 @@ namespace BudgetAnalyser.UnitTest
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RegoBucketCode)).Returns(RegoBucket);
             bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.CarMtcBucketCode)).Returns(CarMtcBucket);
 
-            var mapper = new LedgerDataToDomainMapper(bucketRepositoryMock.Object, new FakeLogger());
+            var accountTypeRepoMock = new Mock<IAccountTypeRepository>();
+            accountTypeRepoMock.Setup(a => a.GetByKey(StatementModelTestData.ChequeAccount.Name)).Returns(StatementModelTestData.ChequeAccount);
+
+            var mapper = new LedgerDataToDomainMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
             return mapper.Map(TestData);
         }
 

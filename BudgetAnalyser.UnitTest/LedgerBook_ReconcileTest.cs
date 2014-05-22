@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class LedgerBook_ReconcileTest
     {
-        private const decimal NextReconcileBankBalance = 1850.5M;
+        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance { Balance = 1850.5M, Account = StatementModelTestData.ChequeAccount }};
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
 
         [TestMethod]

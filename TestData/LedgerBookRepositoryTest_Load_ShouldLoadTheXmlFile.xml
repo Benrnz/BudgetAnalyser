@@ -7,6 +7,11 @@
             <DataLedgerTransaction Credit="0" Debit="550" Id="27e8f7a1-75bd-4bfb-8e44-6ab0c548fe4f" Narrative="Credit card payment yet to go out." TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
           </scg:List>
         </DataLedgerEntryLine.BankBalanceAdjustments>
+        <DataLedgerEntryLine.BankBalances>
+          <scg:List x:TypeArguments="DataBankBalance" Capacity="4">
+            <DataBankBalance Account="Cheque" Balance="2950" />
+          </scg:List>
+        </DataLedgerEntryLine.BankBalances>
         <DataLedgerEntryLine.Entries>
           <scg:List x:TypeArguments="DataLedgerEntry" Capacity="4">
             <DataLedgerEntry Balance="120" BucketCode="HAIRCUT">

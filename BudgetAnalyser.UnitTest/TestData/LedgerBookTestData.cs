@@ -22,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 06, 15), 2500, "Lorem ipsum").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 06, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2500 }, }, "Lorem ipsum").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(hairLedger, null).SetTransactions(new List<LedgerTransaction>
                     {
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 07, 15), 3700, "dolor amet set").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 07, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 3700 }, }, "dolor amet set").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(hairLedger, previousHairEntry).SetTransactions(new List<LedgerTransaction>
                     {
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-            new LedgerEntryLine(new DateTime(2013, 08, 15), 2950, "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
+            new LedgerEntryLine(new DateTime(2013, 08, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2950 }, }, "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(hairLedger, previousHairEntry).SetTransactions(new List<LedgerTransaction>
                     {
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 06, 15), 2500, "Lorem ipsum").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 06, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2500 }, }, "Lorem ipsum").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(hairLedger, null).SetTransactions(new List<LedgerTransaction>
                     {
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 07, 15), 3700, "dolor amet set").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 07, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 3700 }, }, "dolor amet set").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(hairLedger, previousHairEntry).SetTransactions(new List<LedgerTransaction>
                     {
@@ -155,7 +155,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 08, 15), 2950, "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 08, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2950 }, }, "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
                     {
                         new LedgerEntry(hairLedger, previousHairEntry).SetTransactions(new List<LedgerTransaction>
                         {
@@ -205,7 +205,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 11, 15), 10738, "Opening entries").SetEntries(new List<LedgerEntry>
+                new LedgerEntryLine(new DateTime(2013, 11, 15), new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 10738 }, }, "Opening entries").SetEntries(new List<LedgerEntry>
                 {
                     new LedgerEntry(ratesLedger, null).SetTransactions(new List<LedgerTransaction>
                     {

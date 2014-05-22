@@ -402,6 +402,8 @@ namespace BudgetAnalyser.UnitTest.TestData
         private static void UpdateLineBalances(DataLedgerEntryLine currentLine, DataLedgerEntryLine previousLine, decimal bankBalance)
         {
             currentLine.BankBalance = bankBalance;
+            currentLine.BankBalances.Add(new DataBankBalance { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });
+
             if (previousLine == null)
             {
                 return;
