@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using BudgetAnalyser.Engine;
 
 namespace BudgetAnalyser.UnitTest.TestHarness

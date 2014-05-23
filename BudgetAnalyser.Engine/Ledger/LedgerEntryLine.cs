@@ -17,23 +17,18 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
+        private readonly List<BankBalance> bankBalancesList;
         private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
         private List<LedgerEntry> entries = new List<LedgerEntry>();
-
-        /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-        ///     loading from file.
-        ///     This variable is intentionally not persisted.
-        /// </summary>
-        private bool isNew;
-
-        private readonly List<BankBalance> bankBalancesList;
 
         /// <summary>
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />. This constructor is used by deserialisation.
         /// </summary>
         /// <param name="date">The date of the line</param>
-        /// <param name="bankBalances">The bank balances for this date. The sum of which makes up the total bank balance for this entry line.</param>
+        /// <param name="bankBalances">
+        ///     The bank balances for this date. The sum of which makes up the total bank balance for this
+        ///     entry line.
+        /// </param>
         /// <param name="remarks">The remarks saved with this line.</param>
         internal LedgerEntryLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
         {
@@ -50,24 +45,19 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="bankBalances">The bank balances for this date.</param>
         internal LedgerEntryLine(DateTime date, IEnumerable<BankBalance> bankBalances)
         {
-            this.isNew = true;
+            IsNew = true;
             Date = date;
             this.bankBalancesList = bankBalances.ToList();
-        }
-
-        public IEnumerable<BankBalance> BankBalances
-        {
-            get { return this.bankBalancesList; }
-        }
-
-        public decimal TotalBankBalance
-        {
-            get { return this.bankBalancesList.Sum(b => b.Balance); }
         }
 
         public IEnumerable<LedgerTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
+        }
+
+        public IEnumerable<BankBalance> BankBalances
+        {
+            get { return this.bankBalancesList; }
         }
 
         public decimal CalculatedSurplus
@@ -94,9 +84,21 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return BankBalanceAdjustments.Sum(a => a.Credit - a.Debit); }
         }
 
+        public decimal TotalBankBalance
+        {
+            get { return this.bankBalancesList.Sum(b => b.Balance); }
+        }
+
+        /// <summary>
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
+        ///     loading from file.
+        ///     This variable is intentionally not persisted.
+        /// </summary>
+        internal bool IsNew { get; private set; }
+
         public void BalanceAdjustment(decimal adjustment, string narrative)
         {
-            if (!this.isNew)
+            if (!IsNew)
             {
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
@@ -130,7 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public void CancelBalanceAdjustment(Guid transactionId)
         {
-            if (!this.isNew)
+            if (!IsNew)
             {
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
@@ -144,7 +146,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public bool UpdateRemarks(string remarks)
         {
-            if (this.isNew)
+            if (IsNew)
             {
                 Remarks = remarks;
                 return true;
@@ -182,7 +184,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="startDateIncl">The date for this ledger line.</param>
         internal void AddNew(IEnumerable<KeyValuePair<LedgerColumn, LedgerEntry>> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
         {
-            if (!this.isNew)
+            if (!IsNew)
             {
                 throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
@@ -230,7 +232,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal void Unlock()
         {
-            this.isNew = true;
+            IsNew = true;
             foreach (LedgerEntry entry in Entries)
             {
                 entry.Unlock();

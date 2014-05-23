@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
-            if (recentEntry != null && date < recentEntry.Date)
+            if (recentEntry != null && date <= recentEntry.Date)
             {
                 throw new InvalidOperationException("The date entered is before the previous ledger entry.");
             }

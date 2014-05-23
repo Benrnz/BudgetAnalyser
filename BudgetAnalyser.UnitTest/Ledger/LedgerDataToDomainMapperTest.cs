@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -8,7 +9,7 @@ using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
     public class LedgerDataToDomainMapperTest
@@ -19,10 +20,26 @@ namespace BudgetAnalyser.UnitTest
         private DataLedgerBook TestData { get; set; }
 
         [TestMethod]
+        [ExpectedException(typeof(FileFormatException))]
+        public void InvalidTransactionTypeShouldThrow()
+        {
+            TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
+            ArrangeAndAct();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FileFormatException))]
+        public void NullTransactionTypeShouldThrow()
+        {
+            TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = null;
+            ArrangeAndAct();
+        }
+
+        [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerBook. This is a trigger to update the mappers.")]
         public void NumberOfLedgerBookPropertiesShouldBe5()
         {
-            int domainProperties = CountProperties(typeof (LedgerBook));
+            int domainProperties = CountProperties(typeof(LedgerBook));
             Assert.AreEqual(5, domainProperties);
         }
 

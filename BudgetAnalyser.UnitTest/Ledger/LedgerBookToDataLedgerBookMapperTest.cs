@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
     public class LedgerBookToDataLedgerBookMapperTest
@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = LedgerBookTestData.TestData2();
+            this.TestData = LedgerBookTestData.TestData2();
         }
 
         [TestMethod]
@@ -53,63 +53,63 @@ namespace BudgetAnalyser.UnitTest
         public void FilenameShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.FileName, result.FileName);
+            Assert.AreEqual(this.TestData.FileName, result.FileName);
         }
 
         [TestMethod]
         public void ModifiedDateShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Modified, result.Modified);
+            Assert.AreEqual(this.TestData.Modified, result.Modified);
         }
 
         [TestMethod]
         public void NameShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Name, result.Name);
+            Assert.AreEqual(this.TestData.Name, result.Name);
         }
 
         [TestMethod]
         public void DatedEntriesShouldHaveSameCount()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.Count(), result.DatedEntries.Count());
+            Assert.AreEqual(this.TestData.DatedEntries.Count(), result.DatedEntries.Count());
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameBankBalance()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().TotalBankBalance, result.DatedEntries.First().BankBalance);
+            Assert.AreEqual(this.TestData.DatedEntries.First().TotalBankBalance, result.DatedEntries.First().BankBalance);
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameDate()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Date, result.DatedEntries.First().Date);
+            Assert.AreEqual(this.TestData.DatedEntries.First().Date, result.DatedEntries.First().Date);
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameRemarks()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Remarks, result.DatedEntries.First().Remarks);
+            Assert.AreEqual(this.TestData.DatedEntries.First().Remarks, result.DatedEntries.First().Remarks);
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameNumberOfBalanceAdjustments()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.Count(), result.DatedEntries.First().BankBalanceAdjustments.Count());
+            Assert.AreEqual(this.TestData.DatedEntries.First().BankBalanceAdjustments.Count(), result.DatedEntries.First().BankBalanceAdjustments.Count());
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameCredit()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Credit, 
+            Assert.AreEqual(this.TestData.DatedEntries.First().BankBalanceAdjustments.First().Credit, 
                 result.DatedEntries.First().BankBalanceAdjustments.First().Credit);
         }
 
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameDebit()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Debit,
+            Assert.AreEqual(this.TestData.DatedEntries.First().BankBalanceAdjustments.First().Debit,
                 result.DatedEntries.First().BankBalanceAdjustments.First().Debit);
         }
 
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameId()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Id,
+            Assert.AreEqual(this.TestData.DatedEntries.First().BankBalanceAdjustments.First().Id,
                 result.DatedEntries.First().BankBalanceAdjustments.First().Id);
         }
 
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameNarrative()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Narrative,
+            Assert.AreEqual(this.TestData.DatedEntries.First().BankBalanceAdjustments.First().Narrative,
                 result.DatedEntries.First().BankBalanceAdjustments.First().Narrative);
         }
 
@@ -141,7 +141,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryShouldHaveSameNumberOfEntries()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.Count(),
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.Count(),
                 result.DatedEntries.First().Entries.Count());
         }
 
@@ -149,7 +149,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBalance()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Balance,
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().Balance,
                 result.DatedEntries.First().Entries.First().Balance);
         }
 
@@ -157,7 +157,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBucketCode()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code,
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code,
                 result.DatedEntries.First().Entries.First().BucketCode);
         }
 
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryShouldHaveSameNumberOfTransactions()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.Count(),
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().Transactions.Count(),
                 result.DatedEntries.First().Entries.First().Transactions.Count());
         }
 
@@ -173,7 +173,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameCredit()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Credit,
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().Transactions.First().Credit,
                 result.DatedEntries.First().Entries.First().Transactions.First().Credit);
         }
 
@@ -181,7 +181,7 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameDebit()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Debit,
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().Transactions.First().Debit,
                 result.DatedEntries.First().Entries.First().Transactions.First().Debit);
         }
 
@@ -189,14 +189,14 @@ namespace BudgetAnalyser.UnitTest
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameNarrative()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Narrative,
+            Assert.AreEqual(this.TestData.DatedEntries.First().Entries.First().Transactions.First().Narrative,
                 result.DatedEntries.First().Entries.First().Transactions.First().Narrative);
         }
 
         private DataLedgerBook ArrangeAndAct()
         {
             var mapper = new LedgerDomainToDataMapper();
-            return mapper.Map(TestData);
+            return mapper.Map(this.TestData);
         }
 
         private int CountProperties(Type type)

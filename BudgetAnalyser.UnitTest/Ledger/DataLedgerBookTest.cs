@@ -3,7 +3,7 @@ using System.Xaml;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
     public class DataLedgerBookTest
