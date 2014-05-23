@@ -20,6 +20,7 @@ namespace BudgetAnalyser.LedgerBook
         private decimal doNotUseBankBalance;
         private DateTime doNotUseDate;
         private AccountType doNotUseSelectedBankAccount;
+        private bool doNotUseAddBalanceVisibility;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -62,11 +63,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public decimal BankBalanceTotal
-        {
-            get { return BankBalances.Sum(b => b.Balance); }
-        }
-
         public decimal BankBalance
         {
             get { return this.doNotUseBankBalance; }
@@ -76,6 +72,11 @@ namespace BudgetAnalyser.LedgerBook
                 RaisePropertyChanged(() => BankBalance);
                 RaisePropertyChanged(() => BankBalanceTotal);
             }
+        }
+
+        public decimal BankBalanceTotal
+        {
+            get { return BankBalances.Sum(b => b.Balance); }
         }
 
         public ObservableCollection<BankBalance> BankBalances { get; private set; }
@@ -106,6 +107,8 @@ namespace BudgetAnalyser.LedgerBook
             get { return "Cancel"; }
         }
 
+        public bool CreateMode { get; private set; }
+
         public DateTime Date
         {
             get { return this.doNotUseDate; }
@@ -113,6 +116,16 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.doNotUseDate = value;
                 RaisePropertyChanged(() => Date);
+            }
+        }
+
+        public bool AddBalanceVisibility
+        {
+            get { return this.doNotUseAddBalanceVisibility; }
+            private set
+            {
+                this.doNotUseAddBalanceVisibility = value;
+                RaisePropertyChanged(() => AddBalanceVisibility);
             }
         }
 
@@ -131,33 +144,64 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public void ShowDialog()
+        public void ShowCreateDialog()
         {
             Date = DateTime.Today;
-            Canceled = false;
-            BankAccounts = this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
-            SelectedBankAccount = null;
             BankBalances = new ObservableCollection<BankBalance>();
+            CreateMode = true;
+            AddBalanceVisibility = true;
 
-            this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
-            {
-                CorrelationId = this.dialogCorrelationId,
-                Title = "New Reconciliation",
-            };
-            MessengerInstance.Send(dialogRequest);
+            ShowDialogCommon("New Reconciliation");
+        }
+
+        public void ShowEditDialog(LedgerEntryLine line)
+        {
+            Date = line.Date;
+            BankBalances = new ObservableCollection<BankBalance>(line.BankBalances);
+            CreateMode = false;
+            AddBalanceVisibility = false;
+
+            ShowDialogCommon("Edit Bank Balances");
         }
 
         private bool CanExecuteAddBankBalanceCommand()
         {
+            if (CreateMode)
+            {
+                return SelectedBankAccount != null && BankBalance > 0;
+            }
+
+            if (!AddBalanceVisibility)
+            {
+                return true;
+            }
+
             return SelectedBankAccount != null && BankBalance > 0;
         }
 
         private void OnAddBankBalanceCommandExecuted()
         {
-            BankBalances.Add(new BankBalance { Account = SelectedBankAccount, Balance = BankBalance });
-            SelectedBankAccount = null;
-            BankBalance = 0;
+            if (CreateMode)
+            {
+                AddNewBankBalance();
+                return;
+            }
+
+            if (!AddBalanceVisibility)
+            {
+                AddBalanceVisibility = true;
+                return;
+            }
+
+            AddBalanceVisibility = false;
+            AddNewBankBalance();
+        }
+
+        private void AddNewBankBalance()
+        {
+            this.BankBalances.Add(new BankBalance { Account = this.SelectedBankAccount, Balance = this.BankBalance });
+            this.SelectedBankAccount = null;
+            this.BankBalance = 0;
         }
 
         private void OnRemoveBankBalanceCommandExecuted(BankBalance bankBalance)
@@ -180,6 +224,7 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Cancel)
             {
                 Canceled = true;
+                return;
             }
 
             if (!BankBalances.Any())
@@ -199,6 +244,21 @@ namespace BudgetAnalyser.LedgerBook
             {
                 handler(this, EventArgs.Empty);
             }
+        }
+
+        private void ShowDialogCommon(string title)
+        {
+            Canceled = false;
+            BankAccounts = this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
+            SelectedBankAccount = null;
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = title,
+            };
+
+            MessengerInstance.Send(dialogRequest);
         }
     }
 }

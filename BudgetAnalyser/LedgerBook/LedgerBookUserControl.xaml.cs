@@ -199,12 +199,6 @@ namespace BudgetAnalyser.LedgerBook
             List<LedgerColumn> allLedgers = Controller.LedgerBook.Ledgers.ToList();
             foreach (LedgerEntryLine line in Controller.LedgerBook.DatedEntries)
             {
-                if (row >= 13)
-                {
-                    // Only showing 1 year worth of data for now.
-                    break;
-                }
-
                 int column = 0;
                 Border dateBorder = AddBorderToGridCell(grid, false, true, column, row);
                 AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref column, row, NormalStyle);
@@ -244,15 +238,30 @@ namespace BudgetAnalyser.LedgerBook
                 TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle);
                 surplusText.Foreground = FindResource(SurplusTextBrush) as Brush;
 
-                AddHyperlinkToGrid(grid, line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle, parameter: line);
-
-                Border bankBalanceBorder = AddBorderToGridCell(grid, BankBalanceBackground, false, column, row);
-                TextBlock bankBalanceText = AddContentToGrid(bankBalanceBorder, line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture), ref column, row, ImportantNumberStyle,
-                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.TotalBankBalance));
+                AddHyperlinkToGrid(
+                    grid, 
+                    line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture), 
+                    ref column, 
+                    row, 
+                    ImportantNumberStyle, 
+                    parameter: line);
+                
+                AddBorderToGridCell(grid, BankBalanceBackground, false, column, row);
+                TextBlock bankBalanceText = AddHyperlinkToGrid(
+                    grid, 
+                    line.LedgerBalance.ToString("N", CultureInfo.CurrentCulture), 
+                    ref column, 
+                    row, 
+                    ImportantNumberStyle,
+                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.TotalBankBalance),
+                    line);
+                var hyperlink = (Hyperlink)bankBalanceText.Inlines.FirstInline;
+                hyperlink.Command = Controller.ShowBankBalancesCommand;
+                hyperlink.CommandParameter = line;
                 bankBalanceText.Foreground = FindResource(BankBalanceTextBrush) as Brush;
 
                 TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref column, row, NormalStyle, line.Remarks);
-                var hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
+                hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
                 hyperlink.Command = Controller.ShowRemarksCommand;
                 hyperlink.CommandParameter = line;
 

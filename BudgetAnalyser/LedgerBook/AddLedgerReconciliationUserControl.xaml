@@ -6,8 +6,8 @@
     <!-- DataContext AddLedgerReconciliationController -->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -17,18 +17,23 @@
 
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top">
-            <TextBlock Text="Date:" />
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}" 
+                       Text="Date:" />
             <DatePicker x:Name="ReconDate"
                         CalendarStyle="{StaticResource CalendarStyle}"
                         DisplayDate="{Binding Date, StringFormat=d}"
                         SelectedDate="{Binding Date}"
                         VerticalAlignment="Center" />
             <TextBlock Margin="20,2,2,2"
-                       Text="Bank Balance:" />
+                       Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="Bank Balance:"
+                       Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}"/>
             <TextBox GotFocus="OnUIElementGotFocus"
-                     Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}"
+                     Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
-                      SelectedItem="{Binding SelectedBankAccount}" />
+                      SelectedItem="{Binding SelectedBankAccount}"
+                      Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Command="{Binding AddBankBalanceCommand}"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add Bank Balance" />
@@ -38,7 +43,7 @@
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.Column="1"
-                Margin="5,10,5,10"
+                Margin="5,0,5,10"
                 MinHeight="40"
                 VerticalAlignment="Top">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -67,7 +72,8 @@
                    Grid.Column="0"
                    Margin="10,30,10,10"
                    Style="{StaticResource TextBlock.Paragraph}"
-                   TextWrapping="Wrap">
+                   TextWrapping="Wrap"
+                   Visibility="{Binding CreateMode, Converter={StaticResource Converter.BoolToVis}}">
             <Run>
                 Use this feature to add a new reconciliation to the ledger book. This will add a new line to the LedgerBook grid.
                 The date field is used to date the ledger book line and also to find transactions to include.

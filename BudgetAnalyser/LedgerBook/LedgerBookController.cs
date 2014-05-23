@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -152,6 +153,11 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand SaveLedgerBookCommand
         {
             get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
+        }
+
+        public ICommand ShowBankBalancesCommand
+        {
+            get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecute, param => param != null); }
         }
 
         public ICommand ShowRemarksCommand
@@ -378,7 +384,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewReconciliationCommandExecuted()
         {
             AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
-            AddLedgerReconciliationController.ShowDialog();
+            AddLedgerReconciliationController.ShowCreateDialog();
         }
 
         private void OnAddReconciliationComplete(object sender, EventArgs e)
@@ -488,6 +494,11 @@ namespace BudgetAnalyser.LedgerBook
             this.dirty = false;
         }
 
+        private void OnShowBankBalancesCommandExecute(LedgerEntryLine line)
+        {
+            AddLedgerReconciliationController.ShowEditDialog(line);
+        }
+
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
         {
             LedgerRemarksController.Completed += OnShowRemarksCompleted;
@@ -509,16 +520,20 @@ namespace BudgetAnalyser.LedgerBook
             LedgerTransactionsController.Complete += OnShowTransactionsCompleted;
 
             var ledgerEntry = parameter as LedgerEntry; // used when legder entry transactions are being displayed
-            var ledgerEntryLine = parameter as LedgerEntryLine; // used when balance adjustments are being displayed
+            var bankBalanceAdjustments = parameter as LedgerEntryLine; // used when balance adjustments are being displayed
 
             if (ledgerEntry != null)
             {
                 bool isNew = this.newLedgerLine != null && this.newLedgerLine.Entries.Any(e => e == ledgerEntry);
                 LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
             }
+            else if (bankBalanceAdjustments != null)
+            {
+                LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == this.newLedgerLine);
+            }
             else
             {
-                LedgerTransactionsController.ShowDialog(ledgerEntryLine, ledgerEntryLine == this.newLedgerLine);
+                throw new ArgumentException("Invalid paramter passed to ShowTransactionsCommand: " + parameter);
             }
         }
 
