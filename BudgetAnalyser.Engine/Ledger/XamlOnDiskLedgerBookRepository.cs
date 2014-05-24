@@ -70,7 +70,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (dataEntity.Checksum == null)
             {
-                // bypass checksum check
+                // bypass checksum check - this is to allow intentional manual changes to the file.  This checksum is only trying to prevent
+                // bugs in code from breaking the consistency of the file.
             }
             else
             {

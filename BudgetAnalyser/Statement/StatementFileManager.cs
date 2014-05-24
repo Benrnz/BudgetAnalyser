@@ -179,12 +179,12 @@ namespace BudgetAnalyser.Statement
             }
             catch (FileFormatException ex)
             {
-                this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
+                FileCannotBeLoaded(ex);
                 return null;
             }
             catch (NotSupportedException ex)
             {
-                this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
+                FileCannotBeLoaded(ex);
                 return null;
             }
             catch (StatementModelChecksumException ex)
@@ -196,6 +196,11 @@ namespace BudgetAnalyser.Statement
             {
                 this.loadFileController.Reset();
             }
+        }
+
+        private void FileCannotBeLoaded(Exception ex)
+        {
+            this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
         }
     }
 }

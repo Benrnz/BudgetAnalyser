@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
-        private readonly List<BankBalance> bankBalancesList;
+        private List<BankBalance> bankBalancesList;
         private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
@@ -65,6 +65,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return LedgerBalance - Entries.Sum(e => e.Balance); }
         }
 
+        /// <summary>
+        /// This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
+        /// It is not editable as it is used to match transactions from the statement.  Changing this date would mean all transactions
+        /// now falling outside the date range would need to be removed, thus affected balances.
+        /// </summary>
         public DateTime Date { get; private set; }
 
         public IEnumerable<LedgerEntry> Entries
@@ -142,6 +147,16 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 this.bankBalanceAdjustments.Remove(txn);
             }
+        }
+
+        public void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
+        {
+            if (!IsNew)
+            {
+                throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
+            }
+
+            this.bankBalancesList = updatedBankBalances.ToList();
         }
 
         public bool UpdateRemarks(string remarks)

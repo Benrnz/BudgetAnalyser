@@ -20,7 +20,7 @@
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}" 
                        Text="Date:" />
             <DatePicker x:Name="ReconDate"
-                        IsEnabled="{Binding Editable}"
+                        IsEnabled="{Binding DateEditable}"
                         CalendarStyle="{StaticResource CalendarStyle}"
                         DisplayDate="{Binding Date, StringFormat=d}"
                         SelectedDate="{Binding Date}"
@@ -50,7 +50,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           MinWidth="250">
                 <ItemsControl ItemsSource="{Binding BankBalances}"
-                              Margin="5">
+                              Margin="5" >
                 </ItemsControl>
             </ScrollViewer>
         </Border>

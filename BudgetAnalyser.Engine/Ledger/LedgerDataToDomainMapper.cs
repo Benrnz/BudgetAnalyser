@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private IEnumerable<BankBalance> MapBankBalances(IEnumerable<DataBankBalance> dataBalances)
         {
-            return dataBalances.Select(d => new BankBalance { Account = this.accountTypeRepository.GetByKey(d.Account), Balance = d.Balance });
+            return dataBalances.Select(d => new BankBalance { Account = this.accountTypeRepository.GetOrCreateNew(d.Account), Balance = d.Balance });
         }
 
         private List<LedgerEntryLine> MapLines(IEnumerable<DataLedgerEntryLine> dataLines)

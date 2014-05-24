@@ -70,6 +70,7 @@
     <Compile Include="Account\IAccountTypeRepository.cs" />
     <Compile Include="Account\MastercardAccount.cs" />
     <Compile Include="Account\MiscellaneousAccountType.cs" />
+    <Compile Include="Account\SavingsAccount.cs" />
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />

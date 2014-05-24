@@ -115,19 +115,28 @@ namespace BudgetAnalyser.Engine.Statement
                 }
 
                 string[] split = line.Split(',');
-                var transaction = new Transaction
+                Transaction transaction = null;
+                try
                 {
-                    TransactionType = FetchTransactionType(split, 0),
-                    Description = this.importUtilities.SafeArrayFetchString(split, 1),
-                    Reference1 = this.importUtilities.SafeArrayFetchString(split, 2),
-                    Reference2 = this.importUtilities.SafeArrayFetchString(split, 3),
-                    Reference3 = this.importUtilities.SafeArrayFetchString(split, 4),
-                    Amount = this.importUtilities.SafeArrayFetchDecimal(split, 5),
-                    Date = this.importUtilities.SafeArrayFetchDate(split, 6),
-                    BudgetBucket = this.importUtilities.FetchBudgetBucket(split, 7, this.bucketRepository),
-                    AccountType = FetchAccountType(split, 8),
-                    Id = this.importUtilities.SafeArrayFetchGuid(split, 9),
-                };
+                    transaction = new Transaction
+                    {
+                        TransactionType = FetchTransactionType(split, 0),
+                        Description = this.importUtilities.SafeArrayFetchString(split, 1),
+                        Reference1 = this.importUtilities.SafeArrayFetchString(split, 2),
+                        Reference2 = this.importUtilities.SafeArrayFetchString(split, 3),
+                        Reference3 = this.importUtilities.SafeArrayFetchString(split, 4),
+                        Amount = this.importUtilities.SafeArrayFetchDecimal(split, 5),
+                        Date = this.importUtilities.SafeArrayFetchDate(split, 6),
+                        BudgetBucket = this.importUtilities.FetchBudgetBucket(split, 7, this.bucketRepository),
+                        AccountType = FetchAccountType(split, 8),
+                        Id = this.importUtilities.SafeArrayFetchGuid(split, 9),
+                    };
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    throw new FileFormatException("The Budget Analyser file does not have the correct number of columns.", ex);
+                }
+
                 transactions.Add(transaction);
             }
 

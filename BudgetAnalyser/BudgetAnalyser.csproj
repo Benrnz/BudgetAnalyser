@@ -513,7 +513,7 @@
     <Resource Include="UI\Assets\AmexLogo.png" />
     <Resource Include="UI\Assets\ChequeLogo.png" />
     <Resource Include="UI\Assets\ChequeLogo1.png" />
-    <Resource Include="UI\Assets\Mastercard.png" />
+    <Resource Include="UI\Assets\MastercardLogo.png" />
     <Resource Include="UI\Assets\PieChart.ico" />
   </ItemGroup>
   <ItemGroup>

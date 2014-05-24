@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Account
 {
+    /// <summary>
+    ///     A very simple in memory account type repository.  Only one of each type is supported at the moment.
+    ///     You cannot have two Cheque accounts for example.
+    /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class InMemoryAccountTypeRepository : IAccountTypeRepository
     {
@@ -14,6 +19,7 @@ namespace BudgetAnalyser.Engine.Account
             new AmexAccount(null),
             new ChequeAccount(null),
             new MastercardAccount(null),
+            new SavingsAccount(null),
             new VisaAccount(null)
         };
 
@@ -54,6 +60,28 @@ namespace BudgetAnalyser.Engine.Account
         public AccountType GetOrCreateNew(string key)
         {
             return this.repository.GetOrAdd(key, CreateNewAccountType);
+        }
+
+        public IEnumerable<AccountType> ListAvailableAccountTypes()
+        {
+            // Assumes that you can only have one type of account for each account type class. - Ok for now.
+            List<AccountType> availableAccounts = ListCurrentlyUsedAccountTypes().ToList();
+            foreach (AccountType refType in this.referenceAccountTypes)
+            {
+                if (availableAccounts.All(u => u.GetType() != refType.GetType()))
+                {
+                    string name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(refType.KeyWords[0].ToLowerInvariant());
+                    AccountType clone = refType.Clone(name);
+                    availableAccounts.Add(clone);
+                }
+            }
+
+            if (!availableAccounts.Any(a => a is MiscellaneousAccountType))
+            {
+                availableAccounts.Add(new MiscellaneousAccountType("Miscellaneous"));
+            }
+
+            return availableAccounts;
         }
 
         public IEnumerable<AccountType> ListCurrentlyUsedAccountTypes()

@@ -394,11 +394,11 @@ namespace BudgetAnalyser.LedgerBook
             AddLedgerReconciliationController.ShowCreateDialog();
         }
 
-        private void OnAddReconciliationComplete(object sender, EventArgs e)
+        private void OnAddReconciliationComplete(object sender, EditBankBalancesEventArgs e)
         {
             AddLedgerReconciliationController.Complete -= OnAddReconciliationComplete;
 
-            if (AddLedgerReconciliationController.Canceled)
+            if (e.Canceled)
             {
                 return;
             }
@@ -477,6 +477,26 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        private void OnEditBankBalancesCompleted(object sender, EditBankBalancesEventArgs editBankBalancesEventArgs)
+        {
+            AddLedgerReconciliationController.Complete -= OnEditBankBalancesCompleted;
+            if (editBankBalancesEventArgs.Canceled || this.newLedgerLine == null)
+            {
+                return;
+            }
+
+            bool? result = this.questionBox.Show("Are you sure you want to update this Ledger Line's Bank Balances?\nThis will also save any other unsaved changes.", "Update Bank Balances");
+            if (result == null || !result.Value)
+            {
+                return;
+            }
+
+            this.dirty = true;
+            this.newLedgerLine.UpdateBankBalances(AddLedgerReconciliationController.BankBalances);
+            SaveLedgerBook();
+            ReloadCurrentLedgerBook();
+        }
+
         private void OnLoadLedgerBookCommandExecute()
         {
             IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
@@ -505,19 +525,17 @@ namespace BudgetAnalyser.LedgerBook
 
             LedgerBook.RemoveLine(line);
             SaveLedgerBook();
-            string fileName = LedgerBook.FileName;
-            OnCloseLedgerBookCommandExecuted();
-            LoadLedgerBookFromFile(fileName);
+            ReloadCurrentLedgerBook();
         }
 
         private void OnSaveLedgerBookCommandExecute()
         {
-            this.ledgerRepository.Save(LedgerBook);
-            this.dirty = false;
+            SaveLedgerBook();
         }
 
         private void OnShowBankBalancesCommandExecute(LedgerEntryLine line)
         {
+            AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
             AddLedgerReconciliationController.ShowEditDialog(line, line == this.newLedgerLine);
         }
 
@@ -594,10 +612,18 @@ namespace BudgetAnalyser.LedgerBook
             this.dirty = true;
         }
 
+        private void ReloadCurrentLedgerBook()
+        {
+            string fileName = LedgerBook.FileName;
+            OnCloseLedgerBookCommandExecuted();
+            LoadLedgerBookFromFile(fileName);
+        }
+
         private void SaveLedgerBook()
         {
             this.ledgerRepository.Save(LedgerBook);
             this.dirty = false;
+            this.newLedgerLine = null;
         }
     }
 }

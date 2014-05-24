@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Account;
@@ -8,6 +9,7 @@ using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -22,6 +24,8 @@ namespace BudgetAnalyser.LedgerBook
         private DateTime doNotUseDate;
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
+        private IUserInputBox inputBox;
+        private bool doNotUseDateEditable;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -38,11 +42,13 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("accountTypeRepository");
             }
 
+            this.inputBox = uiContext.UserPrompts.InputBox;
+
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        public event EventHandler Complete;
+        public event EventHandler<EditBankBalancesEventArgs> Complete;
 
         public string ActionButtonToolTip
         {
@@ -146,6 +152,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        public bool DateEditable
+        {
+            get { return this.doNotUseDateEditable; }
+            private set
+            {
+                this.doNotUseDateEditable = value;
+                RaisePropertyChanged(() => DateEditable);
+            }
+        }
+
         public ICommand RemoveBankBalanceCommand
         {
             get { return new RelayCommand<BankBalance>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
@@ -167,7 +183,7 @@ namespace BudgetAnalyser.LedgerBook
             BankBalances = new ObservableCollection<BankBalance>();
             CreateMode = true;
             AddBalanceVisibility = true;
-            Editable = false;
+            Editable = DateEditable = true;
 
             ShowDialogCommon("New Reconciliation");
         }
@@ -179,6 +195,7 @@ namespace BudgetAnalyser.LedgerBook
             CreateMode = false;
             AddBalanceVisibility = false;
             Editable = isNewLine;
+            DateEditable = false;
 
             ShowDialogCommon("Edit Bank Balances");
         }
@@ -248,32 +265,34 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Cancel)
             {
                 Canceled = true;
-                return;
             }
-
-            if (!BankBalances.Any())
+            else
             {
-                if (CanExecuteAddBankBalanceCommand())
+                if (!BankBalances.Any())
                 {
-                    OnAddBankBalanceCommandExecuted();
-                }
-                else
-                {
-                    throw new InvalidOperationException("Failed to add any bank balances to Ledger Book reconciliation.");
+                    if (CanExecuteAddBankBalanceCommand())
+                    {
+                        OnAddBankBalanceCommandExecuted();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Failed to add any bank balances to Ledger Book reconciliation.");
+                    }
                 }
             }
 
-            EventHandler handler = Complete;
+            var handler = Complete;
             if (handler != null)
             {
-                handler(this, EventArgs.Empty);
+                handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
             }
         }
 
         private void ShowDialogCommon(string title)
         {
             Canceled = false;
-            BankAccounts = this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
+            var accountsToShow = this.accountTypeRepository.ListAvailableAccountTypes().ToList();
+            BankAccounts = accountsToShow.OrderBy(a => a.Name);
             SelectedBankAccount = null;
             this.dialogCorrelationId = Guid.NewGuid();
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
@@ -284,5 +303,10 @@ namespace BudgetAnalyser.LedgerBook
 
             MessengerInstance.Send(dialogRequest);
         }
+    }
+
+    public class EditBankBalancesEventArgs : EventArgs
+    {
+        public bool Canceled { get; set; }
     }
 }
