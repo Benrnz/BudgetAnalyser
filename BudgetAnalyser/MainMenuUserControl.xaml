@@ -26,9 +26,8 @@
                                     <vsm:VisualState x:Name="Normal" />
                                     <vsm:VisualState x:Name="MouseOver">
                                         <Storyboard>
-                                            <ColorAnimationUsingKeyFrames
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                Storyboard.TargetName="MainGrid">
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                                          Storyboard.TargetName="MainGrid">
                                                 <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                      Value="{StaticResource Colour.ControlMouseOver}" />
                                             </ColorAnimationUsingKeyFrames>
@@ -39,9 +38,8 @@
                                 <vsm:VisualStateGroup x:Name="CheckStates">
                                     <vsm:VisualState x:Name="Checked">
                                         <Storyboard>
-                                            <ColorAnimationUsingKeyFrames
-                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                Storyboard.TargetName="MainGrid">
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                                          Storyboard.TargetName="MainGrid">
                                                 <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                      Value="{StaticResource Colour.SelectedItem}" />
                                             </ColorAnimationUsingKeyFrames>
@@ -72,6 +70,7 @@
         </Grid.ColumnDefinitions>
 
         <ToggleButton Grid.Column="0"
+                      Cursor="Hand"
                       Margin="10,10,10,2"
                       IsChecked="{Binding DashboardToggle}"
                       Command="{Binding DashboardCommand}"
@@ -80,6 +79,7 @@
         </ToggleButton>
 
         <ToggleButton Grid.Column="1"
+                      Cursor="Hand"
                       IsChecked="{Binding TransactionsToggle}"
                       Command="{Binding TransactionsCommand}"
                       Style="{StaticResource TabButtonStyle}">
@@ -87,6 +87,7 @@
         </ToggleButton>
 
         <ToggleButton Grid.Column="2"
+                      Cursor="Hand"
                       IsChecked="{Binding LedgerBookToggle}"
                       Command="{Binding LedgerBookCommand}"
                       Style="{StaticResource TabButtonStyle}">
@@ -94,6 +95,7 @@
         </ToggleButton>
 
         <ToggleButton Grid.Column="3"
+                      Cursor="Hand"
                       IsChecked="{Binding BudgetToggle}"
                       Command="{Binding BudgetCommand}"
                       Style="{StaticResource TabButtonStyle}">
@@ -101,6 +103,7 @@
         </ToggleButton>
 
         <ToggleButton Grid.Column="4"
+                      Cursor="Hand"
                       IsChecked="{Binding ReportsToggle}"
                       Command="{Binding ReportsCommand}"
                       Style="{StaticResource TabButtonStyle}">

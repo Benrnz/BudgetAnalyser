@@ -38,6 +38,7 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                            Cursor="Hand"
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
@@ -80,6 +81,7 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                            Cursor="Hand"
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"

@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Margin="3"
+                   Style="{StaticResource TextBlock.LabelStyle}"
                    Text="Select a file:" />
         <TextBox Grid.Column="1"
                  HorizontalAlignment="Stretch"
