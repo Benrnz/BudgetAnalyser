@@ -69,7 +69,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
         ///     <see cref="statement" />.
         /// </param>
-        /// <param name="bankBalances">The bank balances as at the <see cref="date" /> to include in this new single line of the ledger book.</param>
+        /// <param name="bankBalances">
+        ///     The bank balances as at the <see cref="date" /> to include in this new single line of the
+        ///     ledger book.
+        /// </param>
         /// <param name="budget">The current budget.</param>
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
@@ -111,6 +114,21 @@ namespace BudgetAnalyser.Engine.Ledger
             this.datedEntries.Insert(0, newLine);
             this.newlyAddedLedgers.Clear();
             return newLine;
+        }
+
+        public void RemoveLine(LedgerEntryLine line)
+        {
+            if (!line.IsNew)
+            {
+                throw new InvalidOperationException("You cannot delete a Ledger Entry Line that is not unlocked or a newly created line.");
+            }
+
+            if (line != DatedEntries.FirstOrDefault())
+            {
+                throw new InvalidOperationException("You cannot delete this line, it is not the first and most recent line.");
+            }
+
+            this.datedEntries.Remove(line);
         }
 
         public LedgerEntryLine UnlockMostRecentLine()

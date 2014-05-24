@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -150,6 +149,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return CurrentStatement == null; }
         }
 
+        public ICommand RemoveLedgerEntryLineCommand
+        {
+            get { return new RelayCommand<LedgerEntryLine>(OnRemoveLedgerEntryLineCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
+        }
+
         public ICommand SaveLedgerBookCommand
         {
             get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
@@ -254,6 +258,11 @@ namespace BudgetAnalyser.LedgerBook
             return LedgerBook == null && string.IsNullOrWhiteSpace(this.ledgerBookFileName);
         }
 
+        private bool CanExecuteRemoveLedgerEntryLineCommand(LedgerEntryLine line)
+        {
+            return LedgerBook.DatedEntries.FirstOrDefault() == line && line == this.newLedgerLine;
+        }
+
         private bool CanExecuteSaveCommand()
         {
             return LedgerBook != null && this.dirty;
@@ -277,10 +286,8 @@ namespace BudgetAnalyser.LedgerBook
                 bool? result = this.questionBox.Show("Save changes?", "Ledger Book");
                 if (result != null && result.Value)
                 {
-                    this.ledgerRepository.Save(LedgerBook);
+                    SaveLedgerBook();
                 }
-
-                this.dirty = false;
             }
         }
 
@@ -488,6 +495,21 @@ namespace BudgetAnalyser.LedgerBook
             LoadLedgerBookFromFile(fileName);
         }
 
+        private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
+        {
+            bool? result = this.questionBox.Show("Are you sure you want to delete this Ledger Book Row?\nThis will also save any other unsaved changes.", "Remove Ledger Book Line");
+            if (result == null || !result.Value)
+            {
+                return;
+            }
+
+            LedgerBook.RemoveLine(line);
+            SaveLedgerBook();
+            string fileName = LedgerBook.FileName;
+            OnCloseLedgerBookCommandExecuted();
+            LoadLedgerBookFromFile(fileName);
+        }
+
         private void OnSaveLedgerBookCommandExecute()
         {
             this.ledgerRepository.Save(LedgerBook);
@@ -570,6 +592,12 @@ namespace BudgetAnalyser.LedgerBook
 
             this.newLedgerLine = LedgerBook.UnlockMostRecentLine();
             this.dirty = true;
+        }
+
+        private void SaveLedgerBook()
+        {
+            this.ledgerRepository.Save(LedgerBook);
+            this.dirty = false;
         }
     }
 }

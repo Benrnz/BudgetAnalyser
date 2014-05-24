@@ -27,20 +27,11 @@
         <TextBlock Grid.Column="4"
                    Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}"
                    Text="DR" />
-        <Button Style="{StaticResource Button.Round.Cross}"
+        <Button Style="{StaticResource Button.Round.SmallCross}"
                 Grid.Column="5"
                 Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
                 CommandParameter="{Binding .}"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                ToolTip="Remove"
                 Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Converter.BoolToVis}}">
-            <Button.LayoutTransform>
-                <ScaleTransform CenterX="0.5"
-                                CenterY="0.5"
-                                ScaleX="0.5"
-                                ScaleY="0.5" />
-            </Button.LayoutTransform>
         </Button>
     </Grid>
 

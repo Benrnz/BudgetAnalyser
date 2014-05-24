@@ -256,6 +256,25 @@
                 Value="True" />
     </Style>
 
+    <Style x:Key="Button.Round.SmallCross"
+           BasedOn="{StaticResource Button.Round.Cross}"
+           TargetType="Button">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="Remove" />
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform CenterX="0.5"
+                                CenterY="0.5"
+                                ScaleX="0.5"
+                                ScaleY="0.5" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="Button.Round.Info"
            TargetType="{x:Type Button}">
         <Style.Triggers>

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -200,8 +201,7 @@ namespace BudgetAnalyser.LedgerBook
             foreach (LedgerEntryLine line in Controller.LedgerBook.DatedEntries)
             {
                 int column = 0;
-                Border dateBorder = AddBorderToGridCell(grid, false, true, column, row);
-                AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref column, row, NormalStyle);
+                column = AddDateCellToLedgerEntryLine(grid, column, row, line);
 
                 foreach (LedgerColumn ledger in allLedgers)
                 {
@@ -267,6 +267,32 @@ namespace BudgetAnalyser.LedgerBook
 
                 row++;
             }
+        }
+
+        private int AddDateCellToLedgerEntryLine(Grid grid, int column, int row, LedgerEntryLine line)
+        {
+            Border dateBorder = AddBorderToGridCell(grid, false, true, column, row);
+            AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref column, row, NormalStyle);
+            column--;  // Not finished adding content to this cell yet.
+            var button = new Button()
+            {
+                Style = Application.Current.Resources["Button.Round.SmallCross"] as Style,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Command = Controller.RemoveLedgerEntryLineCommand,
+                CommandParameter = line,
+            };
+            var visibilityBinding = new Binding("IsEnabled")
+            {
+                Converter = (IValueConverter)Application.Current.Resources["Converter.BoolToVis"],
+                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+            };
+            button.SetBinding(Button.VisibilityProperty, visibilityBinding);
+
+            grid.Children.Add(button);
+            Grid.SetColumn(button, column++);
+            Grid.SetRow(button, row);
+
+            return column;
         }
 
         private void AddLedgerRows(Grid grid)
