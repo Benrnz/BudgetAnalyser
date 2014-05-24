@@ -45,12 +45,35 @@
     </Style>
 
     <!-- Circular Buttons -->
-    <Style x:Key="Button.Round.All"
-           TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
+    <Style x:Key="Button.Round.Base" 
+           TargetType="Button">
         <Setter Property="Margin"
                 Value="2" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="Width"
+                Value="40" />
+        <Setter Property="Height"
+                Value="40" />
+        <Setter Property="Background"
+                Value="{StaticResource ButtonBackgroundBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonChromeBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Background"
+                        Value="{StaticResource ButtonDisabledBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="Button.Round.All"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource Button.Round.Base}">
         <Setter Property="Template">
             <Setter.Value>
 
@@ -75,44 +98,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="All" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.Build"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -137,32 +129,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Build" />
     </Style>
 
     <Style x:Key="Button.Round.Clear"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -195,32 +168,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Clear all filters" />
     </Style>
 
     <Style x:Key="Button.Round.Cross"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -246,10 +200,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Close" />
         <Setter Property="IsCancel"
@@ -276,23 +226,8 @@
     </Style>
 
     <Style x:Key="Button.Round.Info"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -318,10 +253,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Info" />
         <Setter Property="IsCancel"
@@ -329,23 +260,8 @@
     </Style>
 
     <Style x:Key="Button.Round.Left"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -371,26 +287,15 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="IsCancel"
                 Value="False" />
     </Style>
 
     <Style x:Key="Button.Round.Load"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="Button">
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Load" />
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -420,26 +325,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.Add"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -465,44 +355,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="New" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.Ok"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -528,10 +387,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="IsCancel"
                 Value="False" />
         <Setter Property="IsDefault"
@@ -539,11 +394,8 @@
     </Style>
 
     <Style x:Key="Button.Round.Pie"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -572,32 +424,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Pie Graph" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.PlusL"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -623,30 +456,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.PlusR"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -671,42 +485,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.Right"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -732,10 +515,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Move Right" />
         <Setter Property="IsCancel"
@@ -743,27 +522,8 @@
     </Style>
 
     <Style x:Key="Button.Round.Save"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="Button">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Save" />
         <Setter Property="Template">
@@ -795,27 +555,8 @@
     </Style>
 
     <Style x:Key="Button.Round.SaveAs"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="Button">
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Save As" />
         <Setter Property="Template">
@@ -857,11 +598,8 @@
     </Style>
 
     <Style x:Key="Button.Round.Smiley"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -913,30 +651,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="Button.Round.Unlock"
+           BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
-        <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
-        <Setter Property="Margin"
-                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
 
@@ -992,24 +711,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Width"
-                Value="40" />
-        <Setter Property="Height"
-                Value="40" />
         <Setter Property="ToolTip"
                 Value="Unlock" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
-            </Trigger>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
