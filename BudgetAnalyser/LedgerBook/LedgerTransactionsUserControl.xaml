@@ -54,6 +54,7 @@
 
                 <TextBlock HorizontalAlignment="Right"
                            VerticalAlignment="Top"
+                           Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Net Amount: " />
 
                 <TextBlock Grid.Column="1"
@@ -63,6 +64,7 @@
                 <TextBlock Grid.Row="1"
                            HorizontalAlignment="Right"
                            Text="Closing Balance: "
+                           Style="{StaticResource TextBlock.LabelStyle}"
                            VerticalAlignment="Top"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
 
@@ -138,6 +140,7 @@
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal">
                     <TextBlock Text="Narrative:"
+                               Style="{StaticResource TextBlock.LabelStyle}"
                                Width="75" />
                     <TextBox x:Name="NewTransactionNarrativeTextBox"
                              MinWidth="200"
@@ -147,6 +150,7 @@
                             Grid.Row="1"
                             Orientation="Horizontal">
                     <TextBlock Text="Amount:"
+                               Style="{StaticResource TextBlock.LabelStyle}"
                                Width="75" />
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              Text="{Binding NewTransactionAmount}" />

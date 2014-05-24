@@ -15,5 +15,10 @@ namespace BudgetAnalyser.ShellDialog
         public Guid CorrelationId { get; set; }
 
         public ShellDialogButton Response { get; private set; }
+
+        public bool IsItForMe(Guid correlationId)
+        {
+            return correlationId != Guid.Empty && correlationId == CorrelationId;
+        }
     }
 }

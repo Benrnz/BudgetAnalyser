@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Statement
         private string doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
         private Task fileSelectionTask;
-        private Guid popUpCorrelationId;
+        private Guid dialogCorrelationId;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
@@ -409,7 +409,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            if (this.popUpCorrelationId != message.CorrelationId)
+            if (!message.IsItForMe(this.dialogCorrelationId))
             {
                 return;
             }
@@ -443,10 +443,10 @@ namespace BudgetAnalyser.Statement
             ExistingAccountNames = listOfNames;
             SelectedExistingAccountName = listOfNames.First();
 
-            this.popUpCorrelationId = Guid.NewGuid();
+            this.dialogCorrelationId = Guid.NewGuid();
             var popRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.OkCancel)
             {
-                CorrelationId = this.popUpCorrelationId,
+                CorrelationId = this.dialogCorrelationId,
                 Title = Title
             };
 

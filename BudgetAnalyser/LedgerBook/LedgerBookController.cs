@@ -496,7 +496,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowBankBalancesCommandExecute(LedgerEntryLine line)
         {
-            AddLedgerReconciliationController.ShowEditDialog(line);
+            AddLedgerReconciliationController.ShowEditDialog(line, line == this.newLedgerLine);
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

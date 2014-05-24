@@ -153,21 +153,26 @@ namespace BudgetAnalyser.ShellDialog
             // Delay execution so that keyed events happen
             Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
-                switch (commandType)
+                // No correlation id given so no response is expected.
+                if (CorrelationId != Guid.Empty)
                 {
-                    case ShellDialogButton.Ok:
-                    case ShellDialogButton.Save:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
-                        break;
+                    switch (commandType)
+                    {
+                        case ShellDialogButton.Ok:
+                        case ShellDialogButton.Save:
+                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
+                            break;
 
-                    case ShellDialogButton.Cancel:
-                        MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
-                        break;
+                        case ShellDialogButton.Cancel:
+                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
+                            break;
 
-                    default:
-                        throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
+                        default:
+                            throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
+                    }
                 }
 
+                // Setting the content to null will hide the dialog, its visibility is bound to the Content != null
                 Content = null;
             });
         }

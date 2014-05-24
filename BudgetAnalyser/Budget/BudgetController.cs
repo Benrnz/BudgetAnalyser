@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Budget
         private decimal expenseTotal;
         private decimal incomeTotal;
         private bool loading;
-        private Guid popUpCorrelationId;
+        private Guid dialogCorrelationId;
         private decimal surplus;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -495,7 +495,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnPopUpResponseReceived(ShellDialogResponseMessage message)
         {
-            if (message.CorrelationId != this.popUpCorrelationId)
+            if (!message.IsItForMe(this.dialogCorrelationId))
             {
                 return;
             }
@@ -583,10 +583,10 @@ namespace BudgetAnalyser.Budget
 
         private void SelectOtherBudget()
         {
-            this.popUpCorrelationId = Guid.NewGuid();
+            this.dialogCorrelationId = Guid.NewGuid();
             var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
             {
-                CorrelationId = this.popUpCorrelationId,
+                CorrelationId = this.dialogCorrelationId,
             };
             MessengerInstance.Send(popUpRequest);
         }

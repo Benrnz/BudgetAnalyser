@@ -72,7 +72,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            if (this.dialogCorrelationId != message.CorrelationId)
+            if (!message.IsItForMe(this.dialogCorrelationId))
             {
                 return;
             }

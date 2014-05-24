@@ -600,19 +600,21 @@ namespace BudgetAnalyser.Statement
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
         {
-            if (message.CorrelationId != Guid.Empty && message.CorrelationId == this.shellDialogCorrelationId)
+            if (!message.IsItForMe(this.shellDialogCorrelationId))
             {
-                if (message.Content is EditingTransactionController)
-                {
-                    FinaliseEditTransaction(message);
-                }
-                else if (message.Content is SplitTransactionController)
-                {
-                    FinaliseSplitTransaction(message);
-                }
-
-                this.shellDialogCorrelationId = Guid.Empty;
+                return;
             }
+
+            if (message.Content is EditingTransactionController)
+            {
+                FinaliseEditTransaction(message);
+            }
+            else if (message.Content is SplitTransactionController)
+            {
+                FinaliseSplitTransaction(message);
+            }
+
+            this.shellDialogCorrelationId = Guid.Empty;
         }
 
         private void OnSortCommandExecute()

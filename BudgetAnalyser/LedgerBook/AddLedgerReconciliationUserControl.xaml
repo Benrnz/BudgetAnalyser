@@ -20,6 +20,7 @@
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}" 
                        Text="Date:" />
             <DatePicker x:Name="ReconDate"
+                        IsEnabled="{Binding Editable}"
                         CalendarStyle="{StaticResource CalendarStyle}"
                         DisplayDate="{Binding Date, StringFormat=d}"
                         SelectedDate="{Binding Date}"

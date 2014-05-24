@@ -266,7 +266,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
-            if (message.CorrelationId != this.shellDialogCorrelationId)
+            if (!message.IsItForMe(this.shellDialogCorrelationId))
             {
                 return;
             }
