@@ -105,6 +105,7 @@
     <Compile Include="IApplicationHookSubscriber.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Ledger\BankBalance.cs" />
+    <Compile Include="Ledger\CorruptedLedgerBookException.cs" />
     <Compile Include="Ledger\DataBankBalance.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
