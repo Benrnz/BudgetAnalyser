@@ -24,7 +24,6 @@ namespace BudgetAnalyser.LedgerBook
         private DateTime doNotUseDate;
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
-        private IUserInputBox inputBox;
         private bool doNotUseDateEditable;
 
         public AddLedgerReconciliationController(
@@ -41,8 +40,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 throw new ArgumentNullException("accountTypeRepository");
             }
-
-            this.inputBox = uiContext.UserPrompts.InputBox;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
@@ -197,7 +194,7 @@ namespace BudgetAnalyser.LedgerBook
             Editable = isNewLine;
             DateEditable = false;
 
-            ShowDialogCommon("Edit Bank Balances");
+            ShowDialogCommon(Editable ? "Edit Bank Balances" : "Bank Balances");
         }
 
         private void AddNewBankBalance()
