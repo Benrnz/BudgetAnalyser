@@ -520,13 +520,13 @@ namespace BudgetAnalyser.Statement
             {
                 try
                 {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor = this.uiContext.WaitCursorFactory());
                     if (additionalModel == null)
                     {
                         // User cancelled.
                         return;
                     }
 
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor = this.uiContext.WaitCursorFactory());
                     ViewModel.Statement.Merge(additionalModel);
 
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
@@ -545,7 +545,10 @@ namespace BudgetAnalyser.Statement
                     }
 
                     BackgroundJob.Finish();
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
+                    if (additionalModel != null)
+                    {
+                        Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
+                    }
                 }
             });
         }

@@ -323,9 +323,10 @@ namespace BudgetAnalyser.Statement
             this.disposed = true;
         }
 
-        private static List<string> PrepareAccountNames(IEnumerable<string> existingAccountNames)
+        private List<string> PrepareAccountNames(IEnumerable<string> existingAccountNames)
         {
-            var commonAccountNames = new[] { "Visa", "Mastercard", "Amex", "Cheque", "Savings" };
+            var commonAccountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
+                .Select(a => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(a.Name.ToLowerInvariant()));
             List<string> listOfNames = existingAccountNames.ToList();
             listOfNames.AddRange(commonAccountNames);
             listOfNames.Insert(0, string.Empty);

@@ -101,17 +101,16 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal bool IsNew { get; private set; }
 
-        public void BalanceAdjustment(decimal adjustment, string narrative)
+        public LedgerTransaction BalanceAdjustment(decimal adjustment, string narrative)
         {
             if (!IsNew)
             {
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            double amount = Convert.ToDouble(adjustment);
-            if (Math.Abs(amount) < 0.01)
+            if (adjustment == 0)
             {
-                return;
+                throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
             }
 
             LedgerTransaction newAdjustment;
@@ -133,6 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.bankBalanceAdjustments.Add(newAdjustment);
+            return newAdjustment;
         }
 
         public void CancelBalanceAdjustment(Guid transactionId)
@@ -266,6 +266,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 IEnumerable<DebitLedgerTransaction> newLedgerTransactions = transactions.Select(t => new DebitLedgerTransaction
                 {
+                    AccountType = t.AccountType,
                     Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
                     Narrative = t.Description,
                 });

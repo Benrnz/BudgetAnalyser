@@ -46,7 +46,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void NumberOfDataLedgerTransactionPropertiesShouldBe5()
         {
             var dataProperties = CountProperties(typeof(DataLedgerTransaction));
-            Assert.AreEqual(5, dataProperties);
+            Assert.AreEqual(6, dataProperties);
         }
 
         [TestMethod]

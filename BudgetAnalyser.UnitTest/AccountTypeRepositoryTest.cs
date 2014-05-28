@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,6 +7,20 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class AccountTypeRepositoryTest
     {
+        private const string Key1 = AccountTypeRepositoryConstants.Cheque;
+        private const string Key2 = AccountTypeRepositoryConstants.Visa;
+
+        [TestMethod]
+        public void AddingDuplicateEntryShouldNotThrow()
+        {
+            InMemoryAccountTypeRepository subject = CreateSubject();
+            ChequeAccount data = CreateTestData2();
+            subject.Add(Key1, data);
+            ChequeAccount data2 = CreateTestData2();
+            subject.Add(Key1, data2);
+            Assert.AreEqual(data.Name, subject.GetByKey(Key1).Name);
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddingEmptyKeyEntryShouldThrow()
@@ -21,30 +34,9 @@ namespace BudgetAnalyser.UnitTest
         public void AddingNewEntryShouldBeRetrievableByKey()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            AmexAccount data = CreateTestData();
-            subject.Add("Key12", data);
-            Assert.AreSame(data, subject.GetByKey("Key12"));
-        }
-
-        [TestMethod]
-        public void AddingDuplicateEntryShouldNotThrow()
-        {
-            InMemoryAccountTypeRepository subject = CreateSubject();
-            AmexAccount data = CreateTestData();
-            subject.Add("Key12", data);
-            var data2 = CreateTestData();
-            subject.Add("Key12", data2);
-            Assert.AreSame(data, subject.GetByKey("Key12"));
-        }
-
-        [TestMethod]
-        public void GetOrCreateNewDuplicateEntryShouldNotThrow()
-        {
-            InMemoryAccountTypeRepository subject = CreateSubject();
-            var result1 = subject.GetOrCreateNew("Key12");
-            var result2 = subject.GetOrCreateNew("Key12");
-
-            Assert.AreSame(result1, result2);
+            ChequeAccount data = CreateTestData2();
+            subject.Add(Key1, data);
+            Assert.AreEqual(data.Name, subject.GetByKey(Key1).Name);
         }
 
         [TestMethod]
@@ -52,7 +44,7 @@ namespace BudgetAnalyser.UnitTest
         public void AddingNullEntryShouldThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            subject.Add("Key12", null);
+            subject.Add(Key1, null);
             Assert.Fail();
         }
 
@@ -68,13 +60,11 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void FindExistingValueShouldSucceed()
         {
-            var subject = CreateSubject();
-            subject.Add("Key1", CreateTestData());
-            subject.Add("Key2", CreateTestData());
-            subject.Add("Key3", CreateTestData());
-            subject.Add("Key4", CreateTestData());
+            InMemoryAccountTypeRepository subject = CreateSubject();
+            subject.Add(Key1, CreateTestData());
+            subject.Add(Key2, CreateTestData());
 
-            var result = subject.Find(a => a.Name == "Key12");
+            AccountType result = subject.Find(a => a.Name == Key1);
 
             Assert.IsNotNull(result);
         }
@@ -82,34 +72,33 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void FindNonExistentValueShouldFail()
         {
-            var subject = CreateSubject();
-            subject.Add("Key1", CreateTestData());
-            subject.Add("Key2", CreateTestData());
-            subject.Add("Key3", CreateTestData());
-            subject.Add("Key4", CreateTestData());
+            InMemoryAccountTypeRepository subject = CreateSubject();
+            subject.Add(Key1, CreateTestData());
+            subject.Add(Key2, CreateTestData());
 
-            var result = subject.Find(a => a.Name == "Key99");
+            AccountType result = subject.Find(a => a.Name == "Key99");
 
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void ListCurrentlyUsedAccountTypesShouldReturnCorrectCount()
+        public void GetOrCreateNewDuplicateEntryShouldNotThrow()
         {
-            var subject = CreateSubject();
-            subject.Add("Key1", CreateTestData());
-            subject.Add("Key2", CreateTestData());
-            subject.Add("Key3", CreateTestData());
-            subject.Add("Key4", CreateTestData());
+            InMemoryAccountTypeRepository subject = CreateSubject();
+            AccountType result1 = subject.GetOrCreateNew(Key1);
+            AccountType result2 = subject.GetOrCreateNew(Key1);
 
-            var result = subject.ListCurrentlyUsedAccountTypes();
-
-            Assert.AreEqual(4, result.Count());
+            Assert.AreSame(result1, result2);
         }
 
         private static AmexAccount CreateTestData()
         {
-            return new AmexAccount("Key12");
+            return new AmexAccount(AccountTypeRepositoryConstants.Amex);
+        }
+
+        private static ChequeAccount CreateTestData2()
+        {
+            return new ChequeAccount(AccountTypeRepositoryConstants.Cheque);
         }
 
         private InMemoryAccountTypeRepository CreateSubject()

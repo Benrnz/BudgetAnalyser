@@ -288,7 +288,7 @@ namespace BudgetAnalyser.LedgerBook
         private void ShowDialogCommon(string title)
         {
             Canceled = false;
-            var accountsToShow = this.accountTypeRepository.ListAvailableAccountTypes().ToList();
+            var accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             BankAccounts = accountsToShow.OrderBy(a => a.Name);
             SelectedBankAccount = null;
             this.dialogCorrelationId = Guid.NewGuid();

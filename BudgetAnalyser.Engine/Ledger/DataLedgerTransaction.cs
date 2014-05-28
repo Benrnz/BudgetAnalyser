@@ -4,6 +4,8 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class DataLedgerTransaction
     {
+        public string AccountType { get; set; }
+
         public decimal Credit { get; set; }
 
         public decimal Debit { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -14,6 +15,8 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             Id = id;
         }
+
+        public AccountType AccountType { get; internal set; }
 
         /// <summary>
         ///     Gets the amount of the credit value.
@@ -32,6 +35,17 @@ namespace BudgetAnalyser.Engine.Ledger
         public Guid Id { get; private set; }
 
         public string Narrative { get; internal set; }
+
+        public LedgerTransaction WithAccountType([NotNull] AccountType accountType)
+        {
+            if (accountType == null)
+            {
+                throw new ArgumentNullException("accountType");
+            }
+
+            AccountType = accountType;
+            return this;
+        }
 
         public virtual LedgerTransaction WithAmount(decimal amount)
         {

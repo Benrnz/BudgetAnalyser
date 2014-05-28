@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
@@ -14,6 +15,7 @@ namespace BudgetAnalyser.LedgerBook
 {
     public class LedgerTransactionsController : ControllerBase
     {
+        private readonly IAccountTypeRepository accountTypeRepository;
         private Guid dialogCorrelationId;
         private bool doNotUseAddingNewTransaction;
         private bool doNotUseIsReadOnly;
@@ -30,11 +32,16 @@ namespace BudgetAnalyser.LedgerBook
         private bool isDeleteDirty;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext)
+        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] IAccountTypeRepository accountTypeRepository)
         {
+            this.accountTypeRepository = accountTypeRepository;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
+            }
+            if (accountTypeRepository == null)
+            {
+                throw new ArgumentNullException("accountTypeRepository");
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -83,6 +90,13 @@ namespace BudgetAnalyser.LedgerBook
                 RaisePropertyChanged(() => IsReadOnly);
             }
         }
+
+        public IEnumerable<AccountType> AccountTypes
+        {
+            get { return this.accountTypeRepository.ListCurrentlyUsedAccountTypes(); }
+        }
+
+        public AccountType NewTransactionAccountType { get; set; }
 
         public LedgerEntry LedgerEntry
         {
@@ -327,6 +341,7 @@ namespace BudgetAnalyser.LedgerBook
             NewTransactionIsDebit = true;
             NewTransactionIsReversal = false;
             NewTransactionNarrative = null;
+            NewTransactionAccountType = null;
         }
 
         private void Save()
@@ -345,18 +360,15 @@ namespace BudgetAnalyser.LedgerBook
                 SaveNewEntryTransaction();
             }
 
-            NewTransactionAmount = 0;
-            NewTransactionIsCredit = false;
-            NewTransactionIsDebit = false;
-            NewTransactionIsReversal = false;
-            NewTransactionNarrative = null;
+            Reset();
 
             RaisePropertyChanged(() => LedgerEntry);
         }
 
         private void SaveBalanceAdjustment()
         {
-            this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative);
+            this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
+                .WithAccountType(NewTransactionAccountType);
             ShownTransactions = this.entryLine.BankBalanceAdjustments.ToList();
         }
 
@@ -373,6 +385,7 @@ namespace BudgetAnalyser.LedgerBook
                 {
                     newTransaction = new DebitLedgerTransaction();
                 }
+
                 if (NewTransactionIsReversal)
                 {
                     newTransaction.WithReversal(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
@@ -380,6 +393,11 @@ namespace BudgetAnalyser.LedgerBook
                 else
                 {
                     newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
+                }
+
+                if (NewTransactionAccountType != null)
+                {
+                    newTransaction.WithAccountType(NewTransactionAccountType);
                 }
 
                 LedgerEntry.AddTransaction(newTransaction);

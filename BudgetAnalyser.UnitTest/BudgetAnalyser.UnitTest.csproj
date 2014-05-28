@@ -137,12 +137,6 @@
     <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml">
       <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile.xml">
-      <Link>TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile.xml</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml">
-      <Link>TestData\LedgerBookRepositoryTest_Save_ShouldSaveTheXmlFile3.xml</Link>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />

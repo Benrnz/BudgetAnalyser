@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return book;
         }
 
-        private static List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
+        private List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
         {
             var list = new List<LedgerTransaction>();
             foreach (DataLedgerTransaction dataTransaction in dataTransactions)
@@ -91,6 +91,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 transaction.Credit = dataTransaction.Credit;
                 transaction.Debit = dataTransaction.Debit;
                 transaction.Narrative = dataTransaction.Narrative;
+                transaction.AccountType = this.accountTypeRepository.GetOrCreateNew(dataTransaction.AccountType) 
+                    ?? this.accountTypeRepository.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque);
                 list.Add(transaction);
             }
 
