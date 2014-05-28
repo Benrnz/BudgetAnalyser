@@ -1,6 +1,7 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -16,7 +17,11 @@ namespace BudgetAnalyser.Engine.Ledger
             Id = id;
         }
 
-        public AccountType AccountType { get; internal set; }
+        /// <summary>
+        /// Gets or sets the Bank Account for this transaction.  This is sourced originally from the original <see cref="StatementModel"/>'s 
+        /// <see cref="Transaction"/>. It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
+        /// </summary>
+        public AccountType BankAccount { get; internal set; }
 
         /// <summary>
         ///     Gets the amount of the credit value.
@@ -32,6 +37,10 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal Debit { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel"/>'s <see cref="Transaction"/>.
+        /// This can be used to link back to the statement and show more transaction specific data.
+        /// </summary>
         public Guid Id { get; private set; }
 
         public string Narrative { get; internal set; }
@@ -43,7 +52,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException("accountType");
             }
 
-            AccountType = accountType;
+            this.BankAccount = accountType;
             return this;
         }
 

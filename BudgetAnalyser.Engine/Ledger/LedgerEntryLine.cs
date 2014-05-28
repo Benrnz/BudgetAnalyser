@@ -264,9 +264,9 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
             if (transactions.Any())
             {
-                IEnumerable<DebitLedgerTransaction> newLedgerTransactions = transactions.Select(t => new DebitLedgerTransaction
+                IEnumerable<DebitLedgerTransaction> newLedgerTransactions = transactions.Select(t => new DebitLedgerTransaction(t.Id)
                 {
-                    AccountType = t.AccountType,
+                    BankAccount = t.AccountType,
                     Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
                     Narrative = t.Description,
                 });

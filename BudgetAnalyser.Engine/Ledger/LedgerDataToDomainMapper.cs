@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 transaction.Credit = dataTransaction.Credit;
                 transaction.Debit = dataTransaction.Debit;
                 transaction.Narrative = dataTransaction.Narrative;
-                transaction.AccountType = this.accountTypeRepository.GetOrCreateNew(dataTransaction.AccountType) 
+                transaction.BankAccount = this.accountTypeRepository.GetOrCreateNew(dataTransaction.AccountType) 
                     ?? this.accountTypeRepository.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque);
                 list.Add(transaction);
             }
