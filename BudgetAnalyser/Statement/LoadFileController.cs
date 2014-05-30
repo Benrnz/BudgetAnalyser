@@ -323,14 +323,14 @@ namespace BudgetAnalyser.Statement
             this.disposed = true;
         }
 
-        private List<string> PrepareAccountNames(IEnumerable<string> existingAccountNames)
+        private List<string> PrepareAccountNames()
         {
-            var commonAccountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
-                .Select(a => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(a.Name.ToLowerInvariant()));
-            List<string> listOfNames = existingAccountNames.ToList();
-            listOfNames.AddRange(commonAccountNames);
-            listOfNames.Insert(0, string.Empty);
-            return listOfNames.Distinct().OrderBy(n => n).ToList();
+            var accountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
+                .Select(a => a.Name)
+                .OrderBy(a => a)
+                .ToList();
+            accountNames.Insert(0, string.Empty);
+            return accountNames;
         }
 
         private bool ActionCommandCanExecute()
@@ -439,8 +439,7 @@ namespace BudgetAnalyser.Statement
             UseNewAccountName = false;
             FileName = null;
             AccountName = null;
-            List<string> existingAccountNamesCopy = existingAccountNames.Select(a => a.Name).OrderBy(n => n).ToList();
-            List<string> listOfNames = PrepareAccountNames(existingAccountNamesCopy);
+            List<string> listOfNames = PrepareAccountNames();
             ExistingAccountNames = listOfNames;
             SelectedExistingAccountName = listOfNames.First();
 
