@@ -89,6 +89,11 @@ namespace BudgetAnalyser.Engine.Reports
             this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
             foreach (var day in chartData)
             {
+                if (day.Key > DateTime.Today)
+                {
+                    break;
+                }
+
                 NetWorth += day.Value;
                 runningTotal -= day.Value;
                 this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day.Key, runningTotal));
@@ -209,11 +214,11 @@ namespace BudgetAnalyser.Engine.Reports
 
         private void CalculateBudgetLineValues(decimal budgetTotal)
         {
-            decimal average = budgetTotal / this.actualSpending.Count;
+            decimal average = budgetTotal / ZeroLine.Count();
 
             this.budgetLine = new List<KeyValuePair<DateTime, decimal>>();
             int iteration = 0;
-            foreach (var day in ActualSpending)
+            foreach (var day in ZeroLine)
             {
                 this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
             }
