@@ -1,9 +1,27 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
 
     <Grid Margin="1"
           Background="{StaticResource Brush.TileBackground}">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <ContextMenu.Resources>
+                        <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
+                               TargetType="{x:Type TextBlock}">
+                        <Setter Property="Foreground"
+                                Value="Black" />
+                    </Style>
+                </ContextMenu.Resources>
+                <MenuItem Command="{x:Static ledgerBook:LedgerTransactionCommands.NavigateToTransactionCommand}"
+                          CommandParameter="{Binding Id}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Navigate to this transaction" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" MinWidth="80" />

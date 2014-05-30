@@ -54,6 +54,7 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterMessage>(this, OnGlobalFilterRequested);
             MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
         public string AccountTypeSummary
@@ -222,6 +223,12 @@ namespace BudgetAnalyser.Filtering
                     Criteria.AccountType = null;
                     break;
             }
+        }
+
+        private void OnGlobalFilterChangeRequested(RequestFilterChangeMessage message)
+        {
+            Criteria = message.Criteria;
+            SendFilterAppliedMessage();
         }
 
         private void OnGlobalFilterRequested(RequestFilterMessage message)

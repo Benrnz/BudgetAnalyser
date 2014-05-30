@@ -184,6 +184,11 @@ namespace BudgetAnalyser.Engine
             {
                 Cleared = false;
             }
+
+            if (BeginDate != null && EndDate != null && BeginDate > EndDate)
+            {
+                EndDate = BeginDate.Value.AddDays(1);
+            }
         }
     }
 }

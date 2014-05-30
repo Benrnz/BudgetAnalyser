@@ -154,12 +154,14 @@
     </Compile>
     <Compile Include="Filtering\GlobalFilterController.cs" />
     <Compile Include="Filtering\PersistentFiltersV1.cs" />
+    <Compile Include="Filtering\RequestFilterChangeMessage.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
     <Compile Include="LedgerBook\BankBalanceUserControl.xaml.cs">
       <DependentUpon>BankBalanceUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LedgerBook\LedgerTransactionCommands.cs" />
     <Compile Include="Matching\NewRuleView.xaml.cs">
       <DependentUpon>NewRuleView.xaml</DependentUpon>
     </Compile>
@@ -215,6 +217,7 @@
     <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownController.cs" />
     <Compile Include="BurnDownGraphs\CustomBurnDownChartsV1.cs" />
     <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
+    <Compile Include="Statement\NavigateToTransactionMessage.cs" />
     <Compile Include="Statement\SplitTransactionController.cs" />
     <Compile Include="Statement\SplitTransactionView.xaml.cs">
       <DependentUpon>SplitTransactionView.xaml</DependentUpon>

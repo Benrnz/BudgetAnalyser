@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
@@ -26,6 +29,8 @@ namespace BudgetAnalyser
 
             this.uiContext = uiContext;
             uiContext.Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
         public ICommand BudgetCommand
@@ -110,7 +115,7 @@ namespace BudgetAnalyser
 
         private void AfterTabExecutedCommon()
         {
-            foreach (var controller in this.uiContext.ShowableControllers)
+            foreach (IShowableController controller in this.uiContext.ShowableControllers)
             {
                 controller.Shown = false;
             }
@@ -165,6 +170,17 @@ namespace BudgetAnalyser
             BeforeTabExecutedCommon();
             LedgerBookToggle = true;
             AfterTabExecutedCommon();
+        }
+
+        private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
+        {
+            message.WhenReadyToNavigate.ContinueWith(t =>
+            {
+                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+                {
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, OnTransactionExecuted);
+                }
+            });
         }
 
         private void OnReportsExecuted()

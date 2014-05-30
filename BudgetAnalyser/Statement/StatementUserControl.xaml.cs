@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
@@ -65,6 +67,7 @@ namespace BudgetAnalyser.Statement
                 Application.Current.MainWindow.Closing += OnMainWindowClosing;
                 Controller.RegisterListener<TransactionsChangedMessage>(this, OnTransactionsChanged);
                 Controller.RegisterListener<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+                Controller.RegisterListener<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
             }
 
             if (Controller != null)
@@ -89,6 +92,25 @@ namespace BudgetAnalyser.Statement
         private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             Controller.NotifyOfClosing();
+        }
+
+        private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
+        {
+            message.WhenReadyToNavigate.ContinueWith(t =>
+            {
+                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+                {
+                    IsVisibleChanged += OnVisibleChangedShowTransaction;
+                }
+            });
+        }
+
+        private void OnVisibleChangedShowTransaction(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsVisibleChanged -= OnVisibleChangedShowTransaction;
+
+            TransactionListBox.UpdateLayout();
+            TransactionListBox.ScrollIntoView(Controller.SelectedRow);
         }
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)

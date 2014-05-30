@@ -8,6 +8,7 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
+using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
@@ -51,6 +52,11 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler<LedgerTransactionEventArgs> Complete;
 
+        public IEnumerable<AccountType> AccountTypes
+        {
+            get { return this.accountTypeRepository.ListCurrentlyUsedAccountTypes(); }
+        }
+
         public ICommand AddTransactionCommand
         {
             get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
@@ -91,13 +97,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public IEnumerable<AccountType> AccountTypes
-        {
-            get { return this.accountTypeRepository.ListCurrentlyUsedAccountTypes(); }
-        }
-
-        public AccountType NewTransactionAccountType { get; set; }
-
         public LedgerEntry LedgerEntry
         {
             get { return this.doNotUseLedgerEntry; }
@@ -109,6 +108,8 @@ namespace BudgetAnalyser.LedgerBook
                 RaisePropertyChanged(() => InLedgerEntryMode);
             }
         }
+
+        public AccountType NewTransactionAccountType { get; set; }
 
         public decimal NewTransactionAmount
         {
