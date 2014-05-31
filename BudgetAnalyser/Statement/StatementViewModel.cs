@@ -5,14 +5,14 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using GalaSoft.MvvmLight;
 
 namespace BudgetAnalyser.Statement
 {
-    public class StatementViewModel : INotifyPropertyChanged
+    public class StatementViewModel : ViewModelBase
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
@@ -43,8 +43,6 @@ namespace BudgetAnalyser.Statement
             this.doNotUseSortByDate = true;
             this.statementController = controller;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public decimal AverageDebit
         {
@@ -99,7 +97,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseBucketFilter = value;
-                OnPropertyChanged();
+                RaisePropertyChanged(() => BucketFilter);
                 TriggerRefreshTotalsRow();
             }
         }
@@ -123,7 +121,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseDirty = value;
-                OnPropertyChanged();
+                RaisePropertyChanged(() => Dirty);
             }
         }
 
@@ -134,7 +132,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseDuplicateSummary = value;
-                OnPropertyChanged();
+                RaisePropertyChanged(() => DuplicateSummary);
             }
         }
 
@@ -149,7 +147,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseGroupedByBucket = value;
-                OnPropertyChanged();
+                RaisePropertyChanged(() => GroupedByBucket);
             }
         }
 
@@ -174,7 +172,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseSelectedRow = value;
-                OnPropertyChanged();
+                RaisePropertyChanged(() => SelectedRow);
             }
         }
 
@@ -184,8 +182,8 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseSortByDate = !value;
-                OnPropertyChanged("SortByDate");
-                OnPropertyChanged();
+                RaisePropertyChanged(() => SortByDate);
+                RaisePropertyChanged(() => SortByBucket);
             }
         }
 
@@ -195,8 +193,8 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseSortByDate = value;
-                OnPropertyChanged("SortByBucket");
-                OnPropertyChanged();
+                RaisePropertyChanged(() => SortByBucket);
+                RaisePropertyChanged(() => SortByDate);
             }
         }
 
@@ -218,7 +216,7 @@ namespace BudgetAnalyser.Statement
                     this.doNotUseStatement.PropertyChanged += OnStatementPropertyChanged;
                 }
 
-                OnPropertyChanged();
+                RaisePropertyChanged(() => Statement);
                 UpdateGroupedByBucket();
             }
         }
@@ -331,26 +329,26 @@ namespace BudgetAnalyser.Statement
 
         public void TriggerRefreshBucketFilter()
         {
-            OnPropertyChanged("BucketFilter");
+            RaisePropertyChanged(() => BucketFilter);
         }
 
         public void TriggerRefreshBucketFilterList()
         {
-            OnPropertyChanged("FilterBudgetBuckets");
-            OnPropertyChanged("BudgetBuckets");
+            RaisePropertyChanged(() => FilterBudgetBuckets);
+            RaisePropertyChanged(() => BudgetBuckets);
         }
 
         public void TriggerRefreshTotalsRow()
         {
-            OnPropertyChanged("TotalCredits");
-            OnPropertyChanged("TotalDebits");
-            OnPropertyChanged("TotalDifference");
-            OnPropertyChanged("AverageDebit");
-            OnPropertyChanged("TotalCount");
-            OnPropertyChanged("HasTransactions");
-            OnPropertyChanged("StatementName");
-            OnPropertyChanged("MinTransactionDate");
-            OnPropertyChanged("MaxTransactionDate");
+            RaisePropertyChanged(() => TotalCredits);
+            RaisePropertyChanged(() => TotalDebits);
+            RaisePropertyChanged(() => TotalDifference);
+            RaisePropertyChanged(() => AverageDebit);
+            RaisePropertyChanged(() => TotalCount);
+            RaisePropertyChanged(() => HasTransactions);
+            RaisePropertyChanged(() => StatementName);
+            RaisePropertyChanged(() => MinTransactionDate);
+            RaisePropertyChanged(() => MaxTransactionDate);
 
             if (Statement == null)
             {
@@ -388,16 +386,6 @@ namespace BudgetAnalyser.Statement
             {
                 // Do it later - its not shown right now.
                 GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
-            }
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

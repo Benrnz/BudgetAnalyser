@@ -48,6 +48,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return DataContext as LedgerBookController; }
         }
 
+        private Engine.Ledger.LedgerBook LedgerBook
+        {
+            get { return Controller.ViewModel.LedgerBook; }
+        }
+
         private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int column, int row)
         {
             return AddBorderToGridCell(parent, hasBackground ? NormalHighlightBackground : null, hasBorder, column, row);
@@ -108,7 +113,7 @@ namespace BudgetAnalyser.LedgerBook
             Border dateBorder = AddBorderToGridCell(grid, true, true, column, 0);
             AddContentToGrid(dateBorder, "Date", ref column, 0, HeadingStyle);
 
-            foreach (LedgerColumn ledger in Controller.LedgerBook.Ledgers)
+            foreach (LedgerColumn ledger in LedgerBook.Ledgers)
             {
                 Border border = AddBorderToGridCell(grid, true, true, column, 0);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
@@ -179,7 +184,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddLedgerColumns(Grid grid)
         {
-            foreach (var ledger in Controller.LedgerBook.Ledgers)
+            foreach (var ledger in LedgerBook.Ledgers)
             {
                 if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                 {
@@ -197,8 +202,8 @@ namespace BudgetAnalyser.LedgerBook
         private void AddLedgerEntryLines(Grid grid)
         {
             int row = 1;
-            List<LedgerColumn> allLedgers = Controller.LedgerBook.Ledgers.ToList();
-            foreach (LedgerEntryLine line in Controller.LedgerBook.DatedEntries)
+            List<LedgerColumn> allLedgers = LedgerBook.Ledgers.ToList();
+            foreach (LedgerEntryLine line in LedgerBook.DatedEntries)
             {
                 int column = 0;
                 column = AddDateCellToLedgerEntryLine(grid, column, row, line);
@@ -297,7 +302,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddLedgerRows(Grid grid)
         {
-            for (int index = 0; index <= Controller.LedgerBook.DatedEntries.Count(); index++)
+            for (int index = 0; index <= LedgerBook.DatedEntries.Count(); index++)
             {
                 // <= because we must allow one row for the heading.
                 if (index >= 12)
@@ -317,7 +322,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         private void DynamicallyCreateLedgerBookGrid()
         {
-            if (Controller.LedgerBook == null)
+            if (LedgerBook == null)
             {
                 this.LedgerBookPanel.Content = null;
                 return;

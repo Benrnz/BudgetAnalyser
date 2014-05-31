@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
@@ -7,70 +6,41 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
-using FileFormatException = BudgetAnalyser.Engine.FileFormatException;
 
 namespace BudgetAnalyser.LedgerBook
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerBookController : ControllerBase, IShowableController
     {
-        private readonly DemoFileHelper demoFileHelper;
         private readonly IUserInputBox inputBox;
-        private readonly ILedgerBookRepository ledgerRepository;
         private readonly IUserMessageBox messageBox;
-        private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
-        private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
-        private readonly Func<IWaitCursor> waitCursorFactory;
 
-        private bool dirty;
-        private BudgetCurrencyContext doNotUseCurrentBudget;
-        private StatementModel doNotUseCurrentStatement;
         private bool doNotUseShown;
-        private Engine.Ledger.LedgerBook ledgerBook;
-
-        private string ledgerBookFileName;
-
-        /// <summary>
-        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
-        ///     it also indicates the ledger row can be edited.
-        /// </summary>
-        private LedgerEntryLine newLedgerLine;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
-            [NotNull] ILedgerBookRepository ledgerRepository,
-            [NotNull] DemoFileHelper demoFileHelper)
+            [NotNull] LedgerBookControllerFileOperations fileOperations)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (ledgerRepository == null)
+            if (fileOperations == null)
             {
-                throw new ArgumentNullException("ledgerRepository");
+                throw new ArgumentNullException("fileOperations");
             }
 
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException("demoFileHelper");
-            }
-
-            this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
-            this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.waitCursorFactory = uiContext.WaitCursorFactory;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
-            this.ledgerRepository = ledgerRepository;
-            this.demoFileHelper = demoFileHelper;
+            FileOperations = fileOperations;
             ChooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
             AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
@@ -87,11 +57,6 @@ namespace BudgetAnalyser.LedgerBook
 
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; private set; }
 
-        public ICommand AddNewLedgerBookCommand
-        {
-            get { return new RelayCommand(OnAddNewLedgerBookCommandExecuted, CanExecuteNewLedgerBookCommand); }
-        }
-
         public ICommand AddNewLedgerCommand
         {
             get { return new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand); }
@@ -99,65 +64,20 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand AddNewReconciliationCommand
         {
-            get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteAddNewReconciliationCommand); }
+            get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
         }
 
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; private set; }
 
-        public ICommand CloseLedgerBookCommand
-        {
-            get { return new RelayCommand(OnCloseLedgerBookCommandExecuted, CanExecuteCloseLedgerBookCommand); }
-        }
-
-        public ICommand DemoLedgerBookCommand
-        {
-            get { return new RelayCommand(OnDemoLedgerBookCommandExecute); }
-        }
-
-        public Engine.Ledger.LedgerBook LedgerBook
-        {
-            get { return this.ledgerBook; }
-
-            private set
-            {
-                this.ledgerBook = value;
-                RaisePropertyChanged(() => LedgerBook);
-                RaisePropertyChanged(() => NoLedgerBookLoaded);
-            }
-        }
+        public LedgerBookControllerFileOperations FileOperations { get; private set; }
 
         public LedgerRemarksController LedgerRemarksController { get; private set; }
 
         public LedgerTransactionsController LedgerTransactionsController { get; private set; }
 
-        public ICommand LoadLedgerBookCommand
-        {
-            get { return new RelayCommand(OnLoadLedgerBookCommandExecute); }
-        }
-
-        public bool NoBudgetLoaded
-        {
-            get { return CurrentBudget == null; }
-        }
-
-        public bool NoLedgerBookLoaded
-        {
-            get { return LedgerBook == null; }
-        }
-
-        public bool NoStatementLoaded
-        {
-            get { return CurrentStatement == null; }
-        }
-
         public ICommand RemoveLedgerEntryLineCommand
         {
             get { return new RelayCommand<LedgerEntryLine>(OnRemoveLedgerEntryLineCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
-        }
-
-        public ICommand SaveLedgerBookCommand
-        {
-            get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
         }
 
         public ICommand ShowBankBalancesCommand
@@ -195,114 +115,70 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand); }
         }
 
-        private BudgetCurrencyContext CurrentBudget
+        public LedgerBookViewModel ViewModel
         {
-            get { return this.doNotUseCurrentBudget; }
-            set
-            {
-                this.doNotUseCurrentBudget = value;
-                RaisePropertyChanged(() => NoBudgetLoaded);
-            }
-        }
-
-        private StatementModel CurrentStatement
-        {
-            get { return this.doNotUseCurrentStatement; }
-
-            set
-            {
-                this.doNotUseCurrentStatement = value;
-                RaisePropertyChanged(() => NoStatementLoaded);
-            }
+            get { return FileOperations.ViewModel; }
         }
 
         public void EditLedgerBookName()
         {
-            if (LedgerBook == null)
+            if (ViewModel.LedgerBook == null)
             {
                 return;
             }
 
-            string result = this.inputBox.Show("Edit Ledger Book Name", "Enter a new name", LedgerBook.Name);
+            string result = this.inputBox.Show("Edit Ledger Book Name", "Enter a new name", ViewModel.LedgerBook.Name);
             if (string.IsNullOrWhiteSpace(result))
             {
                 return;
             }
 
-            LedgerBook.Name = result;
-            this.dirty = true;
-            RaisePropertyChanged(() => LedgerBook);
+            ViewModel.LedgerBook.Name = result;
+            FileOperations.Dirty = true;
         }
 
         public void NotifyOfClosing()
         {
-            CheckIfSaveRequired();
+            FileOperations.CheckIfSaveRequired();
         }
 
         private bool CanExecuteAddNewLedgerCommand()
         {
-            return LedgerBook != null;
+            return ViewModel.LedgerBook != null;
         }
 
-        private bool CanExecuteAddNewReconciliationCommand()
+        private bool CanExecuteNewReconciliationCommand()
         {
-            return CurrentBudget != null && CurrentStatement != null && LedgerBook != null;
-        }
-
-        private bool CanExecuteCloseLedgerBookCommand()
-        {
-            return LedgerBook != null || !string.IsNullOrWhiteSpace(this.ledgerBookFileName);
-        }
-
-        private bool CanExecuteNewLedgerBookCommand()
-        {
-            return LedgerBook == null && string.IsNullOrWhiteSpace(this.ledgerBookFileName);
+            return ViewModel.CurrentBudget != null && ViewModel.CurrentStatement != null && ViewModel.LedgerBook != null;
         }
 
         private bool CanExecuteRemoveLedgerEntryLineCommand(LedgerEntryLine line)
         {
-            return LedgerBook.DatedEntries.FirstOrDefault() == line && line == this.newLedgerLine;
-        }
-
-        private bool CanExecuteSaveCommand()
-        {
-            return LedgerBook != null && this.dirty;
+            return ViewModel.LedgerBook != null && ViewModel.LedgerBook.DatedEntries.FirstOrDefault() == line && line == ViewModel.NewLedgerLine;
         }
 
         private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
         {
             return parameter != null
-                   && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == this.newLedgerLine);
+                   && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
         }
 
         private bool CanExecuteUnlockLedgerLineCommand()
         {
-            return this.newLedgerLine == null && LedgerBook != null;
-        }
-
-        private void CheckIfSaveRequired()
-        {
-            if (this.dirty)
-            {
-                bool? result = this.questionBox.Show("Save changes?", "Ledger Book");
-                if (result != null && result.Value)
-                {
-                    SaveLedgerBook();
-                }
-            }
+            return ViewModel.NewLedgerLine == null && ViewModel.LedgerBook != null;
         }
 
         private void FinaliseAddingReconciliation(bool ignoreWarnings = false)
         {
             try
             {
-                this.newLedgerLine = LedgerBook.Reconcile(
+                ViewModel.NewLedgerLine = ViewModel.LedgerBook.Reconcile(
                     AddLedgerReconciliationController.Date,
                     AddLedgerReconciliationController.BankBalances,
-                    CurrentBudget.Model,
-                    CurrentStatement,
+                    ViewModel.CurrentBudget.Model,
+                    ViewModel.CurrentStatement,
                     ignoreWarnings);
-                this.dirty = true;
+                FileOperations.Dirty = true;
                 EventHandler handler = LedgerBookUpdated;
                 if (handler != null)
                 {
@@ -323,63 +199,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
-        }
-
-        private void LoadLedgerBookFromFile(string fileName)
-        {
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return;
-            }
-
-            using (this.waitCursorFactory())
-            {
-                try
-                {
-                    if (!this.ledgerRepository.Exists(fileName))
-                    {
-                        throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + fileName, fileName);
-                    }
-
-                    LedgerBook = this.ledgerRepository.Load(fileName);
-                    MessengerInstance.Send(new LedgerBookReadyMessage(LedgerBook));
-                }
-                catch (FileFormatException ex)
-                {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
-                }
-                catch (FileNotFoundException ex)
-                {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
-                }
-            }
-        }
-
-        private void OnAddNewLedgerBookCommandExecuted()
-        {
-            IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.CheckPathExists = true;
-            saveFileDialog.DefaultExt = ".xml";
-            saveFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-            saveFileDialog.Title = "Choose a LedgerBook xml file name.";
-            bool? result = saveFileDialog.ShowDialog();
-            if (result == null || !result.Value)
-            {
-                return;
-            }
-
-            string fileName = saveFileDialog.FileName;
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return;
-            }
-
-            OnCloseLedgerBookCommandExecuted();
-
-            LedgerBook = this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", fileName);
-            this.dirty = true;
-            MessengerInstance.Send(new LedgerBookReadyMessage(LedgerBook));
         }
 
         private void OnAddNewLedgerCommandExecuted()
@@ -414,23 +233,12 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            var lastLedgerBookFileName = message.RehydratedModels[typeof(LastLedgerBookLoadedV1)].AdaptModel<string>();
-            this.ledgerBookFileName = lastLedgerBookFileName;
-
-            if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
-            {
-                LoadLedgerBookFromFile(this.ledgerBookFileName);
-                this.ledgerBookFileName = null;
-            }
+            FileOperations.ExtractDataFromApplicationState(message.RehydratedModels[typeof(LastLedgerBookLoadedV1)].AdaptModel<string>());
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var lastLedgerBook = new LastLedgerBookLoadedV1
-            {
-                Model = LedgerBook == null ? this.ledgerBookFileName : LedgerBook.FileName,
-            };
-            message.PersistThisModel(lastLedgerBook);
+            message.PersistThisModel(FileOperations.StateDataForPersistence());
         }
 
         private void OnBudgetBucketChosen(object sender, EventArgs e)
@@ -447,41 +255,21 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            LedgerBook.AddLedger(selectedBucket);
+            ViewModel.LedgerBook.AddLedger(selectedBucket);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
             if (message.ActiveBudget.BudgetActive)
             {
-                CurrentBudget = message.ActiveBudget;
-            }
-        }
-
-        private void OnCloseLedgerBookCommandExecuted()
-        {
-            CheckIfSaveRequired();
-            LedgerBook = null;
-            this.ledgerBookFileName = null;
-            MessengerInstance.Send(new LedgerBookReadyMessage(null));
-        }
-
-        private void OnDemoLedgerBookCommandExecute()
-        {
-            try
-            {
-                LoadLedgerBookFromFile(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
-            }
-            catch (IOException)
-            {
-                this.messageBox.Show("Unable to find the demo Ledger-Book file.");
+                ViewModel.CurrentBudget = message.ActiveBudget;
             }
         }
 
         private void OnEditBankBalancesCompleted(object sender, EditBankBalancesEventArgs editBankBalancesEventArgs)
         {
             AddLedgerReconciliationController.Complete -= OnEditBankBalancesCompleted;
-            if (editBankBalancesEventArgs.Canceled || this.newLedgerLine == null)
+            if (editBankBalancesEventArgs.Canceled || ViewModel.NewLedgerLine == null)
             {
                 return;
             }
@@ -492,28 +280,10 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            this.dirty = true;
-            this.newLedgerLine.UpdateBankBalances(AddLedgerReconciliationController.BankBalances);
-            SaveLedgerBook();
-            ReloadCurrentLedgerBook();
-        }
-
-        private void OnLoadLedgerBookCommandExecute()
-        {
-            IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
-            openFileDialog.AddExtension = true;
-            openFileDialog.CheckPathExists = true;
-            openFileDialog.DefaultExt = ".xml";
-            openFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-            openFileDialog.Title = "Choose a LedgerBook xml file to load.";
-            bool? result = openFileDialog.ShowDialog();
-            if (result == null || !result.Value)
-            {
-                return;
-            }
-            string fileName = openFileDialog.FileName;
-
-            LoadLedgerBookFromFile(fileName);
+            FileOperations.Dirty = true;
+            ViewModel.NewLedgerLine.UpdateBankBalances(AddLedgerReconciliationController.BankBalances);
+            FileOperations.SaveLedgerBook();
+            FileOperations.ReloadCurrentLedgerBook();
         }
 
         private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
@@ -524,26 +294,21 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            LedgerBook.RemoveLine(line);
-            SaveLedgerBook();
-            ReloadCurrentLedgerBook();
-        }
-
-        private void OnSaveLedgerBookCommandExecute()
-        {
-            SaveLedgerBook();
+            ViewModel.LedgerBook.RemoveLine(line);
+            FileOperations.SaveLedgerBook();
+            FileOperations.ReloadCurrentLedgerBook();
         }
 
         private void OnShowBankBalancesCommandExecute(LedgerEntryLine line)
         {
             AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
-            AddLedgerReconciliationController.ShowEditDialog(line, line == this.newLedgerLine);
+            AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
         {
             LedgerRemarksController.Completed += OnShowRemarksCompleted;
-            LedgerRemarksController.Show(parameter, parameter == this.newLedgerLine);
+            LedgerRemarksController.Show(parameter, parameter == ViewModel.NewLedgerLine);
         }
 
         private void OnShowRemarksCompleted(object sender, EventArgs e)
@@ -565,12 +330,12 @@ namespace BudgetAnalyser.LedgerBook
 
             if (ledgerEntry != null)
             {
-                bool isNew = this.newLedgerLine != null && this.newLedgerLine.Entries.Any(e => e == ledgerEntry);
+                bool isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
                 LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
             }
             else if (bankBalanceAdjustments != null)
             {
-                LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == this.newLedgerLine);
+                LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
             }
             else
             {
@@ -594,7 +359,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)
         {
-            CurrentStatement = message.StatementModel;
+            ViewModel.CurrentStatement = message.StatementModel;
         }
 
         private void OnUnlockLedgerLineCommandExecuted()
@@ -602,29 +367,15 @@ namespace BudgetAnalyser.LedgerBook
             bool? response = this.questionBox.Show(
                 "Unlock Ledger Entry Line",
                 "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
-                LedgerBook.DatedEntries.First().Date);
+                ViewModel.LedgerBook.DatedEntries.First().Date);
 
             if (response == null || response.Value == false)
             {
                 return;
             }
 
-            this.newLedgerLine = LedgerBook.UnlockMostRecentLine();
-            this.dirty = true;
-        }
-
-        private void ReloadCurrentLedgerBook()
-        {
-            string fileName = LedgerBook.FileName;
-            OnCloseLedgerBookCommandExecuted();
-            LoadLedgerBookFromFile(fileName);
-        }
-
-        private void SaveLedgerBook()
-        {
-            this.ledgerRepository.Save(LedgerBook);
-            this.dirty = false;
-            this.newLedgerLine = null;
+            ViewModel.NewLedgerLine = ViewModel.LedgerBook.UnlockMostRecentLine();
+            FileOperations.Dirty = true;
         }
     }
 }

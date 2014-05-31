@@ -58,14 +58,14 @@
 
         <!-- Toolbar -->
         <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding SaveLedgerBookCommand}"
+            <Button Command="{Binding FileOperations.SaveLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Save}" />
-            <Button Command="{Binding LoadLedgerBookCommand}"
+            <Button Command="{Binding FileOperations.LoadLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Load}" />
-            <Button Command="{Binding AddNewLedgerBookCommand}"
+            <Button Command="{Binding FileOperations.NewLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Create New Ledger Book" />
-            <Button Command="{Binding CloseLedgerBookCommand}"
+            <Button Command="{Binding FileOperations.CloseLedgerBookCommand}"
                     Style="{StaticResource Button.Round.Clear}"
                     ToolTip="Close Ledger Book" />
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
@@ -83,16 +83,16 @@
                     Style="{StaticResource Button.Round.Unlock}"
                     ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                       Text="{Binding LedgerBook.Name}"
+                       Text="{Binding ViewModel.LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    Visibility="{Binding NoStatementLoaded, Converter={StaticResource Converter.BoolToVis}}">
+                    Visibility="{Binding ViewModel.NoStatementLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Statement"
                            Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            ToolTip="Warning! No statement is loaded, therefore adding a reconciliation will not auto-match transactions." />
             </Border>
             <Border Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    Visibility="{Binding NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
+                    Visibility="{Binding ViewModel.NoBudgetLoaded, Converter={StaticResource Converter.BoolToVis}}">
                 <TextBlock Text="No Budget"
                            Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                            ToolTip="Warning! No budget is loaded, therefore adding a reconciliation will not auto credit ledgers with budgeted amounts." />
@@ -101,7 +101,7 @@
 
         <!-- Main Content -->
         <Grid Grid.Row="1"
-              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource Converter.NotBoolToVis}}">
+              Visibility="{Binding ViewModel.NoLedgerBookLoaded, Converter={StaticResource Converter.NotBoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -111,12 +111,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
-                       Text="{Binding LedgerBook.Modified, StringFormat=D}"
+                       Text="{Binding ViewModel.LedgerBook.Modified, StringFormat=D}"
                        ToolTip="Last modified date and time" />
             <TextBlock Grid.Column="1"
                        Style="{StaticResource TextBlock.Paragraph}"
-                       Text="{Binding LedgerBook.FileName}"
-                       ToolTip="{Binding LedgerBook.FileName}" />
+                       Text="{Binding ViewModel.LedgerBook.FileName}"
+                       ToolTip="{Binding ViewModel.LedgerBook.FileName}" />
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     CornerRadius="3"
@@ -134,21 +134,21 @@
               Height="200"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
-              Visibility="{Binding NoLedgerBookLoaded, Converter={StaticResource Converter.BoolToVis}}"
+              Visibility="{Binding ViewModel.NoLedgerBookLoaded, Converter={StaticResource Converter.BoolToVis}}"
               Width="500">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding LoadLedgerBookCommand}"
+                <Button Command="{Binding FileOperations.LoadLedgerBookCommand}"
                         Style="{StaticResource Button.Round.Load}" />
                 <TextBlock HorizontalAlignment="Center"
                            Text="No Ledger Book loaded. Load one now:" />
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1">
-                <Button Command="{Binding DemoLedgerBookCommand}"
+                <Button Command="{Binding FileOperations.DemoLedgerBookCommand}"
                         Style="{StaticResource Button.Round.Smiley}"
                         ToolTip="Demo LedgerBook" />
                 <TextBlock HorizontalAlignment="Center"

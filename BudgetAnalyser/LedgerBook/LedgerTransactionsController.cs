@@ -9,7 +9,6 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
-using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
 
@@ -287,12 +286,21 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            if (AddingNewTransaction)
+            if (message.Response == ShellDialogButton.Ok)
             {
-                OnAddNewTransactionCommandExecuted();
+                if (AddingNewTransaction)
+                {
+                    OnAddNewTransactionCommandExecuted();
+                }
+
+                Save();
             }
 
-            Save();
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                this.isAddDirty = false;
+                this.isDeleteDirty = false;
+            }
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
             if (handler != null)
@@ -412,7 +420,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             IsReadOnly = !isNew;
             this.dialogCorrelationId = Guid.NewGuid();
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, IsReadOnly ? ShellDialogType.Ok : ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = Title,
