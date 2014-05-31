@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
         private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
+        private Transaction doNotUseSelectedRow;
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
 
@@ -165,6 +166,16 @@ namespace BudgetAnalyser.Statement
         public DateTime MinTransactionDate
         {
             get { return Statement.Transactions.Min(t => t.Date); }
+        }
+
+        public Transaction SelectedRow
+        {
+            get { return this.doNotUseSelectedRow; }
+            set
+            {
+                this.doNotUseSelectedRow = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool SortByBucket
@@ -313,9 +324,20 @@ namespace BudgetAnalyser.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
+        public bool HasSelectedRow()
+        {
+            return SelectedRow != null;
+        }
+
         public void TriggerRefreshBucketFilter()
         {
             OnPropertyChanged("BucketFilter");
+        }
+
+        public void TriggerRefreshBucketFilterList()
+        {
+            OnPropertyChanged("FilterBudgetBuckets");
+            OnPropertyChanged("BudgetBuckets");
         }
 
         public void TriggerRefreshTotalsRow()
@@ -342,12 +364,6 @@ namespace BudgetAnalyser.Statement
                         duplicates.Sum(group => group.Count()))
                     : null;
             }
-        }
-
-        public void TriggerRefreshBucketFilterList()
-        {
-            OnPropertyChanged("FilterBudgetBuckets");
-            OnPropertyChanged("BudgetBuckets");
         }
 
         public void UpdateGroupedByBucket()

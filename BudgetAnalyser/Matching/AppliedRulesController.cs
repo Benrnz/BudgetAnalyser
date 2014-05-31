@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Matching
 
         private bool CanExecuteCreateRuleCommand()
         {
-            return this.statementController.SelectedRow != null;
+            return this.statementController.ViewModel.SelectedRow != null;
         }
 
         private void OnApplyRulesCommandExecute()
@@ -72,13 +72,13 @@ namespace BudgetAnalyser.Matching
 
         private void OnCreateRuleCommandExecute()
         {
-            if (this.statementController.SelectedRow == null)
+            if (this.statementController.ViewModel.SelectedRow == null)
             {
                 this.messageBox.Show("No row selected.");
                 return;
             }
 
-            RulesController.CreateNewRuleFromTransaction(this.statementController.SelectedRow);
+            RulesController.CreateNewRuleFromTransaction(this.statementController.ViewModel.SelectedRow);
         }
 
         private void OnShowRulesCommandExecute()

@@ -105,6 +105,7 @@ namespace BudgetAnalyser
         public SplitTransactionController SplitTransactionController { get; set; }
 
         public StatementController StatementController { get; set; }
+        public StatementControllerNavigation StatementControllerNavigation { get; set; }
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }
 

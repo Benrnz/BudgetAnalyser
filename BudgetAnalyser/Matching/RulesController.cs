@@ -19,6 +19,7 @@ namespace BudgetAnalyser.Matching
     /// <summary>
     ///     The Controller for <see cref="EditRulesUserControl" /> .
     /// </summary>
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class RulesController : ControllerBase, IInitializableController, IShowableController
     {
         public const string BucketSortKey = "Bucket";

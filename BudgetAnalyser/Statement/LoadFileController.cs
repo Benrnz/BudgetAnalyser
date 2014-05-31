@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Statement
         private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
         private bool actionButtonReady;
+        private Guid dialogCorrelationId;
         private bool disposed;
         private string doNotUseAccountName;
         private bool doNotUseExistingAccountName;
@@ -34,7 +35,6 @@ namespace BudgetAnalyser.Statement
         private string doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
         private Task fileSelectionTask;
-        private Guid dialogCorrelationId;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
@@ -232,7 +232,7 @@ namespace BudgetAnalyser.Statement
             if (this.disposed)
             {
                 throw new ObjectDisposedException("LoadFileController.RequestUserInputForMerging");
-            } 
+            }
 
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
@@ -261,7 +261,7 @@ namespace BudgetAnalyser.Statement
                 SuggestedDateRange = string.Format(CultureInfo.CurrentCulture, "{0:d} to {1:d}", lastTransactionDate, maxDate);
             }
 
-            return RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
+            return RequestUserInputCommomPreparation();
         }
 
         public Task RequestUserInputForOpenFile()
@@ -270,12 +270,12 @@ namespace BudgetAnalyser.Statement
             {
                 throw new ObjectDisposedException("LoadFileController.RequestUserInputForOpenFile");
             }
-            
+
             ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Open Statement";
-            return RequestUserInputCommomPreparation(this.accountTypeRepository.ListCurrentlyUsedAccountTypes());
+            return RequestUserInputCommomPreparation();
         }
 
         public void Reset()
@@ -283,54 +283,11 @@ namespace BudgetAnalyser.Statement
             if (this.disposed)
             {
                 throw new ObjectDisposedException("LoadFileController.Reset");
-            } 
+            }
 
             LastFileWasBudgetAnalyserStatementFile = null;
             FileName = null;
             AccountName = null;
-        }
-
-        /// <summary>
-        ///     Dispose(bool disposing) executes in two distinct scenarios.
-        ///     If disposing equals true, the method has been called directly
-        ///     or indirectly by a user's code. Managed and unmanaged resources
-        ///     can be disposed.
-        ///     If disposing equals false, the method has been called by the
-        ///     runtime from inside the finalizer and you should not reference
-        ///     other objects. Only unmanaged resources can be disposed.
-        /// </summary>
-        /// <param name="disposing">
-        ///     <c>true</c> to release both managed and unmanaged
-        ///     resources; <c>false</c> to release only unmanaged resources.
-        /// </param>
-        private void Dispose(bool disposing)
-        {
-            // Check to see if Dispose has already been called. 
-            if (!this.disposed)
-            {
-                // If disposing equals true, dispose all managed 
-                // and unmanaged resources. 
-                if (disposing)
-                {
-                    // Dispose managed resources. 
-                    if (this.fileSelectionTask != null)
-                    {
-                        this.fileSelectionTask.Dispose();
-                    }
-                }
-            }
-
-            this.disposed = true;
-        }
-
-        private List<string> PrepareAccountNames()
-        {
-            var accountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
-                .Select(a => a.Name)
-                .OrderBy(a => a)
-                .ToList();
-            accountNames.Insert(0, string.Empty);
-            return accountNames;
         }
 
         private bool ActionCommandCanExecute()
@@ -385,6 +342,39 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        /// <summary>
+        ///     Dispose(bool disposing) executes in two distinct scenarios.
+        ///     If disposing equals true, the method has been called directly
+        ///     or indirectly by a user's code. Managed and unmanaged resources
+        ///     can be disposed.
+        ///     If disposing equals false, the method has been called by the
+        ///     runtime from inside the finalizer and you should not reference
+        ///     other objects. Only unmanaged resources can be disposed.
+        /// </summary>
+        /// <param name="disposing">
+        ///     <c>true</c> to release both managed and unmanaged
+        ///     resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
+        private void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed 
+                // and unmanaged resources. 
+                if (disposing)
+                {
+                    // Dispose managed resources. 
+                    if (this.fileSelectionTask != null)
+                    {
+                        this.fileSelectionTask.Dispose();
+                    }
+                }
+            }
+
+            this.disposed = true;
+        }
+
         private void OnBrowseForFileCommandExecute()
         {
             IUserPromptOpenFile dialog = this.userPromptOpenFileFactory();
@@ -433,7 +423,17 @@ namespace BudgetAnalyser.Statement
             this.fileSelectionTask.Start();
         }
 
-        private Task RequestUserInputCommomPreparation(IEnumerable<AccountType> existingAccountNames)
+        private List<string> PrepareAccountNames()
+        {
+            List<string> accountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
+                .Select(a => a.Name)
+                .OrderBy(a => a)
+                .ToList();
+            accountNames.Insert(0, string.Empty);
+            return accountNames;
+        }
+
+        private Task RequestUserInputCommomPreparation()
         {
             UseExistingAccountName = true;
             UseNewAccountName = false;

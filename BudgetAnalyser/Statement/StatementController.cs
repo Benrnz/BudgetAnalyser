@@ -21,6 +21,7 @@ using Rees.Wpf.RecentFiles;
 
 namespace BudgetAnalyser.Statement
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class StatementController : ControllerBase, IShowableController, IInitializableController
     {
         public const string SortByBucketKey = "Bucket";
@@ -30,7 +31,6 @@ namespace BudgetAnalyser.Statement
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly IUiContext uiContext;
-        private Transaction doNotUseSelectedRow;
         private bool doNotUseShown;
         private bool initialised;
         private List<ICommand> recentFileCommands;
@@ -83,7 +83,6 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
-            MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequested);
         }
 
         public AppliedRulesController AppliedRulesController
@@ -105,7 +104,7 @@ namespace BudgetAnalyser.Statement
 
         public ICommand DeleteTransactionCommand
         {
-            get { return new RelayCommand(OnDeleteTransactionCommandExecute, HasSelectedRow); }
+            get { return new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
         public ICommand DemoStatementCommand
@@ -115,7 +114,7 @@ namespace BudgetAnalyser.Statement
 
         public ICommand EditTransactionCommand
         {
-            get { return new RelayCommand(OnEditTransactionCommandExecute, HasSelectedRow); }
+            get { return new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
         public EditingTransactionController EditingTransactionController
@@ -203,16 +202,6 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
-        public Transaction SelectedRow
-        {
-            get { return this.doNotUseSelectedRow; }
-            set
-            {
-                this.doNotUseSelectedRow = value;
-                RaisePropertyChanged(() => SelectedRow);
-            }
-        }
-
         public bool Shown
         {
             get { return this.doNotUseShown; }
@@ -234,7 +223,7 @@ namespace BudgetAnalyser.Statement
 
         public ICommand SplitTransactionCommand
         {
-            get { return new RelayCommand(OnSplitTransactionCommandExecute, HasSelectedRow); }
+            get { return new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
         public SplitTransactionController SplitTransactionController
@@ -297,7 +286,7 @@ namespace BudgetAnalyser.Statement
 
         private void DeleteTransaction()
         {
-            ViewModel.Statement.RemoveTransaction(SelectedRow);
+            ViewModel.Statement.RemoveTransaction(ViewModel.SelectedRow);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfEdit();
         }
@@ -328,11 +317,6 @@ namespace BudgetAnalyser.Statement
                 ViewModel.TriggerRefreshTotalsRow();
                 NotifyOfEdit();
             }
-        }
-
-        private bool HasSelectedRow()
-        {
-            return SelectedRow != null;
         }
 
         private async Task<bool> LoadInternal(string fullFileName)
@@ -392,50 +376,6 @@ namespace BudgetAnalyser.Statement
             {
                 BackgroundJob.Finish();
             }
-        }
-
-        private bool NavigateToTransactionOutsideOfFilter(Guid transactionId)
-        {
-            Transaction foundTransaction = ViewModel.Statement.AllTransactions.FirstOrDefault(t => t.Id == transactionId);
-            if (foundTransaction != null)
-            {
-                var result = this.uiContext.UserPrompts.YesNoBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
-                if (result == null || !result.Value)
-                {
-                    return false;
-                }
-                
-                GlobalFilterCriteria newCriteria;
-                var requestCurrentFilter = new RequestFilterMessage(this);
-                MessengerInstance.Send(requestCurrentFilter);
-
-                if (foundTransaction.Date < requestCurrentFilter.Criteria.BeginDate)
-                {
-                    newCriteria = new GlobalFilterCriteria { BeginDate = foundTransaction.Date, EndDate = requestCurrentFilter.Criteria.EndDate };
-                }
-                else
-                {
-                    newCriteria = new GlobalFilterCriteria { BeginDate = requestCurrentFilter.Criteria.BeginDate, EndDate = foundTransaction.Date };
-                }
-
-                MessengerInstance.Send(new RequestFilterChangeMessage(this) { Criteria = newCriteria });
-
-                return NavigateToVisibleTransaction(transactionId);
-            }
-
-            return false;
-        }
-
-        private bool NavigateToVisibleTransaction(Guid transactionId)
-        {
-            Transaction foundTransaction = ViewModel.Statement.Transactions.FirstOrDefault(t => t.Id == transactionId);
-            if (foundTransaction != null)
-            {
-                SelectedRow = foundTransaction;
-                return true;
-            }
-
-            return false;
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -506,7 +446,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnDeleteTransactionCommandExecute()
         {
-            if (SelectedRow == null)
+            if (ViewModel.SelectedRow == null)
             {
                 return;
             }
@@ -526,13 +466,13 @@ namespace BudgetAnalyser.Statement
 
         private void OnEditTransactionCommandExecute()
         {
-            if (SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
+            if (ViewModel.SelectedRow == null || this.shellDialogCorrelationId != Guid.Empty)
             {
                 return;
             }
 
             this.shellDialogCorrelationId = Guid.NewGuid();
-            EditingTransactionController.ShowDialog(SelectedRow, this.shellDialogCorrelationId);
+            EditingTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
         }
 
         private void OnFilterApplied(FilterAppliedMessage message)
@@ -597,24 +537,6 @@ namespace BudgetAnalyser.Statement
                     }
                 }
             });
-        }
-
-        private void OnNavigateToTransactionRequested(NavigateToTransactionMessage message)
-        {
-            if (NavigateToVisibleTransaction(message.TransactionId))
-            {
-                message.SetSearchAsSuccessful();
-                return;
-            }
-
-            if (NavigateToTransactionOutsideOfFilter(message.TransactionId))
-            {
-                message.SetSearchAsSuccessful();
-                return;
-            }
-
-            message.SetSearchAsFailed();
-            // No such transaction id found.
         }
 
         private void OnOpenStatementExecute(string fullFileName)
@@ -693,7 +615,7 @@ namespace BudgetAnalyser.Statement
         private void OnSplitTransactionCommandExecute()
         {
             this.shellDialogCorrelationId = Guid.NewGuid();
-            SplitTransactionController.ShowDialog(SelectedRow, this.shellDialogCorrelationId);
+            SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
         }
 
         private bool PromptToSaveIfDirty()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using GalaSoft.MvvmLight.Command;
@@ -9,6 +10,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetPieController : ControllerBase, IShowableController
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
@@ -55,7 +57,7 @@ namespace BudgetAnalyser.Budget
                     return 0;
                 }
 
-                return (double)ExpenseSelectedItem.Value/(double)ExpensePieChartValues.Sum(e => e.Value);
+                return (double)ExpenseSelectedItem.Value / (double)ExpensePieChartValues.Sum(e => e.Value);
             }
         }
 
@@ -79,7 +81,7 @@ namespace BudgetAnalyser.Budget
                     return 0;
                 }
 
-                return (double)IncomeSelectedItem.Value/(double)IncomePieChartValues.Sum(i => i.Value);
+                return (double)IncomeSelectedItem.Value / (double)IncomePieChartValues.Sum(i => i.Value);
             }
         }
 
@@ -130,7 +132,10 @@ namespace BudgetAnalyser.Budget
 
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }

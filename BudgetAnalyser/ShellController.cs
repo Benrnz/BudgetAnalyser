@@ -126,7 +126,8 @@ namespace BudgetAnalyser
             foreach (var sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                MessengerInstance.Send(new ApplicationStateLoadedMessage(rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy)));
+                var models = rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy);
+                MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
             MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());

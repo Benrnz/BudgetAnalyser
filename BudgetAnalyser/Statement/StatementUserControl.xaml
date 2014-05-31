@@ -315,7 +315,7 @@
                      MinHeight="95"
                      MinWidth="120"
                      MouseDoubleClick="OnTransactionListBoxDoubleClick"
-                     SelectedItem="{Binding SelectedRow}"
+                     SelectedItem="{Binding ViewModel.SelectedRow}"
                      SelectionMode="Single">
                 <ListBox.Visibility>
                     <MultiBinding Converter="{StaticResource Converter.MultiBoolToVisibility}">
@@ -337,7 +337,7 @@
                      ListBox.MouseDoubleClick="OnTransactionListBoxDoubleClick"
                      MinHeight="95"
                      MinWidth="120"
-                     SelectedItem="{Binding SelectedRow}"
+                     SelectedItem="{Binding ViewModel.SelectedRow}"
                      SelectionMode="Single">
                 <ListBox.Visibility>
                     <MultiBinding Converter="{StaticResource Converter.MultiBoolToVisibility}">

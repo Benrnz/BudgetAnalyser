@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
@@ -11,6 +11,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class MainMenuController : ControllerBase, IInitializableController
     {
         private readonly UiContext uiContext;

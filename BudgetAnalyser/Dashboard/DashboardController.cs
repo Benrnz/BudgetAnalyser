@@ -22,6 +22,7 @@ using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Dashboard
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class DashboardController : ControllerBase, IShowableController
     {
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();

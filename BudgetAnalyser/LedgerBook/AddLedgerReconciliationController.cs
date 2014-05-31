@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class AddLedgerReconciliationController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
     {
         private readonly IAccountTypeRepository accountTypeRepository;
@@ -22,9 +22,9 @@ namespace BudgetAnalyser.LedgerBook
         private IEnumerable<AccountType> doNotUseBankAccounts;
         private decimal doNotUseBankBalance;
         private DateTime doNotUseDate;
+        private bool doNotUseDateEditable;
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
-        private bool doNotUseDateEditable;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -139,16 +139,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool Editable
-        {
-            get { return this.doNotUseEditable; }
-            private set
-            {
-                this.doNotUseEditable = value;
-                RaisePropertyChanged(() => Editable);
-            }
-        }
-
         public bool DateEditable
         {
             get { return this.doNotUseDateEditable; }
@@ -156,6 +146,16 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.doNotUseDateEditable = value;
                 RaisePropertyChanged(() => DateEditable);
+            }
+        }
+
+        public bool Editable
+        {
+            get { return this.doNotUseEditable; }
+            private set
+            {
+                this.doNotUseEditable = value;
+                RaisePropertyChanged(() => Editable);
             }
         }
 
@@ -185,8 +185,13 @@ namespace BudgetAnalyser.LedgerBook
             ShowDialogCommon("New Reconciliation");
         }
 
-        public void ShowEditDialog(LedgerEntryLine line, bool isNewLine)
+        public void ShowEditDialog([NotNull] LedgerEntryLine line, bool isNewLine)
         {
+            if (line == null)
+            {
+                throw new ArgumentNullException("line");
+            }
+
             Date = line.Date;
             BankBalances = new ObservableCollection<BankBalance>(line.BankBalances);
             CreateMode = false;
@@ -278,7 +283,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
             }
 
-            var handler = Complete;
+            EventHandler<EditBankBalancesEventArgs> handler = Complete;
             if (handler != null)
             {
                 handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
@@ -288,7 +293,7 @@ namespace BudgetAnalyser.LedgerBook
         private void ShowDialogCommon(string title)
         {
             Canceled = false;
-            var accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            List<AccountType> accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             BankAccounts = accountsToShow.OrderBy(a => a.Name);
             SelectedBankAccount = null;
             this.dialogCorrelationId = Guid.NewGuid();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
@@ -9,6 +10,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IBudgetBucketRepository bucketRepository;

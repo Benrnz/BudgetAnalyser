@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
@@ -13,6 +14,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;

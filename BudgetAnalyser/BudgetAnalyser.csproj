@@ -222,6 +222,7 @@
     <Compile Include="Statement\SplitTransactionView.xaml.cs">
       <DependentUpon>SplitTransactionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Statement\StatementControllerNavigation.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />
     <Compile Include="Statement\LastStatementLoadedV1.cs" />

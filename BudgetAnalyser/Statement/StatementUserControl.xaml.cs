@@ -3,10 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
-using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
@@ -110,7 +108,7 @@ namespace BudgetAnalyser.Statement
             IsVisibleChanged -= OnVisibleChangedShowTransaction;
 
             TransactionListBox.UpdateLayout();
-            TransactionListBox.ScrollIntoView(Controller.SelectedRow);
+            TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
         }
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)

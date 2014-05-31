@@ -18,6 +18,7 @@ using FileFormatException = BudgetAnalyser.Engine.FileFormatException;
 
 namespace BudgetAnalyser.Budget
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetController : ControllerBase, IShowableController
     {
         private const string CloseBudgetMenuName = "Close _Budget";
@@ -32,13 +33,13 @@ namespace BudgetAnalyser.Budget
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
+        private Guid dialogCorrelationId;
         private bool dirty;
         private BudgetCurrencyContext doNotUseModel;
         private bool doNotUseShownBudget;
         private decimal expenseTotal;
         private decimal incomeTotal;
         private bool loading;
-        private Guid dialogCorrelationId;
         private decimal surplus;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]

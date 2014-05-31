@@ -17,6 +17,7 @@ using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Filtering
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
         private readonly IAccountTypeRepository accountTypeRepository;

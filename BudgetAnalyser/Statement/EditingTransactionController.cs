@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
@@ -6,8 +7,11 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class EditingTransactionController : ControllerBase
     {
+        private Transaction doNotUseTransaction;
+
         public EditingTransactionController([NotNull] UiContext uiContext)
         {
             if (uiContext == null)
@@ -18,7 +22,12 @@ namespace BudgetAnalyser.Statement
             MessengerInstance = uiContext.Messenger;
         }
 
-        private Transaction doNotUseTransaction;
+        public bool HasChanged
+        {
+            get { return OriginalHash != Transaction.GetEqualityHashCode(); }
+        }
+
+        public int OriginalHash { get; private set; }
 
         public Transaction Transaction
         {
@@ -36,13 +45,6 @@ namespace BudgetAnalyser.Statement
 
                 this.doNotUseTransaction = value;
             }
-        }
-
-        public int OriginalHash { get; private set; }
-
-        public bool HasChanged
-        {
-            get { return OriginalHash != Transaction.GetEqualityHashCode(); }
         }
 
         public void ShowDialog(Transaction transaction, Guid correlationId)

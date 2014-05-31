@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
@@ -6,6 +7,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerRemarksController : ControllerBase
     {
         private Guid dialogCorrelationId;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -10,6 +11,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class SplitTransactionController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
     {
         private readonly IBudgetBucketRepository bucketRepo;

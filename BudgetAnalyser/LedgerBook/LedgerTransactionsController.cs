@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
@@ -14,6 +15,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerTransactionsController : ControllerBase
     {
         private readonly IAccountTypeRepository accountTypeRepository;

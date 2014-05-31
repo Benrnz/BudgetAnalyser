@@ -17,6 +17,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class ReportsCatalogController : ControllerBase, IShowableController
     {
         private readonly IBudgetAnalysisView analysisFactory;

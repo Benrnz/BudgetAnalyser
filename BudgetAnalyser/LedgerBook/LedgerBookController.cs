@@ -17,6 +17,7 @@ using FileFormatException = BudgetAnalyser.Engine.FileFormatException;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerBookController : ControllerBase, IShowableController
     {
         private readonly DemoFileHelper demoFileHelper;

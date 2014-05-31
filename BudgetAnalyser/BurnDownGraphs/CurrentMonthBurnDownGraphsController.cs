@@ -15,6 +15,7 @@ using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.BurnDownGraphs
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class CurrentMonthBurnDownGraphsController : ControllerBase
     {
         private readonly AddUserDefinedBurnDownController addUserDefinedBurnDownController;

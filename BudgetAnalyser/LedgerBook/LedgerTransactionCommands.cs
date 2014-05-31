@@ -28,8 +28,10 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("transactionId");
             }
 
-            var message = new NavigateToTransactionMessage(transactionId.Value);
-            MessengerInstance.Send(message);
+            using (var message = new NavigateToTransactionMessage(transactionId.Value))
+            {
+                MessengerInstance.Send(message);
+            }
         }
     }
 }
