@@ -21,15 +21,15 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void NotValidForBeginDateToBeAfterEndDate()
         {
+            var invalidEndDate = new DateTime(2014, 3, 1);
             var subject = new GlobalFilterCriteria
             {
                 BeginDate = new DateTime(2014, 5, 1),
-                EndDate = new DateTime(2014, 3, 1),
+                EndDate = invalidEndDate,
             };
 
-            var messages = new StringBuilder();
-            Assert.IsFalse(subject.Validate(messages));
-            Console.WriteLine(messages);
+            Assert.AreNotEqual(invalidEndDate, subject.EndDate);
+            Assert.IsTrue(subject.BeginDate < subject.EndDate);
         }
 
         [TestMethod]
