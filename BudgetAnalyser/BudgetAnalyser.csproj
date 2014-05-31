@@ -161,7 +161,10 @@
     <Compile Include="LedgerBook\BankBalanceUserControl.xaml.cs">
       <DependentUpon>BankBalanceUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LedgerBook\ILedgerBookGridBuilder.cs" />
     <Compile Include="LedgerBook\LedgerBookControllerFileOperations.cs" />
+    <Compile Include="LedgerBook\LedgerBookGridBuilder.cs" />
+    <Compile Include="LedgerBook\LedgerBookGridBuilderFactory.cs" />
     <Compile Include="LedgerBook\LedgerBookViewModel.cs" />
     <Compile Include="LedgerBook\LedgerTransactionCommands.cs" />
     <Compile Include="Matching\NewRuleView.xaml.cs">

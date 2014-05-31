@@ -20,12 +20,14 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IUserInputBox inputBox;
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
+        private readonly LedgerBookGridBuilderFactory uiBuilder;
 
         private bool doNotUseShown;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
-            [NotNull] LedgerBookControllerFileOperations fileOperations)
+            [NotNull] LedgerBookControllerFileOperations fileOperations,
+            [NotNull] LedgerBookGridBuilderFactory uiBuilder)
         {
             if (uiContext == null)
             {
@@ -37,6 +39,12 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("fileOperations");
             }
 
+            if (uiBuilder == null)
+            {
+                throw new ArgumentNullException("uiBuilder");
+            }
+
+            this.uiBuilder = uiBuilder;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
@@ -140,6 +148,11 @@ namespace BudgetAnalyser.LedgerBook
         public void NotifyOfClosing()
         {
             FileOperations.CheckIfSaveRequired();
+        }
+
+        internal ILedgerBookGridBuilder GridBuilder()
+        {
+            return this.uiBuilder.GridBuilderV1(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
         }
 
         private bool CanExecuteAddNewLedgerCommand()
