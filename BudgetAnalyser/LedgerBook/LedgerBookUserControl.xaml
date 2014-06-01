@@ -101,6 +101,10 @@
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Unlock}"
                     ToolTip="Unlock this ledger line to allow adding new transactions. This is only possible for the most recent ledger line." />
+            <Button Command="{Binding PivotCommand}"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource Button.Round.SquareLoop}"
+                    ToolTip="Change orientation of the ledger book grid." />
             <TextBlock Style="{StaticResource TextBlock.Heading1}"
                        Text="{Binding ViewModel.LedgerBook.Name}"
                        MouseUp="OnLedgerBookNameClick" />

@@ -10,7 +10,6 @@ namespace BudgetAnalyser.LedgerBook
     /// </summary>
     public partial class LedgerBookUserControl
     {
-        private bool subscribedToControllerPropertyChanged;
         private bool subscribedToMainWindowClose;
 
         public LedgerBookUserControl()
@@ -23,14 +22,6 @@ namespace BudgetAnalyser.LedgerBook
             get { return DataContext as LedgerBookController; }
         }
         
-        private void OnControllerPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "LedgerBook")
-            {
-                DynamicallyCreateLedgerBookGrid();
-            }
-        }
-
         private void DynamicallyCreateLedgerBookGrid()
         {
             var builder = Controller.GridBuilder();
@@ -43,16 +34,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.subscribedToMainWindowClose = true;
                 Application.Current.MainWindow.Closing += OnMainWindowClosing;
-            }
-
-            if (this.subscribedToControllerPropertyChanged && e.OldValue != null)
-            {
-                Controller.PropertyChanged -= OnControllerPropertyChanged;
-            }
-            else if (!this.subscribedToControllerPropertyChanged && e.NewValue != null)
-            {
-                this.subscribedToControllerPropertyChanged = true;
-                Controller.PropertyChanged += OnControllerPropertyChanged;
             }
 
             if (e.OldValue != null)

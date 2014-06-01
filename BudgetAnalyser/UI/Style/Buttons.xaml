@@ -716,5 +716,65 @@
         <Setter Property="ToolTip"
                 Value="Unlock" />
     </Style>
+    
+    <Style x:Key="Button.Round.SquareLoop"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <Image RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.5"
+                                                ScaleY="0.5" />
+                            </Image.RenderTransform>
+                            <Image.Source>
+                                <DrawingImage>
+                                    <DrawingImage.Drawing>
+                                        <DrawingGroup Opacity="1">
+                                            <DrawingGroup.Children>
+                                                <DrawingGroup Opacity="1">
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="{x:Null}">
+                                                            <GeometryDrawing.Pen>
+                                                                <Pen Brush="#FFDA9890"
+                                                                     Thickness="1" />
+                                                            </GeometryDrawing.Pen>
+                                                            <GeometryDrawing.Geometry>
+                                                                <PathGeometry FillRule="Nonzero"
+                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
+                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                                 Pen="{x:Null}">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="Nonzero"
+                                                                      Figures="M448,224L512,224 512,416 128,416 128,512 0,384 128,256 128,352 448,352 448,224z M384,0L512,128 384,256 384,160 64,160 64,288 0,288 0,96 384,96 384,0z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Source>
+                        </Image>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

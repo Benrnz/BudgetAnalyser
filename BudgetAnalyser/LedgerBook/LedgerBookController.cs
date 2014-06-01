@@ -23,6 +23,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly LedgerBookGridBuilderFactory uiBuilder;
 
         private bool doNotUseShown;
+        private bool pivotGridToHorizontal;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
@@ -83,6 +84,11 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerTransactionsController LedgerTransactionsController { get; private set; }
 
+        public ICommand PivotCommand
+        {
+            get { return new RelayCommand(OnPivotCommandExecuted); }
+        }
+
         public ICommand RemoveLedgerEntryLineCommand
         {
             get { return new RelayCommand<LedgerEntryLine>(OnRemoveLedgerEntryLineCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
@@ -90,7 +96,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand ShowBankBalancesCommand
         {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecute, param => param != null); }
+            get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null); }
         }
 
         public ICommand ShowRemarksCommand
@@ -152,6 +158,11 @@ namespace BudgetAnalyser.LedgerBook
 
         internal ILedgerBookGridBuilder GridBuilder()
         {
+            if (this.pivotGridToHorizontal)
+            {
+                return this.uiBuilder.GridBuilderV1(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
+            } 
+
             return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
         }
 
@@ -192,11 +203,7 @@ namespace BudgetAnalyser.LedgerBook
                     ViewModel.CurrentStatement,
                     ignoreWarnings);
                 FileOperations.Dirty = true;
-                EventHandler handler = LedgerBookUpdated;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                RaiseLedgerBookUpdated();
             }
             catch (ValidationWarningException ex)
             {
@@ -299,6 +306,13 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.ReloadCurrentLedgerBook();
         }
 
+        private void OnPivotCommandExecuted()
+        {
+            this.pivotGridToHorizontal = !this.pivotGridToHorizontal;
+            FileOperations.ReloadCurrentLedgerBook();
+            RaiseLedgerBookUpdated();
+        }
+
         private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
         {
             bool? result = this.questionBox.Show("Are you sure you want to delete this Ledger Book Row?\nThis will also save any other unsaved changes.", "Remove Ledger Book Line");
@@ -312,7 +326,7 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.ReloadCurrentLedgerBook();
         }
 
-        private void OnShowBankBalancesCommandExecute(LedgerEntryLine line)
+        private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)
         {
             AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
             AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
@@ -362,11 +376,16 @@ namespace BudgetAnalyser.LedgerBook
 
             if (args.WasModified)
             {
-                EventHandler handler = LedgerBookUpdated;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                RaiseLedgerBookUpdated();
+            }
+        }
+
+        private void RaiseLedgerBookUpdated()
+        {
+            EventHandler handler = LedgerBookUpdated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
             }
         }
 
