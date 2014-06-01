@@ -17,18 +17,20 @@
             <Setter Property="FontSize"
                     Value="12" />
             <Setter Property="Margin"
-                    Value="3" />
+                    Value="3,3,10,3" />
         </Style>
 
         <Style x:Key="LedgerBookTextBlockHeading"
                BasedOn="{StaticResource TextBlock.Paragraph}"
                TargetType="TextBlock">
             <Setter Property="FontSize"
-                    Value="12" />
+                    Value="14" />
             <Setter Property="FontStyle"
                     Value="Italic" />
             <Setter Property="Margin"
                     Value="5" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left"/>
         </Style>
 
         <Style x:Key="LedgerBookTextBlockOther"
@@ -38,6 +40,21 @@
                     Value="12" />
             <Setter Property="Margin"
                     Value="3" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Right"/>
+        </Style>
+
+        <Style x:Key="LedgerBookTextBlockHeadingRight"
+               TargetType="TextBlock"
+               BasedOn="{StaticResource TextBlock.Paragraph}">
+            <Setter Property="FontSize" 
+                    Value="14"/>
+            <Setter Property="Margin"
+                    Value="10,5,10,5" />
+            <Setter Property="Padding" 
+                    Value="5,0,5,0"/>
+            <Setter Property="HorizontalAlignment"
+                    Value="Right"/>
         </Style>
 
         <Style x:Key="LedgerBookTextBlockImportantNumber"
@@ -45,6 +62,8 @@
                TargetType="TextBlock">
             <Setter Property="FontWeight"
                     Value="Bold" />
+            <Setter Property="FontSize"
+                    Value="14" />
         </Style>
     </UserControl.Resources>
 

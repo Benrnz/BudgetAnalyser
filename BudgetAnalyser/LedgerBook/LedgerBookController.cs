@@ -152,7 +152,7 @@ namespace BudgetAnalyser.LedgerBook
 
         internal ILedgerBookGridBuilder GridBuilder()
         {
-            return this.uiBuilder.GridBuilderV1(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
+            return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
         }
 
         private bool CanExecuteAddNewLedgerCommand()

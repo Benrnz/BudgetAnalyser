@@ -15,13 +15,13 @@ namespace BudgetAnalyser.LedgerBook
             return new LedgerBookGridBuilder(showTransactionsCommand, showBankBalancesCommand, showRemarksCommand, removeLedgerEntryLineCommand);
         }
 
-        //public virtual ILedgerBookGridBuilder GridBuilderV2(
-        //    ICommand showTransactionsCommand,
-        //    ICommand showBankBalancesCommand,
-        //    ICommand showRemarksCommand,
-        //    ICommand removeLedgerEntryLineCommand)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public virtual ILedgerBookGridBuilder GridBuilderV2(
+            ICommand showTransactionsCommand,
+            ICommand showBankBalancesCommand,
+            ICommand showRemarksCommand,
+            ICommand removeLedgerEntryLineCommand)
+        {
+            return new LedgerBookGridBuilderV2(showTransactionsCommand, showBankBalancesCommand, showRemarksCommand, removeLedgerEntryLineCommand);
+        }
     }
 }
