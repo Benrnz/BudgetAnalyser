@@ -26,6 +26,7 @@ namespace BudgetAnalyser.ReportsCatalog
         private Engine.Ledger.LedgerBook currentLedgerBook;
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
+        private BudgetPieController budgetPieController;
 
         public ReportsCatalogController([NotNull] UiContext uiContext)
         {
@@ -37,6 +38,7 @@ namespace BudgetAnalyser.ReportsCatalog
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
+            this.budgetPieController = uiContext.BudgetPieController;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
@@ -77,13 +79,20 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnBudgetPieCommandExecute()
         {
-            throw new NotImplementedException();
+            var windowContainer = new NewWindowContainer
+            {
+                Title = "Budget Pie Charts",
+                MainContent = { Content = new BudgetPie() },
+                DataContext = this.budgetPieController
+            };
+
+            this.budgetPieController.Load(this.budgets.CurrentActiveBudget);
+            windowContainer.Show();
         }
 
         private bool CanExecuteBudgetPieCommand()
         {
-            return false;
-            // return this.budgets != null && this.budgets.CurrentActiveBudget != null;
+            return this.budgets != null && this.budgets.CurrentActiveBudget != null;
         }
 
         private bool CanExecuteOverallBudgetPerformanceCommand()

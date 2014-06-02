@@ -171,6 +171,9 @@
     <Compile Include="Matching\NewRuleView.xaml.cs">
       <DependentUpon>NewRuleView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NewWindowContainer.xaml.cs">
+      <DependentUpon>NewWindowContainer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShellDialog\IShellDialogInteractivity.cs" />
     <Compile Include="IUiContext.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
@@ -319,6 +322,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Matching\NewRuleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewWindowContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
