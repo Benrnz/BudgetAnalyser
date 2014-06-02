@@ -15,28 +15,28 @@
                                HorizontalAlignment="Left"
                                Margin="10"
                                Width="30" />
-                    <Border BorderBrush="{StaticResource ModernTileColourBrush1}"
+                    <Border BorderBrush="{StaticResource Brush.ModernTile.Colour1}"
                             BorderThickness="1,0,0,1"
                             Height="24"
                             HorizontalAlignment="Left"
                             Margin="13,10,10,10"
                             Width="24" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Colour1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,-9,0,0"
                                Width="4" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Colour1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,0,0,0"
                                Width="17" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Colour1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,11,0,0"
                                Width="13" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Colour1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,20,0,0"
@@ -45,7 +45,7 @@
                                Text="Overall Budget Performance"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding OverallBudgetPerformanceCommand}"
-                            Style="{StaticResource ModernTileButton}" />
+                            Style="{StaticResource Button.ModernTile}" />
                 </Grid>
             </Border>
             <Border Style="{StaticResource ModernTileMediumStyle1}">
@@ -60,7 +60,7 @@
                                HorizontalAlignment="Left"
                                Margin="10"
                                Width="30" />
-                    <Border BorderBrush="{StaticResource ModernTileColourBrush1}"
+                    <Border BorderBrush="{StaticResource Brush.ModernTile.Colour1}"
                             BorderThickness="1,0,0,1"
                             Height="24"
                             HorizontalAlignment="Left"
@@ -68,13 +68,55 @@
                             Width="24" />
                     <Path Data="M0,0 L5,4 L10,4 L15,11"
                           Margin="17,-4,0,0"
-                          Stroke="{StaticResource ModernTileColourBrush1}"
+                          Stroke="{StaticResource Brush.ModernTile.Colour1}"
                           VerticalAlignment="Center" />
                     <TextBlock Margin="50,0,0,0"
                                Text="Current Month Burndown Graphs"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding SpendingTrendCommand}"
-                            Style="{StaticResource ModernTileButton}" />
+                            Style="{StaticResource Button.ModernTile}" />
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource ModernTileMediumStyle1}">
+                <Border.ToolTip>
+                    Visualise your budget as a pie chart, showing the size of expenses and incomes in comparison to each other.
+                </Border.ToolTip>
+                <Grid>
+                    <Rectangle Fill="{StaticResource Brush.DefaultText}"
+                               Height="30"
+                               HorizontalAlignment="Left"
+                               Margin="10"
+                               Width="30" />
+
+                    <Image Height="24"
+                           HorizontalAlignment="Left"
+                           Margin="13,10,10,10"
+                           Width="24">
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <DrawingGroup Opacity="1">
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="{StaticResource Brush.ModernTile.Colour1}"
+                                                             Pen="{x:Null}">
+                                                <GeometryDrawing.Geometry>
+                                                    <PathGeometry FillRule="Nonzero"
+                                                                  Figures="M224,64L224,288 424.381988525391,187.809005737305C439.485992431641,217.957992553711 448,251.983001708984 448,288 448,411.712005615234 347.712005615234,512 224,512 100.28800201416,512 0,411.712005615234 0,288 0,164.287994384766 100.28800201416,64 224,64z M256,0C343.695007324219,0,419.605987548828,50.4010009765625,456.381988525391,123.80899810791L256,224 256,0z" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+
+                    <TextBlock Margin="50,0,0,0"
+                               Text="Budget Pie Graphs"
+                               TextWrapping="Wrap" />
+                    <Button Command="{Binding BudgetPieCommand}"
+                            Style="{StaticResource Button.ModernTile}" />
                 </Grid>
             </Border>
         </WrapPanel>

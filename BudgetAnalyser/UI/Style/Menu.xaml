@@ -7,11 +7,11 @@
     <Style x:Key="RoundMenuButton"
            TargetType="{x:Type Menu}">
         <Setter Property="Foreground"
-                Value="{StaticResource ButtonGlyphBrush}" />
+                Value="{StaticResource Brush.Button.Glyph}" />
         <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
+                Value="{StaticResource Brush.Button.Background}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource ButtonStrokeBrush}" />
+                Value="{StaticResource Brush.Button.Stroke}" />
         <Setter Property="BorderThickness"
                 Value="3" />
         <Setter Property="VerticalAlignment"

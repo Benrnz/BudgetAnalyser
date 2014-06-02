@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Widgets
             ImageResourceName = "DateFilterBeakerImage";
             ImageResourceName2 = "DateFilterCalendarImage";
             Size = WidgetSize.Medium;
-            this.standardStyleName = "ModernTileColourBrush2";
+            this.standardStyleName = "Brush.ModernTile.Colour2";
             WidgetStyle = "ModernTileMediumStyle2";
             Clickable = true;
         }

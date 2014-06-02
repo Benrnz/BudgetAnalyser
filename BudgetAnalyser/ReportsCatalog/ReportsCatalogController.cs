@@ -70,6 +70,22 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
 
+        public ICommand BudgetPieCommand
+        {
+            get { return new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand); }
+        }
+
+        private void OnBudgetPieCommandExecute()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CanExecuteBudgetPieCommand()
+        {
+            return false;
+            // return this.budgets != null && this.budgets.CurrentActiveBudget != null;
+        }
+
         private bool CanExecuteOverallBudgetPerformanceCommand()
         {
             return this.currentStatementModel != null

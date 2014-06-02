@@ -254,4 +254,19 @@
     <SolidColorBrush x:Key="Brush.SecondaryBackground"
                      Color="{StaticResource Colour.SecondaryBackground}" />
 
+    <SolidColorBrush x:Key="Brush.Button.Chrome"
+                     Color="{StaticResource Colour.Button.Chrome}" />
+
+    <SolidColorBrush x:Key="Brush.Button.Disabled"
+                     Color="{StaticResource Colour.MainBackground}" />
+
+    <SolidColorBrush x:Key="Brush.Button.Background"
+                     Color="{StaticResource Colour.Button.Background}" />
+
+    <SolidColorBrush x:Key="Brush.Button.Stroke"
+                     Color="{StaticResource Colour.Button.Stroke}" />
+
+    <SolidColorBrush x:Key="Brush.Button.Glyph"
+                     Color="{StaticResource Colour.Button.Glyph}" />
+
 </ResourceDictionary>

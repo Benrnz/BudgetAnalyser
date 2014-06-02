@@ -58,7 +58,7 @@
                     <MenuItem Style="{StaticResource RoundMenuItemButton}">
                         <MenuItem.Header>
                             <TextBlock FontSize="14"
-                                       Foreground="{StaticResource ButtonGlyphBrush}"
+                                       Foreground="{StaticResource Brush.Button.Glyph}"
                                        Text="Sort..." />
                         </MenuItem.Header>
                         <MenuItem Command="{Binding SortCommand}"
@@ -91,7 +91,7 @@
                     <MenuItem Style="{StaticResource RoundMenuItemButton}">
                         <MenuItem.Header>
                             <TextBlock FontSize="14"
-                                       Foreground="{StaticResource ButtonGlyphBrush}"
+                                       Foreground="{StaticResource Brush.Button.Glyph}"
                                        Text="Recent..." />
                         </MenuItem.Header>
                         <MenuItem Command="{Binding RecentFile1Command}"
