@@ -110,7 +110,7 @@
                 <MenuItem Style="{StaticResource RoundMenuItemButton}">
                     <MenuItem.Header>
                         <TextBlock FontSize="14"
-                                   Foreground="{StaticResource Brush.Button.Glyph}"
+                                   Foreground="{StaticResource ButtonGlyphBrush}"
                                    Text="Sort..." />
                     </MenuItem.Header>
                     <MenuItem Command="{Binding SortCommand}"

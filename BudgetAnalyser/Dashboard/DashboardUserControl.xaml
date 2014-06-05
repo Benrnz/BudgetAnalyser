@@ -42,7 +42,7 @@
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
-                            Style="{StaticResource Button.ModernTile}"
+                            Style="{StaticResource ModernTileButton}"
                             Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
@@ -85,7 +85,7 @@
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
-                            Style="{StaticResource Button.ModernTile}"
+                            Style="{StaticResource ModernTileButton}"
                             Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>

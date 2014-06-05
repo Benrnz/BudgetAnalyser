@@ -1,16 +1,15 @@
 ﻿<Application xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="BudgetAnalyser.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf"
+             xmlns:converters1="clr-namespace:BudgetAnalyser.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/ConvertersDictionary.xaml"/>
-
+                
                 <ResourceDictionary Source="UI/Style/Colours.xaml" />
-
-                <ResourceDictionary Source="UI/Assets/PieChartImage.xaml" />
-
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
                 <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
                 <ResourceDictionary Source="UI/Style/TextBlock.xaml" />
