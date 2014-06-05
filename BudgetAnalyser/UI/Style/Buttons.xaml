@@ -17,6 +17,8 @@
     <SolidColorBrush x:Key="ButtonGlyphBrush"
                      Color="{StaticResource Colour.Button.Glyph}" />
 
+    <SolidColorBrush x:Key="Brush.Button.Glyph"
+                     Color="{StaticResource Colour.Button.Glyph}" />
 
     <!-- Rectangular Buttons -->
     <Style x:Key="Button.Square.BaseStyle"
@@ -208,7 +210,7 @@
                 Value="True" />
     </Style>
 
-    <Style x:Key="Button.Round.SmallCross"
+   <Style x:Key="Button.Round.SmallCross"
            BasedOn="{StaticResource Button.Round.Cross}"
            TargetType="Button">
         <Setter Property="HorizontalAlignment"
@@ -226,7 +228,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
     <Style x:Key="Button.Round.Info"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">

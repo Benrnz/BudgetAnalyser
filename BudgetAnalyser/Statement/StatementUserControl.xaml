@@ -44,6 +44,7 @@
                            Text="*"
                            Visibility="{Binding ViewModel.Dirty, Converter={StaticResource Converter.BoolToVis}}" />
             </StackPanel>
+            <!-- Tool bar -->
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
                         IsEnabled="{Binding BackgroundJob.MenuAvailable}"
@@ -166,11 +167,11 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <!-- Tool bar -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <!-- Oil light bar -->
             <StackPanel Orientation="Horizontal"
                         SnapsToDevicePixels="True"
                         TextBlock.Foreground="{StaticResource Brush.MainBackground}">
@@ -253,19 +254,38 @@
                                ToolTip="Potentially corrupt data exists in the statement. Some transactions appear as exact duplicates of others. Look for pink highlighted rows." />
                 </Border>
             </StackPanel>
-            <StackPanel Grid.Column="1"
-                        Orientation="Horizontal"
-                        Visibility="{Binding ViewModel.SortByDate, Converter={StaticResource Converter.BoolToVis}}">
-                <TextBlock HorizontalAlignment="Right"
+            <Grid Grid.Column="1"
+                  Visibility="{Binding ViewModel.SortByDate, Converter={StaticResource Converter.BoolToVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="Search for text within a transaction" />
+                <Image Grid.Column="0" 
+                       Source="{StaticResource SearchImage}"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,7,0"
+                       Height="17"
+                       Width="17" 
+                       Visibility="{Binding TextFilter, Converter={StaticResource Converter.NotNullToVis}}"/>
+                <Button Grid.Column="1" 
+                        Style="{StaticResource Button.Round.SmallCross}"
+                        Command="{Binding ClearTextFilterCommand}"/>
+                <TextBlock Grid.Column="2" 
+                           HorizontalAlignment="Right"
                            Margin="4"
                            Text="Budget Bucket Filter" />
-                <ComboBox IsEnabled="{Binding BackgroundJob.MenuAvailable}"
+                <ComboBox Grid.Column="3" 
+                          IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                           ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                           ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                           Margin="4"
                           SelectedItem="{Binding ViewModel.BucketFilter}"
                           Width="100" />
-            </StackPanel>
+            </Grid>
         </Grid>
         <Grid Grid.Row="2"
               IsSharedSizeScope="True">

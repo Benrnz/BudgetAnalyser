@@ -32,6 +32,8 @@ namespace BudgetAnalyser.Statement
         private readonly IStatementFileManager statementFileManager;
         private readonly IUiContext uiContext;
         private bool doNotUseShown;
+        private string doNotUseTextFilter;
+        private bool filterByTextActive;
         private bool initialised;
         private List<ICommand> recentFileCommands;
         private Guid shellDialogCorrelationId;
@@ -95,6 +97,11 @@ namespace BudgetAnalyser.Statement
         public IBackgroundProcessingJobMetadata BackgroundJob
         {
             get { return this.uiContext.BackgroundJob; }
+        }
+
+        public ICommand ClearTextFilterCommand
+        {
+            get { return new RelayCommand(OnClearTextFilterCommandExecute, () => !string.IsNullOrWhiteSpace(TextFilter)); }
         }
 
         public ICommand CloseStatementCommand
@@ -231,6 +238,25 @@ namespace BudgetAnalyser.Statement
             get { return this.uiContext.SplitTransactionController; }
         }
 
+        public string TextFilter
+        {
+            get { return this.doNotUseTextFilter; }
+            set
+            {
+                if (value == string.Empty)
+                {
+                    this.doNotUseTextFilter = null;
+                }
+                else
+                {
+                    this.doNotUseTextFilter = value;
+                }
+
+                RaisePropertyChanged(() => TextFilter);
+                PerformTextSearch(TextFilter);
+            }
+        }
+
         public StatementViewModel ViewModel { get; private set; }
 
         public void Initialize()
@@ -282,6 +308,13 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteSortCommand()
         {
             return BackgroundJob.MenuAvailable && ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
+        }
+
+        private void ClearTextFilter()
+        {
+            var requestFilter = new RequestFilterMessage(this);
+            MessengerInstance.Send(requestFilter);
+            ViewModel.Statement.Filter(requestFilter.Criteria);
         }
 
         private void DeleteTransaction()
@@ -429,6 +462,12 @@ namespace BudgetAnalyser.Statement
             }
 
             ViewModel.TriggerRefreshBucketFilterList();
+        }
+
+        private void OnClearTextFilterCommandExecute()
+        {
+            TextFilter = null;
+            ClearTextFilter();
         }
 
         private void OnCloseStatementExecute()
@@ -616,6 +655,24 @@ namespace BudgetAnalyser.Statement
         {
             this.shellDialogCorrelationId = Guid.NewGuid();
             SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
+        }
+
+        private void PerformTextSearch(string textFilter)
+        {
+            bool filtered = ViewModel.Statement.FilterByText(textFilter);
+
+            if (string.IsNullOrWhiteSpace(TextFilter))
+            {
+                if (this.filterByTextActive && !filtered)
+                {
+                    ClearTextFilter();
+                }
+
+                this.filterByTextActive = false;
+                return;
+            }
+
+            this.filterByTextActive = true;
         }
 
         private bool PromptToSaveIfDirty()

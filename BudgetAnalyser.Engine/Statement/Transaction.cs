@@ -90,7 +90,11 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        /// The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during serialisation.
+        /// </summary>
         public Guid Id { get; set; }
+
         public bool IsSuspectedDuplicate { get; internal set; }
 
         public string Reference1

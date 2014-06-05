@@ -164,6 +164,27 @@ namespace BudgetAnalyser.Engine.Statement
             Filtered = true;
         }
 
+        public bool FilterByText(string textFilter)
+        {
+            if (string.IsNullOrWhiteSpace(textFilter))
+            {
+                return false;
+            }
+
+            if (textFilter.Length < 3)
+            {
+                return false;
+            }
+
+            // Do not modify the ChangeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
+            Filtered = true;
+            Transactions = Transactions.Where(t => MatchTransactionText(textFilter, t))
+                .AsParallel()
+                .ToList();
+
+            return true;
+        }
+
         public void Merge([NotNull] StatementModel additionalModel)
         {
             if (additionalModel == null)
@@ -190,9 +211,9 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         public void SplitTransaction(
-            [NotNull] Transaction originalTransaction, 
-            decimal splinterAmount1, 
-            decimal splinterAmount2, 
+            [NotNull] Transaction originalTransaction,
+            decimal splinterAmount1,
+            decimal splinterAmount2,
             [NotNull] BudgetBucket splinterBucket1,
             [NotNull] BudgetBucket splinterBucket2)
         {
@@ -200,12 +221,12 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 throw new ArgumentNullException("originalTransaction");
             }
-            
+
             if (splinterBucket1 == null)
             {
                 throw new ArgumentNullException("splinterBucket1");
             }
-            
+
             if (splinterBucket2 == null)
             {
                 throw new ArgumentNullException("splinterBucket2");
@@ -276,6 +297,43 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private static bool MatchTransactionText(string textFilter, Transaction t)
+        {
+            if (!string.IsNullOrWhiteSpace(t.Description))
+            {
+                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference1))
+            {
+                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference2))
+            {
+                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference3))
+            {
+                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
