@@ -73,7 +73,7 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
                                    HorizontalAlignment="Center"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -104,7 +104,7 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontSize="24"
@@ -139,13 +139,13 @@
                                  Width="15"
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
-                                 Stroke="{StaticResource ButtonGlyphBrush}"
+                                 Stroke="{StaticResource Brush.Button.Glyph}"
                                  StrokeThickness="2" />
                         <Path Data="M19,0 L0,16"
                               HorizontalAlignment="Center"
                               Margin="12.5,14.75,12.5,15"
                               StrokeThickness="2"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
                               VerticalAlignment="Center"
                               Height="10.25"
                               Stretch="Fill"
@@ -178,7 +178,7 @@
                               Height="20"
                               HorizontalAlignment="Center"
                               Stretch="Uniform"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
                               StrokeThickness="3"
                               VerticalAlignment="Center"
                               Width="20" />
@@ -229,7 +229,7 @@
                                  Width="40" />
                         <TextBlock HorizontalAlignment="Center"
                                    Margin="0,1,0,0"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
                                    FontSize="22"
                                    FontFamily="Segoe Script"
                                    FontWeight="Bold"
@@ -262,7 +262,7 @@
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="&lt;"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
                                    Margin="0,2,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -301,7 +301,7 @@
                               StrokeThickness="1"
                               VerticalAlignment="Top" />
                         <Path Data="M0,10 L14,10 L18,18 L4,18 L0,10"
-                              Fill="{StaticResource ButtonGlyphBrush}"
+                              Fill="{StaticResource Brush.Button.Glyph}"
                               HorizontalAlignment="Left"
                               Margin="8,12,10,10"
                               Stroke="{StaticResource Brush.Button.Stroke}"
@@ -329,7 +329,7 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
                                    FontFamily="Segoe UI"
                                    FontWeight="Bold"
                                    FontSize="38"
@@ -362,7 +362,7 @@
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="Ok"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
                                    Margin="-1,-3,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -425,7 +425,7 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
                                    FontWeight="Bold"
                                    FontFamily="Segoe UI"
                                    FontSize="18"
@@ -455,7 +455,7 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource ButtonGlyphBrush}"
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
                                    HorizontalAlignment="Center"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -485,7 +485,7 @@
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <TextBlock Text="&gt;"
-                                   Foreground="{StaticResource ButtonGlyphBrush}"
+                                   Foreground="{StaticResource Brush.Button.Glyph}"
                                    Margin="0,2,0,0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -520,12 +520,12 @@
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="{StaticResource ButtonGlyphBrush}"
+                              Fill="{StaticResource Brush.Button.Glyph}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="13,12,0,0"
                               Stretch="Uniform"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
@@ -553,22 +553,22 @@
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="{StaticResource ButtonGlyphBrush}"
+                              Fill="{StaticResource Brush.Button.Glyph}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="9,9,0,0"
                               Stretch="Uniform"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
                         <Path Data="M0,0 L6,0 L6,8 L14,8 L14,0 L16,0 L20,4 L20,20 L0,20 L0,0"
-                              Fill="{StaticResource ButtonGlyphBrush}"
+                              Fill="{StaticResource Brush.Button.Glyph}"
                               Height="15"
                               HorizontalAlignment="Left"
                               Margin="15,15,0,0"
                               Stretch="Uniform"
-                              Stroke="{StaticResource ButtonGlyphBrush}"
+                              Stroke="{StaticResource Brush.Button.Glyph}"
                               StrokeThickness="1"
                               VerticalAlignment="Top"
                               Width="15" />
@@ -614,7 +614,7 @@
                                                         </GeometryDrawing>
                                                     </DrawingGroup.Children>
                                                 </DrawingGroup>
-                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
                                                                  Pen="{x:Null}">
                                                     <GeometryDrawing.Geometry>
                                                         <PathGeometry FillRule="Nonzero"
@@ -674,7 +674,7 @@
                                                         </GeometryDrawing>
                                                     </DrawingGroup.Children>
                                                 </DrawingGroup>
-                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
                                                                  Pen="{x:Null}">
                                                     <GeometryDrawing.Geometry>
                                                         <PathGeometry FillRule="Nonzero"
@@ -736,7 +736,7 @@
                                                         </GeometryDrawing>
                                                     </DrawingGroup.Children>
                                                 </DrawingGroup>
-                                                <GeometryDrawing Brush="{StaticResource ButtonGlyphBrush}"
+                                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
                                                                  Pen="{x:Null}">
                                                     <GeometryDrawing.Geometry>
                                                         <PathGeometry FillRule="Nonzero"

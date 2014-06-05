@@ -287,9 +287,6 @@
     <SolidColorBrush x:Key="Brush.Button.Stroke"
                      Color="{StaticResource Colour.Button.Stroke}" />
 
-    <SolidColorBrush x:Key="ButtonGlyphBrush"
-                     Color="{StaticResource Colour.Button.Glyph}" />
-
     <SolidColorBrush x:Key="Brush.Button.Glyph"
                      Color="{StaticResource Colour.Button.Glyph}" />
 

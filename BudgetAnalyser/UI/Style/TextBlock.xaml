@@ -21,7 +21,7 @@
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="Foreground"
-                Value="{StaticResource ButtonGlyphBrush}" />
+                Value="{StaticResource Brush.Button.Glyph}" />
         <Setter Property="FontSize"
                 Value="14" />
     </Style>
