@@ -52,7 +52,7 @@
             <Trigger Property="IsEnabled"
                      Value="False">
                 <Setter Property="Background"
-                        Value="{StaticResource ButtonDisabledBrush}" />
+                        Value="{StaticResource Brush.Button.Disabled}" />
             </Trigger>
         </Style.Triggers>
     </Style>
