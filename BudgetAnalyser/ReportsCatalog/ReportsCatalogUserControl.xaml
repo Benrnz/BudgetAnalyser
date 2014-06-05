@@ -45,7 +45,7 @@
                                Text="Overall Budget Performance"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding OverallBudgetPerformanceCommand}"
-                            Style="{StaticResource ModernTileButton}" />
+                            Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
             <Border Style="{StaticResource ModernTileMediumStyle1}">
@@ -74,7 +74,7 @@
                                Text="Current Month Burndown Graphs"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding SpendingTrendCommand}"
-                            Style="{StaticResource ModernTileButton}" />
+                            Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
 
@@ -116,7 +116,7 @@
                                Text="Budget Pie Graphs"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding BudgetPieCommand}"
-                            Style="{StaticResource ModernTileButton}" />
+                            Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
         </WrapPanel>
