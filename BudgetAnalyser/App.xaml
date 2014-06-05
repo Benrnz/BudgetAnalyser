@@ -8,10 +8,11 @@
                 <ResourceDictionary Source="UI/ConvertersDictionary.xaml"/>
                 
                 <ResourceDictionary Source="UI/Style/Colours.xaml" />
-                <ResourceDictionary Source="UI/Style/Buttons.xaml" />
                 
                 <ResourceDictionary Source="UI/Assets/PieChartImage.xaml"/>
                 <ResourceDictionary Source="UI/Assets/SearchImage.xaml" />
+
+                <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 
                 <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
                 <ResourceDictionary Source="UI/Style/TextBlock.xaml" />
