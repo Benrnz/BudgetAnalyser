@@ -21,6 +21,7 @@ namespace BudgetAnalyser.ReportsCatalog
     public class ReportsCatalogController : ControllerBase, IShowableController
     {
         private readonly IBudgetAnalysisView analysisFactory;
+        private readonly BudgetPieController budgetPieController;
         private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
         private Engine.Ledger.LedgerBook currentLedgerBook;
@@ -35,6 +36,7 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.waitCursorFactory = uiContext.WaitCursorFactory;
+            this.budgetPieController = uiContext.BudgetPieController;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
 
@@ -44,12 +46,17 @@ namespace BudgetAnalyser.ReportsCatalog
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
+        public ICommand BudgetPieCommand
+        {
+            get { return new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand); }
+        }
+
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
+
         public ICommand OverallBudgetPerformanceCommand
         {
             get { return new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
-
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
 
         public bool Shown
         {
@@ -70,6 +77,11 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
 
+        private bool CanExecuteBudgetPieCommand()
+        {
+            return this.budgets != null && this.budgets.CurrentActiveBudget != null;
+        }
+
         private bool CanExecuteOverallBudgetPerformanceCommand()
         {
             return this.currentStatementModel != null
@@ -78,15 +90,18 @@ namespace BudgetAnalyser.ReportsCatalog
                    && this.budgets.CurrentActiveBudget != null;
         }
 
-        private void OnOverallBudgetPerformanceCommandExecute()
+        private void OnBudgetPieCommandExecute()
         {
-            OverallPerformanceBudgetAnalysis analysis;
-            using (this.waitCursorFactory())
+            // TODO this must not just simply create a new window...
+            var windowContainer = new NewWindowContainer
             {
-                analysis = this.analysisFactory.Analyse(this.currentStatementModel, this.budgets, RequestCurrentFilter());
-            }
+                Title = "Budget Pie Charts",
+                MainContent = { Content = new BudgetPie() },
+                DataContext = this.budgetPieController
+            };
 
-            this.analysisFactory.ShowDialog(analysis);
+            this.budgetPieController.Load(this.budgets.CurrentActiveBudget);
+            windowContainer.Show();
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
@@ -102,6 +117,17 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.currentLedgerBook = message.LedgerBook;
+        }
+
+        private void OnOverallBudgetPerformanceCommandExecute()
+        {
+            OverallPerformanceBudgetAnalysis analysis;
+            using (this.waitCursorFactory())
+            {
+                analysis = this.analysisFactory.Analyse(this.currentStatementModel, this.budgets, RequestCurrentFilter());
+            }
+
+            this.analysisFactory.ShowDialog(analysis);
         }
 
         private void OnSpendingTrendCommandExecute()

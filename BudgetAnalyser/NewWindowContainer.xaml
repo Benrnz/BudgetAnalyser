@@ -6,9 +6,10 @@
         Width="700"
         Closed="OnClosed"
         DataContextChanged="OnDataContextChanged">
-    
+
     <!-- Allows any user control to be presented as a new window -->
     <Grid>
-        <ContentPresenter x:Name="MainContent" /> <!-- Place any user control, or object that has a registered data template, here -->
+        <ContentPresenter x:Name="MainContent" />
+        <!-- Place any user control, or object that has a registered data template, here -->
     </Grid>
 </Window>
