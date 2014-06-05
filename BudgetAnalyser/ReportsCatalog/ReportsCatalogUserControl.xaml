@@ -15,28 +15,28 @@
                                HorizontalAlignment="Left"
                                Margin="10"
                                Width="30" />
-                    <Border BorderBrush="{StaticResource ModernTileColourBrush1}"
+                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
                             BorderThickness="1,0,0,1"
                             Height="24"
                             HorizontalAlignment="Left"
                             Margin="13,10,10,10"
                             Width="24" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Background1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,-9,0,0"
                                Width="4" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Background1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,0,0,0"
                                Width="17" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Background1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,11,0,0"
                                Width="13" />
-                    <Rectangle Fill="{StaticResource ModernTileColourBrush1}"
+                    <Rectangle Fill="{StaticResource Brush.ModernTile.Background1}"
                                Height="4"
                                HorizontalAlignment="Left"
                                Margin="14,20,0,0"
@@ -60,7 +60,7 @@
                                HorizontalAlignment="Left"
                                Margin="10"
                                Width="30" />
-                    <Border BorderBrush="{StaticResource ModernTileColourBrush1}"
+                    <Border BorderBrush="{StaticResource Brush.ModernTile.Background1}"
                             BorderThickness="1,0,0,1"
                             Height="24"
                             HorizontalAlignment="Left"
@@ -68,7 +68,7 @@
                             Width="24" />
                     <Path Data="M0,0 L5,4 L10,4 L15,11"
                           Margin="17,-4,0,0"
-                          Stroke="{StaticResource ModernTileColourBrush1}"
+                          Stroke="{StaticResource Brush.ModernTile.Background1}"
                           VerticalAlignment="Center" />
                     <TextBlock Margin="50,0,0,0"
                                Text="Current Month Burndown Graphs"
@@ -98,7 +98,7 @@
                                 <DrawingImage.Drawing>
                                     <DrawingGroup Opacity="1">
                                         <DrawingGroup.Children>
-                                            <GeometryDrawing Brush="{StaticResource ModernTileColourBrush1}"
+                                            <GeometryDrawing Brush="{StaticResource Brush.ModernTile.Background1}"
                                                              Pen="{x:Null}">
                                                 <GeometryDrawing.Geometry>
                                                     <PathGeometry FillRule="Nonzero"

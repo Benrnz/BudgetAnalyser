@@ -1,19 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vsm="clr-namespace:System.Windows;assembly=PresentationFramework">
-    <Color x:Key="ModernTileHighlightColor">#FF2119FF</Color>
-
-    <SolidColorBrush x:Key="ModernTileColourBrush1"
-                     Color="#FF0073C6" />
-
-    <SolidColorBrush x:Key="ModernTileColourBrush2"
-                     Color="#FF00A400" />
-
-    <SolidColorBrush x:Key="ModernTileColourBrush3"
-                     Color="#FF9A00A2" />
-
-    <SolidColorBrush x:Key="ProgressBarBrush"
-                     Color="#FF65006B" />
 
     <Style x:Key="ModernTileButton"
            TargetType="{x:Type Button}">
@@ -35,11 +22,10 @@
                                 <vsm:VisualState x:Name="Normal" />
                                 <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames
-                                            Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
-                                            Storyboard.TargetName="MainPanel">
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
+                                                                      Storyboard.TargetName="MainPanel">
                                             <EasingColorKeyFrame KeyTime="0:0:0.05"
-                                                                 Value="{StaticResource ModernTileHighlightColor}" />
+                                                                 Value="{StaticResource Colour.ModernTile.Highlight}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </vsm:VisualState>
@@ -64,19 +50,19 @@
         <Setter Property="Margin"
                 Value="10,10,0,0" />
     </Style>
-    
+
     <Style x:Key="ModernTileMediumStyle1"
            TargetType="Border"
            BasedOn="{StaticResource ModernTileMediumBaseStyle}">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush1}" />
+                Value="{StaticResource Brush.ModernTile.Background1}" />
     </Style>
 
     <Style x:Key="ModernTileMediumStyle2"
            TargetType="Border"
            BasedOn="{StaticResource ModernTileMediumBaseStyle}">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush2}" />
+                Value="{StaticResource Brush.ModernTile.Background2}" />
     </Style>
 
     <Style x:Key="ModernTileSmallStyle1"
@@ -90,29 +76,30 @@
            TargetType="Border"
            BasedOn="{StaticResource ModernTileSmallStyle1}">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush3}" />
+                Value="{StaticResource Brush.ModernTile.Background3}" />
     </Style>
 
     <Style x:Key="WidgetWarningStyle"
            TargetType="Panel">
-        <Setter Property="Background" Value="{StaticResource Brush.WarningOilLight}" />
+        <Setter Property="Background"
+                Value="{StaticResource Brush.WarningOilLight}" />
     </Style>
 
     <Style x:Key="WidgetStandardStyle"
            TargetType="Panel">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush1}" />
+                Value="{StaticResource Brush.ModernTile.Background1}" />
     </Style>
 
     <Style x:Key="WidgetStandardStyle2"
            TargetType="Panel">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush2}" />
+                Value="{StaticResource Brush.ModernTile.Background2}" />
     </Style>
 
     <Style x:Key="WidgetStandardStyle3"
            TargetType="Panel">
         <Setter Property="Background"
-                Value="{StaticResource ModernTileColourBrush3}" />
+                Value="{StaticResource Brush.ModernTile.Background3}" />
     </Style>
 </ResourceDictionary>
