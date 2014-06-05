@@ -69,7 +69,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -100,7 +100,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -131,7 +131,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -170,7 +170,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -223,7 +223,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -257,7 +257,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -290,12 +290,12 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
                         <Path Data="M6,0 L20,0 L20,18 L6,18 L6,0"
-                              Fill="{StaticResource ButtonStrokeBrush}"
+                              Fill="{StaticResource Brush.Button.Stroke}"
                               HorizontalAlignment="Left"
                               Margin="8,12,10,10"
                               StrokeThickness="1"
@@ -304,7 +304,7 @@
                               Fill="{StaticResource ButtonGlyphBrush}"
                               HorizontalAlignment="Left"
                               Margin="8,12,10,10"
-                              Stroke="{StaticResource ButtonStrokeBrush}"
+                              Stroke="{StaticResource Brush.Button.Stroke}"
                               StrokeThickness="1"
                               VerticalAlignment="Top" />
                     </Grid>
@@ -325,7 +325,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -357,7 +357,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -391,7 +391,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -421,7 +421,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -451,7 +451,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -480,7 +480,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -515,7 +515,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -548,7 +548,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -590,7 +590,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -646,7 +646,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
@@ -708,7 +708,7 @@
                         <Ellipse Fill="{TemplateBinding Background}"
                                  Height="40"
                                  HorizontalAlignment="Center"
-                                 Stroke="{StaticResource ButtonStrokeBrush}"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
