@@ -47,7 +47,7 @@
             <Trigger Property="IsMouseOver"
                      Value="True">
                 <Setter Property="Background"
-                        Value="{StaticResource ButtonChromeBrush}" />
+                        Value="{StaticResource Brush.Button.Chrome}" />
             </Trigger>
             <Trigger Property="IsEnabled"
                      Value="False">

@@ -275,7 +275,7 @@
 
     
     
-    <SolidColorBrush x:Key="ButtonChromeBrush"
+    <SolidColorBrush x:Key="Brush.Button.Chrome"
                      Color="{StaticResource Colour.Button.Chrome}" />
 
     <SolidColorBrush x:Key="ButtonDisabledBrush"
