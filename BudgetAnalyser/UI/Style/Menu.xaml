@@ -9,7 +9,7 @@
         <Setter Property="Foreground"
                 Value="{StaticResource ButtonGlyphBrush}" />
         <Setter Property="Background"
-                Value="{StaticResource ButtonBackgroundBrush}" />
+                Value="{StaticResource Brush.Button.Background}" />
         <Setter Property="BorderBrush"
                 Value="{StaticResource ButtonStrokeBrush}" />
         <Setter Property="BorderThickness"
