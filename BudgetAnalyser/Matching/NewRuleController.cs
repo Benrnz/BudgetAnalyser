@@ -31,6 +31,8 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
 
+        public event EventHandler RuleCreated;
+
         public NewRuleController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
             if (uiContext == null)
@@ -273,7 +275,7 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            NewRule = new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
+            var newRule = new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
 
             if (Bucket == null)
             {
@@ -283,27 +285,34 @@ namespace BudgetAnalyser.Matching
 
             if (UseDescription)
             {
-                NewRule.Description = Description;
+                newRule.Description = Description;
             }
 
             if (UseReference1)
             {
-                NewRule.Reference1 = Reference1;
+                newRule.Reference1 = Reference1;
             }
 
             if (UseReference2)
             {
-                NewRule.Reference2 = Reference2;
+                newRule.Reference2 = Reference2;
             }
 
             if (UseReference3)
             {
-                NewRule.Reference3 = Reference3;
+                newRule.Reference3 = Reference3;
             }
 
             if (UseTransactionType)
             {
-                NewRule.TransactionType = TransactionType;
+                newRule.TransactionType = TransactionType;
+            }
+
+            NewRule = newRule;
+            var handler = RuleCreated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
             }
         }
 

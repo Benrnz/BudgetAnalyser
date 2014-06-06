@@ -226,10 +226,7 @@ namespace BudgetAnalyser.Matching
             NewRuleController.Amount = transaction.Amount;
             NewRuleController.ShowDialog(Rules);
 
-            if (NewRuleController.NewRule != null)
-            {
-                AddToList(NewRuleController.NewRule);
-            }
+            NewRuleController.RuleCreated += OnNewRuleCreated;
         }
 
         public void Initialize()
@@ -346,6 +343,15 @@ namespace BudgetAnalyser.Matching
         private void OnEditRuleCommandExecute()
         {
             EditingRule = true;
+        }
+
+        private void OnNewRuleCreated(object sender, EventArgs eventArgs)
+        {
+            NewRuleController.RuleCreated -= OnNewRuleCreated;
+            if (NewRuleController.NewRule != null)
+            {
+                AddToList(NewRuleController.NewRule);
+            }
         }
 
         private void OnSaveRuleCommandExecute()
