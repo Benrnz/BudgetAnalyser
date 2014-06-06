@@ -92,8 +92,6 @@ namespace BudgetAnalyser.Statement
             get { return this.uiContext.AppliedRulesController; }
         }
 
-        // TODO Need a find feature to find and highlight transactions based on text search
-
         public IBackgroundProcessingJobMetadata BackgroundJob
         {
             get { return this.uiContext.BackgroundJob; }

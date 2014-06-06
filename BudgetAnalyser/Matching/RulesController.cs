@@ -356,7 +356,6 @@ namespace BudgetAnalyser.Matching
 
         private void OnSortCommandExecute(string sortBy)
         {
-            // TODO
             SortBy = sortBy;
         }
 

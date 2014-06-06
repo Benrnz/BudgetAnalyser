@@ -104,10 +104,12 @@
     <Compile Include="Ledger\LedgerCalculationTest.cs" />
     <Compile Include="Ledger\LedgerDataToDomainMapperTest.cs" />
     <Compile Include="MastercardAccountTest.cs" />
+    <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
+    <Compile Include="TestData\MatchingRulesTestData.cs" />
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
@@ -150,6 +152,9 @@
     <EmbeddedResource Include="..\BudgetAnalyser\BudgetModel.xml">
       <Link>TestData\BudgetModel.xml</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
