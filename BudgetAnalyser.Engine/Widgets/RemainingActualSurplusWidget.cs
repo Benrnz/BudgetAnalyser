@@ -51,6 +51,8 @@ namespace BudgetAnalyser.Engine.Widgets
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
             decimal remainingBalance = openingBalance + CalculateSurplusSpend(this.statement);
 
+            // BUG - This must also take into account overspent ledgers like Clothes for example. This will subtract from actual available surplus.
+
             Maximum = Convert.ToDouble(openingBalance);
             Value = Convert.ToDouble(remainingBalance);
             Minimum = 0;
