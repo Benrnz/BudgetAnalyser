@@ -19,14 +19,14 @@ namespace BudgetAnalyser.Engine.Budget
         private Dictionary<string, BudgetBucket> lookupTable = new Dictionary<string, BudgetBucket>();
         private bool subscribedToBudgetValidation;
 
-        public IEnumerable<BudgetBucket> Buckets
+        public virtual IEnumerable<BudgetBucket> Buckets
         {
             get { return this.lookupTable.Values.OrderBy(b => b.Code).ToList(); }
         }
 
-        public BudgetBucket SurplusBucket { get; private set; }
+        public BudgetBucket SurplusBucket { get; protected set; }
 
-        public BudgetBucket GetByCode([NotNull] string code)
+        public virtual BudgetBucket GetByCode([NotNull] string code)
         {
             if (code == null)
             {
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
-        public void Initialise([NotNull] BudgetCollection budgetCollectionModel)
+        public virtual void Initialise([NotNull] BudgetCollection budgetCollectionModel)
         {
             if (budgetCollectionModel == null)
             {
@@ -87,27 +87,23 @@ namespace BudgetAnalyser.Engine.Budget
                 this.subscribedToBudgetValidation = true;
             }
 
-            Dictionary<string, BudgetBucket> buckets = budgetCollectionModel
+            this.lookupTable = budgetCollectionModel
                 .SelectMany(model => model.Expenses)
                 .Distinct()
                 .ToDictionary(e => e.Bucket.Code, e => e.Bucket);
 
-            SurplusBucket = new SurplusBucket();
-            buckets.Add(Budget.SurplusBucket.SurplusCode, SurplusBucket);
 
-            buckets.Add(JournalBucket.JournalCode, new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate against internal transfers."));
+            InitialiseMandatorySpecialBuckets();
 
             foreach (Income income in budgetCollectionModel
                 .SelectMany(model => model.Incomes)
                 .Distinct())
             {
-                buckets.Add(income.Bucket.Code, income.Bucket);
+                AddBucket(income.Bucket);
             }
-
-            this.lookupTable = buckets;
         }
 
-        public bool IsValidCode([NotNull] string code)
+        public virtual bool IsValidCode([NotNull] string code)
         {
             if (code == null)
             {
@@ -115,6 +111,31 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
+        }
+
+        protected void AddBucket(BudgetBucket bucket)
+        {
+            if (IsValidCode(bucket.Code))
+            {
+                return;
+            }
+
+            lock (this.syncRoot)
+            {
+                if (IsValidCode(bucket.Code))
+                {
+                    return;
+                }
+
+                this.lookupTable.Add(bucket.Code, bucket);
+            }
+        }
+
+        protected void InitialiseMandatorySpecialBuckets()
+        {
+            SurplusBucket = new SurplusBucket();
+            AddBucket(SurplusBucket);
+            AddBucket(new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate against internal transfers."));
         }
     }
 }

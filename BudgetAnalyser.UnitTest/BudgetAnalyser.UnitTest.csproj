@@ -110,8 +110,10 @@
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestData.cs" />
+    <Compile Include="TestData\MatchingRulesTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />

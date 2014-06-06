@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
         public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
         public static readonly SpentMonthlyExpenseBucket HairBucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Haircuts");
-        public static readonly SpentMonthlyExpenseBucket RegoBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RegoBucketCode, "Car registratios");
+        public static readonly SpentMonthlyExpenseBucket RegoBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RegoBucketCode, "Car registrations");
         public static readonly SpentMonthlyExpenseBucket CarMtcBucket = new SpentMonthlyExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car Maintenance");
         public static readonly NamedTransaction TransactionType = new NamedTransaction("Bill Payment");
         public static readonly IncomeBudgetBucket IncomeBucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Salary");
