@@ -231,7 +231,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             // First total the expenses without the saved up for expenses.
             decimal totalExpensesSpend = this.statement.Transactions
-                .Where(t => t.BudgetBucket is ExpenseBudgetBucket)
+                .Where(t => t.BudgetBucket is ExpenseBucket)
                 .Sum(t => t.Amount);
 
             decimal totalSurplusSpend = this.statement.Transactions

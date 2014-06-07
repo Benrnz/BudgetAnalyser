@@ -36,7 +36,7 @@ namespace BudgetAnalyser.BurnDownGraphs
             var listOfCharts = new List<BucketBurnDownController>(this.budgetBucketRepository.Buckets.Count());
 
             foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
-                .Where(b => b is ExpenseBudgetBucket)
+                .Where(b => b is ExpenseBucket)
                 .OrderBy(b => b.Code))
             {
                 BucketBurnDownController chartController = this.bucketSpendingFactory();

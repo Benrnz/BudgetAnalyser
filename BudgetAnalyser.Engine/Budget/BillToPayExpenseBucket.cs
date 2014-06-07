@@ -1,13 +1,13 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
-    public abstract class ExpenseBudgetBucket : BudgetBucket
+    public abstract class BillToPayExpenseBucket : ExpenseBucket
     {
-        protected ExpenseBudgetBucket()
+        protected BillToPayExpenseBucket()
         {
             // Default constructor required for deserialisation.
         }
 
-        protected ExpenseBudgetBucket(string code, string name)
+        protected BillToPayExpenseBucket(string code, string name)
             : base(code, name)
         {
         }

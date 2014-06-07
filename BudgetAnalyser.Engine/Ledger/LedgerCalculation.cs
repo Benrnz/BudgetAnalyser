@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -44,6 +45,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return line;
+        }
+
+        public static decimal CalculateCurrentMonthSurplusBalance(LedgerBook ledgerBook, GlobalFilterCriteria filter, StatementModel statement)
+        {
+            // TODO
+            return -23.33M;
         }
     }
 }

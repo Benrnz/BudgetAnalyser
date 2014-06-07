@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public DateTime Modified { get; private set; }
         public string Name { get; set; }
 
-        public void AddLedger(ExpenseBudgetBucket budgetBucket)
+        public void AddLedger(ExpenseBucket budgetBucket)
         {
             if (Ledgers.Any(l => l.BudgetBucket == budgetBucket))
             {

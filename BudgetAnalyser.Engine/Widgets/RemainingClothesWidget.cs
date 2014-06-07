@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public RemainingClothesWidget()
         {
+            // TODO a better approach is to make all these bucket specific classes generic, and load from app state.
             DetailedText = "Clothes";
             DependencyMissingToolTip = "A Statement, Budget, or a Filter are not present, remaining clothes budget cannot be calculated.";
             RemainingBudgetToolTip = "Remaining Clothes budget for period is {0:C}";

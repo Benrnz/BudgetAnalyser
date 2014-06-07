@@ -224,7 +224,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewLedgerCommandExecuted()
         {
             ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
-            ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBudgetBucket, "Choose an Expense Budget Bucket");
+            ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
             ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook);
         }
 
@@ -269,7 +269,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            var selectedBucket = ChooseBudgetBucketController.Selected as ExpenseBudgetBucket;
+            var selectedBucket = ChooseBudgetBucketController.Selected as ExpenseBucket;
             if (selectedBucket == null)
             {
                 return;

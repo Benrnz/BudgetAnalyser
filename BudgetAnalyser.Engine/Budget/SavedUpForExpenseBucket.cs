@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
-    public class SavedUpForExpenseBucket : ExpenseBudgetBucket
+    public class SavedUpForExpenseBucket : BillToPayExpenseBucket
     {
         public SavedUpForExpenseBucket()
         {

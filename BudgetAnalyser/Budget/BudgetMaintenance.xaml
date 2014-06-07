@@ -155,7 +155,7 @@
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
             <Setter Property="Width"
-                    Value="200" />
+                    Value="180" />
         </Style>
 
         <Style x:Key="ListBox.BudgetContainerStyle"
@@ -227,7 +227,7 @@
                 Grid.Row="2"
                 Style="{StaticResource BudgetButton}">
             <Button.Content>
-                <TextBlock FontSize="14"
+                <TextBlock FontSize="12"
                            Text="Add New Income" />
             </Button.Content>
         </Button>
@@ -258,7 +258,7 @@
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
-                    <TextBlock FontSize="14"
+                    <TextBlock FontSize="12"
                                Text="New Spent Monthly Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
@@ -269,11 +269,23 @@
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
-                    <TextBlock FontSize="14"
+                    <TextBlock FontSize="12"
                                Text="New Saved up for Expense" />
                 </Button.Content>
                 <Button.CommandParameter>
                     <budget:SavedUpForExpenseBucket />
+                </Button.CommandParameter>
+            </Button>
+
+            <Button Background="{StaticResource Brush.BudgetBucket.SavingsCommittment}"
+                    Command="{Binding AddNewExpenseCommand}"
+                    Style="{StaticResource BudgetButton}">
+                <Button.Content>
+                    <TextBlock FontSize="12"
+                               Text="New Savings Committment" />
+                </Button.Content>
+                <Button.CommandParameter>
+                    <budget:SavingsCommittmentBucket />
                 </Button.CommandParameter>
             </Button>
         </StackPanel>

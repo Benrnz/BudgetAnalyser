@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Budget
 
         public ICommand AddNewExpenseCommand
         {
-            get { return new RelayCommand<ExpenseBudgetBucket>(OnAddNewExpenseExecute); }
+            get { return new RelayCommand<ExpenseBucket>(OnAddNewExpenseExecute); }
         }
 
         public ICommand AddNewIncomeCommand
@@ -341,7 +341,7 @@ namespace BudgetAnalyser.Budget
             LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
 
-        private void OnAddNewExpenseExecute(ExpenseBudgetBucket expense)
+        private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             this.dirty = true;
             Expense newExpense = Expenses.AddNew();
@@ -353,6 +353,10 @@ namespace BudgetAnalyser.Budget
             else if (expense is SavedUpForExpenseBucket)
             {
                 newExpense.Bucket = new SavedUpForExpenseBucket(string.Empty, string.Empty);
+            }
+            else if (expense is SavingsCommittmentBucket)
+            {
+                newExpense.Bucket = new SavingsCommittmentBucket(string.Empty, string.Empty);
             }
             else
             {

@@ -7,6 +7,7 @@ namespace BudgetAnalyser.Converters
     public static class ConverterHelper
     {
         private const string AccumulatedBucket = "Brush.BudgetBucket.Accumulated";
+        private const string SavingsCommittmentBucket = "Brush.BudgetBucket.SavingsCommittment";
         private const string CreditBackground1 = "Brush.CreditBackground1";
         private const string DebitBackground1 = "Brush.DebitBackground1";
 
@@ -20,9 +21,13 @@ namespace BudgetAnalyser.Converters
         private const string SlightDebit = "Brush.SlightDebit";
         private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
         private const string TileBackground = "Brush.TileBackground";
+
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly Brush AccumulatedBucketBrush = Application.Current.Resources[AccumulatedBucket] as Brush;
 
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush SavingsCommittmentBucketBrush = Application.Current.Resources[SavingsCommittmentBucket] as Brush;
+        
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly Brush CreditBackground1Brush =
             Application.Current.Resources[CreditBackground1] as Brush;

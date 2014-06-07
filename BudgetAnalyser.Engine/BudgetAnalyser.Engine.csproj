@@ -83,15 +83,17 @@
     <Compile Include="Budget\BudgetModelToDataBudgetModelMapper.cs" />
     <Compile Include="Budget\DataBudgetCollection.cs" />
     <Compile Include="Budget\DataBudgetModel.cs" />
+    <Compile Include="Budget\BillToPayExpenseBucket.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\BudgetCollection.cs" />
     <Compile Include="Budget\BudgetCurrencyContext.cs" />
     <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
     <Compile Include="Budget\BudgetModel.cs" />
+    <Compile Include="Budget\SavingsCommittmentBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="Budget\Expense.cs" />
-    <Compile Include="Budget\ExpenseBudgetBucket.cs" />
+    <Compile Include="Budget\ExpenseBucket.cs" />
     <Compile Include="Budget\IBudgetBucketRepository.cs" />
     <Compile Include="Budget\IBudgetRepository.cs" />
     <Compile Include="Budget\Income.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="Widgets\AccountFilterWidget.cs" />
     <Compile Include="Widgets\CurrentFilesWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
+    <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
     <Compile Include="Widgets\IWidgetRepository.cs" />
     <Compile Include="Widgets\IWidgetWithAdditionalImage.cs" />
@@ -193,6 +196,7 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Budget\BudgetBuckets.cd" />
     <None Include="Ledger\LedgerBook.cd" />
     <None Include="packages.config" />
   </ItemGroup>

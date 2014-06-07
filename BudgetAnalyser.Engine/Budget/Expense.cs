@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Budget
                 retval = false;
             }
 
-            if (retval && !(Bucket is ExpenseBudgetBucket))
+            if (retval && !(Bucket is ExpenseBucket))
             {
                 validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, you must allocate an expense bucket.", Bucket.Description, Amount);
                 retval = false;

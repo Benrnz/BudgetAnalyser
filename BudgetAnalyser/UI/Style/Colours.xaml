@@ -53,6 +53,10 @@
         #9C400F
     </Color>
 
+    <Color x:Key="Colour.BudgetBucket.SavingsCommittment">
+        Purple
+    </Color>
+
     <Color x:Key="Colour.Credit1">
         DarkGreen
     </Color>
@@ -180,6 +184,9 @@
     <SolidColorBrush x:Key="Brush.BudgetBucket.Accumulated"
                      Color="{StaticResource Colour.BudgetBucket.Accumulated}" />
 
+    <SolidColorBrush x:Key="Brush.BudgetBucket.SavingsCommittment"
+                     Color="{StaticResource Colour.BudgetBucket.SavingsCommittment}" />
+
     <SolidColorBrush x:Key="Brush.ToolTip.Background"
                      Color="{StaticResource Colour.ToolTip.Background}" />
 
@@ -229,7 +236,7 @@
                      Color="{StaticResource Colour.ImportantHighlightLight}" />
 
     <SolidColorBrush x:Key="Brush.NeutralNumberBackground"
-                     Color="{StaticResource Colour.NeutralNumber}" />
+                     Color="{StaticResource Colour.TextDefault}" />
 
     <SolidColorBrush x:Key="CreditBackground2Brush"
                      Color="{StaticResource Colour.Credit2}" />

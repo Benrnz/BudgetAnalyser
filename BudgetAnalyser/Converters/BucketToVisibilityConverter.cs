@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Converters
                         return Visibility.Visible;
                     }
 
-                    return bucket is ExpenseBudgetBucket ? Visibility.Visible : Visibility.Collapsed;
+                    return bucket is ExpenseBucket ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 if (parameter.ToString() == "Income")

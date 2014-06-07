@@ -57,7 +57,7 @@ namespace BudgetAnalyser.BurnDownGraphs
         public bool AddChart()
         {
             SelectedBuckets = new BindingList<BudgetBucket>();
-            UnselectedBuckets = new BindingList<BudgetBucket>(this.bucketRepository.Buckets.Where(b => b is ExpenseBudgetBucket || b is SurplusBucket).ToList());
+            UnselectedBuckets = new BindingList<BudgetBucket>(this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket).ToList());
             ChartTitle = string.Empty;
 
             bool? result = this.viewLoader.ShowDialog(this);
