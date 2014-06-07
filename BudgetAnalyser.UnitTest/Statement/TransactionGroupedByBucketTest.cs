@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Statement
 {
     [TestClass]
     public class TransactionGroupedByBucketTest

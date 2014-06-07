@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
@@ -8,7 +8,7 @@ using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Statement
 {
     [TestClass]
     public class StatementModelTest
@@ -154,28 +154,28 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates1()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Transaction3, this.Duplicate1 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates2()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Duplicate2, this.Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates3()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Duplicate3, this.Transaction1, this.Transaction2, this.Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldPassWhenNoDuplicates()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Transaction3 });
             Assert.IsFalse(statement.ValidateAgainstDuplicates().Any());
         }
     }

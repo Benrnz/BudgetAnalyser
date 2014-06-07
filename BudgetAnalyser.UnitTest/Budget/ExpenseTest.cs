@@ -2,32 +2,32 @@
 using BudgetAnalyser.Engine.Budget;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class IncomeTest
+    public class ExpenseTest
     {
         [TestMethod]
-        public void OneCentIsValidIncome()
+        public void OneCentIsValidAmount()
         {
             var subject = CreateSubject();
 
-            var result = subject.Validate(Logs);
+            var result = subject.Validate(this.Logs);
 
             Assert.IsTrue(result);
-            Assert.IsTrue(Logs.Length == 0);
+            Assert.IsTrue(this.Logs.Length == 0);
         }
 
         [TestMethod]
-        public void MaxDeciamlIsValidIncome()
+        public void MaxDeciamlIsValidAmount()
         {
             var subject = CreateSubject();
             subject.Amount = decimal.MaxValue;
 
-            var result = subject.Validate(Logs);
+            var result = subject.Validate(this.Logs);
 
             Assert.IsTrue(result);
-            Assert.IsTrue(Logs.Length == 0);
+            Assert.IsTrue(this.Logs.Length == 0);
         }
 
         [TestMethod]
@@ -36,10 +36,10 @@ namespace BudgetAnalyser.UnitTest
             var subject = CreateSubject();
             subject.Amount = -5;
 
-            var result = subject.Validate(Logs);
+            var result = subject.Validate(this.Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(Logs.Length > 0);
+            Assert.IsTrue(this.Logs.Length > 0);
         }
 
         [TestMethod]
@@ -48,22 +48,22 @@ namespace BudgetAnalyser.UnitTest
             var subject = CreateSubject();
             subject.Bucket.Description = null;
 
-            var result = subject.Validate(Logs);
+            var result = subject.Validate(this.Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(Logs.Length > 0);
+            Assert.IsTrue(this.Logs.Length > 0);
         }
 
         [TestMethod]
-        public void MustBeAnIncomeBucket()
+        public void MustBeAnExpenseBucket()
         {
             var subject = CreateSubject();
-            subject.Bucket = new SavedUpForExpenseBucket("Foo", "Bar");
+            subject.Bucket = new IncomeBudgetBucket("Foo", "Bar");
 
-            var result = subject.Validate(Logs);
+            var result = subject.Validate(this.Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(Logs.Length > 0);
+            Assert.IsTrue(this.Logs.Length > 0);
         }
 
         public StringBuilder Logs { get; private set; }
@@ -71,12 +71,12 @@ namespace BudgetAnalyser.UnitTest
         [TestInitialize]
         public void TestInitialize()
         {
-            Logs = new StringBuilder();
+            this.Logs = new StringBuilder();
         }
 
-        private Income CreateSubject()
+        private Expense CreateSubject()
         {
-            return new Income { Amount = 0.01M, Bucket = new IncomeBudgetBucket(TestData.TestDataConstants.IncomeBucketCode, "Foo Bar") };
+            return new Expense { Amount = 0.01M, Bucket = new SpentMonthlyExpenseBucket(TestData.TestDataConstants.CarMtcBucketCode, "Foo Bar") };
         }
     }
 }

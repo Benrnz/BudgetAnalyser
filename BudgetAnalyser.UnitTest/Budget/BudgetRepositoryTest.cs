@@ -4,16 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Runtime.Remoting.Messaging;
 using System.Xaml;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class BudgetRepositoryTest

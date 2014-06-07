@@ -2,10 +2,9 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class BudgetCollectionToDataBudgetCollectionMapperTest
@@ -15,7 +14,7 @@ namespace BudgetAnalyser.UnitTest
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = BudgetModelTestData.CreateCollectionWith1And2();
+            this.TestData = BudgetModelTestData.CreateCollectionWith1And2();
         }
 
         [TestMethod]
@@ -30,20 +29,20 @@ namespace BudgetAnalyser.UnitTest
         public void EffectiveFromShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.FileName, result.FileName);
+            Assert.AreEqual(this.TestData.FileName, result.FileName);
         }
 
         [TestMethod]
         public void BudgetsCountShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Count, result.Budgets.Count);
+            Assert.AreEqual(this.TestData.Count, result.Budgets.Count);
         }
 
         private DataBudgetCollection ArrangeAndAct()
         {
             var mapper = new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper());
-            return mapper.Map(TestData);
+            return mapper.Map(this.TestData);
         }
 
         private int CountProperties(Type type)

@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class BudgetModelToDataBudgetModelMapperTest
@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = BudgetModelTestData.CreateTestData1();
+            this.TestData = BudgetModelTestData.CreateTestData1();
         }
 
         [TestMethod]
@@ -29,76 +29,76 @@ namespace BudgetAnalyser.UnitTest
         public void EffectiveFromShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.EffectiveFrom, result.EffectiveFrom);
+            Assert.AreEqual(this.TestData.EffectiveFrom, result.EffectiveFrom);
         }
 
         [TestMethod]
         public void LastModifiedDateShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.LastModified, result.LastModified);
+            Assert.AreEqual(this.TestData.LastModified, result.LastModified);
         }
 
         [TestMethod]
         public void NameShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Name, result.Name);
+            Assert.AreEqual(this.TestData.Name, result.Name);
         }
 
         [TestMethod]
         public void LastModifiedCommentShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.LastModifiedComment, result.LastModifiedComment);
+            Assert.AreEqual(this.TestData.LastModifiedComment, result.LastModifiedComment);
         }
 
         [TestMethod]
         public void ExpensesCountShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Expenses.Count(), result.Expenses.Count);
+            Assert.AreEqual(this.TestData.Expenses.Count(), result.Expenses.Count);
         }
 
         [TestMethod]
         public void IncomesCountShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Incomes.Count(), result.Incomes.Count);
+            Assert.AreEqual(this.TestData.Incomes.Count(), result.Incomes.Count);
         }
 
         [TestMethod]
         public void IncomesSumShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Incomes.Sum(i => i.Amount), result.Incomes.Sum(i => i.Amount));
+            Assert.AreEqual(this.TestData.Incomes.Sum(i => i.Amount), result.Incomes.Sum(i => i.Amount));
         }
 
         [TestMethod]
         public void ExpensesSumShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Expenses.Sum(i => i.Amount), result.Expenses.Sum(i => i.Amount));
+            Assert.AreEqual(this.TestData.Expenses.Sum(i => i.Amount), result.Expenses.Sum(i => i.Amount));
         }
 
         [TestMethod]
         public void ExpensesBucketsShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Expenses.Sum(i => (long)i.Bucket.GetHashCode()), result.Expenses.Sum(i => (long)i.Bucket.GetHashCode()));
+            Assert.AreEqual(this.TestData.Expenses.Sum(i => (long)i.Bucket.GetHashCode()), result.Expenses.Sum(i => (long)i.Bucket.GetHashCode()));
         }
 
         [TestMethod]
         public void IncomesBucketsShouldBeMapped()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Incomes.Sum(i => (long)i.Bucket.GetHashCode()), result.Incomes.Sum(i => (long)i.Bucket.GetHashCode()));
+            Assert.AreEqual(this.TestData.Incomes.Sum(i => (long)i.Bucket.GetHashCode()), result.Incomes.Sum(i => (long)i.Bucket.GetHashCode()));
         }
 
         private DataBudgetModel ArrangeAndAct()
         {
             var mapper = new BudgetModelToDataBudgetModelMapper();
-            return mapper.Map(TestData);
+            return mapper.Map(this.TestData);
         }
 
         private int CountProperties(Type type)

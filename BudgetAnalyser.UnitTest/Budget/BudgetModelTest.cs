@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class BudgetModelTest
@@ -150,16 +150,16 @@ namespace BudgetAnalyser.UnitTest
             List<Income> myIncomes = subject.Incomes.ToList();
             subject.Update(myIncomes, myExpenses);
 
-            bool result = subject.Validate(Logs);
+            bool result = subject.Validate(this.Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(Logs.Length > 0);
+            Assert.IsTrue(this.Logs.Length > 0);
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            Logs = new StringBuilder();
+            this.Logs = new StringBuilder();
         }
 
         private static void EnsureDescendingOrder(IEnumerable<BudgetItem> items)

@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class InMemoryBudgetBucketRepositoryTest

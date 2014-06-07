@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Account;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Account
 {
     [TestClass]
     public class ChequeAccountTest

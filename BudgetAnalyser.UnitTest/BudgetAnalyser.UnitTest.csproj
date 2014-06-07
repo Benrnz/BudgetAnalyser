@@ -73,26 +73,28 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AccountTypeRepositoryTest.cs" />
-    <Compile Include="AmexAccountTest.cs" />
-    <Compile Include="BudgetBucketTest.cs" />
-    <Compile Include="BudgetCollectionTest.cs" />
-    <Compile Include="BudgetCurrencyContextTest.cs" />
-    <Compile Include="BudgetItemTest.cs" />
-    <Compile Include="BudgetModelTest.cs" />
-    <Compile Include="BudgetCollectionToDataBudgetCollectionMapperTest.cs" />
-    <Compile Include="DataBudgetCollectionToBudgetCollectionMapperTest.cs" />
-    <Compile Include="DataBudgetModelToBudgetModelMapperTest.cs" />
-    <Compile Include="BudgetRepositoryTest.cs" />
-    <Compile Include="ExpenseTest.cs" />
-    <Compile Include="IncomeTest.cs" />
-    <Compile Include="InMemoryBudgetBucketRepositoryTest.cs" />
-    <Compile Include="ChequeAccountTest.cs" />
+    <Compile Include="Account\AccountTypeRepositoryTest.cs" />
+    <Compile Include="Account\AmexAccountTest.cs" />
+    <Compile Include="Account\ChequeAccountTest.cs" />
+    <Compile Include="Account\MastercardAccountTest.cs" />
+    <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetCollectionTest.cs" />
+    <Compile Include="Budget\BudgetCollectionToDataBudgetCollectionMapperTest.cs" />
+    <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
+    <Compile Include="Budget\BudgetItemTest.cs" />
+    <Compile Include="Budget\BudgetModelTest.cs" />
+    <Compile Include="Budget\BudgetModelToDataBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\BudgetRepositoryTest.cs" />
+    <Compile Include="Budget\DataBudgetCollectionToBudgetCollectionMapperTest.cs" />
+    <Compile Include="Budget\DataBudgetModelToBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\ExpenseTest.cs" />
+    <Compile Include="Budget\IncomeTest.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
-    <Compile Include="BudgetModelToDataBudgetModelMapperTest.cs" />
     <Compile Include="Ledger\DebitLedgerTransactionTest.cs" />
     <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />
     <Compile Include="Ledger\DataLedgerBookTest.cs" />
@@ -102,11 +104,12 @@
     <Compile Include="Ledger\LedgerBook_ReconcileTest.cs" />
     <Compile Include="Ledger\LedgerCalculationTest.cs" />
     <Compile Include="Ledger\LedgerDataToDomainMapperTest.cs" />
-    <Compile Include="MastercardAccountTest.cs" />
     <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="MetaTest.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
+    <Compile Include="Statement\StatementModelTest.cs" />
+    <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
@@ -124,11 +127,8 @@
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
-    <Compile Include="TransactionGroupedByBucketTest.cs" />
-    <Compile Include="VisaAccountTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpendingGraphAnalyserTest.cs" />
-    <Compile Include="StatementModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
@@ -164,6 +164,7 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

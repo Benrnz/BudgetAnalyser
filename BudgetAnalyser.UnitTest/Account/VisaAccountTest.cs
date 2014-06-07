@@ -1,10 +1,10 @@
 ﻿using BudgetAnalyser.Engine.Account;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Account
 {
     [TestClass]
-    public class MastercardAccountTest
+    public class VisaAccountTest
     {
         [TestMethod]
         public void KeywordsShouldNotBeNull()
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.UnitTest
         public void CloneShouldNotJustCopyReference()
         {
             var subject = CreateSubject();
-            var clone = subject.Clone("CloneMastercard");
+            var clone = subject.Clone("CloneVisa");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }
@@ -42,15 +42,15 @@ namespace BudgetAnalyser.UnitTest
         public void CloneShouldGiveUseNameGiven()
         {
             var subject = CreateSubject();
-            var clone = subject.Clone("CloneMastercard");
+            var clone = subject.Clone("CloneVisa");
 
-            Assert.AreEqual("CloneMastercard", clone.Name);
-            Assert.AreNotEqual("CloneMastercard", subject.Name);
+            Assert.AreEqual("CloneVisa", clone.Name);
+            Assert.AreNotEqual("CloneVisa", subject.Name);
         }
 
-        private MastercardAccount CreateSubject()
+        private VisaAccount CreateSubject()
         {
-            return new MastercardAccount("MastercardTest");
+            return new VisaAccount("VisaTest");
         }
     }
 }
