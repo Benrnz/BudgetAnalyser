@@ -75,7 +75,6 @@
   <ItemGroup>
     <Compile Include="AccountTypeRepositoryTest.cs" />
     <Compile Include="AmexAccountTest.cs" />
-    <Compile Include="BankImportUtilitiesTest.cs" />
     <Compile Include="BudgetBucketTest.cs" />
     <Compile Include="BudgetCollectionTest.cs" />
     <Compile Include="BudgetCurrencyContextTest.cs" />
@@ -105,6 +104,8 @@
     <Compile Include="Ledger\LedgerDataToDomainMapperTest.cs" />
     <Compile Include="MastercardAccountTest.cs" />
     <Compile Include="Matching\MatchMakerTest.cs" />
+    <Compile Include="MetaTest.cs" />
+    <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />

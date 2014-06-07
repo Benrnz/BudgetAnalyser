@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Statement
 {
     [TestClass]
     public class BankImportUtilitiesTest
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
 
-            subject.FetchBudgetBucket(testArray, -12, BucketRepositoryMock.Object);
+            subject.FetchBudgetBucket(testArray, -12, this.BucketRepositoryMock.Object);
 
             Assert.Fail();
         }
@@ -30,7 +30,7 @@ namespace BudgetAnalyser.UnitTest
         {
             BankImportUtilities subject = CreateSubject();
 
-            subject.FetchBudgetBucket(null, 2, BucketRepositoryMock.Object);
+            subject.FetchBudgetBucket(null, 2, this.BucketRepositoryMock.Object);
 
             Assert.Fail();
         }
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.UnitTest
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
 
-            subject.FetchBudgetBucket(testArray, 12, BucketRepositoryMock.Object);
+            subject.FetchBudgetBucket(testArray, 12, this.BucketRepositoryMock.Object);
 
             Assert.Fail();
         }
@@ -65,11 +65,11 @@ namespace BudgetAnalyser.UnitTest
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
             var expectedResult = new SpentMonthlyExpenseBucket("FUEL", "Fuel");
-            BucketRepositoryMock.Setup(m => m.GetByCode("FUEL")).Returns(expectedResult);
+            this.BucketRepositoryMock.Setup(m => m.GetByCode("FUEL")).Returns(expectedResult);
 
-            BudgetBucket result = subject.FetchBudgetBucket(testArray, 2, BucketRepositoryMock.Object);
+            BudgetBucket result = subject.FetchBudgetBucket(testArray, 2, this.BucketRepositoryMock.Object);
 
-            BucketRepositoryMock.Verify();
+            this.BucketRepositoryMock.Verify();
             Assert.AreSame(expectedResult, result);
         }
 
@@ -300,7 +300,7 @@ namespace BudgetAnalyser.UnitTest
 
         private BankImportUtilities CreateSubject()
         {
-            BucketRepositoryMock = new Mock<IBudgetBucketRepository>();
+            this.BucketRepositoryMock = new Mock<IBudgetBucketRepository>();
 
             return new BankImportUtilities(new FakeLogger());
         }
