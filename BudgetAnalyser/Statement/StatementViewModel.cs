@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Statement
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
-        private readonly StatementController statementController;
+        private StatementController statementController;
 
         private string doNotUseBucketFilter;
 
@@ -27,13 +27,8 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
 
-        public StatementViewModel([NotNull] StatementController controller, [NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
-            if (controller == null)
-            {
-                throw new ArgumentNullException("controller");
-            }
-
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
@@ -41,7 +36,6 @@ namespace BudgetAnalyser.Statement
 
             this.budgetBucketRepository = budgetBucketRepository;
             this.doNotUseSortByDate = true;
-            this.statementController = controller;
         }
 
         public decimal AverageDebit
@@ -387,6 +381,12 @@ namespace BudgetAnalyser.Statement
                 // Do it later - its not shown right now.
                 GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
             }
+        }
+
+        public StatementViewModel Initialise(StatementController controller)
+        {
+            this.statementController = controller;
+            return this;
         }
 
         private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

@@ -2,10 +2,8 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.UnitTest.TestData;
-using GalaSoft.MvvmLight.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UserInteraction.Contracts;
@@ -20,28 +18,6 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         private Mock<IBudgetBucketRepository> MockBucketRepo { get; set; }
 
         private Mock<IUiContext> MockUiContext { get; set; }
-
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            MockBucketRepo = new Mock<IBudgetBucketRepository>();
-
-            MockUiContext = new Mock<IUiContext>();
-            // Todo Need message, yesnobox, waitcursorfactory, backgroundjob, appliedrulescontroller
-
-            FakeStatetmentController = new StatementController(
-                MockUiContext.Object, 
-                new Mock<IStatementFileManager>().Object, 
-                MockBucketRepo.Object, 
-                new Mock<IRecentFileManager>().Object, 
-                new DemoFileHelper()
-                );
-        }
-
-        private static IWaitCursor WaitCursorFactory()
-        {
-            return new Mock<IWaitCursor>().Object;
-        }
 
         [TestMethod]
         public void BudgetBucketsShouldIncludeBlank()
@@ -90,14 +66,14 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object);
+            var subject = new StatementViewModel(MockBucketRepo.Object);
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object);
+            var subject = new StatementViewModel(MockBucketRepo.Object);
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
@@ -267,6 +243,25 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             Assert.IsTrue(subject.SortByDate);
         }
 
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            MockBucketRepo = new Mock<IBudgetBucketRepository>();
+
+            MockUiContext = new Mock<IUiContext>();
+            // Todo Need message, yesnobox, waitcursorfactory, backgroundjob, appliedrulescontroller
+
+            FakeStatetmentController = new StatementController(
+                MockUiContext.Object,
+                new StatementControllerFileOperations(
+                    MockUiContext.Object,
+                    new Mock<IStatementFileManager>().Object,
+                    new Mock<IRecentFileManager>().Object,
+                    new DemoFileHelper(),
+                    MockBucketRepo.Object)
+                );
+        }
+
         [TestMethod]
         public void TriggerRefreshTotalsRowShouldRaise10Events()
         {
@@ -292,20 +287,25 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             return transactionFromGroupedList;
         }
 
+        private static IWaitCursor WaitCursorFactory()
+        {
+            return new Mock<IWaitCursor>().Object;
+        }
+
         private StatementViewModel Arrange()
         {
-            return new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object)
+            return new StatementViewModel(MockBucketRepo.Object)
             {
                 Statement = StatementModelTestData.TestData1(),
-            };
+            }.Initialise(FakeStatetmentController);
         }
 
         private StatementViewModel Arrange2()
         {
-            return new StatementViewModel(FakeStatetmentController, MockBucketRepo.Object)
+            return new StatementViewModel(MockBucketRepo.Object)
             {
                 Statement = StatementModelTestData.TestData2(),
-            };
+            }.Initialise(FakeStatetmentController);
         }
     }
 }
