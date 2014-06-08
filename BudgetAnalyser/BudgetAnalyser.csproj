@@ -354,6 +354,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Assets\Filter2Image.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Assets\PieChartImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
