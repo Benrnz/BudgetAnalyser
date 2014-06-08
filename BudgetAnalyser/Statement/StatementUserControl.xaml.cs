@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 
@@ -13,6 +15,11 @@ namespace BudgetAnalyser.Statement
     /// </summary>
     public partial class StatementUserControl
     {
+        private const double BucketComboMaxWidth = 130;
+        private const double BucketComboMinWidth = 37;
+        private const double ClearSearchButtonMaxWidth = 40;
+        private const double SearchBoxMaxWidth = 130;
+        private const double SearchBoxMinWidth = 27;
         private bool subscribedToMainWindowClose;
 
         public StatementUserControl()
@@ -23,6 +30,22 @@ namespace BudgetAnalyser.Statement
         private StatementController Controller
         {
             get { return (StatementController)DataContext; }
+        }
+
+        private static void AnimateWidth(FrameworkElement element, double from, double to)
+        {
+            var storyboard = new Storyboard();
+            var fade = new DoubleAnimation
+            {
+                From = from,
+                To = to,
+                Duration = TimeSpan.FromSeconds(1),
+            };
+
+            Storyboard.SetTarget(fade, element);
+            Storyboard.SetTargetProperty(fade, new PropertyPath(WidthProperty));
+            storyboard.Children.Add(fade);
+            storyboard.Begin();
         }
 
         private void ApplyBucketFilter()
@@ -54,6 +77,26 @@ namespace BudgetAnalyser.Statement
         {
             object transaction = this.TransactionListBox.SelectedItem;
             return (ListBoxItem)this.TransactionListBox.ItemContainerGenerator.ContainerFromItem(transaction);
+        }
+
+        private void OnBucketFilterComboBoxDropDownClosed(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
+            {
+                return;
+            }
+
+            AnimateWidth(this.BucketFilterComboBox, BucketComboMaxWidth, BucketComboMinWidth);
+        }
+
+        private void OnBucketFilterComboBoxDropDownOpened(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
+            {
+                return;
+            }
+
+            AnimateWidth(this.BucketFilterComboBox, BucketComboMinWidth, BucketComboMaxWidth);
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -103,12 +146,16 @@ namespace BudgetAnalyser.Statement
             });
         }
 
-        private void OnVisibleChangedShowTransaction(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnSearchTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            IsVisibleChanged -= OnVisibleChangedShowTransaction;
+            AnimateWidth(this.SearchTextBox, SearchBoxMinWidth, SearchBoxMaxWidth);
+            AnimateWidth(this.ClearSearchButton, 0, ClearSearchButtonMaxWidth);
+        }
 
-            TransactionListBox.UpdateLayout();
-            TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
+        private void OnSearchTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            AnimateWidth(this.SearchTextBox, SearchBoxMaxWidth, SearchBoxMinWidth);
+            AnimateWidth(this.ClearSearchButton, ClearSearchButtonMaxWidth, 0);
         }
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
@@ -153,6 +200,14 @@ namespace BudgetAnalyser.Statement
             {
                 ApplyBucketFilter();
             }
+        }
+
+        private void OnVisibleChangedShowTransaction(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsVisibleChanged -= OnVisibleChangedShowTransaction;
+
+            this.TransactionListBox.UpdateLayout();
+            this.TransactionListBox.ScrollIntoView(Controller.ViewModel.SelectedRow);
         }
     }
 }

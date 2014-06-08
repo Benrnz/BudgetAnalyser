@@ -5,10 +5,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DataContextChanged="OnDataContextChanged">
 
-    <UserControl.Resources>
-        <converters:NumberSignToColorConverter x:Key="NumberSignToColorConverter" />
-    </UserControl.Resources>
-
     <UserControl.InputBindings>
         <KeyBinding Key="O"
                     Command="{Binding FileOperations.OpenStatementCommand}"
@@ -20,6 +16,11 @@
                     Command="{Binding FileOperations.CloseStatementCommand}"
                     Modifiers="Control" />
     </UserControl.InputBindings>
+
+    <UserControl.Resources>
+        <converters:NumberSignToColorConverter x:Key="NumberSignToColorConverter" />
+        
+    </UserControl.Resources>
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
@@ -55,28 +56,42 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
-                             ToolTip="Search for text within a transaction" />
+                    <TextBox x:Name="SearchTextBox"
+                             GotFocus="OnSearchTextBoxGotFocus"
+                             LostFocus="OnSearchTextBoxLostFocus"
+                             MinWidth="27"
+                             Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="Search for text within a transaction"
+                             Width="27">
+                    </TextBox>
                     <Image Grid.Column="0"
                            Source="{StaticResource SearchImage}"
+                           IsHitTestVisible="False"
                            HorizontalAlignment="Right"
                            Margin="0,0,7,0"
                            Height="17"
                            Width="17"
                            Visibility="{Binding TextFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}" />
-                    <Button Grid.Column="1"
+                    <Button x:Name="ClearSearchButton"  
+                            Grid.Column="1"
                             Style="{StaticResource Button.Round.SmallCross}"
-                            Command="{Binding ClearTextFilterCommand}" />
-                    <ComboBox Grid.Column="2"
+                            Command="{Binding ClearTextFilterCommand}" 
+                            Width="0"/>
+                    <ComboBox x:Name="BucketFilterComboBox" 
+                              DropDownClosed="OnBucketFilterComboBoxDropDownClosed"
+                              DropDownOpened="OnBucketFilterComboBoxDropDownOpened"
+                              Grid.Column="2"
                               IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                               ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                               ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                               Margin="4"
+                              MinWidth="37"
                               SelectedItem="{Binding ViewModel.BucketFilter}"
-                              Width="100" />
+                              Width="37"/>
                     <Image Grid.Column="2"
                            Height="17"
                            HorizontalAlignment="Right"
+                           IsHitTestVisible="False"
                            Margin="0,0,20,0"
                            Source="{StaticResource Filter2Image}"
                            ToolTip="Budget Bucket Filter"
