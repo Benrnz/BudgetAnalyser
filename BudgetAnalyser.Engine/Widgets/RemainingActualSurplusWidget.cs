@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Visibility = true;
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
-            decimal remainingBalance = openingBalance + CalculateSurplusSpend(this.statement);
+            decimal remainingBalance = LedgerCalculation.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
 
             // BUG - This must also take into account overspent ledgers like Clothes for example. This will subtract from actual available surplus.
 
@@ -72,11 +72,6 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             LedgerEntryLine line = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filter);
             return line == null ? 0 : line.CalculatedSurplus;
-        }
-
-        private static decimal CalculateSurplusSpend(StatementModel statementModel)
-        {
-            return statementModel.Transactions.Where(t => t.BudgetBucket is SurplusBucket).Sum(t => t.Amount);
         }
     }
 }
