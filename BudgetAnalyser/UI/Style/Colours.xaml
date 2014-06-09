@@ -133,6 +133,14 @@
         Purple
     </Color>
 
+    <Color x:Key="Colour.OilLight.Warning">
+        DarkOrange
+    </Color>
+
+    <Color x:Key="Colour.OilLight.Danger">
+        Red
+    </Color>
+
     <Color x:Key="Colour.Popup.Background">
         #FF002600
     </Color>
@@ -153,12 +161,16 @@
         DarkOrange
     </Color>
 
-    <Color x:Key="Colour.TextBlock.Label">
+    <Color x:Key="Colour.Text.Label">
         DarkSeaGreen
     </Color>
 
-    <Color x:Key="Colour.TextDefault">
+    <Color x:Key="Colour.Text.Default">
         White
+    </Color>
+
+    <Color x:Key="Colour.Text.Reverse">
+        Black
     </Color>
 
     <Color x:Key="Colour.TileBackground">
@@ -193,8 +205,8 @@
     <SolidColorBrush x:Key="Brush.DialogBackground"
                      Color="{StaticResource Colour.Popup.Background}" />
 
-    <SolidColorBrush x:Key="Brush.TextBlock.Label"
-                     Color="{StaticResource Colour.TextBlock.Label}" />
+    <SolidColorBrush x:Key="Brush.Text.Label"
+                     Color="{StaticResource Colour.Text.Label}" />
 
     <SolidColorBrush x:Key="Brush.BorderLight"
                      Color="{StaticResource Colour.BorderLight}" />
@@ -220,8 +232,8 @@
     <SolidColorBrush x:Key="SelectedItemRowBrush"
                      Color="{StaticResource Colour.SelectedItem}" />
 
-    <SolidColorBrush x:Key="Brush.DefaultText"
-                     Color="{StaticResource Colour.TextDefault}" />
+    <SolidColorBrush x:Key="Brush.Text.Default"
+                     Color="{StaticResource Colour.Text.Default}" />
 
     <SolidColorBrush x:Key="Brush.SlightDebit"
                      Color="{StaticResource Colour.SlightDebit}" />
@@ -236,7 +248,7 @@
                      Color="{StaticResource Colour.ImportantHighlightLight}" />
 
     <SolidColorBrush x:Key="Brush.NeutralNumberBackground"
-                     Color="{StaticResource Colour.TextDefault}" />
+                     Color="{StaticResource Colour.Text.Default}" />
 
     <SolidColorBrush x:Key="CreditBackground2Brush"
                      Color="{StaticResource Colour.Credit2}" />
@@ -280,8 +292,8 @@
                      Color="{StaticResource Colour.ModernTile.Background3}" />
 
 
-    
-    
+
+
     <SolidColorBrush x:Key="Brush.Button.Chrome"
                      Color="{StaticResource Colour.Button.Chrome}" />
 
@@ -297,4 +309,12 @@
     <SolidColorBrush x:Key="Brush.Button.Glyph"
                      Color="{StaticResource Colour.Button.Glyph}" />
 
+    <SolidColorBrush x:Key="Brush.WarningOilLight"
+                     Color="{StaticResource Colour.OilLight.Warning}" />
+
+    <SolidColorBrush x:Key="Brush.RedOilLight"
+                     Color="{StaticResource Colour.OilLight.Danger}" />
+
+    <SolidColorBrush x:Key="Brush.BadgeText"
+                     Color="{StaticResource Colour.Text.Reverse}" />
 </ResourceDictionary>

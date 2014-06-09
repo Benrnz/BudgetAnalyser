@@ -50,7 +50,7 @@
                                     Margin="0,0,80,0">
                             <RadioButton x:Name="RadioExisting"
                                          Content="Use an existing Name"
-                                         Foreground="{StaticResource Brush.DefaultText}"
+                                         Foreground="{StaticResource Brush.Text.Default}"
                                          GroupName="AccountNameMode"
                                          IsChecked="{Binding UseExistingAccountName}"
                                          Margin="3"
@@ -67,7 +67,7 @@
                         <StackPanel Orientation="Horizontal">
                             <RadioButton x:Name="RadioNew"
                                          Content="Type a new Name"
-                                         Foreground="{StaticResource Brush.DefaultText}"
+                                         Foreground="{StaticResource Brush.Text.Default}"
                                          GroupName="AccountNameMode"
                                          IsChecked="{Binding UseNewAccountName}"
                                          Margin="3"

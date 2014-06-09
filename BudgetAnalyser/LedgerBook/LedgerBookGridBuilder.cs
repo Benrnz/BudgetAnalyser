@@ -18,7 +18,7 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerBookGridBuilder : ILedgerBookGridBuilder
     {
         private const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
-        private const string BankBalanceTextBrush = "Brush.DefaultText";
+        private const string BankBalanceTextBrush = "Brush.Text.Default";
         private const string DateFormat = "d-MMM-yy";
         private const string HeadingStyle = "LedgerBookTextBlockHeading";
         private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";

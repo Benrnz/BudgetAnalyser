@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="UI/Assets/PieChartImage.xaml"/>
                 <ResourceDictionary Source="UI/Assets/SearchImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/Filter2Image.xaml" />
+                <ResourceDictionary Source="UI/Assets/DeltaImage.xaml" />
 
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 

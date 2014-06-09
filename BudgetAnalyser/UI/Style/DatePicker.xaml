@@ -6,7 +6,7 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
-                Value="{StaticResource Brush.DefaultText}" />
+                Value="{StaticResource Brush.Text.Default}" />
         <Setter Property="Margin"
                 Value="3" />
         <Setter Property="BorderThickness"

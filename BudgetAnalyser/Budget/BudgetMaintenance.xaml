@@ -19,7 +19,7 @@
                 <Trigger Property="IsMouseOver"
                          Value="True">
                     <Setter Property="BorderBrush"
-                            Value="{StaticResource Brush.DefaultText}" />
+                            Value="{StaticResource Brush.Text.Default}" />
                 </Trigger>
             </Style.Triggers>
         </Style>

@@ -1,25 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="Colour.WarningOilLight">
-        DarkOrange
-    </Color>
-
-    <Color x:Key="Colour.RedOilLight">
-        Red
-    </Color>
-
-    <Color x:Key="Colour.BadgeTextColor">Black</Color>
-
-    <SolidColorBrush x:Key="Brush.WarningOilLight"
-                     Color="{StaticResource Colour.WarningOilLight}" />
-
-    <SolidColorBrush x:Key="Brush.RedOilLight"
-                     Color="{StaticResource Colour.RedOilLight}" />
-
-    <SolidColorBrush x:Key="Brush.BadgeText"
-                     Color="{StaticResource Colour.BadgeTextColor}" />
-
     <Style x:Key="Badge.Text"
            TargetType="TextBlock">
         <Setter Property="FontSize"
@@ -79,9 +60,9 @@
         <Setter Property="CornerRadius"
                 Value="3" />
         <Setter Property="Height"
-                Value="25" />
+                Value="30" />
         <Setter Property="Width"
-                Value="85" />
+                Value="100" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"

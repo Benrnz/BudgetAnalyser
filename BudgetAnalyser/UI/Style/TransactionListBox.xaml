@@ -169,7 +169,7 @@
 
     <DataTemplate DataType="{x:Type statement1:EditingTransactionController}">
         <Border x:Name="MainBorder"
-                BorderBrush="{StaticResource Brush.DefaultText}"
+                BorderBrush="{StaticResource Brush.Text.Default}"
                 BorderThickness="1"
                 DataContext="{Binding Transaction}"
                 Margin="0,1,2,1"
@@ -291,20 +291,28 @@
     <DataTemplate x:Key="GroupedByBucketTemplate"
                   DataType="statement:TransactionGroupedByBucket">
         <Expander Style="{StaticResource Expander.Style1}">
+            <Expander.Resources>
+                <Style x:Key="Local.Badge.WarningLightStyle" 
+                       BasedOn="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                       TargetType="TextBlock">
+                    <Setter Property="FontSize"
+                            Value="13"/>
+                </Style>
+            </Expander.Resources>
             <Expander.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition MinWidth="75"
                                           Width="*" />
-                        <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="90" />
-                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="105" />
+                        <ColumnDefinition Width="105" />
+                        <ColumnDefinition Width="105" />
+                        <ColumnDefinition Width="105" />
                     </Grid.ColumnDefinitions>
                     <Border Style="{StaticResource Badge.Border2}"
                             ToolTip="Total number of transactions in this bucket for the date range.">
-                        <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                        <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                    Text="{Binding TotalCount}" />
                     </Border>
                     <TextBlock Grid.Column="1"
@@ -315,9 +323,9 @@
                             ToolTip="Total debits in this bucket for the date range."
                             Visibility="{Binding TotalDebits, Converter={StaticResource Converter.ZeroToVisibility}}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="{Binding TotalDebits, StringFormat=C}" />
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="DR" />
                         </StackPanel>
                     </Border>
@@ -326,9 +334,9 @@
                             ToolTip="Total credits in this bucket for the date range."
                             Visibility="{Binding TotalCredits, Converter={StaticResource Converter.ZeroToVisibility}}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="{Binding TotalCredits, StringFormat=C}" />
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="CR" />
                         </StackPanel>
                     </Border>
@@ -337,10 +345,11 @@
                             ToolTip="Difference between total debits and total credits."
                             Visibility="{Binding TotalDifference, Converter={StaticResource Converter.ZeroToVisibility}}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Webdings"
-                                       Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                                       Text="ê" />
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <Image Source="{StaticResource DeltaImage}"
+                                   Margin="3,0,3,0"
+                                   Height="15"
+                                   Width="15"/>
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="{Binding TotalDifference, StringFormat=C}" />
                         </StackPanel>
                     </Border>
@@ -349,9 +358,9 @@
                             ToolTip="Average debit in this bucket for the date range."
                             Visibility="{Binding AverageDebit, Converter={StaticResource Converter.ZeroToVisibility}}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="Avg" />
-                            <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                            <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="{Binding AverageDebit, StringFormat=C}" />
                         </StackPanel>
                     </Border>

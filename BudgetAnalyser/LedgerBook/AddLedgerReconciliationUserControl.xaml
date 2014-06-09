@@ -58,11 +58,11 @@
         <Border Grid.Row="1"
                 Grid.Column="1"
                 BorderThickness="0,2,0,0"
-                BorderBrush="{StaticResource Brush.DefaultText}"
+                BorderBrush="{StaticResource Brush.Text.Default}"
                 HorizontalAlignment="Right"
                 Width="120">
             <Border BorderThickness="0,2,0,0"
-                    BorderBrush="{StaticResource Brush.DefaultText}"
+                    BorderBrush="{StaticResource Brush.Text.Default}"
                     Margin="0,2,0,0">
                 <TextBlock HorizontalAlignment="Right" 
                            Text="{Binding BankBalanceTotal, StringFormat=N}" />

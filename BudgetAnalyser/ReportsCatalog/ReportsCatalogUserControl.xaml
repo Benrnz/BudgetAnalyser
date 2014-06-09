@@ -10,7 +10,7 @@
         <WrapPanel Orientation="Horizontal">
             <Border Style="{StaticResource ModernTileMediumStyle1}">
                 <Grid>
-                    <Rectangle Fill="{StaticResource Brush.DefaultText}"
+                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
                                Height="30"
                                HorizontalAlignment="Left"
                                Margin="10"
@@ -55,7 +55,7 @@
                     If it is, then the End Date is used less one month.
                 </Border.ToolTip>
                 <Grid>
-                    <Rectangle Fill="{StaticResource Brush.DefaultText}"
+                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
                                Height="30"
                                HorizontalAlignment="Left"
                                Margin="10"
@@ -83,7 +83,7 @@
                     Visualise your budget as a pie chart, showing the size of expenses and incomes in comparison to each other.
                 </Border.ToolTip>
                 <Grid>
-                    <Rectangle Fill="{StaticResource Brush.DefaultText}"
+                    <Rectangle Fill="{StaticResource Brush.Text.Default}"
                                Height="30"
                                HorizontalAlignment="Left"
                                Margin="10"

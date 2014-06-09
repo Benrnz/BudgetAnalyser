@@ -17,7 +17,7 @@
         <Setter Property="MinHeight" Value="30"/>
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="Background" Value="{StaticResource Brush.TileBackgroundAlternate}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush.DefaultText}" />
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text.Default}" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="BorderBrush" Value="{StaticResource Brush.ControlBorder}" />

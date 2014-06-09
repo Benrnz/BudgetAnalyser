@@ -20,8 +20,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ProgressBar Background="Transparent"
-                                 BorderBrush="{StaticResource Brush.DefaultText}"
-                                 Foreground="{StaticResource Brush.DefaultText}"
+                                 BorderBrush="{StaticResource Brush.Text.Default}"
+                                 Foreground="{StaticResource Brush.Text.Default}"
                                  BorderThickness="1"
                                  Height="30"
                                  Margin="4"
