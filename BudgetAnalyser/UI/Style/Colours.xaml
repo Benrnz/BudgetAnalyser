@@ -126,7 +126,7 @@
     <Color x:Key="Colour.ModernTile.Background3">#FF9A00A2</Color>
 
     <Color x:Key="Colour.NeutralNumber">
-        Black
+        #FF888888
     </Color>
 
     <Color x:Key="Colour.NotSoBadDebit">
@@ -248,7 +248,7 @@
                      Color="{StaticResource Colour.ImportantHighlightLight}" />
 
     <SolidColorBrush x:Key="Brush.NeutralNumberBackground"
-                     Color="{StaticResource Colour.Text.Default}" />
+                     Color="{StaticResource Colour.NeutralNumber}" />
 
     <SolidColorBrush x:Key="CreditBackground2Brush"
                      Color="{StaticResource Colour.Credit2}" />
