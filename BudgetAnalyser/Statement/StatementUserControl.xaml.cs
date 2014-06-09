@@ -198,6 +198,11 @@ namespace BudgetAnalyser.Statement
         {
             if (e.PropertyName == "BucketFilter")
             {
+                if (Math.Abs(this.SearchTextBox.Width - BucketComboMaxWidth) > 0.01)
+                {
+                    OnBucketFilterComboBoxDropDownOpened(sender, e);
+                }
+
                 ApplyBucketFilter();
             }
         }
