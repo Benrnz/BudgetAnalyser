@@ -39,6 +39,7 @@ namespace BudgetAnalyser.Engine.Reports
                 throw new ArgumentNullException("criteria");
             }
 
+            Graph = null;
             DateTime minDate = CalculateStartDate(statement, criteria);
             DateTime maxDate = CalculateEndDate(statement, criteria);
 

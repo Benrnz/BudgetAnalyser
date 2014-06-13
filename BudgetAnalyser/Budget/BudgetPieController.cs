@@ -141,6 +141,11 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        public string Title
+        {
+            get { return "Budget Pie Charts"; }
+        }
+
         public void Close()
         {
             Shown = false;

@@ -11,6 +11,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
+using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -22,21 +23,30 @@ namespace BudgetAnalyser.ReportsCatalog
     {
         private readonly IBudgetAnalysisView analysisFactory;
         private readonly BudgetPieController budgetPieController;
+        private readonly LongTermSpendingGraphController longTermSpendingGraphController;
+        private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
         private Engine.Ledger.LedgerBook currentLedgerBook;
         private StatementModel currentStatementModel;
         private bool doNotUseShown;
 
-        public ReportsCatalogController([NotNull] UiContext uiContext)
+        public ReportsCatalogController([NotNull] UiContext uiContext, [NotNull] NewWindowViewLoader newWindowViewLoader)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
+            if (newWindowViewLoader == null)
+            {
+                throw new ArgumentNullException("newWindowViewLoader");
+            }
+
+            this.newWindowViewLoader = newWindowViewLoader;
             this.waitCursorFactory = uiContext.WaitCursorFactory;
             this.budgetPieController = uiContext.BudgetPieController;
+            this.longTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
 
@@ -52,6 +62,11 @@ namespace BudgetAnalyser.ReportsCatalog
         }
 
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
+
+        public ICommand LongTermSpendingGraphCommand
+        {
+            get { return new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null); }
+        }
 
         public ICommand OverallBudgetPerformanceCommand
         {
@@ -92,16 +107,12 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnBudgetPieCommandExecute()
         {
-            // TODO this must not just simply create a new window...
-            var windowContainer = new NewWindowContainer
+            using (this.waitCursorFactory())
             {
-                Title = "Budget Pie Charts",
-                MainContent = { Content = new BudgetPie() },
-                DataContext = this.budgetPieController
-            };
+                this.budgetPieController.Load(this.budgets.CurrentActiveBudget);
+            }
 
-            this.budgetPieController.Load(this.budgets.CurrentActiveBudget);
-            windowContainer.Show();
+            this.newWindowViewLoader.Show(this.budgetPieController);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
@@ -117,6 +128,16 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.currentLedgerBook = message.LedgerBook;
+        }
+
+        private void OnLongTermSpendingGraphCommandExecute()
+        {
+            using (this.waitCursorFactory())
+            {
+                this.longTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
+            }
+
+            this.newWindowViewLoader.Show(this.longTermSpendingGraphController);
         }
 
         private void OnOverallBudgetPerformanceCommandExecute()

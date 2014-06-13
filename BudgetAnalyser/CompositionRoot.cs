@@ -11,6 +11,7 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.BurnDownGraphs;
+using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.Statement;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -103,6 +104,7 @@ namespace BudgetAnalyser
             uiContext.RulesController = container.Resolve<RulesController>();
             uiContext.MainMenuController = container.Resolve<MainMenuController>();
             uiContext.DashboardController = container.Resolve<DashboardController>();
+            uiContext.LongTermSpendingGraphController = container.Resolve<LongTermSpendingGraphController>();
             uiContext.ReportsCatalogController = container.Resolve<ReportsCatalogController>();
             uiContext.AppliedRulesController = container.Resolve<AppliedRulesController>();
             uiContext.SplitTransactionController = container.Resolve<SplitTransactionController>();

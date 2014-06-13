@@ -12,6 +12,7 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog;
+using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
@@ -108,6 +109,7 @@ namespace BudgetAnalyser
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
         public UserPrompts UserPrompts { get; private set; }
         public Func<IWaitCursor> WaitCursorFactory { get; private set; }
+        public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
 
         private List<ControllerBase> DiscoverAllControllers()
         {
