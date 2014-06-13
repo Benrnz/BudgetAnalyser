@@ -124,8 +124,14 @@ namespace BudgetAnalyser.Engine.Ledger
         private static Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
         {
             DateTime endDate = beginDate.AddMonths(1).AddDays(-1);
-            LedgerEntryLine currentLegderLine = LocateLedgerEntryLine(ledgerBook, beginDate, endDate);
             List<Transaction> transactions = statement.Transactions.Where(t => t.Date < beginDate.AddMonths(1)).ToList();
+
+            LedgerEntryLine currentLegderLine = LocateLedgerEntryLine(ledgerBook, beginDate, endDate);
+            if (currentLegderLine == null)
+            {
+                return new Dictionary<BudgetBucket, decimal>();
+            }
+
             var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
             foreach (LedgerEntry entry in currentLegderLine.Entries)
             {
