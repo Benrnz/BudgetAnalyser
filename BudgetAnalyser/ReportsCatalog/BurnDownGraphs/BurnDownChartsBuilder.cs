@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.BurnDownGraphs
+namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
     public class BurnDownChartsBuilder
     {
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.BurnDownGraphs
                 listOfCharts.Insert(0, chartController);
             }
 
-            Results = new BurnDownChartBuilderResults(beginDate, dateRangeDescription, listOfCharts);
+            this.Results = new BurnDownChartBuilderResults(beginDate, dateRangeDescription, listOfCharts);
         }
 
         private static DateTime CalculateBeginDate(GlobalFilterCriteria criteria)

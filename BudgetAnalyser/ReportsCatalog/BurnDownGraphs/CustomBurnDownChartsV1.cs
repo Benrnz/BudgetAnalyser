@@ -1,6 +1,6 @@
 ﻿using Rees.Wpf;
 
-namespace BudgetAnalyser.BurnDownGraphs
+namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
     public class CustomBurnDownChartsV1 : IPersistent
     {
@@ -10,7 +10,7 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         public T AdaptModel<T>()
         {
-            return (T)Model;
+            return (T)this.Model;
         }
     }
 }

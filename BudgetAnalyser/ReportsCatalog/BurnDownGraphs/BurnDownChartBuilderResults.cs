@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BudgetAnalyser.BurnDownGraphs
+namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
     public class BurnDownChartBuilderResults
     {
         public BurnDownChartBuilderResults(DateTime beginDate, string dateRangeDescription, IEnumerable<BucketBurnDownController> listOfCharts)
         {
-            BeginDate = beginDate;
-            DateRangeDescription = dateRangeDescription;
-            Charts = listOfCharts;
+            this.BeginDate = beginDate;
+            this.DateRangeDescription = dateRangeDescription;
+            this.Charts = listOfCharts;
         }
 
         public DateTime BeginDate { get; private set; }

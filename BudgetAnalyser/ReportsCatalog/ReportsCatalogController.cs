@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
-using BudgetAnalyser.BurnDownGraphs;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -11,6 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.OverallPerformance;
+using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;

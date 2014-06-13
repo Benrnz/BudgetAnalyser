@@ -127,9 +127,6 @@
     <Compile Include="Budget\BudgetSelectionViewModel.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
-    <Compile Include="BurnDownGraphs\BucketBurnDownController.cs" />
-    <Compile Include="BurnDownGraphs\BurnDownChartBuilderResults.cs" />
-    <Compile Include="BurnDownGraphs\BurnDownChartsBuilder.cs" />
     <Compile Include="ConcurrentMessenger.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
     <Compile Include="Converters\BucketToVisibilityConverter.cs" />
@@ -175,6 +172,23 @@
       <DependentUpon>NewWindowContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="NewWindowViewLoader.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\AddUserDefinedBurnDownController.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\AddUserDefinedBurnDownDialog.xaml.cs">
+      <DependentUpon>AddUserDefinedBurnDownDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportsCatalog\BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\BucketBurnDownController.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\BucketBurnDownLineChart.xaml.cs">
+      <DependentUpon>BucketBurnDownLineChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartBuilderResults.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartsBuilder.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml.cs">
+      <DependentUpon>CurrentMonthBurnDownGraphsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CustomBurnDownChartsV1.cs" />
     <Compile Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml.cs">
       <DependentUpon>LongTermSpendingGraph.xaml</DependentUpon>
     </Compile>
@@ -197,8 +211,6 @@
     <Compile Include="ShellDialog\ShellDialogResponseMessage.cs" />
     <Compile Include="ShellDialog\IShellDialogToolTips.cs" />
     <Compile Include="ShellDialog\ShellDialogType.cs" />
-    <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialogViewLoader.cs" />
-    <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
     <Compile Include="ShellDialog\ShellDialogView.xaml.cs">
       <DependentUpon>ShellDialogView.xaml</DependentUpon>
     </Compile>
@@ -228,9 +240,6 @@
       <DependentUpon>ReportsCatalogUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShellController.cs" />
-    <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownController.cs" />
-    <Compile Include="BurnDownGraphs\CustomBurnDownChartsV1.cs" />
-    <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
     <Compile Include="Statement\NavigateToTransactionMessage.cs" />
     <Compile Include="Statement\SplitTransactionController.cs" />
     <Compile Include="Statement\SplitTransactionView.xaml.cs">
@@ -251,12 +260,6 @@
     <Compile Include="UiContext.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationUserControl.xaml.cs">
       <DependentUpon>AddLedgerReconciliationUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BurnDownGraphs\AddUserDefinedBurnDownDialog.xaml.cs">
-      <DependentUpon>AddUserDefinedBurnDownDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BurnDownGraphs\BucketBurnDownLineChart.xaml.cs">
-      <DependentUpon>BucketBurnDownLineChart.xaml</DependentUpon>
     </Compile>
     <Compile Include="OverallPerformance\BudgetAnalysisView.xaml.cs">
       <DependentUpon>BudgetAnalysisView.xaml</DependentUpon>
@@ -287,9 +290,6 @@
     </Compile>
     <Compile Include="LedgerBook\LedgerTransactionUserControl.xaml.cs">
       <DependentUpon>LedgerTransactionUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml.cs">
-      <DependentUpon>CurrentMonthBurnDownGraphsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Statement\StatementUserControl.xaml.cs">
       <DependentUpon>StatementUserControl.xaml</DependentUpon>
@@ -334,6 +334,18 @@
     <Page Include="NewWindowContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportsCatalog\BurnDownGraphs\AddUserDefinedBurnDownDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReportsCatalog\BurnDownGraphs\BucketBurnDownLineChart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml">
       <SubType>Designer</SubType>
@@ -455,14 +467,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BurnDownGraphs\AddUserDefinedBurnDownDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BurnDownGraphs\BucketBurnDownLineChart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="OverallPerformance\BudgetAnalysisView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -515,10 +519,6 @@
       <DependentUpon>Shell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Statement\StatementUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BudgetAnalyser.BurnDownGraphs.BucketBurnDownLineChart"
+﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.BurnDownGraphs.BucketBurnDownLineChart"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              d:DesignHeight="300"
              d:DesignWidth="300"

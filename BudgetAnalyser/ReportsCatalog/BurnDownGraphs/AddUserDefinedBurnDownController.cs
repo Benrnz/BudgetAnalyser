@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight.Command;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.BurnDownGraphs
+namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
     public class AddUserDefinedBurnDownController : ControllerBase
     {
@@ -56,9 +56,9 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         public bool AddChart()
         {
-            SelectedBuckets = new BindingList<BudgetBucket>();
-            UnselectedBuckets = new BindingList<BudgetBucket>(this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket).ToList());
-            ChartTitle = string.Empty;
+            this.SelectedBuckets = new BindingList<BudgetBucket>();
+            this.UnselectedBuckets = new BindingList<BudgetBucket>(this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket).ToList());
+            this.ChartTitle = string.Empty;
 
             bool? result = this.viewLoader.ShowDialog(this);
             if (result != null && result.Value)
@@ -81,14 +81,14 @@ namespace BudgetAnalyser.BurnDownGraphs
 
         private void OnAddSelectedCommandExecute(BudgetBucket parameter)
         {
-            UnselectedBuckets.Remove(parameter);
-            SelectedBuckets.Add(parameter);
+            this.UnselectedBuckets.Remove(parameter);
+            this.SelectedBuckets.Add(parameter);
         }
 
         private void OnRemoveSelectedCommandExecute(BudgetBucket parameter)
         {
-            SelectedBuckets.Remove(parameter);
-            UnselectedBuckets.Add(parameter);
+            this.SelectedBuckets.Remove(parameter);
+            this.UnselectedBuckets.Add(parameter);
         }
     }
 }
