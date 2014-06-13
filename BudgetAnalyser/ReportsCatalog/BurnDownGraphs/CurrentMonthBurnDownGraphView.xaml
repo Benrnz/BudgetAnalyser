@@ -1,18 +1,14 @@
-﻿<Window x:Class="BudgetAnalyser.ReportsCatalog.BurnDownGraphs.CurrentMonthBurnDownGraphsView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs"
-        Icon="..\..\UI\Assets\PieChart.png"
-        Title="Current Month Burndown Graphs"
-        Width="580">
-
-    <Window.Resources>
+﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.BurnDownGraphs.CurrentMonthBurnDownGraphsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs">
+    <UserControl.Resources>
 
         <DataTemplate DataType="{x:Type burnDownGraphs:BucketBurnDownController}">
             <burnDownGraphs:BucketBurnDownLineChart Background="{Binding Background}"
-                                                   Margin="0,2,0,0" />
+                                                    Margin="0,2,0,0" />
         </DataTemplate>
-    </Window.Resources>
+    </UserControl.Resources>
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
@@ -59,5 +55,4 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
-
-</Window>
+</UserControl>

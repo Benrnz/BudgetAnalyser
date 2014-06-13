@@ -17,6 +17,10 @@
         <burnDownGraphs:BucketBurnDownLineChart />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type burnDownGraphs:CurrentMonthBurnDownGraphsController}">
+        <burnDownGraphs:CurrentMonthBurnDownGraphsView />
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type budget:BudgetController}">
         <budget:BudgetMaintenance />
     </DataTemplate>

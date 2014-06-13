@@ -9,7 +9,6 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.Command;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 
@@ -21,17 +20,15 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         private readonly AddUserDefinedBurnDownController addUserDefinedBurnDownController;
         private readonly Func<BucketBurnDownController> bucketSpendingFactory;
         private readonly BurnDownChartsBuilder chartBuilder;
-        private readonly IViewLoader viewLoader;
+        private DateTime beginDate;
         private BudgetModel budget;
         private string doNotUseDateRangeDescription;
         private BucketBurnDownController doNotUseSelectedChart;
         private Engine.Ledger.LedgerBook ledgerBook;
         private StatementModel statement;
-        private DateTime beginDate;
 
         public CurrentMonthBurnDownGraphsController(
             [NotNull] Func<BucketBurnDownController> bucketSpendingFactory,
-            [NotNull] CurrentMonthBurnDownGraphsViewLoader viewLoader,
             [NotNull] AddUserDefinedBurnDownController addUserDefinedBurnDownController,
             [NotNull] IBudgetBucketRepository budgetBucketRepository,
             [NotNull] UiContext uiContext)
@@ -39,11 +36,6 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             if (bucketSpendingFactory == null)
             {
                 throw new ArgumentNullException("bucketSpendingFactory");
-            }
-
-            if (viewLoader == null)
-            {
-                throw new ArgumentNullException("viewLoader");
             }
 
             if (addUserDefinedBurnDownController == null)
@@ -62,13 +54,12 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
 
             this.bucketSpendingFactory = bucketSpendingFactory;
-            this.viewLoader = viewLoader;
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController;
             this.chartBuilder = new BurnDownChartsBuilder(budgetBucketRepository, this.bucketSpendingFactory);
 
-            this.MessengerInstance = uiContext.Messenger;
-            this.MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            this.MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
         public ICommand AddChartCommand
@@ -84,7 +75,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseDateRangeDescription = value;
-                RaisePropertyChanged(() => this.DateRangeDescription);
+                RaisePropertyChanged(() => DateRangeDescription);
             }
         }
 
@@ -107,6 +98,11 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
                 this.doNotUseSelectedChart = value;
             }
+        }
+
+        public string Title
+        {
+            get { return "Current Month Burndown Graphs"; }
         }
 
         public void Load(
@@ -136,11 +132,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
             this.chartBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
             this.beginDate = this.chartBuilder.Results.BeginDate;
-            this.DateRangeDescription = this.chartBuilder.Results.DateRangeDescription;
-            this.ChartControllers = new BindingList<BucketBurnDownController>(this.chartBuilder.Results.Charts.ToList());
+            DateRangeDescription = this.chartBuilder.Results.DateRangeDescription;
+            ChartControllers = new BindingList<BucketBurnDownController>(this.chartBuilder.Results.Charts.ToList());
 
-            this.viewLoader.Show(this);
-            RaisePropertyChanged(() => this.ChartControllers);
+            RaisePropertyChanged(() => ChartControllers);
         }
 
         private void OnAddChartCommandExecuted()
@@ -153,14 +148,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             List<BudgetBucket> buckets = this.addUserDefinedBurnDownController.SelectedBuckets.ToList();
             BucketBurnDownController newChart = this.bucketSpendingFactory();
             newChart.LoadCustomChart(this.statement, this.budget, buckets, this.beginDate, this.ledgerBook, this.addUserDefinedBurnDownController.ChartTitle);
-            this.ChartControllers.Insert(0, newChart);
+            ChartControllers.Insert(0, newChart);
             var persistChart = new CustomAggregateBurnDownGraph
             {
                 BucketIds = buckets.Select(b => b.Code).ToList(),
                 Name = this.addUserDefinedBurnDownController.ChartTitle,
             };
 
-            this.chartBuilder.CustomCharts = this.chartBuilder.CustomCharts.Union(new[] {persistChart}).ToList();
+            this.chartBuilder.CustomCharts = this.chartBuilder.CustomCharts.Union(new[] { persistChart }).ToList();
         }
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -178,16 +173,16 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void OnRemoveChartCommandExecuted()
         {
-            this.ChartControllers.Remove(this.SelectedChart);
-            var customCharts = this.chartBuilder.CustomCharts.ToList();
-            CustomAggregateBurnDownGraph chart = customCharts.FirstOrDefault(c => c.Name == this.SelectedChart.ChartTitle);
+            ChartControllers.Remove(SelectedChart);
+            List<CustomAggregateBurnDownGraph> customCharts = this.chartBuilder.CustomCharts.ToList();
+            CustomAggregateBurnDownGraph chart = customCharts.FirstOrDefault(c => c.Name == SelectedChart.ChartTitle);
             customCharts.Remove(chart);
             this.chartBuilder.CustomCharts = customCharts;
         }
 
         private bool RemoveChartCommandCanExecute()
         {
-            return this.SelectedChart != null && this.SelectedChart.IsCustomChart;
+            return SelectedChart != null && SelectedChart.IsCustomChart;
         }
     }
 }

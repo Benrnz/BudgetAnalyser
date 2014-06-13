@@ -48,6 +48,7 @@
                             Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
+            
             <Border Style="{StaticResource ModernTileMediumStyle1}">
                 <Border.ToolTip>
                     The graphs tell you if there is any surplus left over in each bucket for the current month. 
@@ -71,7 +72,7 @@
                           Stroke="{StaticResource Brush.ModernTile.Background1}"
                           VerticalAlignment="Center" />
                     <TextBlock Margin="50,0,0,0"
-                               Text="Current Month Burndown Graphs"
+                               Text="{Binding CurrentMonthBurnDownGraphsController.Title}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding SpendingTrendCommand}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />

@@ -3,9 +3,9 @@
     /// <summary>
     ///     Interaction logic for CurrentMonthBurnDownGraphsView.xaml
     /// </summary>
-    public partial class CurrentMonthBurnDownGraphsView
+    public partial class CurrentMonthBurnDownGraphsView2
     {
-        public CurrentMonthBurnDownGraphsView()
+        public CurrentMonthBurnDownGraphsView2()
         {
             InitializeComponent();
         }

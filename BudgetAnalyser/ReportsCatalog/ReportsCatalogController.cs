@@ -163,6 +163,10 @@ namespace BudgetAnalyser.ReportsCatalog
             {
                 CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
             }
+
+            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 1000;
+            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
+            this.newWindowViewLoader.Show(CurrentMonthBurnDownGraphsController);
         }
 
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)

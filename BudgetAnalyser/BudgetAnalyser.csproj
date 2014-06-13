@@ -184,10 +184,12 @@
     <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartBuilderResults.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartsBuilder.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
-    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml.cs">
-      <DependentUpon>CurrentMonthBurnDownGraphsView.xaml</DependentUpon>
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView2.xaml.cs">
+      <DependentUpon>CurrentMonthBurnDownGraphsView2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsViewLoader.cs" />
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphView.xaml.cs">
+      <DependentUpon>CurrentMonthBurnDownGraphView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReportsCatalog\BurnDownGraphs\CustomBurnDownChartsV1.cs" />
     <Compile Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml.cs">
       <DependentUpon>LongTermSpendingGraph.xaml</DependentUpon>
@@ -343,9 +345,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView.xaml">
+    <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml">
       <SubType>Designer</SubType>
