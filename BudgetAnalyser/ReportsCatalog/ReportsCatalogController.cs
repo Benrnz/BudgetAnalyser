@@ -22,8 +22,6 @@ namespace BudgetAnalyser.ReportsCatalog
     public class ReportsCatalogController : ControllerBase, IShowableController
     {
         private readonly IBudgetAnalysisView analysisFactory;
-        private readonly BudgetPieController budgetPieController;
-        private readonly LongTermSpendingGraphController longTermSpendingGraphController;
         private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
@@ -45,8 +43,8 @@ namespace BudgetAnalyser.ReportsCatalog
 
             this.newWindowViewLoader = newWindowViewLoader;
             this.waitCursorFactory = uiContext.WaitCursorFactory;
-            this.budgetPieController = uiContext.BudgetPieController;
-            this.longTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
+            BudgetPieController = uiContext.BudgetPieController;
+            LongTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
             this.analysisFactory = uiContext.AnalysisFactory;
 
@@ -61,12 +59,16 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand); }
         }
 
+        public BudgetPieController BudgetPieController { get; private set; }
+
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
 
         public ICommand LongTermSpendingGraphCommand
         {
             get { return new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null); }
         }
+
+        public LongTermSpendingGraphController LongTermSpendingGraphController { get; private set; }
 
         public ICommand OverallBudgetPerformanceCommand
         {
@@ -109,10 +111,12 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             using (this.waitCursorFactory())
             {
-                this.budgetPieController.Load(this.budgets.CurrentActiveBudget);
+                BudgetPieController.Load(this.budgets.CurrentActiveBudget);
             }
 
-            this.newWindowViewLoader.Show(this.budgetPieController);
+            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
+            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 800;
+            this.newWindowViewLoader.Show(BudgetPieController);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
@@ -134,10 +138,12 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             using (this.waitCursorFactory())
             {
-                this.longTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
+                LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
             }
-
-            this.newWindowViewLoader.Show(this.longTermSpendingGraphController);
+            
+            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
+            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
+            this.newWindowViewLoader.Show(LongTermSpendingGraphController);
         }
 
         private void OnOverallBudgetPerformanceCommandExecute()

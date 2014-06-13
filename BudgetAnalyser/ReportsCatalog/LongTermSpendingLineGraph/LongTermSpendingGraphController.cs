@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
@@ -26,6 +28,19 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             get { return this.analyser.Graph; }
         }
 
+        public SeriesData SurplusLine
+        {
+            get
+            {
+                if (Graph == null)
+                {
+                    return null;
+                }
+
+                return Graph.Series.Single(s => s.SeriesName == SurplusBucket.SurplusCode);
+            }
+        }
+
         public string Title
         {
             get { return "Long Term Spending Line Graph"; }
@@ -35,6 +50,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         {
             this.analyser.Analyse(statementModel, criteria);
             RaisePropertyChanged(() => Graph);
+            RaisePropertyChanged(() => SurplusLine);
         }
     }
 }

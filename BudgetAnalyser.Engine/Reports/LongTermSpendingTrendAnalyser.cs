@@ -52,15 +52,7 @@ namespace BudgetAnalyser.Engine.Reports
             {
                 if (transaction.Date >= nextMonth)
                 {
-                    // Current month's data is complete - update totals and advance to next month
-                    foreach (var subTotal in subTotals)
-                    {
-                        // Find appropriate bucket series
-                        SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
-                        // Find appropriate month on that bucket graph line
-                        DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
-                        monthData.Amount = Math.Abs(subTotal.Value); // Negate because all debits are stored as negative. Graph lines will look better as positive values.
-                    }
+                    StoreSummarisedMonthData(subTotals, allSeriesData, currentMonth);
 
                     currentMonth = nextMonth;
                     nextMonth = nextMonth.AddMonths(1);
@@ -74,8 +66,22 @@ namespace BudgetAnalyser.Engine.Reports
                 GetOrAdd(subTotals, transaction.BudgetBucket.Code, transaction.Amount);
             }
 
+            StoreSummarisedMonthData(subTotals, allSeriesData, currentMonth);
             Graph = new GraphData { SeriesList = allSeriesData, GraphName = "Long term spending for Budget Buckets" };
             RemoveSeriesWithNoData();
+        }
+
+        private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
+        {
+            // Current month's data is complete - update totals and advance to next month
+            foreach (var subTotal in subTotals)
+            {
+                // Find appropriate bucket series
+                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
+                // Find appropriate month on that bucket graph line
+                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
+                monthData.Amount = Math.Abs(subTotal.Value); // Negate because all debits are stored as negative. Graph lines will look better as positive values.
+            }
         }
 
         private static DateTime CalculateStartDate(StatementModel statement, GlobalFilterCriteria criteria)

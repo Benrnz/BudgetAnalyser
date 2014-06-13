@@ -45,7 +45,7 @@ namespace BudgetAnalyser.UnitTest.Reports
                 new GlobalFilterCriteria
                 {
                     BeginDate = new DateTime(2013, 12, 20),
-                    EndDate = new DateTime(2014, 5, 19),
+                    EndDate = new DateTime(2014, 6, 19),
                 });
             stopwatch.Stop();
             

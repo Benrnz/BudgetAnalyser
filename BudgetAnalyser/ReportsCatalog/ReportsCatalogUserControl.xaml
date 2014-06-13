@@ -113,7 +113,7 @@
                     </Image>
 
                     <TextBlock Margin="50,0,0,0"
-                               Text="Budget Pie Graphs"
+                               Text="{Binding BudgetPieController.Title}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding BudgetPieCommand}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />
@@ -142,7 +142,7 @@
                           Stroke="{StaticResource Brush.ModernTile.Background1}"
                           VerticalAlignment="Center" />
                     <TextBlock Margin="50,0,0,0"
-                               Text="Long term bucket line graphs"
+                               Text="{Binding LongTermSpendingGraphController.Title}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding LongTermSpendingGraphCommand}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />
