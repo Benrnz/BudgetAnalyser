@@ -9,14 +9,14 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class OverallPerformanceBudgetAnalysis
+    public class OverallPerformanceBudgetAnalyser
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly BudgetCollection budgets;
         private readonly StatementModel statement;
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
-        public OverallPerformanceBudgetAnalysis([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
+        public OverallPerformanceBudgetAnalyser([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (statement == null)
             {
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Reports
             this.bucketRepository = bucketRepository;
         }
 
-        public IEnumerable<BucketPerformanceAnalysis> Analyses { get; private set; }
+        public IEnumerable<BucketPerformanceAnalyser> Analyses { get; private set; }
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
@@ -80,8 +80,8 @@ namespace BudgetAnalyser.Engine.Reports
 
             CalculateTotalsAndAverage(beginDate);
 
-            Analyses = new List<BucketPerformanceAnalysis>();
-            var list = new List<BucketPerformanceAnalysis>();
+            Analyses = new List<BucketPerformanceAnalyser>();
+            var list = new List<BucketPerformanceAnalyser>();
             foreach (BudgetBucket bucket in this.bucketRepository.Buckets)
             {
                 BudgetBucket bucketCopy = bucket;
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal budgetedTotal = CalculateBudgetedTotalAmount(beginDate, b => b.Surplus);
                     decimal perMonthBudget = budgetedTotal / DurationInMonths; // Calc an average in case multiple budgets are used and the budgeted amounts are different.
-                    var surplusAnalysis = new BucketPerformanceAnalysis
+                    var surplusAnalysis = new BucketPerformanceAnalyser
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
@@ -112,7 +112,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildExpenseFinder(bucket));
                     decimal perMonthBudget = totalBudget / DurationInMonths;
-                    var analysis = new BucketPerformanceAnalysis
+                    var analysis = new BucketPerformanceAnalyser
                     {
                         Bucket = bucket,
                         TotalSpent = -totalSpent,
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     decimal totalBudget = CalculateBudgetedTotalAmount(beginDate, BuildIncomeFinder(bucket));
                     decimal perMonthBudget = totalBudget / DurationInMonths;
-                    var analysis = new BucketPerformanceAnalysis
+                    var analysis = new BucketPerformanceAnalyser
                     {
                         Bucket = bucket,
                         TotalSpent = totalSpent,

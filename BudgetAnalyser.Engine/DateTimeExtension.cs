@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace BudgetAnalyser.Engine
 {
@@ -13,6 +14,16 @@ namespace BudgetAnalyser.Engine
             }
 
             return durationInMonths;
+        }
+
+        public static DateTime LastDateInMonth(this DateTime instance)
+        {
+            return instance.AddMonths(1).FirstDateInMonth().AddDays(-1);
+        }
+
+        public static DateTime FirstDateInMonth(this DateTime instance)
+        {
+            return instance.AddDays(-instance.Day + 1);
         }
     }
 }

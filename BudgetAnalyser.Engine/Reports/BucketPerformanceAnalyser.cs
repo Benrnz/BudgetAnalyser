@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Reports
     /// <summary>
     ///     A Data Transfer Object to contain the output of a bucket spending analysis.
     /// </summary>
-    public class BucketPerformanceAnalysis
+    public class BucketPerformanceAnalyser
     {
         public decimal AverageSpend { get; internal set; }
 

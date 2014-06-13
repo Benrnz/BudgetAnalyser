@@ -31,14 +31,14 @@ namespace BudgetAnalyser.Budget
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection type is necessary")]
-        public virtual OverallPerformanceBudgetAnalysis Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria)
+        public virtual OverallPerformanceBudgetAnalyser Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
-            var analysis = new OverallPerformanceBudgetAnalysis(statement, budgets, this.bucketRepository);
+            var analysis = new OverallPerformanceBudgetAnalyser(statement, budgets, this.bucketRepository);
             analysis.Analyse(criteria);
             return analysis;
         }
 
-        public virtual void ShowDialog(OverallPerformanceBudgetAnalysis analysis)
+        public virtual void ShowDialog(OverallPerformanceBudgetAnalyser analysis)
         {
             this.controller.Load(analysis);
             var window = new BudgetAnalysisView

@@ -114,6 +114,10 @@
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
+    <Compile Include="Reports\DatedGraphPlot.cs" />
+    <Compile Include="Reports\GraphData.cs" />
+    <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
+    <Compile Include="Reports\SeriesData.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />
@@ -156,10 +160,10 @@
     <Compile Include="IModelValidate.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\BucketPerformanceAnalysis.cs" />
+    <Compile Include="Reports\BucketPerformanceAnalyser.cs" />
     <Compile Include="Reports\CustomAggregateBurnDownGraph.cs" />
     <Compile Include="Reports\IBurnDownGraphAnalyser.cs" />
-    <Compile Include="Reports\OverallPerformanceBudgetAnalysis.cs" />
+    <Compile Include="Reports\OverallPerformanceBudgetAnalyser.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyser.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />

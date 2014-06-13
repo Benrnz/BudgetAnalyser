@@ -8,6 +8,42 @@ namespace BudgetAnalyser.UnitTest
     public class DateTimeExtensionTest
     {
         [TestMethod]
+        public void Given28JanuaryFirstDateInMonthShouldReturn1January()
+        {
+            Assert.AreEqual(new DateTime(2014, 1, 1), new DateTime(2014, 1, 28).FirstDateInMonth());
+        }
+
+        [TestMethod]
+        public void Given1DecemberFirstDateInMonthShouldReturn1December()
+        {
+            Assert.AreEqual(new DateTime(2014, 12, 1), new DateTime(2014, 12, 1).FirstDateInMonth());
+        }
+
+        [TestMethod]
+        public void Given5JuneLastDateInMonthShouldReturn30June()
+        {
+            Assert.AreEqual(new DateTime(2014, 6, 30), new DateTime(2014, 6, 5).LastDateInMonth());
+        }
+
+        [TestMethod]
+        public void Given28FebruaryLastDateInMonthShouldReturn28February()
+        {
+            Assert.AreEqual(new DateTime(2014, 2, 28), new DateTime(2014, 2, 28).LastDateInMonth());
+        }
+
+        [TestMethod]
+        public void Given30JanuaryLastDateInMonthShouldReturn31January()
+        {
+            Assert.AreEqual(new DateTime(2014, 1, 31), new DateTime(2014, 1, 30).LastDateInMonth());
+        }
+
+        [TestMethod]
+        public void Given5February2000LastDateInMonthShouldReturn29February()
+        {
+            Assert.AreEqual(new DateTime(2000, 2, 29), new DateTime(2000, 2, 5).LastDateInMonth());
+        }
+
+        [TestMethod]
         public void JanuaryToJuneIsFiveMonths()
         {
             Assert.AreEqual(5, new DateTime(2014, 1, 1).DurationInMonths(new DateTime(2014, 6, 1)));

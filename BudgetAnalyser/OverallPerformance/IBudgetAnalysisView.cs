@@ -8,8 +8,8 @@ namespace BudgetAnalyser.OverallPerformance
     public interface IBudgetAnalysisView
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification="Custom collection")]
-        OverallPerformanceBudgetAnalysis Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria);
+        OverallPerformanceBudgetAnalyser Analyse(StatementModel statement, BudgetCollection budgets, GlobalFilterCriteria criteria);
 
-        void ShowDialog(OverallPerformanceBudgetAnalysis analysis);
+        void ShowDialog(OverallPerformanceBudgetAnalyser analysis);
     }
 }

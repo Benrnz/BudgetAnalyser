@@ -2,14 +2,14 @@
 using BudgetAnalyser.Engine.Reports;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.UnitTest.Reports
 {
     [TestClass]
     public class SpendingGraphAnalyserTest
     {
         public SpendingGraphAnalyserTest()
         {
-            SurplusTestBucket = new SurplusBucket();
+            this.SurplusTestBucket = new SurplusBucket();
         }
 
         private BudgetBucket SurplusTestBucket { get; set; }
@@ -35,12 +35,11 @@ namespace BudgetAnalyser.UnitTest
         //{
         //    // TODO this is shite.
         //    var bucketRepository = new InMemoryBudgetBucketRepository();
-        //    var budgets = new BudgetModelImporter(bucketRepository).LoadBudgetData(@"C:\Development\Brees_Unfuddle\BudgetAnalyserProject\Trunk\TestData\BudgetModel.xml");
+        //    var budgets = new BudgetModelImporter(bucketRepository).LoadBudgetData(@"C:\Development\xxx\BudgetAnalyserProject\Trunk\TestData\BudgetModel.xml");
         //    budgetModel = budgets.CurrentActiveBudget;
         //    var mock = new Mock<IUserMessageBox>();
         //    var statementImporter = new AnzAccountStatementImporterV1(mock.Object, bucketRepository);
-        //    // TODO so is this.
-        //    return statementImporter.ImportFromFile(@"C:\Development\Brees_Unfuddle\BudgetAnalyserProject\Trunk\TestData\8Months.csv", budgetModel, new ChequeAccount("Cheque"));
+        //    return statementImporter.ImportFromFile(@"C:\Development\xxx\BudgetAnalyserProject\Trunk\TestData\8Months.csv", budgetModel, new ChequeAccount("Cheque"));
         //}
 
         private BurnDownGraphAnalyser CreateSubject()

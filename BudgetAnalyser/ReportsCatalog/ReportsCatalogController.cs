@@ -121,7 +121,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnOverallBudgetPerformanceCommandExecute()
         {
-            OverallPerformanceBudgetAnalysis analysis;
+            OverallPerformanceBudgetAnalyser analysis;
             using (this.waitCursorFactory())
             {
                 analysis = this.analysisFactory.Analyse(this.currentStatementModel, this.budgets, RequestCurrentFilter());

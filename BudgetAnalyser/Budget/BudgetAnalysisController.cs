@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Budget
             this.doNotUseExpenseFilter = true;
         }
 
-        public OverallPerformanceBudgetAnalysis Analysis { get; private set; }
+        public OverallPerformanceBudgetAnalyser Analysis { get; private set; }
 
         public bool ExpenseFilter
         {
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Budget
 
         public double OverallPerformance { get; private set; }
 
-        public void Load([NotNull] OverallPerformanceBudgetAnalysis overallPerformanceBudgetAnalysis)
+        public void Load([NotNull] OverallPerformanceBudgetAnalyser overallPerformanceBudgetAnalysis)
         {
             if (overallPerformanceBudgetAnalysis == null)
             {
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Budget
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {
-                var bucketAnalysis = x as BucketPerformanceAnalysis;
+                var bucketAnalysis = x as BucketPerformanceAnalyser;
                 if (bucketAnalysis == null)
                 {
                     return true;
