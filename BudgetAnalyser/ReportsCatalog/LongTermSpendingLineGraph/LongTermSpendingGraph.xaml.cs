@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Data;
+using System.Xml.Serialization.Configuration;
 using BudgetAnalyser.Engine.Reports;
 
 namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
@@ -63,8 +66,22 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
                 };
                 series.SetBinding(UIElement.VisibilityProperty, visibilityBinding);
 
+                series.SelectionChanged += SeriesOnSelectionChanged;
+
                 this.Chart.Series.Add(series);
             }
+        }
+
+        private void SeriesOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            if (selectionChangedEventArgs.AddedItems.Count < 1)
+            {
+                return;
+            }
+
+            var lineSeries = (LineSeries)sender;
+            Controller.SelectedSeriesData  = (SeriesData)lineSeries.DataContext;
+            Controller.SelectedPlotPoint = (DatedGraphPlot)selectionChangedEventArgs.AddedItems[0];
         }
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

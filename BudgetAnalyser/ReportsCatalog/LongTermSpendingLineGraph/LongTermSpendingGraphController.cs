@@ -2,7 +2,6 @@
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
@@ -12,33 +11,66 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
     public class LongTermSpendingGraphController : ControllerBase
     {
         private readonly LongTermSpendingTrendAnalyser analyser;
-        private readonly IBudgetBucketRepository bucketRepository;
-        private bool doNotUseToggleAll;
-        private decimal doNotUseGraphMinimumValue;
         private decimal doNotUseGraphMaximumValue;
-        // private bool active;
+        private decimal doNotUseGraphMinimumValue;
+        private bool doNotUseToggleAll;
+        private SeriesData doNotUseSelectedSeriesData;
+        private DatedGraphPlot doNotUseSelectedPlotPoint;
 
-        // public event EventHandler ChartUpdateRequired;
-
-        public LongTermSpendingGraphController([NotNull] LongTermSpendingTrendAnalyser analyser, [NotNull] IBudgetBucketRepository bucketRepository)
+        public LongTermSpendingGraphController([NotNull] LongTermSpendingTrendAnalyser analyser)
         {
             if (analyser == null)
             {
                 throw new ArgumentNullException("analyser");
             }
 
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException("bucketRepository");
-            }
-
             this.analyser = analyser;
-            this.bucketRepository = bucketRepository;
+            ToggleAll = true;
+        }
+
+        public SeriesData SelectedSeriesData
+        {
+            get { return this.doNotUseSelectedSeriesData; }
+            set
+            {
+                this.doNotUseSelectedSeriesData = value;
+                RaisePropertyChanged(() => SelectedSeriesData);
+            }
+        }
+
+        public DatedGraphPlot SelectedPlotPoint
+        {
+            get { return this.doNotUseSelectedPlotPoint; }
+            set
+            {
+                this.doNotUseSelectedPlotPoint = value;
+                RaisePropertyChanged(() => SelectedPlotPoint);
+            }
         }
 
         public GraphData Graph
         {
             get { return this.analyser.Graph; }
+        }
+
+        public decimal GraphMaximumValue
+        {
+            get { return this.doNotUseGraphMaximumValue; }
+            set
+            {
+                this.doNotUseGraphMaximumValue = value;
+                RaisePropertyChanged(() => GraphMaximumValue);
+            }
+        }
+
+        public decimal GraphMinimumValue
+        {
+            get { return this.doNotUseGraphMinimumValue; }
+            set
+            {
+                this.doNotUseGraphMinimumValue = value;
+                RaisePropertyChanged(() => GraphMinimumValue);
+            }
         }
 
         public string Title
@@ -57,26 +89,6 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             }
         }
 
-        public decimal GraphMaximumValue
-        {
-            get { return this.doNotUseGraphMaximumValue; }
-            set
-            {
-                this.doNotUseGraphMaximumValue = value; 
-                RaisePropertyChanged(() => GraphMaximumValue);
-            }
-        }
-
-        public decimal GraphMinimumValue
-        {
-            get { return this.doNotUseGraphMinimumValue; }
-            set
-            {
-                this.doNotUseGraphMinimumValue = value;
-                RaisePropertyChanged(() => GraphMinimumValue);
-            }
-        }
-
         public void Load(StatementModel statementModel, GlobalFilterCriteria criteria)
         {
             this.analyser.Analyse(statementModel, criteria);
@@ -86,12 +98,17 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public void NotifyOfClose()
         {
-            // this.active = false;
             this.analyser.Reset();
+            ToggleAll = true;
         }
 
         private void ToggleAllLinesVisibility()
         {
+            if (Graph == null)
+            {
+                return;
+            }
+
             Graph.Series.ToList().ForEach(s => s.Visible = ToggleAll);
         }
     }
