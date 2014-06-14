@@ -5,13 +5,12 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
+using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using Rees.Wpf;
@@ -21,7 +20,6 @@ namespace BudgetAnalyser.ReportsCatalog
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class ReportsCatalogController : ControllerBase, IShowableController
     {
-        private readonly IBudgetAnalysisView analysisFactory;
         private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
@@ -46,7 +44,7 @@ namespace BudgetAnalyser.ReportsCatalog
             BudgetPieController = uiContext.BudgetPieController;
             LongTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
-            this.analysisFactory = uiContext.AnalysisFactory;
+            OverallPerformanceController = uiContext.OverallPerformanceController;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
@@ -74,6 +72,8 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             get { return new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
+
+        public OverallPerformanceController OverallPerformanceController { get; private set; }
 
         public bool Shown
         {
@@ -140,7 +140,7 @@ namespace BudgetAnalyser.ReportsCatalog
             {
                 LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
             }
-            
+
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
             this.newWindowViewLoader.Show(LongTermSpendingGraphController);
@@ -148,13 +148,14 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnOverallBudgetPerformanceCommandExecute()
         {
-            OverallPerformanceBudgetAnalyser analysis;
             using (this.waitCursorFactory())
             {
-                analysis = this.analysisFactory.Analyse(this.currentStatementModel, this.budgets, RequestCurrentFilter());
+                OverallPerformanceController.Load(this.currentStatementModel, this.budgets, RequestCurrentFilter());
             }
 
-            this.analysisFactory.ShowDialog(analysis);
+            this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
+            this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
+            this.newWindowViewLoader.Show(OverallPerformanceController);
         }
 
         private void OnSpendingTrendCommandExecute()

@@ -109,8 +109,6 @@
     </ApplicationDefinition>
     <Compile Include="BackgroundProcessingJobMetadata.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
-    <Compile Include="Budget\BudgetAnalysisBuilder.cs" />
-    <Compile Include="Budget\BudgetAnalysisController.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetBucketUserControl.xaml.cs">
       <DependentUpon>BudgetBucketUserControl.xaml</DependentUpon>
@@ -184,9 +182,6 @@
     <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartBuilderResults.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartsBuilder.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
-    <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView2.xaml.cs">
-      <DependentUpon>CurrentMonthBurnDownGraphsView2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphView.xaml.cs">
       <DependentUpon>CurrentMonthBurnDownGraphView.xaml</DependentUpon>
     </Compile>
@@ -195,6 +190,10 @@
       <DependentUpon>LongTermSpendingGraph.xaml</DependentUpon>
     </Compile>
     <Compile Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraphController.cs" />
+    <Compile Include="ReportsCatalog\OverallPerformance\OverallPerformanceController.cs" />
+    <Compile Include="ReportsCatalog\OverallPerformance\OverallPerformanceView.xaml.cs">
+      <DependentUpon>OverallPerformanceView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShellDialog\IShellDialogInteractivity.cs" />
     <Compile Include="IUiContext.cs" />
     <Compile Include="LedgerBook\LedgerBookReadyMessage.cs" />
@@ -235,7 +234,6 @@
       <DependentUpon>MainMenuUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="CompositionRoot.cs" />
-    <Compile Include="OverallPerformance\IBudgetAnalysisView.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ReportsCatalog\ReportsCatalogController.cs" />
     <Compile Include="ReportsCatalog\ReportsCatalogUserControl.xaml.cs">
@@ -262,9 +260,6 @@
     <Compile Include="UiContext.cs" />
     <Compile Include="LedgerBook\AddLedgerReconciliationUserControl.xaml.cs">
       <DependentUpon>AddLedgerReconciliationUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OverallPerformance\BudgetAnalysisView.xaml.cs">
-      <DependentUpon>BudgetAnalysisView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Budget\BudgetModelNameUserControl.xaml.cs">
       <DependentUpon>BudgetModelNameUserControl.xaml</DependentUpon>
@@ -345,15 +340,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsView2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportsCatalog\OverallPerformance\OverallPerformanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -470,10 +465,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="LedgerBook\AddLedgerReconciliationUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="OverallPerformance\BudgetAnalysisView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

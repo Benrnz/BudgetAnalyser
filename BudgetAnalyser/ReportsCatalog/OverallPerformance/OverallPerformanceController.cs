@@ -2,21 +2,30 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.Budget
+namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 {
-    public class BudgetAnalysisController : ControllerBase
+    public class OverallPerformanceController : ControllerBase
     {
+        private readonly IBudgetBucketRepository bucketRepository;
         private bool doNotUseExpenseFilter;
         private bool doNotUseIncomeFilter;
 
-        public BudgetAnalysisController()
+        public OverallPerformanceController([NotNull] IBudgetBucketRepository bucketRepository)
         {
+            if (bucketRepository == null)
+            {
+                throw new ArgumentNullException("bucketRepository");
+            }
+
             this.doNotUseExpenseFilter = true;
+            this.bucketRepository = bucketRepository;
         }
 
         public OverallPerformanceBudgetAnalyser Analysis { get; private set; }
@@ -47,18 +56,20 @@ namespace BudgetAnalyser.Budget
 
         public double OverallPerformance { get; private set; }
 
-        public void Load([NotNull] OverallPerformanceBudgetAnalyser overallPerformanceBudgetAnalysis)
+        public string Title
         {
-            if (overallPerformanceBudgetAnalysis == null)
-            {
-                throw new ArgumentNullException("overallPerformanceBudgetAnalysis");
-            }
+            get { return "Overall Budget Performance"; }
+        }
 
-            Analysis = overallPerformanceBudgetAnalysis;
-            OverallPerformance = (double)overallPerformanceBudgetAnalysis.OverallPerformance;
+        public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+        {
+            Analysis = new OverallPerformanceBudgetAnalyser(statementModel, budgets, this.bucketRepository);
+            Analysis.Analyse(criteria);
+            OverallPerformance = (double)Analysis.OverallPerformance;
             ExpenseFilter = true;
             IncomeFilter = false;
 
+            RaisePropertyChanged(() => Analysis);
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {

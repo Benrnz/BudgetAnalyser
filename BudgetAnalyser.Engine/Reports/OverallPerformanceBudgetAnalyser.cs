@@ -38,25 +38,25 @@ namespace BudgetAnalyser.Engine.Reports
             this.bucketRepository = bucketRepository;
         }
 
-        public IEnumerable<BucketPerformanceAnalyser> Analyses { get; private set; }
+        public IEnumerable<BucketPerformanceAnalyser> Analyses { get; protected set; }
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
         ///     Expected to be negative.
         /// </summary>
-        public decimal AverageSpend { get; private set; }
+        public decimal AverageSpend { get; protected set; }
 
         /// <summary>
         ///     Gets the average surplus spending per month based on statement transaction data over a period of time.
         /// </summary>
-        public decimal AverageSurplus { get; private set; }
+        public decimal AverageSurplus { get; protected set; }
 
-        public int DurationInMonths { get; private set; }
+        public int DurationInMonths { get; protected set; }
 
-        public decimal OverallPerformance { get; private set; }
-        public decimal TotalBudgetExpenses { get; private set; }
+        public decimal OverallPerformance { get; protected set; }
+        public decimal TotalBudgetExpenses { get; protected set; }
 
-        public bool UsesMultipleBudgets { get; private set; }
+        public bool UsesMultipleBudgets { get; protected set; }
 
         /// <summary>
         ///     Analyses the supplied statement using the supplied budget within the criteria given to this method.
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Reports
         ///     given in the criteria.
         /// </exception>
         /// <exception cref="ArgumentException">If statement or budget is null.</exception>
-        public void Analyse([NotNull] GlobalFilterCriteria criteria)
+        public virtual void Analyse([NotNull] GlobalFilterCriteria criteria)
         {
             DateTime endDate, beginDate;
             AnalysisPreconditions(criteria, out beginDate, out endDate);

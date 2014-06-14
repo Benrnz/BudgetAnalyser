@@ -42,7 +42,7 @@
                                Margin="14,20,0,0"
                                Width="20" />
                     <TextBlock Margin="50,10,10,10"
-                               Text="Overall Budget Performance"
+                               Text="{Binding OverallPerformanceController.Title}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding OverallBudgetPerformanceCommand}"
                             Style="{StaticResource Button.ModernTile.Overlay}" />

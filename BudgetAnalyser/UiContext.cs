@@ -9,10 +9,10 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
-using BudgetAnalyser.OverallPerformance;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
+using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
@@ -29,7 +29,6 @@ namespace BudgetAnalyser
         private List<ControllerBase> controllers;
 
         public UiContext(
-            [NotNull] IBudgetAnalysisView analysisFactory,
             [NotNull] IBackgroundProcessingJobMetadata backgroundJobMetadata,
             [NotNull] Func<IWaitCursor> waitCursorFactory,
             [NotNull] UserPrompts userPrompts,
@@ -50,18 +49,12 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("messenger");
             }
 
-            if (analysisFactory == null)
-            {
-                throw new ArgumentNullException("analysisFactory");
-            }
-
             if (backgroundJobMetadata == null)
             {
                 throw new ArgumentNullException("backgroundJobMetadata");
             }
 
             WaitCursorFactory = waitCursorFactory;
-            AnalysisFactory = analysisFactory;
             BackgroundJob = backgroundJobMetadata;
             UserPrompts = userPrompts;
             Messenger = messenger;
@@ -69,7 +62,7 @@ namespace BudgetAnalyser
 
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
 
-        public IBudgetAnalysisView AnalysisFactory { get; private set; }
+        public OverallPerformanceController OverallPerformanceController { get; set; }
         public AppliedRulesController AppliedRulesController { get; set; }
         public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
 

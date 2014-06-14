@@ -1,18 +1,12 @@
-﻿<Window x:Class="BudgetAnalyser.OverallPerformance.BudgetAnalysisView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
-        Background="{StaticResource Brush.MainBackground}"
-        Height="650"
-        Icon="..\UI\Assets\PieChart.png"
-        MinWidth="550"
-        Title="Overall Performance"
-        Width="740">
-
-    <Window.Resources>
-        <converters1:PercentToColourConverter x:Key="Converter.PercentToColour" />
-        <converters1:BucketToVisibilityConverter x:Key="Converter.BucketToVisibility" />
+﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.OverallPerformance.OverallPerformanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
+             xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
+             Background="{StaticResource Brush.MainBackground}">
+    <UserControl.Resources>
+        <converters:PercentToColourConverter x:Key="Converter.PercentToColour" />
+        <converters:BucketToVisibilityConverter x:Key="Converter.BucketToVisibility" />
 
         <DataTemplate DataType="{x:Type reports:BucketPerformanceAnalyser}">
             <Grid ToolTip="{Binding Bucket.Description}">
@@ -26,16 +20,14 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border
-                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Expense}"
-                        Grid.ColumnSpan="2"
-                        Grid.RowSpan="2"
-                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Expense}" />
-                    <Border
-                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Income}"
-                        Grid.ColumnSpan="2"
-                        Grid.RowSpan="2"
-                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Income}" />
+                    <Border Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Expense}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Expense}" />
+                    <Border Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Income}"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="2"
+                            Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Income}" />
                     <TextBlock FontSize="12"
                                FontWeight="Bold"
                                HorizontalAlignment="Left"
@@ -65,19 +57,20 @@
                              VerticalAlignment="Stretch" />
             </Grid>
         </DataTemplate>
-    </Window.Resources>
+    </UserControl.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <!-- Gauge -->
+             <!--Gauge--> 
             <RowDefinition Height="*" />
-            <!-- List box -->
+             <!--List box--> 
             <RowDefinition Height="Auto" />
-            <!-- Totals Row -->
+             <!--Totals Row--> 
         </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -139,7 +132,7 @@
         </Grid>
         <ListBox Grid.Row="3"
                  ItemsSource="{Binding Analysis.Analyses, Mode=OneWay}"
-                 ItemContainerStyle="{StaticResource ListBox.NoVisualStatesContainerStyle}"/>
+                 ItemContainerStyle="{StaticResource ListBox.NoVisualStatesContainerStyle}" />
         <Grid Grid.Row="3"
               Margin="10,20,25,0">
             <Grid.ColumnDefinitions>
@@ -157,13 +150,12 @@
                        StrokeThickness="1"
                        Width="1" />
         </Grid>
-        <StackPanel
-            Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
-            Grid.Row="4"
-            Margin="2,4,2,4"
-            Orientation="Horizontal"
-            TextBlock.FontWeight="Bold"
-            TextBlock.Foreground="{StaticResource Brush.MainBackground}">
+        <StackPanel Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
+                    Grid.Row="4"
+                    Margin="2,4,2,4"
+                    Orientation="Horizontal"
+                    TextBlock.FontWeight="Bold"
+                    TextBlock.Foreground="{StaticResource Brush.MainBackground}">
             <TextBlock Margin="4,4,1,4"
                        Text="Avg Expenses " />
             <TextBlock Margin="0,4,0,4"
@@ -178,5 +170,4 @@
                        Text="{Binding Analysis.OverallPerformance, StringFormat=C}" />
         </StackPanel>
     </Grid>
-
-</Window>
+</UserControl>
