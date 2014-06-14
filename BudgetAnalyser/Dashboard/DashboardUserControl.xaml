@@ -10,8 +10,30 @@
     <UserControl.Resources>
         <converters1:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
 
+        <ContextMenu x:Key="WidgetContextMenu">
+            <ContextMenu.Resources>
+                <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
+                       TargetType="{x:Type TextBlock}">
+                    <Setter Property="Foreground"
+                            Value="Black" />
+                </Style>
+            </ContextMenu.Resources>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.HideWidgetCommand}"
+                      CommandParameter="{Binding .}">
+                <MenuItem.Header>
+                    <TextBlock Text="Hide" />
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.UnhideAllWidgetsCommand}">
+                <MenuItem.Header>
+                    <TextBlock Text="Unhide all" />
+                </MenuItem.Header>
+            </MenuItem>
+        </ContextMenu>
+
         <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
-            <Border Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+            <Border ContextMenu="{StaticResource WidgetContextMenu}"
+                    Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
                     ToolTip="{Binding ToolTip}"
                     Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
@@ -38,7 +60,6 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                            Cursor="Hand"
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
@@ -49,7 +70,8 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type widget:Widget}">
-            <Border Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+            <Border ContextMenu="{StaticResource WidgetContextMenu}"
+                    Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
                     ToolTip="{Binding ToolTip}"
                     Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
@@ -81,7 +103,6 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                            Cursor="Hand"
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
                             Grid.RowSpan="2"
