@@ -33,13 +33,13 @@ namespace BudgetAnalyser.Engine.Reports
             {
                 throw new ArgumentNullException("statement");
             }
-            
+
             if (criteria == null)
             {
                 throw new ArgumentNullException("criteria");
             }
 
-            Graph = null;
+            Reset();
             DateTime minDate = CalculateStartDate(statement, criteria);
             DateTime maxDate = CalculateEndDate(statement, criteria);
 
@@ -71,17 +71,20 @@ namespace BudgetAnalyser.Engine.Reports
             RemoveSeriesWithNoData();
         }
 
-        private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
+        public void Reset()
         {
-            // Current month's data is complete - update totals and advance to next month
-            foreach (var subTotal in subTotals)
+            Graph = null;
+        }
+
+        private static DateTime CalculateEndDate(StatementModel statement, GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared || criteria.EndDate == null)
             {
-                // Find appropriate bucket series
-                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
-                // Find appropriate month on that bucket graph line
-                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
-                monthData.Amount = Math.Abs(subTotal.Value); // Negate because all debits are stored as negative. Graph lines will look better as positive values.
+                DateTime maxDate = statement.AllTransactions.Max(t => t.Date).Date;
+                return maxDate.LastDateInMonth();
             }
+
+            return criteria.EndDate.Value;
         }
 
         private static DateTime CalculateStartDate(StatementModel statement, GlobalFilterCriteria criteria)
@@ -96,17 +99,6 @@ namespace BudgetAnalyser.Engine.Reports
             return criteria.BeginDate.Value;
         }
 
-        private static DateTime CalculateEndDate(StatementModel statement, GlobalFilterCriteria criteria)
-        {
-            if (criteria.Cleared || criteria.EndDate == null)
-            {
-                var maxDate = statement.AllTransactions.Max(t => t.Date).Date;
-                return maxDate.LastDateInMonth();
-            }
-
-            return criteria.EndDate.Value;
-        }
-
         private static void GetOrAdd(IDictionary<string, decimal> dictionary, string key, decimal value)
         {
             if (dictionary.ContainsKey(key))
@@ -116,6 +108,19 @@ namespace BudgetAnalyser.Engine.Reports
             else
             {
                 dictionary.Add(key, value);
+            }
+        }
+
+        private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
+        {
+            // Current month's data is complete - update totals and advance to next month
+            foreach (var subTotal in subTotals)
+            {
+                // Find appropriate bucket series
+                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
+                // Find appropriate month on that bucket graph line
+                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
+                monthData.Amount = Math.Abs(subTotal.Value); // Negate because all debits are stored as negative. Graph lines will look better as positive values.
             }
         }
 

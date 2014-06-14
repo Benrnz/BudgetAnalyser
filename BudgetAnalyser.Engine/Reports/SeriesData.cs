@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class SeriesData
+    public class SeriesData : INotifyPropertyChanged
     {
+        private bool doNotUseVisible;
+
         public SeriesData()
         {
             PlotsList = new List<DatedGraphPlot>();
@@ -29,7 +34,27 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
-        public bool Visible { get; set; }
+        public bool Visible
+        {
+            get { return this.doNotUseVisible; }
+            set
+            {
+                this.doNotUseVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         internal IList<DatedGraphPlot> PlotsList { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }

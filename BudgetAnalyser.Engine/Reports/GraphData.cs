@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BudgetAnalyser.Engine.Reports
 {
@@ -9,6 +10,11 @@ namespace BudgetAnalyser.Engine.Reports
         public IEnumerable<SeriesData> Series
         {
             get { return SeriesList; }
+        }
+
+        public decimal GraphMinimumValue
+        {
+            get { return SeriesList.Min(s => s.MinimumValue); }
         }
 
         internal IList<SeriesData> SeriesList { get; set; }

@@ -2,22 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:reports="clr-namespace:BudgetAnalyser.Engine.Reports;assembly=BudgetAnalyser.Engine"
+             IsVisibleChanged="OnIsVisibleChanged">
     <UserControl.Resources>
 
-        <Style x:Key="TitleStyle"
-               TargetType="visualizationToolkit:Title">
-            <Setter Property="Template">
-                <Setter.Value>
-
-                    <ControlTemplate TargetType="visualizationToolkit:Title">
-                        <TextBlock FontWeight="Bold"
-                                   Text="{TemplateBinding Content}" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
         <Style x:Key="LegendStyle"
                TargetType="{x:Type visualizationToolkit:Legend}">
             <Setter Property="Margin"
@@ -37,37 +26,92 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </UserControl.Resources>
 
     <Grid Background="{StaticResource Brush.MainBackground}"
           Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
         <Border HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch" />
-        <chartingToolkit:Chart HorizontalAlignment="Stretch"
+        <chartingToolkit:Chart x:Name="Chart"
+                               DataContextChanged="OnChartDataContextChanged"
+                               HorizontalAlignment="Stretch"
                                Margin="5"
-                               Title="{Binding Title}"
-                               TitleStyle="{StaticResource TitleStyle}"
                                VerticalAlignment="Stretch"
-                               LegendStyle="{DynamicResource LegendStyle}">
-            <chartingToolkit:LineSeries DependentValuePath="Amount"
-                                        IsSelectionEnabled="False"
+                               LegendTitle="Budget Buckets"
+                               LegendStyle="{StaticResource LegendStyle}">
+
+            <!--<chartingToolkit:LineSeries DependentValuePath="Amount"
+                                        IndependentValuePath="Month"
+                                        IsSelectionEnabled="True"
                                         ItemsSource="{Binding SurplusLine.Plots}"
-                                        Title="{Binding SurplusLine.SeriesName}">
+                                        Title="{Binding SurplusLine.SeriesName}" />-->
 
-                <chartingToolkit:LineSeries.DependentRangeAxis>
-                    <chartingToolkit:LinearAxis Minimum="{Binding SurplusLine.MinimumValue}"
-                                                Orientation="Y"
-                                                Title="$" />
-                </chartingToolkit:LineSeries.DependentRangeAxis>
+            <!--<chartingToolkit:LineSeries DependentValuePath="Amount"
+                                        IndependentValuePath="Month"
+                                        IsSelectionEnabled="True"
+                                        ItemsSource="{Binding FoodLine.Plots}"
+                                        Title="{Binding FoodLine.SeriesName}" />-->
 
-                <chartingToolkit:LineSeries.IndependentValueBinding>
-                    <Binding Path="Month" />
-                </chartingToolkit:LineSeries.IndependentValueBinding>
+            <chartingToolkit:Chart.Axes>
+                <chartingToolkit:CategoryAxis Orientation="X" />
+                <chartingToolkit:LinearAxis Orientation="Y"
+                                            Minimum="{Binding GraphMinimumValue}"
+                                            Maximum="{Binding GraphMaximumValue}" />
+            </chartingToolkit:Chart.Axes>
 
-                <chartingToolkit:LineSeries.IndependentAxis>
-                    <chartingToolkit:CategoryAxis Orientation="X" />
-                </chartingToolkit:LineSeries.IndependentAxis>
-            </chartingToolkit:LineSeries>
         </chartingToolkit:Chart>
+
+        <Border Background="{StaticResource Brush.TileBackground}"
+                BorderBrush="{StaticResource Brush.MainBackground}"
+                BorderThickness="2,0,0,0"
+                Grid.Column="1"
+                VerticalAlignment="Stretch">
+            <ScrollViewer VerticalAlignment="Stretch">
+                <StackPanel>
+                    <StackPanel Margin="5"
+                                Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding ToggleAll}"
+                                  Margin="3" />
+                        <TextBlock Text="Toggle All"
+                                   Style="{StaticResource TextBlock.LabelStyle}"
+                                   Margin="3" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Y Minimum"
+                                   Style="{StaticResource TextBlock.LabelStyle}"/>
+                        <TextBox Text="{Binding GraphMinimumValue, StringFormat=N}" />
+                        <TextBlock Text="Y Maximum"
+                                   Style="{StaticResource TextBlock.LabelStyle}" />
+                        <TextBox Text="{Binding GraphMaximumValue, StringFormat=N}" />
+                    </StackPanel>
+                    <ItemsControl Margin="5"
+                                  ItemsSource="{Binding Graph.Series}">
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type reports:SeriesData}">
+                                <Border BorderBrush="{StaticResource Brush.MainBackground}"
+                                        BorderThickness="2">
+                                    <StackPanel Margin="2"
+                                                Orientation="Horizontal"
+                                                ToolTip="{Binding Description}">
+                                        <CheckBox IsChecked="{Binding Visible}"
+                                                  Margin="3" />
+                                        <TextBlock Text="{Binding SeriesName}"
+                                                   Style="{StaticResource TextBlock.LabelStyle}"
+                                                   Margin="3" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>
+
