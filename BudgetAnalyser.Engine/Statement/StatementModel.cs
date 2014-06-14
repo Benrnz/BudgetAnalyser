@@ -98,18 +98,8 @@ namespace BudgetAnalyser.Engine.Statement
             }
             else
             {
-                foreach (Transaction transaction in list)
-                {
-                    if (transaction.Date < minDate)
-                    {
-                        minDate = transaction.Date;
-                    }
-
-                    if (transaction.Date > maxDate)
-                    {
-                        maxDate = transaction.Date;
-                    }
-                }
+                minDate = list.Min(t => t.Date);
+                maxDate = list.Max(t => t.Date);
             }
 
             return minDate.DurationInMonths(maxDate);
@@ -282,7 +272,7 @@ namespace BudgetAnalyser.Engine.Statement
             ChangeHash = Guid.NewGuid();
             Transactions = transactions.OrderBy(t => t.Date).ToList();
             AllTransactions = Transactions;
-            this.fullDuration = DurationInMonths;
+            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
             this.duplicates = null;
             OnPropertyChanged("Transactions");
             SubscribeToTransactionChangedEvents();
