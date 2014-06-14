@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (!ValidateUpdateInput(input))
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
@@ -55,11 +55,11 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null)
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
-            Visibility = true;
+            Enabled = true;
             decimal totalBudget = MonthlyBudgetAmount()
                                   * Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
             Maximum = Convert.ToDouble(totalBudget);

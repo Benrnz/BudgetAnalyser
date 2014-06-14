@@ -7,6 +7,24 @@ namespace BudgetAnalyser.Engine.Widgets
         private double doNotUseMaximum;
         private double doNotUseMinimum;
         private double doNotUseValue;
+        private bool doNotUseEnabled;
+        private bool doNotUseProgressBarVisibility;
+
+        public override bool Enabled
+        {
+            get { return this.doNotUseEnabled; }
+            set
+            {
+                this.doNotUseEnabled = value;
+                if (!this.doNotUseEnabled)
+                {
+                    Value = 0;
+                    ProgressBarVisibility = false;
+                }
+
+                OnPropertyChanged();
+            }
+        }
 
         public double Maximum
         {
@@ -31,7 +49,12 @@ namespace BudgetAnalyser.Engine.Widgets
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for Data binding")]
         public bool ProgressBarVisibility
         {
-            get { return true; }
+            get { return this.doNotUseProgressBarVisibility; }
+            protected set
+            {
+                this.doNotUseProgressBarVisibility = value;
+                OnPropertyChanged();
+            }
         }
 
         public double Value

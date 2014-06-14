@@ -39,11 +39,11 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (!ValidateUpdateInput(input))
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
-            Visibility = true;
+            Enabled = true;
             var statement = (StatementModel)input[0];
             var budget = (BudgetCurrencyContext)input[1];
             var filter = (GlobalFilterCriteria)input[2];
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (ledgerBook == null || statement == null || filter == null || filter.Cleared || filter.BeginDate == null || budget == null)
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 

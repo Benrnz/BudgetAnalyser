@@ -26,11 +26,11 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (!ValidateUpdateInput(input))
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
-            Visibility = true;
+            Enabled = true;
             var statement = (StatementModel)input[0];
             int days = Convert.ToInt32(DateTime.Today.Subtract(statement.Imported).TotalDays);
             if (days < 0)

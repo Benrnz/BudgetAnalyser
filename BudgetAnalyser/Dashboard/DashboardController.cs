@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -30,12 +31,13 @@ namespace BudgetAnalyser.Dashboard
         private readonly IWidgetRepository widgetRepository;
         private bool doNotUseShown;
         private TimeSpan elapsedTime;
-        private Guid statementChangeHash;
         private int filterChangeHash;
+        private Guid statementChangeHash;
         private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification="Timer is needed for the lifetime of the controller, and controller is single instance")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Timer is needed for the lifetime of the controller, and controller is single instance")
+        ]
         public DashboardController([NotNull] UiContext uiContext, [NotNull] IWidgetRepository widgetRepository, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (uiContext == null)
@@ -61,6 +63,7 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
@@ -82,7 +85,10 @@ namespace BudgetAnalyser.Dashboard
             get { return this.doNotUseShown; }
             set
             {
-                if (value == this.doNotUseShown) return;
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
@@ -120,11 +126,53 @@ namespace BudgetAnalyser.Dashboard
             {
                 throw new ArgumentNullException("message");
             }
+
             if (Widgets == null)
             {
                 Widgets = this.widgetRepository.GetAll();
                 UpdateWidgets();
             }
+
+            if (!message.RehydratedModels.ContainsKey(typeof(DashboardApplicationStateV1)))
+            {
+                return;
+            }
+
+            var storedState = message.RehydratedModels[typeof(DashboardApplicationStateV1)].AdaptModel<DashboardApplicationStateModel>();
+            if (storedState == null)
+            {
+                return;
+            }
+
+            List<Widget> widgetsClone = Widgets.ToList();
+            foreach (WidgetState widgetState in storedState.WidgetStates)
+            {
+                WidgetState stateClone = widgetState;
+                if (widgetState.IdType == IdentifierType.FullTypeName)
+                {
+                    Widget widget = widgetsClone.FirstOrDefault(w => w.GetType().FullName == stateClone.Id);
+                    if (widget != null)
+                    {
+                        widget.Visibility = widgetState.Visible;
+                    }
+                }
+            }
+        }
+
+        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+        {
+            var widgetStates = Widgets.Select(w => new WidgetState
+            {
+                Id = w.GetType().FullName,
+                IdType = IdentifierType.FullTypeName,
+                Visible = w.Visibility,
+            });
+
+            message.PersistThisModel(
+                new DashboardApplicationStateV1
+                {
+                    Model = new DashboardApplicationStateModel { WidgetStates = widgetStates.ToList() }
+                });
         }
 
         private void OnBudgetReadyMessageReceived([NotNull] BudgetReadyMessage message)
@@ -149,7 +197,7 @@ namespace BudgetAnalyser.Dashboard
             Type key = typeof(GlobalFilterCriteria);
             this.availableDependencies[key] = message.Criteria;
 
-            var newHash = message.Criteria.GetHashCode();
+            int newHash = message.Criteria.GetHashCode();
             if (newHash != this.filterChangeHash)
             {
                 this.filterChangeHash = newHash;
@@ -183,7 +231,7 @@ namespace BudgetAnalyser.Dashboard
             if (this.statementChangeHash != message.StatementModel.ChangeHash)
             {
                 this.statementChangeHash = message.StatementModel.ChangeHash;
-                var key = typeof(StatementModel);
+                Type key = typeof(StatementModel);
                 this.availableDependencies[key] = message.StatementModel;
                 UpdateWidgets(key);
             }
@@ -269,7 +317,7 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private bool WidgetCommandCanExecute(Widget widget)
+        private static bool WidgetCommandCanExecute(Widget widget)
         {
             return widget.Clickable;
         }

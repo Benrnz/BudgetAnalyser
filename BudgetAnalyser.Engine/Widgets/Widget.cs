@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private string doNotUseToolTip;
         private bool doNotUseVisibility;
         private string doNotUseWidgetStyle;
+        private bool doNotUseEnabled;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         protected Widget()
@@ -32,6 +33,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
             Visibility = true;
+            Enabled = true;
         }
 
         public event EventHandler ColourStyleChanged;
@@ -82,6 +84,16 @@ namespace BudgetAnalyser.Engine.Widgets
             protected set
             {
                 this.doNotUseDetailedText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public virtual bool Enabled
+        {
+            get { return this.doNotUseEnabled; }
+            set
+            {
+                this.doNotUseEnabled = value;
                 OnPropertyChanged();
             }
         }

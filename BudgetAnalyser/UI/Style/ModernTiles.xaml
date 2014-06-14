@@ -49,6 +49,15 @@
                 Value="250" />
         <Setter Property="Margin"
                 Value="10,10,0,0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Enabled}"
+                         Value="False">
+                <DataTrigger.Setters>
+                    <Setter Property="Background"
+                            Value="{StaticResource Brush.ModernTile.Disabled}"/>
+                </DataTrigger.Setters>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="ModernTileMediumStyle1"

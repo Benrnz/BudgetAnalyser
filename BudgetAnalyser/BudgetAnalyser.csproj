@@ -142,7 +142,9 @@
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\DashboardApplicationStateV1.cs" />
+    <Compile Include="Dashboard\IdentifierType.cs" />
     <Compile Include="Dashboard\WidgetActivatedMessage.cs" />
+    <Compile Include="Dashboard\WidgetState.cs" />
     <Compile Include="DemoFileHelper.cs" />
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
     <Compile Include="Filtering\FilterMode.cs" />

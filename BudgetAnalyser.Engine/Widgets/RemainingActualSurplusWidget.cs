@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (!ValidateUpdateInput(input))
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
@@ -43,11 +43,11 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (this.ledgerBook == null || this.statement == null || this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.EndDate == null)
             {
-                Visibility = false;
+                Enabled = false;
                 return;
             }
 
-            Visibility = true;
+            Enabled = true;
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
             decimal remainingBalance = LedgerCalculation.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
 

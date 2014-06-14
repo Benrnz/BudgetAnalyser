@@ -125,6 +125,8 @@
 
     <Color x:Key="Colour.ModernTile.Background3">#FF9A00A2</Color>
 
+    <Color x:Key="Colour.ModernTile.Disabled">#FF262626</Color>
+
     <Color x:Key="Colour.NeutralNumber">
         #FF888888
     </Color>
@@ -291,6 +293,8 @@
     <SolidColorBrush x:Key="Brush.ModernTile.Background3"
                      Color="{StaticResource Colour.ModernTile.Background3}" />
 
+    <SolidColorBrush x:Key="Brush.ModernTile.Disabled"
+                     Color="{StaticResource Colour.ModernTile.Disabled}" />
 
 
 
