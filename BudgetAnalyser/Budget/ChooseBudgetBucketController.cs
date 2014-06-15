@@ -39,7 +39,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        public event EventHandler Chosen;
+        public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
 
         public string ActionButtonToolTip
         {
@@ -96,23 +96,31 @@ namespace BudgetAnalyser.Budget
             this.filtered = true;
         }
 
-        public void ShowDialog(BudgetAnalyserFeature source)
+        public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null)
         {
-            this.dialogCorrelationId = Guid.NewGuid();
+            if (correlationId == null)
+            {
+                this.dialogCorrelationId = Guid.NewGuid();
+            }
+            else
+            {
+                this.dialogCorrelationId = correlationId.Value;
+            }
+
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Add New Ledger to Ledger Book",
+                Title = title,
             };
             MessengerInstance.Send(dialogRequest);
         }
 
         private void CompleteSelection()
         {
-            EventHandler handler = Chosen;
+            var handler = Chosen;
             if (handler != null)
             {
-                handler(this, EventArgs.Empty);
+                handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId));
             }
 
             FilterDescription = null;

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC]
     public static class LedgerTransactionCommands
     {
+        [PropertyInjection]
         public static IMessenger MessengerInstance { get; set; }
 
         public static ICommand NavigateToTransactionCommand

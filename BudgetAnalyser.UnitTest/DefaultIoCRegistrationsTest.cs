@@ -21,6 +21,7 @@ namespace BudgetAnalyser.UnitTest
                     typeof (IModelValidate), // Used to indicate support for standard validation.
                     typeof (IBankStatementImporter), // The implementations of this interface are discovered by reflection.
                     typeof (IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
+                    typeof (IMultiInstanceWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
                 };
             }
         }

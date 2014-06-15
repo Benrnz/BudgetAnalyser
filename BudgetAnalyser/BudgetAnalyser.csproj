@@ -110,6 +110,7 @@
     <Compile Include="BackgroundProcessingJobMetadata.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
+    <Compile Include="Budget\BudgetBucketChosenEventArgs.cs" />
     <Compile Include="Budget\BudgetBucketUserControl.xaml.cs">
       <DependentUpon>BudgetBucketUserControl.xaml</DependentUpon>
     </Compile>

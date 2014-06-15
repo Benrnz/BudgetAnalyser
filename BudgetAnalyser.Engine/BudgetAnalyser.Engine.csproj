@@ -114,6 +114,7 @@
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
+    <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Widgets\RemainingSurplusWidget.cs" />
     <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widgets\Widget.cs" />
+    <Compile Include="Widgets\WidgetRepositoryChangedEventArgs.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
   </ItemGroup>
   <ItemGroup>

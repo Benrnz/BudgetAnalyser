@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -18,6 +19,7 @@ using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Command;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 
@@ -28,7 +30,10 @@ namespace BudgetAnalyser.Dashboard
     {
         private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly ChooseBudgetBucketController chooseBudgetBucketController;
+        private readonly IUserMessageBox messageBox;
         private readonly IWidgetRepository widgetRepository;
+        private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
         private TimeSpan elapsedTime;
         private int filterChangeHash;
@@ -38,7 +43,11 @@ namespace BudgetAnalyser.Dashboard
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Timer is needed for the lifetime of the controller, and controller is single instance")
         ]
-        public DashboardController([NotNull] UiContext uiContext, [NotNull] IWidgetRepository widgetRepository, [NotNull] IBudgetBucketRepository bucketRepository)
+        public DashboardController(
+            [NotNull] UiContext uiContext,
+            [NotNull] IWidgetRepository widgetRepository,
+            [NotNull] IBudgetBucketRepository bucketRepository,
+            [NotNull] ChooseBudgetBucketController chooseBudgetBucketController)
         {
             if (uiContext == null)
             {
@@ -55,9 +64,19 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("bucketRepository");
             }
 
+            if (chooseBudgetBucketController == null)
+            {
+                throw new ArgumentNullException("chooseBudgetBucketController");
+            }
+
             this.widgetRepository = widgetRepository;
+            this.widgetRepository.WidgetRemoved += OnBudgetBucketMonitorWidgetRemoved;
             this.bucketRepository = bucketRepository;
+            this.chooseBudgetBucketController = chooseBudgetBucketController;
+            this.chooseBudgetBucketController.Chosen += OnBudgetBucketMonitorWidgetAdded;
             GlobalFilterController = uiContext.GlobalFilterController;
+            CorrelationId = Guid.NewGuid();
+            this.messageBox = uiContext.UserPrompts.MessageBox;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
@@ -68,6 +87,7 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
 
+
             this.updateTimer = new Timer(TimeSpan.FromMinutes(1).TotalMilliseconds)
             {
                 AutoReset = true,
@@ -76,6 +96,16 @@ namespace BudgetAnalyser.Dashboard
             this.updateTimer.Elapsed += OnUpdateTimerElapsed;
 
             InitialiseSupportedDependenciesArray();
+        }
+
+        public Guid CorrelationId
+        {
+            get { return this.doNotUseCorrelationId; }
+            private set
+            {
+                this.doNotUseCorrelationId = value;
+                RaisePropertyChanged(() => CorrelationId);
+            }
         }
 
         public GlobalFilterController GlobalFilterController { get; private set; }
@@ -108,7 +138,7 @@ namespace BudgetAnalyser.Dashboard
             get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
         }
 
-        public IEnumerable<Widget> Widgets { get; private set; }
+        public ObservableCollection<Widget> Widgets { get; private set; }
 
         private static WidgetState CreateWidgetState(Widget widget)
         {
@@ -163,9 +193,8 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            Widgets = this.widgetRepository.GetAll();
+            List<Widget> widgets = this.widgetRepository.GetAll().ToList();
 
-            List<Widget> widgetsClone = Widgets.ToList();
             foreach (WidgetState widgetState in storedState.WidgetStates)
             {
                 WidgetState stateClone = widgetState;
@@ -179,7 +208,7 @@ namespace BudgetAnalyser.Dashboard
                 else
                 {
                     // Ordinary widgets will already exist in the repository as they are single instance per class.
-                    Widget typedWidget = widgetsClone.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                    Widget typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
                     if (typedWidget != null)
                     {
                         typedWidget.Visibility = widgetState.Visible;
@@ -187,7 +216,7 @@ namespace BudgetAnalyser.Dashboard
                 }
             }
 
-            Widgets = this.widgetRepository.GetAll();
+            Widgets = new ObservableCollection<Widget>(this.widgetRepository.GetAll());
             UpdateWidgets();
         }
 
@@ -200,6 +229,32 @@ namespace BudgetAnalyser.Dashboard
                 {
                     Model = new DashboardApplicationStateModel { WidgetStates = widgetStates.ToList() }
                 });
+        }
+
+        private void OnBudgetBucketMonitorWidgetAdded(object sender, BudgetBucketChosenEventArgs args)
+        {
+            if (args.CorrelationId != CorrelationId)
+            {
+                return;
+            }
+
+            CorrelationId = Guid.NewGuid();
+            BudgetBucket bucket = this.chooseBudgetBucketController.Selected;
+            if (Widgets.OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucket.Code))
+            {
+                this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
+                return;
+            }
+
+            IMultiInstanceWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucket.Code);
+            var baseWidget = (Widget)widget;
+            Widgets.Add(baseWidget);
+            UpdateWidget(baseWidget);
+        }
+
+        private void OnBudgetBucketMonitorWidgetRemoved(object sender, WidgetRepositoryChangedEventArgs eventArgs)
+        {
+            Widgets.Remove(eventArgs.WidgetRemoved);
         }
 
         private void OnBudgetReadyMessageReceived([NotNull] BudgetReadyMessage message)

@@ -85,8 +85,8 @@ namespace BudgetAnalyser
             // Trigger instantiation of all Application hook subscribers. Unless we ask for these to be constructed, they won't be.
             container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
 
-            LedgerTransactionCommands.MessengerInstance = container.Resolve<IMessenger>();
-            DashboardCommands.WidgetRepository = container.Resolve<IWidgetRepository>();
+            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
+            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
         }
 
         private void ConstructUiContext(IContainer container)

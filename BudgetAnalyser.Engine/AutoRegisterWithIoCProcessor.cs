@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Autofac;
 using Autofac.Builder;
 using BudgetAnalyser.Engine.Annotations;
@@ -44,6 +45,35 @@ namespace BudgetAnalyser.Engine
                 }
 
                 registration.AsImplementedInterfaces().AsSelf();
+            }
+        }
+
+        public static void ProcessPropertyInjection([NotNull] IContainer container, [NotNull] Assembly assembly)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException("container");
+            }
+
+            if (assembly == null)
+            {
+                throw new ArgumentNullException("assembly");
+            }
+
+            Type[] allTypes = assembly.GetTypes()
+                .Where(t => t.IsClass && t.IsAbstract && t.IsSealed && t.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null)
+                .ToArray();
+            foreach (Type type in allTypes)
+            {
+                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static))
+                {
+                    var injectionAttribute = property.GetCustomAttribute<PropertyInjectionAttribute>();
+                    if (injectionAttribute != null)
+                    {
+                        var dependency = container.Resolve(property.PropertyType);
+                        property.SetValue(null, dependency);
+                    }
+                }
             }
         }
     }

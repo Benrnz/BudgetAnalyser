@@ -5,7 +5,8 @@
              xmlns:widget="clr-namespace:BudgetAnalyser.Engine.Widgets;assembly=BudgetAnalyser.Engine"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              MinHeight="200"
-             MinWidth="200">
+             MinWidth="200"
+             DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
         <converters1:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
@@ -29,11 +30,25 @@
                     <TextBlock Text="Unhide all" />
                 </MenuItem.Header>
             </MenuItem>
+            <Separator/>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewBucketMonitorWidgetCommand}"
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                <MenuItem.Header>
+                    <TextBlock Text="New Bucket Monitor Widget" />
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.RemoveWidgetCommand}"
+                      CommandParameter="{Binding .}">
+                <MenuItem.Header>
+                    <TextBlock Text="Remove Bucket Monitor Widget" />
+                </MenuItem.Header>
+            </MenuItem>
         </ContextMenu>
 
         <DataTemplate DataType="{x:Type widget:ProgressBarWidget}">
             <Border ContextMenu="{StaticResource WidgetContextMenu}"
                     Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
                     ToolTip="{Binding ToolTip}"
                     Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">
@@ -72,6 +87,7 @@
         <DataTemplate DataType="{x:Type widget:Widget}">
             <Border ContextMenu="{StaticResource WidgetContextMenu}"
                     Style="{Binding WidgetStyle, Converter={StaticResource Converter.TextToStaticResource}}"
+                    Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
                     ToolTip="{Binding ToolTip}"
                     Visibility="{Binding Visibility, Converter={StaticResource Converter.BoolToVis}}">
                 <Grid Style="{Binding ColourStyleName, Converter={StaticResource Converter.TextToStaticResource}}">

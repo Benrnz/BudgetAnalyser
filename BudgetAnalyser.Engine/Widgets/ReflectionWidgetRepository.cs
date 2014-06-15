@@ -12,12 +12,14 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public ReflectionWidgetRepository()
         {
-            cachedWidgets = new SortedList<string, Widget>();
+            this.cachedWidgets = new SortedList<string, Widget>();
         }
+
+        public event EventHandler<WidgetRepositoryChangedEventArgs> WidgetRemoved;
 
         public IMultiInstanceWidget Create(string widgetType, string id)
         {
-            var type = Type.GetType(widgetType);
+            Type type = Type.GetType(widgetType);
             if (type == null)
             {
                 throw new NotSupportedException("The widget type specified " + widgetType + " is not found in any known type library.");
@@ -32,7 +34,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Debug.Assert(widget != null);
             widget.Id = id;
             var baseWidget = (Widget)widget;
-            this.cachedWidgets.Add(baseWidget.Category + baseWidget.Name + widget.Id, baseWidget);
+            this.cachedWidgets.Add(BuildMultiUseWidgetKey(widget), baseWidget);
             return widget;
         }
 
@@ -43,7 +45,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 IEnumerable<Type> widgetTypes = GetType().Assembly.GetExportedTypes()
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
 
-                foreach (var widget in widgetTypes
+                foreach (Widget widget in widgetTypes
                     .Where(t => !typeof(IMultiInstanceWidget).IsAssignableFrom(t))
                     .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
                 {
@@ -52,6 +54,29 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             return this.cachedWidgets.Values;
+        }
+
+        public void Remove(IMultiInstanceWidget widget)
+        {
+            if (widget == null)
+            {
+                return;
+            }
+
+            if (this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget)))
+            {
+                var handler = WidgetRemoved;
+                if (handler != null)
+                {
+                    handler(this, new WidgetRepositoryChangedEventArgs((Widget)widget));
+                }
+            }
+        }
+
+        private static string BuildMultiUseWidgetKey(IMultiInstanceWidget widget)
+        {
+            var baseWidget = (Widget)widget;
+            return baseWidget.Category + baseWidget.Name + widget.Id;
         }
     }
 }
