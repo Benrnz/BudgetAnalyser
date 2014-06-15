@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Widgets
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class ReflectionWidgetRepository : IWidgetRepository
     {
-        private SortedList<string, Widget> cachedWidgets;
+        private readonly SortedList<string, Widget> cachedWidgets;
 
         public ReflectionWidgetRepository()
         {

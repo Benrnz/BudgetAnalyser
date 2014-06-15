@@ -21,6 +21,10 @@ namespace BudgetAnalyser.Engine.Widgets
                     Value = 0;
                     ProgressBarVisibility = false;
                 }
+                else
+                {
+                    ProgressBarVisibility = true;
+                }
 
                 OnPropertyChanged();
             }
