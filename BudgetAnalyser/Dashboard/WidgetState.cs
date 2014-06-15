@@ -6,7 +6,6 @@
     public class WidgetState
     {
         public bool Visible { get; set; }
-        public string Id { get; set; }
-        public IdentifierType IdType { get; set; }
+        public string WidgetType { get; set; }
     }
 }

@@ -178,12 +178,14 @@
     <Compile Include="Widgets\AccountFilterWidget.cs" />
     <Compile Include="Widgets\CurrentFilesWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
+    <Compile Include="Widgets\IMultiInstanceWidget.cs" />
     <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
     <Compile Include="Widgets\IWidgetRepository.cs" />
     <Compile Include="Widgets\IWidgetWithAdditionalImage.cs" />
     <Compile Include="Widgets\ProgressBarWidget.cs" />
     <Compile Include="Widgets\ReflectionWidgetRepository.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
     <Compile Include="Widgets\RemainingBudgetBucketWidget.cs" />
     <Compile Include="Widgets\RemainingHairWidget.cs" />
     <Compile Include="Widgets\RemainingClothesWidget.cs" />

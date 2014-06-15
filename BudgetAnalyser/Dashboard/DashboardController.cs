@@ -110,6 +110,31 @@ namespace BudgetAnalyser.Dashboard
 
         public IEnumerable<Widget> Widgets { get; private set; }
 
+        private static WidgetState CreateWidgetState(Widget widget)
+        {
+            var multiInstanceWidget = widget as IMultiInstanceWidget;
+            if (multiInstanceWidget != null)
+            {
+                return new MultiInstanceWidgetState
+                {
+                    Id = multiInstanceWidget.Id,
+                    Visible = multiInstanceWidget.Visibility,
+                    WidgetType = multiInstanceWidget.WidgetType.FullName,
+                };
+            }
+
+            return new WidgetState
+            {
+                Visible = widget.Visibility,
+                WidgetType = widget.GetType().FullName,
+            };
+        }
+
+        private static bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
+        }
+
         private void InitialiseSupportedDependenciesArray()
         {
             this.availableDependencies[typeof(StatementModel)] = null;
@@ -127,12 +152,6 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            if (Widgets == null)
-            {
-                Widgets = this.widgetRepository.GetAll();
-                UpdateWidgets();
-            }
-
             if (!message.RehydratedModels.ContainsKey(typeof(DashboardApplicationStateV1)))
             {
                 return;
@@ -144,29 +163,37 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
+            Widgets = this.widgetRepository.GetAll();
+
             List<Widget> widgetsClone = Widgets.ToList();
             foreach (WidgetState widgetState in storedState.WidgetStates)
             {
                 WidgetState stateClone = widgetState;
-                if (widgetState.IdType == IdentifierType.FullTypeName)
+                var multiInstanceState = widgetState as MultiInstanceWidgetState;
+                if (multiInstanceState != null)
                 {
-                    Widget widget = widgetsClone.FirstOrDefault(w => w.GetType().FullName == stateClone.Id);
-                    if (widget != null)
+                    // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
+                    IMultiInstanceWidget newIdWidget = this.widgetRepository.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+                    newIdWidget.Visibility = multiInstanceState.Visible;
+                }
+                else
+                {
+                    // Ordinary widgets will already exist in the repository as they are single instance per class.
+                    Widget typedWidget = widgetsClone.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                    if (typedWidget != null)
                     {
-                        widget.Visibility = widgetState.Visible;
+                        typedWidget.Visibility = widgetState.Visible;
                     }
                 }
             }
+
+            Widgets = this.widgetRepository.GetAll();
+            UpdateWidgets();
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var widgetStates = Widgets.Select(w => new WidgetState
-            {
-                Id = w.GetType().FullName,
-                IdType = IdentifierType.FullTypeName,
-                Visible = w.Visibility,
-            });
+            IEnumerable<WidgetState> widgetStates = Widgets.Select(CreateWidgetState);
 
             message.PersistThisModel(
                 new DashboardApplicationStateV1
@@ -315,11 +342,6 @@ namespace BudgetAnalyser.Dashboard
                 // update all
                 Widgets.ToList().ForEach(UpdateWidget);
             }
-        }
-
-        private static bool WidgetCommandCanExecute(Widget widget)
-        {
-            return widget.Clickable;
         }
     }
 }

@@ -142,7 +142,7 @@
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\DashboardApplicationStateV1.cs" />
-    <Compile Include="Dashboard\IdentifierType.cs" />
+    <Compile Include="Dashboard\MultiInstanceWidgetState.cs" />
     <Compile Include="Dashboard\WidgetActivatedMessage.cs" />
     <Compile Include="Dashboard\WidgetState.cs" />
     <Compile Include="DemoFileHelper.cs" />
