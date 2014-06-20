@@ -381,7 +381,12 @@ namespace BudgetAnalyser.Dashboard
 
         private void UpdateWidgets(params Type[] filterDependencyTypes)
         {
-            if (Widgets == null || !Widgets.Any())
+            if (Widgets == null)
+            {
+                Widgets = new ObservableCollection<Widget>(this.widgetRepository.GetAll());
+            }
+
+            if (!Widgets.Any())
             {
                 return;
             }

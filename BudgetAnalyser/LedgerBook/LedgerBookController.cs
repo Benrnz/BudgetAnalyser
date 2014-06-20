@@ -134,6 +134,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return FileOperations.ViewModel; }
         }
 
+        public void DeregisterListener<T>(object listener, Action<T> handler)
+        {
+            MessengerInstance.Unregister(listener, handler);
+        }
+
         public void EditLedgerBookName()
         {
             if (ViewModel.LedgerBook == null)
@@ -156,12 +161,17 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.CheckIfSaveRequired();
         }
 
+        public void RegisterListener<T>(object listener, Action<T> handler)
+        {
+            MessengerInstance.Register(listener, handler);
+        }
+
         internal ILedgerBookGridBuilder GridBuilder()
         {
             if (this.pivotGridToHorizontal)
             {
                 return this.uiBuilder.GridBuilderV1(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
-            } 
+            }
 
             return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
         }
@@ -380,15 +390,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void RaiseLedgerBookUpdated()
-        {
-            EventHandler handler = LedgerBookUpdated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)
         {
             ViewModel.CurrentStatement = message.StatementModel;
@@ -408,6 +409,15 @@ namespace BudgetAnalyser.LedgerBook
 
             ViewModel.NewLedgerLine = ViewModel.LedgerBook.UnlockMostRecentLine();
             FileOperations.Dirty = true;
+        }
+
+        private void RaiseLedgerBookUpdated()
+        {
+            EventHandler handler = LedgerBookUpdated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }
