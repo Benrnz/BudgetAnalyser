@@ -188,10 +188,6 @@
     <Compile Include="Widgets\ReflectionWidgetRepository.cs" />
     <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
     <Compile Include="Widgets\RemainingBudgetBucketWidget.cs" />
-    <Compile Include="Widgets\RemainingHairWidget.cs" />
-    <Compile Include="Widgets\RemainingClothesWidget.cs" />
-    <Compile Include="Widgets\RemainingFuelWidget.cs" />
-    <Compile Include="Widgets\RemainingFoodWidget.cs" />
     <Compile Include="Widgets\RemainingSurplusWidget.cs" />
     <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widgets\Widget.cs" />

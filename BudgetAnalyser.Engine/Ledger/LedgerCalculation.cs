@@ -66,6 +66,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerEntryLine entryLine = LocateApplicableLedgerLine(ledgerBook, filter);
+            if (entryLine == null)
+            {
+                return 0;
+            }
+
             decimal beginningOfMonthBalance = entryLine.CalculatedSurplus;
             decimal transactionTotal = statement.Transactions
                 .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1) && t.BudgetBucket is SurplusBucket)

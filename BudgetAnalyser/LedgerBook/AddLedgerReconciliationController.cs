@@ -306,9 +306,4 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(dialogRequest);
         }
     }
-
-    public class EditBankBalancesEventArgs : EventArgs
-    {
-        public bool Canceled { get; set; }
-    }
 }

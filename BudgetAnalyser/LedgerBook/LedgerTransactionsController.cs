@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -27,11 +28,9 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseNewTransactionIsDebit;
         private bool doNotUseNewTransactionIsReversal;
         private string doNotUseNewTransactionNarrative;
-        private IEnumerable<LedgerTransaction> doNotUseShownTransactions;
         private string doNotUseTitle;
         private LedgerEntryLine entryLine;
         private bool isAddDirty;
-        private bool isDeleteDirty;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] IAccountTypeRepository accountTypeRepository)
@@ -162,16 +161,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public IEnumerable<LedgerTransaction> ShownTransactions
-        {
-            get { return this.doNotUseShownTransactions; }
-            private set
-            {
-                this.doNotUseShownTransactions = value;
-                RaisePropertyChanged(() => ShownTransactions);
-                RaisePropertyChanged(() => TransactionsTotal);
-            }
-        }
+        public ObservableCollection<LedgerTransaction> ShownTransactions { get; private set; }
 
         public string Title
         {
@@ -206,7 +196,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             LedgerEntry = ledgerEntry;
-            ShownTransactions = LedgerEntry.Transactions;
+            ShownTransactions = new ObservableCollection<LedgerTransaction>(LedgerEntry.Transactions);
             Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerColumn.BudgetBucket.Code);
             ShowDialogCommon(isNew);
         }
@@ -222,7 +212,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             LedgerEntry = null;
-            ShownTransactions = ledgerEntryLine.BankBalanceAdjustments;
+            ShownTransactions = new ObservableCollection<LedgerTransaction>(ledgerEntryLine.BankBalanceAdjustments);
             Title = "Balance Adjustment Transactions";
             this.entryLine = ledgerEntryLine;
             ShowDialogCommon(isNew);
@@ -245,6 +235,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnAddNewTransactionCommandExecuted()
         {
+            // This command is executed to show the add transaction panel, then again to add the transaction once the edit fields are completed.
             if (AddingNewTransaction)
             {
                 AddingNewTransaction = false;
@@ -257,25 +248,27 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void OnDeleteTransactionCommandExecuted(LedgerTransaction obj)
+        private void OnDeleteTransactionCommandExecuted(LedgerTransaction transaction)
         {
             if (IsReadOnly)
             {
                 return;
             }
 
-            this.isDeleteDirty = true;
             if (InLedgerEntryMode)
             {
-                LedgerEntry.RemoveTransaction(obj.Id);
-                ShownTransactions = LedgerEntry.Transactions.ToList();
+                this.wasChanged = true;
+                LedgerEntry.RemoveTransaction(transaction.Id);
+                ShownTransactions.Remove(transaction);
             }
             else if (InBalanceAdjustmentMode)
             {
-                this.entryLine.CancelBalanceAdjustment(obj.Id);
-                ShownTransactions = this.entryLine.BankBalanceAdjustments.ToList();
+                this.wasChanged = true;
+                this.entryLine.CancelBalanceAdjustment(transaction.Id);
+                ShownTransactions.Remove(transaction);
             }
 
+            RaisePropertyChanged(() => TransactionsTotal);
             RaisePropertyChanged(() => LedgerEntry);
         }
 
@@ -299,16 +292,16 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Cancel)
             {
                 this.isAddDirty = false;
-                this.isDeleteDirty = false;
             }
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
             if (handler != null)
             {
-                handler(this, new LedgerTransactionEventArgs(this.isAddDirty || this.isDeleteDirty));
+                handler(this, new LedgerTransactionEventArgs(this.wasChanged));
             }
 
             Reset();
+            this.wasChanged = false;
         }
 
         private void OnZeroNetAmountCommandExecuted()
@@ -343,7 +336,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             AddingNewTransaction = false;
             this.isAddDirty = false;
-            this.isDeleteDirty = false;
             ShownTransactions = null;
             LedgerEntry = null;
             this.entryLine = null;
@@ -372,16 +364,18 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             Reset();
-
             RaisePropertyChanged(() => LedgerEntry);
         }
 
         private void SaveBalanceAdjustment()
         {
-            this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
+            var newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
                 .WithAccountType(NewTransactionAccountType);
-            ShownTransactions = this.entryLine.BankBalanceAdjustments.ToList();
+            ShownTransactions.Add(newTransaction);
+            this.wasChanged = true;
         }
+
+        private bool wasChanged;
 
         private void SaveNewEntryTransaction()
         {
@@ -412,7 +406,9 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 LedgerEntry.AddTransaction(newTransaction);
-                ShownTransactions = LedgerEntry.Transactions.ToList();
+                ShownTransactions.Add(newTransaction);
+                RaisePropertyChanged(() => TransactionsTotal);
+                this.wasChanged = true;
             }
         }
 

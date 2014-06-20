@@ -72,6 +72,7 @@
         <TextBlock Grid.Row="1" 
                    Grid.Column="0"
                    Margin="10,30,10,10"
+                   MaxWidth="800"
                    Style="{StaticResource TextBlock.Paragraph}"
                    TextWrapping="Wrap"
                    Visibility="{Binding CreateMode, Converter={StaticResource Converter.BoolToVis}}">
