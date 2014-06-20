@@ -10,5 +10,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public Engine.Ledger.LedgerBook LedgerBook { get; private set; }
+
+        public bool ForceUiRefresh { get; set; }
     }
 }

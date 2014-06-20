@@ -169,11 +169,11 @@ namespace BudgetAnalyser.LedgerBook
                     }
 
                     ViewModel.LedgerBook = this.ledgerRepository.Load(fileName);
-                    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
+                    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
                 }
-                catch (FileFormatException ex)
+                catch (Engine.FileFormatException ex)
                 {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
+                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likey due to the budget file not containing all required Budget Buckets for this LedgerBook.");
                 }
                 catch (FileNotFoundException ex)
                 {
