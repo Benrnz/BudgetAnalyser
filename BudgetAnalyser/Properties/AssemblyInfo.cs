@@ -52,7 +52,7 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.7.1")]
-[assembly: AssemblyFileVersion("1.7.1")]
+[assembly: AssemblyVersion("1.8")]
+[assembly: AssemblyFileVersion("1.8")]
 
 [assembly: CLSCompliant(false)]
