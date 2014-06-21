@@ -7,11 +7,12 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     [AutoRegisterWithIoC]
-    public sealed class LoggingApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
+    [UsedImplicitly]
+    public class LoggingApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
     {
         private readonly ILogger logger;
-        private IEnumerable<IApplicationHookEventPublisher> myPublishers;
         private bool isDisposed;
+        private IEnumerable<IApplicationHookEventPublisher> myPublishers;
 
         public LoggingApplicationHookSubscriber([NotNull] ILogger logger)
         {
@@ -38,16 +39,6 @@ namespace BudgetAnalyser.Engine
             GC.SuppressFinalize(this);
         }
 
-        private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
-        {
-            if (this.isDisposed)
-            {
-                return;
-            }
-
-            this.logger.LogInfo(() => string.Format(CultureInfo.CurrentCulture, "Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.EventType, args.Origin));
-        }
-
         public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
             if (publishers == null)
@@ -60,6 +51,21 @@ namespace BudgetAnalyser.Engine
             {
                 publisher.ApplicationEvent += OnEventOccurred;
             }
+        }
+
+        protected virtual void PerformAction(object sender, ApplicationHookEventArgs args)
+        {
+            this.logger.LogInfo(() => string.Format(CultureInfo.CurrentCulture, "Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.EventType, args.Origin));
+        }
+
+        private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
+        {
+            if (this.isDisposed)
+            {
+                return;
+            }
+
+            PerformAction(sender, args);
         }
     }
 }

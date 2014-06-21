@@ -11,17 +11,19 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    /// A application event subscriber class that will run a batch file whenever the publishers raise an event.
-    /// This allows for automatic source control of data files; for example checking into subversion when ever the statement file is changed.
+    ///     A application event subscriber class that will run a batch file whenever the publishers raise an event.
+    ///     This allows for automatic source control of data files; for example checking into subversion when ever the
+    ///     statement file is changed.
     /// </summary>
     [AutoRegisterWithIoC]
-    public sealed class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
+    [UsedImplicitly]
+    public class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
     {
         private const string BatchFileName = "BudgetAnalyserHooks.bat";
         private readonly ILogger logger;
-        private IEnumerable<IApplicationHookEventPublisher> myPublishers;
         private string doNotUseFileName;
         private bool isDisposed;
+        private IEnumerable<IApplicationHookEventPublisher> myPublishers;
 
         public BatchFileApplicationHookSubscriber([NotNull] ILogger logger)
         {
@@ -62,14 +64,23 @@ namespace BudgetAnalyser.Engine
             GC.SuppressFinalize(this);
         }
 
-        private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
+        public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
-            if (this.isDisposed)
+            if (publishers == null)
             {
-                return;
+                throw new ArgumentNullException("publishers");
             }
 
-            Task.Factory.StartNew(
+            this.myPublishers = publishers.ToList();
+            foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
+            {
+                publisher.ApplicationEvent += OnEventOccurred;
+            }
+        }
+
+        protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
+        {
+            return Task.Factory.StartNew(
                 () =>
                 {
                     if (!File.Exists(FileName))
@@ -103,18 +114,14 @@ namespace BudgetAnalyser.Engine
                 });
         }
 
-        public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
+        private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
         {
-            if (publishers == null)
+            if (this.isDisposed)
             {
-                throw new ArgumentNullException("publishers");
+                return;
             }
 
-            this.myPublishers = publishers.ToList();
-            foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
-            {
-                publisher.ApplicationEvent += OnEventOccurred;
-            }
+            PerformAction(sender, args);
         }
     }
 }

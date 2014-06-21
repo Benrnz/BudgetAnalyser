@@ -78,6 +78,8 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="ApplicationHooks\LoggingApplicationHookSubscriberTest.cs" />
+    <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
@@ -125,6 +127,8 @@
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\LoggingApplicationHookSubscriberTestHarness.cs" />
+    <Compile Include="TestHarness\BatchFileApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\FakeUserMessageBox.cs" />
