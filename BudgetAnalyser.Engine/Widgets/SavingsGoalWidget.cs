@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
@@ -50,7 +51,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var totalMonths = filter.BeginDate.Value.DurationInMonths(filter.EndDate.Value);
             Maximum = Convert.ToDouble(budget.Model.Expenses.Where(s => s.Bucket is SavingsCommitmentBucket).Sum(s => s.Amount)) * totalMonths;
 
-            decimal savingsToDate = CalculateSavingsToDateWithTrackedLedgers(statement, ledger, filter);
+            decimal savingsToDate = CalculateSavingsToDateWithTrackedLedgers(statement, ledger);
 
             Value = Convert.ToDouble(savingsToDate);
             ToolTip = string.Format(CultureInfo.CurrentCulture, "You have saved {0:C} of your monthly goal {1:C}", savingsToDate, Maximum);
@@ -65,7 +66,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        private static decimal CalculateSavingsToDateWithTrackedLedgers(StatementModel statement, LedgerBook ledger, GlobalFilterCriteria filter)
+        private static decimal CalculateSavingsToDateWithTrackedLedgers(StatementModel statement, LedgerBook ledger)
         {
             var trackedSavingsLedgers = ledger.Ledgers
                                             .Where(l => l.BudgetBucket is SavingsCommitmentBucket)
@@ -76,25 +77,32 @@ namespace BudgetAnalyser.Engine.Widgets
                 return SumDebitSavingsTransactions(statement);
             }
 
-            decimal savingsToDate = 0;
-            foreach (var bucket in trackedSavingsLedgers)
-            {
-                var transactions = statement.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
-                
-                // This will give interest earned.  This is because the transaction list will contain both debits and credits for transfering the savings around.
-                savingsToDate += transactions.Sum(t => t.Amount); 
-                
-                // This will give the savings credited.
-                var amounts = transactions
-                                .Select(t => Math.Abs(t.Amount))
-                                .GroupBy(amount => amount, amount => amount)
-                                .Where(group => group.Count() > 1);
-                savingsToDate += amounts.Distinct().Sum(g => g.Key);
-            }
+            decimal savingsToDate = CalculateTrackedSavingLedgersContributions(statement, trackedSavingsLedgers);
 
             // Other non-ledger-book-tracked savings will appear as debits in the statement so need to be negated.
             var otherNontrackedSavings = statement.Transactions.Where(t => t.BudgetBucket is SavingsCommitmentBucket && trackedSavingsLedgers.All(b => b != t.BudgetBucket));
             savingsToDate += otherNontrackedSavings.Sum(t => -t.Amount);
+            return savingsToDate;
+        }
+
+        private static decimal CalculateTrackedSavingLedgersContributions(StatementModel statement, IEnumerable<BudgetBucket> trackedSavingsLedgers)
+        {
+            decimal savingsToDate = 0;
+            foreach (var bucket in trackedSavingsLedgers)
+            {
+                var transactions = statement.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
+
+                // This will give interest earned.  This is because the transaction list will contain both debits and credits for transfering the savings around.
+                savingsToDate += transactions.Sum(t => t.Amount);
+
+                // This will give the savings credited.
+                var amounts = transactions
+                    .Select(t => Math.Abs(t.Amount))
+                    .GroupBy(amount => amount, amount => amount)
+                    .Where(group => @group.Count() > 1);
+                savingsToDate += amounts.Distinct().Sum(g => g.Key);
+            }
+
             return savingsToDate;
         }
 
