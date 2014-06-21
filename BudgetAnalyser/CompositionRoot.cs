@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using Autofac;
 using BudgetAnalyser.Budget;
@@ -83,7 +84,9 @@ namespace BudgetAnalyser
             ShellWindow = new ShellWindow { DataContext = ShellController };
 
             // Trigger instantiation of all Application hook subscribers. Unless we ask for these to be constructed, they won't be.
-            container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
+            var appEventSubscribers = container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
+            var appEventPublishers = container.Resolve<IEnumerable<IApplicationHookEventPublisher>>();
+            appEventSubscribers.ToList().ForEach(s => s.Subscribe(appEventPublishers));
 
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);

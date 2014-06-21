@@ -1,7 +1,10 @@
-﻿namespace BudgetAnalyser.Engine
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace BudgetAnalyser.Engine
 {
     public interface IApplicationHookSubscriber
     {
-        void OnEventOccurred(object sender, ApplicationHookEventArgs args);
+        void Subscribe(IEnumerable<IApplicationHookEventPublisher> publishers);
     }
 }
