@@ -7,6 +7,9 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    /// Use this widget class for hard coded budget bucket widgets.
+    /// </summary>
     public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
         private readonly string standardStyle;
