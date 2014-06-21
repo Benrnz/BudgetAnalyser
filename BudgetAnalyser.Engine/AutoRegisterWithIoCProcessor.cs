@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Core;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
@@ -71,8 +70,14 @@ namespace BudgetAnalyser.Engine
                     var injectionAttribute = property.GetCustomAttribute<PropertyInjectionAttribute>();
                     if (injectionAttribute != null)
                     {
-                        var dependency = container.Resolve(property.PropertyType);
-                        property.SetValue(null, dependency);
+                        // Some reasonably awkard Autofac usage here to allow testibility.  (Extension methods aren't easy to test)
+                        IComponentRegistration registration;
+                        var success = container.ComponentRegistry.TryGetRegistration(new TypedService(property.PropertyType), out registration);
+                        if (success)
+                        {
+                            var dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
+                            property.SetValue(null, dependency);
+                        }
                     }
                 }
             }

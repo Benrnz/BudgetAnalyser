@@ -78,6 +78,8 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
+    <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
     <Compile Include="Budget\BudgetCollectionTest.cs" />
     <Compile Include="Budget\BudgetCollectionToDataBudgetCollectionMapperTest.cs" />
