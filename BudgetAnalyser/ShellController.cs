@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Windows;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
@@ -20,6 +21,8 @@ namespace BudgetAnalyser
         private readonly IPersistApplicationState statePersistence;
         private readonly UiContext uiContext;
         private bool initialised;
+        private Point originalWindowSize;
+        private Point originalWindowTopLeft;
 
         public ShellController(
             [NotNull] UiContext uiContext,
@@ -38,7 +41,8 @@ namespace BudgetAnalyser
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
             MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
-
+            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
             BackgroundJob = uiContext.BackgroundJob;
@@ -103,6 +107,9 @@ namespace BudgetAnalyser
             get { return "Budget Analyser"; }
         }
 
+        internal Point WindowSize { get; private set; }
+        internal Point WindowTopLeft { get; private set; }
+
         public void Initialize()
         {
             if (this.initialised)
@@ -120,13 +127,13 @@ namespace BudgetAnalyser
             }
 
             // Create a distinct list of sequences.
-            var sequences = rehydratedModels.Select(persistentModel => persistentModel.Sequence).OrderBy(s => s).Distinct();
+            IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.Sequence).OrderBy(s => s).Distinct();
 
             // Send state load messages in order.
-            foreach (var sequence in sequences)
+            foreach (int sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                var models = rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy);
+                IEnumerable<IPersistent> models = rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -135,10 +142,67 @@ namespace BudgetAnalyser
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
 
+        public void NotifyOfWindowLocationChange(Point location)
+        {
+            WindowTopLeft = location;
+        }
+
+        public void NotifyOfWindowSizeChange(Point size)
+        {
+            WindowSize = size;
+        }
+
         public void OnViewReady()
         {
             // Re-run the initialisers. This allows any controller who couldn't initialise until the views are loaded to now reattempt to initialise.
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
+            if (this.originalWindowTopLeft != new Point())
+            {
+                WindowTopLeft = this.originalWindowTopLeft;
+            }
+
+            if (this.originalWindowSize != new Point())
+            {
+                WindowSize = this.originalWindowSize;
+            }
+        }
+
+        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        {
+            if (!message.RehydratedModels.ContainsKey(typeof(ShellPersistentStateV1)))
+            {
+                return;
+            }
+
+            var shellState = message.RehydratedModels[typeof(ShellPersistentStateV1)].AdaptModel<ShellStateModel>();
+            // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
+            if (shellState.Size.X > 0 || shellState.Size.Y > 0)
+            {
+                this.originalWindowSize = shellState.Size;
+            }
+            else
+            {
+                this.originalWindowSize = new Point(1250, 600);
+            }
+
+            if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
+            {
+                // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
+                this.originalWindowTopLeft = shellState.TopLeft;
+            }
+        }
+
+        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
+        {
+            var shellPersistentStateV1 = new ShellPersistentStateV1
+            {
+                Model = new ShellStateModel
+                {
+                    Size = WindowSize,
+                    TopLeft = WindowTopLeft,
+                }
+            };
+            message.PersistThisModel(shellPersistentStateV1);
         }
 
         private void OnDialogRequested(ShellDialogRequestMessage message)

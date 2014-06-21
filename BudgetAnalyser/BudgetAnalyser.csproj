@@ -159,6 +159,7 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="ShellPersistentStateV1.cs" />
     <Compile Include="LedgerBook\BankBalanceUserControl.xaml.cs">
       <DependentUpon>BankBalanceUserControl.xaml</DependentUpon>
     </Compile>
@@ -222,6 +223,7 @@
     <Compile Include="ShellDialog\ShellDialogView.xaml.cs">
       <DependentUpon>ShellDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShellStateModel.cs" />
     <Compile Include="Statement\AccountTypeUserControl.xaml.cs">
       <DependentUpon>AccountTypeUserControl.xaml</DependentUpon>
     </Compile>
