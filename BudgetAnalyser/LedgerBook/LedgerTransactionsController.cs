@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
@@ -379,37 +380,46 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveNewEntryTransaction()
         {
-            if (NewTransactionIsCredit || NewTransactionIsDebit)
+            try
             {
-                LedgerTransaction newTransaction;
-                if (NewTransactionIsCredit)
+                if (NewTransactionIsCredit || NewTransactionIsDebit)
                 {
-                    newTransaction = new CreditLedgerTransaction();
-                }
-                else
-                {
-                    newTransaction = new DebitLedgerTransaction();
-                }
+                    LedgerTransaction newTransaction;
+                    if (NewTransactionIsCredit)
+                    {
+                        newTransaction = new CreditLedgerTransaction();
+                    }
+                    else
+                    {
+                        newTransaction = new DebitLedgerTransaction();
+                    }
 
-                if (NewTransactionIsReversal)
-                {
-                    newTransaction.WithReversal(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
-                }
-                else
-                {
-                    newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
-                }
+                    if (NewTransactionIsReversal)
+                    {
+                        newTransaction.WithReversal(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
+                    }
+                    else
+                    {
+                        newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
+                    }
 
-                if (NewTransactionAccountType != null)
-                {
-                    newTransaction.WithAccountType(NewTransactionAccountType);
-                }
+                    if (NewTransactionAccountType != null)
+                    {
+                        newTransaction.WithAccountType(NewTransactionAccountType);
+                    }
 
-                LedgerEntry.AddTransaction(newTransaction);
-                ShownTransactions.Add(newTransaction);
-                RaisePropertyChanged(() => TransactionsTotal);
-                this.wasChanged = true;
+                    LedgerEntry.AddTransaction(newTransaction);
+                    ShownTransactions.Add(newTransaction);
+                }
             }
+            catch (ArgumentException)
+            {
+                // Invalid transaction data
+                return;
+            }
+
+            RaisePropertyChanged(() => TransactionsTotal);
+            this.wasChanged = true;
         }
 
         private void ShowDialogCommon(bool isNew)
