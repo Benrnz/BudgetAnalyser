@@ -90,7 +90,7 @@
     <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
     <Compile Include="Budget\BudgetModel.cs" />
-    <Compile Include="Budget\SavingsCommittmentBucket.cs" />
+    <Compile Include="Budget\SavingsCommitmentBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="Budget\Expense.cs" />
     <Compile Include="Budget\ExpenseBucket.cs" />

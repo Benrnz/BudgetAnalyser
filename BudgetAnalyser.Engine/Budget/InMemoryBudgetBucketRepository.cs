@@ -113,8 +113,13 @@ namespace BudgetAnalyser.Engine.Budget
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
         }
 
-        protected void AddBucket(BudgetBucket bucket)
+        protected void AddBucket([NotNull] BudgetBucket bucket)
         {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException("bucket");
+            }
+
             if (IsValidCode(bucket.Code))
             {
                 return;

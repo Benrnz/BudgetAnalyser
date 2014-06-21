@@ -173,7 +173,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
                 catch (Engine.FileFormatException ex)
                 {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likey due to the budget file not containing all required Budget Buckets for this LedgerBook.");
+                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
                 }
                 catch (FileNotFoundException ex)
                 {

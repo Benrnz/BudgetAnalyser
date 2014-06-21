@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class PropertyInjectionAttribute : Attribute
+    public sealed class PropertyInjectionAttribute : Attribute
     {
     }
 }

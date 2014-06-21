@@ -1,20 +1,20 @@
 ﻿namespace BudgetAnalyser.Engine.Budget
 {
-    public class SavingsCommittmentBucket : ExpenseBucket
+    public class SavingsCommitmentBucket : ExpenseBucket
     {
-        public SavingsCommittmentBucket()
+        public SavingsCommitmentBucket()
         {
             // Default constructor required for deserialisation.
         }
 
-        public SavingsCommittmentBucket(string code, string name)
+        public SavingsCommitmentBucket(string code, string name)
             : base(code, name)
         {
         }
 
         public override string TypeDescription
         {
-            get { return "Savings Committment Monthly Expense"; }
+            get { return "Savings Commitment Monthly Expense"; }
         }
     }
 }

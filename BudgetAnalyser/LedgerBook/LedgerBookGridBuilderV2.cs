@@ -35,7 +35,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showRemarksCommand;
         private readonly ICommand showTransactionsCommand;
-        private ContentPresenter content;
+        private ContentPresenter contentPresenter;
         private Engine.Ledger.LedgerBook ledgerBook;
         private ResourceDictionary localResources;
 
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerBook = currentLedgerBook;
             this.localResources = viewResources;
-            this.content = contentPanel;
+            this.contentPresenter = contentPanel;
             DynamicallyCreateLedgerBookGrid();
         }
 
@@ -344,7 +344,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (this.ledgerBook == null)
             {
-                this.content = null;
+                this.contentPresenter = null;
                 return;
             }
 
@@ -362,7 +362,7 @@ namespace BudgetAnalyser.LedgerBook
             // Remarks
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-            this.content.Content = grid;
+            this.contentPresenter.Content = grid;
             AddGridColumns(grid);
 
             AddHeadingColumnContent(grid);

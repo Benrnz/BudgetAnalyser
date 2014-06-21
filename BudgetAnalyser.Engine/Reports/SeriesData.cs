@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class SeriesData : INotifyPropertyChanged
+    public sealed class SeriesData : INotifyPropertyChanged
     {
         private bool doNotUseVisible;
 
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Reports
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)

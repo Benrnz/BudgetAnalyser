@@ -123,8 +123,13 @@ namespace BudgetAnalyser.Engine.Ledger
             return newLine;
         }
 
-        public void RemoveLine(LedgerEntryLine line)
+        public void RemoveLine([NotNull] LedgerEntryLine line)
         {
+            if (line == null)
+            {
+                throw new ArgumentNullException("line");
+            }
+
             if (!line.IsNew)
             {
                 throw new InvalidOperationException("You cannot delete a Ledger Entry Line that is not unlocked or a newly created line.");

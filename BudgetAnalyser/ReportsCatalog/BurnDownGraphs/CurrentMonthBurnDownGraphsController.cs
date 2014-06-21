@@ -100,6 +100,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
         public string Title
         {
             get { return "Current Month Burndown Graphs"; }

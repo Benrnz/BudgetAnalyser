@@ -59,21 +59,7 @@ namespace BudgetAnalyser.Engine.Widgets
             int warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 
             // Check other budget buckets that are not represented in the ledger book.
-            List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate.Value.AddMonths(1)).ToList();
-            foreach (Expense expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
-            {
-                if (overspendingSummary.ContainsKey(expense.Bucket))
-                {
-                    continue;
-                }
-
-                decimal bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
-                overspendingSummary.Add(expense.Bucket, bucketBalance);
-                if (bucketBalance < -Tolerance)
-                {
-                    warnings++;
-                }
-            }
+            SearchForOverspentLedgers(statement, filter, budget, overspendingSummary, warnings);
 
             if (warnings > 0)
             {
@@ -91,8 +77,27 @@ namespace BudgetAnalyser.Engine.Widgets
             else
             {
                 LargeNumber = "0";
-                ToolTip = "No overspent ledgers for the month beginning " + filter.BeginDate.Value.ToString("d");
+                ToolTip = "No overspent ledgers for the month beginning " + filter.BeginDate.Value.ToString("d", CultureInfo.CurrentCulture);
                 ColourStyleName = WidgetStandardStyle;
+            }
+        }
+
+        private void SearchForOverspentLedgers(StatementModel statement, GlobalFilterCriteria filter, BudgetCurrencyContext budget, IDictionary<BudgetBucket, decimal> overspendingSummary, int warnings)
+        {
+            List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate.Value.AddMonths(1)).ToList();
+            foreach (Expense expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
+            {
+                if (overspendingSummary.ContainsKey(expense.Bucket))
+                {
+                    continue;
+                }
+
+                decimal bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
+                overspendingSummary.Add(expense.Bucket, bucketBalance);
+                if (bucketBalance < -this.Tolerance)
+                {
+                    warnings++;
+                }
             }
         }
     }

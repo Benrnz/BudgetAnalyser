@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Converters
                 return ConverterHelper.AccumulatedBucketBrush;
             }
 
-            if (value is SavingsCommittmentBucket)
+            if (value is SavingsCommitmentBucket)
             {
                 return ConverterHelper.NotSoBadDebitBrush;
             }

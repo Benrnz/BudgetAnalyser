@@ -56,11 +56,13 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public double OverallPerformance { get; private set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
         public string Title
         {
             get { return "Overall Budget Performance"; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "BudgetCollection might be refactored, but ok for now")]
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
             Analysis = new OverallPerformanceBudgetAnalyser(statementModel, budgets, this.bucketRepository);

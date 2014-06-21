@@ -354,9 +354,9 @@ namespace BudgetAnalyser.Budget
             {
                 newExpense.Bucket = new SavedUpForExpenseBucket(string.Empty, string.Empty);
             }
-            else if (expense is SavingsCommittmentBucket)
+            else if (expense is SavingsCommitmentBucket)
             {
-                newExpense.Bucket = new SavingsCommittmentBucket(string.Empty, string.Empty);
+                newExpense.Bucket = new SavingsCommitmentBucket(string.Empty, string.Empty);
             }
             else
             {

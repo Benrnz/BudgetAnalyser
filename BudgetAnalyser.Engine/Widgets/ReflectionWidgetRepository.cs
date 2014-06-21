@@ -17,6 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public event EventHandler<WidgetRepositoryChangedEventArgs> WidgetRemoved;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IMultiInstanceWidget")]
         public IMultiInstanceWidget Create(string widgetType, string id)
         {
             Type type = Type.GetType(widgetType);

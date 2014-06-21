@@ -7,6 +7,7 @@ namespace BudgetAnalyser.Engine.Widgets
     ///     instance must be uniquely
     ///     identified by the <see cref="Id" /> property combined with the <see cref="WidgetType" /> Property.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred Spelling")]
     public interface IMultiInstanceWidget
     {
         string Id { get; set; }

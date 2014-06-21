@@ -21,7 +21,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private Guid dialogCorrelationId;
-        private bool doNotUseAddingNewTransaction;
+        private bool doNotUseShowAddingNewTransactionPanel;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
         private decimal doNotUseNewTransactionAmount;
@@ -63,13 +63,13 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
         }
 
-        public bool AddingNewTransaction
+        public bool ShowAddingNewTransactionPanel
         {
-            get { return this.doNotUseAddingNewTransaction; }
+            get { return this.doNotUseShowAddingNewTransactionPanel; }
             private set
             {
-                this.doNotUseAddingNewTransaction = value;
-                RaisePropertyChanged(() => AddingNewTransaction);
+                this.doNotUseShowAddingNewTransactionPanel = value;
+                RaisePropertyChanged(() => this.ShowAddingNewTransactionPanel);
             }
         }
 
@@ -237,15 +237,15 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewTransactionCommandExecuted()
         {
             // This command is executed to show the add transaction panel, then again to add the transaction once the edit fields are completed.
-            if (AddingNewTransaction)
+            if (this.ShowAddingNewTransactionPanel)
             {
-                AddingNewTransaction = false;
+                this.ShowAddingNewTransactionPanel = false;
                 this.isAddDirty = true;
                 Save();
             }
             else
             {
-                AddingNewTransaction = true;
+                this.ShowAddingNewTransactionPanel = true;
             }
         }
 
@@ -282,7 +282,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (message.Response == ShellDialogButton.Ok)
             {
-                if (AddingNewTransaction)
+                if (this.ShowAddingNewTransactionPanel)
                 {
                     OnAddNewTransactionCommandExecuted();
                 }
@@ -335,7 +335,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void Reset()
         {
-            AddingNewTransaction = false;
+            this.ShowAddingNewTransactionPanel = false;
             this.isAddDirty = false;
             ShownTransactions = null;
             LedgerEntry = null;

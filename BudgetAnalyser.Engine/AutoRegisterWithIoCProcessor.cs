@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -48,7 +49,7 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public static void ProcessPropertyInjection([NotNull] IContainer container, [NotNull] Assembly assembly)
+        public static void ProcessPropertyInjection([NotNull] IComponentContext container, [NotNull] Assembly assembly)
         {
             if (container == null)
             {

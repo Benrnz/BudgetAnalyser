@@ -8,7 +8,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 {
-    public class LongTermSpendingGraphController : ControllerBase
+    public sealed class LongTermSpendingGraphController : ControllerBase
     {
         private readonly LongTermSpendingTrendAnalyser analyser;
         private decimal doNotUseGraphMaximumValue;
@@ -73,6 +73,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
         public string Title
         {
             get { return "Long Term Spending Line Graph"; }

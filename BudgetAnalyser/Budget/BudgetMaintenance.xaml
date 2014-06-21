@@ -282,10 +282,10 @@
                     Style="{StaticResource BudgetButton}">
                 <Button.Content>
                     <TextBlock FontSize="12"
-                               Text="New Savings Committment" />
+                               Text="New Savings Commitment" />
                 </Button.Content>
                 <Button.CommandParameter>
-                    <budget:SavingsCommittmentBucket />
+                    <budget:SavingsCommitmentBucket />
                 </Button.CommandParameter>
             </Button>
         </StackPanel>

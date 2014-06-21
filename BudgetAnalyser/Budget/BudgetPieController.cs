@@ -141,6 +141,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
         public string Title
         {
             get { return "Budget Pie Charts"; }

@@ -108,7 +108,7 @@ namespace BudgetAnalyser.Statement
             get { return this.doNotUseTextFilter; }
             set
             {
-                if (value == string.Empty)
+                if (string.IsNullOrEmpty(value))
                 {
                     this.doNotUseTextFilter = null;
                 }
