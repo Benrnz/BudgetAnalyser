@@ -273,6 +273,7 @@ namespace BudgetAnalyser.Engine.Statement
             Transactions = transactions.OrderBy(t => t.Date).ToList();
             AllTransactions = Transactions;
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
+            DurationInMonths = CalculateDuration(null, Transactions); 
             this.duplicates = null;
             OnPropertyChanged("Transactions");
             SubscribeToTransactionChangedEvents();

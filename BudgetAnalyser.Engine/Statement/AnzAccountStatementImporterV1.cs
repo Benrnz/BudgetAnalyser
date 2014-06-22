@@ -83,7 +83,6 @@ namespace BudgetAnalyser.Engine.Statement
                 Imported = DateTime.Now,
             }.LoadTransactions(transactions);
 
-            statement.DurationInMonths = StatementModel.CalculateDuration(null, statement.Transactions);
             return statement;
         }
 

@@ -45,6 +45,12 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
+            if (this.filter.BeginDate.Value.DurationInMonths(this.filter.EndDate.Value) != 1)
+            {
+                ToolTip = DesignedForOneMonthOnly;
+                Enabled = false;
+                return;
+            }
             Enabled = true;
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
             decimal remainingBalance = LedgerCalculation.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);

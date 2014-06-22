@@ -43,18 +43,25 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            Enabled = true;
             var statement = (StatementModel)input[0];
             var budget = (BudgetCurrencyContext)input[1];
             var filter = (GlobalFilterCriteria)input[2];
             var ledgerBook = (LedgerBook)input[3];
 
-            if (ledgerBook == null || statement == null || filter == null || filter.Cleared || filter.BeginDate == null || budget == null)
+            if (budget == null || ledgerBook == null || statement == null || filter == null || filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
             {
                 Enabled = false;
                 return;
             }
 
+            if (filter.BeginDate.Value.DurationInMonths(filter.EndDate.Value) != 1)
+            {
+                Enabled = false;
+                ToolTip = DesignedForOneMonthOnly;
+                return;
+            }
+
+            Enabled = true;
             IDictionary<BudgetBucket, decimal> overspendingSummary = LedgerCalculation.CalculateCurrentMonthLedgerBalances(ledgerBook, filter, statement);
             int warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 

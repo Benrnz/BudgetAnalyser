@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Widgets
     {
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
+        protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
 
         private string doNotUseCategory;
         private bool doNotUseClickable;

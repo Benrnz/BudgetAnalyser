@@ -83,6 +83,9 @@ namespace BudgetAnalyser.Engine.Ledger
             return beginningOfMonthBalance;
         }
 
+        /// <summary>
+        /// Locates the most recent <see cref="LedgerEntryLine"/> for the given date filter. Note that this will only return the most recent line that fits the criteria.
+        /// </summary>
         public static decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
         {
             if (ledgerBook == null)
@@ -101,7 +104,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return 0;
             }
 
-            return (from ledgerEntry in line.Entries where ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode select ledgerEntry.Balance).FirstOrDefault();
+            return line.Entries
+                            .Where(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode)
+                            .Select(ledgerEntry => ledgerEntry.Balance)
+                            .FirstOrDefault();
         }
 
         public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)

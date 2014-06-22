@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
@@ -96,9 +98,15 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
+            if (this.filter.BeginDate.Value.DurationInMonths(this.filter.EndDate.Value) != 1)
+            {
+                Enabled = false;
+                ToolTip = DesignedForOneMonthOnly;
+                return;
+            }
+
             Enabled = true;
-            decimal totalBudget = MonthlyBudgetAmount()
-                                  * this.filter.BeginDate.Value.DurationInMonths(this.filter.EndDate.Value);
+            decimal totalBudget = MonthlyBudgetAmount();
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
@@ -123,12 +131,19 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private decimal MonthlyBudgetAmount()
         {
-            if (this.ledgerBook == null)
+            Debug.Assert(this.filter.BeginDate != null);
+            Debug.Assert(this.filter.EndDate != null);
+
+            var monthlyBudget = this.budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+            var totalBudgetedAmount = monthlyBudget;
+            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
+
+            if (this.ledgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerColumn.BudgetBucket.Code != BucketCode))
             {
-                return this.budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+                return totalBudgetedAmount;
             }
 
-            return LedgerCalculation.LocateApplicableLedgerBalance(this.ledgerBook, this.filter, BucketCode);
+            return ledgerLine.Entries.First(e => e.LedgerColumn.BudgetBucket.Code == BucketCode).Balance;
         }
     }
 }

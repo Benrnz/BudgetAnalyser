@@ -116,11 +116,13 @@
     <Compile Include="MetaTest.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
+    <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="Statement\StatementModelTest.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
@@ -131,6 +133,8 @@
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
+    <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
     <Compile Include="TestHarness\LoggingApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BatchFileApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
@@ -177,7 +181,9 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
