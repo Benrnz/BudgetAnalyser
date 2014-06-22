@@ -6,15 +6,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Matching
 {
     [TestClass]
-    public class MatchingRuleToDataMatchingRuleMapperTest
+    public class DataMatchingRuleToMatchingRuleMapperTest
     {
-        private MatchingRule TestData { get; set; }
+        private DataMatchingRule TestData { get; set; }
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the DataMatchingRule. This is a trigger to update the mappers.")]
         public void NumberOfDataMatchingRulePropertiesShouldBe11()
         {
-            int dataProperties = typeof(DataMatchingRule).CountProperties();
+            int dataProperties = typeof(MatchingRule).CountProperties();
             Assert.AreEqual(11, dataProperties);
         }
 
@@ -95,16 +95,17 @@ namespace BudgetAnalyser.UnitTest.Matching
             Assert.AreEqual(TestData.TransactionType, result.TransactionType);
         }
 
-        private DataMatchingRule ArrangeAndAct()
+        private MatchingRule ArrangeAndAct()
         {
-            return new MatchingRuleDomainToDataMapper().Map(TestData);
+            return new MatchingRuleDataToDomainMapper(new BucketBucketRepoAlwaysFind()).Map(TestData);
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = new MatchingRule(new BucketBucketRepoAlwaysFind())
+            TestData = new DataMatchingRule
             {
+                Created = new DateTime(2014, 1, 2),
                 Amount = 123.45M,
                 BucketCode = "CARMTC",
                 Description = "Testing Description",

@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public bool Exists(string fileName)
+        public virtual bool Exists(string fileName)
         {
             return File.Exists(fileName);
         }
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Matching
             List<DataMatchingRule> dataEntities;
             try
             {
-                dataEntities = XamlServices.Load(fileName) as List<DataMatchingRule>;
+                dataEntities = LoadFromDisk(fileName);
             }
             catch (Exception ex)
             {
@@ -66,13 +66,23 @@ namespace BudgetAnalyser.Engine.Matching
         public void SaveRules(IEnumerable<MatchingRule> rules, string fileName)
         {
             IEnumerable<DataMatchingRule> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
-            XamlServices.Save(fileName, dataEntities.ToList());
+            SaveToDisk(fileName, dataEntities);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
                 handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "MatchingRuleRepository", ApplicationHookEventArgs.Save));
             }
+        }
+
+        protected virtual void SaveToDisk(string fileName, IEnumerable<DataMatchingRule> dataEntities)
+        {
+            XamlServices.Save(fileName, dataEntities.ToList());
+        }
+
+        protected virtual List<DataMatchingRule> LoadFromDisk(string fileName)
+        {
+            return XamlServices.Load(fileName) as List<DataMatchingRule>;
         }
     }
 }

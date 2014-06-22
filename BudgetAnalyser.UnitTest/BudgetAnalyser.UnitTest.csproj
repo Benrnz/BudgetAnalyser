@@ -109,6 +109,7 @@
     <Compile Include="Ledger\LedgerCalculationTest.cs" />
     <Compile Include="Ledger\LedgerDataToDomainMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleTest.cs" />
+    <Compile Include="Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="MetaTest.cs" />
