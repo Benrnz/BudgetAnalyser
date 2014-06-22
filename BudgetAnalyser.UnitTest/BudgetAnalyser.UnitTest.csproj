@@ -112,6 +112,7 @@
     <Compile Include="Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchMakerTest.cs" />
+    <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
     <Compile Include="MetaTest.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

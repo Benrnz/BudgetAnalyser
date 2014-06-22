@@ -38,8 +38,13 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataMatchingRule")]
-        public IEnumerable<MatchingRule> LoadRules(string fileName)
+        public IEnumerable<MatchingRule> LoadRules([NotNull] string fileName)
         {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
             if (!Exists(fileName))
             {
                 throw new FileNotFoundException(fileName);
@@ -63,8 +68,18 @@ namespace BudgetAnalyser.Engine.Matching
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
         }
 
-        public void SaveRules(IEnumerable<MatchingRule> rules, string fileName)
+        public void SaveRules([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string fileName)
         {
+            if (rules == null)
+            {
+                throw new ArgumentNullException("rules");
+            }
+
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
             IEnumerable<DataMatchingRule> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
             SaveToDisk(fileName, dataEntities);
 
