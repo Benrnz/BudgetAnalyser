@@ -167,10 +167,12 @@ namespace BudgetAnalyser.Engine.Matching
             {
                 return false;
             }
+
             if (ReferenceEquals(this, other))
             {
                 return true;
             }
+
             return RuleId.Equals(other.RuleId);
         }
 
@@ -196,6 +198,11 @@ namespace BudgetAnalyser.Engine.Matching
             return RuleId.GetHashCode();
         }
 
+        /// <summary>
+        /// Checks for a match with the given transactions.  
+        /// All the properties on this rule are 'And'ed together.  This is an exact match search.
+        /// </summary>
+        /// <returns>true if a the rule matches the transactions</returns>
         public bool Match([NotNull] Transaction transaction)
         {
             if (transaction == null)
@@ -206,42 +213,27 @@ namespace BudgetAnalyser.Engine.Matching
             bool matched = false;
             if (!string.IsNullOrWhiteSpace(Description))
             {
-                if (transaction.Description == Description)
-                {
-                    matched = true;
-                }
+                matched = transaction.Description == Description;
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(Reference1))
+            if (!string.IsNullOrWhiteSpace(Reference1))
             {
-                if (transaction.Reference1 == Reference1)
-                {
-                    matched = true;
-                }
+                matched = transaction.Reference1 == Reference1;
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(Reference2))
+            if (!string.IsNullOrWhiteSpace(Reference2))
             {
-                if (transaction.Reference2 == Reference2)
-                {
-                    matched = true;
-                }
+                matched = transaction.Reference2 == Reference2;
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(Reference3))
+            if (!string.IsNullOrWhiteSpace(Reference3))
             {
-                if (transaction.Reference3 == Reference3)
-                {
-                    matched = true;
-                }
+                matched = transaction.Reference3 == Reference3;
             }
 
-            if (!matched && !string.IsNullOrWhiteSpace(TransactionType))
+            if (!string.IsNullOrWhiteSpace(TransactionType))
             {
-                if (transaction.TransactionType.Name == TransactionType)
-                {
-                    matched = true;
-                }
+                matched = transaction.TransactionType.Name == TransactionType;
             }
 
             if (matched)

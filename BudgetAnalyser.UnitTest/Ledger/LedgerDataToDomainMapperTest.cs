@@ -39,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [Description("A test designed to break when new propperties are added to the LedgerBook. This is a trigger to update the mappers.")]
         public void NumberOfLedgerBookPropertiesShouldBe5()
         {
-            int domainProperties = CountProperties(typeof(LedgerBook));
+            int domainProperties = typeof(LedgerBook).CountProperties();
             Assert.AreEqual(5, domainProperties);
         }
 
@@ -202,11 +202,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             var mapper = new LedgerDataToDomainMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
             return mapper.Map(TestData);
-        }
-
-        private int CountProperties(Type type)
-        {
-            return type.GetProperties().Length;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,11 +11,45 @@ namespace BudgetAnalyser.UnitTest.ApplicationHooks
     [TestClass]
     public class LoggingApplicationHookSubscriberTest
     {
+        private Mock<ILogger> MockLogger { get; set; }
         private IList<Mock<IApplicationHookEventPublisher>> MockPublishers { get; set; }
 
         private IEnumerable<IApplicationHookEventPublisher> Publishers
         {
             get { return MockPublishers.Select(m => m.Object); }
+        }
+
+        [TestMethod]
+        public void ShouldRespondToPublisherEventByCallerLogger()
+        {
+            LoggingApplicationHookSubscriberTestHarness subject = Arrange();
+            subject.Subscribe(Publishers);
+
+            RaisePublisherEvents();
+
+            MockLogger.Verify(m => m.LogInfo(It.IsAny<Func<string>>()));
+        }
+
+        [TestMethod]
+        public void SubscribeShouldSubscribeAndRespondToPublisherEvent()
+        {
+            LoggingApplicationHookSubscriberTestHarness subject = Arrange();
+            bool eventCalled = false;
+            subject.PerformActionOverride = (s, e) => eventCalled = true;
+
+            subject.Subscribe(Publishers);
+            RaisePublisherEvents();
+
+            Assert.IsTrue(eventCalled);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SubscribeShouldThrowIfPublishersIsNull()
+        {
+            LoggingApplicationHookSubscriberTestHarness subject = Arrange();
+            subject.Subscribe(null);
+            Assert.Fail();
         }
 
         [TestInitialize]
@@ -26,38 +59,18 @@ namespace BudgetAnalyser.UnitTest.ApplicationHooks
             {
                 new Mock<IApplicationHookEventPublisher>(),
             };
+
+            MockLogger = new Mock<ILogger>();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void SubscribeShouldThrowIfPublishersIsNull()
+        private LoggingApplicationHookSubscriberTestHarness Arrange()
         {
-            var subject = Arrange();
-            subject.Subscribe(null);
-            Assert.Fail();
-        }
-        
-        [TestMethod]
-        public void SubscribeShouldSubscribeAndRespondToPublisherEvent()
-        {
-            var subject = Arrange();
-            bool eventCalled = false;
-            subject.PerformActionOverride = (s, e) => eventCalled = true;
-            
-            subject.Subscribe(Publishers);
-            RaisePublisherEvents();
-
-            Assert.IsTrue(eventCalled);
+            return new LoggingApplicationHookSubscriberTestHarness(MockLogger.Object);
         }
 
         private void RaisePublisherEvents()
         {
             MockPublishers.ToList().ForEach(p => p.Raise(m => m.ApplicationEvent += null, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "TestOrigin", "TestSubcategory")));
-        }
-
-        private LoggingApplicationHookSubscriberTestHarness Arrange()
-        {
-            return new LoggingApplicationHookSubscriberTestHarness(new FakeLogger());
         }
     }
 }
