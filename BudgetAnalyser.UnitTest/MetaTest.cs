@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest
             var assembly = GetType().Assembly;
             int count = (from type in assembly.ExportedTypes let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>() where testClassAttrib != null select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() != null)).Sum();
             Console.WriteLine(count);
-            Assert.IsTrue(count >= 380);
+            Assert.IsTrue(count >= 395);
         }
     }
 }
