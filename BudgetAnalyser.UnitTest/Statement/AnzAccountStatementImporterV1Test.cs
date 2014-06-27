@@ -38,17 +38,6 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void LoadShouldParseAGoodFile()
-        {
-            AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
-            StatementModel result = subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
-
-            Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
-        }
-
-        [TestMethod]
         public void LoadShouldParseAFileWithExtraColumns()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
@@ -60,13 +49,14 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
-        public void LoadShouldThrowIfFileNotFound()
+        public void LoadShouldParseAGoodFile()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            BankImportUtilities.AbortIfFileDoesntExistOverride = (s, m) => { throw new FileNotFoundException(); };
-            subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
-            Assert.Fail();
+            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
+            StatementModel result = subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+
+            Assert.AreEqual(1, result.DurationInMonths);
+            Assert.AreEqual(7, result.AllTransactions.Count());
         }
 
         [TestMethod]
@@ -80,23 +70,59 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnTrueGivenAGoodFile()
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void LoadShouldThrowIfFileNotFound()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            var result = subject.TasteTest(@"transumm.CSV");
-            Assert.IsTrue(result);
+            BankImportUtilities.AbortIfFileDoesntExistOverride = (s, m) => { throw new FileNotFoundException(); };
+            subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+            Assert.Fail();
         }
 
         [TestMethod]
         public void TatseTestShouldReturnFalseGivenABadFile()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            subject.ReadTextChunkOverride = file => "4367-****-****-3239,D,32.36,Z Quay Street          Auckland      Nz ,24/06/2014,25/06/2014,";
-            var result = subject.TasteTest(@"transumm.CSV");
+            subject.ReadTextChunkOverride = file => "lkjpoisjg809wutwuoipsahf98qyfg0w9ashgpiosxnhbvoiyxcu8o9ui9paso,spotiw93th98sh8,35345345,353453534521,lkhsldhlsk,shgjkshj,sgsjdgsd";
+            bool result = subject.TasteTest(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
-        // 
+        [TestMethod]
+        public void TatseTestShouldReturnFalseGivenAnEmptyTasteTestResponse()
+        {
+            AnzAccountStatementImporterV1TestHarness subject = Arrange();
+            subject.ReadTextChunkOverride = file => string.Empty;
+            bool result = subject.TasteTest(@"transumm.CSV");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void TatseTestShouldReturnFalseGivenNullTasteTestResponse()
+        {
+            AnzAccountStatementImporterV1TestHarness subject = Arrange();
+            subject.ReadTextChunkOverride = file => null;
+            bool result = subject.TasteTest(@"transumm.CSV");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void TatseTestShouldReturnFalseGivenTheVisaFormat()
+        {
+            AnzAccountStatementImporterV1TestHarness subject = Arrange();
+            subject.ReadTextChunkOverride = file => "4367-****-****-1234,D,32.36,Z Quay Street          Auckland      Nz ,24/06/2014,25/06/2014,"; // Visa format given to Cheque parser
+            bool result = subject.TasteTest(@"transumm.CSV");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void TatseTestShouldReturnTrueGivenAGoodFile()
+        {
+            AnzAccountStatementImporterV1TestHarness subject = Arrange();
+            bool result = subject.TasteTest(@"transumm.CSV");
+            Assert.IsTrue(result);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {

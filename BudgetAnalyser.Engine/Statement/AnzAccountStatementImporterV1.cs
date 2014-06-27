@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.Statement
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {
                 var sb = new StringBuilder();
-                var buffer = new byte[0x64];
+                var buffer = new byte[0x128];
                 int numRead;
                 while ((numRead = sourceStream.Read(buffer, 0, buffer.Length)) != 0)
                 {
@@ -179,6 +179,11 @@ namespace BudgetAnalyser.Engine.Statement
         private string ReadFirstLine(string fileName)
         {
             string chunk = ReadTextChunk(fileName);
+            if (string.IsNullOrWhiteSpace(chunk))
+            {
+                return null;
+            }
+
             int position = chunk.IndexOf("\n", StringComparison.InvariantCulture);
             if (position > 0)
             {
