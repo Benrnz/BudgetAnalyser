@@ -16,6 +16,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, IEnumerable<string>> ReadLinesOverride { get; set; }
 
+        public Func<string, string> ReadTextChunkOverride { get; set; }
+
         protected override IEnumerable<string> ReadLines(string fileName)
         {
             if (ReadLinesOverride == null)
@@ -24,6 +26,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             }
 
             return ReadLinesOverride(fileName);
+        }
+
+        protected override string ReadTextChunk(string filePath)
+        {
+            if (ReadTextChunkOverride == null)
+            {
+                return "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,";
+            }
+
+            return ReadTextChunkOverride(filePath);
         }
     }
 }

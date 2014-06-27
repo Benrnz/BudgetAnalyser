@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using Rees.UserInteraction.Contracts;
@@ -93,7 +94,7 @@ namespace BudgetAnalyser.Engine.Statement
         public bool TasteTest(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
-            string line = ReadLines(fileName).FirstOrDefault(); // TODO Inefficient read only two lines not the whole thing.
+            string line = ReadFirstLine(fileName);
             if (string.IsNullOrWhiteSpace(line))
             {
                 return false;
@@ -136,6 +137,27 @@ namespace BudgetAnalyser.Engine.Statement
             return File.ReadLines(fileName);
         }
 
+        protected virtual string ReadTextChunk(string filePath)
+        {
+            using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
+            {
+                var sb = new StringBuilder();
+                var buffer = new byte[0x64];
+                int numRead;
+                while ((numRead = sourceStream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    string text = Encoding.UTF8.GetString(buffer, 0, numRead);
+                    sb.Append(text);
+                    if (text.Contains("\n"))
+                    {
+                        break;
+                    }
+                }
+
+                return sb.ToString();
+            }
+        }
+
         private TransactionType FetchTransactionType(string[] array, int index)
         {
             string stringType = this.importUtilities.SafeArrayFetchString(array, index);
@@ -152,6 +174,18 @@ namespace BudgetAnalyser.Engine.Statement
             var transactionType = new NamedTransaction(stringType);
             TransactionTypes.Add(stringType, transactionType);
             return transactionType;
+        }
+
+        private string ReadFirstLine(string fileName)
+        {
+            string chunk = ReadTextChunk(fileName);
+            int position = chunk.IndexOf("\n", StringComparison.InvariantCulture);
+            if (position > 0)
+            {
+                return chunk.Substring(0, position);
+            }
+
+            return chunk;
         }
     }
 }
