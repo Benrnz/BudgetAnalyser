@@ -270,10 +270,15 @@ namespace BudgetAnalyser.Engine.Statement
         {
             UnsubscribeToTransactionChangedEvents();
             ChangeHash = Guid.NewGuid();
-            Transactions = transactions.OrderBy(t => t.Date).ToList();
+            var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
+            Transactions = listOfTransactions;
             AllTransactions = Transactions;
-            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
-            DurationInMonths = CalculateDuration(null, Transactions); 
+            if (listOfTransactions.Any())
+            {
+                this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
+                DurationInMonths = CalculateDuration(null, Transactions);
+            }
+
             this.duplicates = null;
             OnPropertyChanged("Transactions");
             SubscribeToTransactionChangedEvents();

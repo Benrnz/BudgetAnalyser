@@ -82,17 +82,17 @@ namespace BudgetAnalyser.Engine.Statement
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
 
+            if (!IsValidFile(fileName))
+            {
+                throw new VersionNotFoundException("The CSV file is not supported by this version of the Budget Analyser.");
+            }
+
             var transactions = new List<Transaction>();
             List<string> allLines = ReadLines(fileName).ToList();
             long totalLines = allLines.LongCount();
-            if (totalLines == 0)
+            if (totalLines < 2)
             {
-                return null;
-            }
-
-            if (!VersionCheck(allLines))
-            {
-                throw new VersionNotFoundException("The CSV file is not supported by this version of the Budget Analyser.");
+                return new StatementModel(this.logger) {FileName = fileName}.LoadTransactions(new List<Transaction>());
             }
 
             long txnChecksum = ReadTransactionCheckSum(allLines[0]);
@@ -100,11 +100,6 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 FileName = fileName,
             };
-
-            if (totalLines == 1)
-            {
-                return statementModel;
-            }
 
             for (int index = 1; index < totalLines; index++)
             {
@@ -137,12 +132,16 @@ namespace BudgetAnalyser.Engine.Statement
                     throw new FileFormatException("The Budget Analyser file does not have the correct number of columns.", ex);
                 }
 
+                if (transaction.Amount == 0 || transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
+                {
+                    throw new FileFormatException("The Budget Analyser file does not contain the correct data type for Amount and/or Date and/or Id in row " + index+1);
+                }
+
                 transactions.Add(transaction);
             }
 
             statementModel.LoadTransactions(transactions);
 
-            statementModel.DurationInMonths = StatementModel.CalculateDuration(null, statementModel.Transactions);
             statementModel.Imported = transactions.Any() ? transactions.Max(t => t.Date) : DateTime.Now;
 
             long calcTxnCheckSum = CalculateTransactionCheckSum(statementModel);
@@ -150,6 +149,7 @@ namespace BudgetAnalyser.Engine.Statement
             // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
             if (txnChecksum > 1 && txnChecksum != calcTxnCheckSum)
             {
+                this.logger.LogError(() => this.logger.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", txnChecksum, calcTxnCheckSum));
                 throw new StatementModelChecksumException(
                     calcTxnCheckSum.ToString(CultureInfo.InvariantCulture),
                     string.Format(

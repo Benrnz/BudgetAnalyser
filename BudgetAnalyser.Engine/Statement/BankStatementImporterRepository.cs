@@ -7,6 +7,7 @@ namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
     ///     A <see cref="IBankStatementImporter" /> repository based on a list of dependency injected importers.
+    ///     These are the bank specific file formats exported from online banking to be imported into the Budget Analyser.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BankStatementImporterRepository : IBankStatementImporterRepository

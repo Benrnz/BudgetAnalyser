@@ -61,6 +61,7 @@
       <HintPath>..\packages\Rees.UserInteraction.Wpf.1.0.1\Rees.UserInteraction.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -119,12 +120,14 @@
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
+    <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="Statement\StatementModelTest.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
+    <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\DataLedgerBookTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
@@ -189,6 +193,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\AnzVisaCsvFileExportFormat.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
