@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Budget
             return null;
         }
 
-        public BudgetBucket GetOrAdd([NotNull] string code, [NotNull] Func<BudgetBucket> factory)
+        public BudgetBucket GetOrCreateNew([NotNull] string code, [NotNull] Func<BudgetBucket> factory)
         {
             if (code == null)
             {

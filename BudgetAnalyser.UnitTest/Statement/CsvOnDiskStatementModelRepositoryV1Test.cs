@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,9 +22,9 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullAccountTypeRepo()
+        public void CtorShouldThrowGivenNullDomainMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(null, new FakeUserMessageBox(), BudgetBucketRepoMock.Object, new BankImportUtilities(new FakeLogger()), new FakeLogger());
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, null);
             Assert.Fail();
         }
 
@@ -31,15 +32,15 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtils()
         {
-            new CsvOnDiskStatementModelRepositoryV1(AccountTypeRepoMock.Object, new FakeUserMessageBox(), BudgetBucketRepoMock.Object, null, new FakeLogger());
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), null, new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullBudgetBucketRepo()
+        public void CtorShouldThrowGivenNullDtoMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(AccountTypeRepoMock.Object, new FakeUserMessageBox(), null, new BankImportUtilities(new FakeLogger()), new FakeLogger());
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), null, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
@@ -47,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new CsvOnDiskStatementModelRepositoryV1(AccountTypeRepoMock.Object, new FakeUserMessageBox(), BudgetBucketRepoMock.Object, new BankImportUtilities(new FakeLogger()), null);
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), null, new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
@@ -55,7 +56,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullMessageBox()
         {
-            new CsvOnDiskStatementModelRepositoryV1(AccountTypeRepoMock.Object, null, BudgetBucketRepoMock.Object, new BankImportUtilities(new FakeLogger()), new FakeLogger());
+            new CsvOnDiskStatementModelRepositoryV1(null, new BankImportUtilities(new FakeLogger()), new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
@@ -105,8 +106,8 @@ namespace BudgetAnalyser.UnitTest.Statement
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
             StatementModel result = subject.Load("Foo.foo");
-            Console.WriteLine(result.Imported);
-            Assert.AreEqual(new DateTime(2012, 08, 20), result.Imported);
+            Console.WriteLine(result.LastImport);
+            Assert.AreEqual(new DateTime(2012, 08, 20), result.LastImport);
         }
 
         [TestMethod]

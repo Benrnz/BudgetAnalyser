@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             var statement = (StatementModel)input[0];
-            int days = Convert.ToInt32(DateTime.Today.Subtract(statement.Imported).TotalDays);
+            int days = Convert.ToInt32(DateTime.Today.Subtract(statement.LastImport).TotalDays);
             if (days < 0)
             {
                 days = 0;

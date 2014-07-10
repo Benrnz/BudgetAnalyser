@@ -123,6 +123,29 @@ namespace BudgetAnalyser.Engine.Statement
             return result;
         }
 
+        internal long SafeArrayFetchLong([NotNull] string[] array, int index)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException("array");
+            }
+
+            if (index > array.Length - 1 || index < 0)
+            {
+                ThrowIndexOutOfRangeException(array, index);
+            }
+
+            string stringToParse = array[index];
+            long retval;
+            if (!long.TryParse(stringToParse, out retval))
+            {
+                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse long: " + stringToParse);
+                return 0;
+            }
+
+            return retval;
+        }
+
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
         internal string SafeArrayFetchString([NotNull] string[] array, int index)
         {

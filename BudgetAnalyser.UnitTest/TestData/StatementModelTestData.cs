@@ -27,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var statement = new StatementModel(new FakeLogger())
             {
                 FileName = @"C:\TestData1\FooStatement.csv",
-                Imported = new DateTime(2013, 08, 15),
+                LastImport = new DateTime(2013, 08, 15),
             };
 
             var transactions = CreateTransactions1();
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var statement = new StatementModel(new FakeLogger())
             {
                 FileName = @"C:\TestData2\Foo2Statement.csv",
-                Imported = new DateTime(2013, 08, 15),
+                LastImport = new DateTime(2013, 08, 15),
             };
 
             var transactions = CreateTransactions2();

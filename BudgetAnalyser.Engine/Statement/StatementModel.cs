@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public string FileName { get; set; }
         public bool Filtered { get; private set; }
-        public DateTime Imported { get; set; }
+        public DateTime LastImport { get; set; }
 
         public IEnumerable<Transaction> Transactions
         {
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("additionalModel");
             }
 
-            Imported = additionalModel.Imported;
+            this.LastImport = additionalModel.LastImport;
 
             Merge(additionalModel.AllTransactions);
         }

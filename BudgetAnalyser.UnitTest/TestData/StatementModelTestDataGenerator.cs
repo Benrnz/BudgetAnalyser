@@ -2,6 +2,7 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.UnitTest.TestData
@@ -14,7 +15,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var userMessageBox = new FakeUserMessageBox();
             var accountTypeRepo = new InMemoryAccountTypeRepository();
-            var importer = new CsvOnDiskStatementModelRepositoryV1(accountTypeRepo, userMessageBox, bucketRepo, new BankImportUtilities(fakeLogger), fakeLogger);
+            var importer = new CsvOnDiskStatementModelRepositoryV1(
+                userMessageBox, 
+                new BankImportUtilities(fakeLogger), 
+                fakeLogger,
+                new TransactionSetDtoToStatementModelMapper(fakeLogger, new TransactionDtoToTransactionMapper(accountTypeRepo, bucketRepo, new InMemoryTransactionTypeRepository())),
+                new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper()));
 
             var model = importer.Load(fileName);
 
@@ -28,7 +34,7 @@ public static StatementModel TestDataGenerated()
             Console.WriteLine(@"
         FileName = @""C:\Foo\StatementModel.csv"",");
             Console.WriteLine(@"
-        Imported = new DateTime({0}, {1}, {2}),", model.Imported.Year, model.Imported.Month, model.Imported.Day);
+        Imported = new DateTime({0}, {1}, {2}),", model.LastImport.Year, model.LastImport.Month, model.LastImport.Day);
             Console.WriteLine(@"
     };"); // End new StatementModel Initialiser
 

@@ -20,38 +20,39 @@ namespace BudgetAnalyser.UnitTest.Reports
     public class LongTermSpendingTrendAnalyserTest
     {
 
-        [TestMethod]
-        public void Test1()
-        {
-            var accountTypeRepo = new InMemoryAccountTypeRepository();
-            var budgetBucketRepo = new InMemoryBudgetBucketRepository();
-            var budgetRepo = new XamlOnDiskBudgetRepository(
-                budgetBucketRepo,
-                new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()),
-                new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()));
-            budgetRepo.Load(@"C:\Development\Brees_Unfuddle\Rees Budget Accounts\ReesBudget2013.3.xml");
-            var importer = new CsvOnDiskStatementModelRepositoryV1(
-                accountTypeRepo,
-                MessageBoxFake,
-                budgetBucketRepo,
-                new BankImportUtilities(new FakeLogger()),
-                new FakeLogger());
-            var statementModel = importer.Load(@"C:\Development\Brees_Unfuddle\Rees Budget Accounts\MergedAccounts 2014.csv");
+        // Used on demand for performance profiling
+        //[TestMethod]
+        //public void PerformanceTest()
+        //{
+        //    var accountTypeRepo = new InMemoryAccountTypeRepository();
+        //    var budgetBucketRepo = new InMemoryBudgetBucketRepository();
+        //    var budgetRepo = new XamlOnDiskBudgetRepository(
+        //        budgetBucketRepo,
+        //        new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()),
+        //        new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()));
+        //    budgetRepo.Load(@"C:\BudgetfileLocation.xml");
+        //    var importer = new CsvOnDiskStatementModelRepositoryV1(
+        //        accountTypeRepo,
+        //        MessageBoxFake,
+        //        budgetBucketRepo,
+        //        new BankImportUtilities(new FakeLogger()),
+        //        new FakeLogger());
+        //    var statementModel = importer.Load(@"C:\StatementFilelocation.csv");
 
-            var subject = Arrange(budgetBucketRepo);
-            var stopwatch = Stopwatch.StartNew();
-            subject.Analyse(
-                statementModel, 
-                new GlobalFilterCriteria
-                {
-                    BeginDate = new DateTime(2013, 12, 20),
-                    EndDate = new DateTime(2014, 6, 19),
-                });
-            stopwatch.Stop();
-            
-            Console.WriteLine("{0:N} ms", stopwatch.ElapsedMilliseconds);
-            Output(subject);
-        }
+        //    var subject = Arrange(budgetBucketRepo);
+        //    var stopwatch = Stopwatch.StartNew();
+        //    subject.Analyse(
+        //        statementModel,
+        //        new GlobalFilterCriteria
+        //        {
+        //            BeginDate = new DateTime(2013, 12, 20),
+        //            EndDate = new DateTime(2014, 6, 19),
+        //        });
+        //    stopwatch.Stop();
+
+        //    Console.WriteLine("{0:N} ms", stopwatch.ElapsedMilliseconds);
+        //    Output(subject);
+        //}
 
         [TestMethod]
         public void OutputTest()

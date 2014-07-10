@@ -41,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.Initialise(CreateBudgetCollectionModel());
 
-            subject.GetOrAdd("Foo", () => new IncomeBudgetBucket("Foo", "Bar"));
+            subject.GetOrCreateNew("Foo", () => new IncomeBudgetBucket("Foo", "Bar"));
 
             Assert.IsTrue(subject.IsValidCode("Foo"));
         }
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.Initialise(CreateBudgetCollectionModel());
 
             int count = subject.Buckets.Count();
-            subject.GetOrAdd(TestDataConstants.HairBucketCode, () =>
+            subject.GetOrCreateNew(TestDataConstants.HairBucketCode, () =>
             {
                 Assert.Fail();
                 return new IncomeBudgetBucket(TestDataConstants.HairBucketCode, "Bar");
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                 string code = "AAA";
                 try
                 {
-                    typedSubject.GetOrAdd(code, () => new SavedUpForExpenseBucket(code, "GFoo 123"));
+                    typedSubject.GetOrCreateNew(code, () => new SavedUpForExpenseBucket(code, "GFoo 123"));
                 }
                 catch (Exception ex)
                 {

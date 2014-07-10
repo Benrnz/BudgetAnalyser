@@ -119,6 +119,16 @@
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
     <Compile Include="Reports\SeriesData.cs" />
+    <Compile Include="Statement\Data\TransactionSetDto.cs" />
+    <Compile Include="Statement\Data\TransactionSetDtoToStatementModelMapper.cs" />
+    <Compile Include="Statement\Data\ITransactionSetDtoToStatementModelMapper.cs" />
+    <Compile Include="Statement\Data\IStatementModelToTransactionSetDtoMapper.cs" />
+    <Compile Include="Statement\Data\StatementModelToTransactionSetDtoMapper.cs" />
+    <Compile Include="Statement\Data\TransactionDto.cs" />
+    <Compile Include="Statement\Data\TransactionDtoToTransactionMapper.cs" />
+    <Compile Include="Statement\Data\TransactionToTransactionDtoMapper.cs" />
+    <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
+    <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />

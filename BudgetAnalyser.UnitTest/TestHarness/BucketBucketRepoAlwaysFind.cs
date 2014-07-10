@@ -8,10 +8,10 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
             if (code.StartsWith("I"))
             {
-                return GetOrAdd(code, () => new IncomeBudgetBucket(code, code));
+                return GetOrCreateNew(code, () => new IncomeBudgetBucket(code, code));
             }
 
-            return GetOrAdd(code, () => new SavedUpForExpenseBucket(code, code));
+            return GetOrCreateNew(code, () => new SavedUpForExpenseBucket(code, code));
         }
 
         public override void Initialise(BudgetCollection budgetCollectionModel)

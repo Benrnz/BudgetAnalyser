@@ -571,13 +571,13 @@ namespace BudgetAnalyser.Budget
                 foreach (Income income in CurrentBudget.Model.Incomes)
                 {
                     Income incomeCopy = income;
-                    this.bucketRepo.GetOrAdd(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
+                    this.bucketRepo.GetOrCreateNew(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
                 }
 
                 foreach (Expense expense in CurrentBudget.Model.Expenses)
                 {
                     Expense expenseCopy = expense;
-                    this.bucketRepo.GetOrAdd(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
+                    this.bucketRepo.GetOrCreateNew(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
                 }
 
                 return true;

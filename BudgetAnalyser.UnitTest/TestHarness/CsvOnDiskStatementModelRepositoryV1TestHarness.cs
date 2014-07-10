@@ -6,14 +6,22 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.Engine.Statement.Data;
+using BudgetAnalyser.UnitTest.Account;
 using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {
-        public CsvOnDiskStatementModelRepositoryV1TestHarness([NotNull] IAccountTypeRepository accountTypeRepository, [NotNull] IUserMessageBox userMessageBox, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
-            : base(accountTypeRepository, userMessageBox, bucketRepository, importUtilities, logger)
+        public CsvOnDiskStatementModelRepositoryV1TestHarness(IAccountTypeRepository accountTypeRepo, IUserMessageBox userMessageBox, IBudgetBucketRepository bucketRepo, BankImportUtilities importUtilities, ILogger logger)
+            : base(userMessageBox, 
+                    importUtilities, 
+                    logger, 
+                    new TransactionSetDtoToStatementModelMapper(
+                        logger, 
+                        new TransactionDtoToTransactionMapper(accountTypeRepo, bucketRepo, new InMemoryTransactionTypeRepository())), 
+                    new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper()))
         {
         }
 
