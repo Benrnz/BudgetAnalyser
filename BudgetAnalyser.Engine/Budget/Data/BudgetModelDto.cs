@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Engine.Budget.Data
 {
-    public class DataBudgetModel
+    public class BudgetModelDto
     {
         public DateTime EffectiveFrom { get; set; }
 

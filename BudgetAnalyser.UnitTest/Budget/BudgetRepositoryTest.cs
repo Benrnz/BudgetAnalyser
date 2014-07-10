@@ -7,6 +7,7 @@ using System.Resources;
 using System.Xaml;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -28,7 +29,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenBucketRepositoryIsNull()
         {
-            new XamlOnDiskBudgetRepository(null, new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()), new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()));
+            new XamlOnDiskBudgetRepository(null, new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper()), new BudgetCollectionDtoToBudgetCollectionMapper(new BudgetModelDtoToBudgetModelMapper()));
             Assert.Fail();
         }
 
@@ -176,7 +177,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.AreEqual(1, collection.Count);
         }
 
-        private DataBudgetCollection OnLoadFromDiskMock(string f)
+        private BudgetCollectionDto OnLoadFromDiskMock(string f)
         {
             // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
             Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
@@ -187,7 +188,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                     throw new MissingManifestResourceException("Cannot find resource named: " + f);
                 }
 
-                return (DataBudgetCollection)XamlServices.Load(new XamlXmlReader(stream));
+                return (BudgetCollectionDto)XamlServices.Load(new XamlXmlReader(stream));
             }
         }
 

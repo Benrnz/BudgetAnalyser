@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    public class BudgetModelToDataBudgetModelMapper
+    public class BudgetModelToBudgetModelDtoMapper
     {
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
-        public DataBudgetModel Map([NotNull] BudgetModel model)
+        public BudgetModelDto Map([NotNull] BudgetModel model)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            return new DataBudgetModel
+            return new BudgetModelDto
             {
                 EffectiveFrom = model.EffectiveFrom,
                 Expenses = new List<Expense>(model.Expenses),

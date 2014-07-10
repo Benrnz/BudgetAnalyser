@@ -1,6 +1,7 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
@@ -8,8 +9,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     {
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
             : base(bucketRepository,
-                new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()),
-                new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()))
+                new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper()),
+                new BudgetCollectionDtoToBudgetCollectionMapper(new BudgetModelDtoToBudgetModelMapper()))
         {
         }
 

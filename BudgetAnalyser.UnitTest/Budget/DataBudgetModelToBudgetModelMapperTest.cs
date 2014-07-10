@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xaml;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void OutputBudgetModelTestData1()
         {
-            var testData = new DataBudgetModel
+            var testData = new BudgetModelDto
             {
                 EffectiveFrom = new DateTime(2014, 4, 28),
                 LastModified = new DateTime(2014, 5, 2),

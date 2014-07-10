@@ -4,28 +4,29 @@ using System.Globalization;
 using System.IO;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
-        private readonly BudgetCollectionToDataBudgetCollectionMapper toDataMapper;
-        private readonly DataBudgetCollectionToBudgetCollectionMapper toDomainMapper;
+        private readonly BudgetCollectionToBudgetCollectionDtoMapper toDtoMapper;
+        private readonly BudgetCollectionDtoToBudgetCollectionMapper toDomainMapper;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] BudgetCollectionToDataBudgetCollectionMapper toDataMapper,
-            [NotNull] DataBudgetCollectionToBudgetCollectionMapper toDomainMapper)
+            [NotNull] BudgetCollectionToBudgetCollectionDtoMapper toDtoMapper,
+            [NotNull] BudgetCollectionDtoToBudgetCollectionMapper toDomainMapper)
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
             }
 
-            if (toDataMapper == null)
+            if (toDtoMapper == null)
             {
-                throw new ArgumentNullException("toDataMapper");
+                throw new ArgumentNullException("toDtoMapper");
             }
 
             if (toDomainMapper == null)
@@ -34,7 +35,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             BudgetBucketRepository = bucketRepository;
-            this.toDataMapper = toDataMapper;
+            this.toDtoMapper = toDtoMapper;
             this.toDomainMapper = toDomainMapper;
         }
 
@@ -89,7 +90,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new FileFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
-            var correctDataFormat = serialised as DataBudgetCollection;
+            var correctDataFormat = serialised as BudgetCollectionDto;
             if (correctDataFormat == null)
             {
                 throw new FileFormatException(
@@ -105,7 +106,7 @@ namespace BudgetAnalyser.Engine.Budget
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public void Save(BudgetCollection budget)
         {
-            DataBudgetCollection dataFormat = this.toDataMapper.Map(budget);
+            BudgetCollectionDto dataFormat = this.toDtoMapper.Map(budget);
             string serialised = Serialise(dataFormat);
             WriteToDisk(dataFormat.FileName, serialised);
 
@@ -126,7 +127,7 @@ namespace BudgetAnalyser.Engine.Budget
             return XamlServices.Load(fileName);
         }
 
-        protected virtual string Serialise(DataBudgetCollection budgetData)
+        protected virtual string Serialise(BudgetCollectionDto budgetData)
         {
             return XamlServices.Save(budgetData);
         }

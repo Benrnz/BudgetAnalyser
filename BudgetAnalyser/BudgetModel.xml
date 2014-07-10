@@ -1,19 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<DataBudgetCollection FileName="C:\Temp\BudgetModel.xml"
-                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
+<BudgetCollectionDto FileName="C:\Temp\BudgetModel.xml"
+                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
+                      xmlns:Bb="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                       xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <DataBudgetCollection.Budgets>
-    <scg:List x:TypeArguments="DataBudgetModel" Capacity="4">
-      <DataBudgetModel LastModifiedComment="{x:Null}" EffectiveFrom="2014-01-19T00:00+13:00" LastModified="2014-01-19T11:49:07.7350234+13:00" Name="Default Budget">
-        <DataBudgetModel.Expenses>
-          <scg:List x:TypeArguments="Expense" Capacity="1"/>
-        </DataBudgetModel.Expenses>
-        <DataBudgetModel.Incomes>
-          <scg:List x:TypeArguments="Income" Capacity="1"/>
-        </DataBudgetModel.Incomes>
-      </DataBudgetModel>
+  <BudgetCollectionDto.Budgets>
+    <scg:List x:TypeArguments="BudgetModelDto" Capacity="4">
+      <BudgetModelDto LastModifiedComment="{x:Null}" EffectiveFrom="2014-01-19T00:00+13:00" LastModified="2014-01-19T11:49:07.7350234+13:00" Name="Default Budget">
+        <BudgetModelDto.Expenses>
+          <scg:List x:TypeArguments="Bb:Expense" Capacity="1"/>
+        </BudgetModelDto.Expenses>
+        <BudgetModelDto.Incomes>
+          <scg:List x:TypeArguments="Bb:Income" Capacity="1"/>
+        </BudgetModelDto.Incomes>
+      </BudgetModelDto>
     </scg:List>
-  </DataBudgetCollection.Budgets>
-</DataBudgetCollection>
+  </BudgetCollectionDto.Budgets>
+</BudgetCollectionDto>

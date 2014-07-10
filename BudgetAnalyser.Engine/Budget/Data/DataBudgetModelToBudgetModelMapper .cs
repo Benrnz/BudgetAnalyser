@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    public class DataBudgetModelToBudgetModelMapper
+    public class BudgetModelDtoToBudgetModelMapper
     {
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
-        public BudgetModel Map([NotNull] DataBudgetModel data)
+        public BudgetModel Map([NotNull] BudgetModelDto data)
         {
             if (data == null)
             {

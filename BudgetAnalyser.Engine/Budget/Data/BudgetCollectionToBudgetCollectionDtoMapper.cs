@@ -4,14 +4,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    public class BudgetCollectionToDataBudgetCollectionMapper
+    public class BudgetCollectionToBudgetCollectionDtoMapper
     {
-        private readonly BudgetModelToDataBudgetModelMapper budgetModelMapper;
+        private readonly BudgetModelToBudgetModelDtoMapper budgetModelMapper;
 
-        public BudgetCollectionToDataBudgetCollectionMapper([NotNull] BudgetModelToDataBudgetModelMapper budgetModelMapper)
+        public BudgetCollectionToBudgetCollectionDtoMapper([NotNull] BudgetModelToBudgetModelDtoMapper budgetModelMapper)
         {
             if (budgetModelMapper == null)
             {
@@ -22,14 +22,14 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
-        public DataBudgetCollection Map([NotNull] BudgetCollection budgetCollection)
+        public BudgetCollectionDto Map([NotNull] BudgetCollection budgetCollection)
         {
             if (budgetCollection == null)
             {
                 throw new ArgumentNullException("budgetCollection");
             }
 
-            var collection = new DataBudgetCollection
+            var collection = new BudgetCollectionDto
             {
                 FileName = budgetCollection.FileName,
                 Budgets = budgetCollection.Select(b => this.budgetModelMapper.Map(b)).ToList()
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             // Rationalise the buckets to ensure the same object is used for repeated uses of the same bucket. Only one bucket can exist with each unique code.
             var bucketRegister = new Dictionary<string, BudgetBucket>();
-            foreach (DataBudgetModel model in collection.Budgets)
+            foreach (BudgetModelDto model in collection.Budgets)
             {
                 foreach (Income income in model.Incomes)
                 {
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Budget
                 }
             }
 
-            foreach (DataBudgetModel model in collection.Budgets)
+            foreach (BudgetModelDto model in collection.Budgets)
             {
                 foreach (Income income in model.Incomes)
                 {

@@ -1,67 +1,68 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DataBudgetCollection FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml"
-                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
+<BudgetCollectionDto FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml"
+                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
+                      xmlns:Bb="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                       xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <DataBudgetCollection.Budgets>
-    <scg:List x:TypeArguments="DataBudgetModel" Capacity="4">
+  <BudgetCollectionDto.Budgets>
+    <scg:List x:TypeArguments="BudgetModelDto" Capacity="4">
 
-      <DataBudgetModel EffectiveFrom="2012-01-01"
+      <BudgetModelDto EffectiveFrom="2012-01-01"
                        LastModified="2014-02-05T20:58:41.8316716+13:00"
                        LastModifiedComment="Rent increase"
                        Name="Demo Budget 1">
 
-        <DataBudgetModel.Expenses>
-          <scg:List x:TypeArguments="Expense" Capacity="6">
-            <Expense Amount="1200.00">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket Code="RENT" Description="Rent for my bachelor pad"/>
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="400.00">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket Code="FOOD" Description="Groceries, staples, and necessities" />
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="37.00">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket Code="WATER" Description="Water Rates"/>
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="100.00">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket Code="INSHOME" Description="Home and Contents Insurance" />
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="45.00">
-              <Expense.Bucket>
-                <SavedUpForExpenseBucket Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" />
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="1.00">
-              <Expense.Bucket>
-                <SavedUpForExpenseBucket Code="FEES" Description="Bank Fees" />
-              </Expense.Bucket>
-            </Expense>
+        <BudgetModelDto.Expenses>
+          <scg:List x:TypeArguments="Bb:Expense" Capacity="6">
+            <Bb:Expense Amount="1200.00">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket Code="RENT" Description="Rent for my bachelor pad"/>
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="400.00">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket Code="FOOD" Description="Groceries, staples, and necessities" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="37.00">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket Code="WATER" Description="Water Rates"/>
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="100.00">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket Code="INSHOME" Description="Home and Contents Insurance" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="45.00">
+              <Bb:Expense.Bucket>
+                <Bb:SavedUpForExpenseBucket Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="1.00">
+              <Bb:Expense.Bucket>
+                <Bb:SavedUpForExpenseBucket Code="FEES" Description="Bank Fees" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
           </scg:List>
-        </DataBudgetModel.Expenses>
+        </BudgetModelDto.Expenses>
 
-        <DataBudgetModel.Incomes>
-          <scg:List x:TypeArguments="Income" Capacity="4">
-            <Income Amount="2000.00">
-              <Income.Bucket>
-                <IncomeBudgetBucket Code="SALARY" Description="Salary from Lawn Mowing business"/>
-              </Income.Bucket>
-            </Income>
-            <Income Amount="0.0100">
-              <Income.Bucket>
-                <IncomeBudgetBucket Code="GIFT" Description="Income from gifts and paybacks that are not spent as surplus" />
-              </Income.Bucket>
-            </Income>
+        <BudgetModelDto.Incomes>
+          <scg:List x:TypeArguments="Bb:Income" Capacity="4">
+            <Bb:Income Amount="2000.00">
+              <Bb:Income.Bucket>
+                <Bb:IncomeBudgetBucket Code="SALARY" Description="Salary from Lawn Mowing business"/>
+              </Bb:Income.Bucket>
+            </Bb:Income>
+            <Bb:Income Amount="0.0100">
+              <Bb:Income.Bucket>
+                <Bb:IncomeBudgetBucket Code="GIFT" Description="Income from gifts and paybacks that are not spent as surplus" />
+              </Bb:Income.Bucket>
+            </Bb:Income>
           </scg:List>
-        </DataBudgetModel.Incomes>
-      </DataBudgetModel>
+        </BudgetModelDto.Incomes>
+      </BudgetModelDto>
     </scg:List>
-  </DataBudgetCollection.Budgets>
-</DataBudgetCollection>
+  </BudgetCollectionDto.Budgets>
+</BudgetCollectionDto>

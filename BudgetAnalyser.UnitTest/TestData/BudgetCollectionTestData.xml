@@ -1,60 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<DataBudgetCollection FileName="C:\Temp\Foo.xaml" 
-                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine" 
+<BudgetCollectionDto FileName="C:\Temp\Foo.xaml" 
+                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine" 
+                      xmlns:Bb="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine" 
                       xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" 
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
-  <DataBudgetCollection.Budgets>
-    <scg:List x:TypeArguments="DataBudgetModel" Capacity="4">
+  <BudgetCollectionDto.Budgets>
+    <scg:List x:TypeArguments="BudgetModelDto" Capacity="4">
       
-      <DataBudgetModel LastModifiedComment="{x:Null}" 
+      <BudgetModelDto LastModifiedComment="{x:Null}" 
                        EffectiveFrom="2014-01-20" 
                        LastModified="2014-05-03T11:37:11.7916835+12:00" 
                        Name="Test Data 2 Budget">
         
-        <DataBudgetModel.Expenses>
-          <scg:List x:TypeArguments="Expense" Capacity="3">
-            <Expense Amount="185">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket x:Name="__ReferenceID0" Code="POWER" Description="Power" />
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="100">
-              <Expense.Bucket>
-                <SavedUpForExpenseBucket x:Name="__ReferenceID1" Code="CAR MTC" Description="Car maintenance" />
-              </Expense.Bucket>
-            </Expense>
-            <Expense Amount="65">
-              <Expense.Bucket>
-                <SpentMonthlyExpenseBucket x:Name="__ReferenceID2" Code="HAIRCUT" Description="Hair cuts" />
-              </Expense.Bucket>
-            </Expense>
+        <BudgetModelDto.Expenses>
+          <scg:List x:TypeArguments="Bb:Expense" Capacity="3">
+            <Bb:Expense Amount="185">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket x:Name="__ReferenceID0" Code="POWER" Description="Power" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="100">
+              <Bb:Expense.Bucket>
+                <Bb:SavedUpForExpenseBucket x:Name="__ReferenceID1" Code="CAR MTC" Description="Car maintenance" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
+            <Bb:Expense Amount="65">
+              <Bb:Expense.Bucket>
+                <Bb:SpentMonthlyExpenseBucket x:Name="__ReferenceID2" Code="HAIRCUT" Description="Hair cuts" />
+              </Bb:Expense.Bucket>
+            </Bb:Expense>
           </scg:List>
-        </DataBudgetModel.Expenses>
-        <DataBudgetModel.Incomes>
-          <scg:List x:TypeArguments="Income" Capacity="1">
-            <Income Amount="1600">
-              <Income.Bucket>
-                <IncomeBudgetBucket x:Name="__ReferenceID3" Code="INCOME" Description="Pay" />
-              </Income.Bucket>
-            </Income>
+        </BudgetModelDto.Expenses>
+        <BudgetModelDto.Incomes>
+          <scg:List x:TypeArguments="Bb:Income" Capacity="1">
+            <Bb:Income Amount="1600">
+              <Bb:Income.Bucket>
+                <Bb:IncomeBudgetBucket x:Name="__ReferenceID3" Code="INCOME" Description="Pay" />
+              </Bb:Income.Bucket>
+            </Bb:Income>
           </scg:List>
-        </DataBudgetModel.Incomes>
-      </DataBudgetModel>
-      <DataBudgetModel LastModifiedComment="{x:Null}" EffectiveFrom="2013-01-01" LastModified="2014-05-03T11:37:11.7916835+12:00" Name="Test Data 1 Budget">
-        <DataBudgetModel.Expenses>
-          <scg:List x:TypeArguments="Expense" Capacity="3">
-            <Expense Bucket="{x:Reference __ReferenceID0}" Amount="175" />
-            <Expense Bucket="{x:Reference __ReferenceID1}" Amount="95" />
-            <Expense Bucket="{x:Reference __ReferenceID2}" Amount="55" />
+        </BudgetModelDto.Incomes>
+      </BudgetModelDto>
+      <BudgetModelDto LastModifiedComment="{x:Null}" EffectiveFrom="2013-01-01" LastModified="2014-05-03T11:37:11.7916835+12:00" Name="Test Data 1 Budget">
+        <BudgetModelDto.Expenses>
+          <scg:List x:TypeArguments="Bb:Expense" Capacity="3">
+            <Bb:Expense Bucket="{x:Reference __ReferenceID0}" Amount="175" />
+            <Bb:Expense Bucket="{x:Reference __ReferenceID1}" Amount="95" />
+            <Bb:Expense Bucket="{x:Reference __ReferenceID2}" Amount="55" />
           </scg:List>
-        </DataBudgetModel.Expenses>
-        <DataBudgetModel.Incomes>
-          <scg:List x:TypeArguments="Income" Capacity="1">
-            <Income Bucket="{x:Reference __ReferenceID3}" Amount="1500" />
+        </BudgetModelDto.Expenses>
+        <BudgetModelDto.Incomes>
+          <scg:List x:TypeArguments="Bb:Income" Capacity="1">
+            <Bb:Income Bucket="{x:Reference __ReferenceID3}" Amount="1500" />
           </scg:List>
-        </DataBudgetModel.Incomes>
-      </DataBudgetModel>
+        </BudgetModelDto.Incomes>
+      </BudgetModelDto>
     </scg:List>
-  </DataBudgetCollection.Budgets>
-</DataBudgetCollection>
+  </BudgetCollectionDto.Budgets>
+</BudgetCollectionDto>

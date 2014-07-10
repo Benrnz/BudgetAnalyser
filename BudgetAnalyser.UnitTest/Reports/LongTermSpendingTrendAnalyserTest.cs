@@ -28,8 +28,8 @@ namespace BudgetAnalyser.UnitTest.Reports
         //    var budgetBucketRepo = new InMemoryBudgetBucketRepository();
         //    var budgetRepo = new XamlOnDiskBudgetRepository(
         //        budgetBucketRepo,
-        //        new BudgetCollectionToDataBudgetCollectionMapper(new BudgetModelToDataBudgetModelMapper()),
-        //        new DataBudgetCollectionToBudgetCollectionMapper(new DataBudgetModelToBudgetModelMapper()));
+        //        new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper()),
+        //        new BudgetCollectionDtoToBudgetCollectionMapper(new BudgetModelDtoToBudgetModelMapper()));
         //    budgetRepo.Load(@"C:\BudgetfileLocation.xml");
         //    var importer = new CsvOnDiskStatementModelRepositoryV1(
         //        accountTypeRepo,
