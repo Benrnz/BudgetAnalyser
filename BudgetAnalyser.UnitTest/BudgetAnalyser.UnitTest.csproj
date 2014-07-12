@@ -123,7 +123,9 @@
     <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="Statement\StatementModelTest.cs" />
+    <Compile Include="Statement\TransactionDtoTest.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
+    <Compile Include="Statement\TransactionTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />

@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <summary>
         /// The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during serialisation.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; internal set; }
 
         public bool IsSuspectedDuplicate { get; internal set; }
 
@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
