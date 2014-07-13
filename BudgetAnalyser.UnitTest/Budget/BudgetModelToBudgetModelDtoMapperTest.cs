@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
@@ -9,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class BudgetModelToDataBudgetModelMapperTest
+    public class BudgetModelToBudgetModelDtoMapperTest
     {
         private BudgetModel TestData { get; set; }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Matching;
 
 namespace BudgetAnalyser.UnitTest.TestData
@@ -10,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public static void ConvertToDomainAndGenerateCSharp(IEnumerable<DataMatchingRule> dataRules)
         {
-            var bucketRepo = new InMemoryBudgetBucketRepository();
+            var bucketRepo = new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
 
             var mapper = new MatchingRuleDataToDomainMapper(bucketRepo);
 

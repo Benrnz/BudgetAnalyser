@@ -256,6 +256,8 @@ namespace BudgetAnalyser.Budget
             return Path.Combine(path, "BudgetModel.xml");
         }
 
+        private List<BudgetBucket> newBuckets = new List<BudgetBucket>();
+
         protected virtual bool SaveBudgetCollection()
         {
             string input = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
@@ -266,6 +268,10 @@ namespace BudgetAnalyser.Budget
 
             CurrentBudget.Model.LastModifiedComment = input;
             CurrentBudget.Model.LastModified = DateTime.Now;
+            
+            newBuckets.ForEach(b => this.bucketRepo.GetOrCreateNew(b.Code, () => b));
+            newBuckets.Clear();
+
             this.budgetRepository.Save(Budgets);
             return true;
         }
@@ -363,6 +369,7 @@ namespace BudgetAnalyser.Budget
                 throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
             }
 
+            this.newBuckets.Add(newExpense.Bucket);
             Expenses.RaiseListChangedEvents = true;
             newExpense.PropertyChanged += OnExpenseAmountPropertyChanged;
         }
@@ -371,6 +378,7 @@ namespace BudgetAnalyser.Budget
         {
             this.dirty = true;
             var newIncome = new Income { Bucket = new IncomeBudgetBucket(string.Empty, string.Empty), Amount = 0 };
+            this.newBuckets.Add(newIncome.Bucket);
             Incomes.Add(newIncome);
             newIncome.PropertyChanged += OnIncomeAmountPropertyChanged;
         }
@@ -583,6 +591,7 @@ namespace BudgetAnalyser.Budget
                 return true;
             }
 
+            this.newBuckets.Clear();
             return false;
         }
 

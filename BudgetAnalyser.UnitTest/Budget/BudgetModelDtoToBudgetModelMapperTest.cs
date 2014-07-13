@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class DataBudgetModelToBudgetModelMapperTest
+    public class BudgetModelDtoToBudgetModelMapperTest
     {
         [TestMethod]
         public void OutputBudgetModelTestData1()

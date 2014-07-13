@@ -11,5 +11,8 @@
         public const string PowerBucketCode = "POWER";
         public const string RatesBucketCode = "RATES";
         public const string RegoBucketCode = "REGO";
+        public const string RentBucketCode = "RENT";
+        public const string FoodBucketCode = "FOOD";
+        public const string WaterBucketCode = "WATER";
     }
 }

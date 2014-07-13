@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -13,8 +13,9 @@ namespace BudgetAnalyser.Engine.Budget
 
         BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory);
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom Collection")]
-        void Initialise(BudgetCollection budgetCollectionModel);
+        // TODO Remove this when tested
+        //void Initialise(IEnumerable<BudgetBucket> buckets);
+        void Initialise(IEnumerable<BudgetBucketDto> buckets);
 
         bool IsValidCode(string code);
     }

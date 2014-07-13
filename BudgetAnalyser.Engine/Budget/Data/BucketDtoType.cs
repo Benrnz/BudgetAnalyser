@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Budget.Data
 {
-    public enum BucketTypeDto
+    public enum BucketDtoType
     {
         SpentMonthlyExpense,
         SavedUpForExpense,

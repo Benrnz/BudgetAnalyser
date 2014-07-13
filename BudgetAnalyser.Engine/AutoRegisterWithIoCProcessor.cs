@@ -45,6 +45,11 @@ namespace BudgetAnalyser.Engine
                 }
 
                 registration.AsImplementedInterfaces().AsSelf();
+
+                if (autoRegisterAttribute.RegisterAs != null)
+                {
+                    registration.As(autoRegisterAttribute.RegisterAs);
+                }
             }
         }
 

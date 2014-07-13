@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void AfterInitialiseJournalBucketShouldExist()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(new BudgetCollection());
+            subject.Initialise(new List<BudgetBucketDto>());
 
             Assert.IsTrue(subject.IsValidCode(JournalBucket.JournalCode));
             Assert.IsInstanceOfType(subject.GetByCode(JournalBucket.JournalCode), typeof(JournalBucket));
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void AfterInitialiseSurplusBucketShouldExist()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(new BudgetCollection());
+            subject.Initialise(new List<BudgetBucketDto>());
 
             Assert.IsTrue(subject.IsValidCode(SurplusBucket.SurplusCode));
             Assert.IsInstanceOfType(subject.GetByCode(SurplusBucket.SurplusCode), typeof(SurplusBucket));
@@ -38,8 +38,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void GetOrAddShouldAddWhenItemDoesntExist()
         {
-            InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(CreateBudgetCollectionModel());
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.GetOrCreateNew("Foo", () => new IncomeBudgetBucket("Foo", "Bar"));
 
@@ -49,8 +48,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void GetOrAddShouldNotAddWhenItemDoesExist()
         {
-            InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(CreateBudgetCollectionModel());
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             int count = subject.Buckets.Count();
             subject.GetOrCreateNew(TestDataConstants.HairBucketCode, () =>
@@ -63,23 +61,21 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void InitialiseShouldPopulate6Buckets()
+        public void InitialiseShouldPopulate9Buckets()
         {
-            InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(CreateBudgetCollectionModel());
-
-            Assert.AreEqual(6, subject.Buckets.Count());
+            InMemoryBudgetBucketRepository subject = Arrange();
+            var expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
+            Assert.AreEqual(expected, subject.Buckets.Count());
         }
 
         [TestMethod]
         public void InitialiseShouldPopulateKnownBuckets()
         {
-            InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(CreateBudgetCollectionModel());
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             Assert.IsTrue(subject.IsValidCode(TestDataConstants.CarMtcBucketCode));
             Assert.IsTrue(subject.IsValidCode(TestDataConstants.HairBucketCode));
-            Assert.IsTrue(subject.IsValidCode(TestDataConstants.PowerBucketCode));
+            Assert.IsTrue(subject.IsValidCode(TestDataConstants.FoodBucketCode));
             Assert.IsTrue(subject.IsValidCode(TestDataConstants.IncomeBucketCode));
         }
 
@@ -107,8 +103,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ThreadSafetyCheckOnGetOrAdd()
         {
-            InMemoryBudgetBucketRepository subject = CreateSubject();
-            subject.Initialise(CreateBudgetCollectionModel());
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             var threads = new List<Thread>();
             int concurrency = 50;
@@ -135,25 +130,16 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.IsFalse(this.concurrencyFail);
         }
 
-        [TestMethod]
-        public void WhenUnderlyingBudgetCollectionChangesRepositoryReinitialises()
+        private InMemoryBudgetBucketRepository Arrange()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
-            BudgetCollection collection = CreateBudgetCollectionModel();
-            subject.Initialise(collection);
+            subject.Initialise(CreateBudgetBucketDtoTestData());
+            return subject;
+        }
 
-            int count = subject.Buckets.Count();
-
-            var myExpenses = collection.CurrentActiveBudget.Expenses.ToList();
-            var myIncomes = collection.CurrentActiveBudget.Incomes.ToList();
-
-            myExpenses.Add(new Expense { Amount = 12.22M, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") });
-            collection.CurrentActiveBudget.Update(myIncomes, myExpenses);
-
-            var builder = new StringBuilder();
-            collection.Validate(builder);
-
-            Assert.AreEqual(count + 1, subject.Buckets.Count());
+        private IEnumerable<BudgetBucketDto> CreateBudgetBucketDtoTestData()
+        {
+            return BudgetModelTestData.CreateBudgetBucketDtoTestData1();
         }
 
         private BudgetCollection CreateBudgetCollectionModel()
@@ -163,7 +149,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private InMemoryBudgetBucketRepository CreateSubject()
         {
-            return new InMemoryBudgetBucketRepository();
+            return new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
         }
 
         private void ThreadSafetyCheckOneThread(object subject)

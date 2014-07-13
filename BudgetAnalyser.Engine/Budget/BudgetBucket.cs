@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
-    [DebuggerDisplay("BudgetBucket {Code} {Description}")]
+    [DebuggerDisplay("{TypeDescription} {Code} {Description}")]
     public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, IComparable
     {
         private string doNotUseCode;

@@ -64,6 +64,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -85,14 +86,14 @@
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
     <Compile Include="Budget\BudgetCollectionTest.cs" />
-    <Compile Include="Budget\BudgetCollectionToDataBudgetCollectionMapperTest.cs" />
+    <Compile Include="Budget\BudgetCollectionToBudgetCollectionDtoMapperTest.cs" />
     <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
     <Compile Include="Budget\BudgetItemTest.cs" />
     <Compile Include="Budget\BudgetModelTest.cs" />
-    <Compile Include="Budget\BudgetModelToDataBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\BudgetModelToBudgetModelDtoMapperTest.cs" />
     <Compile Include="Budget\BudgetRepositoryTest.cs" />
-    <Compile Include="Budget\DataBudgetCollectionToBudgetCollectionMapperTest.cs" />
-    <Compile Include="Budget\DataBudgetModelToBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\BudgetCollectionDtoToBudgetCollectionMapperTest.cs" />
+    <Compile Include="Budget\BudgetModelDtoToBudgetModelMapperTest.cs" />
     <Compile Include="Budget\ExpenseTest.cs" />
     <Compile Include="Budget\IncomeTest.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
@@ -175,16 +176,20 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
+    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\DemoBudget.xml">
       <Link>TestData\DemoBudget.xml</Link>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\BudgetAnalyser\BudgetModel.xml">
       <Link>TestData\BudgetModel.xml</Link>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

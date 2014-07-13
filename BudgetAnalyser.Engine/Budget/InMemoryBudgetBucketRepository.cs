@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -15,9 +15,19 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     {
+        private readonly BasicMapper<BudgetBucketDto, BudgetBucket> mapper;
         private readonly object syncRoot = new object();
         private Dictionary<string, BudgetBucket> lookupTable = new Dictionary<string, BudgetBucket>();
-        private bool subscribedToBudgetValidation;
+
+        public InMemoryBudgetBucketRepository([NotNull] BasicMapper<BudgetBucketDto, BudgetBucket> mapper)
+        {
+            if (mapper == null)
+            {
+                throw new ArgumentNullException("mapper");
+            }
+
+            this.mapper = mapper;
+        }
 
         public virtual IEnumerable<BudgetBucket> Buckets
         {
@@ -73,34 +83,20 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
-        public virtual void Initialise([NotNull] BudgetCollection budgetCollectionModel)
+        public virtual void Initialise(IEnumerable<BudgetBucketDto> buckets)
         {
-            if (budgetCollectionModel == null)
+            if (buckets == null)
             {
-                throw new ArgumentNullException("budgetCollectionModel");
+                throw new ArgumentNullException("buckets");
             }
 
-            if (!this.subscribedToBudgetValidation)
-            {
-                budgetCollectionModel.Validating += (s, e) => Initialise(s as BudgetCollection);
-                this.subscribedToBudgetValidation = true;
-            }
-
-            this.lookupTable = budgetCollectionModel
-                .SelectMany(model => model.Expenses)
+            this.lookupTable = buckets
+                .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
+                .Select(dto => this.mapper.Map(dto))
                 .Distinct()
-                .ToDictionary(e => e.Bucket.Code, e => e.Bucket);
-
+                .ToDictionary(e => e.Code, e => e);
 
             InitialiseMandatorySpecialBuckets();
-
-            foreach (Income income in budgetCollectionModel
-                .SelectMany(model => model.Incomes)
-                .Distinct())
-            {
-                AddBucket(income.Bucket);
-            }
         }
 
         public virtual bool IsValidCode([NotNull] string code)
@@ -140,7 +136,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             SurplusBucket = new SurplusBucket();
             AddBucket(SurplusBucket);
-            AddBucket(new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate against internal transfers."));
+            AddBucket(new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate internal transfers."));
         }
     }
 }

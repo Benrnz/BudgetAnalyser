@@ -1,12 +1,13 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class BudgetCollectionToDataBudgetCollectionMapperTest
+    public class BudgetCollectionToBudgetCollectionDtoMapperTest
     {
         private BudgetCollection TestData { get; set; }
 
@@ -40,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetCollectionDto ArrangeAndAct()
         {
-            var mapper = new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper());
+            var mapper = new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToBudgetBucketDtoMapper(new BudgetBucketFactory()));
             return mapper.Map(TestData);
         }
     }

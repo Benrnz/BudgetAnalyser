@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -62,6 +64,8 @@ namespace BudgetAnalyser.Engine.Budget
                 FileName = fileName
             };
 
+            BudgetBucketRepository.Initialise(new List<BudgetBucketDto>());
+
             Save(newCollection);
 
             return newCollection;
@@ -97,16 +101,31 @@ namespace BudgetAnalyser.Engine.Budget
                     string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", fileName));
             }
 
-            BudgetCollection correctFormat = this.toDomainMapper.Map(correctDataFormat);
-            correctFormat.FileName = fileName;
-            BudgetBucketRepository.Initialise(correctFormat);
-            return correctFormat;
+            // Bucket Repository must be initialised first, the budget model incomes/expenses are dependent on the bucket repository.
+            BudgetBucketRepository.Initialise(correctDataFormat.Buckets);
+
+            BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
+            budgetCollection.FileName = fileName;
+
+            // Ensure all buckets are included in the budget bucket index.
+            // THIS IS A TEMPORARY MEASURE to ensure data integrity until Budget XAML format has been fully redesigned.
+            var allBuckets = budgetCollection.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+                             .Union(budgetCollection.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
+                             .Distinct();
+            foreach (var bucket in allBuckets)
+            {
+                BudgetBucket bucketCopy = bucket;
+                BudgetBucketRepository.GetOrCreateNew(bucket.Code, () => bucketCopy);
+            }
+
+            return budgetCollection;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public void Save(BudgetCollection budget)
         {
             BudgetCollectionDto dataFormat = this.toDtoMapper.Map(budget);
+
             string serialised = Serialise(dataFormat);
             WriteToDisk(dataFormat.FileName, serialised);
 

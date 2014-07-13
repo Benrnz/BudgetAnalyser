@@ -1,24 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
     internal static class BudgetModelTestData
     {
+        public static IEnumerable<BudgetBucketDto> CreateBudgetBucketDtoTestData1()
+        {
+            return new[]
+            {
+                new BudgetBucketDto { Code = TestDataConstants.RentBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Rent for my bachelor pad" },
+                new BudgetBucketDto { Code = TestDataConstants.FoodBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Groceries, staples, and necessities" },
+                new BudgetBucketDto { Code = TestDataConstants.WaterBucketCode, Type = BucketDtoType.SpentMonthlyExpense, Description = "Water Rates" },
+                new BudgetBucketDto { Code = TestDataConstants.HairBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Haircuts" },
+                new BudgetBucketDto { Code = TestDataConstants.CarMtcBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Car Maintenance" },
+                new BudgetBucketDto { Code = TestDataConstants.PhoneBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Phone and Internet" },
+                new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" },
+            };
+        }
+
         public static BudgetCollection CreateCollectionWith1And2()
         {
-            var collection = new BudgetCollection( new[]
+            var collection = new BudgetCollection(new[]
             {
                 CreateTestData1(),
-                CreateTestData2(),
+                CreateTestData2()
             });
             collection.FileName = @"C:\Temp\Foo.xaml";
             return collection;
         }
 
         /// <summary>
-        /// A budget model that is effective from 1/1/2013
+        ///     A budget model that is effective from 1/1/2013
         /// </summary>
         public static BudgetModel CreateTestData1()
         {
@@ -34,7 +49,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     Amount = 95M,
                     Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
-                }, 
+                },
                 new Expense
                 {
                     Amount = 55M,
@@ -47,13 +62,13 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }
             });
 
-            var incomes = new List<Income>(new[] 
+            var incomes = new List<Income>(new[]
             {
-                    new Income
-                    {
-                        Amount = 1500M,
-                        Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                    }
+                new Income
+                {
+                    Amount = 1500M,
+                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
+                }
             });
 
             budget.Update(incomes, expenses);
@@ -61,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         }
 
         /// <summary>
-        /// A budget model that is effective from 20/1/14
+        ///     A budget model that is effective from 20/1/14
         /// </summary>
         public static BudgetModel CreateTestData2()
         {
@@ -77,7 +92,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     Amount = 100M,
                     Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
-                }, 
+                },
                 new Expense
                 {
                     Amount = 65M,
@@ -90,7 +105,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }
             });
 
-            var incomes = new List<Income>(new[] 
+            var incomes = new List<Income>(new[]
             {
                 new Income
                 {

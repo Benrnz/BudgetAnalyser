@@ -7,5 +7,6 @@ namespace BudgetAnalyser.Engine
     {
         public string Named { get; set; }
         public bool SingleInstance { get; set; }
+        public Type RegisterAs { get; set; }
     }
 }

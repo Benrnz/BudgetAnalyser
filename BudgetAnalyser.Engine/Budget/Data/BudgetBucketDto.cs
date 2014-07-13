@@ -6,6 +6,6 @@
 
         public string Description { get; set; }
 
-        public BucketTypeDto Type { get; set; }
+        public BucketDtoType Type { get; set; }
     }
 }
