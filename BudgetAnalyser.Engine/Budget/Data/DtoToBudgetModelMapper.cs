@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetModelDto, BudgetModel>))]
     public class DtoToBudgetModelMapper : BasicMapper<BudgetModelDto, BudgetModel>
     {
         private readonly IBudgetBucketRepository bucketRepo;

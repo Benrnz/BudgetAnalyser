@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetModel, BudgetModelDto>))]
     public class BudgetModelToDtoMapper : BasicMapper<BudgetModel, BudgetModelDto>
     {
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]

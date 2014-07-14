@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     // TODO if this works ok implement for all mappers to reduce the number of interfaces.
-    [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<BudgetBucketDto, BudgetBucket>))]
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetBucketDto, BudgetBucket>))]
     public class DtoToBudgetBucketMapper : BasicMapper<BudgetBucketDto, BudgetBucket>
     {
         private readonly BudgetBucketFactory bucketFactory;

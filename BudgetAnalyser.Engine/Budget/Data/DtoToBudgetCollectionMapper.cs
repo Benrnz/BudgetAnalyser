@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetCollectionDto, BudgetCollection>))]
     public class DtoToBudgetCollectionMapper : BasicMapper<BudgetCollectionDto, BudgetCollection>
     {
         private readonly DtoToBudgetModelMapper budgetModelMapper;
