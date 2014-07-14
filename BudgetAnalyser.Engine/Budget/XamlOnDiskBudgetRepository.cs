@@ -13,13 +13,13 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
-        private readonly BudgetCollectionToBudgetCollectionDtoMapper toDtoMapper;
-        private readonly BudgetCollectionDtoToBudgetCollectionMapper toDomainMapper;
+        private readonly BudgetCollectionToDtoMapper toDtoMapper;
+        private readonly DtoToBudgetCollectionMapper toDomainMapper;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] BudgetCollectionToBudgetCollectionDtoMapper toDtoMapper,
-            [NotNull] BudgetCollectionDtoToBudgetCollectionMapper toDomainMapper)
+            [NotNull] BudgetCollectionToDtoMapper toDtoMapper,
+            [NotNull] DtoToBudgetCollectionMapper toDomainMapper)
         {
             if (bucketRepository == null)
             {
@@ -106,18 +106,6 @@ namespace BudgetAnalyser.Engine.Budget
 
             BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
             budgetCollection.FileName = fileName;
-
-            // Ensure all buckets are included in the budget bucket index.
-            // THIS IS A TEMPORARY MEASURE to ensure data integrity until Budget XAML format has been fully redesigned.
-            var allBuckets = budgetCollection.SelectMany(b => b.Expenses.Select(e => e.Bucket))
-                             .Union(budgetCollection.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
-                             .Distinct();
-            foreach (var bucket in allBuckets)
-            {
-                BudgetBucket bucketCopy = bucket;
-                BudgetBucketRepository.GetOrCreateNew(bucket.Code, () => bucketCopy);
-            }
-
             return budgetCollection;
         }
 

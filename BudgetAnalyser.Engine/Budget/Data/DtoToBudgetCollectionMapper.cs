@@ -6,11 +6,11 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    public class BudgetCollectionDtoToBudgetCollectionMapper
+    public class DtoToBudgetCollectionMapper : BasicMapper<BudgetCollectionDto, BudgetCollection>
     {
-        private readonly BudgetModelDtoToBudgetModelMapper budgetModelMapper;
+        private readonly DtoToBudgetModelMapper budgetModelMapper;
 
-        public BudgetCollectionDtoToBudgetCollectionMapper([NotNull] BudgetModelDtoToBudgetModelMapper budgetModelMapper)
+        public DtoToBudgetCollectionMapper([NotNull] DtoToBudgetModelMapper budgetModelMapper)
         {
             if (budgetModelMapper == null)
             {
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom Collection")]
-        public BudgetCollection Map([NotNull] BudgetCollectionDto budgetCollectionDto)
+        public override BudgetCollection Map([NotNull] BudgetCollectionDto budgetCollectionDto)
         {
             if (budgetCollectionDto == null)
             {

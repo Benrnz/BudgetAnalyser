@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <BudgetCollectionDto FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml"
                       xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
-                      xmlns:Bb="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
                       xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
@@ -27,52 +26,20 @@
                        Name="Demo Budget 1">
 
         <BudgetModelDto.Expenses>
-          <scg:List x:TypeArguments="Bb:Expense" Capacity="6">
-            <Bb:Expense Amount="1200.00">
-              <Bb:Expense.Bucket>
-                <Bb:SpentMonthlyExpenseBucket Code="RENT" Description="Rent for my bachelor pad"/>
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
-            <Bb:Expense Amount="400.00">
-              <Bb:Expense.Bucket>
-                <Bb:SpentMonthlyExpenseBucket Code="FOOD" Description="Groceries, staples, and necessities" />
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
-            <Bb:Expense Amount="37.00">
-              <Bb:Expense.Bucket>
-                <Bb:SpentMonthlyExpenseBucket Code="WATER" Description="Water Rates"/>
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
-            <Bb:Expense Amount="100.00">
-              <Bb:Expense.Bucket>
-                <Bb:SpentMonthlyExpenseBucket Code="INSHOME" Description="Home and Contents Insurance" />
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
-            <Bb:Expense Amount="45.00">
-              <Bb:Expense.Bucket>
-                <Bb:SavedUpForExpenseBucket Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" />
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
-            <Bb:Expense Amount="1.00">
-              <Bb:Expense.Bucket>
-                <Bb:SavedUpForExpenseBucket Code="FEES" Description="Bank Fees" />
-              </Bb:Expense.Bucket>
-            </Bb:Expense>
+          <scg:List x:TypeArguments="ExpenseDto" Capacity="6">
+            <ExpenseDto Amount="1200.00" BudgetBucketCode="RENT"/>
+            <ExpenseDto Amount="400.00" BudgetBucketCode="FOOD" />
+            <ExpenseDto Amount="37.00" BudgetBucketCode="WATER" />
+            <ExpenseDto Amount="100.00" BudgetBucketCode="INSHOME" />
+            <ExpenseDto Amount="45.00" BudgetBucketCode="DOC" />
+            <ExpenseDto Amount="1.00" BudgetBucketCode="FEES" />
           </scg:List>
         </BudgetModelDto.Expenses>
 
         <BudgetModelDto.Incomes>
-          <scg:List x:TypeArguments="Bb:Income" Capacity="4">
-            <Bb:Income Amount="2000.00">
-              <Bb:Income.Bucket>
-                <Bb:IncomeBudgetBucket Code="SALARY" Description="Salary from Lawn Mowing business"/>
-              </Bb:Income.Bucket>
-            </Bb:Income>
-            <Bb:Income Amount="0.0100">
-              <Bb:Income.Bucket>
-                <Bb:IncomeBudgetBucket Code="GIFT" Description="Income from gifts and paybacks that are not spent as surplus" />
-              </Bb:Income.Bucket>
-            </Bb:Income>
+          <scg:List x:TypeArguments="IncomeDto" Capacity="4">
+            <IncomeDto Amount="2000.00" BudgetBucketCode="SALARY" />
+            <IncomeDto Amount="0.0100" BudgetBucketCode="GIFT" />
           </scg:List>
         </BudgetModelDto.Incomes>
       </BudgetModelDto>

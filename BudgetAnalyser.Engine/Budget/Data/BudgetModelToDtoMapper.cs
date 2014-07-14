@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC]
-    public class BudgetModelToBudgetModelDtoMapper
+    public class BudgetModelToDtoMapper : BasicMapper<BudgetModel, BudgetModelDto>
     {
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
-        public BudgetModelDto Map([NotNull] BudgetModel model)
+        public override BudgetModelDto Map([NotNull] BudgetModel model)
         {
             if (model == null)
             {
@@ -19,8 +20,8 @@ namespace BudgetAnalyser.Engine.Budget.Data
             return new BudgetModelDto
             {
                 EffectiveFrom = model.EffectiveFrom,
-                Expenses = new List<Expense>(model.Expenses),
-                Incomes = new List<Income>(model.Incomes),
+                Expenses = model.Expenses.Select(e => new ExpenseDto { Amount = e.Amount, BudgetBucketCode = e.Bucket.Code }).ToList(),
+                Incomes = model.Incomes.Select(i => new IncomeDto { Amount = i.Amount, BudgetBucketCode = i.Bucket.Code }).ToList(),
                 LastModified = model.LastModified,
                 LastModifiedComment = model.LastModifiedComment,
                 Name = model.Name,

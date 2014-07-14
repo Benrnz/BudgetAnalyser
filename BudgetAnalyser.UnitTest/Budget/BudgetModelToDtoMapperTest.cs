@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class BudgetModelToBudgetModelDtoMapperTest
+    public class BudgetModelToDtoMapperTest
     {
         private BudgetModel TestData { get; set; }
 
@@ -22,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void ExpensesBucketsShouldBeMapped()
         {
             BudgetModelDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Expenses.Sum(i => (long)i.Bucket.GetHashCode()), result.Expenses.Sum(i => (long)i.Bucket.GetHashCode()));
+            Assert.IsTrue(result.Expenses.All(dto => !string.IsNullOrWhiteSpace(dto.BudgetBucketCode)));
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void IncomesBucketsShouldBeMapped()
         {
             BudgetModelDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Incomes.Sum(i => (long)i.Bucket.GetHashCode()), result.Incomes.Sum(i => (long)i.Bucket.GetHashCode()));
+            Assert.IsTrue(result.Incomes.All(dto => !string.IsNullOrWhiteSpace(dto.BudgetBucketCode)));
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetModelDto ArrangeAndAct()
         {
-            var mapper = new BudgetModelToBudgetModelDtoMapper();
+            var mapper = new BudgetModelToDtoMapper();
             return mapper.Map(TestData);
         }
     }

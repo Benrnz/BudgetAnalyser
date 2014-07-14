@@ -11,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public static void ConvertToDomainAndGenerateCSharp(IEnumerable<DataMatchingRule> dataRules)
         {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
 
             var mapper = new MatchingRuleDataToDomainMapper(bucketRepo);
 

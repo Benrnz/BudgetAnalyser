@@ -4,11 +4,11 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<BudgetBucket, BudgetBucketDto>))]
-    public class BudgetBucketToBudgetBucketDtoMapper : BasicMapper<BudgetBucket, BudgetBucketDto>
+    public class BudgetBucketToDtoMapper : BasicMapper<BudgetBucket, BudgetBucketDto>
     {
         private readonly BudgetBucketFactory bucketFactory;
 
-        public BudgetBucketToBudgetBucketDtoMapper([NotNull] BudgetBucketFactory bucketFactory)
+        public BudgetBucketToDtoMapper([NotNull] BudgetBucketFactory bucketFactory)
         {
             if (bucketFactory == null)
             {

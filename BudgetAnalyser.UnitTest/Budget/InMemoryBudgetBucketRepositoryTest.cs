@@ -149,7 +149,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private InMemoryBudgetBucketRepository CreateSubject()
         {
-            return new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
         }
 
         private void ThreadSafetyCheckOneThread(object subject)

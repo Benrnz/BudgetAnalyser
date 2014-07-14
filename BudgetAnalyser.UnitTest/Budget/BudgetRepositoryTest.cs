@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Reflection;
 using System.Resources;
 using System.Xaml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -24,8 +24,6 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private const string EmptyBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetModel.xml";
         private const string FileName1 = @"BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml";
-
-        private Mock<IBudgetBucketRepository> mockBucketRepository;
 
         [TestMethod]
         public void CreateNewShouldPopulateFileName()
@@ -64,23 +62,25 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void CtorShouldThrowWhenBucketRepositoryIsNull()
         {
             new XamlOnDiskBudgetRepository(
-                null, 
-                new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToBudgetBucketDtoMapper(new BudgetBucketFactory())),
-                new BudgetCollectionDtoToBudgetCollectionMapper(new BudgetModelDtoToBudgetModelMapper()));
+                null,
+                new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToDtoMapper(new BudgetBucketFactory())),
+                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper(new BucketBucketRepoAlwaysFind())));
             Assert.Fail();
         }
 
         [TestMethod]
         public void LoadShouldCallInitialiseOnTheBucketRepository()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            var mockBucketRepository = new Mock<IBudgetBucketRepository>();
+            mockBucketRepository.Setup(m => m.Initialise(null));
+
+            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject(mockBucketRepository.Object);
             subject.FileExistsMock = f => true;
-            this.mockBucketRepository.Setup(m => m.Initialise(null));
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             subject.Load(FileName1);
 
-            this.mockBucketRepository.Verify();
+            mockBucketRepository.Verify();
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void SaveShouldWriteOutBuckets()
         {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
             var subject = new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
 
             string savedData = null;
@@ -181,8 +181,8 @@ namespace BudgetAnalyser.UnitTest.Budget
 
             XNamespace ns = "clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine";
             XDocument document = XDocument.Parse(savedData);
-            var bucketCollectionElements = document.Descendants(ns + "BudgetBucketDto");
-            foreach (var element in bucketCollectionElements)
+            IEnumerable<XElement> bucketCollectionElements = document.Descendants(ns + "BudgetBucketDto");
+            foreach (XElement element in bucketCollectionElements)
             {
                 Console.WriteLine(element.FirstAttribute);
             }
@@ -193,7 +193,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void SaveShouldWriteOutBucketsXPath()
         {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new BudgetBucketDtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
             var subject = new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
 
             string savedData = null;
@@ -228,15 +228,14 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.IsTrue(writeToDiskCalled);
         }
 
-        [TestInitialize]
-        public void TestInitialise()
+        private XamlOnDiskBudgetRepositoryTestHarness CreateSubject(IBudgetBucketRepository bucketRepo = null)
         {
-            this.mockBucketRepository = new Mock<IBudgetBucketRepository>();
-        }
+            if (bucketRepo == null)
+            {
+                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            }
 
-        private XamlOnDiskBudgetRepositoryTestHarness CreateSubject()
-        {
-            return new XamlOnDiskBudgetRepositoryTestHarness(this.mockBucketRepository.Object);
+            return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
         }
 
         private BudgetCollectionDto OnLoadFromDiskMock(string f)

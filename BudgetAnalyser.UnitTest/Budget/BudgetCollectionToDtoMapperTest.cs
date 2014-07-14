@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class BudgetCollectionToBudgetCollectionDtoMapperTest
+    public class BudgetCollectionToDtoMapperTest
     {
         private BudgetCollection TestData { get; set; }
 
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetCollectionDto ArrangeAndAct()
         {
-            var mapper = new BudgetCollectionToBudgetCollectionDtoMapper(new BudgetModelToBudgetModelDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToBudgetBucketDtoMapper(new BudgetBucketFactory()));
+            var mapper = new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToDtoMapper(new BudgetBucketFactory()));
             return mapper.Map(TestData);
         }
     }

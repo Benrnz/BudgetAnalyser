@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xaml;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
-    public class BudgetModelDtoToBudgetModelMapperTest
+    public class DtoToBudgetModelMapperTest
     {
         [TestMethod]
         public void OutputBudgetModelTestData1()
@@ -20,25 +19,25 @@ namespace BudgetAnalyser.UnitTest.Budget
                 LastModified = new DateTime(2014, 5, 2),
                 LastModifiedComment = "The quick brown fox jumped over the lazy dog.",
                 Name = "Foo data budget",
-                Incomes = new List<Income>
+                Incomes = new List<IncomeDto>
                 {
-                    new Income
+                    new IncomeDto
                     {
                         Amount = 2300.23M,
-                        Bucket = StatementModelTestData.IncomeBucket,
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                     },
                 },
-                Expenses = new List<Expense>
+                Expenses = new List<ExpenseDto>
                 {
-                    new Expense
+                    new ExpenseDto
                     {
                         Amount = 350.11M,
-                        Bucket = StatementModelTestData.PhoneBucket,
+                        BudgetBucketCode = TestDataConstants.PhoneBucketCode,
                     },
-                    new Expense
+                    new ExpenseDto
                     {
                         Amount = 221.22M,
-                        Bucket = StatementModelTestData.PowerBucket,
+                        BudgetBucketCode = TestDataConstants.PowerBucketCode,
                     },
                 },
             };

@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
-        public List<Expense> Expenses { get; set; }
+        public List<ExpenseDto> Expenses { get; set; }
 
         /// <summary>
         ///     No need for a data type for <see cref="Income" />, <see cref="Expenses" />, <see cref="BudgetItem" />,
@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Necessary for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for serialisation")]
-        public List<Income> Incomes { get; set; }
+        public List<IncomeDto> Incomes { get; set; }
 
         /// <summary>
         ///     Gets the date and time the budget model was last modified by the user.
