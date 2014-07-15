@@ -5,7 +5,8 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement.Data
 {
-    public class TransactionDtoToTransactionMapper
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<TransactionDto, Transaction>))]
+    public class TransactionDtoToTransactionMapper : BasicMapper<TransactionDto, Transaction>
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
@@ -35,20 +36,25 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionTypeRepository = transactionTypeRepository;
         }
 
-        public Transaction Map(TransactionDto dto)
+        public override Transaction Map([NotNull] TransactionDto source)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             return new Transaction
             {
-                AccountType = this.accountTypeRepository.GetOrCreateNew(dto.AccountType),
-                Amount = dto.Amount,
-                BudgetBucket = this.bucketRepository.GetByCode(dto.BudgetBucketCode),
-                Date = dto.Date,
-                Description = dto.Description,
-                Id = dto.Id,
-                Reference1 = dto.Reference1,
-                Reference2 = dto.Reference2,
-                Reference3 = dto.Reference3,
-                TransactionType = this.transactionTypeRepository.GetOrCreateNew(dto.TransactionType)
+                AccountType = this.accountTypeRepository.GetOrCreateNew(source.AccountType),
+                Amount = source.Amount,
+                BudgetBucket = this.bucketRepository.GetByCode(source.BudgetBucketCode),
+                Date = source.Date,
+                Description = source.Description,
+                Id = source.Id,
+                Reference1 = source.Reference1,
+                Reference2 = source.Reference2,
+                Reference3 = source.Reference3,
+                TransactionType = this.transactionTypeRepository.GetOrCreateNew(source.TransactionType)
             };
         }
     }

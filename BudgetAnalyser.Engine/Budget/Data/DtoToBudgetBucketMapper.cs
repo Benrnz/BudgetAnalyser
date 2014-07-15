@@ -7,9 +7,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
     [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetBucketDto, BudgetBucket>))]
     public class DtoToBudgetBucketMapper : BasicMapper<BudgetBucketDto, BudgetBucket>
     {
-        private readonly BudgetBucketFactory bucketFactory;
+        private readonly IBudgetBucketFactory bucketFactory;
 
-        public DtoToBudgetBucketMapper([NotNull] BudgetBucketFactory bucketFactory)
+        public DtoToBudgetBucketMapper([NotNull] IBudgetBucketFactory bucketFactory)
         {
             if (bucketFactory == null)
             {
@@ -19,11 +19,16 @@ namespace BudgetAnalyser.Engine.Budget.Data
             this.bucketFactory = bucketFactory;
         }
 
-        public override BudgetBucket Map(BudgetBucketDto dto)
+        public override BudgetBucket Map([NotNull] BudgetBucketDto source)
         {
-            var bucket = this.bucketFactory.Build(dto.Type);
-            bucket.Code = dto.Code;
-            bucket.Description = dto.Description;
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            var bucket = this.bucketFactory.Build(source.Type);
+            bucket.Code = source.Code;
+            bucket.Description = source.Description;
             return bucket;
         }
     }

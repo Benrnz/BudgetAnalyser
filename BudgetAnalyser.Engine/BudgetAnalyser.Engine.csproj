@@ -91,6 +91,7 @@
     <Compile Include="Budget\Data\BudgetModelDto.cs" />
     <Compile Include="Budget\Data\DtoToBudgetModelMapper.cs" />
     <Compile Include="Budget\Data\ExpenseDto.cs" />
+    <Compile Include="Budget\Data\IBudgetBucketFactory.cs" />
     <Compile Include="Budget\Data\IncomeDto.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\BudgetCollection.cs" />

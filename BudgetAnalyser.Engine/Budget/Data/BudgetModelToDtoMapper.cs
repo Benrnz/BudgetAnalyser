@@ -9,21 +9,21 @@ namespace BudgetAnalyser.Engine.Budget.Data
     public class BudgetModelToDtoMapper : BasicMapper<BudgetModel, BudgetModelDto>
     {
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
-        public override BudgetModelDto Map([NotNull] BudgetModel model)
+        public override BudgetModelDto Map([NotNull] BudgetModel source)
         {
-            if (model == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException("source");
             }
 
             return new BudgetModelDto
             {
-                EffectiveFrom = model.EffectiveFrom,
-                Expenses = model.Expenses.Select(e => new ExpenseDto { Amount = e.Amount, BudgetBucketCode = e.Bucket.Code }).ToList(),
-                Incomes = model.Incomes.Select(i => new IncomeDto { Amount = i.Amount, BudgetBucketCode = i.Bucket.Code }).ToList(),
-                LastModified = model.LastModified,
-                LastModifiedComment = model.LastModifiedComment,
-                Name = model.Name,
+                EffectiveFrom = source.EffectiveFrom,
+                Expenses = source.Expenses.Select(e => new ExpenseDto { Amount = e.Amount, BudgetBucketCode = e.Bucket.Code }).ToList(),
+                Incomes = source.Incomes.Select(i => new IncomeDto { Amount = i.Amount, BudgetBucketCode = i.Bucket.Code }).ToList(),
+                LastModified = source.LastModified,
+                LastModifiedComment = source.LastModifiedComment,
+                Name = source.Name,
             };
         }
     }

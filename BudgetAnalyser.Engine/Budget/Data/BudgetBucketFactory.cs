@@ -1,8 +1,10 @@
 using System;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    public class BudgetBucketFactory
+    [AutoRegisterWithIoC(SingleInstance = true)]
+    internal class BudgetBucketFactory : IBudgetBucketFactory
     {
         public BudgetBucket Build(BucketDtoType type)
         {
@@ -24,8 +26,13 @@ namespace BudgetAnalyser.Engine.Budget.Data
             }
         }
 
-        public BucketDtoType SerialiseType(BudgetBucket bucket)
+        public BucketDtoType SerialiseType([NotNull] BudgetBucket bucket)
         {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException("bucket");
+            }
+
             if (bucket is IncomeBudgetBucket)
             {
                 return BucketDtoType.Income;

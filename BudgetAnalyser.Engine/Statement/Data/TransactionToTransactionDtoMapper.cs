@@ -1,21 +1,30 @@
-﻿namespace BudgetAnalyser.Engine.Statement.Data
+﻿using System;
+using BudgetAnalyser.Engine.Annotations;
+
+namespace BudgetAnalyser.Engine.Statement.Data
 {
-    public class TransactionToTransactionDtoMapper
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<Transaction, TransactionDto>))]
+    public class TransactionToTransactionDtoMapper : BasicMapper<Transaction, TransactionDto>
     {
-        public TransactionDto Map(Transaction transaction)
+        public override TransactionDto Map([NotNull] Transaction source)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             return new TransactionDto()
             {
-                AccountType = transaction.AccountType == null ? null : transaction.AccountType.Name,
-                Amount = transaction.Amount,
-                BudgetBucketCode = transaction.BudgetBucket == null ? null : transaction.BudgetBucket.Code,
-                Date = transaction.Date,
-                Description = transaction.Description,
-                Id = transaction.Id,
-                Reference1 = transaction.Reference1,
-                Reference2 = transaction.Reference2,
-                Reference3 = transaction.Reference3,
-                TransactionType = transaction.TransactionType == null ? null : transaction.TransactionType.Name,
+                AccountType = source.AccountType == null ? null : source.AccountType.Name,
+                Amount = source.Amount,
+                BudgetBucketCode = source.BudgetBucket == null ? null : source.BudgetBucket.Code,
+                Date = source.Date,
+                Description = source.Description,
+                Id = source.Id,
+                Reference1 = source.Reference1,
+                Reference2 = source.Reference2,
+                Reference3 = source.Reference3,
+                TransactionType = source.TransactionType == null ? null : source.TransactionType.Name,
             };
         }
     }

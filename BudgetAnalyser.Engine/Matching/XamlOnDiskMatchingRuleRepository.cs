@@ -95,6 +95,7 @@ namespace BudgetAnalyser.Engine.Matching
             XamlServices.Save(fileName, dataEntities.ToList());
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
         protected virtual List<DataMatchingRule> LoadFromDisk(string fileName)
         {
             return XamlServices.Load(fileName) as List<DataMatchingRule>;

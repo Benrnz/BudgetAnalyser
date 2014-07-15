@@ -26,21 +26,33 @@ namespace BudgetAnalyser.Engine
 
         public void Dispose()
         {
-            this.isDisposed = true;
-            this.logger.LogInfo(() => "LoggingApplicationHookSubscriber is being disposed.");
-            if (this.myPublishers != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.isDisposed)
             {
-                foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
+                if (disposing)
                 {
-                    publisher.ApplicationEvent -= OnEventOccurred;
+                    this.isDisposed = true;
+                    this.logger.LogInfo(() => "LoggingApplicationHookSubscriber is being disposed.");
+                    if (this.myPublishers != null)
+                    {
+                        foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
+                        {
+                            publisher.ApplicationEvent -= OnEventOccurred;
+                        }
+                    }
                 }
             }
-
-            GC.SuppressFinalize(this);
         }
 
         public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
+            if (this.isDisposed) throw new ObjectDisposedException(GetType().Name);
+
             if (publishers == null)
             {
                 throw new ArgumentNullException("publishers");

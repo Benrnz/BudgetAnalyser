@@ -19,8 +19,13 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionMapper = transactionMapper;
         }
 
-        public TransactionSetDto Map(StatementModel model, string versionHash, string fileName)
+        public TransactionSetDto Map([NotNull] StatementModel model, string versionHash, string fileName)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             return new TransactionSetDto
             {
                 LastImport = model.LastImport,

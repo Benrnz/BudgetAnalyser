@@ -51,21 +51,14 @@ namespace BudgetAnalyser.Engine
 
         public void Dispose()
         {
-            this.isDisposed = true;
-            this.logger.LogInfo(() => "BatchFileApplicationHookSubscriber is being disposed.");
-            if (this.myPublishers != null)
-            {
-                foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
-                {
-                    publisher.ApplicationEvent -= OnEventOccurred;
-                }
-            }
-
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
+            if (this.isDisposed) throw new ObjectDisposedException(GetType().Name);
+
             if (publishers == null)
             {
                 throw new ArgumentNullException("publishers");
@@ -77,6 +70,31 @@ namespace BudgetAnalyser.Engine
                 publisher.ApplicationEvent += OnEventOccurred;
             }
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.isDisposed)
+            {
+                // If disposing equals true, dispose all managed 
+                // and unmanaged resources. 
+                if (disposing)
+                {
+                    // Dispose managed resources. 
+                    this.isDisposed = true;
+                    this.logger.LogInfo(() => "BatchFileApplicationHookSubscriber is being disposed.");
+                    if (this.myPublishers != null)
+                    {
+                        foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
+                        {
+                            publisher.ApplicationEvent -= OnEventOccurred;
+                        }
+                    }
+                }
+            }
+
+            this.isDisposed = true;
+        } 
 
         protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
         {

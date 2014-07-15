@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return null;
             }
 
-            int position = chunk.IndexOf("\n", StringComparison.InvariantCulture);
+            int position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
             if (position > 0)
             {
                 return chunk.Substring(0, position);

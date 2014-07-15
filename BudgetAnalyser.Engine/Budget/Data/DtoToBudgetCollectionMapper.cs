@@ -21,16 +21,16 @@ namespace BudgetAnalyser.Engine.Budget.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom Collection")]
-        public override BudgetCollection Map([NotNull] BudgetCollectionDto budgetCollectionDto)
+        public override BudgetCollection Map([NotNull] BudgetCollectionDto source)
         {
-            if (budgetCollectionDto == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("budgetCollectionDto");
+                throw new ArgumentNullException("source");
             }
 
-            var collection = new BudgetCollection(budgetCollectionDto.Budgets.Select(d => this.budgetModelMapper.Map(d)))
+            var collection = new BudgetCollection(source.Budgets.Select(d => this.budgetModelMapper.Map(d)))
             {
-                FileName = budgetCollectionDto.FileName,
+                FileName = source.FileName,
             };
 
             return collection;

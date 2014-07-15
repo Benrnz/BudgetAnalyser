@@ -22,23 +22,23 @@ namespace BudgetAnalyser.Engine.Budget.Data
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
-        public override BudgetModel Map([NotNull] BudgetModelDto data)
+        public override BudgetModel Map([NotNull] BudgetModelDto source)
         {
-            if (data == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException("source");
             }
 
             var model = new BudgetModel
             {
-                EffectiveFrom = data.EffectiveFrom,
-                LastModified = data.LastModified ?? DateTime.Now,
-                LastModifiedComment = data.LastModifiedComment,
-                Name = data.Name,
+                EffectiveFrom = source.EffectiveFrom,
+                LastModified = source.LastModified ?? DateTime.Now,
+                LastModifiedComment = source.LastModifiedComment,
+                Name = source.Name,
             };
 
-            IEnumerable<Expense> expenses = data.Expenses.Select(dto => new Expense { Amount = dto.Amount, Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) });
-            IEnumerable<Income> incomes = data.Incomes.Select(dto => new Income { Amount = dto.Amount, Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) });
+            IEnumerable<Expense> expenses = source.Expenses.Select(dto => new Expense { Amount = dto.Amount, Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) });
+            IEnumerable<Income> incomes = source.Incomes.Select(dto => new Income { Amount = dto.Amount, Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode) });
             model.Update(incomes, expenses);
             return model;
         }

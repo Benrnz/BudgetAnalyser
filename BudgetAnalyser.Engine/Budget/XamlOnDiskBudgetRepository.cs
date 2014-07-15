@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -13,13 +12,13 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
-        private readonly BudgetCollectionToDtoMapper toDtoMapper;
-        private readonly DtoToBudgetCollectionMapper toDomainMapper;
+        private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
+        private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] BudgetCollectionToDtoMapper toDtoMapper,
-            [NotNull] DtoToBudgetCollectionMapper toDomainMapper)
+            [NotNull] BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
+            [NotNull] BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
         {
             if (bucketRepository == null)
             {

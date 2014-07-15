@@ -26,8 +26,13 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionMapper = transactionMapper;
         }
 
-        public StatementModel Map(TransactionSetDto setDto)
+        public StatementModel Map([NotNull] TransactionSetDto setDto)
         {
+            if (setDto == null)
+            {
+                throw new ArgumentNullException("setDto");
+            }
+
             var model = new StatementModel(this.logger)
             {
                 FileName = setDto.FileName,
