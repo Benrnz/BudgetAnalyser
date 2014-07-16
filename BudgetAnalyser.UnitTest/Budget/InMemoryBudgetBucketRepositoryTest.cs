@@ -36,6 +36,47 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CtorShouldThrowGivenNullMapper()
+        {
+            new InMemoryBudgetBucketRepository(null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetByCodeShouldThrowGivenNullCode()
+        {
+            InMemoryBudgetBucketRepository subject = Arrange();
+
+            subject.GetByCode(null);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetByOrCreateNewShouldThrowGivenNullCode()
+        {
+            InMemoryBudgetBucketRepository subject = Arrange();
+
+            subject.GetOrCreateNew(null, () => new JournalBucket());
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GetByOrCreateNewShouldThrowGivenNullFactory()
+        {
+            InMemoryBudgetBucketRepository subject = Arrange();
+
+            subject.GetOrCreateNew("CODE", null);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void GetOrAddShouldAddWhenItemDoesntExist()
         {
             InMemoryBudgetBucketRepository subject = Arrange();
@@ -64,7 +105,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void InitialiseShouldPopulate9Buckets()
         {
             InMemoryBudgetBucketRepository subject = Arrange();
-            var expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
+            int expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
             Assert.AreEqual(expected, subject.Buckets.Count());
         }
 
@@ -80,10 +121,31 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void InitialiseShouldThrowGivenNullBucketsArgument()
+        {
+            InMemoryBudgetBucketRepository subject = CreateSubject();
+            subject.Initialise(null);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void IsValidCodeShouldReturnFalseWhenRepositoryIsEmpty()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
             Assert.IsFalse(subject.IsValidCode(SurplusBucket.SurplusCode));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void IsValidCodeShouldThrowGivenNullCode()
+        {
+            InMemoryBudgetBucketRepository subject = Arrange();
+
+            subject.IsValidCode(null);
+
+            Assert.Fail();
         }
 
         [TestMethod]

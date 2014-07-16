@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
@@ -37,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static BudgetModel CreateTestData1()
         {
-            var budget = new BudgetModel
+            var budget = new BudgetModel(new FakeLogger())
             {
                 EffectiveFrom = new DateTime(2013, 01, 01),
                 Name = TestDataConstants.Budget1Name,
@@ -80,7 +81,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static BudgetModel CreateTestData2()
         {
-            var budget = new BudgetModel
+            var budget = new BudgetModel(new FakeLogger())
             {
                 EffectiveFrom = new DateTime(2014, 01, 20),
                 Name = TestDataConstants.Budget2Name,

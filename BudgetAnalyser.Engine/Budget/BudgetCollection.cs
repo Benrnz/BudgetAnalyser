@@ -10,15 +10,9 @@ namespace BudgetAnalyser.Engine.Budget
     // TODO Reconsider basing this on List<T>, a better might be ICollection<T> or IEnumerable<T>
     public class BudgetCollection : List<BudgetModel>, IModelValidate
     {
-        public BudgetCollection()
-        {
-        }
-
         public BudgetCollection(IEnumerable<BudgetModel> initialBudgets) : base(initialBudgets.OrderByDescending(b => b.EffectiveFrom))
         {
         }
-
-        public event EventHandler Validating;
 
         public BudgetModel CurrentActiveBudget
         {
@@ -98,12 +92,6 @@ namespace BudgetAnalyser.Engine.Budget
                         index++;
                     }
                 }
-            }
-
-            EventHandler handler = Validating;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
             }
 
             return allValid;

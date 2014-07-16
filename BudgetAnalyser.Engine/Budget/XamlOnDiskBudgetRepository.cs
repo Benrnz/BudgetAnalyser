@@ -14,11 +14,13 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
+        private readonly ILogger logger;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
-            [NotNull] BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
+            [NotNull] BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper, 
+            [NotNull] ILogger logger)
         {
             if (bucketRepository == null)
             {
@@ -34,10 +36,15 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 throw new ArgumentNullException("toDomainMapper");
             }
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
 
             BudgetBucketRepository = bucketRepository;
             this.toDtoMapper = toDtoMapper;
             this.toDomainMapper = toDomainMapper;
+            this.logger = logger;
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
@@ -47,12 +54,12 @@ namespace BudgetAnalyser.Engine.Budget
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection CreateNew([NotNull] string fileName)
         {
-            if (fileName == null)
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 throw new ArgumentNullException("fileName");
             }
 
-            var newBudget = new BudgetModel
+            var newBudget = new BudgetModel(logger)
             {
                 EffectiveFrom = DateTime.Today,
                 Name = "Default Budget",

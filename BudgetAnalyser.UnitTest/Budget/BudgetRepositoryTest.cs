@@ -28,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void CreateNewShouldPopulateFileName()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.WriteToDiskMock = (f, d) => { };
             string filename = "FooBar.xml";
             BudgetCollection collection = subject.CreateNew(filename);
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void CreateNewShouldReturnCollectionWithOneBudgetInIt()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.WriteToDiskMock = (f, d) => { };
             string filename = "FooBar.xml";
             BudgetCollection collection = subject.CreateNew(filename);
@@ -47,9 +47,27 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreateNewShouldThrowGivenEmptyFileName()
+        {
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
+            subject.CreateNew(string.Empty);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreateNewShouldThrowGivenNullFileName()
+        {
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
+            subject.CreateNew(null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void CreateNewShouldWriteToDisk()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             bool writeToDiskCalled = false;
             subject.WriteToDiskMock = (f, d) => { writeToDiskCalled = true; };
             string filename = "FooBar.xml";
@@ -59,12 +77,46 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void CtorShouldThrowGivenNullDomainMapper()
+        {
+            new XamlOnDiskBudgetRepository(
+                new BucketBucketRepoAlwaysFind(),
+                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                null,
+                new FakeLogger());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CtorShouldThrowGivenNullDtoMapper()
+        {
+            new XamlOnDiskBudgetRepository(
+                new BucketBucketRepoAlwaysFind(),
+                null,
+                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
+                new FakeLogger());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CtorShouldThrowGivenNullLoggerMapper()
+        {
+            new XamlOnDiskBudgetRepository(
+                new BucketBucketRepoAlwaysFind(),
+                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
+                null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenBucketRepositoryIsNull()
         {
             new XamlOnDiskBudgetRepository(
                 null,
-                new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToDtoMapper(new BudgetBucketFactory())),
-                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper(new BucketBucketRepoAlwaysFind())));
+                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
+                new FakeLogger());
             Assert.Fail();
         }
 
@@ -74,7 +126,12 @@ namespace BudgetAnalyser.UnitTest.Budget
             var mockBucketRepository = new Mock<IBudgetBucketRepository>();
             mockBucketRepository.Setup(m => m.Initialise(null));
 
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject(mockBucketRepository.Object);
+            var toDomainMapper = new Mock<BasicMapper<BudgetCollectionDto, BudgetCollection>>();
+            var subject = new XamlOnDiskBudgetRepositoryTestHarness(
+                mockBucketRepository.Object,
+                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                toDomainMapper.Object);
+            toDomainMapper.Setup(m => m.Map(It.IsAny<BudgetCollectionDto>())).Returns(BudgetModelTestData.CreateCollectionWith1And2);
             subject.FileExistsMock = f => true;
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
@@ -86,7 +143,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void LoadShouldReturnACollectionAndSetFileName()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = subject.Load(FileName1);
@@ -98,7 +155,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(FileFormatException))]
         public void LoadShouldThrowIfAnyOtherExceptionIsThrownAndWrapItIntoFileFormatException()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => { throw new Exception(); };
             subject.Load("SmellyPoo.xml");
@@ -110,7 +167,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(FileFormatException))]
         public void LoadShouldThrowIfDeserialisedObjectIsNotBudgetCollection()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => new object();
             subject.Load("SmellyPoo.xml");
@@ -122,7 +179,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(FileNotFoundException))]
         public void LoadShouldThrowIfFileDoesntExist()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => false;
             subject.Load("SmellyPoo.xml");
 
@@ -133,7 +190,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(FileFormatException))]
         public void LoadShouldThrowIfFileFormatIsInvalid()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => { throw new XamlObjectWriterException(); };
             subject.Load("SmellyPoo.xml");
@@ -144,7 +201,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void MustBeAbleToLoadDemoBudgetFile()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = subject.Load(DemoBudgetFileName);
@@ -156,7 +213,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void MustBeAbleToLoadEmptyBudgetFile()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = subject.Load(EmptyBudgetFileName);
@@ -220,7 +277,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void SaveShouldWriteToDisk()
         {
-            XamlOnDiskBudgetRepositoryTestHarness subject = CreateSubject();
+            XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             bool writeToDiskCalled = false;
             subject.WriteToDiskMock = (filename, data) => { writeToDiskCalled = true; };
             subject.Save(BudgetModelTestData.CreateCollectionWith1And2());
@@ -228,7 +285,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.IsTrue(writeToDiskCalled);
         }
 
-        private XamlOnDiskBudgetRepositoryTestHarness CreateSubject(IBudgetBucketRepository bucketRepo = null)
+        private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)
         {
             if (bucketRepo == null)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -10,9 +11,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
             : base(bucketRepository,
                 new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), bucketRepository, new BudgetBucketToDtoMapper(new BudgetBucketFactory())),
-                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper(bucketRepository)))
+                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper(bucketRepository, new FakeLogger())),
+                new FakeLogger())
         {
         }
+
+        public XamlOnDiskBudgetRepositoryTestHarness(
+            IBudgetBucketRepository bucketRepo, 
+            BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper, 
+            BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
+            : base(bucketRepo, toDtoMapper, toDomainMapper, new FakeLogger()) { }
 
         public Func<string, bool> FileExistsMock { get; set; }
 

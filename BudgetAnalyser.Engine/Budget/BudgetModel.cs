@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     public class BudgetModel
     {
-        public BudgetModel()
+        private readonly ILogger logger;
+
+        public BudgetModel([NotNull] ILogger logger)
         {
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
+            this.logger = logger;
             Incomes = new List<Income>();
             Expenses = new List<Expense>();
             LastModified = DateTime.Now; // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
@@ -39,10 +48,18 @@ namespace BudgetAnalyser.Engine.Budget
             get { return Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount); }
         }
 
-        public void Initialise()
+        protected virtual void Initialise()
         {
             Expenses = Expenses.OrderByDescending(e => e.Amount).ToList();
             Incomes = Incomes.OrderByDescending(i => i.Amount).ToList();
+
+            var builder = new StringBuilder();
+            if (!Validate(builder))
+            {
+                // Consumer should have already called validate and resolved any issues before calling Update+Initialise.
+                this.logger.LogError(() => this.logger.Format("BudgetModel is invalid. {0}", builder));
+                throw new ValidationWarningException("The model is invalid. " + builder);
+            }
         }
 
         public void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
@@ -53,7 +70,7 @@ namespace BudgetAnalyser.Engine.Budget
             Initialise();
         }
 
-        internal bool Validate(StringBuilder validationMessages)
+        internal virtual bool Validate(StringBuilder validationMessages)
         {
             bool retval = true;
             retval &= Incomes.OfType<IModelValidate>().ToList().All(i => i.Validate(validationMessages));

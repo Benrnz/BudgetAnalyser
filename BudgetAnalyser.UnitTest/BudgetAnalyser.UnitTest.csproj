@@ -141,6 +141,7 @@
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestHarness\BudgetModelFake.cs" />
     <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />

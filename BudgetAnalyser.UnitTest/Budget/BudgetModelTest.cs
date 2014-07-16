@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -17,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterConstructionEffectiveDateIsValidDate()
         {
-            var subject = new BudgetModel();
+            var subject = new BudgetModel(new FakeLogger());
 
             Assert.AreNotEqual(DateTime.MinValue, subject.EffectiveFrom);
         }
@@ -25,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterConstructionLastModifiedDateIsValidDate()
         {
-            var subject = new BudgetModel();
+            var subject = new BudgetModel(new FakeLogger());
 
             Assert.AreNotEqual(DateTime.MinValue, subject.LastModified);
         }
@@ -134,13 +136,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ListsAreInitialised()
         {
-            var subject = new BudgetModel();
+            var subject = new BudgetModel(new FakeLogger());
 
             Assert.IsNotNull(subject.Incomes);
             Assert.IsNotNull(subject.Expenses);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ValidationWarningException))]
         public void SurplusCannotBeUsedInTheExpenseList()
         {
             BudgetModel subject = BudgetModelTestData.CreateTestData1();
@@ -148,12 +151,10 @@ namespace BudgetAnalyser.UnitTest.Budget
             List<Expense> myExpenses = subject.Expenses.ToList();
             myExpenses.Add(new Expense { Amount = 445M, Bucket = new SurplusBucket() });
             List<Income> myIncomes = subject.Incomes.ToList();
+
             subject.Update(myIncomes, myExpenses);
 
-            bool result = subject.Validate(this.Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
+            Assert.Fail();
         }
 
         [TestInitialize]

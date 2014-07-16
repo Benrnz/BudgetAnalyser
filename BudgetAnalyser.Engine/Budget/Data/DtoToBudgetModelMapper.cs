@@ -10,15 +10,21 @@ namespace BudgetAnalyser.Engine.Budget.Data
     public class DtoToBudgetModelMapper : BasicMapper<BudgetModelDto, BudgetModel>
     {
         private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILogger logger;
 
-        public DtoToBudgetModelMapper([NotNull] IBudgetBucketRepository bucketRepo)
+        public DtoToBudgetModelMapper([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] ILogger logger)
         {
             if (bucketRepo == null)
             {
                 throw new ArgumentNullException("bucketRepo");
             }
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
 
             this.bucketRepo = bucketRepo;
+            this.logger = logger;
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Prefered usage with IoC")]
@@ -29,7 +35,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 throw new ArgumentNullException("source");
             }
 
-            var model = new BudgetModel
+            var model = new BudgetModel(this.logger)
             {
                 EffectiveFrom = source.EffectiveFrom,
                 LastModified = source.LastModified ?? DateTime.Now,

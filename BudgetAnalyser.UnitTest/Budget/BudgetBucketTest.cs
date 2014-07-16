@@ -33,7 +33,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void Comparable_PhoneBucketIsEqualToAnotherInstance()
         {
             var phoneBucket = TestData.StatementModelTestData.PhoneBucket;
-            var phooneBucket2 = CreateSubject(TestData.TestDataConstants.PhoneBucketCode, "Foo");
+            var phooneBucket2 = Arrange(TestData.TestDataConstants.PhoneBucketCode, "Foo");
 
             Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
         }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void CtorShouldAllocateUpperCaseCode()
         {
-            BudgetBucket subject = CreateSubject("Foo", "Bar");
+            BudgetBucket subject = Arrange("Foo", "Bar");
             Assert.AreEqual("FOO", subject.Code);
             Assert.AreNotEqual("Foo", subject.Code);
         }
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenCodeIsNull()
         {
-            CreateSubject(NotSpecified, "Something");
+            Arrange(NotSpecified, "Something");
             Assert.Fail();
         }
 
@@ -58,14 +58,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenNameIsNull()
         {
-            CreateSubject("Something", NotSpecified);
+            Arrange("Something", NotSpecified);
             Assert.Fail();
         }
 
         [TestMethod]
         public void SettingCodeShouldConvertToUpperCase()
         {
-            BudgetBucket subject = CreateSubject("Foo", "Bar");
+            BudgetBucket subject = Arrange("Foo", "Bar");
             subject.Code = "White";
             Assert.AreNotEqual("White", subject.Code);
             Assert.AreEqual("WHITE", subject.Code);
@@ -74,8 +74,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void TwoBucketsAreDifferentIfCodesAreDifferent()
         {
-            BudgetBucket subject1 = CreateSubject("Foo1", "Name");
-            BudgetBucket subject2 = CreateSubject("Foo2", "Name");
+            BudgetBucket subject1 = Arrange("Foo1", "Name");
+            BudgetBucket subject2 = Arrange("Foo2", "Name");
             Assert.AreNotEqual(subject1, subject2);
             Assert.IsTrue(subject1 != subject2);
             Assert.AreNotEqual(subject1.GetHashCode(), subject2.GetHashCode());
@@ -84,8 +84,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void TwoBucketsAreTheSameIfCodesAreEqual()
         {
-            BudgetBucket subject1 = CreateSubject("Foo", "Name");
-            BudgetBucket subject2 = CreateSubject("Foo", "Name");
+            BudgetBucket subject1 = Arrange("Foo", "Name");
+            BudgetBucket subject2 = Arrange("Foo", "Name");
             Assert.AreEqual(subject1, subject2);
             Assert.IsTrue(subject1 == subject2);
             Assert.AreEqual(subject1.GetHashCode(), subject2.GetHashCode());
@@ -94,8 +94,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void TwoReferencesToDifferentObjectsAreNotEqual()
         {
-            BudgetBucket subject1 = CreateSubject("Foo", "Name");
-            BudgetBucket subject2 = CreateSubject("Ben", "Is Awesome");
+            BudgetBucket subject1 = Arrange("Foo", "Name");
+            BudgetBucket subject2 = Arrange("Ben", "Is Awesome");
             Assert.AreNotEqual(subject1, subject2);
             Assert.IsTrue(subject1 != subject2);
             Assert.AreNotEqual(subject1.GetHashCode(), subject2.GetHashCode());
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void TwoReferencesToTheSameObjectAreEqual()
         {
-            BudgetBucket subject1 = CreateSubject("Foo", "Name");
+            BudgetBucket subject1 = Arrange("Foo", "Name");
             BudgetBucket subject2 = subject1;
             Assert.AreEqual(subject1, subject2);
             Assert.IsTrue(subject1 == subject2);
@@ -114,7 +114,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ValidateWillReturnFalseWhenCodeIsNull()
         {
-            BudgetBucket subject = CreateSubject();
+            BudgetBucket subject = Arrange();
             subject.Description = "Foo bar";
             var builder = new StringBuilder();
             Assert.IsFalse(subject.Validate(builder));
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ValidateWillReturnFalseWhenCodeIsTooLong()
         {
-            BudgetBucket subject = CreateSubject();
+            BudgetBucket subject = Arrange();
             subject.Description = "FooBarHo";
             var builder = new StringBuilder();
             Assert.IsFalse(subject.Validate(builder));
@@ -134,14 +134,32 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ValidateWillReturnFalseWhenNameIsNull()
         {
-            BudgetBucket subject = CreateSubject();
+            BudgetBucket subject = Arrange();
             subject.Code = "Foo";
             var builder = new StringBuilder();
             Assert.IsFalse(subject.Validate(builder));
             Assert.IsTrue(builder.Length > 0);
         }
 
-        private BudgetBucket CreateSubject(string code = NotSpecified, string name = NotSpecified)
+        [TestMethod]
+        public void ValidateShouldRetrunFalseGivenLongCode()
+        {
+            var subject = Arrange();
+            subject.Code = "ABC345678";
+            var result = subject.Validate(new StringBuilder());
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ValidateShouldThrowGivenNullStringBuilder()
+        {
+            var subject = Arrange();
+            subject.Validate(null);
+            Assert.Fail();
+        }
+
+        private BudgetBucket Arrange(string code = NotSpecified, string name = NotSpecified)
         {
             if (code == NotSpecified && name == NotSpecified)
             {
