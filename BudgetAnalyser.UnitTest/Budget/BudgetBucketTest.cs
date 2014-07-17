@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -10,6 +13,13 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class BudgetBucketTest
     {
         private const string NotSpecified = "NotSpecified";
+
+        [TestMethod]
+        public void BucdgetBucketPropertiesShouldBeMapped()
+        {
+            var properties = typeof(BudgetBucket).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
+            Assert.AreEqual(2, properties.Count());
+        }
 
         [TestMethod]
         public void Comparable_HairBucketIsLessThanPower()

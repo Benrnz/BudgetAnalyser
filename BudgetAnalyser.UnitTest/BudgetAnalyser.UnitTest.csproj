@@ -84,6 +84,7 @@
     <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
+    <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
     <Compile Include="Budget\BudgetCollectionTest.cs" />
     <Compile Include="Budget\BudgetCollectionToDtoMapperTest.cs" />
