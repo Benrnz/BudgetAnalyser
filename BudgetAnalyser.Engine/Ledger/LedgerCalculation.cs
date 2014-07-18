@@ -75,8 +75,9 @@ namespace BudgetAnalyser.Engine.Ledger
             decimal transactionTotal = statement.Transactions
                 .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1) && t.BudgetBucket is SurplusBucket)
                 .Sum(t => t.Amount);
-
             beginningOfMonthBalance += transactionTotal;
+
+            // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.
             Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, statement);
             beginningOfMonthBalance += ledgersSummary.Where(kvp => kvp.Value < 0).Sum(kvp => kvp.Value);
 

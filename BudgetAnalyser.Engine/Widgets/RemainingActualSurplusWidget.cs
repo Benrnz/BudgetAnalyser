@@ -51,6 +51,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 Enabled = false;
                 return;
             }
+
             Enabled = true;
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
             decimal remainingBalance = LedgerCalculation.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
