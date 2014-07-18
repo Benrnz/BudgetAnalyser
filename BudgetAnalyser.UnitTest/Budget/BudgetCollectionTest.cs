@@ -77,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             // If this test breaks consider putting the new property into the Mappers and DTO's before updating the count.
             IEnumerable<PropertyInfo> properties = typeof(BudgetCollection).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
-            Assert.AreEqual(1, properties.Count());
+            Assert.AreEqual(3, properties.Count());
         }
 
         [TestMethod]
