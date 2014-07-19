@@ -159,6 +159,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual("Foo bar", result.Remarks);
         }
 
+        [TestMethod]
+        public void UsingTestData2_Output()
+        {
+            LedgerBook book = LedgerBookTestData.TestData2();
+            book.Output();
+        }
+
+
         private LedgerBook ArrangeAndAct()
         {
             return LedgerBookTestData.TestData1();

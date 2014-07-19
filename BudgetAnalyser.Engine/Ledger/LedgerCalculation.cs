@@ -133,6 +133,16 @@ namespace BudgetAnalyser.Engine.Ledger
             return LocateLedgerEntryLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
         }
 
+        public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime beginDate)
+        {
+            if (ledgerBook == null)
+            {
+                return null;
+            }
+
+            return LocateLedgerEntryLine(ledgerBook, beginDate, beginDate.AddMonths(1).AddDays(-1));
+        }
+
         private static Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
         {
             DateTime endDate = beginDate.AddMonths(1).AddDays(-1);

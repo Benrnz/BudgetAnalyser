@@ -83,6 +83,14 @@ namespace BudgetAnalyser.Engine.Reports
                 chartData[transaction.Date] = transaction.Total;
             }
 
+            if (bucketsCopy.OfType<SurplusBucket>().Any())
+            {
+                foreach (var transaction in CalculateOverspentLedgers(statementModel, ledgerBook, beginDate))
+                {
+                    chartData[transaction.Item1] += transaction.Item2;
+                }
+            }
+
             decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
 
             decimal runningTotal = budgetTotal;
@@ -102,6 +110,50 @@ namespace BudgetAnalyser.Engine.Reports
             CalculateBudgetLineValues(budgetTotal);
 
             ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
+        }
+
+        /// <summary>
+        /// Finds any overspent ledgers for the month and returns the date and value the of the overspend.  This resulting collection can then be used to subtract from Surplus.
+        /// Overdrawn ledgers are supplemented from Surplus.
+        /// </summary>
+        private static IEnumerable<Tuple<DateTime, decimal>>  CalculateOverspentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            var list = new List<Tuple<DateTime, decimal>>();
+            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(ledger, beginDate);
+            if (ledgerLine == null)
+            {
+                return list;
+            }
+
+            DateTime endDate = beginDate.AddMonths(1);
+            DateTime currentDate = beginDate;
+            var runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => entry.Balance);
+
+            do
+            {
+                decimal dayOverspend = 0;
+                DateTime currentDateCopy = currentDate;
+                foreach (var transaction in statement.Transactions.Where(t => t.Date == currentDateCopy))
+                {
+                    if (runningBalances.ContainsKey(transaction.BudgetBucket))
+                    {
+                        runningBalances[transaction.BudgetBucket] += transaction.Amount;
+                        if (runningBalances[transaction.BudgetBucket] < 0)
+                        {
+                            dayOverspend += runningBalances[transaction.BudgetBucket];
+                        }
+                    }
+                }
+
+                if (dayOverspend < 0)
+                {
+                    list.Add(new Tuple<DateTime, decimal>(currentDate, -dayOverspend));
+                }
+
+                currentDate = currentDate.AddDays(1);
+            } while (currentDate < endDate);
+
+            return list;
         }
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)
