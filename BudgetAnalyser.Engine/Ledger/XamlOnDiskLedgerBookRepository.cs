@@ -11,13 +11,13 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository, IApplicationHookEventPublisher
     {
-        private readonly ILedgerDataToDomainMapper dataToDomainMapper;
-        private readonly ILedgerDomainToDataMapper domainToDataMapper;
+        private readonly BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper;
+        private readonly BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper;
         private readonly ILogger logger;
 
         public XamlOnDiskLedgerBookRepository(
-            [NotNull] ILedgerDataToDomainMapper dataToDomainMapper,
-            [NotNull] ILedgerDomainToDataMapper domainToDataMapper,
+            [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
+            [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper,
             [NotNull] ILogger logger)
         {
             if (dataToDomainMapper == null)

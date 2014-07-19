@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Xaml;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
@@ -14,8 +15,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     public class XamlOnDiskLedgerBookRepositoryTestHarness : XamlOnDiskLedgerBookRepository
     {
         public XamlOnDiskLedgerBookRepositoryTestHarness(
-            [NotNull] ILedgerDataToDomainMapper dataToDomainMapper,
-            [NotNull] ILedgerDomainToDataMapper domainToDataMapper
+            [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
+            [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper
             ) : base(dataToDomainMapper, domainToDataMapper, new FakeLogger())
         {
         }

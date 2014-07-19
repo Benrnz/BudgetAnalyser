@@ -122,8 +122,6 @@
     <Compile Include="Ledger\Data\LedgerEntryDto.cs" />
     <Compile Include="Ledger\Data\LedgerEntryLineDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionDto.cs" />
-    <Compile Include="Ledger\Data\ILedgerDataToDomainMapper.cs" />
-    <Compile Include="Ledger\Data\ILedgerDomainToDataMapper.cs" />
     <Compile Include="Ledger\Data\DtoToLedgerBookMapper.cs" />
     <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />

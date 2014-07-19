@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBookDto, LedgerBook>))]
-    public class DtoToLedgerBookMapper : BasicMapper<LedgerBookDto, LedgerBook>, ILedgerDataToDomainMapper
+    public class DtoToLedgerBookMapper : BasicMapper<LedgerBookDto, LedgerBook>
     {
         private static readonly Dictionary<string, LedgerColumn> CachedLedgers = new Dictionary<string, LedgerColumn>();
         private readonly IBudgetBucketRepository bucketRepository;

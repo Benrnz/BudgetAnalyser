@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBook, LedgerBookDto>))]
-    public class LedgerBookToDtoMapper : BasicMapper<LedgerBook, LedgerBookDto>, ILedgerDomainToDataMapper
+    public class LedgerBookToDtoMapper : BasicMapper<LedgerBook, LedgerBookDto>
     {
         public override LedgerBookDto Map([NotNull] LedgerBook domainBook)
         {
