@@ -34,6 +34,20 @@ namespace BudgetAnalyser.Engine
             Dispose(false);
         }
 
+        protected virtual Level CurrentLogLevel
+        {
+            get
+            {
+                var internalLogger = (Logger)Log4NetLogger.Logger;
+                return internalLogger.Level;
+            }
+            set
+            {
+                var internalLogger = (Logger)Log4NetLogger.Logger;
+                internalLogger.Level = value;
+            }
+        }
+
         protected ILog Log4NetLogger { get; set; }
 
         public void Dispose()
@@ -64,7 +78,7 @@ namespace BudgetAnalyser.Engine
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
 
-            Level currentLevel = GetCurrentLogLevel();
+            Level currentLevel = CurrentLogLevel;
             this.alwaysLogLock.EnterWriteLock();
             try
             {
@@ -74,7 +88,7 @@ namespace BudgetAnalyser.Engine
             finally
             {
                 // Reset back
-                SetLogLevel(currentLevel);
+                CurrentLogLevel = currentLevel;
                 this.alwaysLogLock.ExitWriteLock();
             }
         }
@@ -164,18 +178,6 @@ namespace BudgetAnalyser.Engine
             {
                 this.alwaysLogLock.Dispose();
             }
-        }
-
-        protected virtual Level GetCurrentLogLevel()
-        {
-            var internalLogger = (Logger)Log4NetLogger.Logger;
-            return internalLogger.Level;
-        }
-
-        protected virtual void SetLogLevel(Level level)
-        {
-            var internalLogger = (Logger)Log4NetLogger.Logger;
-            internalLogger.Level = level;
         }
 
         protected virtual void SetLogLevelToAll()

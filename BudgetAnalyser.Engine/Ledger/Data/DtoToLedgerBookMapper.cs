@@ -43,15 +43,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.logger = logger;
         }
 
-        public override LedgerBook Map([NotNull] LedgerBookDto dataBook)
+        public override LedgerBook Map([NotNull] LedgerBookDto source)
         {
-            if (dataBook == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("dataBook");
+                throw new ArgumentNullException("source");
             }
 
-            var book = new LedgerBook(dataBook.Name, dataBook.Modified, dataBook.FileName, this.logger);
-            book.SetDatedEntries(MapLines(dataBook.DatedEntries));
+            var book = new LedgerBook(source.Name, source.Modified, source.FileName, this.logger);
+            book.SetDatedEntries(MapLines(source.DatedEntries));
 
             var messages = new StringBuilder();
             if (!book.Validate(messages))

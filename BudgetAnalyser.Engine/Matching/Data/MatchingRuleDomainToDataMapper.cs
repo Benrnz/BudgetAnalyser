@@ -6,26 +6,26 @@ namespace BudgetAnalyser.Engine.Matching.Data
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<MatchingRule, MatchingRuleDto>))]
     public class MatchingRuleDomainToDataMapper : BasicMapper<MatchingRule, MatchingRuleDto>
     {
-        public override MatchingRuleDto Map([NotNull] MatchingRule rule)
+        public override MatchingRuleDto Map([NotNull] MatchingRule source)
         {
-            if (rule == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("rule");
+                throw new ArgumentNullException("source");
             }
 
             return new MatchingRuleDto
             {
-                Amount = rule.Amount,
-                BucketCode = rule.BucketCode, // Its important to use the BucketCode not the Bucket. See below.
-                Created = rule.Created,
-                Description = rule.Description,
-                LastMatch = rule.LastMatch,
-                MatchCount = rule.MatchCount,
-                Reference1 = rule.Reference1,
-                Reference2 = rule.Reference2,
-                Reference3 = rule.Reference3,
-                RuleId = rule.RuleId,
-                TransactionType = rule.TransactionType,
+                Amount = source.Amount,
+                BucketCode = source.BucketCode, // Its important to use the BucketCode not the Bucket. See below.
+                Created = source.Created,
+                Description = source.Description,
+                LastMatch = source.LastMatch,
+                MatchCount = source.MatchCount,
+                Reference1 = source.Reference1,
+                Reference2 = source.Reference2,
+                Reference3 = source.Reference3,
+                RuleId = source.RuleId,
+                TransactionType = source.TransactionType,
             };
 
             // Bucket can be null, while BucketCode will always be the string read from the persistence file.  The currently loaded budget model may not have a bucket

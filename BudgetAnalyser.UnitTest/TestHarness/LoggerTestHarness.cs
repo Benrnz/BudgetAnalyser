@@ -29,6 +29,12 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             get { return this.loggingLevel; }
         }
 
+        protected override Level CurrentLogLevel
+        {
+            get { return this.loggingLevel; }
+            set { this.loggingLevel = value; }
+        }
+
         protected override void ConfigureLog4Net()
         {
             if (Log4NetLoggerMock == null)
@@ -38,16 +44,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
             Log4NetLogger = Log4NetLoggerMock.Object;
             ConfigWasCalled = true;
-        }
-
-        protected override Level GetCurrentLogLevel()
-        {
-            return this.loggingLevel;
-        }
-
-        protected override void SetLogLevel(Level level)
-        {
-            this.loggingLevel = level;
         }
 
         protected override void SetLogLevelToAll()

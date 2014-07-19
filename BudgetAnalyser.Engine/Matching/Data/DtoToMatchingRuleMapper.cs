@@ -19,26 +19,26 @@ namespace BudgetAnalyser.Engine.Matching.Data
             this.bucketRepository = bucketRepository;
         }
 
-        public override MatchingRule Map([NotNull] MatchingRuleDto rule)
+        public override MatchingRule Map([NotNull] MatchingRuleDto source)
         {
-            if (rule == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("rule");
+                throw new ArgumentNullException("source");
             }
 
             var domainRule = new MatchingRule(this.bucketRepository)
             {
-                Amount = rule.Amount,
-                BucketCode = rule.BucketCode,
-                Created = rule.Created ?? DateTime.Now,
-                Description = rule.Description,
-                LastMatch = rule.LastMatch,
-                MatchCount = rule.MatchCount,
-                Reference1 = rule.Reference1,
-                Reference2 = rule.Reference2,
-                Reference3 = rule.Reference3,
-                RuleId = rule.RuleId ?? Guid.Empty,
-                TransactionType = rule.TransactionType,
+                Amount = source.Amount,
+                BucketCode = source.BucketCode,
+                Created = source.Created ?? DateTime.Now,
+                Description = source.Description,
+                LastMatch = source.LastMatch,
+                MatchCount = source.MatchCount,
+                Reference1 = source.Reference1,
+                Reference2 = source.Reference2,
+                Reference3 = source.Reference3,
+                RuleId = source.RuleId ?? Guid.Empty,
+                TransactionType = source.TransactionType,
             };
 
             return domainRule;

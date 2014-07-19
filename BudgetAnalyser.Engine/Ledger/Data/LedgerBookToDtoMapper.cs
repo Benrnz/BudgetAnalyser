@@ -7,19 +7,19 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBook, LedgerBookDto>))]
     public class LedgerBookToDtoMapper : BasicMapper<LedgerBook, LedgerBookDto>
     {
-        public override LedgerBookDto Map([NotNull] LedgerBook domainBook)
+        public override LedgerBookDto Map([NotNull] LedgerBook source)
         {
-            if (domainBook == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("domainBook");
+                throw new ArgumentNullException("source");
             }
 
             var dataBook = new LedgerBookDto
             {
-                DatedEntries = domainBook.DatedEntries.Select(MapLine).ToList(),
-                FileName = domainBook.FileName,
-                Modified = domainBook.Modified,
-                Name = domainBook.Name,
+                DatedEntries = source.DatedEntries.Select(MapLine).ToList(),
+                FileName = source.FileName,
+                Modified = source.Modified,
+                Name = source.Name,
             };
 
             return dataBook;
