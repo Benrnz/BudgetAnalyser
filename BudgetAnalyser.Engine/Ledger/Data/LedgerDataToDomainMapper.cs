@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerDataToDomainMapper : ILedgerDataToDomainMapper

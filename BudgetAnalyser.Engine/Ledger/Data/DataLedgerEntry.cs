@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     public class DataLedgerEntry
     {
         public DataLedgerEntry()
         {
-            Transactions = new List<DataLedgerTransaction>();
+            this.Transactions = new List<DataLedgerTransaction>();
         }
 
         public decimal Balance { get; set; }

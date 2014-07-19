@@ -2,7 +2,7 @@
 				FileName="" 
 				Modified="2013-12-29T15:31:03.5480436+13:00" 
 				Name="Demo LedgerBook" 
-				xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine" 
+				xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine" 
 				xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" 
 				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<DataLedgerBook.DatedEntries>

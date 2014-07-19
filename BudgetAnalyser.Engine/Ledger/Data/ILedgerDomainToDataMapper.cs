@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Engine.Ledger
+﻿namespace BudgetAnalyser.Engine.Ledger.Data
 {
     public interface ILedgerDomainToDataMapper
     {

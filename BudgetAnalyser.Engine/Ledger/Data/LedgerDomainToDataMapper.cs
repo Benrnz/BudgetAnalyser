@@ -2,7 +2,7 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerDomainToDataMapper : ILedgerDomainToDataMapper

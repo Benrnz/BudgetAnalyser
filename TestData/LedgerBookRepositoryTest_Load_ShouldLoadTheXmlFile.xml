@@ -1,4 +1,4 @@
-﻿<DataLedgerBook FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Modified="2013-12-16" Name="Test Data 2 Book" xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<DataLedgerBook FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Modified="2013-12-16" Name="Test Data 2 Book" xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <DataLedgerBook.DatedEntries>
     <scg:List x:TypeArguments="DataLedgerEntryLine" Capacity="4">
       <DataLedgerEntryLine BankBalance="2950" Date="2013-08-15" Remarks="The quick brown fox jumped over the lazy dog">

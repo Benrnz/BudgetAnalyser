@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     public class DataLedgerEntryLine
     {
         public DataLedgerEntryLine()
         {
-            Entries = new List<DataLedgerEntry>();
-            BankBalanceAdjustments = new List<DataLedgerTransaction>();
-            BankBalances = new List<DataBankBalance>();
+            this.Entries = new List<DataLedgerEntry>();
+            this.BankBalanceAdjustments = new List<DataLedgerTransaction>();
+            this.BankBalances = new List<DataBankBalance>();
         }
 
         /// <summary>

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     public class DataLedgerBook
     {
         public DataLedgerBook()
         {
-            DatedEntries = new List<DataLedgerEntryLine>();
+            this.DatedEntries = new List<DataLedgerEntryLine>();
         }
 
         public double? Checksum { get; set; }

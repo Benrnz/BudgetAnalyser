@@ -7,6 +7,7 @@ using System.Resources;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
