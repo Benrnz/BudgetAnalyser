@@ -98,7 +98,7 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         private MatchingRule ArrangeAndAct()
         {
-            return new MatchingRuleDataToDomainMapper(new BucketBucketRepoAlwaysFind()).Map(TestData);
+            return new DtoToMatchingRuleMapper(new BucketBucketRepoAlwaysFind()).Map(TestData);
         }
 
         [TestInitialize]

@@ -3,10 +3,10 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching.Data
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class MatchingRuleDomainToDataMapper : IMatchingRuleDomainToDataMapper
+    [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<MatchingRule, MatchingRuleDto>))]
+    public class MatchingRuleDomainToDataMapper : BasicMapper<MatchingRule, MatchingRuleDto>
     {
-        public MatchingRuleDto Map([NotNull] MatchingRule rule)
+        public override MatchingRuleDto Map([NotNull] MatchingRule rule)
         {
             if (rule == null)
             {

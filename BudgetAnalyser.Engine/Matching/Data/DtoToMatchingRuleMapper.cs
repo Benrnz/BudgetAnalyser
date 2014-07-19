@@ -4,12 +4,12 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Matching.Data
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class MatchingRuleDataToDomainMapper : IMatchingRuleDataToDomainMapper
+    [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<MatchingRuleDto, MatchingRule>))]
+    public class DtoToMatchingRuleMapper : BasicMapper<MatchingRuleDto, MatchingRule>
     {
         private readonly IBudgetBucketRepository bucketRepository;
 
-        public MatchingRuleDataToDomainMapper([NotNull] IBudgetBucketRepository bucketRepository)
+        public DtoToMatchingRuleMapper([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
             {
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
             this.bucketRepository = bucketRepository;
         }
 
-        public MatchingRule Map([NotNull] MatchingRuleDto rule)
+        public override MatchingRule Map([NotNull] MatchingRuleDto rule)
         {
             if (rule == null)
             {

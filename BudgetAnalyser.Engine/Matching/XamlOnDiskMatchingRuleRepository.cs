@@ -12,10 +12,10 @@ namespace BudgetAnalyser.Engine.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository, IApplicationHookEventPublisher
     {
-        private readonly IMatchingRuleDataToDomainMapper dataToDomainMapper;
-        private readonly IMatchingRuleDomainToDataMapper domainToDataMapper;
+        private readonly BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper;
+        private readonly BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper;
 
-        public XamlOnDiskMatchingRuleRepository([NotNull] IMatchingRuleDataToDomainMapper dataToDomainMapper, [NotNull] IMatchingRuleDomainToDataMapper domainToDataMapper)
+        public XamlOnDiskMatchingRuleRepository([NotNull] BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper, [NotNull] BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper)
         {
             if (dataToDomainMapper == null)
             {

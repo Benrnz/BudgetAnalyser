@@ -128,9 +128,7 @@
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
-    <Compile Include="Matching\Data\IMatchingRuleDataToDomainMapper.cs" />
-    <Compile Include="Matching\Data\IMatchingRuleDomainToDataMapper.cs" />
-    <Compile Include="Matching\Data\MatchingRuleDataToDomainMapper.cs" />
+    <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchMaker.cs" />

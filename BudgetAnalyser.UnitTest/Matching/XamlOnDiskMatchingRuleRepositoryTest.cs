@@ -26,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenGivenNullMapper2()
         {
-            new XamlOnDiskMatchingRuleRepository(new MatchingRuleDataToDomainMapper(new BucketBucketRepoAlwaysFind()), null);
+            new XamlOnDiskMatchingRuleRepository(new DtoToMatchingRuleMapper(new BucketBucketRepoAlwaysFind()), null);
             Assert.Fail();
         }
 
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             MatchingRulesTestDataGenerated.BucketRepo = bucketRepo;
-            return new XamlOnDiskMatchingRuleRepositoryTestHarness(new MatchingRuleDataToDomainMapper(bucketRepo), new MatchingRuleDomainToDataMapper());
+            return new XamlOnDiskMatchingRuleRepositoryTestHarness(new DtoToMatchingRuleMapper(bucketRepo), new MatchingRuleDomainToDataMapper());
         }
     }
 }
