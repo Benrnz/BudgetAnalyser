@@ -24,7 +24,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullDomainMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, null);
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapper<TransactionSetDto, StatementModel>(), null);
             Assert.Fail();
         }
 
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtils()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), null, new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), null, new FakeLogger(), new BasicMapper<TransactionSetDto, StatementModel>(), new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), null, new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
+            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), null, new BasicMapper<TransactionSetDto, StatementModel>(), new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullMessageBox()
         {
-            new CsvOnDiskStatementModelRepositoryV1(null, new BankImportUtilities(new FakeLogger()), new FakeLogger(), new Mock<ITransactionSetDtoToStatementModelMapper>().Object, new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
+            new CsvOnDiskStatementModelRepositoryV1(null, new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapper<TransactionSetDto, StatementModel>(), new Mock<IStatementModelToTransactionSetDtoMapper>().Object);
             Assert.Fail();
         }
 

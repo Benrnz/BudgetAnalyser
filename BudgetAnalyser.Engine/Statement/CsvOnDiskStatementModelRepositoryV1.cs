@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Statement
     public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository, IApplicationHookEventPublisher
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
-        private readonly ITransactionSetDtoToStatementModelMapper dtoToDomainMapper;
+        private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
         private readonly IStatementModelToTransactionSetDtoMapper domainToDtoMapper;
 
         private readonly BankImportUtilities importUtilities;
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] IUserMessageBox userMessageBox,
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILogger logger,
-            [NotNull] ITransactionSetDtoToStatementModelMapper dtoToDomainMapper,
+            [NotNull] BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper,
             [NotNull] IStatementModelToTransactionSetDtoMapper domainToDtoMapper)
         {
             if (userMessageBox == null)

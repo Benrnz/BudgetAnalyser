@@ -4,8 +4,8 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement.Data
 {
-    [AutoRegisterWithIoC]
-    public class TransactionSetDtoToStatementModelMapper : ITransactionSetDtoToStatementModelMapper
+    [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<TransactionSetDto, StatementModel>))]
+    public class TransactionSetDtoToStatementModelMapper : BasicMapper<TransactionSetDto, StatementModel>
     {
         private readonly ILogger logger;
         private readonly TransactionDtoToTransactionMapper transactionMapper;
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionMapper = transactionMapper;
         }
 
-        public StatementModel Map([NotNull] TransactionSetDto setDto)
+        public override StatementModel Map([NotNull] TransactionSetDto setDto)
         {
             if (setDto == null)
             {
