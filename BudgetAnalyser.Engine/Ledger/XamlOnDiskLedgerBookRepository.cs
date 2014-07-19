@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook Load(string fileName)
         {
-            DataLedgerBook dataEntity;
+            LedgerBookDto dataEntity;
             try
             {
                 dataEntity = LoadXamlFromDisk(fileName);
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public void Save(LedgerBook book, string fileName)
         {
-            DataLedgerBook dataEntity = this.domainToDataMapper.Map(book);
+            LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
             dataEntity.FileName = fileName;
             dataEntity.Checksum = CalculateChecksum(dataEntity);
 
@@ -117,12 +117,12 @@ namespace BudgetAnalyser.Engine.Ledger
             return File.Exists(fileName);
         }
 
-        protected virtual DataLedgerBook LoadXamlFromDisk(string fileName)
+        protected virtual LedgerBookDto LoadXamlFromDisk(string fileName)
         {
-            return XamlServices.Load(fileName) as DataLedgerBook;
+            return XamlServices.Load(fileName) as LedgerBookDto;
         }
 
-        protected virtual void SaveXamlFileToDisk([NotNull] DataLedgerBook dataEntity)
+        protected virtual void SaveXamlFileToDisk([NotNull] LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
             {
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger
             XamlServices.Save(dataEntity.FileName, dataEntity);
         }
 
-        private static double CalculateChecksum(DataLedgerBook dataEntity)
+        private static double CalculateChecksum(LedgerBookDto dataEntity)
         {
             unchecked
             {

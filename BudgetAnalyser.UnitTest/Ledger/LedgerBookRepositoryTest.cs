@@ -15,14 +15,19 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBookRepositoryTest
     {
+        private const string DemoLedgerBookFileName = @"BudgetAnalyser.UnitTest.TestData.DemoLedgerBook.xml";
         private const string LoadFileName = @"BudgetAnalyser.UnitTest.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
 
         private BudgetBucket CarMtcBucket { get; set; }
+        private BudgetBucket DoctorBucket { get; set; }
         private BudgetBucket HairBucket { get; set; }
+        private BudgetBucket InsuranceHomeBucket { get; set; }
         private BudgetBucket PhoneBucket { get; set; }
         private BudgetBucket PowerBucket { get; set; }
         private BudgetBucket RatesBucket { get; set; }
         private BudgetBucket RegoBucket { get; set; }
+        private BudgetBucket RentBucket { get; set; }
+        private BudgetBucket WaterBucket { get; set; }
 
         [TestMethod]
         public void Load_Output()
@@ -115,6 +120,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void MustBeAbleToLoadDemoLedgerBookFile()
+        {
+            XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
+
+            LedgerBook book = subject.Load(DemoLedgerBookFileName);
+
+            Assert.IsNotNull(book);
+        }
+
+        [TestMethod]
         public void Save_ShouldSaveTheXmlFile()
         {
             string fileName = @"CompleteSmellyFoo.xml";
@@ -129,26 +144,34 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()
         {
-            this.RatesBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Foo");
-            this.CarMtcBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo");
-            this.RegoBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "Foo");
-            this.HairBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Foo");
-            this.PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo");
-            this.PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Foo");
+            RatesBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Foo");
+            CarMtcBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo");
+            RegoBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "Foo");
+            HairBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Foo");
+            PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Foo");
+            PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Foo");
+            WaterBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Foo");
+            InsuranceHomeBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Foo");
+            DoctorBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "Foo");
+            RentBucket = new SpentMonthlyExpenseBucket(TestDataConstants.RentBucketCode, "Foo");
 
             var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RatesBucketCode)).Returns(this.RatesBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RegoBucketCode)).Returns(this.RegoBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.CarMtcBucketCode)).Returns(this.CarMtcBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.HairBucketCode)).Returns(this.HairBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PhoneBucketCode)).Returns(this.PhoneBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PowerBucketCode)).Returns(this.PowerBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RatesBucketCode)).Returns(RatesBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RegoBucketCode)).Returns(RegoBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.CarMtcBucketCode)).Returns(CarMtcBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.HairBucketCode)).Returns(HairBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PhoneBucketCode)).Returns(PhoneBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.PowerBucketCode)).Returns(PowerBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.WaterBucketCode)).Returns(WaterBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.InsuranceHomeBucketCode)).Returns(InsuranceHomeBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.DoctorBucketCode)).Returns(DoctorBucket);
+            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RentBucketCode)).Returns(RentBucket);
 
             var accountTypeRepoMock = new Mock<IAccountTypeRepository>();
             accountTypeRepoMock.Setup(a => a.GetByKey(StatementModelTestData.ChequeAccount.Name)).Returns(StatementModelTestData.ChequeAccount);
 
-            var dataToDomainMapper = new LedgerDataToDomainMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
-            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(dataToDomainMapper, new LedgerDomainToDataMapper());
+            var dataToDomainMapper = new DtoToLedgerBookMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
+            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(dataToDomainMapper, new LedgerBookToDtoMapper());
 
             return subject;
         }

@@ -1,110 +1,110 @@
-﻿<DataLedgerBook FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Modified="2013-12-16" Name="Test Data 2 Book" xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <DataLedgerBook.DatedEntries>
-    <scg:List x:TypeArguments="DataLedgerEntryLine" Capacity="4">
-      <DataLedgerEntryLine BankBalance="2950" Date="2013-08-15" Remarks="The quick brown fox jumped over the lazy dog">
-        <DataLedgerEntryLine.BankBalanceAdjustments>
-          <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-            <DataLedgerTransaction Credit="0" Debit="550" Id="27e8f7a1-75bd-4bfb-8e44-6ab0c548fe4f" Narrative="Credit card payment yet to go out." TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+﻿<LedgerBookDto FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml" Modified="2013-12-16" Name="Test Data 2 Book" xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <LedgerBookDto.DatedEntries>
+    <scg:List x:TypeArguments="LedgerEntryLineDto" Capacity="4">
+      <LedgerEntryLineDto BankBalance="2950" Date="2013-08-15" Remarks="The quick brown fox jumped over the lazy dog">
+        <LedgerEntryLineDto.BankBalanceAdjustments>
+          <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+            <LedgerTransactionDto Credit="0" Debit="550" Id="27e8f7a1-75bd-4bfb-8e44-6ab0c548fe4f" Narrative="Credit card payment yet to go out." TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
           </scg:List>
-        </DataLedgerEntryLine.BankBalanceAdjustments>
-        <DataLedgerEntryLine.BankBalances>
-          <scg:List x:TypeArguments="DataBankBalance" Capacity="4">
-            <DataBankBalance Account="Cheque" Balance="2950" />
+        </LedgerEntryLineDto.BankBalanceAdjustments>
+        <LedgerEntryLineDto.BankBalances>
+          <scg:List x:TypeArguments="BankBalanceDto" Capacity="4">
+            <BankBalanceDto Account="Cheque" Balance="2950" />
           </scg:List>
-        </DataLedgerEntryLine.BankBalances>
-        <DataLedgerEntryLine.Entries>
-          <scg:List x:TypeArguments="DataLedgerEntry" Capacity="4">
-            <DataLedgerEntry Balance="120" BucketCode="HAIRCUT">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="55" Debit="0" Id="bc037255-736c-4cf2-9460-2296851b455f" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+        </LedgerEntryLineDto.BankBalances>
+        <LedgerEntryLineDto.Entries>
+          <scg:List x:TypeArguments="LedgerEntryDto" Capacity="4">
+            <LedgerEntryDto Balance="120" BucketCode="HAIRCUT">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="55" Debit="0" Id="bc037255-736c-4cf2-9460-2296851b455f" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="52.32" BucketCode="POWER">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="140" Debit="0" Id="917172f4-5c62-4298-b241-482b3532b0c1" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="98.56" Id="c3e37f64-b5b3-4d19-a8be-4840e39fae09" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="52.32" BucketCode="POWER">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="140" Debit="0" Id="917172f4-5c62-4298-b241-482b3532b0c1" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="98.56" Id="c3e37f64-b5b3-4d19-a8be-4840e39fae09" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="64.71" BucketCode="PHNET">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="95" Debit="0" Id="4ef8967c-d545-40ce-b707-f6f72364d943" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="67.43" Id="51bc4767-a13d-49ba-8ccd-11c8b311627c" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="64.71" BucketCode="PHNET">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="95" Debit="0" Id="4ef8967c-d545-40ce-b707-f6f72364d943" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="67.43" Id="51bc4767-a13d-49ba-8ccd-11c8b311627c" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
           </scg:List>
-        </DataLedgerEntryLine.Entries>
-      </DataLedgerEntryLine>
-      <DataLedgerEntryLine BankBalance="3700" Date="2013-07-15" Remarks="dolor amet set">
-        <DataLedgerEntryLine.BankBalanceAdjustments>
-          <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="0" />
-        </DataLedgerEntryLine.BankBalanceAdjustments>
-        <DataLedgerEntryLine.Entries>
-          <scg:List x:TypeArguments="DataLedgerEntry" Capacity="4">
-            <DataLedgerEntry Balance="65" BucketCode="HAIRCUT">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="55" Debit="0" Id="f1b77cf1-1c6b-4031-a9ab-9a4f4ef580f0" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+        </LedgerEntryLineDto.Entries>
+      </LedgerEntryLineDto>
+      <LedgerEntryLineDto BankBalance="3700" Date="2013-07-15" Remarks="dolor amet set">
+        <LedgerEntryLineDto.BankBalanceAdjustments>
+          <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="0" />
+        </LedgerEntryLineDto.BankBalanceAdjustments>
+        <LedgerEntryLineDto.Entries>
+          <scg:List x:TypeArguments="LedgerEntryDto" Capacity="4">
+            <LedgerEntryDto Balance="65" BucketCode="HAIRCUT">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="55" Debit="0" Id="f1b77cf1-1c6b-4031-a9ab-9a4f4ef580f0" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="10.88" BucketCode="POWER">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="140" Debit="0" Id="15e3ed39-e7a4-4d5f-9968-36bf64c71f0b" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="145.56" Id="cbaaae89-afaa-4a2b-b186-8b30a48d1957" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="10.88" BucketCode="POWER">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="140" Debit="0" Id="15e3ed39-e7a4-4d5f-9968-36bf64c71f0b" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="145.56" Id="cbaaae89-afaa-4a2b-b186-8b30a48d1957" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="37.14" BucketCode="PHNET">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="95" Debit="0" Id="8d86b3be-7f88-48b0-91b0-5028dc5f6978" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="66.43" Id="7c8468d0-e859-4d4b-b231-5d523bbc5fc6" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="37.14" BucketCode="PHNET">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="95" Debit="0" Id="8d86b3be-7f88-48b0-91b0-5028dc5f6978" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="66.43" Id="7c8468d0-e859-4d4b-b231-5d523bbc5fc6" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
           </scg:List>
-        </DataLedgerEntryLine.Entries>
-      </DataLedgerEntryLine>
-      <DataLedgerEntryLine BankBalance="2500" Date="2013-06-15" Remarks="Lorem ipsum">
-        <DataLedgerEntryLine.BankBalanceAdjustments>
-          <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="0" />
-        </DataLedgerEntryLine.BankBalanceAdjustments>
-        <DataLedgerEntryLine.Entries>
-          <scg:List x:TypeArguments="DataLedgerEntry" Capacity="4">
-            <DataLedgerEntry Balance="10" BucketCode="HAIRCUT">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="55" Debit="0" Id="6f75162f-f3ab-4c29-a098-82d914e9c346" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="45" Id="0a9e3d54-e58d-4a21-931a-2edf672581c5" Narrative="Hair cut" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+        </LedgerEntryLineDto.Entries>
+      </LedgerEntryLineDto>
+      <LedgerEntryLineDto BankBalance="2500" Date="2013-06-15" Remarks="Lorem ipsum">
+        <LedgerEntryLineDto.BankBalanceAdjustments>
+          <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="0" />
+        </LedgerEntryLineDto.BankBalanceAdjustments>
+        <LedgerEntryLineDto.Entries>
+          <scg:List x:TypeArguments="LedgerEntryDto" Capacity="4">
+            <LedgerEntryDto Balance="10" BucketCode="HAIRCUT">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="55" Debit="0" Id="6f75162f-f3ab-4c29-a098-82d914e9c346" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="45" Id="0a9e3d54-e58d-4a21-931a-2edf672581c5" Narrative="Hair cut" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="16.44" BucketCode="POWER">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="140" Debit="0" Id="a580c5c2-f463-4c41-8c1b-f2023e823a37" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="123.56" Id="4a60a8f4-2bc3-4f72-af4e-39217a369b27" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="16.44" BucketCode="POWER">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="140" Debit="0" Id="a580c5c2-f463-4c41-8c1b-f2023e823a37" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="123.56" Id="4a60a8f4-2bc3-4f72-af4e-39217a369b27" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
-            <DataLedgerEntry Balance="8.57" BucketCode="PHNET">
-              <DataLedgerEntry.Transactions>
-                <scg:List x:TypeArguments="DataLedgerTransaction" Capacity="4">
-                  <DataLedgerTransaction Credit="95" Debit="0" Id="9cc86219-61fd-4bdb-887c-3ea3fc9d3bdc" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <DataLedgerTransaction Credit="0" Debit="86.43" Id="1a66103e-f324-43dc-94a2-6689819dbb76" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
+            <LedgerEntryDto Balance="8.57" BucketCode="PHNET">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto Credit="95" Debit="0" Id="9cc86219-61fd-4bdb-887c-3ea3fc9d3bdc" Narrative="Budgetted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto Credit="0" Debit="86.43" Id="1a66103e-f324-43dc-94a2-6689819dbb76" Narrative="Pay phones" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
                 </scg:List>
-              </DataLedgerEntry.Transactions>
-            </DataLedgerEntry>
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>
           </scg:List>
-        </DataLedgerEntryLine.Entries>
-      </DataLedgerEntryLine>
+        </LedgerEntryLineDto.Entries>
+      </LedgerEntryLineDto>
     </scg:List>
-  </DataLedgerBook.DatedEntries>
-</DataLedgerBook>
+  </LedgerBookDto.DatedEntries>
+</LedgerBookDto>

@@ -4,17 +4,17 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerDomainToDataMapper : ILedgerDomainToDataMapper
+    [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBook, LedgerBookDto>))]
+    public class LedgerBookToDtoMapper : BasicMapper<LedgerBook, LedgerBookDto>, ILedgerDomainToDataMapper
     {
-        public DataLedgerBook Map([NotNull] LedgerBook domainBook)
+        public override LedgerBookDto Map([NotNull] LedgerBook domainBook)
         {
             if (domainBook == null)
             {
                 throw new ArgumentNullException("domainBook");
             }
 
-            var dataBook = new DataLedgerBook
+            var dataBook = new LedgerBookDto
             {
                 DatedEntries = domainBook.DatedEntries.Select(MapLine).ToList(),
                 FileName = domainBook.FileName,
@@ -25,14 +25,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return dataBook;
         }
 
-        private DataBankBalance MapBankBalance(BankBalance bankBalance)
+        private BankBalanceDto MapBankBalance(BankBalance bankBalance)
         {
-            return new DataBankBalance { Account = bankBalance.Account.Name, Balance = bankBalance.Balance };
+            return new BankBalanceDto { Account = bankBalance.Account.Name, Balance = bankBalance.Balance };
         }
 
-        private DataLedgerEntry MapEntry(LedgerEntry entry)
+        private LedgerEntryDto MapEntry(LedgerEntry entry)
         {
-            var dataEntry = new DataLedgerEntry
+            var dataEntry = new LedgerEntryDto
             {
                 Balance = entry.Balance,
                 BucketCode = entry.LedgerColumn.BudgetBucket.Code,
@@ -42,9 +42,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return dataEntry;
         }
 
-        private DataLedgerEntryLine MapLine(LedgerEntryLine line)
+        private LedgerEntryLineDto MapLine(LedgerEntryLine line)
         {
-            var dataLine = new DataLedgerEntryLine
+            var dataLine = new LedgerEntryLineDto
             {
                 BankBalance = line.TotalBankBalance,
                 BankBalances = line.BankBalances.Select(MapBankBalance).ToList(),
@@ -57,9 +57,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return dataLine;
         }
 
-        private DataLedgerTransaction MapTransaction(LedgerTransaction transaction)
+        private LedgerTransactionDto MapTransaction(LedgerTransaction transaction)
         {
-            var dataTransaction = new DataLedgerTransaction
+            var dataTransaction = new LedgerTransactionDto
             {
                 Credit = transaction.Credit,
                 Debit = transaction.Debit,

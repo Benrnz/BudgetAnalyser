@@ -20,34 +20,34 @@ namespace BudgetAnalyser.UnitTest.TestData
         private static readonly Guid id10 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A9");
         private static readonly Guid id11 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6AA");
 
-        public static DataLedgerBook TestData1()
+        public static LedgerBookDto TestData1()
         {
-            var book = new DataLedgerBook
+            var book = new LedgerBookDto
             {
                 Modified = new DateTime(2013, 12, 14),
                 Name = "Test Budget Ledger Book 1",
                 FileName = "C:\\Folder\\FooBook.xml",
             };
 
-            var lines = new List<DataLedgerEntryLine>();
+            var lines = new List<LedgerEntryLineDto>();
 
             var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 0, // because would go into negative
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id1,
                             Credit = 75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id2,
                             Debit = 195,
@@ -56,13 +56,13 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 21.15M,
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id3,
                             Credit = 21.15M,
@@ -71,20 +71,20 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 0, // because would go into negative
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id4,
                             Credit = 95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id5,
                             Debit = 295.45M,
@@ -98,12 +98,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id6,
                             Credit = 75,
@@ -112,12 +112,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id7,
                             Credit = 21.15M,
@@ -126,12 +126,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id8,
                             Credit = 95,
@@ -145,12 +145,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id9,
                             Credit = 75,
@@ -159,12 +159,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id10,
                             Credit = 21.15M,
@@ -173,12 +173,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id11,
                             Credit = 95,
@@ -196,27 +196,27 @@ namespace BudgetAnalyser.UnitTest.TestData
             return book;
         }
 
-        public static DataLedgerBook TestData2()
+        public static LedgerBookDto TestData2()
         {
-            var book = new DataLedgerBook
+            var book = new LedgerBookDto
             {
                 Modified = new DateTime(2013, 12, 14),
                 Name = "Test Budget Ledger Book 2",
                 FileName = "C:\\Folder\\FooBook2.xml",
             };
 
-            var lines = new List<DataLedgerEntryLine>();
+            var lines = new List<LedgerEntryLineDto>();
 
             var line1 = AddEntryLineForTestData2(lines, new DateTime(2013, 12, 20));
             line1.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 0, // because would go into negative
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id1,
                             Credit = 75,
@@ -225,13 +225,13 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 21.15M,
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id2,
                             Credit = 21.15M,
@@ -240,13 +240,13 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     Balance = 0, // because would go into negative
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id3,
                             Credit = 95,
@@ -260,12 +260,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var line2 = AddEntryLineForTestData2(lines, new DateTime(2014, 1, 20));
             line2.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id4,
                             Credit = 75,
@@ -274,12 +274,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id5,
                             Credit = 21.15M,
@@ -288,12 +288,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id6,
                             Credit = 95,
@@ -307,19 +307,19 @@ namespace BudgetAnalyser.UnitTest.TestData
             var line3 = AddEntryLineForTestData2(lines, new DateTime(2014, 02, 20));
             line3.Entries.AddRange(new[]
             {
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RatesBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id7,
                             Credit = 75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id8,
                             Debit = 195,
@@ -328,12 +328,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                         },
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.RegoBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id9,
                             Credit = 21.15M,
@@ -342,19 +342,19 @@ namespace BudgetAnalyser.UnitTest.TestData
                         }
                     }
                 },
-                new DataLedgerEntry
+                new LedgerEntryDto
                 {
                     BucketCode = TestDataConstants.CarMtcBucketCode,
-                    Transactions = new List<DataLedgerTransaction>
+                    Transactions = new List<LedgerTransactionDto>
                     {
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id10,
                             Credit = 95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
-                        new DataLedgerTransaction
+                        new LedgerTransactionDto
                         {
                             Id = id11,
                             Debit = 295.45M,
@@ -372,9 +372,9 @@ namespace BudgetAnalyser.UnitTest.TestData
             return book;
         }
 
-        private static DataLedgerEntryLine AddEntryLineForTestData1(List<DataLedgerEntryLine> entries, DateTime lineDate)
+        private static LedgerEntryLineDto AddEntryLineForTestData1(List<LedgerEntryLineDto> entries, DateTime lineDate)
         {
-            var line = new DataLedgerEntryLine
+            var line = new LedgerEntryLineDto
             {
                 Date = lineDate,
                 Remarks = "Lorem ipsum dolor. Mit solo darte.",
@@ -384,15 +384,15 @@ namespace BudgetAnalyser.UnitTest.TestData
             return line;
         }
 
-        private static DataLedgerEntryLine AddEntryLineForTestData2(List<DataLedgerEntryLine> entries, DateTime lineDate)
+        private static LedgerEntryLineDto AddEntryLineForTestData2(List<LedgerEntryLineDto> entries, DateTime lineDate)
         {
-            var line = new DataLedgerEntryLine
+            var line = new LedgerEntryLineDto
             {
                 Date = lineDate,
                 Remarks = "Lorem ipsum dolor. Mit solo darte.",
-                BankBalanceAdjustments = new List<DataLedgerTransaction>
+                BankBalanceAdjustments = new List<LedgerTransactionDto>
                 {
-                    new DataLedgerTransaction { Debit = 99M, Narrative = "The quick brown fox", TransactionType = typeof(DebitLedgerTransaction).FullName},
+                    new LedgerTransactionDto { Debit = 99M, Narrative = "The quick brown fox", TransactionType = typeof(DebitLedgerTransaction).FullName},
                 },
             };
 
@@ -400,10 +400,10 @@ namespace BudgetAnalyser.UnitTest.TestData
             return line;
         }
 
-        private static void UpdateLineBalances(DataLedgerEntryLine currentLine, DataLedgerEntryLine previousLine, decimal bankBalance)
+        private static void UpdateLineBalances(LedgerEntryLineDto currentLine, LedgerEntryLineDto previousLine, decimal bankBalance)
         {
             currentLine.BankBalance = bankBalance;
-            currentLine.BankBalances.Add(new DataBankBalance { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });
+            currentLine.BankBalances.Add(new BankBalanceDto { Account = StatementModelTestData.ChequeAccount.Name, Balance = bankBalance });
 
             if (previousLine == null)
             {

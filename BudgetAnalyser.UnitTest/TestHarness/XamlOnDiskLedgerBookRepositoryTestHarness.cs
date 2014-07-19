@@ -22,14 +22,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, bool> FileExistsMock { get; set; }
 
-        public Action<DataLedgerBook> SaveXamlFileToDiskMock { get; set; }
+        public Action<LedgerBookDto> SaveXamlFileToDiskMock { get; set; }
 
         protected override bool FileExistsOnDisk(string fileName)
         {
             return FileExistsMock(fileName);
         }
 
-        protected override DataLedgerBook LoadXamlFromDisk(string fileName)
+        protected override LedgerBookDto LoadXamlFromDisk(string fileName)
         {
             // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
             Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
@@ -40,11 +40,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
                     throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
                 }
 
-                return (DataLedgerBook)XamlServices.Load(new XamlXmlReader(stream));
+                return (LedgerBookDto)XamlServices.Load(new XamlXmlReader(stream));
             }
         }
 
-        protected override void SaveXamlFileToDisk(DataLedgerBook dataEntity)
+        protected override void SaveXamlFileToDisk(LedgerBookDto dataEntity)
         {
             SaveXamlFileToDiskMock(dataEntity);
         }

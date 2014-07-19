@@ -2,6 +2,6 @@
 {
     public interface ILedgerDataToDomainMapper
     {
-        LedgerBook Map(DataLedgerBook dataBook);
+        LedgerBook Map(LedgerBookDto dataBook);
     }
 }

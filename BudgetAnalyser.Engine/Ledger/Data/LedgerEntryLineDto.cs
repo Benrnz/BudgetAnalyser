@@ -4,33 +4,33 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    public class DataLedgerEntryLine
+    public class LedgerEntryLineDto
     {
-        public DataLedgerEntryLine()
+        public LedgerEntryLineDto()
         {
-            this.Entries = new List<DataLedgerEntry>();
-            this.BankBalanceAdjustments = new List<DataLedgerTransaction>();
-            this.BankBalances = new List<DataBankBalance>();
+            Entries = new List<LedgerEntryDto>();
+            BankBalanceAdjustments = new List<LedgerTransactionDto>();
+            BankBalances = new List<BankBalanceDto>();
         }
 
         /// <summary>
-        /// Total bank balance, ie sum of all <see cref="BankBalances"/>
+        ///     Total bank balance, ie sum of all <see cref="BankBalances" />
         /// </summary>
         public decimal BankBalance { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<DataBankBalance> BankBalances { get; set; }
+        public List<LedgerTransactionDto> BankBalanceAdjustments { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<DataLedgerTransaction> BankBalanceAdjustments { get; set; }
+        public List<BankBalanceDto> BankBalances { get; set; }
 
         public DateTime Date { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<DataLedgerEntry> Entries { get; set; }
+        public List<LedgerEntryDto> Entries { get; set; }
 
         public string Remarks { get; set; }
     }

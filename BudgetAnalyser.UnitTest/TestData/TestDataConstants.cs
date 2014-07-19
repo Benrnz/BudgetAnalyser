@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.UnitTest.TestData
+﻿using BudgetAnalyser.Engine.Budget;
+
+namespace BudgetAnalyser.UnitTest.TestData
 {
     public static class TestDataConstants
     {
@@ -14,5 +16,7 @@
         public const string RentBucketCode = "RENT";
         public const string FoodBucketCode = "FOOD";
         public const string WaterBucketCode = "WATER";
+        public const string InsuranceHomeBucketCode = "INSHOME";
+        public const string DoctorBucketCode = "DOC";
     }
 }

@@ -9,15 +9,15 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerDataToDomainMapper : ILedgerDataToDomainMapper
+    [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBookDto, LedgerBook>))]
+    public class DtoToLedgerBookMapper : BasicMapper<LedgerBookDto, LedgerBook>, ILedgerDataToDomainMapper
     {
         private static readonly Dictionary<string, LedgerColumn> CachedLedgers = new Dictionary<string, LedgerColumn>();
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILogger logger;
 
-        public LedgerDataToDomainMapper(
+        public DtoToLedgerBookMapper(
             [NotNull] ILogger logger,
             [NotNull] IBudgetBucketRepository bucketRepository, 
             [NotNull] IAccountTypeRepository accountTypeRepository
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.logger = logger;
         }
 
-        public LedgerBook Map([NotNull] DataLedgerBook dataBook)
+        public override LedgerBook Map([NotNull] LedgerBookDto dataBook)
         {
             if (dataBook == null)
             {
@@ -62,10 +62,10 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return book;
         }
 
-        private List<LedgerTransaction> MapTransactions(IEnumerable<DataLedgerTransaction> dataTransactions)
+        private List<LedgerTransaction> MapTransactions(IEnumerable<LedgerTransactionDto> dataTransactions)
         {
             var list = new List<LedgerTransaction>();
-            foreach (DataLedgerTransaction dataTransaction in dataTransactions)
+            foreach (LedgerTransactionDto dataTransaction in dataTransactions)
             {
                 if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
                 {
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return list;
         }
 
-        private LedgerEntry MapEntry(DataLedgerEntry dataEntry, LedgerEntry previousEntry)
+        private LedgerEntry MapEntry(LedgerEntryDto dataEntry, LedgerEntry previousEntry)
         {
             var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry);
             entry.SetTransactions(MapTransactions(dataEntry.Transactions));
@@ -123,17 +123,17 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return ledger;
         }
 
-        private IEnumerable<BankBalance> MapBankBalances(IEnumerable<DataBankBalance> dataBalances)
+        private IEnumerable<BankBalance> MapBankBalances(IEnumerable<BankBalanceDto> dataBalances)
         {
             return dataBalances.Select(d => new BankBalance { Account = this.accountTypeRepository.GetOrCreateNew(d.Account), Balance = d.Balance });
         }
 
-        private List<LedgerEntryLine> MapLines(IEnumerable<DataLedgerEntryLine> dataLines)
+        private List<LedgerEntryLine> MapLines(IEnumerable<LedgerEntryLineDto> dataLines)
         {
-            List<DataLedgerEntryLine> localCopyOfLines = dataLines.Reverse().ToList(); // Now it is in ascending order starting at oldest date first.
+            List<LedgerEntryLineDto> localCopyOfLines = dataLines.Reverse().ToList(); // Now it is in ascending order starting at oldest date first.
             LedgerEntryLine previousLine = null;
             var listOfLines = new List<LedgerEntryLine>();
-            foreach (DataLedgerEntryLine line in localCopyOfLines)
+            foreach (LedgerEntryLineDto line in localCopyOfLines)
             {
                 var domainLine = new LedgerEntryLine(line.Date, MapBankBalances(line.BankBalances), line.Remarks);
 
@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 else
                 {
                     var entries = new List<LedgerEntry>();
-                    foreach (DataLedgerEntry entry in line.Entries)
+                    foreach (LedgerEntryDto entry in line.Entries)
                     {
                         LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket.Code == entry.BucketCode);
                         entries.Add(MapEntry(entry, previousEntry));

@@ -3,11 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    public class DataLedgerEntry
+    public class LedgerEntryDto
     {
-        public DataLedgerEntry()
+        public LedgerEntryDto()
         {
-            this.Transactions = new List<DataLedgerTransaction>();
+            Transactions = new List<LedgerTransactionDto>();
         }
 
         public decimal Balance { get; set; }
@@ -16,6 +16,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<DataLedgerTransaction> Transactions { get; set; }
+        public List<LedgerTransactionDto> Transactions { get; set; }
     }
 }

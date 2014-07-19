@@ -212,6 +212,9 @@
   <ItemGroup>
     <None Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\DemoLedgerBook.xml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

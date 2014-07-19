@@ -4,18 +4,18 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    public class DataLedgerBook
+    public class LedgerBookDto
     {
-        public DataLedgerBook()
+        public LedgerBookDto()
         {
-            this.DatedEntries = new List<DataLedgerEntryLine>();
+            DatedEntries = new List<LedgerEntryLineDto>();
         }
 
         public double? Checksum { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<DataLedgerEntryLine> DatedEntries { get; set; }
+        public List<LedgerEntryLineDto> DatedEntries { get; set; }
 
         public string FileName { get; set; }
 

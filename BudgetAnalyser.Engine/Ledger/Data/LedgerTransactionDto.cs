@@ -2,7 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    public class DataLedgerTransaction
+    public class LedgerTransactionDto
     {
         public string AccountType { get; set; }
 

@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private BudgetBucket CarMtcBucket { get; set; }
         private BudgetBucket RatesBucket { get; set; }
         private BudgetBucket RegoBucket { get; set; }
-        private DataLedgerBook TestData { get; set; }
+        private LedgerBookDto TestData { get; set; }
 
         [TestMethod]
         [ExpectedException(typeof(FileFormatException))]
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var accountTypeRepoMock = new Mock<IAccountTypeRepository>();
             accountTypeRepoMock.Setup(a => a.GetByKey(StatementModelTestData.ChequeAccount.Name)).Returns(StatementModelTestData.ChequeAccount);
 
-            var mapper = new LedgerDataToDomainMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
+            var mapper = new DtoToLedgerBookMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
             return mapper.Map(TestData);
         }
     }
