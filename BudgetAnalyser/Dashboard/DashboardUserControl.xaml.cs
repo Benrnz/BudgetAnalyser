@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            var view = CollectionViewSource.GetDefaultView(Controller.Widgets);
+            var view = CollectionViewSource.GetDefaultView(Controller.WidgetGroups);
             if (view == null)
             {
                 return;

@@ -30,7 +30,7 @@
                     <TextBlock Text="Unhide all" />
                 </MenuItem.Header>
             </MenuItem>
-            <Separator/>
+            <Separator />
             <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewBucketMonitorWidgetCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
                 <MenuItem.Header>
@@ -142,12 +142,41 @@
         </Grid.ColumnDefinitions>
         <ItemsControl Grid.ColumnSpan="3"
                       Grid.Row="1"
-                      ItemsSource="{Binding Widgets}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                      Margin="20"
+                      ItemsSource="{Binding WidgetGroups}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type dashboard:WidgetGroup}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Heading}"/>
+                        <Border BorderThickness="1"
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                BorderBrush="{StaticResource Brush.TileBackground}"
+                                Height="1"
+                                Margin="2,1,0,0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch" />
+                        <ItemsControl Grid.Row="1" 
+                                      Grid.ColumnSpan="2"
+                                      ItemsSource="{Binding Widgets}"
+                                      Margin="5,10,2,30">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
         <TextBlock FontSize="10"
                    Foreground="{StaticResource Brush.TileBackground}"
