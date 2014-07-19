@@ -1,19 +1,19 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Matching
+namespace BudgetAnalyser.Engine.Matching.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MatchingRuleDomainToDataMapper : IMatchingRuleDomainToDataMapper
     {
-        public DataMatchingRule Map([NotNull] MatchingRule rule)
+        public MatchingRuleDto Map([NotNull] MatchingRule rule)
         {
             if (rule == null)
             {
                 throw new ArgumentNullException("rule");
             }
 
-            return new DataMatchingRule
+            return new MatchingRuleDto
             {
                 Amount = rule.Amount,
                 BucketCode = rule.BucketCode, // Its important to use the BucketCode not the Bucket. See below.

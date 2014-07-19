@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Matching.Data;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
@@ -14,8 +15,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, bool> ExistsOveride { get; set; }
 
-        public Func<string, List<DataMatchingRule>> LoadFromDiskOveride { get; set; }
-        public Action<string, IEnumerable<DataMatchingRule>> SaveToDiskOveride { get; set; }
+        public Func<string, List<MatchingRuleDto>> LoadFromDiskOveride { get; set; }
+        public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
 
         public override bool Exists(string fileName)
         {
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return ExistsOveride(fileName);
         }
 
-        protected override List<DataMatchingRule> LoadFromDisk(string fileName)
+        protected override List<MatchingRuleDto> LoadFromDisk(string fileName)
         {
             if (LoadFromDiskOveride == null)
             {
@@ -37,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadFromDiskOveride(fileName);
         }
 
-        protected override void SaveToDisk(string fileName, IEnumerable<DataMatchingRule> dataEntities)
+        protected override void SaveToDisk(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
             if (SaveToDiskOveride == null)
             {

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace BudgetAnalyser.Engine.Matching
+namespace BudgetAnalyser.Engine.Matching.Data
 {
-    public class DataMatchingRule
+    public class MatchingRuleDto
     {
-        public DataMatchingRule()
+        public MatchingRuleDto()
         {
             RuleId = Guid.NewGuid();
         }

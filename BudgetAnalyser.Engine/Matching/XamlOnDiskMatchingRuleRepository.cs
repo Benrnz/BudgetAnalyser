@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Matching.Data;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -37,7 +38,7 @@ namespace BudgetAnalyser.Engine.Matching
             return File.Exists(fileName);
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataMatchingRule")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
         public IEnumerable<MatchingRule> LoadRules([NotNull] string fileName)
         {
             if (fileName == null)
@@ -50,7 +51,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new FileNotFoundException(fileName);
             }
 
-            List<DataMatchingRule> dataEntities;
+            List<MatchingRuleDto> dataEntities;
             try
             {
                 dataEntities = LoadFromDisk(fileName);
@@ -62,7 +63,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             if (dataEntities == null)
             {
-                throw new FileFormatException("Deserialised Matching-Rules are not of type List<DataMatchingRule>");
+                throw new FileFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
@@ -80,7 +81,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("fileName");
             }
 
-            IEnumerable<DataMatchingRule> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
+            IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
             SaveToDisk(fileName, dataEntities);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
@@ -90,15 +91,15 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
-        protected virtual void SaveToDisk(string fileName, IEnumerable<DataMatchingRule> dataEntities)
+        protected virtual void SaveToDisk(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
             XamlServices.Save(fileName, dataEntities.ToList());
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
-        protected virtual List<DataMatchingRule> LoadFromDisk(string fileName)
+        protected virtual List<MatchingRuleDto> LoadFromDisk(string fileName)
         {
-            return XamlServices.Load(fileName) as List<DataMatchingRule>;
+            return XamlServices.Load(fileName) as List<MatchingRuleDto>;
         }
     }
 }

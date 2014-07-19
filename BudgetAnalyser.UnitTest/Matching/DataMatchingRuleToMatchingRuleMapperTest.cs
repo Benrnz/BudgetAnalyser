@@ -1,5 +1,6 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,10 +9,10 @@ namespace BudgetAnalyser.UnitTest.Matching
     [TestClass]
     public class DataMatchingRuleToMatchingRuleMapperTest
     {
-        private DataMatchingRule TestData { get; set; }
+        private MatchingRuleDto TestData { get; set; }
 
         [TestMethod]
-        [Description("A test designed to break when new propperties are added to the DataMatchingRule. This is a trigger to update the mappers.")]
+        [Description("A test designed to break when new propperties are added to the MatchingRuleDto. This is a trigger to update the mappers.")]
         public void NumberOfDataMatchingRulePropertiesShouldBe11()
         {
             int dataProperties = typeof(MatchingRule).CountProperties();
@@ -103,7 +104,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = new DataMatchingRule
+            TestData = new MatchingRuleDto
             {
                 Created = new DateTime(2014, 1, 2),
                 Amount = 123.45M,

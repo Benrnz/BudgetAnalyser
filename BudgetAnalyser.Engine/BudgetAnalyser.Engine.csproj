@@ -127,6 +127,11 @@
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDto.cs" />
+    <Compile Include="Matching\Data\IMatchingRuleDataToDomainMapper.cs" />
+    <Compile Include="Matching\Data\IMatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDataToDomainMapper.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
@@ -157,7 +162,6 @@
     <Compile Include="AutoRegisterWithIoCProcessor.cs" />
     <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
-    <Compile Include="Matching\DataMatchingRule.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
     <Compile Include="Ledger\DebitLedgerTransaction.cs" />
@@ -166,12 +170,8 @@
     <Compile Include="Ledger\LedgerEntry.cs" />
     <Compile Include="Ledger\LedgerEntryLine.cs" />
     <Compile Include="Ledger\LedgerTransaction.cs" />
-    <Compile Include="Matching\IMatchingRuleDataToDomainMapper.cs" />
-    <Compile Include="Matching\IMatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\IMatchingRuleRepository.cs" />
     <Compile Include="Matching\MatchingRule.cs" />
-    <Compile Include="Matching\MatchingRuleDataToDomainMapper.cs" />
-    <Compile Include="Matching\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepository.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />

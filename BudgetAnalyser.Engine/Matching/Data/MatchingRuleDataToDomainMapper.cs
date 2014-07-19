@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Engine.Matching
+namespace BudgetAnalyser.Engine.Matching.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MatchingRuleDataToDomainMapper : IMatchingRuleDataToDomainMapper
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Matching
             this.bucketRepository = bucketRepository;
         }
 
-        public MatchingRule Map([NotNull] DataMatchingRule rule)
+        public MatchingRule Map([NotNull] MatchingRuleDto rule)
         {
             if (rule == null)
             {

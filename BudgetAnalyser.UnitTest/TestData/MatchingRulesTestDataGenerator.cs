@@ -4,12 +4,13 @@ using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Matching.Data;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
     public static class MatchingRulesTestDataGenerator
     {
-        public static void ConvertToDomainAndGenerateCSharp(IEnumerable<DataMatchingRule> dataRules)
+        public static void ConvertToDomainAndGenerateCSharp(IEnumerable<MatchingRuleDto> dataRules)
         {
             var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
 

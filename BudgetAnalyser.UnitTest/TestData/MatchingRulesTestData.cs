@@ -6,12 +6,13 @@ using System.Reflection;
 using System.Resources;
 using System.Xaml;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Matching.Data;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
     public static class MatchingRulesTestData
     {
-        public static IEnumerable<DataMatchingRule> RawTestData1()
+        public static IEnumerable<MatchingRuleDto> RawTestData1()
         {
             // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
             Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
@@ -24,7 +25,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
                 }
 
-                return (List<DataMatchingRule>)XamlServices.Load(new XamlXmlReader(stream));
+                return (List<MatchingRuleDto>)XamlServices.Load(new XamlXmlReader(stream));
             }
         }
     }
