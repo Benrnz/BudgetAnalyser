@@ -52,6 +52,10 @@
     <Reference Include="GalaSoft.MvvmLight.WPF45">
       <HintPath>..\BudgetAnalyser\bin\Debug\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -147,6 +151,7 @@
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\LoggerTestHarness.cs" />
     <Compile Include="TestHarness\LoggingApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BatchFileApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
@@ -158,6 +163,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">

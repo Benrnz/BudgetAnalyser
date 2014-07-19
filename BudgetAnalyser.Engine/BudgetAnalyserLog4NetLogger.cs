@@ -19,13 +19,13 @@ namespace BudgetAnalyser.Engine
     public class BudgetAnalyserLog4NetLogger : ILogger, IDisposable
     {
         private readonly ReaderWriterLockSlim alwaysLogLock = new ReaderWriterLockSlim();
-        private readonly ILog log4NetLogger = LogManager.GetLogger("Budget Analyser Diagnostic Log");
-        private bool disposed = false;
+        private bool disposed;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here, required for testing")]
         public BudgetAnalyserLog4NetLogger()
         {
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            // Ok here, required for testing
             ConfigureLog4Net();
         }
 
@@ -33,6 +33,8 @@ namespace BudgetAnalyser.Engine
         {
             Dispose(false);
         }
+
+        protected ILog Log4NetLogger { get; set; }
 
         public void Dispose()
         {
@@ -67,7 +69,7 @@ namespace BudgetAnalyser.Engine
             try
             {
                 SetLogLevelToAll();
-                this.log4NetLogger.Info(logEntryBuilder());
+                Log4NetLogger.Info(logEntryBuilder());
             }
             finally
             {
@@ -88,9 +90,10 @@ namespace BudgetAnalyser.Engine
             {
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
-            if (this.log4NetLogger.IsErrorEnabled)
+
+            if (Log4NetLogger.IsErrorEnabled)
             {
-                SynchroniseWithAlwaysLog(() => this.log4NetLogger.Error(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder()));
             }
         }
 
@@ -106,9 +109,9 @@ namespace BudgetAnalyser.Engine
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
 
-            if (this.log4NetLogger.IsErrorEnabled)
+            if (Log4NetLogger.IsErrorEnabled)
             {
-                SynchroniseWithAlwaysLog(() => this.log4NetLogger.Error(logEntryBuilder(), ex));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(), ex));
             }
         }
 
@@ -124,9 +127,9 @@ namespace BudgetAnalyser.Engine
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
 
-            if (this.log4NetLogger.IsInfoEnabled)
+            if (Log4NetLogger.IsInfoEnabled)
             {
-                SynchroniseWithAlwaysLog(() => this.log4NetLogger.Info(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Info(logEntryBuilder()));
             }
         }
 
@@ -142,40 +145,42 @@ namespace BudgetAnalyser.Engine
                 throw new ObjectDisposedException("BudgetAnalyserLog4NetLogger");
             }
 
-            if (this.log4NetLogger.IsWarnEnabled)
+            if (Log4NetLogger.IsWarnEnabled)
             {
-                SynchroniseWithAlwaysLog(() => this.log4NetLogger.Warn(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Warn(logEntryBuilder()));
             }
         }
 
         protected virtual void ConfigureLog4Net()
         {
+            Log4NetLogger = LogManager.GetLogger("Budget Analyser Diagnostic Log");
             XmlConfigurator.Configure();
         }
 
         protected virtual void Dispose(bool disposing)
         {
+            this.disposed = true;
             if (disposing)
             {
                 this.alwaysLogLock.Dispose();
             }
         }
 
-        private Level GetCurrentLogLevel()
+        protected virtual Level GetCurrentLogLevel()
         {
-            var internalLogger = (Logger)this.log4NetLogger.Logger;
+            var internalLogger = (Logger)Log4NetLogger.Logger;
             return internalLogger.Level;
         }
 
-        private void SetLogLevel(Level level)
+        protected virtual void SetLogLevel(Level level)
         {
-            var internalLogger = (Logger)this.log4NetLogger.Logger;
+            var internalLogger = (Logger)Log4NetLogger.Logger;
             internalLogger.Level = level;
         }
 
-        private void SetLogLevelToAll()
+        protected virtual void SetLogLevelToAll()
         {
-            var internalLogger = (Logger)this.log4NetLogger.Logger;
+            var internalLogger = (Logger)Log4NetLogger.Logger;
             internalLogger.Level = internalLogger.Hierarchy.LevelMap["ALL"];
         }
 
