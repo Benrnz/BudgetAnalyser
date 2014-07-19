@@ -202,13 +202,13 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            this.WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
+            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
             UpdateWidgets();
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            IEnumerable<WidgetState> widgetStates = this.WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
+            IEnumerable<WidgetState> widgetStates = WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
 
             message.PersistThisModel(
                 new DashboardApplicationStateV1
@@ -226,7 +226,13 @@ namespace BudgetAnalyser.Dashboard
 
             CorrelationId = Guid.NewGuid();
             BudgetBucket bucket = this.chooseBudgetBucketController.Selected;
-            if (this.WidgetGroups.OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucket.Code))
+            if (bucket == null)
+            {
+                // Cancelled by user.
+                return;
+            }
+
+            if (WidgetGroups.OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucket.Code))
             {
                 this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
                 return;
@@ -234,11 +240,11 @@ namespace BudgetAnalyser.Dashboard
 
             IMultiInstanceWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucket.Code);
             var baseWidget = (Widget)widget;
-            WidgetGroup widgetGroup = this.WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
+            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
                 widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
-                this.WidgetGroups.Add(widgetGroup);
+                WidgetGroups.Add(widgetGroup);
             }
 
             widgetGroup.Widgets.Add(baseWidget);
@@ -247,7 +253,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnBudgetBucketMonitorWidgetRemoved(object sender, WidgetRepositoryChangedEventArgs eventArgs)
         {
-            WidgetGroup widgetGroup = this.WidgetGroups.FirstOrDefault(group => group.Heading == eventArgs.WidgetRemoved.Category);
+            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == eventArgs.WidgetRemoved.Category);
             if (widgetGroup == null)
             {
                 return;
@@ -333,7 +339,7 @@ namespace BudgetAnalyser.Dashboard
         private void OnUpdateTimerElapsed(object sender, ElapsedEventArgs e)
         {
             this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
-            foreach (Widget widget in this.WidgetGroups.SelectMany(group => group.Widgets).Where(w => w.RecommendedTimeIntervalUpdate != null))
+            foreach (Widget widget in WidgetGroups.SelectMany(group => group.Widgets).Where(w => w.RecommendedTimeIntervalUpdate != null))
             {
                 Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
                 if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
@@ -380,12 +386,12 @@ namespace BudgetAnalyser.Dashboard
 
         private void UpdateWidgets(params Type[] filterDependencyTypes)
         {
-            if (this.WidgetGroups == null)
+            if (WidgetGroups == null)
             {
-                this.WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(null));
+                WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(null));
             }
 
-            if (!this.WidgetGroups.Any())
+            if (!WidgetGroups.Any())
             {
                 return;
             }
@@ -393,7 +399,7 @@ namespace BudgetAnalyser.Dashboard
             if (filterDependencyTypes != null && filterDependencyTypes.Length > 0)
             {
                 // targeted update
-                List<Widget> affectedWidgets = this.WidgetGroups.SelectMany(group => group.Widgets)
+                List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
                     .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
                     .ToList();
                 affectedWidgets.ForEach(UpdateWidget);
@@ -401,7 +407,7 @@ namespace BudgetAnalyser.Dashboard
             else
             {
                 // update all
-                this.WidgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
+                WidgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
             }
         }
     }
