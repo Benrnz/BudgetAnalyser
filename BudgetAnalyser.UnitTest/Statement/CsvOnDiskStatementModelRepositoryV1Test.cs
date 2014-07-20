@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
+using System.Xaml;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestData;
@@ -182,6 +188,37 @@ namespace BudgetAnalyser.UnitTest.Statement
 
             Assert.Fail();
         }
+
+        [TestMethod]
+        public void MustBeAbleToLoadDemoStatementFile()
+        {
+            var subject = Arrange();
+            subject.ReadLinesOverride = file =>
+            {
+                // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
+                Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
+                {
+                    if (stream == null)
+                    {
+                        throw new MissingManifestResourceException("Cannot find resource named: " + file);
+                    }
+
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        var text = streamReader.ReadToEnd();
+                        return text.Split('\n');
+                    }
+                }
+            };
+
+            var model = subject.Load(StatementDemoFile);
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(33, model.AllTransactions.Count());
+        }
+
+        private const string StatementDemoFile = "BudgetAnalyser.UnitTest.TestData.DemoTransactions.csv";
 
         [TestInitialize]
         public void TestInitialise()
