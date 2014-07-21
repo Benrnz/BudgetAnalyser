@@ -227,7 +227,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void SaveShouldWriteOutBuckets()
         {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
             var subject = new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
 
             string savedData = null;
@@ -250,33 +250,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void SaveShouldWriteOutBucketsXPath()
-        {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
-            var subject = new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
-
-            string savedData = null;
-            subject.WriteToDiskMock = (filename, data) => { savedData = data; };
-            subject.FileExistsMock = f => true;
-            subject.LoadFromDiskMock = OnLoadFromDiskMock;
-
-            BudgetCollection collection = subject.Load(DemoBudgetFileName);
-            subject.Save(collection);
-
-            XDocument document = XDocument.Parse(savedData);
-
-            //var bucketCollectionElement = document.XPathEvaluate("/BudgetCollectionDto/BudgetCollectionDto.Buckets/scg:List", document);
-
-            //XElement bucketCollectionElement = document.Root.Elements().First(e => e.Name.LocalName == "BudgetCollectionDto.Buckets");
-            //foreach (var element in bucketCollectionElement.Elements().Single().Elements())
-            //{
-            //    Console.WriteLine(element.FirstAttribute);
-            //}
-
-            //Assert.AreEqual(10, bucketCollectionElement.Elements().Single().Elements().Count());
-        }
-
-        [TestMethod]
         public void SaveShouldWriteToDisk()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
@@ -295,7 +268,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                 return;
             }
 
-            new AutoMapperConfiguration(new BudgetBucketFactory()).Configure();
+            new AutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind()).Configure();
             autoMapperIsConfigured = true;
         }
 
@@ -303,7 +276,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             if (bucketRepo == null)
             {
-                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
+                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
             }
 
             return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
@@ -34,7 +36,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             if (!configurationDone)
             {
-                new AutoMapperConfiguration(new BudgetBucketFactory()).Configure();
+                new AutoMapperConfiguration(new BudgetBucketFactory(), new Mock<IBudgetBucketRepository>().Object).Configure();
                 configurationDone = true;
             }
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
@@ -14,6 +16,8 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class InMemoryBudgetBucketRepositoryTest
     {
         private bool concurrencyFail;
+
+        private static bool isAutoMapperConfigured;
 
         [TestMethod]
         public void AfterInitialiseJournalBucketShouldExist()
@@ -192,6 +196,16 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.IsFalse(this.concurrencyFail);
         }
 
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            if (!isAutoMapperConfigured)
+            {
+                new AutoMapperConfiguration(new BudgetBucketFactory(), new Mock<IBudgetBucketRepository>().Object).Configure();
+                isAutoMapperConfigured = true;
+            }
+        }
+
         private InMemoryBudgetBucketRepository Arrange()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
@@ -211,7 +225,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private InMemoryBudgetBucketRepository CreateSubject()
         {
-            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(new BudgetBucketFactory()));
+            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
         }
 
         private void ThreadSafetyCheckOneThread(object subject)

@@ -107,7 +107,11 @@
     <Compile Include="Budget\DtoToBudgetBucketTest.cs" />
     <Compile Include="Budget\DtoToBudgetCollectionMapperTest.cs" />
     <Compile Include="Budget\DtoToBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\DtoToIncomeMapper.cs" />
     <Compile Include="Budget\ExpenseTest.cs" />
+    <Compile Include="Budget\DtoToExpenseMapper.cs" />
+    <Compile Include="Budget\IncomeToDtoMapperTest.cs" />
+    <Compile Include="Budget\ExpenseToDtoMapperTest.cs" />
     <Compile Include="Budget\IncomeTest.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
@@ -172,6 +176,7 @@
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
+    <Compile Include="AutoMapperConfigurationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
