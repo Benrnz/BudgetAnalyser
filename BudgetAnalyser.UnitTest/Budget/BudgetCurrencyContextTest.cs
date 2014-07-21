@@ -42,7 +42,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(KeyNotFoundException))]
         public void CtorShouldThrowIfCurrentBudgetIsNotInCollection()
         {
-            new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), new BudgetModel(new FakeLogger()));
+            new BudgetCurrencyContext(BudgetModelTestData.CreateCollectionWith1And2(), new BudgetModel());
             Assert.Fail();
         }
 
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ShouldIndicateFutureBudgetWhenOneIsGiven()
         {
-            var budget3 = new BudgetModel(new FakeLogger()) { EffectiveFrom = new DateTime(2020, 01, 30) };
+            var budget3 = new BudgetModel { EffectiveFrom = new DateTime(2020, 01, 30) };
             var subject = new BudgetCurrencyContext(
                 new BudgetCollection(new[]
                 {

@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("fileName");
             }
 
-            var newBudget = new BudgetModel(logger)
+            var newBudget = new BudgetModel
             {
                 EffectiveFrom = DateTime.Today,
                 Name = "Default Budget",

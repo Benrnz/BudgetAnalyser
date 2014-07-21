@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterConstructionEffectiveDateIsValidDate()
         {
-            var subject = new BudgetModel(new FakeLogger());
+            var subject = new BudgetModel();
 
             Assert.AreNotEqual(DateTime.MinValue, subject.EffectiveFrom);
         }
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterConstructionLastModifiedDateIsValidDate()
         {
-            var subject = new BudgetModel(new FakeLogger());
+            var subject = new BudgetModel();
 
             Assert.AreNotEqual(DateTime.MinValue, subject.LastModified);
         }
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ListsAreInitialised()
         {
-            var subject = new BudgetModel(new FakeLogger());
+            var subject = new BudgetModel();
 
             Assert.IsNotNull(subject.Incomes);
             Assert.IsNotNull(subject.Expenses);

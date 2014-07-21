@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
 
-            var budget = new BudgetModel(uiContext.Logger);
+            var budget = new BudgetModel();
             CurrentBudget = new BudgetCurrencyContext(new BudgetCollection(new[] { budget }), budget);
         }
 

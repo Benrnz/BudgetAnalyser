@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     public class BudgetModel
     {
-        private readonly ILogger logger;
-
-        public BudgetModel([NotNull] ILogger logger)
+        public BudgetModel()
         {
-            if (logger == null)
-            {
-                throw new ArgumentNullException("logger");
-            }
-
-            this.logger = logger;
             Incomes = new List<Income>();
             Expenses = new List<Expense>();
             LastModified = DateTime.Now; // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
@@ -57,7 +48,6 @@ namespace BudgetAnalyser.Engine.Budget
             if (!Validate(builder))
             {
                 // Consumer should have already called validate and resolved any issues before calling Update+Initialise.
-                this.logger.LogError(() => this.logger.Format("BudgetModel is invalid. {0}", builder));
                 throw new ValidationWarningException("The model is invalid. " + builder);
             }
         }

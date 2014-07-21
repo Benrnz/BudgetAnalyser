@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -9,6 +11,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class BudgetModelToDtoMapperTest
     {
+        private static bool isAutoMapperConfigured;
         private BudgetModel TestData { get; set; }
 
         [TestMethod]
@@ -92,6 +95,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
+            if (!isAutoMapperConfigured)
+            {
+                new AutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind()).Configure();
+                isAutoMapperConfigured = true;
+            }
+
             TestData = BudgetModelTestData.CreateTestData1();
         }
 

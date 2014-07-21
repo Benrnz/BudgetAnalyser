@@ -45,6 +45,10 @@ namespace BudgetAnalyser.Engine
 
             Mapper.CreateMap<IncomeDto, Income>()
                 .ForMember(income => income.Bucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BudgetBucketCode)));
+
+            Mapper.CreateMap<BudgetModel, BudgetModelDto>();
+
+            Mapper.CreateMap<BudgetModelDto, BudgetModel>();
         }
     }
 }
