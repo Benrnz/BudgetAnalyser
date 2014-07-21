@@ -1,11 +1,11 @@
 using System;
+using AutoMapper;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    // TODO if this works ok implement for all mappers to reduce the number of interfaces.
     [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetBucketDto, BudgetBucket>))]
-    public class DtoToBudgetBucketMapper : BasicMapper<BudgetBucketDto, BudgetBucket>
+    public class DtoToBudgetBucketMapper : MagicMapper<BudgetBucketDto, BudgetBucket>
     {
         private readonly IBudgetBucketFactory bucketFactory;
 
@@ -19,17 +19,14 @@ namespace BudgetAnalyser.Engine.Budget.Data
             this.bucketFactory = bucketFactory;
         }
 
-        public override BudgetBucket Map([NotNull] BudgetBucketDto source)
+        public override BudgetBucket Map(BudgetBucketDto source)
         {
             if (source == null)
             {
                 throw new ArgumentNullException("source");
             }
 
-            var bucket = this.bucketFactory.Build(source.Type);
-            bucket.Code = source.Code;
-            bucket.Description = source.Description;
-            return bucket;
+            return Mapper.Map<BudgetBucket>(source, options => options.ConstructServicesUsing(type => this.bucketFactory.Build(source.Type)));
         }
     }
 }

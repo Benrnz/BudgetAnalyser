@@ -41,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetCollectionDto ArrangeAndAct()
         {
-            var mapper = new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToDtoMapper(new BudgetBucketFactory()));
+            var mapper = new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), new BucketBucketRepoAlwaysFind(), new BudgetBucketToDtoMapper());
             return mapper.Map(TestData);
         }
     }

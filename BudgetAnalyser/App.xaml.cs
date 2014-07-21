@@ -33,6 +33,7 @@ namespace BudgetAnalyser
             var compositionRoot = new CompositionRoot();
             compositionRoot.RegisterIoCMappings(this);
             this.logger = compositionRoot.Logger;
+
             this.logger.LogAlways(() => "=========== Budget Analyser Starting ===========");
             this.logger.LogAlways(() => compositionRoot.ShellController.DashboardController.VersionString);
             var initialisableShell = compositionRoot.ShellController as IInitializableController;

@@ -77,18 +77,21 @@ namespace BudgetAnalyser
 
             Logger = container.Resolve<ILogger>();
 
-            // Kick it off
-            ConstructUiContext(container);
-            ShellController = container.Resolve<ShellController>();
-            ShellWindow = new ShellWindow { DataContext = ShellController };
+            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
+            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
 
             // Trigger instantiation of all Application hook subscribers. Unless we ask for these to be constructed, they won't be.
             var appEventSubscribers = container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
             var appEventPublishers = container.Resolve<IEnumerable<IApplicationHookEventPublisher>>();
             appEventSubscribers.ToList().ForEach(s => s.Subscribe(appEventPublishers));
 
-            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
-            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
+            var autoMapperConfig = container.Resolve<AutoMapperConfiguration>();
+            autoMapperConfig.Configure();
+
+            // Kick it off
+            ConstructUiContext(container);
+            ShellController = container.Resolve<ShellController>();
+            ShellWindow = new ShellWindow { DataContext = ShellController };
         }
 
         private void ConstructUiContext(IContainer container)

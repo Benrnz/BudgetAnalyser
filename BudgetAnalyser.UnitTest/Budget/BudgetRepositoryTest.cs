@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Threading;
 using System.Xaml;
 using System.Xml.Linq;
 using BudgetAnalyser.Engine;
@@ -24,6 +25,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private const string EmptyBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetModel.xml";
         private const string FileName1 = @"BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml";
+        private static bool autoMapperIsConfigured;
 
         [TestMethod]
         public void CreateNewShouldPopulateFileName()
@@ -283,6 +285,18 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.Save(BudgetModelTestData.CreateCollectionWith1And2());
 
             Assert.IsTrue(writeToDiskCalled);
+        }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            if (autoMapperIsConfigured)
+            {
+                return;
+            }
+
+            new AutoMapperConfiguration(new BudgetBucketFactory()).Configure();
+            autoMapperIsConfigured = true;
         }
 
         private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)

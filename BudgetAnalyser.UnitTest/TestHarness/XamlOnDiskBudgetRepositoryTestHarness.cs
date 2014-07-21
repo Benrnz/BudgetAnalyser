@@ -10,7 +10,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     {
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
             : base(bucketRepository,
-                new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), bucketRepository, new BudgetBucketToDtoMapper(new BudgetBucketFactory())),
+                new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), bucketRepository, new BudgetBucketToDtoMapper()),
                 new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper(bucketRepository, new FakeLogger())),
                 new FakeLogger())
         {
