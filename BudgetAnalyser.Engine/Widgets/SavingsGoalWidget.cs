@@ -68,6 +68,11 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private static decimal CalculateSavingsToDateWithTrackedLedgers(StatementModel statement, LedgerBook ledger)
         {
+            if (ledger == null)
+            {
+                return 0;
+            }
+
             var trackedSavingsLedgers = ledger.Ledgers
                                             .Where(l => l.BudgetBucket is SavingsCommitmentBucket)
                                             .Select(l => l.BudgetBucket)
