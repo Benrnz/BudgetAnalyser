@@ -19,16 +19,16 @@ namespace BudgetAnalyser.LedgerBook
     {
         private const string BankBalanceBackground = "Brush.TileBackgroundAlternate";
         private const string BankBalanceTextBrush = "Brush.Text.Default";
+        private const string DateColumnStyle = "LedgerBookTextBlockHeadingRight";
         private const string DateFormat = "d-MMM-yy";
         private const string HeadingStyle = "LedgerBookTextBlockHeading";
         private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
         private const string LightBorderBrush = "Brush.BorderLight";
 
         private const string NormalHighlightBackground = "Brush.TileBackground";
-        private const string DateColumnStyle = "LedgerBookTextBlockHeadingRight";
-        private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
         private const string NormalStyle = "LedgerBookTextBlockOther";
         private const string NumberStyle = "LedgerBookTextBlockNumber";
+        private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
         private const string SurplusBackground = "Brush.TileBackgroundAlternate";
         private const string SurplusTextBrush = "Brush.CreditBackground1";
         private readonly ICommand removeLedgerEntryLineCommand;
@@ -72,6 +72,26 @@ namespace BudgetAnalyser.LedgerBook
             this.localResources = viewResources;
             this.contentPresenter = contentPanel;
             DynamicallyCreateLedgerBookGrid();
+        }
+
+        private static Brush StripColour(LedgerColumn ledger)
+        {
+            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+            {
+                return ConverterHelper.SpentMonthlyBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavedUpForExpenseBucket)
+            {
+                return ConverterHelper.AccumulatedBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavingsCommitmentBucket)
+            {
+                return ConverterHelper.SavingsCommitmentBucketBrush;
+            }
+
+            return ConverterHelper.TileBackgroundBrush;
         }
 
         private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int gridRow, int gridColumn)
@@ -154,6 +174,15 @@ namespace BudgetAnalyser.LedgerBook
             return gridRow;
         }
 
+        private void AddGridColumns(Grid grid)
+        {
+            for (int index = 0; index < this.ledgerBook.DatedEntries.Count() + 2; index++)
+            {
+                // + 2 because we need 2 columns for the headings
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            }
+        }
+
         private void AddHeadingColumnContent(Grid grid)
         {
             int gridRow = 0;
@@ -162,7 +191,7 @@ namespace BudgetAnalyser.LedgerBook
             Grid.SetColumnSpan(dateBorder, 2);
             AddContentToGrid(dateBorder, "Date", ref gridRow, gridColumn, DateColumnStyle);
 
-            var remarksBorder = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
+            Border remarksBorder = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
             Grid.SetColumnSpan(remarksBorder, 2);
             AddContentToGrid(grid, "Remarks", ref gridRow, gridColumn, RemarksStyle);
 
@@ -182,8 +211,8 @@ namespace BudgetAnalyser.LedgerBook
             TextBlock surplusTextBlock = AddContentToGrid(surplusBorder, "Surplus", ref gridRow, gridColumn, HeadingStyle);
             surplusTextBlock.Foreground = FindResource(SurplusTextBrush) as Brush;
             surplusTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
-            
-            gridRow = 5; 
+
+            gridRow = 5;
             foreach (LedgerColumn ledger in this.ledgerBook.Ledgers)
             {
                 gridColumn = 0;
@@ -195,7 +224,7 @@ namespace BudgetAnalyser.LedgerBook
                 var stripe = new Border
                 {
                     BorderThickness = new Thickness(6, 0, 0, 0),
-                    BorderBrush = ledger.BudgetBucket is SpentMonthlyExpenseBucket ? ConverterHelper.SpentMonthlyBucketBrush : ConverterHelper.AccumulatedBucketBrush,
+                    BorderBrush = StripColour(ledger),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
                 };
@@ -238,23 +267,6 @@ namespace BudgetAnalyser.LedgerBook
             return textBlock;
         }
 
-        private void AddLedgerRows(Grid grid)
-        {
-            foreach (LedgerColumn ledger in this.ledgerBook.Ledgers)
-            {
-                if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
-                {
-                    // Spent Monthly ledgers only have a balance gridRow
-                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                }
-                else
-                {
-                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                }
-            }
-        }
-
         private void AddLedgerEntryLinesVertically(Grid grid)
         {
             int gridColumn = 2; //because the first two columns are headings
@@ -295,7 +307,7 @@ namespace BudgetAnalyser.LedgerBook
                 TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, ImportantNumberStyle);
                 surplusText.Foreground = FindResource(SurplusTextBrush) as Brush;
 
-               
+
                 foreach (LedgerColumn ledger in allLedgers)
                 {
                     LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
@@ -331,12 +343,20 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void AddGridColumns(Grid grid)
+        private void AddLedgerRows(Grid grid)
         {
-            for (int index = 0; index < this.ledgerBook.DatedEntries.Count() + 2; index++)
+            foreach (LedgerColumn ledger in this.ledgerBook.Ledgers)
             {
-                // + 2 because we need 2 columns for the headings
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width= GridLength.Auto });
+                if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+                {
+                    // Spent Monthly ledgers only have a balance gridRow
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                }
+                else
+                {
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                }
             }
         }
 

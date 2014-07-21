@@ -264,12 +264,26 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
             if (transactions.Any())
             {
-                IEnumerable<DebitLedgerTransaction> newLedgerTransactions = transactions.Select(t => new DebitLedgerTransaction(t.Id)
-                {
-                    BankAccount = t.AccountType,
-                    Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
-                    Narrative = t.Description,
-                });
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
+                    t =>
+                    {
+                        if (t.Amount < 0)
+                        {
+                            return new DebitLedgerTransaction(t.Id)
+                            {
+                                BankAccount = t.AccountType,
+                                Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
+                                Narrative = string.IsNullOrWhiteSpace(t.Description) ? t.TransactionType.ToString() : t.Description,
+                            };
+                        }
+
+                        return new CreditLedgerTransaction(t.Id)
+                        {
+                            BankAccount = t.AccountType,
+                            Credit = t.Amount,
+                            Narrative = string.IsNullOrWhiteSpace(t.Description) ? t.TransactionType.ToString() : t.Description,
+                        };
+                    });
 
                 return newLedgerTransactions.ToList();
             }
