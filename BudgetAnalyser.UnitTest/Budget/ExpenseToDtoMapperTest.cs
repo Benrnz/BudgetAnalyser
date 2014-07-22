@@ -38,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             if (!isAutoMapperConfigured)
             {
-                new AutoMapperConfiguration(new Mock<IBudgetBucketFactory>().Object, new Mock<IBudgetBucketRepository>().Object).Configure();
+                AutoMapperConfigurationTest.AutoMapperConfiguration();
                 isAutoMapperConfigured = true;
             }
 

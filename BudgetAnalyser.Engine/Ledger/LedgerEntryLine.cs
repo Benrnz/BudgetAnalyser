@@ -17,8 +17,8 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
-        private List<BankBalance> bankBalancesList;
         private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
+        private List<BankBalance> bankBalancesList;
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
         /// <summary>
@@ -66,9 +66,10 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
-        /// It is not editable as it is used to match transactions from the statement.  Changing this date would mean all transactions
-        /// now falling outside the date range would need to be removed, thus affected balances.
+        ///     This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
+        ///     It is not editable as it is used to match transactions from the statement.  Changing this date would mean all
+        ///     transactions
+        ///     now falling outside the date range would need to be removed, thus affected balances.
         /// </summary>
         public DateTime Date { get; private set; }
 
@@ -254,6 +255,21 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        private static string ExtractNarrative(Transaction t)
+        {
+            if (string.IsNullOrWhiteSpace(t.Description))
+            {
+                return t.Description;
+            }
+
+            if (t.TransactionType != null)
+            {
+                return t.TransactionType.ToString();
+            }
+
+            return string.Empty;
+        }
+
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
         {
             if (!filteredStatementTransactions.Any())
@@ -273,7 +289,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             {
                                 BankAccount = t.AccountType,
                                 Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
-                                Narrative = string.IsNullOrWhiteSpace(t.Description) ? t.TransactionType.ToString() : t.Description,
+                                Narrative = ExtractNarrative(t),
                             };
                         }
 
@@ -281,7 +297,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             BankAccount = t.AccountType,
                             Credit = t.Amount,
-                            Narrative = string.IsNullOrWhiteSpace(t.Description) ? t.TransactionType.ToString() : t.Description,
+                            Narrative = ExtractNarrative(t),
                         };
                     });
 

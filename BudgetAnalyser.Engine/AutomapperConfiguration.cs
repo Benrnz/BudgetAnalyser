@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine
             this.bucketRepo = bucketRepo;
         }
 
-        public void Configure()
+        public AutoMapperConfiguration Configure()
         {
             // Warning! Use of this static mapping configuration has a chance of intermittently failing tests, if the tests are run in parallel (which they are in this project).
             // This may need to change to improve consistency of test results. Failure does seem to be very rare however.
@@ -52,6 +52,8 @@ namespace BudgetAnalyser.Engine
             Mapper.CreateMap<BudgetModel, BudgetModelDto>();
 
             Mapper.CreateMap<BudgetModelDto, BudgetModel>();
+
+            return this;
         }
     }
 }

@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -13,16 +14,20 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void IsConfigurationValid()
         {
-            Subject.Configure();
             Mapper.AssertConfigurationIsValid();
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            Subject = new AutoMapperConfiguration(new Mock<IBudgetBucketFactory>().Object, new Mock<IBudgetBucketRepository>().Object);
+            Subject = AutoMapperConfiguration();
         }
 
         private AutoMapperConfiguration Subject { get; set; }
+
+        public static AutoMapperConfiguration AutoMapperConfiguration()
+        {
+            return new AutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind()).Configure();
+        }
     }
 }

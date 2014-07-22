@@ -120,7 +120,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             if (!isAutoMapperConfigured)
             {
-                new AutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind()).Configure();
+                AutoMapperConfigurationTest.AutoMapperConfiguration();
                 isAutoMapperConfigured = true;
             }
 

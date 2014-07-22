@@ -268,7 +268,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                 return;
             }
 
-            new AutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind()).Configure();
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
             autoMapperIsConfigured = true;
         }
 
