@@ -1,23 +1,15 @@
 ﻿using AutoMapper;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class BudgetBucketToDtoMapperTest
     {
-        private static bool configurationDone;
-
-        [TestMethod]
-        public void ShouldMapType()
-        {
-            Assert.IsInstanceOfType(Result, typeof(BudgetBucketDto));
-        }
+        private BudgetBucketDto Result { get; set; }
 
         [TestMethod]
         public void ShouldMapCode()
@@ -30,20 +22,20 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             Assert.AreEqual("Car Maintenance", Result.Description);
         }
-        
+
+        [TestMethod]
+        public void ShouldMapType()
+        {
+            Assert.IsInstanceOfType(Result, typeof(BudgetBucketDto));
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            if (!configurationDone)
-            {
-                AutoMapperConfigurationTest.AutoMapperConfiguration();
-                configurationDone = true;
-            }
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
 
-            var testData = StatementModelTestData.CarMtcBucket;
+            SpentMonthlyExpenseBucket testData = StatementModelTestData.CarMtcBucket;
             Result = Mapper.Map<BudgetBucketDto>(testData);
         }
-
-        private BudgetBucketDto Result { get; set; }
     }
 }

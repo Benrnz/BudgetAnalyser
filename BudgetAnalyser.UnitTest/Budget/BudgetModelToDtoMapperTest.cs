@@ -1,9 +1,7 @@
 ﻿using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -11,7 +9,6 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class BudgetModelToDtoMapperTest
     {
-        private static bool isAutoMapperConfigured;
         private BudgetModel TestData { get; set; }
 
         [TestMethod]
@@ -95,11 +92,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            if (!isAutoMapperConfigured)
-            {
-                AutoMapperConfigurationTest.AutoMapperConfiguration();
-                isAutoMapperConfigured = true;
-            }
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
 
             TestData = BudgetModelTestData.CreateTestData1();
         }

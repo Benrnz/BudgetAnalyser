@@ -1,19 +1,15 @@
 ﻿using System.Linq;
 using AutoMapper;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class ExpenseToDtoMapperTest
     {
-        private static bool isAutoMapperConfigured;
-
         private ExpenseDto Result { get; set; }
 
         private Expense TestData
@@ -22,25 +18,21 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void ShouldMapCode()
-        {
-            Assert.AreEqual(TestDataConstants.CarMtcBucketCode, Result.BudgetBucketCode);
-        }
-
-        [TestMethod]
         public void ShouldMapAmount()
         {
             Assert.AreEqual(95M, Result.Amount);
         }
 
+        [TestMethod]
+        public void ShouldMapCode()
+        {
+            Assert.AreEqual(TestDataConstants.CarMtcBucketCode, Result.BudgetBucketCode);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            if (!isAutoMapperConfigured)
-            {
-                AutoMapperConfigurationTest.AutoMapperConfiguration();
-                isAutoMapperConfigured = true;
-            }
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
 
             Result = Mapper.Map<ExpenseDto>(TestData);
         }

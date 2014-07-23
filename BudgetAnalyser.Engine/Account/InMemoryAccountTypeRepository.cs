@@ -127,6 +127,7 @@ namespace BudgetAnalyser.Engine.Account
 
         private static AccountType CreateNewAccountType(string key)
         {
+            // TODO this needs work. The accounts should be created a little more intentionally.  This can wait until the data is migrated to a db.
             throw new NotSupportedException();
         }
     }

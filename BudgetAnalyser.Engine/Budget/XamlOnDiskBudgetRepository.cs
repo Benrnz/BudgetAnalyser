@@ -14,13 +14,11 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
-        private readonly ILogger logger;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
-            [NotNull] BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper, 
-            [NotNull] ILogger logger)
+            [NotNull] BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
         {
             if (bucketRepository == null)
             {
@@ -36,15 +34,10 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 throw new ArgumentNullException("toDomainMapper");
             }
-            if (logger == null)
-            {
-                throw new ArgumentNullException("logger");
-            }
 
             BudgetBucketRepository = bucketRepository;
             this.toDtoMapper = toDtoMapper;
             this.toDomainMapper = toDomainMapper;
-            this.logger = logger;
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;

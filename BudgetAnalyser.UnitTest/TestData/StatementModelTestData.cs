@@ -9,8 +9,9 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     public static class StatementModelTestData
     {
-        public static readonly ChequeAccount ChequeAccount = new ChequeAccount("Cheque");
-        public static readonly VisaAccount VisaAccount = new VisaAccount("Visa");
+        public static readonly ChequeAccount ChequeAccount = new ChequeAccount("CHEQUE");
+        public static readonly VisaAccount VisaAccount = new VisaAccount("VISA");
+
         public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
         public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");
         public static readonly SpentMonthlyExpenseBucket HairBucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Haircuts");

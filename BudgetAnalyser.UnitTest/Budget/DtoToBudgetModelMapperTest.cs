@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xaml;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -14,8 +12,6 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class DtoToBudgetModelMapperTest
     {
-        private static bool isAutoMapperConfigured;
-
         private BudgetModel Result { get; set; }
 
         private BudgetModelDto TestData
@@ -118,11 +114,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            if (!isAutoMapperConfigured)
-            {
-                AutoMapperConfigurationTest.AutoMapperConfiguration();
-                isAutoMapperConfigured = true;
-            }
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
 
             Result = new DtoToBudgetModelMapper().Map(TestData);
         }

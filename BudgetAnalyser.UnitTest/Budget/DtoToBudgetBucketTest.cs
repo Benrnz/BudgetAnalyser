@@ -1,31 +1,14 @@
 ﻿using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {
     [TestClass]
     public class DtoToBudgetBucketTest
     {
-        private static bool autoMapperIsConfigured;
-
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            if (!autoMapperIsConfigured)
-            {
-                AutoMapperConfigurationTest.AutoMapperConfiguration();
-                autoMapperIsConfigured = true;
-            }
-
-            var subject = new DtoToBudgetBucketMapper();
-            Result = subject.Map(TestData);
-        }
-
         private BudgetBucket Result { get; set; }
 
         private BudgetBucketDto TestData
@@ -50,7 +33,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             Assert.IsInstanceOfType(Result, typeof(SavedUpForExpenseBucket));
         }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
+
+            var subject = new DtoToBudgetBucketMapper();
+            Result = subject.Map(TestData);
+        }
     }
-
-
 }

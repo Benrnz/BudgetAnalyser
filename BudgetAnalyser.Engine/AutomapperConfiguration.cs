@@ -1,21 +1,33 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using AutoMapper;
+using AutoMapper.Impl;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.Engine
 {
     public class AutoMapperConfiguration 
     {
-        private readonly IBudgetBucketFactory factory;
+        private readonly IBudgetBucketFactory bucketFactory;
         private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILedgerTransactionFactory ledgerTransactionFactory;
+        private readonly IAccountTypeRepository accountTypeRepo;
 
-        public AutoMapperConfiguration([NotNull] IBudgetBucketFactory factory, [NotNull] IBudgetBucketRepository bucketRepo)
+        public AutoMapperConfiguration(
+            [NotNull] IBudgetBucketFactory bucketFactory, 
+            [NotNull] IBudgetBucketRepository bucketRepo, 
+            [NotNull] ILedgerTransactionFactory ledgerTransactionFactory, 
+            [NotNull] IAccountTypeRepository accountTypeRepo)
         {
-            if (factory == null)
+            if (bucketFactory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException("bucketFactory");
             }
 
             if (bucketRepo == null)
@@ -23,8 +35,19 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException("bucketRepo");
             }
 
-            this.factory = factory;
+            if (ledgerTransactionFactory == null)
+            {
+                throw new ArgumentNullException("ledgerTransactionFactory");
+            }
+            if (accountTypeRepo == null)
+            {
+                throw new ArgumentNullException("accountTypeRepo");
+            }
+
+            this.bucketFactory = bucketFactory;
             this.bucketRepo = bucketRepo;
+            this.ledgerTransactionFactory = ledgerTransactionFactory;
+            this.accountTypeRepo = accountTypeRepo;
         }
 
         public AutoMapperConfiguration Configure()
@@ -33,9 +56,10 @@ namespace BudgetAnalyser.Engine
             // This may need to change to improve consistency of test results. Failure does seem to be very rare however.
 
             Mapper.CreateMap<BudgetBucket, BudgetBucketDto>()
-                .ForMember(dto => dto.Type, m => m.MapFrom(budgetBucket => this.factory.SerialiseType(budgetBucket)));
+                .ForMember(dto => dto.Type, m => m.MapFrom(budgetBucket => this.bucketFactory.SerialiseType(budgetBucket)));
 
-            Mapper.CreateMap<BudgetBucketDto, BudgetBucket>().ConstructUsing(dto => this.factory.Build(dto.Type));
+            Mapper.CreateMap<BudgetBucketDto, BudgetBucket>()
+                .ConstructUsing(dto => this.bucketFactory.Build(dto.Type));
 
             Mapper.CreateMap<Expense, ExpenseDto>()
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(expense => expense.Bucket.Code));
@@ -52,6 +76,15 @@ namespace BudgetAnalyser.Engine
             Mapper.CreateMap<BudgetModel, BudgetModelDto>();
 
             Mapper.CreateMap<BudgetModelDto, BudgetModel>();
+
+            Mapper.CreateMap<LedgerTransaction, LedgerTransactionDto>()
+                .ForMember(dto => dto.AccountType, m => m.MapFrom(transaction => transaction.BankAccount.Name))
+                .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName));
+
+            Mapper.CreateMap<LedgerTransactionDto, LedgerTransaction>()
+                .ConstructUsing(dto => this.ledgerTransactionFactory.Build(dto.TransactionType, dto.Id))
+                .ForMember(transaction => transaction.BankAccount,
+                    m => m.MapFrom(dto => this.accountTypeRepo.GetOrCreateNew(dto.AccountType, null) ?? this.accountTypeRepo.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque, null)));
 
             return this;
         }

@@ -11,8 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
             : base(bucketRepository,
                 new BudgetCollectionToDtoMapper(new BudgetModelToDtoMapper(), bucketRepository, new BudgetBucketToDtoMapper()),
-                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper()),
-                new FakeLogger())
+                new DtoToBudgetCollectionMapper(new DtoToBudgetModelMapper()))
         {
         }
 
@@ -20,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             IBudgetBucketRepository bucketRepo, 
             BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper, 
             BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
-            : base(bucketRepo, toDtoMapper, toDomainMapper, new FakeLogger()) { }
+            : base(bucketRepo, toDtoMapper, toDomainMapper) { }
 
         public Func<string, bool> FileExistsMock { get; set; }
 

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Threading;
 using System.Xaml;
 using System.Xml.Linq;
 using BudgetAnalyser.Engine;
@@ -25,7 +24,6 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private const string EmptyBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetModel.xml";
         private const string FileName1 = @"BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml";
-        private static bool autoMapperIsConfigured;
 
         [TestMethod]
         public void CreateNewShouldPopulateFileName()
@@ -84,8 +82,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
                 new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
-                null,
-                new FakeLogger());
+                null);
         }
 
         [TestMethod]
@@ -95,19 +92,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
                 null,
-                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
-                new FakeLogger());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullLoggerMapper()
-        {
-            new XamlOnDiskBudgetRepository(
-                new BucketBucketRepoAlwaysFind(),
-                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
-                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
-                null);
+                new BasicMapper<BudgetCollectionDto, BudgetCollection>());
         }
 
         [TestMethod]
@@ -117,8 +102,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 null,
                 new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
-                new BasicMapper<BudgetCollectionDto, BudgetCollection>(),
-                new FakeLogger());
+                new BasicMapper<BudgetCollectionDto, BudgetCollection>());
             Assert.Fail();
         }
 
@@ -263,13 +247,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            if (autoMapperIsConfigured)
-            {
-                return;
-            }
-
             AutoMapperConfigurationTest.AutoMapperConfiguration();
-            autoMapperIsConfigured = true;
         }
 
         private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)
