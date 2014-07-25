@@ -204,7 +204,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddNewBankBalance()
         {
-            BankBalances.Add(new BankBalance { Account = SelectedBankAccount, Balance = BankBalance });
+            BankBalances.Add(new BankBalance(SelectedBankAccount, BankBalance));
             SelectedBankAccount = null;
             BankBalance = 0;
         }

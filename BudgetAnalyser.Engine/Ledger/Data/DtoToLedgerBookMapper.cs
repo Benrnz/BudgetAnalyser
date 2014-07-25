@@ -13,13 +13,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class DtoToLedgerBookMapper : BasicMapper<LedgerBookDto, LedgerBook>
     {
         private static readonly Dictionary<string, LedgerColumn> CachedLedgers = new Dictionary<string, LedgerColumn>();
-        private readonly IBudgetBucketRepository bucketRepository;
         private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly IBudgetBucketRepository bucketRepository;
         private readonly ILogger logger;
 
         public DtoToLedgerBookMapper(
             [NotNull] ILogger logger,
-            [NotNull] IBudgetBucketRepository bucketRepository, 
+            [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository
             )
         {
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 throw new ArgumentNullException("bucketRepository");
             }
-            
+
             if (accountTypeRepository == null)
             {
                 throw new ArgumentNullException("accountTypeRepository");
@@ -62,41 +62,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return book;
         }
 
-        private List<LedgerTransaction> MapTransactions(IEnumerable<LedgerTransactionDto> dataTransactions)
+        private IEnumerable<BankBalance> MapBankBalances(IEnumerable<BankBalanceDto> dataBalances)
         {
-            var list = new List<LedgerTransaction>();
-            foreach (LedgerTransactionDto dataTransaction in dataTransactions)
-            {
-                if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
-                {
-                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
-                        dataTransaction.Narrative,
-                        dataTransaction.Credit - dataTransaction.Debit));
-                }
-
-                Type transactionType = Type.GetType(dataTransaction.TransactionType);
-                if (transactionType == null)
-                {
-                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
-                        dataTransaction.Narrative,
-                        dataTransaction.Credit - dataTransaction.Debit));
-                }
-
-                var transaction = Activator.CreateInstance(transactionType, dataTransaction.Id) as LedgerTransaction;
-                if (transaction == null)
-                {
-                    throw new FileFormatException("Invalid transaction type encountered: " + dataTransaction.TransactionType);
-                }
-
-                transaction.Credit = dataTransaction.Credit;
-                transaction.Debit = dataTransaction.Debit;
-                transaction.Narrative = dataTransaction.Narrative;
-                transaction.BankAccount = this.accountTypeRepository.GetOrCreateNew(dataTransaction.AccountType) 
-                    ?? this.accountTypeRepository.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque);
-                list.Add(transaction);
-            }
-
-            return list;
+            return dataBalances.Select(d => new BankBalance(this.accountTypeRepository.GetOrCreateNew(d.Account), d.Balance));
         }
 
         private LedgerEntry MapEntry(LedgerEntryDto dataEntry, LedgerEntry previousEntry)
@@ -121,11 +89,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
             CachedLedgers.Add(ledger.BudgetBucket.Code, ledger);
             return ledger;
-        }
-
-        private IEnumerable<BankBalance> MapBankBalances(IEnumerable<BankBalanceDto> dataBalances)
-        {
-            return dataBalances.Select(d => new BankBalance { Account = this.accountTypeRepository.GetOrCreateNew(d.Account), Balance = d.Balance });
         }
 
         private List<LedgerEntryLine> MapLines(IEnumerable<LedgerEntryLineDto> dataLines)
@@ -160,6 +123,43 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             }
 
             return listOfLines.ToList();
+        }
+
+        private List<LedgerTransaction> MapTransactions(IEnumerable<LedgerTransactionDto> dataTransactions)
+        {
+            var list = new List<LedgerTransaction>();
+            foreach (LedgerTransactionDto dataTransaction in dataTransactions)
+            {
+                if (string.IsNullOrWhiteSpace(dataTransaction.TransactionType))
+                {
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "A null transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
+                        dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
+                }
+
+                Type transactionType = Type.GetType(dataTransaction.TransactionType);
+                if (transactionType == null)
+                {
+                    throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "Invalid transaction type was encountered in transaction with narrative: {0} and amount {1:C}",
+                        dataTransaction.Narrative,
+                        dataTransaction.Credit - dataTransaction.Debit));
+                }
+
+                var transaction = Activator.CreateInstance(transactionType, dataTransaction.Id) as LedgerTransaction;
+                if (transaction == null)
+                {
+                    throw new FileFormatException("Invalid transaction type encountered: " + dataTransaction.TransactionType);
+                }
+
+                transaction.Credit = dataTransaction.Credit;
+                transaction.Debit = dataTransaction.Debit;
+                transaction.Narrative = dataTransaction.Narrative;
+                transaction.BankAccount = this.accountTypeRepository.GetOrCreateNew(dataTransaction.AccountType)
+                                          ?? this.accountTypeRepository.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque);
+                list.Add(transaction);
+            }
+
+            return list;
         }
     }
 }

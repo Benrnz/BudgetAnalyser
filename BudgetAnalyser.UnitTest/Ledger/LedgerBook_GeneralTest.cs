@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBook_GeneralTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance { Balance = 1850.5M, Account = StatementModelTestData.ChequeAccount } };
+        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
 
         [TestMethod]

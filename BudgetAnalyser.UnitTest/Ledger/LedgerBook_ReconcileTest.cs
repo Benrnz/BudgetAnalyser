@@ -17,7 +17,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBook_ReconcileTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance { Balance = 1850.5M, Account = StatementModelTestData.ChequeAccount }};
+        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
 
         [TestMethod]
@@ -27,21 +27,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var subject = new LedgerBook("Foo", new DateTime(2012, 02, 29), "", new FakeLogger());
 
             subject.Reconcile(
-                new DateTime(2012, 02, 20), 
-                new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2050M } }, 
-                BudgetModelTestData.CreateTestData1(),
-                StatementModelTestData.TestData1());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingTestData1WithDateEqualToExistingLine_Reconcile_ShouldThrow()
-        {
-            var subject = LedgerBookTestData.TestData1();
-
-            subject.Reconcile(
-                new DateTime(2013, 08, 15),
-                new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2050M } },
+                new DateTime(2012, 02, 20),
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) },
                 BudgetModelTestData.CreateTestData1(),
                 StatementModelTestData.TestData1());
         }
@@ -50,11 +37,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [ExpectedException(typeof(ValidationWarningException))]
         public void UsingTestData1AndNoStatementModelTransactions_Reconcile_ShouldThrow()
         {
-            var subject = LedgerBookTestData.TestData1();
+            LedgerBook subject = LedgerBookTestData.TestData1();
 
             subject.Reconcile(
                 new DateTime(2013, 10, 15),
-                new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2050M } },
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) },
                 BudgetModelTestData.CreateTestData1(),
                 StatementModelTestData.TestData1());
         }
@@ -63,27 +50,40 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [ExpectedException(typeof(ValidationWarningException))]
         public void UsingTestData1AndUnclassifiedTransactions_Reconcile_ShouldThrow()
         {
-            var subject = LedgerBookTestData.TestData1();
-            var statement = StatementModelTestData.TestData1();
-            var aTransaction = statement.AllTransactions.First();
+            LedgerBook subject = LedgerBookTestData.TestData1();
+            StatementModel statement = StatementModelTestData.TestData1();
+            Transaction aTransaction = statement.AllTransactions.First();
             PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
 
             subject.Reconcile(
                 new DateTime(2013, 9, 15),
-                new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2050M } },
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) },
                 BudgetModelTestData.CreateTestData1(),
                 statement);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
+        public void UsingTestData1WithDateEqualToExistingLine_Reconcile_ShouldThrow()
+        {
+            LedgerBook subject = LedgerBookTestData.TestData1();
+
+            subject.Reconcile(
+                new DateTime(2013, 08, 15),
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) },
+                BudgetModelTestData.CreateTestData1(),
+                StatementModelTestData.TestData1());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UsingTestData1WithDateLessThanExistingLine_Reconcile_ShouldThrow()
         {
-            var subject = LedgerBookTestData.TestData1();
+            LedgerBook subject = LedgerBookTestData.TestData1();
 
             subject.Reconcile(
                 new DateTime(2013, 07, 15),
-                new[] { new BankBalance { Account = StatementModelTestData.ChequeAccount, Balance = 2050M } },
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) },
                 BudgetModelTestData.CreateTestData1(),
                 StatementModelTestData.TestData1());
         }
@@ -164,19 +164,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_Reconcile_WithStatementSpentMonthlyLedgerShouldSupplementShortfall()
-        {
-            LedgerBook book = LedgerBookTestData.TestData1();
-            BudgetModel budget = BudgetModelTestData.CreateTestData1();
-            StatementModel statement = StatementModelTestData.TestData1();
-
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            book.Output(true);
-
-            Assert.AreEqual(64.71M, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
-        }
-
-        [TestMethod]
         public void UsingTestData1_Reconcile_WithStatementSavedUpForLedgerShouldHave0Balance()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
@@ -200,17 +187,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_Reconcile_WithStatementShouldHave3PowerTransactions()
-        {
-            LedgerBook book = LedgerBookTestData.TestData1();
-            BudgetModel budget = BudgetModelTestData.CreateTestData1();
-            StatementModel statement = StatementModelTestData.TestData1();
-            book.Output();
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            Assert.AreEqual(3, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
-        }
-
-        [TestMethod]
         public void UsingTestData1_Reconcile_WithStatementShouldHave2HairTransactions()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
@@ -222,6 +198,17 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void UsingTestData1_Reconcile_WithStatementShouldHave3PowerTransactions()
+        {
+            LedgerBook book = LedgerBookTestData.TestData1();
+            BudgetModel budget = BudgetModelTestData.CreateTestData1();
+            StatementModel statement = StatementModelTestData.TestData1();
+            book.Output();
+            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
+            Assert.AreEqual(3, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
+        }
+
+        [TestMethod]
         public void UsingTestData1_Reconcile_WithStatementShouldHaveSurplus1613()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
@@ -230,6 +217,19 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             book.Output(true);
             Assert.AreEqual(1613.47M, result.CalculatedSurplus);
+        }
+
+        [TestMethod]
+        public void UsingTestData1_Reconcile_WithStatementSpentMonthlyLedgerShouldSupplementShortfall()
+        {
+            LedgerBook book = LedgerBookTestData.TestData1();
+            BudgetModel budget = BudgetModelTestData.CreateTestData1();
+            StatementModel statement = StatementModelTestData.TestData1();
+
+            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
+            book.Output(true);
+
+            Assert.AreEqual(64.71M, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
         }
 
         [TestMethod]

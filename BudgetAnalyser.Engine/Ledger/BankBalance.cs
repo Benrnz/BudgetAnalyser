@@ -4,8 +4,14 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class BankBalance
     {
-        public AccountType Account { get; set; }
+        public BankBalance(AccountType account, decimal balance)
+        {
+            Account = account;
+            Balance = balance;
+        }
 
-        public decimal Balance { get; set; }
+        public AccountType Account { get; private set; }
+
+        public decimal Balance { get; private set; }
     }
 }

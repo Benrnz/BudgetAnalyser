@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
 using AutoMapper;
-using AutoMapper.Impl;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -39,6 +36,7 @@ namespace BudgetAnalyser.Engine
             {
                 throw new ArgumentNullException("ledgerTransactionFactory");
             }
+
             if (accountTypeRepo == null)
             {
                 throw new ArgumentNullException("accountTypeRepo");
@@ -84,7 +82,16 @@ namespace BudgetAnalyser.Engine
             Mapper.CreateMap<LedgerTransactionDto, LedgerTransaction>()
                 .ConstructUsing(dto => this.ledgerTransactionFactory.Build(dto.TransactionType, dto.Id))
                 .ForMember(transaction => transaction.BankAccount,
-                    m => m.MapFrom(dto => this.accountTypeRepo.GetOrCreateNew(dto.AccountType, null) ?? this.accountTypeRepo.GetOrCreateNew(AccountTypeRepositoryConstants.Cheque, null)));
+                    m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.AccountType) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
+
+            Mapper.CreateMap<BankBalance, BankBalanceDto>();
+
+            Mapper.CreateMap<string, AccountType>()
+                .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
+
+            Mapper.CreateMap<BankBalanceDto, BankBalance>()
+                .ForMember(balance => balance.Account,
+                    m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
             return this;
         }
