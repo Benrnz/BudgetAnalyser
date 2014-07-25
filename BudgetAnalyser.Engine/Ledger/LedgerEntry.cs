@@ -32,9 +32,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Used only by persistence.
         /// </summary>
-        internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry)
+        internal LedgerEntry(LedgerColumn ledger, decimal previousBalance)
         {
-            Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
+            Balance = previousBalance;
             LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
         }

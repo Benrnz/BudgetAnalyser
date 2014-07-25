@@ -93,6 +93,12 @@ namespace BudgetAnalyser.Engine
                 .ForMember(balance => balance.Account,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
+            Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
+                .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code));
+
+            Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
+                .ForMember(entry => entry.LedgerColumn, m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode) }));
+
             return this;
         }
     }

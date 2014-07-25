@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class DataLedgerBookTest
+    public class LedgerBookDtoTest
     {
         [TestMethod]
         public void OutputLedgerBookTestData1()

@@ -13,7 +13,7 @@ using Moq;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class LedgerDataToDomainMapperTest
+    public class DtoToLedgerBookMapperTest
     {
         private BudgetBucket CarMtcBucket { get; set; }
         private BudgetBucket RatesBucket { get; set; }

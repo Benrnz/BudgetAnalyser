@@ -69,6 +69,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", fileName));
             }
 
+            dataEntity.FileName = fileName;
+            var book = this.dataToDomainMapper.Map(dataEntity);
+
             if (dataEntity.Checksum == null)
             {
                 // bypass checksum check - this is to allow intentional manual changes to the file.  This checksum is only trying to prevent
@@ -76,15 +79,14 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             else
             {
-                double calculatedChecksum = CalculateChecksum(dataEntity);
+                double calculatedChecksum = CalculateChecksum(book);
                 if (calculatedChecksum != dataEntity.Checksum)
                 {
                     throw new FileFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
                 }
             }
 
-            dataEntity.FileName = fileName;
-            return this.dataToDomainMapper.Map(dataEntity);
+            return book;
         }
 
         public void Save([NotNull] LedgerBook book)
@@ -101,7 +103,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
             dataEntity.FileName = fileName;
-            dataEntity.Checksum = CalculateChecksum(dataEntity);
+            dataEntity.Checksum = CalculateChecksum(book);
 
             SaveXamlFileToDisk(dataEntity);
 
@@ -132,12 +134,12 @@ namespace BudgetAnalyser.Engine.Ledger
             XamlServices.Save(dataEntity.FileName, dataEntity);
         }
 
-        private static double CalculateChecksum(LedgerBookDto dataEntity)
+        private static double CalculateChecksum(LedgerBook dataEntity)
         {
             unchecked
             {
                 return dataEntity.DatedEntries.Sum(l =>
-                    (double)l.BankBalance
+                    (double)l.LedgerBalance
                     + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
                     + l.Entries.Sum(e => (double)e.Balance));
             }

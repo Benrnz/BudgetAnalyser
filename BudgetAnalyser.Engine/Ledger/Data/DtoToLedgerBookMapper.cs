@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         private LedgerEntry MapEntry(LedgerEntryDto dataEntry, LedgerEntry previousEntry)
         {
-            var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry);
+            var entry = new LedgerEntry(MapLedger(dataEntry.BucketCode), previousEntry == null ? 0 : previousEntry.Balance);
             entry.SetTransactions(MapTransactions(dataEntry.Transactions));
             return entry;
         }
