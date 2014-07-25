@@ -118,8 +118,8 @@
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
-    <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerEntryMapperTest.cs" />
+    <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
     <Compile Include="Ledger\BankBalanceToDtoMapperTest.cs" />
     <Compile Include="Ledger\DebitLedgerTransactionTest.cs" />
     <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />

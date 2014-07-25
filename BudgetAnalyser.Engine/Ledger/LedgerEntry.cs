@@ -32,27 +32,22 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Used only by persistence.
         /// </summary>
-        internal LedgerEntry(LedgerColumn ledger, decimal previousBalance)
+        internal LedgerEntry()
         {
-            Balance = previousBalance;
-            LedgerColumn = ledger;
             this.transactions = new List<LedgerTransaction>();
         }
 
         /// <summary>
         ///     Used when adding a new entry for a new reconciliation.
         /// </summary>
-        internal LedgerEntry(LedgerColumn ledger, LedgerEntry previousLedgerEntry, bool isNew)
+        internal LedgerEntry(bool isNew) : this()
         {
-            Balance = previousLedgerEntry == null ? 0 : previousLedgerEntry.Balance;
-            LedgerColumn = ledger;
-            this.transactions = new List<LedgerTransaction>();
             this.isNew = isNew;
         }
 
-        public decimal Balance { get; private set; }
+        public decimal Balance { get; internal set; }
 
-        public LedgerColumn LedgerColumn { get; private set; }
+        public LedgerColumn LedgerColumn { get; internal set; }
 
         /// <summary>
         ///     The total net affect of all transactions in this entry.  Debits will be negative.
@@ -92,6 +87,21 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.transactions.Remove(txn);
                 Balance -= (txn.Credit - txn.Debit);
             }
+        }
+
+        public bool Validate()
+        {
+            if (LedgerColumn == null)
+            {
+                return false;
+            }
+
+            if (LedgerColumn.BudgetBucket == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

@@ -212,7 +212,8 @@ namespace BudgetAnalyser.Engine.Ledger
             foreach (var previousEntry in previousEntries)
             {
                 LedgerColumn ledger = previousEntry.Key;
-                var newEntry = new LedgerEntry(ledger, previousEntry.Value, true);
+                decimal balance = previousEntry.Value == null ? 0 : previousEntry.Value.Balance;
+                var newEntry = new LedgerEntry(true) { Balance = balance, LedgerColumn = ledger };
                 Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledger.BudgetBucket.Code);
                 var transactions = new List<LedgerTransaction>();
                 if (expenseBudget != null)
@@ -242,8 +243,13 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal LedgerEntryLine SetEntries(List<LedgerEntry> replacementEntries)
         {
-            this.entries = replacementEntries;
-            return this;
+            if (replacementEntries.All(e => e.Validate()))
+            {
+                this.entries = replacementEntries;
+                return this;
+            }
+
+            throw new InvalidOperationException("One or more new Ledger Entries are invalid and cannot be included in this Ledger Entry Line.");
         }
 
         internal void Unlock()
