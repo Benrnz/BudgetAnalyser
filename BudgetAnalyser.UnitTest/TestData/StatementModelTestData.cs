@@ -11,6 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public static readonly ChequeAccount ChequeAccount = new ChequeAccount("CHEQUE");
         public static readonly VisaAccount VisaAccount = new VisaAccount("VISA");
+        public static readonly SavingsAccount SavingsAccount = new SavingsAccount("SAVINGS");
 
         public static readonly SpentMonthlyExpenseBucket PowerBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power");
         public static readonly SpentMonthlyExpenseBucket PhoneBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone");

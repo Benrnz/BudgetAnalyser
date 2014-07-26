@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             var listOfLines = new List<LedgerEntryLine>();
             foreach (LedgerEntryLineDto line in localCopyOfLines)
             {
-                var domainLine = new LedgerEntryLine(line.Date, MapBankBalances(line.BankBalances), line.Remarks);
+                var domainLine = new LedgerEntryLine { Date = line.Date, Remarks = line.Remarks, BankBalances = MapBankBalances(line.BankBalances) };
 
                 domainLine.SetBalanceAdjustments(MapTransactions(line.BankBalanceAdjustments));
                 if (previousLine == null)

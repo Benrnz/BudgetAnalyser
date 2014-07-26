@@ -129,6 +129,8 @@ namespace BudgetAnalyser
             // Create a distinct list of sequences.
             IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.Sequence).OrderBy(s => s).Distinct();
 
+            this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
+
             // Send state load messages in order.
             foreach (int sequence in sequences)
             {
@@ -138,8 +140,6 @@ namespace BudgetAnalyser
             }
 
             MessengerInstance.Send(new ApplicationStateLoadFinishedMessage());
-
-            this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
         }
 
         public void NotifyOfWindowLocationChange(Point location)

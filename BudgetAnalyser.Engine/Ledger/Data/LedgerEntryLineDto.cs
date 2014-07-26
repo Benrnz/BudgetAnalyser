@@ -15,6 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         /// <summary>
         ///     Total bank balance, ie sum of all <see cref="BankBalances" />
+        ///     Doesn't include balance adjustments.
         /// </summary>
         public decimal BankBalance { get; set; }
 

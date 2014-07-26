@@ -118,6 +118,8 @@
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
+    <Compile Include="Ledger\LedgerEntryLineToDtoMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerEntryLineMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerEntryMapperTest.cs" />
     <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
     <Compile Include="Ledger\BankBalanceToDtoMapperTest.cs" />
@@ -156,7 +158,7 @@
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
-    <Compile Include="TestData\DataLedgerBookTestData.cs" />
+    <Compile Include="TestData\LedgerBookDtoTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestDataGenerated.cs" />

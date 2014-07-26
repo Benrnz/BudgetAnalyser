@@ -22,24 +22,17 @@ namespace BudgetAnalyser.Engine.Ledger
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
         /// <summary>
-        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. This constructor is used by deserialisation.
+        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. 
+        ///     This constructor is used by deserialisation.
         /// </summary>
-        /// <param name="date">The date of the line</param>
-        /// <param name="bankBalances">
-        ///     The bank balances for this date. The sum of which makes up the total bank balance for this
-        ///     entry line.
-        /// </param>
-        /// <param name="remarks">The remarks saved with this line.</param>
-        internal LedgerEntryLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
+        internal LedgerEntryLine()
         {
-            this.bankBalancesList = bankBalances.ToList();
-            Date = date;
-            Remarks = remarks;
+            this.bankBalancesList = new List<BankBalance>();
         }
 
         /// <summary>
-        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. Use this constructor for adding a new line when
-        ///     reconciling once a month.
+        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. 
+        ///     Use this constructor for adding a new line when reconciling once a month.
         /// </summary>
         /// <param name="date">The date of the line</param>
         /// <param name="bankBalances">The bank balances for this date.</param>
@@ -53,11 +46,13 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
+            internal set { this.bankBalanceAdjustments = value.ToList(); }
         }
 
         public IEnumerable<BankBalance> BankBalances
         {
             get { return this.bankBalancesList; }
+            internal set { this.bankBalancesList = value.ToList(); }
         }
 
         public decimal CalculatedSurplus
@@ -71,11 +66,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     transactions
         ///     now falling outside the date range would need to be removed, thus affected balances.
         /// </summary>
-        public DateTime Date { get; private set; }
+        // TODO when mapping is working try changing these to private.
+        public DateTime Date { get; internal set; }
 
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
+            internal set { this.entries = value.ToList(); }
         }
 
         public decimal LedgerBalance
@@ -83,7 +80,7 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return TotalBankBalance + TotalBalanceAdjustments; }
         }
 
-        public string Remarks { get; private set; }
+        public string Remarks { get; internal set; }
 
         public decimal TotalBalanceAdjustments
         {

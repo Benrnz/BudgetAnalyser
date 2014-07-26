@@ -102,6 +102,11 @@ namespace BudgetAnalyser.Engine
                 .ForMember(entry => entry.LedgerColumn, m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode) }))
                 .AfterMap((dto, entry) => entry.SetTransactions(Mapper.Map<IEnumerable<LedgerTransaction>>(dto.Transactions).ToList()));
 
+            Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>();
+
+            Mapper.CreateMap<LedgerEntryLine, LedgerEntryLineDto>()
+                .ForMember(dto => dto.BankBalance, m => m.MapFrom(line => line.TotalBankBalance));
+
             return this;
         }
     }

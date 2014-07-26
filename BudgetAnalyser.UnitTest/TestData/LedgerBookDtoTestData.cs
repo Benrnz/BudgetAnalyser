@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
-    internal static class DataLedgerBookTestData
+    internal static class LedgerBookDtoTestData
     {
         private static readonly Guid id1 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A0");
         private static readonly Guid id2 = new Guid("2647B4AF-4371-4DA6-B827-E93CCB98B6A1");
@@ -368,6 +368,203 @@ namespace BudgetAnalyser.UnitTest.TestData
             UpdateLineBalances(line1, null, 1999.25M);
             UpdateLineBalances(line2, line1, 2001.15M);
             UpdateLineBalances(line3, line2, 1801.45M);
+            book.DatedEntries = lines.OrderByDescending(e => e.Date).ToList();
+            return book;
+        }
+
+        /// <summary>
+        /// Same as TestData1 but with some Balance Adjustments on the most recent line.
+        /// The most recent line also has two bank balances associated with it.
+        /// </summary>
+        public static LedgerBookDto TestData3()
+        {
+            var book = new LedgerBookDto
+            {
+                Modified = new DateTime(2013, 12, 14),
+                Name = "Test Budget Ledger Book 3",
+                FileName = "C:\\Folder\\FooBook3.xml",
+            };
+
+            var lines = new List<LedgerEntryLineDto>();
+
+            var line1 = AddEntryLineForTestData1(lines, new DateTime(2013, 12, 20));
+            line1.Entries.AddRange(new[]
+            {
+                new LedgerEntryDto
+                {
+                    Balance = 0, // because would go into negative
+                    BucketCode = TestDataConstants.RatesBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id1,
+                            Credit = 75,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                        new LedgerTransactionDto
+                        {
+                            Id = id2,
+                            Debit = 195,
+                            Narrative = "Rates payment",
+                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                        },
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    Balance = 21.15M,
+                    BucketCode = TestDataConstants.RegoBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id3,
+                            Credit = 21.15M,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        }
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    Balance = 0, // because would go into negative
+                    BucketCode = TestDataConstants.CarMtcBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id4,
+                            Credit = 95,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                        new LedgerTransactionDto
+                        {
+                            Id = id5,
+                            Debit = 295.45M,
+                            Narrative = "Fix car",
+                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                        }
+                    }
+                }
+            });
+
+            var line2 = AddEntryLineForTestData1(lines, new DateTime(2014, 1, 20));
+            line2.Entries.AddRange(new[]
+            {
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.RatesBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id6,
+                            Credit = 75,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.RegoBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id7,
+                            Credit = 21.15M,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        }
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.CarMtcBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id8,
+                            Credit = 95,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                    }
+                }
+            });
+
+            var line3 = AddEntryLineForTestData1(lines, new DateTime(2014, 02, 20));
+            line3.Entries.AddRange(new[]
+            {
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.RatesBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id9,
+                            Credit = 75,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.RegoBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id10,
+                            Credit = 21.15M,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        }
+                    }
+                },
+                new LedgerEntryDto
+                {
+                    BucketCode = TestDataConstants.CarMtcBucketCode,
+                    Transactions = new List<LedgerTransactionDto>
+                    {
+                        new LedgerTransactionDto
+                        {
+                            Id = id11,
+                            Credit = 95,
+                            Narrative = "Budgeted Amount",
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                    }
+                }
+            });
+
+            line3.BankBalanceAdjustments.Add(new LedgerTransactionDto
+            {
+                AccountType = StatementModelTestData.ChequeAccount.Name,
+                Debit = 100.01M,
+                Narrative = "Visa payment yet to go out",
+                Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
+                TransactionType = typeof(CreditLedgerTransaction).FullName,
+            });
+
+            UpdateLineBalances(line1, null, 1999.25M);
+            UpdateLineBalances(line2, line1, 2001.15M);
+            UpdateLineBalances(line3, line2, 1801.45M);
+            line3.BankBalances.Add(
+                new BankBalanceDto
+                {
+                    Account = StatementModelTestData.SavingsAccount.Name,
+                    Balance = 201M,
+                });
+            line3.BankBalance += 201M;
+
             book.DatedEntries = lines.OrderByDescending(e => e.Date).ToList();
             return book;
         }

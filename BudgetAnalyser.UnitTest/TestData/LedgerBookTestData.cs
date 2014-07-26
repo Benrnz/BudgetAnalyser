@@ -9,6 +9,11 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     internal static class LedgerBookTestData
     {
+        private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
+        {
+            return new LedgerEntryLine { Date = date, BankBalances = bankBalances, Remarks = remarks };
+        }
+
         /// <summary>
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         /// </summary>
@@ -22,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntries(new List<LedgerEntry>
+                CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntries(new List<LedgerEntry>
                 {
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
@@ -47,7 +52,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List<LedgerEntry>
+                CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List<LedgerEntry>
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
@@ -70,7 +75,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
+                CreateLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
                     "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
                     {
                         CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
@@ -95,10 +100,11 @@ namespace BudgetAnalyser.UnitTest.TestData
         }
 
         /// <summary>
+        ///     Same as Test Data 2, but with multiple Bank Balances for the latest entry.
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         ///     August transactions include some balance adjustments.
         /// </summary>
-        public static LedgerBook TestData2()
+        public static LedgerBook TestData4()
         {
             var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
             var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
@@ -108,7 +114,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntries(new List
+                CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntries(new List
                     <LedgerEntry>
                 {
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
@@ -134,7 +140,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List
+                CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List
                     <LedgerEntry>
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
@@ -158,7 +164,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
-                new LedgerEntryLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
+                CreateLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200),  },
                     "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
                     {
                         CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
@@ -209,7 +215,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine>
             {
-                new LedgerEntryLine(new DateTime(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntries(new List
+                CreateLine(new DateTime(2013, 11, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 10738) }, "Opening entries").SetEntries(new List
                     <LedgerEntry>
                 {
                     CreateLedgerEntry(ratesLedger).SetTransactions(new List<LedgerTransaction>
@@ -262,6 +268,98 @@ namespace BudgetAnalyser.UnitTest.TestData
                     }),
                 }),
             };
+
+            book.SetDatedEntries(list);
+
+            return book;
+        }
+
+        /// <summary>
+        ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
+        ///     August transactions include some balance adjustments.
+        /// </summary>
+        public static LedgerBook TestData2()
+        {
+            var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+
+            var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
+
+            var list = new List<LedgerEntryLine>
+            {
+                CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum").SetEntries(new List
+                    <LedgerEntry>
+                {
+                    CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut" },
+                    }),
+                    CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill" },
+                    }),
+                    CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones" },
+                    })
+                }),
+            };
+
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+
+            list.Add(
+                CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List
+                    <LedgerEntry>
+                {
+                    CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                    }),
+                    CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill" },
+                    }),
+                    CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                    {
+                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones" },
+                    })
+                }));
+
+            previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+
+            list.Add(
+                CreateLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
+                    "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
+                    {
+                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                        {
+                            new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        }),
+                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                        {
+                            new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
+                            new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill" },
+                        }),
+                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
+                        {
+                            new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
+                            new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones" },
+                        })
+                    }
+                    ).SetBalanceAdjustments(new List<LedgerTransaction>
+                    {
+                        new DebitLedgerTransaction { Debit = 550, Narrative = "Credit card payment yet to go out." }
+                    }));
 
             book.SetDatedEntries(list);
 

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void OutputLedgerBookTestData1()
         {
-            var testData = DataLedgerBookTestData.TestData1();
+            var testData = LedgerBookDtoTestData.TestData1();
             string serialised = XamlServices.Save(testData);
             Console.WriteLine(serialised);
         }
@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void OutputLedgerBookTestData2()
         {
-            var testData = DataLedgerBookTestData.TestData2();
+            var testData = LedgerBookDtoTestData.TestData2();
             string serialised = XamlServices.Save(testData);
             Console.WriteLine(serialised);
         }

@@ -76,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapLineBalanceAdjustments()
         {
-            TestData = DataLedgerBookTestData.TestData2();
+            TestData = LedgerBookDtoTestData.TestData2();
             LedgerBook result = ArrangeAndAct();
             LedgerEntryLine subject = result.DatedEntries.First();
 
@@ -184,7 +184,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = DataLedgerBookTestData.TestData1();
+            TestData = LedgerBookDtoTestData.TestData1();
         }
 
         private LedgerBook ArrangeAndAct()
