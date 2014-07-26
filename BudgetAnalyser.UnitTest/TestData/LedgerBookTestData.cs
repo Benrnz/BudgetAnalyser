@@ -23,7 +23,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook("Test Data 1 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
+            var book = new LedgerBook(new FakeLogger())
+            {
+                Name = "Test Data 1 Book",
+                Modified = new DateTime(2013, 12, 16),
+                FileName = "C:\\Folder\\book1.xml",
+            };
 
             var list = new List<LedgerEntryLine>
             {
@@ -110,7 +115,12 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
+            var book = new LedgerBook(new FakeLogger())
+            {
+                Name = "Test Data 4 Book",
+                Modified = new DateTime(2013, 12, 16),
+                FileName = "C:\\Folder\\book1.xml",
+            };
 
             var list = new List<LedgerEntryLine>
             {
@@ -211,7 +221,10 @@ namespace BudgetAnalyser.UnitTest.TestData
             var clothesLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
             var docLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("DOC", "") };
 
-            var book = new LedgerBook("Smith Budget 2014", new DateTime(2013, 12, 22), @"C:\Foo\SmithLedger2014.xml", new FakeLogger());
+            var book = new LedgerBook(new FakeLogger())
+            {
+                Name = "Smith Budget 2014", Modified = new DateTime(2013, 12, 22), FileName = @"C:\Foo\SmithLedger2014.xml", 
+            };
 
             var list = new List<LedgerEntryLine>
             {
@@ -284,7 +297,10 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook("Test Data 2 Book", new DateTime(2013, 12, 16), "C:\\Folder\\book1.xml", new FakeLogger());
+            var book = new LedgerBook(new FakeLogger())
+            {
+                Name = "Test Data 2 Book", Modified = new DateTime(2013, 12, 16), FileName = "C:\\Folder\\book1.xml",
+            };
 
             var list = new List<LedgerEntryLine>
             {

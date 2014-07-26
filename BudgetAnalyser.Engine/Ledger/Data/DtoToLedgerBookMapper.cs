@@ -50,7 +50,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 throw new ArgumentNullException("source");
             }
 
-            var book = new LedgerBook(source.Name, source.Modified, source.FileName, this.logger);
+            var book = new LedgerBook(this.logger)
+            {
+                Name = source.Name,
+                Modified = source.Modified,
+                FileName = source.FileName,
+            };
             book.SetDatedEntries(MapLines(source.DatedEntries));
 
             var messages = new StringBuilder();

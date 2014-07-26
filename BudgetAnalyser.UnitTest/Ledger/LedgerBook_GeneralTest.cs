@@ -20,7 +20,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldNotThrowIfBookIsEmpty()
         {
-            var subject = new LedgerBook("Foo", new DateTime(2011, 12, 4), @"C:\TestLedgerBook.xml", new FakeLogger());
+            var subject = new LedgerBook(new FakeLogger())
+            {
+                Name = "Foo", Modified = new DateTime(2011, 12, 4), FileName = @"C:\TestLedgerBook.xml",
+            };
             LedgerEntryLine result = subject.UnlockMostRecentLine();
 
             Assert.IsNull(result);

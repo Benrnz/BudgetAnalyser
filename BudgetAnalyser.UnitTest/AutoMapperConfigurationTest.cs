@@ -27,7 +27,8 @@ namespace BudgetAnalyser.UnitTest
                             new BudgetBucketFactory(), 
                             new BucketBucketRepoAlwaysFind(), 
                             new LedgerTransactionFactory(),
-                            new InMemoryAccountTypeRepository()).Configure();
+                            new InMemoryAccountTypeRepository(),
+                            new FakeLogger()).Configure();
                     }
                 }
             }

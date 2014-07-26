@@ -17,12 +17,14 @@ namespace BudgetAnalyser.Engine
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly IAccountTypeRepository accountTypeRepo;
+        private readonly ILogger logger;
 
         public AutoMapperConfiguration(
             [NotNull] IBudgetBucketFactory bucketFactory, 
             [NotNull] IBudgetBucketRepository bucketRepo, 
             [NotNull] ILedgerTransactionFactory ledgerTransactionFactory, 
-            [NotNull] IAccountTypeRepository accountTypeRepo)
+            [NotNull] IAccountTypeRepository accountTypeRepo, 
+            [NotNull] ILogger logger)
         {
             if (bucketFactory == null)
             {
@@ -43,11 +45,17 @@ namespace BudgetAnalyser.Engine
             {
                 throw new ArgumentNullException("accountTypeRepo");
             }
+            
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
 
             this.bucketFactory = bucketFactory;
             this.bucketRepo = bucketRepo;
             this.ledgerTransactionFactory = ledgerTransactionFactory;
             this.accountTypeRepo = accountTypeRepo;
+            this.logger = logger;
         }
 
         public AutoMapperConfiguration Configure()
@@ -106,6 +114,12 @@ namespace BudgetAnalyser.Engine
 
             Mapper.CreateMap<LedgerEntryLine, LedgerEntryLineDto>()
                 .ForMember(dto => dto.BankBalance, m => m.MapFrom(line => line.TotalBankBalance));
+
+            Mapper.CreateMap<LedgerBook, LedgerBookDto>()
+                .ForMember(dto => dto.Checksum, m => m.Ignore());
+
+            Mapper.CreateMap<LedgerBookDto, LedgerBook>()
+                .ConstructUsing(new Func<LedgerBookDto, LedgerBook>(dto => new LedgerBook(this.logger)));
 
             return this;
         }

@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly List<LedgerColumn> newlyAddedLedgers = new List<LedgerColumn>();
         private List<LedgerEntryLine> datedEntries;
 
-        public LedgerBook(string name, DateTime modified, string fileName, [NotNull] ILogger logger)
+        public LedgerBook([NotNull] ILogger logger)
         {
             if (logger == null)
             {
@@ -23,18 +23,16 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.logger = logger;
-            Name = name;
-            Modified = modified;
-            FileName = fileName;
             this.datedEntries = new List<LedgerEntryLine>();
         }
 
         public IEnumerable<LedgerEntryLine> DatedEntries
         {
             get { return this.datedEntries; }
+            internal set { this.datedEntries = value.ToList(); }
         }
 
-        public string FileName { get; private set; }
+        public string FileName { get; internal set; }
 
         public IEnumerable<LedgerColumn> Ledgers
         {
@@ -48,7 +46,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public DateTime Modified { get; private set; }
+        public DateTime Modified { get; internal set; }
         public string Name { get; set; }
 
         public void AddLedger(ExpenseBucket budgetBucket)

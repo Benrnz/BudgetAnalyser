@@ -1,0 +1,53 @@
+﻿using System;
+using System.Linq;
+using AutoMapper;
+using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.UnitTest.TestData;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace BudgetAnalyser.UnitTest.Ledger
+{
+    [TestClass]
+    public class DtoToLedgerBookMapperAutoMapperTest
+    {
+        private LedgerBook Result { get; set; }
+
+        private LedgerBookDto TestData
+        {
+            get { return LedgerBookDtoTestData.TestData3(); }
+        }
+
+        [TestMethod]
+        public void ShouldMapDatedEntries()
+        {
+            Assert.AreEqual(3, Result.DatedEntries.Count());
+        }
+
+        [TestMethod]
+        public void ShouldMapFileName()
+        {
+            Assert.AreEqual(@"C:\Folder\FooBook3.xml", Result.FileName);
+        }
+
+        [TestMethod]
+        public void ShouldMapModified()
+        {
+            Assert.AreEqual(new DateTime(2013,12,14), Result.Modified);
+        }
+
+        [TestMethod]
+        public void ShouldMapName()
+        {
+            Assert.AreEqual("Test Budget Ledger Book 3", Result.Name);
+        }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
+
+            Result = Mapper.Map<LedgerBook>(TestData);
+        }
+    }
+}

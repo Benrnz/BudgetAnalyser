@@ -44,7 +44,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook CreateNew(string name, string fileName)
         {
-            return new LedgerBook(name, DateTime.Now, fileName, this.logger);
+            return new LedgerBook(this.logger)
+            {
+                Name = name,
+                FileName = fileName,
+                Modified = DateTime.Now,
+            };
         }
 
         public bool Exists(string fileName)
