@@ -290,6 +290,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// <summary>
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         ///     August transactions include some balance adjustments.
+        ///     THIS SET OF TEST DATA IS SUPPOSED TO BE THE SAME AS THE EMBEDDED RESOURCE XML FILE: LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml
         /// </summary>
         public static LedgerBook TestData2()
         {

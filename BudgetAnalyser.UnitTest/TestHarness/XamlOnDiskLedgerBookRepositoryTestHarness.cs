@@ -19,35 +19,56 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper
             ) : base(dataToDomainMapper, domainToDataMapper, new FakeLogger())
         {
+            LoadXamlFromDiskFromEmbeddedResources = true;
         }
 
-        public Func<string, bool> FileExistsMock { get; set; }
+        public Func<string, bool> FileExistsOverride { get; set; }
+        public LedgerBookDto LedgerBookDto { get; private set; }
 
-        public Action<LedgerBookDto> SaveXamlFileToDiskMock { get; set; }
+        public Func<string, string> LoadXamlAsStringOverride { get; set; }
+
+        public bool LoadXamlFromDiskFromEmbeddedResources { get; set; }
+        public Action<string, string> WriteToDiskOverride { get; set; }
 
         protected override bool FileExistsOnDisk(string fileName)
         {
-            return FileExistsMock(fileName);
+            return FileExistsOverride(fileName);
+        }
+
+        protected override string LoadXamlAsString(string fileName)
+        {
+            if (LoadXamlAsStringOverride == null)
+            {
+                return base.LoadXamlAsString(fileName);
+            }
+
+            return LoadXamlAsStringOverride(fileName);
         }
 
         protected override LedgerBookDto LoadXamlFromDisk(string fileName)
         {
-            // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-            Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            if (LoadXamlFromDiskFromEmbeddedResources)
             {
-                if (stream == null)
+                // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
+                Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
                 {
-                    throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
-                }
+                    if (stream == null)
+                    {
+                        throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
+                    }
 
-                return (LedgerBookDto)XamlServices.Load(new XamlXmlReader(stream));
+                    return (LedgerBookDto)XamlServices.Load(new XamlXmlReader(stream));
+                }
             }
+
+            LedgerBookDto = base.LoadXamlFromDisk(fileName);
+            return LedgerBookDto;
         }
 
-        protected override void SaveXamlFileToDisk(LedgerBookDto dataEntity)
+        protected override void WriteToDisk(string filename, string data)
         {
-            SaveXamlFileToDiskMock(dataEntity);
+            WriteToDiskOverride(filename, data);
         }
     }
 }

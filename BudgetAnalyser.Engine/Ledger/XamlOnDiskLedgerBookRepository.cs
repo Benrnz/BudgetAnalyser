@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger.Data;
@@ -75,7 +76,13 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             dataEntity.FileName = fileName;
-            var book = this.dataToDomainMapper.Map(dataEntity);
+            LedgerBook book = this.dataToDomainMapper.Map(dataEntity);
+
+            var messages = new StringBuilder();
+            if (!book.Validate(messages))
+            {
+                throw new FileFormatException(messages.ToString());
+            }
 
             if (dataEntity.Checksum == null)
             {
@@ -126,17 +133,27 @@ namespace BudgetAnalyser.Engine.Ledger
 
         protected virtual LedgerBookDto LoadXamlFromDisk(string fileName)
         {
-            return XamlServices.Load(fileName) as LedgerBookDto;
+            return XamlServices.Parse(LoadXamlAsString(fileName)) as LedgerBookDto;
         }
 
-        protected virtual void SaveXamlFileToDisk([NotNull] LedgerBookDto dataEntity)
+        protected virtual string LoadXamlAsString(string fileName)
+        {
+            return File.ReadAllText(fileName);
+        }
+
+        protected virtual string Serialise(LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
             {
                 throw new ArgumentNullException("dataEntity");
             }
 
-            XamlServices.Save(dataEntity.FileName, dataEntity);
+            return XamlServices.Save(dataEntity);
+        }
+
+        protected virtual void WriteToDisk(string fileName, string data)
+        {
+            File.WriteAllText(fileName, data);
         }
 
         private static double CalculateChecksum(LedgerBook dataEntity)
@@ -148,6 +165,11 @@ namespace BudgetAnalyser.Engine.Ledger
                     + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
                     + l.Entries.Sum(e => (double)e.Balance));
             }
+        }
+
+        private void SaveXamlFileToDisk([NotNull] LedgerBookDto dataEntity)
+        {
+            WriteToDisk(dataEntity.FileName, Serialise(dataEntity));
         }
     }
 }

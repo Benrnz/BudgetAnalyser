@@ -43,6 +43,24 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.logger = logger;
         }
 
+        //private static readonly ConcurrentDictionary<string, LedgerColumn> CachedLedgers = new ConcurrentDictionary<string, LedgerColumn>();
+
+        //public override LedgerBook Map([NotNull] LedgerBookDto source)
+        //{
+        //    LedgerBook book = base.Map(source);
+
+        //    // Make sure all instances of LedgerColumn are using the same instance for the one Bucket Code.
+        //    foreach (LedgerEntryLine line in book.DatedEntries)
+        //    {
+        //        foreach (LedgerEntry entry in line.Entries)
+        //        {
+        //            entry.LedgerColumn = CachedLedgers.GetOrAdd(entry.LedgerColumn.BudgetBucket.Code, code => entry.LedgerColumn);
+        //        }
+        //    }
+
+        //    return book;
+        //}
+
         public override LedgerBook Map([NotNull] LedgerBookDto source)
         {
             if (source == null)
@@ -57,13 +75,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 FileName = source.FileName,
             };
             book.SetDatedEntries(MapLines(source.DatedEntries));
-
-            var messages = new StringBuilder();
-            if (!book.Validate(messages))
-            {
-                throw new FileFormatException(messages.ToString());
-            }
-
             return book;
         }
 

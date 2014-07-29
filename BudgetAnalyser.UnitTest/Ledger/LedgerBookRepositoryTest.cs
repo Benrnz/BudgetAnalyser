@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -28,6 +30,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private BudgetBucket RegoBucket { get; set; }
         private BudgetBucket RentBucket { get; set; }
         private BudgetBucket WaterBucket { get; set; }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
+        }
 
         [TestMethod]
         public void Load_Output()
@@ -60,11 +68,27 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void SerialiseTestData2ToEnsureItMatches_Load_ShouldLoadTheXmlFile_xml()
+        {
+            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapper<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+            string serialisedData = string.Empty;
+            subject.WriteToDiskOverride = (f, d) => serialisedData = d;
+            subject.Save(LedgerBookTestData.TestData2());
+
+            Console.WriteLine(serialisedData);
+            Assert.IsTrue(serialisedData.Length > 100);
+        }
+        
+        [TestMethod]
         public void Load_ShouldCreateBookWithFirstLineEqualSurplus()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
             LedgerBook book = subject.Load(LoadFileName);
+            book.Output();
+
             LedgerBook testData2 = LedgerBookTestData.TestData2();
+            testData2.Output();
+
             LedgerEntryLine line = book.DatedEntries.First();
 
             Assert.AreEqual(testData2.DatedEntries.First().CalculatedSurplus, line.CalculatedSurplus);
@@ -130,13 +154,40 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void SavingAndLoadingShouldProduceTheSameCheckSum()
+        {
+            string serialisedData = string.Empty;
+            {
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapper<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+                subject.WriteToDiskOverride = (f, d) => serialisedData = d;
+                subject.Save(LedgerBookTestData.TestData2());
+            }
+
+            LedgerBookDto bookDto;
+            {
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(new FakeLogger(), new BucketBucketRepoAlwaysFind(), new InMemoryAccountTypeRepository()), new BasicMapper<LedgerBook, LedgerBookDto>());
+                subject.FileExistsOverride = f => true;
+                subject.LoadXamlAsStringOverride = f => serialisedData;
+                subject.LoadXamlFromDiskFromEmbeddedResources = false;
+                subject.Load("foo");
+                bookDto = subject.LedgerBookDto;
+            }
+
+            var checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
+            var checksumLength = serialisedData.IndexOf('"', checksumPosition + 11) - checksumPosition;
+            var serialisedCheckSum = serialisedData.Substring(checksumPosition+10, checksumLength-10);
+
+            Assert.AreEqual(double.Parse(serialisedCheckSum), bookDto.Checksum);
+        }
+
+        [TestMethod]
         public void Save_ShouldSaveTheXmlFile()
         {
             string fileName = @"CompleteSmellyFoo.xml";
 
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
             bool saved = false;
-            subject.SaveXamlFileToDiskMock = book => { saved = true; };
+            subject.WriteToDiskOverride = (f, d) => { saved = true; };
             LedgerBook testData = LedgerBookTestData.TestData2();
             subject.Save(testData, fileName);
             Assert.IsTrue(saved);
