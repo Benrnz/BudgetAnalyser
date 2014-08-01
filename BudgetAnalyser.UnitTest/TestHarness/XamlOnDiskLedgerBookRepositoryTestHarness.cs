@@ -22,12 +22,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             LoadXamlFromDiskFromEmbeddedResources = true;
         }
 
+        public event EventHandler DtoDeserialised;
+
         public Func<string, bool> FileExistsOverride { get; set; }
         public LedgerBookDto LedgerBookDto { get; private set; }
 
         public Func<string, string> LoadXamlAsStringOverride { get; set; }
 
         public bool LoadXamlFromDiskFromEmbeddedResources { get; set; }
+
+        public Action<LedgerBookDto> SaveDtoToDiskOverride { get; set; }
         public Action<string, string> WriteToDiskOverride { get; set; }
 
         protected override bool FileExistsOnDisk(string fileName)
@@ -39,7 +43,9 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
             if (LoadXamlAsStringOverride == null)
             {
-                return base.LoadXamlAsString(fileName);
+                string result = base.LoadXamlAsString(fileName);
+                Debug.WriteLine(result);
+                return result;
             }
 
             return LoadXamlAsStringOverride(fileName);
@@ -58,12 +64,32 @@ namespace BudgetAnalyser.UnitTest.TestHarness
                         throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
                     }
 
-                    return (LedgerBookDto)XamlServices.Load(new XamlXmlReader(stream));
+                    var reader = new StreamReader(stream);
+                    string stringData = reader.ReadToEnd();
+                    Debug.WriteLine(stringData);
+                    LedgerBookDto = (LedgerBookDto)XamlServices.Parse(stringData);
+                    EventHandler handler = DtoDeserialised;
+                    if (handler != null)
+                    {
+                        handler(this, EventArgs.Empty);
+                    }
+                    return LedgerBookDto;
                 }
             }
 
             LedgerBookDto = base.LoadXamlFromDisk(fileName);
             return LedgerBookDto;
+        }
+
+        protected override void SaveDtoToDisk(LedgerBookDto dataEntity)
+        {
+            if (SaveDtoToDiskOverride == null)
+            {
+                base.SaveDtoToDisk(dataEntity);
+                return;
+            }
+
+            SaveDtoToDiskOverride(dataEntity);
         }
 
         protected override void WriteToDisk(string filename, string data)

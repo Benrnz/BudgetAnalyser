@@ -60,6 +60,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> Transactions
         {
             get { return this.transactions; }
+            private set { this.transactions = value.ToList(); }
         }
 
         public void AddTransaction([NotNull] LedgerTransaction newTransaction)

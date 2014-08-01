@@ -20,45 +20,43 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private BudgetBucket RegoBucket { get; set; }
         private LedgerBookDto TestData { get; set; }
 
-        // TODO uncomment this test when Automapper is fully implemented for LedgerBook
-        //[TestMethod]
-        //public void InvalidTransactionTypeShouldThrow()
-        //{
-        //    try
-        //    {
-        //        TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
-        //        ArrangeAndAct();
-        //    }
-        //    catch (AutoMapper.AutoMapperMappingException ex)
-        //    {
-        //        if (ex.InnerException is FileFormatException)
-        //        {
-        //            return;
-        //        }
-        //    }
+        [TestMethod]
+        public void InvalidTransactionTypeShouldThrow()
+        {
+            try
+            {
+                TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
+                ArrangeAndAct();
+            }
+            catch (AutoMapper.AutoMapperMappingException ex)
+            {
+                if (ex.InnerException is FileFormatException)
+                {
+                    return;
+                }
+            }
 
-        //    Assert.Fail();
-        //}
+            Assert.Fail();
+        }
 
-        // TODO and this one too.
-        //[TestMethod]
-        //public void NullTransactionTypeShouldThrow()
-        //{
-        //    try
-        //    {
-        //        TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = null;
-        //        ArrangeAndAct();
-        //    }
-        //    catch (AutoMapper.AutoMapperMappingException ex)
-        //    {
-        //        if (ex.InnerException is ArgumentNullException)
-        //        {
-        //            return;
-        //        }
-        //    }
+        [TestMethod]
+        public void NullTransactionTypeShouldThrow()
+        {
+            try
+            {
+                TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = null;
+                ArrangeAndAct();
+            }
+            catch (AutoMapper.AutoMapperMappingException ex)
+            {
+                if (ex.InnerException is ArgumentNullException)
+                {
+                    return;
+                }
+            }
 
-        //    Assert.Fail();
-        //}
+            Assert.Fail();
+        }
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerBook. This is a trigger to update the mappers.")]

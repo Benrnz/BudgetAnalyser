@@ -1,4 +1,4 @@
-﻿<LedgerBookDto Checksum="2496.00" 
+﻿<LedgerBookDto Checksum="2728.88" 
 				FileName="" 
 				Modified="2013-12-29T15:31:03.5480436+13:00" 
 				Name="Demo LedgerBook" 
@@ -75,7 +75,7 @@
 								</scg:List>
 							</LedgerEntryDto.Transactions>
 						</LedgerEntryDto>
-						<LedgerEntryDto Balance="211.44" 
+						<LedgerEntryDto Balance="217.44" 
 						                 BucketCode="DOC">
 							<LedgerEntryDto.Transactions>
 								<scg:List x:TypeArguments="LedgerTransactionDto" 
@@ -162,7 +162,7 @@
 							<LedgerEntryDto.Transactions>
 								<scg:List x:TypeArguments="LedgerTransactionDto" 
 								          Capacity="1">
-									<LedgerTransactionDto Credit="95.00" 
+									<LedgerTransactionDto Credit="211.44" 
 									                       Debit="0" 
 														   Id="97adeaf4-5c5a-4aa0-90c8-d5c2938bb1bb" 
 														   Narrative="Starting balance" 

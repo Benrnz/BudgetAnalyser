@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new FileFormatException(messages.ToString());
             }
 
-            if (dataEntity.Checksum == null)
+            if (Math.Abs(dataEntity.Checksum - (-1)) < 0.0001)
             {
                 // bypass checksum check - this is to allow intentional manual changes to the file.  This checksum is only trying to prevent
                 // bugs in code from breaking the consistency of the file.
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Ledger
             else
             {
                 double calculatedChecksum = CalculateChecksum(book);
-                if (calculatedChecksum != dataEntity.Checksum)
+                if (Math.Abs(calculatedChecksum - dataEntity.Checksum) > 0.0001)
                 {
                     throw new FileFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
                 }
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.FileName = fileName;
             dataEntity.Checksum = CalculateChecksum(book);
 
-            SaveXamlFileToDisk(dataEntity);
+            SaveDtoToDisk(dataEntity);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
@@ -131,14 +131,19 @@ namespace BudgetAnalyser.Engine.Ledger
             return File.Exists(fileName);
         }
 
+        protected virtual string LoadXamlAsString(string fileName)
+        {
+            return File.ReadAllText(fileName);
+        }
+
         protected virtual LedgerBookDto LoadXamlFromDisk(string fileName)
         {
             return XamlServices.Parse(LoadXamlAsString(fileName)) as LedgerBookDto;
         }
 
-        protected virtual string LoadXamlAsString(string fileName)
+        protected virtual void SaveDtoToDisk([NotNull] LedgerBookDto dataEntity)
         {
-            return File.ReadAllText(fileName);
+            WriteToDisk(dataEntity.FileName, Serialise(dataEntity));
         }
 
         protected virtual string Serialise(LedgerBookDto dataEntity)
@@ -158,18 +163,42 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static double CalculateChecksum(LedgerBook dataEntity)
         {
-            unchecked
+            // TODO simplify this back down after debugging
+            //unchecked
+            //{
+            double sumTotal = 0;
+            Debug.WriteLine("LedgerBook CalculateChecksum:");
+            foreach (LedgerEntryLine l in dataEntity.DatedEntries)
             {
-                return dataEntity.DatedEntries.Sum(l =>
-                    (double)l.LedgerBalance
-                    + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
-                    + l.Entries.Sum(e => (double)e.Balance));
-            }
-        }
+                Debug.WriteLine("    Ledger Line Dated : " + l.Date);
+                sumTotal += (double)l.LedgerBalance;
+                Debug.WriteLine("    +LedgerBalance {0} = {1}", l.LedgerBalance, sumTotal);
+                double balanceAdjustmentsTotal = 0;
+                Debug.WriteLine("    Balance Adjustments:");
+                foreach (LedgerTransaction b in l.BankBalanceAdjustments)
+                {
+                    balanceAdjustmentsTotal += (double)b.Credit - (double)b.Debit;
+                    Debug.WriteLine("        + {0} - {1} = {2}", b.Credit, b.Debit, balanceAdjustmentsTotal);
+                }
 
-        private void SaveXamlFileToDisk([NotNull] LedgerBookDto dataEntity)
-        {
-            WriteToDisk(dataEntity.FileName, Serialise(dataEntity));
+                sumTotal += balanceAdjustmentsTotal;
+                Debug.WriteLine("    +Balance Adjusment Total: {0} = {1}", balanceAdjustmentsTotal, sumTotal);
+
+                double entriesTotal = 0;
+                Debug.WriteLine("    Entries:");
+                foreach (LedgerEntry e in l.Entries)
+                {
+                    entriesTotal += (double)e.Balance;
+                    Debug.WriteLine("        + {0} = {1}", e.Balance, entriesTotal);
+                }
+
+                sumTotal += entriesTotal;
+                Debug.WriteLine("    +Entries Total: {0} = {1}", entriesTotal, sumTotal);
+            }
+
+            Debug.WriteLine("Checksum = {0}", sumTotal);
+            return sumTotal;
+            //}
         }
     }
 }

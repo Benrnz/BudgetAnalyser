@@ -14,23 +14,42 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private LedgerEntry Result { get; set; }
 
+        private LedgerEntry Control { get; set; }
+
         private LedgerEntryDto TestData
         {
             get
             {
+                /*
+            <LedgerEntryDto Balance="52.32" BucketCode="POWER">
+              <LedgerEntryDto.Transactions>
+                <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
+                  <LedgerTransactionDto AccountType="{x:Null}" Credit="140" Debit="0" Id="601d77e5-63d5-479c-a0e5-d56a18c975f1" Narrative="Budgeted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
+                  <LedgerTransactionDto AccountType="{x:Null}" Credit="0" Debit="98.56" Id="450f9b46-010a-4508-afc5-d46042c80d02" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                </scg:List>
+              </LedgerEntryDto.Transactions>
+            </LedgerEntryDto>                 */
                 return new LedgerEntryDto
                 {
-                    Balance = 2398.39M,
-                    BucketCode = TestDataConstants.InsuranceHomeBucketCode,
+                    Balance = 52.32M,
+                    BucketCode = TestDataConstants.PowerBucketCode,
                     Transactions = new List<LedgerTransactionDto>
                     {
                         new LedgerTransactionDto
                         {
                             AccountType = StatementModelTestData.ChequeAccount.Name,
-                            Credit = 222.33M,
+                            Credit = 140M,
                             Id = Guid.NewGuid(),
                             Narrative = "Foo...",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                        },
+                        new LedgerTransactionDto
+                        {
+                            AccountType = StatementModelTestData.ChequeAccount.Name,
+                            Debit = 98.56M,
+                            Id = Guid.NewGuid(),
+                            Narrative = "Bar...",
+                            TransactionType = typeof(DebitLedgerTransaction).FullName,
                         },
                     },
                 };
@@ -40,25 +59,25 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapBalance()
         {
-            Assert.AreEqual(2620.72M, Result.Balance);
+            Assert.AreEqual(Control.Balance, Result.Balance);
         }
 
         [TestMethod]
         public void ShouldMapNetAmount()
         {
-            Assert.AreEqual(222.33M, Result.NetAmount);
+            Assert.AreEqual(Control.NetAmount, Result.NetAmount);
         }
 
         [TestMethod]
         public void ShouldMapBucketCode()
         {
-            Assert.AreEqual(TestDataConstants.InsuranceHomeBucketCode, Result.LedgerColumn.BudgetBucket.Code);
+            Assert.AreEqual(TestDataConstants.PowerBucketCode, Result.LedgerColumn.BudgetBucket.Code);
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfTransactions()
         {
-            Assert.AreEqual(1, Result.Transactions.Count());
+            Assert.AreEqual(2, Result.Transactions.Count());
         }
 
         [TestInitialize]
@@ -67,6 +86,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
             AutoMapperConfigurationTest.AutoMapperConfiguration();
 
             Result = Mapper.Map<LedgerEntry>(TestData);
+
+            var book = LedgerBookTestData.TestData2();
+            Control = book.DatedEntries.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
         }
     }
 }

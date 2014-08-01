@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             DatedEntries = new List<LedgerEntryLineDto>();
         }
 
-        public double? Checksum { get; set; }
+        public double Checksum { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]

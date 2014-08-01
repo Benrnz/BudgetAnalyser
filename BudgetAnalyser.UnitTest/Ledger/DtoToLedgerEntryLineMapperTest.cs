@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapSurplus()
         {
-            Assert.AreEqual(1307.84M, Result.CalculatedSurplus);
+            Assert.AreEqual(1498.99M, Result.CalculatedSurplus);
         }
 
         [TestMethod]
