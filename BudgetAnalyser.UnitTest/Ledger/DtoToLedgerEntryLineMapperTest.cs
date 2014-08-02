@@ -23,6 +23,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void ShouldSetIsNewToFalse()
+        {
+            Assert.IsFalse(Result.IsNew);
+        }
+
+        [TestMethod]
         public void ShouldMapBankBalanceAdjustments()
         {
             Assert.AreEqual(1, Result.BankBalanceAdjustments.Count());

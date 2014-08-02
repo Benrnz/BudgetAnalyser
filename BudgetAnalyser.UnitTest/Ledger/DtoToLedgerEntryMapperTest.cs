@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rees.TestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Ledger
 {
@@ -54,6 +55,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
                     },
                 };
             }
+        }
+
+        [TestMethod]
+        public void ShouldSetIsNewToFalse()
+        {
+            Assert.IsFalse((bool)PrivateAccessor.GetField(Result, "isNew"));
         }
 
         [TestMethod]

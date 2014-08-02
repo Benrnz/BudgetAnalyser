@@ -23,15 +23,6 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />. 
-        ///     This constructor is used by deserialisation.
-        /// </summary>
-        internal LedgerEntryLine()
-        {
-            this.bankBalancesList = new List<BankBalance>();
-        }
-
-        /// <summary>
-        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. 
         ///     Use this constructor for adding a new line when reconciling once a month.
         /// </summary>
         /// <param name="date">The date of the line</param>
@@ -46,13 +37,15 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
-            internal set { this.bankBalanceAdjustments = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.bankBalanceAdjustments = value.ToList(); }
         }
 
         public IEnumerable<BankBalance> BankBalances
         {
             get { return this.bankBalancesList; }
-            internal set { this.bankBalancesList = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.bankBalancesList = value.ToList(); }
         }
 
         public decimal CalculatedSurplus
@@ -66,13 +59,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     transactions
         ///     now falling outside the date range would need to be removed, thus affected balances.
         /// </summary>
-        // TODO when mapping is working try changing these to private.
         public DateTime Date { get; internal set; }
 
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
-            internal set { this.entries = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.entries = value.ToList(); }
         }
 
         public decimal LedgerBalance
@@ -96,6 +89,8 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
         ///     loading from file.
         ///     This variable is intentionally not persisted.
+        ///     AutoMapper always sets this to false.
+        ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
         /// </summary>
         internal bool IsNew { get; private set; }
 
@@ -175,13 +170,24 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException("validationMessages");
             }
 
+            bool result = true;
+
             if (!Entries.Any())
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
-                return false;
+                result = false;
             }
 
-            return true;
+            foreach (var ledgerEntry in Entries)
+            {
+                if (!ledgerEntry.Validate())
+                {
+                    validationMessages.AppendFormat("Ledger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    result = false;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -221,32 +227,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
 
-                newEntry.SetTransactions(transactions, true);
+                newEntry.SetTransactionsForReconciliation(transactions);
                 this.entries.Add(newEntry);
             }
-        }
-
-        /// <summary>
-        ///     Used by the mapper to map from Data entitiy to Domain entity, ie used indirectly by deserialisation.
-        /// </summary>
-        internal LedgerEntryLine SetBalanceAdjustments(List<LedgerTransaction> balanceAdjustments)
-        {
-            this.bankBalanceAdjustments = balanceAdjustments;
-            return this;
-        }
-
-        /// <summary>
-        ///     Used by the mapper to map from Data entitiy to Domain entity, ie used indirectly by deserialisation.
-        /// </summary>
-        internal LedgerEntryLine SetEntries(List<LedgerEntry> replacementEntries)
-        {
-            if (replacementEntries.All(e => e.Validate()))
-            {
-                this.entries = replacementEntries;
-                return this;
-            }
-
-            throw new InvalidOperationException("One or more new Ledger Entries are invalid and cannot be included in this Ledger Entry Line.");
         }
 
         internal void Unlock()

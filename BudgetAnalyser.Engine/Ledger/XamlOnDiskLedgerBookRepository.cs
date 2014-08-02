@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
@@ -163,42 +163,13 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static double CalculateChecksum(LedgerBook dataEntity)
         {
-            // TODO simplify this back down after debugging
-            //unchecked
-            //{
-            double sumTotal = 0;
-            Debug.WriteLine("LedgerBook CalculateChecksum:");
-            foreach (LedgerEntryLine l in dataEntity.DatedEntries)
+            unchecked
             {
-                Debug.WriteLine("    Ledger Line Dated : " + l.Date);
-                sumTotal += (double)l.LedgerBalance;
-                Debug.WriteLine("    +LedgerBalance {0} = {1}", l.LedgerBalance, sumTotal);
-                double balanceAdjustmentsTotal = 0;
-                Debug.WriteLine("    Balance Adjustments:");
-                foreach (LedgerTransaction b in l.BankBalanceAdjustments)
-                {
-                    balanceAdjustmentsTotal += (double)b.Credit - (double)b.Debit;
-                    Debug.WriteLine("        + {0} - {1} = {2}", b.Credit, b.Debit, balanceAdjustmentsTotal);
-                }
-
-                sumTotal += balanceAdjustmentsTotal;
-                Debug.WriteLine("    +Balance Adjusment Total: {0} = {1}", balanceAdjustmentsTotal, sumTotal);
-
-                double entriesTotal = 0;
-                Debug.WriteLine("    Entries:");
-                foreach (LedgerEntry e in l.Entries)
-                {
-                    entriesTotal += (double)e.Balance;
-                    Debug.WriteLine("        + {0} = {1}", e.Balance, entriesTotal);
-                }
-
-                sumTotal += entriesTotal;
-                Debug.WriteLine("    +Entries Total: {0} = {1}", entriesTotal, sumTotal);
+                return dataEntity.DatedEntries.Sum(l =>
+                    (double)l.LedgerBalance
+                    + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
+                    + l.Entries.Sum(e => (double)e.Balance));
             }
-
-            Debug.WriteLine("Checksum = {0}", sumTotal);
-            return sumTotal;
-            //}
         }
     }
 }

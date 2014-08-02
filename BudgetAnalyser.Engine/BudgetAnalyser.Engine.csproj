@@ -80,7 +80,6 @@
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />
-    <Compile Include="Ledger\Data\DtoToLedgerBookMapper2.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="MagicMapper.cs" />

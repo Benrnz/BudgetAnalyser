@@ -119,7 +119,6 @@
     <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Ledger\DtoToLedgerBookMapperAutoMapperTest.cs" />
-    <Compile Include="Ledger\LedgerBookRepositoryTest2.cs" />
     <Compile Include="Ledger\LedgerBookToDtoMapperAutoMapperTest.cs" />
     <Compile Include="Ledger\LedgerEntryLineToDtoMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerEntryLineMapperTest.cs" />

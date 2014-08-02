@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
     public class DtoToLedgerBookMapperTest
     {
-        private BudgetBucket CarMtcBucket { get; set; }
-        private BudgetBucket RatesBucket { get; set; }
-        private BudgetBucket RegoBucket { get; set; }
         private LedgerBookDto TestData { get; set; }
 
         [TestMethod]
@@ -28,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
                 ArrangeAndAct();
             }
-            catch (AutoMapper.AutoMapperMappingException ex)
+            catch (AutoMapperMappingException ex)
             {
                 if (ex.InnerException is FileFormatException)
                 {
@@ -47,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = null;
                 ArrangeAndAct();
             }
-            catch (AutoMapper.AutoMapperMappingException ex)
+            catch (AutoMapperMappingException ex)
             {
                 if (ex.InnerException is ArgumentNullException)
                 {
@@ -212,19 +206,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerBook ArrangeAndAct()
         {
-            RatesBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Foo");
-            CarMtcBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo");
-            RegoBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "Foo");
-
-            var bucketRepositoryMock = new Mock<IBudgetBucketRepository>();
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RatesBucketCode)).Returns(RatesBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.RegoBucketCode)).Returns(RegoBucket);
-            bucketRepositoryMock.Setup(r => r.GetByCode(TestDataConstants.CarMtcBucketCode)).Returns(CarMtcBucket);
-
-            var accountTypeRepoMock = new Mock<IAccountTypeRepository>();
-            accountTypeRepoMock.Setup(a => a.GetByKey(StatementModelTestData.ChequeAccount.Name)).Returns(StatementModelTestData.ChequeAccount);
-
-            var mapper = new DtoToLedgerBookMapper(new FakeLogger(), bucketRepositoryMock.Object, accountTypeRepoMock.Object);
+            var mapper = new DtoToLedgerBookMapper();
             return mapper.Map(TestData);
         }
     }

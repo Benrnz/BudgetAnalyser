@@ -13,8 +13,6 @@ namespace BudgetAnalyser.Engine.Budget
 
         BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory);
 
-        // TODO Remove this when tested
-        //void Initialise(IEnumerable<BudgetBucket> buckets);
         void Initialise(IEnumerable<BudgetBucketDto> buckets);
 
         bool IsValidCode(string code);

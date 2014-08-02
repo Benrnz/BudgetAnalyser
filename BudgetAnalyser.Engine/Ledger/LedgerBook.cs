@@ -29,7 +29,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntryLine> DatedEntries
         {
             get { return this.datedEntries; }
-            internal set { this.datedEntries = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.datedEntries = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
