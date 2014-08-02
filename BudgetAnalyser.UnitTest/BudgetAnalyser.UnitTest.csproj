@@ -138,6 +138,8 @@
     <Compile Include="Ledger\DtoToLedgerBookMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
+    <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
+    <Compile Include="Matching\DtoToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleTest.cs" />
     <Compile Include="Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" />

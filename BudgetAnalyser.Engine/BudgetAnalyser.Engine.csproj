@@ -80,11 +80,11 @@
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />
-    <Compile Include="Budget\BudgetAutoMapperConfiguration.cs" />
+    <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
-    <Compile Include="Ledger\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
@@ -140,10 +140,13 @@
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
+    <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\IMatchingRuleFactory.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
+    <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />

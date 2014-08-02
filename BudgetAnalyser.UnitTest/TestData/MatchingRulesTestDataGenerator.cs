@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
 
-            var mapper = new DtoToMatchingRuleMapper(bucketRepo);
+            var mapper = new DtoToMatchingRuleMapper();
 
             List<MatchingRule> domainRules = dataRules.Select(mapper.Map).ToList();
 

@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             get { return this.bucketRepository.GetByCode(BucketCode); }
 
-            set
+            private set
             {
                 if (value == null)
                 {

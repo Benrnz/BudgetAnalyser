@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +28,8 @@ namespace BudgetAnalyser.UnitTest
                         Subject = new AutoMapperConfiguration(new ILocalAutoMapperConfiguration[]
                         {
                             new BudgetAutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
-                            new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger())
+                            new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                            new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())), 
                         }).Configure();
                     }
                 }

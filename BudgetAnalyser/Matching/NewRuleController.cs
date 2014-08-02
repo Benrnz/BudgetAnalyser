@@ -18,6 +18,7 @@ namespace BudgetAnalyser.Matching
     public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly IMatchingRuleFactory ruleFactory;
         private decimal doNotUseAmount;
         private string doNotUseDescription;
         private string doNotUseReference1;
@@ -33,7 +34,7 @@ namespace BudgetAnalyser.Matching
 
         public event EventHandler RuleCreated;
 
-        public NewRuleController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public NewRuleController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] IMatchingRuleFactory ruleFactory)
         {
             if (uiContext == null)
             {
@@ -45,7 +46,13 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("budgetBucketRepository");
             }
 
+            if (ruleFactory == null)
+            {
+                throw new ArgumentNullException("ruleFactory");
+            }
+
             this.budgetBucketRepository = budgetBucketRepository;
+            this.ruleFactory = ruleFactory;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
@@ -275,7 +282,7 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            var newRule = new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
+            var newRule = this.ruleFactory.CreateRule(Bucket.Code); //new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
 
             if (Bucket == null)
             {

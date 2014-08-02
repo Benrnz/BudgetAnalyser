@@ -3,9 +3,8 @@ using AutoMapper;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger.Data;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC]
     internal class LedgerAutoMapperConfiguration : ILocalAutoMapperConfiguration
