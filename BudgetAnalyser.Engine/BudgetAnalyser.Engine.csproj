@@ -153,6 +153,7 @@
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
     <Compile Include="Reports\SeriesData.cs" />
+    <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
     <Compile Include="Statement\Data\TransactionSetDtoToStatementModelMapper.cs" />
     <Compile Include="Statement\Data\IStatementModelToTransactionSetDtoMapper.cs" />

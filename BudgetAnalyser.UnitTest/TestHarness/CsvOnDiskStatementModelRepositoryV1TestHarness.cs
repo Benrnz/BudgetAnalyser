@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
-using BudgetAnalyser.UnitTest.Account;
 using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
@@ -20,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
                     logger, 
                     new TransactionSetDtoToStatementModelMapper(
                         logger, 
-                        new TransactionDtoToTransactionMapper(accountTypeRepo, bucketRepo, new InMemoryTransactionTypeRepository())), 
+                        new TransactionDtoToTransactionMapper()), 
                     new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper()))
         {
         }

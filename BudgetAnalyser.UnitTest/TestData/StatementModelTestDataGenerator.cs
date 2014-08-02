@@ -19,7 +19,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 userMessageBox, 
                 new BankImportUtilities(fakeLogger), 
                 fakeLogger,
-                new TransactionSetDtoToStatementModelMapper(fakeLogger, new TransactionDtoToTransactionMapper(accountTypeRepo, bucketRepo, new InMemoryTransactionTypeRepository())),
+                new TransactionSetDtoToStatementModelMapper(fakeLogger, new TransactionDtoToTransactionMapper()),
                 new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper()));
 
             var model = importer.Load(fileName);

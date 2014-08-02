@@ -152,6 +152,8 @@
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
+    <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
+    <Compile Include="Statement\DtoToTransactionMapperTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="Statement\StatementModelTest.cs" />
     <Compile Include="Statement\TransactionDtoTest.cs" />
