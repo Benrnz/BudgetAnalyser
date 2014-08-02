@@ -143,6 +143,11 @@ namespace BudgetAnalyser.Engine.Ledger
 
         protected virtual void SaveDtoToDisk([NotNull] LedgerBookDto dataEntity)
         {
+            if (dataEntity == null)
+            {
+                throw new ArgumentNullException("dataEntity");
+            }
+
             WriteToDisk(dataEntity.FileName, Serialise(dataEntity));
         }
 

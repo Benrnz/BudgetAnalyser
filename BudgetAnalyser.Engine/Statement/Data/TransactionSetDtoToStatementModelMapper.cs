@@ -26,20 +26,20 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionMapper = transactionMapper;
         }
 
-        public override StatementModel Map([NotNull] TransactionSetDto setDto)
+        public override StatementModel Map([NotNull] TransactionSetDto source)
         {
-            if (setDto == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("setDto");
+                throw new ArgumentNullException("source");
             }
 
             var model = new StatementModel(this.logger)
             {
-                FileName = setDto.FileName,
-                LastImport = setDto.LastImport,
+                FileName = source.FileName,
+                LastImport = source.LastImport,
             };
 
-            model.LoadTransactions(setDto.Transactions.Select(t => this.transactionMapper.Map(t)));
+            model.LoadTransactions(source.Transactions.Select(t => this.transactionMapper.Map(t)));
 
             return model;
         }

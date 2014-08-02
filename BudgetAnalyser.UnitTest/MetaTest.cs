@@ -29,13 +29,32 @@ namespace BudgetAnalyser.UnitTest
             }
         }
 
+        private const int ExpectedMinimumTests = 565;
+
         [TestMethod]
         public void NoDecreaseInTests()
         {
-            var assembly = GetType().Assembly;
-            int count = (from type in assembly.ExportedTypes let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>() where testClassAttrib != null select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() != null)).Sum();
+            var count = CountTests();
             Console.WriteLine(count);
-            Assert.IsTrue(count >= 499);
+            Assert.IsTrue(count >= ExpectedMinimumTests);
+        }
+
+        [TestMethod]
+        public void UpdateNoDecreaseInTests()
+        {
+            var count = CountTests();
+            
+            Assert.IsFalse(count > ExpectedMinimumTests + 10, "Update the minimum expected number of tests to " + count);
+        }
+
+        private int CountTests()
+        {
+            var assembly = GetType().Assembly;
+            int count = (from type in assembly.ExportedTypes
+                let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
+                where testClassAttrib != null
+                select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() != null)).Sum();
+            return count;
         }
     }
 }

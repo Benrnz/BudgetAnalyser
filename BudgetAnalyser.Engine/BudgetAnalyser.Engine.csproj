@@ -80,8 +80,11 @@
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />
+    <Compile Include="Budget\BudgetAutoMapperConfiguration.cs" />
+    <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />

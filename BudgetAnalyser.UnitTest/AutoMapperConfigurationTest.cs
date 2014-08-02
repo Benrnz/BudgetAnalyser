@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,12 +25,11 @@ namespace BudgetAnalyser.UnitTest
                 {
                     if (Subject == null)
                     {
-                        Subject = new AutoMapperConfiguration(
-                            new BudgetBucketFactory(), 
-                            new BucketBucketRepoAlwaysFind(), 
-                            new LedgerTransactionFactory(),
-                            new InMemoryAccountTypeRepository(),
-                            new FakeLogger()).Configure();
+                        Subject = new AutoMapperConfiguration(new ILocalAutoMapperConfiguration[]
+                        {
+                            new BudgetAutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                            new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger())
+                        }).Configure();
                     }
                 }
             }
