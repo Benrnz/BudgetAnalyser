@@ -16,10 +16,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             : base(userMessageBox, 
                     importUtilities, 
                     logger, 
-                    new TransactionSetDtoToStatementModelMapper(
-                        logger, 
-                        new TransactionDtoToTransactionMapper()), 
-                    new StatementModelToTransactionSetDtoMapper(new TransactionToTransactionDtoMapper()))
+                    new TransactionSetDtoToStatementModelMapper(), 
+                    new StatementModelToTransactionSetDtoMapper())
         {
         }
 

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Statement
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
         private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
-        private readonly IStatementModelToTransactionSetDtoMapper domainToDtoMapper;
+        private readonly BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper;
 
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILogger logger,
             [NotNull] BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper,
-            [NotNull] IStatementModelToTransactionSetDtoMapper domainToDtoMapper)
+            [NotNull] BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper)
         {
             if (userMessageBox == null)
             {
@@ -108,7 +108,9 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("model");
             }
 
-            var transactionSet = this.domainToDtoMapper.Map(model, VersionHash, fileName);
+            var transactionSet = this.domainToDtoMapper.Map(model);
+            transactionSet.VersionHash = VersionHash;
+            transactionSet.FileName = fileName;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
 
             using (var stream = new FileStream(fileName, FileMode.Create))

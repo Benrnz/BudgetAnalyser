@@ -152,6 +152,8 @@
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
+    <Compile Include="Statement\StatementModelToDtoMapperTest.cs" />
+    <Compile Include="Statement\DtoToStatementModelMapperTest.cs" />
     <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
     <Compile Include="Statement\DtoToTransactionMapperTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
     <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestData\TransactionSetDtoTestData.cs" />
     <Compile Include="TestHarness\BudgetModelFake.cs" />
     <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />

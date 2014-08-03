@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             get { return this.doNotUseDurationInMonths; }
 
-            set
+            private set
             {
                 this.doNotUseDurationInMonths = value;
                 OnPropertyChanged();
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public string FileName { get; set; }
         public bool Filtered { get; private set; }
-        public DateTime LastImport { get; set; }
+        public DateTime LastImport { get; internal set; }
 
         public IEnumerable<Transaction> Transactions
         {

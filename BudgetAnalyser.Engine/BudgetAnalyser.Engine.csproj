@@ -156,7 +156,6 @@
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
     <Compile Include="Statement\Data\TransactionSetDtoToStatementModelMapper.cs" />
-    <Compile Include="Statement\Data\IStatementModelToTransactionSetDtoMapper.cs" />
     <Compile Include="Statement\Data\StatementModelToTransactionSetDtoMapper.cs" />
     <Compile Include="Statement\Data\TransactionDto.cs" />
     <Compile Include="Statement\Data\TransactionDtoToTransactionMapper.cs" />
