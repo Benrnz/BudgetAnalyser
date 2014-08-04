@@ -47,7 +47,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             string serialisedData = string.Empty;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapper<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
                 subject.Save(LedgerBookTestData.TestData2());
             }
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             string serialisedData = string.Empty;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapper<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
                 subject.Save(LedgerBookTestData.TestData2());
             }
@@ -193,7 +193,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             LedgerBookDto bookDto;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(), new BasicMapper<LedgerBook, LedgerBookDto>());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(), new BasicMapperFake<LedgerBook, LedgerBookDto>());
                 subject.FileExistsOverride = f => true;
                 subject.LoadXamlAsStringOverride = f => serialisedData;
                 subject.LoadXamlFromDiskFromEmbeddedResources = false;
@@ -211,7 +211,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void SerialiseTestData2ToEnsureItMatches_Load_ShouldLoadTheXmlFile_xml()
         {
-            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapper<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
             string serialisedData = string.Empty;
             subject.WriteToDiskOverride = (f, d) => serialisedData = d;
             subject.Save(LedgerBookTestData.TestData2());

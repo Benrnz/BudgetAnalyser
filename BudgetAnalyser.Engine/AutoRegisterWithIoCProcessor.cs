@@ -8,8 +8,17 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
+    /// <summary>
+    /// An intialisation class to discover all automatic registrations in the specified assembly and register them with Autofac.
+    /// </summary>
     public static class AutoRegisterWithIoCProcessor
     {
+        /// <summary>
+        /// Enumerates through all types in the given assembly and registers those decorated with <see cref="AutoRegisterWithIoCAttribute"/> with Autofac.
+        /// See the attribute for registration options. No dependent assemblies are searched.
+        /// </summary>
+        /// <param name="builder">The Autofac container builder object used to register type mappings.</param>
+        /// <param name="assembly">The assembly in which to search for automatic registrations.</param>
         public static void RegisterAutoMappingsFromAssembly([NotNull] ContainerBuilder builder, [NotNull] Assembly assembly)
         {
             if (builder == null)
@@ -53,6 +62,14 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        /// <summary>
+        /// Enumerates through all static types in the given assembly and populates static properties decorated with <see cref="AutoRegisterWithIoCAttribute"/> with their instances 
+        /// from the container.  
+        /// DO NOT USE THIS. Except as a last resort, property injection is a bad pattern, but is sometimes required with UI bindings. Do not use it for any other reason.
+        /// </summary>
+        /// <param name="container">The populated and ready for use IoC container. It will be used to populate properties with their dependency instances.</param>
+        /// <param name="assembly">The assembly in which to search for automatic registrations.</param>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public static void ProcessPropertyInjection([NotNull] IComponentContext container, [NotNull] Assembly assembly)
         {
             if (container == null)

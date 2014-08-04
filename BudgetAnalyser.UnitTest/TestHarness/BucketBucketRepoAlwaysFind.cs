@@ -7,7 +7,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     {
-        public BucketBucketRepoAlwaysFind() : base(new BasicMapper<BudgetBucketDto, BudgetBucket>())
+        public BucketBucketRepoAlwaysFind() : base(new BasicMapperFake<BudgetBucketDto, BudgetBucket>())
         {
         }
 

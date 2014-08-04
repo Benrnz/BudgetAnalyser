@@ -46,6 +46,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.logger = logger;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Necessary for Statement Automapper configuration.")]
         public void RegisterMappings()
         {
             Mapper.CreateMap<TransactionDto, Transaction>()

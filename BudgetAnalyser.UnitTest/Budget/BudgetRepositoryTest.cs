@@ -81,7 +81,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
-                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
                 null);
         }
 
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
                 null,
-                new BasicMapper<BudgetCollectionDto, BudgetCollection>());
+                new BasicMapperFake<BudgetCollectionDto, BudgetCollection>());
         }
 
         [TestMethod]
@@ -101,8 +101,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             new XamlOnDiskBudgetRepository(
                 null,
-                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
-                new BasicMapper<BudgetCollectionDto, BudgetCollection>());
+                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
+                new BasicMapperFake<BudgetCollectionDto, BudgetCollection>());
             Assert.Fail();
         }
 
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var toDomainMapper = new Mock<BasicMapper<BudgetCollectionDto, BudgetCollection>>();
             var subject = new XamlOnDiskBudgetRepositoryTestHarness(
                 mockBucketRepository.Object,
-                new BasicMapper<BudgetCollection, BudgetCollectionDto>(),
+                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
                 toDomainMapper.Object);
             toDomainMapper.Setup(m => m.Map(It.IsAny<BudgetCollectionDto>())).Returns(BudgetModelTestData.CreateCollectionWith1And2);
             subject.FileExistsMock = f => true;

@@ -15,9 +15,9 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class AutoMapperConfigurationTest
     {
-        private static AutoMapperConfiguration Subject { get; set; }
+        private static volatile AutoMapperConfiguration Subject;
 
-        private static object SyncLock = new object();
+        private static readonly object SyncLock = new object();
 
         public static AutoMapperConfiguration AutoMapperConfiguration()
         {
