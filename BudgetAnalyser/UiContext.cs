@@ -21,7 +21,8 @@ using Rees.Wpf;
 namespace BudgetAnalyser
 {
     /// <summary>
-    ///     Controllers required by the <see cref="ShellController" /> grouped together for convenience.
+    ///     Controllers required by the <see cref="ShellController" /> and most other <see cref="ControllerBase"/> controllers grouped together for convenience.
+    ///     This follows an Ambient Context pattern. Not using Thread Local Storage for ease of testing.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class UiContext : IUiContext

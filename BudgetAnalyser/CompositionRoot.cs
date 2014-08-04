@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using Autofac;
@@ -15,7 +16,6 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
-
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -25,27 +25,78 @@ using Rees.Wpf.UserInteraction;
 
 namespace BudgetAnalyser
 {
-    public class CompositionRoot 
+    /// <summary>
+    ///     This class follows the Composition Root Pattern as described here: http://blog.ploeh.dk/2011/07/28/CompositionRoot/
+    ///     It constructs any and all required objects, the whole graph for use for the process lifetime of the application.
+    ///     This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used any where
+    ///     else in the application to prevent the Service Locator anti-pattern from appearing.
+    /// </summary>
+    public class CompositionRoot
     {
         private const string InputBoxView = "InputBoxView";
 
-        public ShellController ShellController { get; private set; }
-        public Window ShellWindow { get; private set; }
+        /// <summary>
+        ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not
+        ///     been available.
+        ///     (An alternative would be to pass the logger into the Composition Root).
+        /// </summary>
         public ILogger Logger { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification="IoC Config")]
-        public void RegisterIoCMappings(Application app)
+        /// <summary>
+        ///     The top level Controller / ViewModel for the top level window aka <see cref="ShellWindow" />.  This is the first
+        ///     object to be called following execution of this Composition Root.
+        /// </summary>
+        public ShellController ShellController { get; private set; }
+
+        /// <summary>
+        ///     The top level Window that binds to the <see cref="ShellController" />.
+        /// </summary>
+        public Window ShellWindow { get; private set; }
+
+        /// <summary>
+        ///     Register all IoC mappings and instantiate the object graph required to run the application.
+        /// </summary>
+        /// <param name="app">The main <see cref="Application" /> object for this Windows application.</param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "IoC Config")]
+        public void Compose(Application app)
         {
             var builder = new ContainerBuilder();
 
+            // Automatically trigger registration of all mundane mappings. Classes that are decorated with AutoRegisterWithIoC are automatically registered against their implemented interfaces.
             DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+
+            // Detect and register all automatic registrations in the Engine Assembly.
             AutoRegisterWithIoCProcessor.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
 
+            // Register Messenger Singleton from MVVM Light
+            builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
 
+            // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
+            RegistrationsForReesWpf(builder);
+
+
+            AllLocalNonAutomaticRegistrations(app, builder);
+
+            BuildApplicationObjectGraph(builder);
+        }
+
+        private static void AllLocalNonAutomaticRegistrations(Application app, ContainerBuilder builder)
+        {
+            // Register any special mappings that have not been registered with automatic mappings.
+            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new BurnDownGraphAnalyser()));
+
+            // Explicit object creation below is necessary to correctly register with IoC container.
+            // ReSharper disable once RedundantDelegateCreation
+            builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
+
+            builder.RegisterInstance(app).As<IApplicationHookEventPublisher>();
+        }
+
+        private static void RegistrationsForReesWpf(ContainerBuilder builder)
+        {
             // Wait Cursor Builder
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
-            // Registrations from Rees.Wpf
             builder.RegisterType<XmlRecentFileManager>().As<IRecentFileManager>().SingleInstance();
             builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
@@ -57,23 +108,13 @@ namespace BudgetAnalyser
                 .SingleInstance();
             builder.Register(c => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
                 .SingleInstance();
+        }
 
-
-            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new BurnDownGraphAnalyser()));
-
-
-            // Register Messenger Singleton from MVVM Light
-            builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
-
-            // Explicit object creation below is necessary to correctly register with IoC container.
-            // ReSharper disable once RedundantDelegateCreation
-            builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
-
-            builder.RegisterInstance(app).As<IApplicationHookEventPublisher>();
-
+        private void BuildApplicationObjectGraph(ContainerBuilder builder)
+        {
             // Instantiate and store all controllers...
             // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
-            var container = builder.Build();
+            IContainer container = builder.Build();
 
             Logger = container.Resolve<ILogger>();
 
@@ -94,6 +135,12 @@ namespace BudgetAnalyser
             ShellWindow = new ShellWindow { DataContext = ShellController };
         }
 
+        /// <summary>
+        ///     Build the <see cref="IUiContext" /> instance that is used by all <see cref="ControllerBase" /> controllers.
+        ///     It contains refereces to commonly used UI components that most controllers require as well as references to all
+        ///     other controllers.  All controllers are single instances.
+        /// </summary>
+        /// <param name="container">The newly created (and short lived) IoC container used to instantiate objects.</param>
         private void ConstructUiContext(IContainer container)
         {
             var uiContext = container.Resolve<UiContext>();

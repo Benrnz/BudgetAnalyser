@@ -31,7 +31,7 @@ namespace BudgetAnalyser
             Current.Exit += OnApplicationExit;
 
             var compositionRoot = new CompositionRoot();
-            compositionRoot.RegisterIoCMappings(this);
+            compositionRoot.Compose(this);
             this.logger = compositionRoot.Logger;
 
             this.logger.LogAlways(() => "=========== Budget Analyser Starting ===========");
