@@ -60,8 +60,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> Transactions
         {
             get { return this.transactions; }
-            [UsedImplicitly]
-            private set { this.transactions = value.ToList(); }
+            [UsedImplicitly] private set { this.transactions = value.ToList(); }
         }
 
         public void AddTransaction([NotNull] LedgerTransaction newTransaction)
@@ -89,21 +88,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.transactions.Remove(txn);
                 Balance -= (txn.Credit - txn.Debit);
             }
-        }
-
-        public bool Validate()
-        {
-            if (LedgerColumn == null)
-            {
-                return false;
-            }
-
-            if (LedgerColumn.BudgetBucket == null)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -188,6 +172,21 @@ namespace BudgetAnalyser.Engine.Ledger
         internal void Unlock()
         {
             this.isNew = true;
+        }
+
+        internal bool Validate()
+        {
+            if (LedgerColumn == null)
+            {
+                return false;
+            }
+
+            if (LedgerColumn.BudgetBucket == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

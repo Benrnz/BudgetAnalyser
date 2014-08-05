@@ -6,6 +6,9 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
+    /// <summary>
+    /// A logging event subscriber that will log the occurance of all published application-wide events to the give <see cref="ILogger"/>.
+    /// </summary>
     [AutoRegisterWithIoC]
     [UsedImplicitly]
     public class LoggingApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable

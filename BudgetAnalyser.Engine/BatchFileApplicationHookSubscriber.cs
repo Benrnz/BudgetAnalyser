@@ -11,8 +11,8 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    ///     A application event subscriber class that will run a batch file whenever the publishers raise an event.
-    ///     This allows for automatic source control of data files; for example checking into subversion when ever the
+    ///     An application event subscriber class that will run a batch file whenever the publishers raise an event.
+    ///     This allows for automatic source control of data files. For example, it can check-in into subversion when ever the
     ///     statement file is changed.
     /// </summary>
     [AutoRegisterWithIoC]
@@ -57,7 +57,10 @@ namespace BudgetAnalyser.Engine
 
         public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
-            if (this.isDisposed) throw new ObjectDisposedException(GetType().Name);
+            if (this.isDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
 
             if (publishers == null)
             {
@@ -94,7 +97,7 @@ namespace BudgetAnalyser.Engine
             }
 
             this.isDisposed = true;
-        } 
+        }
 
         protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
         {

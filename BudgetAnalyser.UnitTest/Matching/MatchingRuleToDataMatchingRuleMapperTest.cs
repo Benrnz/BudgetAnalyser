@@ -104,6 +104,8 @@ namespace BudgetAnalyser.UnitTest.Matching
         [TestInitialize]
         public void TestInitialise()
         {
+            AutoMapperConfigurationTest.AutoMapperConfiguration();
+
             TestData = new MatchingRule(new BucketBucketRepoAlwaysFind())
             {
                 Amount = 123.45M,

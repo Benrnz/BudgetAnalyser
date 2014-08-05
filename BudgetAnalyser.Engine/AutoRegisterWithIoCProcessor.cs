@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
-        /// Enumerates through all static types in the given assembly and populates static properties decorated with <see cref="AutoRegisterWithIoCAttribute"/> with their instances 
+        /// Enumerates through all static types in the given assembly and populates static properties decorated with <see cref="PropertyInjectionAttribute"/> with their instances 
         /// from the container.  
         /// DO NOT USE THIS. Except as a last resort, property injection is a bad pattern, but is sometimes required with UI bindings. Do not use it for any other reason.
         /// </summary>

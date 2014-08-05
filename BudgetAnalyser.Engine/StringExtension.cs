@@ -3,10 +3,19 @@ using System.Linq;
 
 namespace BudgetAnalyser.Engine
 {
+    /// <summary>
+    /// An extension class for string.
+    /// </summary>
     public static class StringExtension
     {
         private static readonly char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
 
+        /// <summary>
+        /// Returns the appropriate 'An' or 'A' prefix for the given string.  The given string is not included
+        /// in the return text.
+        /// </summary>
+        /// <param name="instance">The string to determine the prefix for.</param>
+        /// <param name="properCase">A boolean to indicate if the prefix should be proper-cased or not.</param>
         public static string AnOrA(this string instance, bool properCase = false)
         {
             if (string.IsNullOrWhiteSpace(instance))
@@ -34,6 +43,10 @@ namespace BudgetAnalyser.Engine
             return "a";
         }
 
+        /// <summary>
+        /// Truncates the right of a string to the specified length, but only if it exceeds that length. Optionally the returned string can include
+        /// ellipses.
+        /// </summary>
         public static string Truncate(this string instance, int truncateToLength, bool useEllipses = false)
         {
             if (string.IsNullOrWhiteSpace(instance))
@@ -54,36 +67,10 @@ namespace BudgetAnalyser.Engine
             return instance.Substring(0, truncateToLength);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification = "This is the simplest approach.")]
-        public static string Truncate(this string instance, int truncateToLength, ref bool isEmpty, bool useEllipses = false, string prefix = null)
-        {
-            if (string.IsNullOrWhiteSpace(instance))
-            {
-                isEmpty = true;
-                return string.Empty;
-            }
-
-            string returnValue;
-            if (instance.Length <= truncateToLength)
-            {
-                returnValue = isEmpty ? instance : prefix + instance;
-            }
-            else
-            {
-                if (useEllipses)
-                {
-                    returnValue = isEmpty ? instance.Substring(0, truncateToLength - 1) + "…" : prefix + instance.Substring(0, truncateToLength - 1) + "…";
-                }
-                else
-                {
-                    returnValue = isEmpty ? instance.Substring(0, truncateToLength) : prefix + instance.Substring(0, truncateToLength);
-                }
-            }
-
-            isEmpty = false;
-            return returnValue;
-        }
-
+        /// <summary>
+        /// Truncates the left of a string to the specified length, but only if it exceeds that length. Optionally the returned string can
+        /// include ellipses.
+        /// </summary>
         public static string TruncateLeft(this string instance, int truncateToLength, bool useEllipses = false)
         {
             if (string.IsNullOrWhiteSpace(instance))

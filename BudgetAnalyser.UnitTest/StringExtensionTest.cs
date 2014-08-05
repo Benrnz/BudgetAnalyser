@@ -93,34 +93,6 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        public void TruncateEmptyStringTo9WithIsEmptyFlag()
-        {
-            bool isEmpty = false;
-            Assert.AreEqual(string.Empty, string.Empty.Truncate(9, ref isEmpty));
-            Assert.IsTrue(isEmpty);
-        }
-
-        [TestMethod]
-        public void TruncateValidStringTo9WithIsEmptyFlagTrueAndPrefix()
-        {
-            string data1 = "The quick brown fox";
-
-            bool isEmpty = true;
-            Assert.AreEqual("The quic…", data1.Truncate(9, ref isEmpty, true, " / "));
-            Assert.IsFalse(isEmpty);
-        }
-
-        [TestMethod]
-        public void TruncateValidStringTo9WithIsEmptyFlagFalseAndPrefix()
-        {
-            string data1 = "The quick brown fox";
-
-            bool isEmpty = false;
-            Assert.AreEqual(" / The quic…", data1.Truncate(9, ref isEmpty, true, " / "));
-            Assert.IsFalse(isEmpty);
-        }
-
-        [TestMethod]
         public void TruncateLeftValidStringTo9()
         {
             string data1 = "The quick brown fox";
