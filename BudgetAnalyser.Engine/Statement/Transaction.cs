@@ -211,12 +211,6 @@ namespace BudgetAnalyser.Engine.Statement
                 result += TransactionType.GetHashCode();
                 result *= 397;
 
-                if (BudgetBucket != null)
-                {
-                    result += BudgetBucket.GetHashCode();
-                    result *= 397;
-                }
-
                 return result;
             }
         }

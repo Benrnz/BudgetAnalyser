@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest
             }
         }
 
-        private const int ExpectedMinimumTests = 620;
+        private const int ExpectedMinimumTests = 622;
 
         [TestMethod]
         public void NoDecreaseInTests()
