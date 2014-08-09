@@ -8,6 +8,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
     [AutoRegisterWithIoC(RegisterAs = typeof(BasicMapper<BudgetCollectionDto, BudgetCollection>))]
     public class DtoToBudgetCollectionMapper : BasicMapper<BudgetCollectionDto, BudgetCollection>
     {
+        // TODO Why isnt this AutoMapper?
         private readonly DtoToBudgetModelMapper budgetModelMapper;
 
         public DtoToBudgetCollectionMapper([NotNull] DtoToBudgetModelMapper budgetModelMapper)
@@ -20,7 +21,6 @@ namespace BudgetAnalyser.Engine.Budget.Data
             this.budgetModelMapper = budgetModelMapper;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom Collection")]
         public override BudgetCollection Map([NotNull] BudgetCollectionDto source)
         {
             if (source == null)

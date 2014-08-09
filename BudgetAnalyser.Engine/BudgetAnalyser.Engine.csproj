@@ -81,6 +81,7 @@
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
+    <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />

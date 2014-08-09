@@ -114,7 +114,12 @@ namespace BudgetAnalyser.Engine.Statement
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
             if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
             {
-                throw new StatementModelChecksumException(string.Format("Only {0} out of {1} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.", transactionSet.Transactions.Count, model.AllTransactions.Count()));
+                throw new StatementModelChecksumException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Only {0} out of {1} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.", 
+                        transactionSet.Transactions.Count, 
+                        model.AllTransactions.Count()));
             }
 
             using (var stream = new FileStream(fileName, FileMode.Create))

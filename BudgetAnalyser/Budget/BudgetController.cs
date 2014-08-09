@@ -112,7 +112,6 @@ namespace BudgetAnalyser.Budget
 
         public BudgetPieController BudgetPieController { get; private set; }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
@@ -15,7 +14,6 @@ namespace BudgetAnalyser.Engine.Reports
         private readonly BudgetCollection budgets;
         private readonly StatementModel statement;
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public OverallPerformanceBudgetAnalyser([NotNull] StatementModel statement, [NotNull] BudgetCollection budgets, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (statement == null)

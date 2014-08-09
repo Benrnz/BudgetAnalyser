@@ -14,7 +14,6 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BudgetCollection budgets;
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
             if (budgets == null)
@@ -61,7 +60,7 @@ namespace BudgetAnalyser.Engine.Budget
                 int myIndex = this.budgets.IndexOf(Model);
                 if (myIndex == 0)
                 {
-                    // There is no superceding budget, so this budget is effective indefinitely.
+                    // There is no superceding budget, so this budget is effective indefinitely (no expiry date).
                     // I'd rather return null here because returning 31/12/9999 is just weird, and looks stupid when displayed to user.
                     return null;
                 }

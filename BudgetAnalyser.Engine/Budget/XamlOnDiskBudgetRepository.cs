@@ -44,7 +44,6 @@ namespace BudgetAnalyser.Engine.Budget
 
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection CreateNew([NotNull] string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
@@ -70,7 +69,6 @@ namespace BudgetAnalyser.Engine.Budget
             return newCollection;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public BudgetCollection Load(string fileName)
         {
             if (!FileExists(fileName))
@@ -108,7 +106,6 @@ namespace BudgetAnalyser.Engine.Budget
             return budgetCollection;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Custom collection")]
         public void Save(BudgetCollection budget)
         {
             BudgetCollectionDto dataFormat = this.toDtoMapper.Map(budget);

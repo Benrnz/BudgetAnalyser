@@ -62,7 +62,6 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             get { return "Overall Budget Performance"; }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "BudgetCollection might be refactored, but ok for now")]
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
             Analysis = new OverallPerformanceBudgetAnalyser(statementModel, budgets, this.bucketRepository);

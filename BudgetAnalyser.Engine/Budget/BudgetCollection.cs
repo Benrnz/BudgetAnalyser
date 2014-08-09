@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,11 +8,22 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
-    // TODO Reconsider basing this on List<T>, a better might be ICollection<T> or IEnumerable<T>
-    public class BudgetCollection : List<BudgetModel>, IModelValidate
+    /// <summary>
+    ///     A collection of budgets.  The collection is always sorted in descending order on the
+    ///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived budgets.
+    /// </summary>
+    public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     {
-        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets) : base(initialBudgets.OrderByDescending(b => b.EffectiveFrom))
+        private readonly SortedList<DateTime, BudgetModel> budgetStorage;
+
+        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets)
         {
+            this.budgetStorage = new SortedList<DateTime, BudgetModel>(initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom), new DateTimeDescendingOrder());
+        }
+
+        public int Count
+        {
+            get { return this.budgetStorage.Count; }
         }
 
         public BudgetModel CurrentActiveBudget
@@ -24,6 +36,29 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public string FileName { get; set; }
+
+        internal BudgetModel this[int index]
+        {
+            get { return this.budgetStorage.ElementAt(index).Value; }
+        }
+
+        public void Add([NotNull] BudgetModel item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            DateTime key = item.EffectiveFrom;
+            while (this.budgetStorage.ContainsKey(key))
+            {
+                // Arbitrarily change the effective from date to ensure no overlap between budgets.
+                key = key.AddDays(1);
+            }
+
+            item.EffectiveFrom = key;
+            this.budgetStorage.Add(item.EffectiveFrom, item);
+        }
 
         public BudgetModel ForDate(DateTime date)
         {
@@ -42,6 +77,11 @@ namespace BudgetAnalyser.Engine.Budget
             budgets.Add(firstEffectiveBudget);
             budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
             return budgets;
+        }
+
+        public IEnumerator<BudgetModel> GetEnumerator()
+        {
+            return this.budgetStorage.Select(kvp => kvp.Value).GetEnumerator();
         }
 
         public bool IsArchivedBudget(BudgetModel budget)
@@ -78,23 +118,17 @@ namespace BudgetAnalyser.Engine.Budget
         public bool Validate(StringBuilder validationMessages)
         {
             bool allValid = this.All(budget => budget.Validate(validationMessages));
-            List<IGrouping<DateTime, BudgetModel>> duplicateEffectiveDates = this.GroupBy(b => b.EffectiveFrom, b => b).ToList();
-            if (duplicateEffectiveDates.Any(group => group.Count() > 1))
-            {
-                // Loop all duplicate dates found
-                foreach (var duplicateGroups in duplicateEffectiveDates)
-                {
-                    // Arbitrarily change the effective dates to ensure a sure later effective date.
-                    int index = 0;
-                    foreach (BudgetModel budget in duplicateGroups)
-                    {
-                        budget.EffectiveFrom = budget.EffectiveFrom.AddSeconds(index);
-                        index++;
-                    }
-                }
-            }
-
             return allValid;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        internal int IndexOf(BudgetModel budget)
+        {
+            return this.budgetStorage.IndexOfValue(budget);
         }
     }
 }

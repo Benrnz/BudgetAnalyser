@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         private readonly BudgetModelToDtoMapper budgetModelMapper;
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly BudgetBucketToDtoMapper bucketMapper;
-
+        // TODO Why isnt this AutoMapper?
         public BudgetCollectionToDtoMapper(
             [NotNull] BudgetModelToDtoMapper budgetModelMapper, 
             [NotNull] IBudgetBucketRepository bucketRepo, 

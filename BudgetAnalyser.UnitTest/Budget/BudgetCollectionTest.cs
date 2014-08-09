@@ -14,6 +14,16 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class BudgetCollectionTest
     {
         [TestMethod]
+        public void OutputBudgetCollection()
+        {
+            BudgetCollection subject = Arrange();
+            foreach (var budget in subject)
+            {
+                Console.WriteLine("Budget: '{0}' EffectiveFrom: {1:d}", budget.Name, budget.EffectiveFrom);
+            }
+        }
+
+        [TestMethod]
         public void ForDate_1_1_2013_ShouldReturnBudget1()
         {
             BudgetCollection subject = Arrange();
@@ -67,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             BudgetCollection subject = Arrange();
 
-            IEnumerable<BudgetModel> results = subject.ForDates(DateTime.MinValue, DateTime.MaxValue);
+            subject.ForDates(DateTime.MinValue, DateTime.MaxValue);
 
             Assert.Fail();
         }
@@ -77,7 +87,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             // If this test breaks consider putting the new property into the Mappers and DTO's before updating the count.
             IEnumerable<PropertyInfo> properties = typeof(BudgetCollection).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
-            Assert.AreEqual(3, properties.Count());
+            Assert.AreEqual(1, properties.Count());
         }
 
         [TestMethod]
