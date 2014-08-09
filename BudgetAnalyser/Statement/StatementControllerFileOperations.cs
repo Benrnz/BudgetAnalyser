@@ -316,16 +316,19 @@ namespace BudgetAnalyser.Statement
                 }
                 finally
                 {
-                    if (cursor != null)
+                    this.dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
                     {
-                        this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor.Dispose());
-                    }
+                        BackgroundJob.Finish();
+                        if (cursor != null)
+                        {
+                            cursor.Dispose();
+                        }
 
-                    BackgroundJob.Finish();
-                    if (additionalModel != null)
-                    {
-                        this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () => MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement)));
-                    }
+                        if (additionalModel != null)
+                        {
+                            MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+                        }
+                    });
                 }
             });
         }
