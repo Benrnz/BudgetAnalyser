@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using Rees.UserInteraction.Contracts;
@@ -12,12 +10,25 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {
-        public CsvOnDiskStatementModelRepositoryV1TestHarness(IAccountTypeRepository accountTypeRepo, IUserMessageBox userMessageBox, IBudgetBucketRepository bucketRepo, BankImportUtilities importUtilities, ILogger logger)
+        public CsvOnDiskStatementModelRepositoryV1TestHarness(IUserMessageBox userMessageBox, BankImportUtilities importUtilities)
             : base(userMessageBox, 
                     importUtilities, 
-                    logger, 
+                    new FakeLogger(), 
                     new TransactionSetDtoToStatementModelMapper(), 
                     new StatementModelToTransactionSetDtoMapper())
+        {
+        }
+
+        public CsvOnDiskStatementModelRepositoryV1TestHarness(
+            IUserMessageBox userMessageBox, 
+            BankImportUtilities importUtilities, 
+            BasicMapper<TransactionSetDto, StatementModel> toDomainMapper, 
+            BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
+            : base(userMessageBox,
+                    importUtilities,
+                    new FakeLogger(),
+                    toDomainMapper,
+                    toDtoMapper)
         {
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BudgetAnalyser.Statement
 {
@@ -10,6 +12,16 @@ namespace BudgetAnalyser.Statement
         public LoadFileView()
         {
             InitializeComponent();
+        }
+
+        private LoadFileController Controller
+        {
+            get { return (LoadFileController)DataContext; }
+        }
+
+        private void OnFileNameMouseUp(object sender, MouseEventArgs e)
+        {
+            Controller.BrowseForFileCommand.Execute(null);
         }
     }
 }

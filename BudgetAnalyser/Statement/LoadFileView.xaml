@@ -20,6 +20,7 @@
                    Style="{StaticResource TextBlock.LabelStyle}"
                    Text="Select a file:" />
         <TextBox Grid.Column="1"
+                 PreviewMouseUp="OnFileNameMouseUp"
                  HorizontalAlignment="Stretch"
                  Margin="3"
                  Text="{Binding FileName}"

@@ -126,7 +126,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            BankImportUtilities = new BankImportUtilitiesTestHarness(new FakeLogger());
+            BankImportUtilities = new BankImportUtilitiesTestHarness();
         }
 
         private AnzAccountStatementImporterV1TestHarness Arrange()

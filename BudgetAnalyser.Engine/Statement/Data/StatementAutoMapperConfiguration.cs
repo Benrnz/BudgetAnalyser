@@ -70,7 +70,8 @@ namespace BudgetAnalyser.Engine.Statement.Data
 
             Mapper.CreateMap<StatementModel, TransactionSetDto>()
                 .ForMember(dto => dto.Checksum, m => m.Ignore())
-                .ForMember(dto => dto.VersionHash, m => m.Ignore());
+                .ForMember(dto => dto.VersionHash, m => m.Ignore())
+                .ForMember(dto => dto.Transactions, m => m.MapFrom(model => model.AllTransactions));
 
 
             this.logger.LogInfo(() => "Statement AutoMapper Configuration Mappings Registered.");

@@ -35,6 +35,7 @@ namespace BudgetAnalyser.Statement
         private string doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
         private Task fileSelectionTask;
+        private bool showingDialog;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
@@ -388,25 +389,38 @@ namespace BudgetAnalyser.Statement
 
         private void OnBrowseForFileCommandExecute()
         {
-            IUserPromptOpenFile dialog = this.userPromptOpenFileFactory();
-            dialog.DefaultExt = "*.CSV";
-            dialog.Title = "Select a CSV file of transactions to load.";
-            dialog.Filter = "Comma Separated Values (*.CSV)|*.CSV";
-            bool? result = dialog.ShowDialog();
-            if (result == null || result == false)
+            if (this.showingDialog)
             {
-                FileName = null;
                 return;
             }
 
-            if (!File.Exists(dialog.FileName))
+            try
             {
-                this.messageBox.Show("File not found.\n" + dialog.FileName, "Open file");
-                FileName = null;
-                return;
-            }
+                this.showingDialog = true;
+                IUserPromptOpenFile dialog = this.userPromptOpenFileFactory();
+                dialog.DefaultExt = "*.CSV";
+                dialog.Title = "Select a CSV file of transactions to load.";
+                dialog.Filter = "Comma Separated Values (*.CSV)|*.CSV";
+                bool? result = dialog.ShowDialog();
+                if (result == null || result == false)
+                {
+                    FileName = null;
+                    return;
+                }
 
-            FileName = dialog.FileName;
+                if (!File.Exists(dialog.FileName))
+                {
+                    this.messageBox.Show("File not found.\n" + dialog.FileName, "Open file");
+                    FileName = null;
+                    return;
+                }
+
+                FileName = dialog.FileName;
+            }
+            finally
+            {
+                this.showingDialog = false;
+            }
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
