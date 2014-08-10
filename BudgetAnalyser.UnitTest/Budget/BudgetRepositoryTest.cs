@@ -238,7 +238,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private static BudgetCollectionDto OnLoadFromDiskMock(string f)
         {
-            return EmbeddedResourceHelper.Extract<BudgetCollectionDto>(f);
+            return EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(f);
         }
     }
 }

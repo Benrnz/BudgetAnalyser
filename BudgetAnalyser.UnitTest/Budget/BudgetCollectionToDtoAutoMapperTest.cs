@@ -83,7 +83,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
             TestData = BudgetModelTestData.CreateCollectionWith1And2();
 
-            // Extract All Buckets from The Test Data.
+            // ExtractXaml All Buckets from The Test Data.
             TestDataBuckets = TestData.SelectMany(b => b.Expenses.Cast<BudgetItem>())
                 .Union(TestData.SelectMany(b => b.Incomes))
                 .Select(x => x.Bucket)

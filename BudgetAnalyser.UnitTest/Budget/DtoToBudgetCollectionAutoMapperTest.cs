@@ -39,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             AutoMapperConfigurationTest.AutoMapperConfiguration();
 
             // TODO roll this out to all other tests
-            TestData = EmbeddedResourceHelper.Extract<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
+            TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
             Result = Mapper.Map<BudgetCollection>(TestData);
         }
     }

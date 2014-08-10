@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Xaml;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.UnitTest.Helper;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
@@ -55,26 +51,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
-                // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-                Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+                LedgerBookDto = EmbeddedResourceHelper.ExtractXaml<LedgerBookDto>(fileName, true);
+                var handler = DtoDeserialised;
+                if (handler != null)
                 {
-                    if (stream == null)
-                    {
-                        throw new MissingManifestResourceException("Cannot find resource named: " + fileName);
-                    }
-
-                    var reader = new StreamReader(stream);
-                    string stringData = reader.ReadToEnd();
-                    Debug.WriteLine(stringData);
-                    LedgerBookDto = (LedgerBookDto)XamlServices.Parse(stringData);
-                    EventHandler handler = DtoDeserialised;
-                    if (handler != null)
-                    {
-                        handler(this, EventArgs.Empty);
-                    }
-                    return LedgerBookDto;
+                    handler(this, EventArgs.Empty);
                 }
+
+                return LedgerBookDto;
             }
 
             LedgerBookDto = base.LoadXamlFromDisk(fileName);

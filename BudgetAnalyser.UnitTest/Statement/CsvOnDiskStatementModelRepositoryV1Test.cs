@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
+using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -194,24 +189,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         public void MustBeAbleToLoadDemoStatementFile()
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = file =>
-            {
-                // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-                Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(file))
-                {
-                    if (stream == null)
-                    {
-                        throw new MissingManifestResourceException("Cannot find resource named: " + file);
-                    }
-
-                    using (var streamReader = new StreamReader(stream))
-                    {
-                        string text = streamReader.ReadToEnd();
-                        return text.Split('\n');
-                    }
-                }
-            };
+            subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
 
             StatementModel model = subject.Load(StatementDemoFile);
 
@@ -224,8 +202,8 @@ namespace BudgetAnalyser.UnitTest.Statement
         public void SaveShouldThrowGivenMappingDoesNotMapAllTransactions()
         {
             var mockToDtoMapper = new Mock<BasicMapper<StatementModel, TransactionSetDto>>();
-            var subject = ArrangeWithMockMappers(new BasicMapperFake<TransactionSetDto, StatementModel>(), mockToDtoMapper.Object);
-            var model = StatementModelTestData.TestData2();
+            CsvOnDiskStatementModelRepositoryV1TestHarness subject = ArrangeWithMockMappers(new BasicMapperFake<TransactionSetDto, StatementModel>(), mockToDtoMapper.Object);
+            StatementModel model = StatementModelTestData.TestData2();
             model.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
 
             mockToDtoMapper.Setup(m => m.Map(model)).Returns(
@@ -246,7 +224,8 @@ namespace BudgetAnalyser.UnitTest.Statement
             return new CsvOnDiskStatementModelRepositoryV1TestHarness(new FakeUserMessageBox(), new BankImportUtilitiesTestHarness());
         }
 
-        private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(BasicMapper<TransactionSetDto, StatementModel> toDomainMapper, BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
+        private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
+            BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
         {
             return new CsvOnDiskStatementModelRepositoryV1TestHarness(new FakeUserMessageBox(), new BankImportUtilitiesTestHarness(), toDomainMapper, toDtoMapper);
         }
