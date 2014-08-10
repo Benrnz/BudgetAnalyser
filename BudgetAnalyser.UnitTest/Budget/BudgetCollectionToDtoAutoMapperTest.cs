@@ -77,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            var config = AutoMapperConfigurationTest.AutoMapperConfiguration();
+            var config = Global.AutoMapperConfiguration;
             var budgetMapperConfig = config.Registrations.OfType<BudgetAutoMapperConfiguration>().Single();
             var bucketRepo = budgetMapperConfig.BucketRepository;
 

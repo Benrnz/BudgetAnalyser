@@ -126,7 +126,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
             Result = Mapper.Map<MatchingRule>(TestData);
         }

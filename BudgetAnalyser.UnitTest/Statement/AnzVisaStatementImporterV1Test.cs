@@ -131,7 +131,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         private AnzVisaStatementImporterV1TestHarness Arrange()
         {
-            return new AnzVisaStatementImporterV1TestHarness(new FakeUserMessageBox(), BankImportUtilities, new FakeLogger());
+            return new AnzVisaStatementImporterV1TestHarness(new FakeUserMessageBox(), BankImportUtilities);
         }
     }
 }

@@ -224,7 +224,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
         }
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()

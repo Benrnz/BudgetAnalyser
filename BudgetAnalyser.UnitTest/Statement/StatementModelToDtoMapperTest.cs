@@ -57,7 +57,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
             Act(TestData);
         }
 

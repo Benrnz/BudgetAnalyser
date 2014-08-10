@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using Rees.UserInteraction.Contracts;
@@ -9,8 +8,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
     {
-        public AnzVisaStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
-            : base(userMessageBox, importUtilities, logger)
+        public AnzVisaStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
+            : base(userMessageBox, importUtilities, new FakeLogger())
         {
         }
 

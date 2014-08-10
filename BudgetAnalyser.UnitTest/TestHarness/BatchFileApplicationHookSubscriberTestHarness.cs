@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class BatchFileApplicationHookSubscriberTestHarness : BatchFileApplicationHookSubscriber
     {
-        public BatchFileApplicationHookSubscriberTestHarness([NotNull] ILogger logger) : base(logger)
+        public BatchFileApplicationHookSubscriberTestHarness() : base(new FakeLogger())
         {
         }
 

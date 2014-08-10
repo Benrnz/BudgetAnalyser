@@ -45,7 +45,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
             Result = Mapper.Map<LedgerBook>(TestData);
         }

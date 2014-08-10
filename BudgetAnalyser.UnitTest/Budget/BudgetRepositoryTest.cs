@@ -223,7 +223,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
         }
 
         private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)

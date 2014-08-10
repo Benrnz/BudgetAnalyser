@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine;
+﻿using System;
+using BudgetAnalyser.Engine;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
@@ -8,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     {
         public override TDestination Map(TSource source)
         {
-            throw new System.NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

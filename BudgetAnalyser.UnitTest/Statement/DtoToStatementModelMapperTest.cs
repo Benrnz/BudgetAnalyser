@@ -126,7 +126,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
             Result = Mapper.Map<StatementModel>(TestData);
         }

@@ -32,7 +32,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
             Result = Mapper.Map<ExpenseDto>(TestData);
         }

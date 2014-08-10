@@ -9,8 +9,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
     {
-        public AnzAccountStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
-            : base(userMessageBox, importUtilities, logger)
+        public AnzAccountStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
+            : base(userMessageBox, importUtilities, new FakeLogger())
         {
         }
 

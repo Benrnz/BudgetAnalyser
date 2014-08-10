@@ -92,6 +92,7 @@
     <Compile Include="Account\VisaAccountTest.cs" />
     <Compile Include="ApplicationHooks\LoggingApplicationHookSubscriberTest.cs" />
     <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
     <Compile Include="Budget\BudgetBucketFactoryTest.cs" />

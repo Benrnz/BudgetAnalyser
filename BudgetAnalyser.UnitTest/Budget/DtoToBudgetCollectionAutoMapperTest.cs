@@ -35,10 +35,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            // TODO Try AssemblyInitialise
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
-            // TODO roll this out to all other tests
             TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
             Result = Mapper.Map<BudgetCollection>(TestData);
         }

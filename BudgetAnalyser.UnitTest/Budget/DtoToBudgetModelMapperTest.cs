@@ -114,7 +114,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            AutoMapperConfigurationTest.AutoMapperConfiguration();
+            
 
             Result = new DtoToBudgetModelMapper().Map(TestData);
         }

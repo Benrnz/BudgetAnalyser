@@ -59,7 +59,7 @@ namespace BudgetAnalyser.UnitTest.ApplicationHooks
 
         private BatchFileApplicationHookSubscriberTestHarness Arrange()
         {
-            return new BatchFileApplicationHookSubscriberTestHarness(new FakeLogger());
+            return new BatchFileApplicationHookSubscriberTestHarness();
         }
     }
 }
