@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -209,31 +210,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void SaveShouldWriteOutBuckets()
-        {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
-            var subject = new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
-
-            string savedData = null;
-            subject.WriteToDiskMock = (filename, data) => { savedData = data; };
-            subject.FileExistsMock = f => true;
-            subject.LoadFromDiskMock = OnLoadFromDiskMock;
-
-            BudgetCollection collection = subject.Load(DemoBudgetFileName);
-            subject.Save(collection);
-
-            XNamespace ns = "clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine";
-            XDocument document = XDocument.Parse(savedData);
-            IEnumerable<XElement> bucketCollectionElements = document.Descendants(ns + "BudgetBucketDto");
-            foreach (XElement element in bucketCollectionElements)
-            {
-                Console.WriteLine(element.FirstAttribute);
-            }
-
-            Assert.AreEqual(10, bucketCollectionElements.Count());
-        }
-
-        [TestMethod]
         public void SaveShouldWriteToDisk()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
@@ -260,19 +236,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
         }
 
-        private BudgetCollectionDto OnLoadFromDiskMock(string f)
+        private static BudgetCollectionDto OnLoadFromDiskMock(string f)
         {
-            // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-            Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(f))
-            {
-                if (stream == null)
-                {
-                    throw new MissingManifestResourceException("Cannot find resource named: " + f);
-                }
-
-                return (BudgetCollectionDto)XamlServices.Load(new XamlXmlReader(stream));
-            }
+            return EmbeddedResourceHelper.Extract<BudgetCollectionDto>(f);
         }
     }
 }

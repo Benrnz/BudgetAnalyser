@@ -96,6 +96,8 @@
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
     <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetCollectionToDtoAutoMapperTest.cs" />
+    <Compile Include="Budget\DtoToBudgetCollectionAutoMapperTest.cs" />
     <Compile Include="Budget\BudgetBucketToDtoMapperTest.cs" />
     <Compile Include="Budget\BudgetCollectionTest.cs" />
     <Compile Include="Budget\BudgetCollectionToDtoMapperTest.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
+    <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Ledger\DtoToLedgerBookMapperAutoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBookToDtoMapperAutoMapperTest.cs" />

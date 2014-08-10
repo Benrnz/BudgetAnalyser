@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -36,6 +38,8 @@ namespace BudgetAnalyser.Engine.Budget.Data
             this.logger = logger;
         }
 
+        internal IBudgetBucketRepository BucketRepository { get { return this.bucketRepo; } }
+
         public void RegisterMappings()
         {
             Mapper.CreateMap<BudgetBucket, BudgetBucketDto>()
@@ -59,6 +63,13 @@ namespace BudgetAnalyser.Engine.Budget.Data
             Mapper.CreateMap<BudgetModel, BudgetModelDto>();
 
             Mapper.CreateMap<BudgetModelDto, BudgetModel>();
+
+            Mapper.CreateMap<BudgetCollection, BudgetCollectionDto>()
+                .ForMember(dto => dto.Buckets, m => m.MapFrom(collection => this.bucketRepo.Buckets))
+                .ForMember(dto => dto.Budgets, m => m.ResolveUsing(collection => collection.Select(Mapper.Map<BudgetModel, BudgetModelDto>)));
+
+            Mapper.CreateMap<BudgetCollectionDto, BudgetCollection>()
+                .ConstructUsing(dto => new BudgetCollection(dto.Budgets.Select(Mapper.Map<BudgetModelDto, BudgetModel>)));
 
             this.logger.LogInfo(() => "Budget AutoMapper Configuration Mappings Registered.");
         }

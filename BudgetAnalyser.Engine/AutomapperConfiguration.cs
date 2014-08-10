@@ -22,13 +22,20 @@ namespace BudgetAnalyser.Engine
             this.autoMapperRegistrations = autoMapperRegistrations;
         }
 
+        internal IEnumerable<ILocalAutoMapperConfiguration> Registrations
+        {
+            get { return this.autoMapperRegistrations; }
+        }
+
         /// <summary>
         /// Register all configurations on all known instances. This only needs to be done once during application startup.
         /// </summary>
         public AutoMapperConfiguration Configure()
         {
-            // Warning! Use of this static mapping configuration has a chance of intermittently failing tests, if the tests are run in parallel (which they are in this project).
+            // Warning! Use of this static mapping configuration has a chance of intermittently failing parallel test runs, (which they are in this project).
             // This may need to change to improve consistency of test results. Failure does seem to be very rare however.
+            // In addition use of dependencies within the mapping effectively makes the dependencies "static-shared" as well, making it difficult to mock these
+            // dependencies.  Will probably work ok if testing of mappers are isolated properly.  Ie, no integration tests that consume real mappers.
 
             foreach (var configuration in autoMapperRegistrations)
             {
