@@ -118,6 +118,28 @@ namespace Rees.TestUtilities {
         }
 
         /// <summary>
+        /// Gets a private property.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <typeparam name="T">The type of the instance object. Use this to specify a different type other than its concrete type</typeparam>
+        /// <returns>The value of the private property.</returns>
+        public static object GetProperty<T>(object instance, string propertyName)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance");
+            }
+
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException("propertyName");
+            }
+
+            return GetPropertyInfo(typeof(T), propertyName).GetValue(instance, new object[] { });
+        }
+
+        /// <summary>
         /// Sets the private property.
         /// </summary>
         /// <param name="instance">The instance.</param>

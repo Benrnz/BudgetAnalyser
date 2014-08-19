@@ -21,6 +21,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ShouldMapCorrectNumberOfBuckets()
         {
+            Console.WriteLine("TestDataBuckets.Count = " + TestDataBuckets.Count());
+            Console.WriteLine("Result.Buckets.Count = " + Result.Buckets.Count());
             Assert.AreEqual(TestDataBuckets.Count(), Result.Buckets.Count);
         }
 

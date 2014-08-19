@@ -17,12 +17,11 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     [AutoRegisterWithIoC]
     [UsedImplicitly]
-    public class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber, IDisposable
+    public class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber
     {
         private const string BatchFileName = "BudgetAnalyserHooks.bat";
         private readonly ILogger logger;
         private string doNotUseFileName;
-        private bool isDisposed;
         private IEnumerable<IApplicationHookEventPublisher> myPublishers;
 
         public BatchFileApplicationHookSubscriber([NotNull] ILogger logger)
@@ -49,19 +48,8 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
         {
-            if (this.isDisposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-
             if (publishers == null)
             {
                 throw new ArgumentNullException("publishers");
@@ -72,31 +60,6 @@ namespace BudgetAnalyser.Engine
             {
                 publisher.ApplicationEvent += OnEventOccurred;
             }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            // Check to see if Dispose has already been called. 
-            if (!this.isDisposed)
-            {
-                // If disposing equals true, dispose all managed 
-                // and unmanaged resources. 
-                if (disposing)
-                {
-                    // Dispose managed resources. 
-                    this.isDisposed = true;
-                    this.logger.LogInfo(() => "BatchFileApplicationHookSubscriber is being disposed.");
-                    if (this.myPublishers != null)
-                    {
-                        foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
-                        {
-                            publisher.ApplicationEvent -= OnEventOccurred;
-                        }
-                    }
-                }
-            }
-
-            this.isDisposed = true;
         }
 
         protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
@@ -137,11 +100,6 @@ namespace BudgetAnalyser.Engine
 
         private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
         {
-            if (this.isDisposed)
-            {
-                return;
-            }
-
             PerformAction(sender, args);
         }
     }
