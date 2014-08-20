@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
@@ -21,7 +20,6 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private Guid dialogCorrelationId;
-        private bool doNotUseShowAddingNewTransactionPanel;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
         private decimal doNotUseNewTransactionAmount;
@@ -29,9 +27,11 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseNewTransactionIsDebit;
         private bool doNotUseNewTransactionIsReversal;
         private string doNotUseNewTransactionNarrative;
+        private bool doNotUseShowAddingNewTransactionPanel;
         private string doNotUseTitle;
         private LedgerEntryLine entryLine;
         private bool isAddDirty;
+        private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] IAccountTypeRepository accountTypeRepository)
@@ -61,16 +61,6 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand AddTransactionCommand
         {
             get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
-        }
-
-        public bool ShowAddingNewTransactionPanel
-        {
-            get { return this.doNotUseShowAddingNewTransactionPanel; }
-            private set
-            {
-                this.doNotUseShowAddingNewTransactionPanel = value;
-                RaisePropertyChanged(() => this.ShowAddingNewTransactionPanel);
-            }
         }
 
         public ICommand DeleteTransactionCommand
@@ -162,6 +152,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        public bool ShowAddingNewTransactionPanel
+        {
+            get { return this.doNotUseShowAddingNewTransactionPanel; }
+            private set
+            {
+                this.doNotUseShowAddingNewTransactionPanel = value;
+                RaisePropertyChanged(() => ShowAddingNewTransactionPanel);
+            }
+        }
+
         public ObservableCollection<LedgerTransaction> ShownTransactions { get; private set; }
 
         public string Title
@@ -197,6 +197,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             LedgerEntry = ledgerEntry;
+            this.entryLine = null;
             ShownTransactions = new ObservableCollection<LedgerTransaction>(LedgerEntry.Transactions);
             Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerColumn.BudgetBucket.Code);
             ShowDialogCommon(isNew);
@@ -213,9 +214,9 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             LedgerEntry = null;
+            this.entryLine = ledgerEntryLine;
             ShownTransactions = new ObservableCollection<LedgerTransaction>(ledgerEntryLine.BankBalanceAdjustments);
             Title = "Balance Adjustment Transactions";
-            this.entryLine = ledgerEntryLine;
             ShowDialogCommon(isNew);
         }
 
@@ -237,15 +238,15 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewTransactionCommandExecuted()
         {
             // This command is executed to show the add transaction panel, then again to add the transaction once the edit fields are completed.
-            if (this.ShowAddingNewTransactionPanel)
+            if (ShowAddingNewTransactionPanel)
             {
-                this.ShowAddingNewTransactionPanel = false;
+                ShowAddingNewTransactionPanel = false;
                 this.isAddDirty = true;
                 Save();
             }
             else
             {
-                this.ShowAddingNewTransactionPanel = true;
+                ShowAddingNewTransactionPanel = true;
             }
         }
 
@@ -282,7 +283,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (message.Response == ShellDialogButton.Ok)
             {
-                if (this.ShowAddingNewTransactionPanel)
+                if (ShowAddingNewTransactionPanel)
                 {
                     OnAddNewTransactionCommandExecuted();
                 }
@@ -293,6 +294,8 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Cancel)
             {
                 this.isAddDirty = false;
+                this.entryLine = null;
+                LedgerEntry = null;
             }
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
@@ -335,11 +338,11 @@ namespace BudgetAnalyser.LedgerBook
 
         private void Reset()
         {
-            this.ShowAddingNewTransactionPanel = false;
+            ShowAddingNewTransactionPanel = false;
             this.isAddDirty = false;
             ShownTransactions = null;
             LedgerEntry = null;
-            this.entryLine = null;
+            // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             NewTransactionAmount = 0;
             NewTransactionIsCredit = false;
             NewTransactionIsDebit = true;
@@ -370,13 +373,11 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            var newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
+            LedgerTransaction newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
                 .WithAccountType(NewTransactionAccountType);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
         }
-
-        private bool wasChanged;
 
         private void SaveNewEntryTransaction()
         {

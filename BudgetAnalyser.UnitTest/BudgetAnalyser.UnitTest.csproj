@@ -165,6 +165,7 @@
     <Compile Include="Statement\TransactionDtoTest.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="Statement\TransactionTest.cs" />
+    <Compile Include="Statement\BankStatementImporterRepositoryTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />

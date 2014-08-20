@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -14,8 +15,13 @@ namespace BudgetAnalyser.Engine.Statement
     {
         private readonly IEnumerable<IBankStatementImporter> importers;
 
-        public BankStatementImporterRepository(IEnumerable<IBankStatementImporter> importers)
+        public BankStatementImporterRepository([NotNull] IEnumerable<IBankStatementImporter> importers)
         {
+            if (importers == null || !importers.Any())
+            {
+                throw new ArgumentNullException("importers");
+            }
+
             this.importers = importers.ToList();
         }
 

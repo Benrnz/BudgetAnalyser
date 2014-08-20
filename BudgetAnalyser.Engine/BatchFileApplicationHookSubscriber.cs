@@ -92,9 +92,16 @@ namespace BudgetAnalyser.Engine
                         RedirectStandardError = false,
                         RedirectStandardOutput = false,
                     };
-                    Process process = Process.Start(processInfo);
-                    process.WaitForExit(5000);
-                    this.logger.LogInfo(() => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
+                    try
+                    {
+                        Process process = Process.Start(processInfo);
+                        process.WaitForExit(5000);
+                        this.logger.LogInfo(() => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
+                    }
+                    catch
+                    {
+                        // Ignore - Best efforts to log only and app is exiting.
+                    }
                 });
         }
 
