@@ -42,10 +42,10 @@ namespace BudgetAnalyser.UnitTest.Reports
         //    return statementImporter.ImportFromFile(@"C:\Development\xxx\BudgetAnalyserProject\Trunk\TestData\8Months.csv", budgetModel, new ChequeAccount("Cheque"));
         //}
 
-        private BurnDownGraphAnalyser CreateSubject()
-        {
-            var analyser = new BurnDownGraphAnalyser();
-            return analyser;
-        }
+        //private BurnDownGraphAnalyser CreateSubject()
+        //{
+        //    var analyser = new BurnDownGraphAnalyser();
+        //    return analyser;
+        //}
     }
 }

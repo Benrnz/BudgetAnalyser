@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.Caching;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -14,8 +16,26 @@ namespace BudgetAnalyser.Engine.Reports
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BurnDownGraphAnalyser : IBurnDownGraphAnalyser
     {
+        private readonly ILogger logger;
+
+        /// <summary>
+        /// A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers"/>. This method is called multiple times over a short period to build a burn down report.
+        /// It is IDisposable, but because it is static there is no need to dispose it, it will be disposed when the app exits.
+        /// </summary>
+        // TODO not happy with this
+        private static readonly MemoryCache OverSpentLedgersCache = new MemoryCache("BurnDownGraphAnalyser#OverSpentLedgersCache");
         private List<KeyValuePair<DateTime, decimal>> actualSpending;
         private List<KeyValuePair<DateTime, decimal>> budgetLine;
+
+        public BurnDownGraphAnalyser([NotNull] ILogger logger)
+        {
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
+            this.logger = logger;
+        }
 
         /// <summary>
         ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
@@ -60,6 +80,7 @@ namespace BudgetAnalyser.Engine.Reports
                 throw new ArgumentNullException("statementModel");
             }
 
+            this.logger.LogInfo(() => "BurnDownGraphAnalyser.Analyse: " + string.Join(" ", bucketsSubset.Select(b => b.Code)));
             ZeroLine = null;
             this.budgetLine = null;
             this.actualSpending = null;
@@ -68,8 +89,8 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime earliestDate = beginDate;
             DateTime latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
-
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
+            decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
 
             var query = statementModel.Transactions
                 .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
@@ -78,23 +99,26 @@ namespace BudgetAnalyser.Engine.Reports
                 .OrderBy(t => t.Date)
                 .AsParallel();
 
+            this.logger.LogInfo(() => "    Initial Daily Txn Totals:");
             foreach (var transaction in query)
             {
                 chartData[transaction.Date] = transaction.Total;
+                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Total));
             }
 
             if (bucketsCopy.OfType<SurplusBucket>().Any())
             {
+                this.logger.LogInfo(() => "    Overspent Ledgers Subtract from Surplus:");
                 foreach (var transaction in CalculateOverspentLedgers(statementModel, ledgerBook, beginDate))
                 {
-                    chartData[transaction.Item1] += transaction.Item2;
+                    chartData[transaction.Key] -= transaction.Value;
+                    this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Key, transaction.Value));
                 }
             }
 
-            decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
-
             decimal runningTotal = budgetTotal;
             this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
+            this.logger.LogInfo(() => "    Convert totals to running total burndown:");
             foreach (var day in chartData)
             {
                 if (day.Key > DateTime.Today)
@@ -105,6 +129,7 @@ namespace BudgetAnalyser.Engine.Reports
                 NetWorth += day.Value;
                 runningTotal -= day.Value;
                 this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day.Key, runningTotal));
+                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", day.Key, runningTotal));
             }
 
             CalculateBudgetLineValues(budgetTotal);
@@ -112,48 +137,17 @@ namespace BudgetAnalyser.Engine.Reports
             ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
         }
 
-        /// <summary>
-        /// Finds any overspent ledgers for the month and returns the date and value the of the overspend.  This resulting collection can then be used to subtract from Surplus.
-        /// Overdrawn ledgers are supplemented from Surplus.
-        /// </summary>
-        private static IEnumerable<Tuple<DateTime, decimal>>  CalculateOverspentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        private string BuildCacheKeyForOverSpentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
         {
-            var list = new List<Tuple<DateTime, decimal>>();
-            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(ledger, beginDate);
-            if (ledgerLine == null)
+            long key;
+            unchecked
             {
-                return list;
+                key = statement.GetHashCode() * ledger.GetHashCode() * beginDate.GetHashCode();
             }
 
-            DateTime endDate = beginDate.AddMonths(1);
-            DateTime currentDate = beginDate;
-            var runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => entry.Balance);
-
-            do
-            {
-                decimal dayOverspend = 0;
-                DateTime currentDateCopy = currentDate;
-                foreach (var transaction in statement.Transactions.Where(t => t.Date == currentDateCopy))
-                {
-                    if (runningBalances.ContainsKey(transaction.BudgetBucket))
-                    {
-                        runningBalances[transaction.BudgetBucket] += transaction.Amount;
-                        if (runningBalances[transaction.BudgetBucket] < 0)
-                        {
-                            dayOverspend += runningBalances[transaction.BudgetBucket];
-                        }
-                    }
-                }
-
-                if (dayOverspend < 0)
-                {
-                    list.Add(new Tuple<DateTime, decimal>(currentDate, -dayOverspend));
-                }
-
-                currentDate = currentDate.AddDays(1);
-            } while (currentDate < endDate);
-
-            return list;
+            string keyString = key.ToString(CultureInfo.InvariantCulture);
+            this.logger.LogInfo(() => this.logger.Format("OverSpentLedger Cache Key: {0} from {1} {2} {3}", keyString, statement.FileName, ledger.FileName, beginDate));
+            return keyString;
         }
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)
@@ -264,6 +258,13 @@ namespace BudgetAnalyser.Engine.Reports
             return data;
         }
 
+        private void AddToOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate, object cacheData)
+        {
+            string keyString = BuildCacheKeyForOverSpentLedgers(statement, ledger, beginDate);
+            OverSpentLedgersCache.Set(keyString, cacheData, DateTime.Now.AddMinutes(3));
+            this.logger.LogInfo(() => this.logger.Format("Added {0} to cache, cache now has {1} items.", keyString, OverSpentLedgersCache.GetCount()));
+        }
+
         private void CalculateBudgetLineValues(decimal budgetTotal)
         {
             decimal average = budgetTotal / ZeroLine.Count();
@@ -274,6 +275,98 @@ namespace BudgetAnalyser.Engine.Reports
             {
                 this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
             }
+        }
+
+        /// <summary>
+        ///     Finds any overspent ledgers for the month and returns the date and value the of the overspend.  This resulting
+        ///     collection can then be used to subtract from Surplus.
+        ///     Overdrawn ledgers are supplemented from Surplus.
+        ///     Negative values indicate overdrawn ledgers.
+        /// </summary>
+        private IEnumerable<KeyValuePair<DateTime, decimal>> CalculateOverspentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            // TODO this should be moved to LedgerCalculator
+            // Given the same ledger, statement and begin date this data won't change.
+            IEnumerable<KeyValuePair<DateTime, decimal>> cachedValue = FoundInOverSpentLedgerCache(statement, ledger, beginDate);
+            if (cachedValue != null)
+            {
+                return cachedValue;
+            }
+
+            var list = new Dictionary<DateTime, decimal>();
+            LedgerEntryLine ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(ledger, beginDate);
+            if (ledgerLine == null)
+            {
+                return list;
+            }
+
+            DateTime endDate = beginDate.AddMonths(1);
+            DateTime currentDate = beginDate;
+            Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => entry.Balance);
+            Dictionary<BudgetBucket, decimal> previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => 0M);
+
+            do
+            {
+                DateTime currentDateCopy = currentDate;
+                foreach (Transaction transaction in statement.Transactions.Where(t => t.Date == currentDateCopy))
+                {
+                    if (runningBalances.ContainsKey(transaction.BudgetBucket))
+                    {
+                        runningBalances[transaction.BudgetBucket] += transaction.Amount;
+                    }
+                }
+
+                decimal overSpend = 0; // This will be a negative number to give the level of overspend.
+                foreach (var runningBalance in runningBalances)
+                {
+                    decimal previousBalance = previousBalances[runningBalance.Key];
+
+                    // Update previous balance with today's
+                    previousBalances[runningBalance.Key] = runningBalance.Value;
+
+                    if (previousBalance == runningBalance.Value)
+                    {
+                        // Previous balance and current balance are the same so there is no change, ledger hasn't got any worse or better.
+                        continue;
+                    }
+
+                    if (runningBalance.Value < 0 && previousBalance >= 0)
+                    {
+                        // Ledger has been overdrawn today.
+                        overSpend += runningBalance.Value;
+                    }
+                    else if (runningBalance.Value < 0 && previousBalance < 0)
+                    {
+                        // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
+                        overSpend += -(previousBalance - runningBalance.Value);
+                    }
+                    else if (runningBalance.Value >= 0 && previousBalance < 0)
+                    {
+                        // Ledger was overdrawn yesterday and is now back in credit.
+                        overSpend += -previousBalance;
+                    }
+                }
+
+                list[currentDate] = overSpend;
+                currentDate = currentDate.AddDays(1);
+            } while (currentDate < endDate);
+
+            AddToOverSpentLedgerCache(statement, ledger, beginDate, list);
+            return list;
+        }
+
+        private IEnumerable<KeyValuePair<DateTime, decimal>> FoundInOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            string keyString = BuildCacheKeyForOverSpentLedgers(statement, ledger, beginDate);
+            var item = OverSpentLedgersCache.Get(keyString);
+            if (item != null)
+            {
+                this.logger.LogInfo(() => "Cached value hit");
+                return (IEnumerable<KeyValuePair<DateTime, decimal>>)item;
+            }
+
+            this.logger.LogInfo(() => "Not found in cache");
+            return null;
         }
     }
 }
