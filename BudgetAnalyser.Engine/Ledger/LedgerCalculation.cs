@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -11,6 +14,15 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC]
     public class LedgerCalculation
     {
+        /// <summary>
+        ///     A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers" />. This method
+        ///     is called multiple times over a short period to build a burn down report.
+        ///     I did consider using a MemoryCache here, but I don't like the fact it is IDisposable.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, object> CalculationsCache = new ConcurrentDictionary<string, object>();
+
+        private static DateTime CacheLastUpdated;
+
         public IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
             if (ledgerBook == null)
@@ -46,6 +58,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public virtual decimal CalculateCurrentMonthSurplusBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
+            CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
                 throw new ArgumentNullException("ledgerBook");
@@ -86,10 +99,90 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Locates the most recent <see cref="LedgerEntryLine"/> for the given date filter. Note that this will only return the most recent line that fits the criteria.
+        ///     Finds any overspent ledgers for the month and returns the date and value the of the overspend.  This resulting
+        ///     collection can then be used to subtract from Surplus.
+        ///     Overdrawn ledgers are supplemented from Surplus.
+        ///     Negative values indicate overdrawn ledgers.
+        /// </summary>
+        public virtual IDictionary<DateTime, decimal> CalculateOverspentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            CheckCacheForCleanUp();
+            // Given the same ledger, statement and begin date this data won't change.
+            IDictionary<DateTime, decimal> cachedValue = FoundInOverSpentLedgerCache(statement, ledger, beginDate);
+            if (cachedValue != null)
+            {
+                return cachedValue;
+            }
+
+            var list = new Dictionary<DateTime, decimal>();
+            LedgerEntryLine ledgerLine = LocateApplicableLedgerLine(ledger, beginDate);
+            if (ledgerLine == null)
+            {
+                return list;
+            }
+
+            DateTime endDate = beginDate.AddMonths(1);
+            DateTime currentDate = beginDate;
+            Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => entry.Balance);
+            Dictionary<BudgetBucket, decimal> previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => 0M);
+
+            do
+            {
+                DateTime currentDateCopy = currentDate;
+                foreach (Transaction transaction in statement.Transactions.Where(t => t.Date == currentDateCopy))
+                {
+                    if (runningBalances.ContainsKey(transaction.BudgetBucket))
+                    {
+                        runningBalances[transaction.BudgetBucket] += transaction.Amount;
+                    }
+                }
+
+                decimal overSpend = 0; // This will be a negative number to give the level of overspend.
+                foreach (var runningBalance in runningBalances)
+                {
+                    decimal previousBalance = previousBalances[runningBalance.Key];
+
+                    // Update previous balance with today's
+                    previousBalances[runningBalance.Key] = runningBalance.Value;
+
+                    if (previousBalance == runningBalance.Value)
+                    {
+                        // Previous balance and current balance are the same so there is no change, ledger hasn't got any worse or better.
+                        continue;
+                    }
+
+                    if (runningBalance.Value < 0 && previousBalance >= 0)
+                    {
+                        // Ledger has been overdrawn today.
+                        overSpend += runningBalance.Value;
+                    }
+                    else if (runningBalance.Value < 0 && previousBalance < 0)
+                    {
+                        // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
+                        overSpend += -(previousBalance - runningBalance.Value);
+                    }
+                    else if (runningBalance.Value >= 0 && previousBalance < 0)
+                    {
+                        // Ledger was overdrawn yesterday and is now back in credit.
+                        overSpend += -previousBalance;
+                    }
+                }
+
+                list[currentDate] = overSpend;
+                currentDate = currentDate.AddDays(1);
+            } while (currentDate < endDate);
+
+            AddToCache(statement, ledger, beginDate, list);
+            return list;
+        }
+
+        /// <summary>
+        ///     Locates the most recent <see cref="LedgerEntryLine" /> for the given date filter. Note that this will only return
+        ///     the most recent line that fits the criteria.
         /// </summary>
         public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
         {
+            CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
                 throw new ArgumentNullException("ledgerBook");
@@ -107,13 +200,14 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return line.Entries
-                            .Where(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode)
-                            .Select(ledgerEntry => ledgerEntry.Balance)
-                            .FirstOrDefault();
+                .Where(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode)
+                .Select(ledgerEntry => ledgerEntry.Balance)
+                .FirstOrDefault();
         }
 
         public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
         {
+            CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
                 return null;
@@ -136,12 +230,33 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime beginDate)
         {
+            CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
                 return null;
             }
 
             return LocateLedgerEntryLine(ledgerBook, beginDate, beginDate.AddMonths(1).AddDays(-1));
+        }
+
+        private static void AddToCache(StatementModel statement, LedgerBook ledger, DateTime beginDate, object cacheData)
+        {
+            CacheLastUpdated = DateTime.Now;
+            Thread.MemoryBarrier();
+            string keyString = BuildCacheKey(statement, ledger, beginDate);
+            CalculationsCache.AddOrUpdate(keyString, key => cacheData, (key, o) => cacheData);
+        }
+
+        private static string BuildCacheKey(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            long key;
+            unchecked
+            {
+                key = statement.GetHashCode() * ledger.GetHashCode() * beginDate.GetHashCode();
+            }
+
+            string keyString = key.ToString(CultureInfo.InvariantCulture);
+            return keyString;
         }
 
         private static Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
@@ -163,6 +278,31 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return ledgersSummary;
+        }
+
+        private static void CheckCacheForCleanUp()
+        {
+            TimeSpan wasLastUsed = DateTime.Now.Subtract(CacheLastUpdated);
+            if (wasLastUsed.Minutes > 2 && CacheLastUpdated != default(DateTime))
+            {
+                CacheLastUpdated = default(DateTime);
+                Thread.MemoryBarrier();
+                CalculationsCache.Clear();
+            }
+        }
+
+        private static IDictionary<DateTime, decimal> FoundInOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        {
+            string keyString = BuildCacheKey(statement, ledger, beginDate);
+            object item;
+            if (CalculationsCache.TryGetValue(keyString, out item))
+            {
+                CacheLastUpdated = DateTime.Now;
+                Thread.MemoryBarrier();
+                return (IDictionary<DateTime, decimal>)item;
+            }
+
+            return null;
         }
 
         private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime begin, DateTime end)
