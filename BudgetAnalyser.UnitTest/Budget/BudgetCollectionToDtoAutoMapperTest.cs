@@ -23,7 +23,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             Console.WriteLine("TestDataBuckets.Count = " + TestDataBuckets.Count());
             Console.WriteLine("Result.Buckets.Count = " + Result.Buckets.Count());
-            Assert.AreEqual(TestDataBuckets.Count(), Result.Buckets.Count);
+
+            Assert.IsTrue(Result.Buckets.Any());
+            foreach (var bucketDto in Result.Buckets)
+            {
+                Assert.IsTrue(TestDataBuckets.Any(b => b.Code == bucketDto.Code));
+            }
         }
 
         [TestMethod]
