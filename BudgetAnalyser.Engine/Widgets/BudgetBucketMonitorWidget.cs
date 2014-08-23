@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -13,6 +12,7 @@ namespace BudgetAnalyser.Engine.Widgets
     public sealed class BudgetBucketMonitorWidget : ProgressBarWidget, IMultiInstanceWidget
     {
         private readonly string disabledToolTip;
+        private LedgerCalculation ledgerCalculator;
         private readonly string remainingBudgetToolTip;
         private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public BudgetBucketMonitorWidget()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook) };
+            Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle3";
 
@@ -83,6 +83,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];
             this.ledgerBook = (LedgerBook)input[4];
+            this.ledgerCalculator = (LedgerCalculation)input[5];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -134,9 +135,9 @@ namespace BudgetAnalyser.Engine.Widgets
             Debug.Assert(this.filter.BeginDate != null);
             Debug.Assert(this.filter.EndDate != null);
 
-            var monthlyBudget = this.budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
-            var totalBudgetedAmount = monthlyBudget;
-            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
+            decimal monthlyBudget = this.budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+            decimal totalBudgetedAmount = monthlyBudget;
+            LedgerEntryLine ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
 
             if (this.ledgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerColumn.BudgetBucket.Code != BucketCode))
             {

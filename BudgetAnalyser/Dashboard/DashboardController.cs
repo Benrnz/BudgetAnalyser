@@ -13,6 +13,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
@@ -35,6 +36,7 @@ namespace BudgetAnalyser.Dashboard
         private readonly IUserMessageBox messageBox;
         private readonly IWidgetRepository widgetRepository;
         private readonly WidgetService widgetService;
+        private readonly LedgerCalculation ledgerCalculator;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
         private TimeSpan elapsedTime;
@@ -50,7 +52,8 @@ namespace BudgetAnalyser.Dashboard
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] ChooseBudgetBucketController chooseBudgetBucketController,
-            [NotNull] WidgetService widgetService)
+            [NotNull] WidgetService widgetService, 
+            [NotNull] LedgerCalculation ledgerCalculator)
         {
             if (uiContext == null)
             {
@@ -76,6 +79,11 @@ namespace BudgetAnalyser.Dashboard
             {
                 throw new ArgumentNullException("widgetService");
             }
+            
+            if (ledgerCalculator == null)
+            {
+                throw new ArgumentNullException("ledgerCalculator");
+            }
 
             this.widgetRepository = widgetRepository;
             this.widgetRepository.WidgetRemoved += OnBudgetBucketMonitorWidgetRemoved;
@@ -85,6 +93,7 @@ namespace BudgetAnalyser.Dashboard
             GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
             this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.ledgerCalculator = ledgerCalculator;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
@@ -182,6 +191,7 @@ namespace BudgetAnalyser.Dashboard
             this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = null;
             this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
             this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
+            this.availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
         }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)

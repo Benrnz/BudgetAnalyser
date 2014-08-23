@@ -8,6 +8,7 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     public class RemainingActualSurplusWidget : ProgressBarWidget
     {
+        private LedgerCalculation ledgerCalculator;
         private readonly string standardStyle;
         private GlobalFilterCriteria filter;
         private LedgerBook ledgerBook;
@@ -18,7 +19,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Category = "Monthly Budget";
             DetailedText = "Bank Surplus";
             Name = "Surplus A";
-            Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
+            Dependencies = new[] { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
             this.standardStyle = "WidgetStandardStyle3";
         }
 
@@ -38,6 +39,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.statement = (StatementModel)input[0];
             this.filter = (GlobalFilterCriteria)input[1];
             this.ledgerBook = (LedgerBook)input[2];
+            this.ledgerCalculator = (LedgerCalculation)input[3];
 
             if (this.ledgerBook == null || this.statement == null || this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.EndDate == null)
             {
@@ -54,7 +56,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
-            decimal remainingBalance = LedgerCalculation.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
+            decimal remainingBalance = this.ledgerCalculator.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
             Value = Convert.ToDouble(remainingBalance);
@@ -71,9 +73,9 @@ namespace BudgetAnalyser.Engine.Widgets
             ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
         }
 
-        private static decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
+        private decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
         {
-            LedgerEntryLine line = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, filter);
+            LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, filter);
             return line == null ? 0 : line.CalculatedSurplus;
         }
     }

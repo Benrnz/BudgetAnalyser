@@ -8,9 +8,10 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    public static class LedgerCalculation
+    [AutoRegisterWithIoC]
+    public class LedgerCalculation
     {
-        public static IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
+        public IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
             if (ledgerBook == null)
             {
@@ -43,7 +44,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledgersSummary;
         }
 
-        public static decimal CalculateCurrentMonthSurplusBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
+        public virtual decimal CalculateCurrentMonthSurplusBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
             if (ledgerBook == null)
             {
@@ -87,7 +88,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         /// Locates the most recent <see cref="LedgerEntryLine"/> for the given date filter. Note that this will only return the most recent line that fits the criteria.
         /// </summary>
-        public static decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
+        public virtual decimal LocateApplicableLedgerBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, string bucketCode)
         {
             if (ledgerBook == null)
             {
@@ -111,7 +112,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             .FirstOrDefault();
         }
 
-        public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
+        public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
         {
             if (ledgerBook == null)
             {
@@ -133,7 +134,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return LocateLedgerEntryLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
         }
 
-        public static LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime beginDate)
+        public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime beginDate)
         {
             if (ledgerBook == null)
             {

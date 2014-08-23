@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public OverspentWarning()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(StatementModel), typeof(BudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
+            Dependencies = new[] { typeof(StatementModel), typeof(BudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
             DetailedText = "Overspent";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
@@ -47,6 +47,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var budget = (BudgetCurrencyContext)input[1];
             var filter = (GlobalFilterCriteria)input[2];
             var ledgerBook = (LedgerBook)input[3];
+            var ledgerCalculator = (LedgerCalculation)input[4];
 
             if (budget == null || ledgerBook == null || statement == null || filter == null || filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
             {
@@ -62,7 +63,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            IDictionary<BudgetBucket, decimal> overspendingSummary = LedgerCalculation.CalculateCurrentMonthLedgerBalances(ledgerBook, filter, statement);
+            IDictionary<BudgetBucket, decimal> overspendingSummary = ledgerCalculator.CalculateCurrentMonthLedgerBalances(ledgerBook, filter, statement);
             int warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 
             // Check other budget buckets that are not represented in the ledger book.
@@ -101,7 +102,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
                 decimal bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
                 overspendingSummary.Add(expense.Bucket, bucketBalance);
-                if (bucketBalance < -this.Tolerance)
+                if (bucketBalance < -Tolerance)
                 {
                     warnings++;
                 }

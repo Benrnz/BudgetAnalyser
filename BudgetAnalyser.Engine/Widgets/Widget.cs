@@ -8,6 +8,9 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    /// A base class for all widgets. These are used on the Dashboard view to display statistics, metrics, and oil lights.
+    /// </summary>
     public abstract class Widget : INotifyPropertyChanged
     {
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
@@ -26,6 +29,10 @@ namespace BudgetAnalyser.Engine.Widgets
         private string doNotUseWidgetStyle;
         private bool doNotUseEnabled;
 
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Widget"/> class.
+        /// All widgets must have a parameterless constructor. This is the constructor that will be used to create all widgets.
+        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         protected Widget()
         {

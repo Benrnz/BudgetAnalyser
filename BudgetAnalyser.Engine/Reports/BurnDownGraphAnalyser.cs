@@ -16,6 +16,7 @@ namespace BudgetAnalyser.Engine.Reports
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BurnDownGraphAnalyser : IBurnDownGraphAnalyser
     {
+        private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
 
         /// <summary>
@@ -27,13 +28,19 @@ namespace BudgetAnalyser.Engine.Reports
         private List<KeyValuePair<DateTime, decimal>> actualSpending;
         private List<KeyValuePair<DateTime, decimal>> budgetLine;
 
-        public BurnDownGraphAnalyser([NotNull] ILogger logger)
+        public BurnDownGraphAnalyser([NotNull] LedgerCalculation ledgerCalculator, [NotNull] ILogger logger)
         {
+            if (ledgerCalculator == null)
+            {
+                throw new ArgumentNullException("ledgerCalculator");
+            }
+
             if (logger == null)
             {
                 throw new ArgumentNullException("logger");
             }
 
+            this.ledgerCalculator = ledgerCalculator;
             this.logger = logger;
         }
 
@@ -178,7 +185,7 @@ namespace BudgetAnalyser.Engine.Reports
             return 0;
         }
 
-        private static decimal GetBudgetedTotal(
+        private decimal GetBudgetedTotal(
             [NotNull] BudgetModel budgetModel,
             [NotNull] IEnumerable<BudgetBucket> buckets,
             int durationInMonths,
@@ -196,7 +203,7 @@ namespace BudgetAnalyser.Engine.Reports
                     EndDate = endDate.AddMonths(-monthIndex),
                 };
 
-                LedgerEntryLine applicableLine = LedgerCalculation.LocateApplicableLedgerLine(ledgerBook, previousMonthCriteria);
+                LedgerEntryLine applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, previousMonthCriteria);
                 if (applicableLine == null)
                 {
                     // Use budget values from budget model instead, there is no ledger book line for this month.
@@ -294,7 +301,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             var list = new Dictionary<DateTime, decimal>();
-            LedgerEntryLine ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(ledger, beginDate);
+            LedgerEntryLine ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledger, beginDate);
             if (ledgerLine == null)
             {
                 return list;

@@ -83,8 +83,6 @@ namespace BudgetAnalyser
         private void AllLocalNonAutomaticRegistrations(Application app, ContainerBuilder builder)
         {
             // Register any special mappings that have not been registered with automatic mappings.
-            builder.RegisterInstance<Func<BucketBurnDownController>>(() => new BucketBurnDownController(new BurnDownGraphAnalyser(Logger)));
-
             // Explicit object creation below is necessary to correctly register with IoC container.
             // ReSharper disable once RedundantDelegateCreation
             builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
