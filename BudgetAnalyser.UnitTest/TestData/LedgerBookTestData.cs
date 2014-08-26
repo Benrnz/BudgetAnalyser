@@ -11,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     internal static class LedgerBookTestData
     {
         /// <summary>
-        ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
+        ///     A Test LedgerBook with data populated for June, July and August 2013.  Also includes some debit transactions.
         /// </summary>
         public static LedgerBook TestData1()
         {

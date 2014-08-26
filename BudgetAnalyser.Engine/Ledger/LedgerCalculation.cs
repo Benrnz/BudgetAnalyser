@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -99,26 +100,38 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Finds any overspent ledgers for the month and returns the date and value the of the overspend.  This resulting
+        ///     Finds any overspent ledgers for the month and returns the date and value the of the total overspend.  This
+        ///     resulting
         ///     collection can then be used to subtract from Surplus.
         ///     Overdrawn ledgers are supplemented from Surplus.
         ///     Negative values indicate overdrawn ledgers.
         /// </summary>
-        public virtual IDictionary<DateTime, decimal> CalculateOverspentLedgers(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        public virtual IEnumerable<ReportTransaction> CalculateOverspentLedgers([NotNull] StatementModel statement, [NotNull] LedgerBook ledger, DateTime beginDate)
         {
             CheckCacheForCleanUp();
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException("statement");
+            }
+
+            if (ledger == null)
+            {
+                throw new ArgumentNullException("ledger");
+            }
+
             // Given the same ledger, statement and begin date this data won't change.
-            IDictionary<DateTime, decimal> cachedValue = FoundInOverSpentLedgerCache(statement, ledger, beginDate);
+            IEnumerable<ReportTransaction> cachedValue = FoundInOverSpentLedgerCache(statement, ledger, beginDate);
             if (cachedValue != null)
             {
                 return cachedValue;
             }
 
-            var list = new Dictionary<DateTime, decimal>();
+            var overSpendTransactions = new List<ReportTransaction>();
             LedgerEntryLine ledgerLine = LocateApplicableLedgerLine(ledger, beginDate);
             if (ledgerLine == null)
             {
-                return list;
+                return overSpendTransactions;
             }
 
             DateTime endDate = beginDate.AddMonths(1);
@@ -137,43 +150,13 @@ namespace BudgetAnalyser.Engine.Ledger
                     }
                 }
 
-                decimal overSpend = 0; // This will be a negative number to give the level of overspend.
-                foreach (var runningBalance in runningBalances)
-                {
-                    decimal previousBalance = previousBalances[runningBalance.Key];
+                ProcessOverdrawnLedgers(runningBalances, previousBalances, overSpendTransactions, currentDate);
 
-                    // Update previous balance with today's
-                    previousBalances[runningBalance.Key] = runningBalance.Value;
-
-                    if (previousBalance == runningBalance.Value)
-                    {
-                        // Previous balance and current balance are the same so there is no change, ledger hasn't got any worse or better.
-                        continue;
-                    }
-
-                    if (runningBalance.Value < 0 && previousBalance >= 0)
-                    {
-                        // Ledger has been overdrawn today.
-                        overSpend += runningBalance.Value;
-                    }
-                    else if (runningBalance.Value < 0 && previousBalance < 0)
-                    {
-                        // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
-                        overSpend += -(previousBalance - runningBalance.Value);
-                    }
-                    else if (runningBalance.Value >= 0 && previousBalance < 0)
-                    {
-                        // Ledger was overdrawn yesterday and is now back in credit.
-                        overSpend += -previousBalance;
-                    }
-                }
-
-                list[currentDate] = overSpend;
                 currentDate = currentDate.AddDays(1);
             } while (currentDate < endDate);
 
-            AddToCache(statement, ledger, beginDate, list);
-            return list;
+            AddToCache(statement, ledger, beginDate, overSpendTransactions);
+            return overSpendTransactions;
         }
 
         /// <summary>
@@ -291,7 +274,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private static IDictionary<DateTime, decimal> FoundInOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+        private static IEnumerable<ReportTransaction> FoundInOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate)
         {
             string keyString = BuildCacheKey(statement, ledger, beginDate);
             object item;
@@ -299,7 +282,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 CacheLastUpdated = DateTime.Now;
                 Thread.MemoryBarrier();
-                return (IDictionary<DateTime, decimal>)item;
+                return (IEnumerable<ReportTransaction>)item;
             }
 
             return null;
@@ -308,6 +291,67 @@ namespace BudgetAnalyser.Engine.Ledger
         private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime begin, DateTime end)
         {
             return ledgerBook.DatedEntries.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= begin && ledgerEntryLine.Date <= end);
+        }
+
+        private static void ProcessOverdrawnLedgers(
+            Dictionary<BudgetBucket, decimal> runningBalances,
+            Dictionary<BudgetBucket, decimal> previousBalances,
+            List<ReportTransaction> overSpendTransactions,
+            DateTime currentDate)
+        {
+            foreach (var runningBalance in runningBalances)
+            {
+                decimal previousBalance = previousBalances[runningBalance.Key];
+
+                // Update previous balance with today's
+                previousBalances[runningBalance.Key] = runningBalance.Value;
+
+                if (previousBalance == runningBalance.Value)
+                {
+                    // Previous balance and current balance are the same so there is no change, ledger hasn't got any worse or better.
+                    continue;
+                }
+
+                if (runningBalance.Value < 0 && previousBalance >= 0)
+                {
+                    // Ledger has been overdrawn today.
+                    overSpendTransactions.Add(new ReportTransaction
+                    {
+                        Date = currentDate,
+                        Amount = runningBalance.Value,
+                        Narrative = runningBalance.Key + " overdrawn - will be supplemented from Surplus."
+                    });
+                    continue;
+                }
+
+                if (runningBalance.Value < 0 && previousBalance < 0)
+                {
+                    // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
+                    decimal amount = -(previousBalance - runningBalance.Value);
+                    overSpendTransactions.Add(new ReportTransaction
+                    {
+                        Date = currentDate,
+                        Amount = amount,
+                        Narrative = string.Format(
+                            CultureInfo.CurrentCulture,
+                            "{0} was overdrawn, {1}. Will be supplemented from Surplus.",
+                            runningBalance.Key,
+                            amount < 0 ? "and has been further overdrawn" : "has been credited, but is still overdrawn"),
+                    });
+                    continue;
+                }
+
+                if (runningBalance.Value >= 0 && previousBalance < 0)
+                {
+                    // Ledger was overdrawn yesterday and is now back in credit.
+                    overSpendTransactions.Add(new ReportTransaction
+                    {
+                        Date = currentDate,
+                        Amount = -previousBalance,
+                        Narrative = runningBalance.Key + " was overdrawn, and has been credited back into a positive balance."
+                    });
+                }
+            }
         }
     }
 }

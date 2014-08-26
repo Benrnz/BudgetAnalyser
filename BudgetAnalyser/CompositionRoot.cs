@@ -80,7 +80,7 @@ namespace BudgetAnalyser
             BuildApplicationObjectGraph(builder);
         }
 
-        private void AllLocalNonAutomaticRegistrations(Application app, ContainerBuilder builder)
+        private static void AllLocalNonAutomaticRegistrations(Application app, ContainerBuilder builder)
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.

@@ -62,6 +62,7 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "reviewed ok here.")]
         protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
         {
             return Task.Factory.StartNew(

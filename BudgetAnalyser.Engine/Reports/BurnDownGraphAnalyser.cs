@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Caching;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -93,27 +91,15 @@ namespace BudgetAnalyser.Engine.Reports
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
             decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
 
-            var query = statementModel.Transactions
-                .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
-                .Where(t => t.Date >= earliestDate && t.Date <= latestDate)
-                .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
-                .OrderBy(t => t.Date)
-                .AsParallel();
-
-            this.logger.LogInfo(() => "    Initial Daily Txn Totals:");
-            foreach (var transaction in query)
-            {
-                chartData[transaction.Date] = transaction.Total;
-                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Total));
-            }
+            CollateAndInsertStatementTransactions(statementModel, bucketsCopy, earliestDate, latestDate, chartData);
 
             if (bucketsCopy.OfType<SurplusBucket>().Any())
             {
                 this.logger.LogInfo(() => "    Overspent Ledgers Subtract from Surplus:");
                 foreach (var transaction in this.ledgerCalculator.CalculateOverspentLedgers(statementModel, ledgerBook, beginDate))
                 {
-                    chartData[transaction.Key] -= transaction.Value;
-                    this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Key, transaction.Value));
+                    chartData[transaction.Date] -= transaction.Amount;
+                    this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Amount));
                 }
             }
 
@@ -136,6 +122,22 @@ namespace BudgetAnalyser.Engine.Reports
             CalculateBudgetLineValues(budgetTotal);
 
             ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
+        }
+
+        private void CollateAndInsertStatementTransactions(StatementModel statementModel, IEnumerable<BudgetBucket> bucketsCopy, DateTime earliestDate, DateTime latestDate, Dictionary<DateTime, decimal> chartData)
+        {
+            var query = statementModel.Transactions
+                .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
+                .Where(t => t.Date >= earliestDate && t.Date <= latestDate)
+                .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
+                .OrderBy(t => t.Date)
+                .AsParallel();
+
+            foreach (var transaction in query)
+            {
+                chartData[transaction.Date] = transaction.Total;
+                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Total));
+            }
         }
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)

@@ -25,9 +25,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             Console.WriteLine("Result.Buckets.Count = " + Result.Buckets.Count());
 
             Assert.IsTrue(Result.Buckets.Any());
-            foreach (var bucketDto in Result.Buckets)
+            foreach (var bucket in TestDataBuckets)
             {
-                Assert.IsTrue(TestDataBuckets.Any(b => b.Code == bucketDto.Code));
+                Assert.IsTrue(Result.Buckets.Any(b => b.Code == bucket.Code));
             }
         }
 

@@ -154,6 +154,7 @@
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
+    <Compile Include="Reports\ReportTransaction.cs" />
     <Compile Include="Reports\SeriesData.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />

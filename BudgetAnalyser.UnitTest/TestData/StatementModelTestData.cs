@@ -54,6 +54,24 @@ namespace BudgetAnalyser.UnitTest.TestData
             return statement;
         }
 
+        /// <summary>
+        /// Statement Model with transactions between 15/07/2013 and 14/09/2013
+        /// Includes income transactions.
+        /// Adjusted for use with LedgerCalculator.
+        /// </summary>
+        public static StatementModel TestData3()
+        {
+            var statement = new StatementModel(new FakeLogger())
+            {
+                FileName = @"C:\TestData3\Foo2Statement.csv",
+                LastImport = new DateTime(2013, 08, 15),
+            };
+
+            var transactions = CreateTransactions3();
+            statement.LoadTransactions(transactions);
+            return statement;
+        }
+
         private static IEnumerable<Transaction> CreateTransactions1()
         {
             var transactions = new List<Transaction>
@@ -190,6 +208,114 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     AccountType = ChequeAccount,
                     Amount = -68.29M,
+                    BudgetBucket = PhoneBucket,
+                    Date = new DateTime(2013, 08, 16),
+                    Description = "Vodafone Mobile Ltd",
+                    Reference1 = "1233411119",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = VisaAccount,
+                    Amount = -55.00M,
+                    BudgetBucket = HairBucket,
+                    Date = new DateTime(2013, 08, 22),
+                    Description = "Rodney Wayne",
+                    Reference1 = "1233411222",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = VisaAccount,
+                    Amount = -91.00M,
+                    BudgetBucket = CarMtcBucket,
+                    Date = new DateTime(2013, 08, 15),
+                    Description = "Ford Ellerslie",
+                    Reference1 = "23411222",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = VisaAccount,
+                    Amount = -350.00M,
+                    BudgetBucket = RegoBucket,
+                    Date = new DateTime(2013, 09, 01),
+                    Description = "nzpost nzta car regisration",
+                    Reference1 = "23411222",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = 850.99M,
+                    BudgetBucket = IncomeBucket,
+                    Date = new DateTime(2013, 09, 20),
+                    Description = "Payroll",
+                    Reference1 = "123xxxxxx89",
+                    TransactionType = TransactionType,
+                },
+            };
+            return transactions;
+        }
+
+        private static IEnumerable<Transaction> CreateTransactions3()
+        {
+            var transactions = new List<Transaction>
+            {
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = 850.99M,
+                    BudgetBucket = IncomeBucket,
+                    Date = new DateTime(2013, 07, 20),
+                    Description = "Payroll",
+                    Reference1 = "123xxxxxx89",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = -95.15M,
+                    BudgetBucket = PowerBucket,
+                    Date = new DateTime(2013, 07, 15),
+                    Description = "Engery Online Electricity",
+                    Reference1 = "12334458989",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = -58.19M,
+                    BudgetBucket = PhoneBucket,
+                    Date = new DateTime(2013, 07, 16),
+                    Description = "Vodafone Mobile Ltd",
+                    Reference1 = "1233411119",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = -52.32M,
+                    BudgetBucket = PowerBucket,
+                    Date = new DateTime(2013, 08, 15),
+                    Description = "Engery Online Electricity",
+                    Reference1 = "12334458989",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = 850.99M,
+                    BudgetBucket = IncomeBucket,
+                    Date = new DateTime(2013, 08, 20),
+                    Description = "Payroll",
+                    Reference1 = "123xxxxxx89",
+                    TransactionType = TransactionType,
+                },
+                new Transaction
+                {
+                    AccountType = ChequeAccount,
+                    Amount = -64.71M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 08, 16),
                     Description = "Vodafone Mobile Ltd",

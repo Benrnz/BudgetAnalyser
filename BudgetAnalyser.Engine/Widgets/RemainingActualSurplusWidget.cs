@@ -8,10 +8,10 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     public class RemainingActualSurplusWidget : ProgressBarWidget
     {
-        private LedgerCalculation ledgerCalculator;
         private readonly string standardStyle;
         private GlobalFilterCriteria filter;
         private LedgerBook ledgerBook;
+        private LedgerCalculation ledgerCalculator;
         private StatementModel statement;
 
         public RemainingActualSurplusWidget()
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            decimal openingBalance = CalculateOpeningBalance(this.filter, this.ledgerBook);
+            decimal openingBalance = CalculateOpeningBalance();
             decimal remainingBalance = this.ledgerCalculator.CalculateCurrentMonthSurplusBalance(this.ledgerBook, this.filter, this.statement);
 
             Maximum = Convert.ToDouble(openingBalance);
@@ -73,9 +73,9 @@ namespace BudgetAnalyser.Engine.Widgets
             ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}", remainingBalance, openingBalance);
         }
 
-        private decimal CalculateOpeningBalance(GlobalFilterCriteria filter, LedgerBook ledgerBook)
+        private decimal CalculateOpeningBalance()
         {
-            LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, filter);
+            LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
             return line == null ? 0 : line.CalculatedSurplus;
         }
     }
