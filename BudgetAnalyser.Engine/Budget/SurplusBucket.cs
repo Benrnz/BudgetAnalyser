@@ -7,7 +7,6 @@
         public SurplusBucket()
             : base(SurplusCode, "A special bucket to allocate against any discretionary spending.")
         {
-            // Id = new Guid("dbaf34f9-5d8d-4984-8303-a022ab49b98a");
         }
 
         public override string TypeDescription

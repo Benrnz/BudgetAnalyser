@@ -90,6 +90,11 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 new Expense
                 {
+                    Amount = 120M,
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet"),
+                },
+                new Expense
+                {
                     Amount = 100M,
                     Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
                 },
@@ -117,5 +122,6 @@ namespace BudgetAnalyser.UnitTest.TestData
             budget.Update(incomes, expenses);
             return budget;
         }
+
     }
 }

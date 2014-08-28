@@ -67,16 +67,26 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
+        /// <summary>
+        /// Analyse the actual spending over a month as a burn down of the available budget.
+        /// The available budget is either the <paramref name="ledgerBook"/> balance of the ledger or if not tracked in the ledger, then 
+        /// the budgeted amount from the <paramref name="budgetModel"/>.
+        /// </summary>
         public void Analyse(
             [NotNull] StatementModel statementModel,
-            BudgetModel budgetModel,
+            [NotNull] BudgetModel budgetModel,
             IEnumerable<BudgetBucket> bucketsSubset,
             DateTime beginDate,
-            LedgerBook ledgerBook)
+            [CanBeNull] LedgerBook ledgerBook)
         {
             if (statementModel == null)
             {
                 throw new ArgumentNullException("statementModel");
+            }
+
+            if (budgetModel == null)
+            {
+                throw new ArgumentNullException("budgetModel");
             }
 
             this.logger.LogInfo(() => "BurnDownGraphAnalyser.Analyse: " + string.Join(" ", bucketsSubset.Select(b => b.Code)));
@@ -89,11 +99,12 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime latestDate = chartData.Keys.Max(k => k);
             ZeroLine = chartData.ToList();
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
-            decimal budgetTotal = GetBudgetedTotal(budgetModel, bucketsCopy, statementModel.DurationInMonths, ledgerBook, earliestDate, latestDate);
+            decimal budgetTotal = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, earliestDate);
 
             CollateAndInsertStatementTransactions(statementModel, bucketsCopy, earliestDate, latestDate, chartData);
 
-            if (bucketsCopy.OfType<SurplusBucket>().Any())
+            // Only relevant when calculating surplus burndown
+            if (ledgerBook != null && bucketsCopy.OfType<SurplusBucket>().Any())
             {
                 this.logger.LogInfo(() => "    Overspent Ledgers Subtract from Surplus:");
                 foreach (var transaction in this.ledgerCalculator.CalculateOverspentLedgers(statementModel, ledgerBook, beginDate))
@@ -124,7 +135,7 @@ namespace BudgetAnalyser.Engine.Reports
             ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
         }
 
-        private void CollateAndInsertStatementTransactions(StatementModel statementModel, IEnumerable<BudgetBucket> bucketsCopy, DateTime earliestDate, DateTime latestDate, Dictionary<DateTime, decimal> chartData)
+        private static void CollateAndInsertStatementTransactions(StatementModel statementModel, IEnumerable<BudgetBucket> bucketsCopy, DateTime earliestDate, DateTime latestDate, Dictionary<DateTime, decimal> chartData)
         {
             var query = statementModel.Transactions
                 .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
@@ -136,7 +147,6 @@ namespace BudgetAnalyser.Engine.Reports
             foreach (var transaction in query)
             {
                 chartData[transaction.Date] = transaction.Total;
-                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Total));
             }
         }
 
@@ -168,56 +178,35 @@ namespace BudgetAnalyser.Engine.Reports
             return 0;
         }
 
+        /// <summary>
+        /// Calculates the appropriate budgeted amount for the given buckets.
+        /// This can either be the ledger balance from the ledger book or if not tracked by the ledger book, then from the budget model.
+        /// </summary>
         private decimal GetBudgetedTotal(
             [NotNull] BudgetModel budgetModel,
+            [CanBeNull] LedgerBook ledgerBook,
             [NotNull] IEnumerable<BudgetBucket> buckets,
-            int durationInMonths,
-            LedgerBook ledgerBook,
-            DateTime beginDate,
-            DateTime endDate)
+            DateTime beginDate)
         {
             decimal budgetTotal = 0;
             List<BudgetBucket> bucketsCopy = buckets.ToList();
-            for (int monthIndex = 0; monthIndex < durationInMonths; monthIndex++)
+
+            LedgerEntryLine applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, beginDate);
+            if (applicableLine == null)
             {
-                var previousMonthCriteria = new GlobalFilterCriteria
-                {
-                    BeginDate = beginDate.AddMonths(-monthIndex),
-                    EndDate = endDate.AddMonths(-monthIndex),
-                };
-
-                LedgerEntryLine applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, previousMonthCriteria);
-                if (applicableLine == null)
-                {
-                    // Use budget values from budget model instead, there is no ledger book line for this month.
-                    budgetTotal += bucketsCopy.Sum(bucket => GetBudgetModelTotalForBucket(budgetModel, bucket));
-                }
-                else
-                {
-                    budgetTotal += bucketsCopy.Sum(bucket =>
-                    {
-                        decimal ledgerBal = GetLedgerBalance(applicableLine, bucket);
-                        if (ledgerBal < 0)
-                        {
-                            // The Ledger line might not actually have a ledger for the given bucket.
-                            return GetBudgetModelTotalForBucket(budgetModel, bucket);
-                        }
-
-                        return ledgerBal;
-                    });
-                }
+                // Use budget values from budget model instead, there is no ledger book line for this month.
+                budgetTotal += bucketsCopy.Sum(bucket => GetBudgetModelTotalForBucket(budgetModel, bucket));
+            }
+            else
+            {
+                budgetTotal += bucketsCopy.Sum(bucket => GetLedgerBalanceForBucket(budgetModel, applicableLine, bucket));
             }
 
             return budgetTotal;
         }
 
-        private static decimal GetLedgerBalance(LedgerEntryLine applicableLine, BudgetBucket bucket)
+        private static decimal GetLedgerBalanceForBucket(BudgetModel budgetModel, LedgerEntryLine applicableLine, BudgetBucket bucket)
         {
-            if (applicableLine == null)
-            {
-                return -1;
-            }
-
             if (bucket is SurplusBucket)
             {
                 return applicableLine.CalculatedSurplus;
@@ -229,9 +218,13 @@ namespace BudgetAnalyser.Engine.Reports
                 return ledger.Balance;
             }
 
-            return -1;
+            // The Ledger line might not actually have a ledger for the given bucket.
+            return GetBudgetModelTotalForBucket(budgetModel, bucket);
         }
 
+        /// <summary>
+        /// Populate a dictionary with an entry for each day of a month beginning at the start date.
+        /// </summary>
         private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(DateTime beginDate)
         {
             DateTime startDate = beginDate;
