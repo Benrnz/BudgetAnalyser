@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static string ExtractNarrative(Transaction t)
         {
-            if (string.IsNullOrWhiteSpace(t.Description))
+            if (!string.IsNullOrWhiteSpace(t.Description))
             {
                 return t.Description;
             }

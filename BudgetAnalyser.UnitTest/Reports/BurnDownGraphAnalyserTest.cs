@@ -19,21 +19,27 @@ namespace BudgetAnalyser.UnitTest.Reports
         private BurnDownGraphAnalyser Subject { get; set; }
 
         [TestMethod]
-        public void AnalyseShouldReturn30DaysOfActualSpendingElements()
+        public void AnalyseShouldReturn31DaysOfActualSpendingElements()
         {
-            Assert.AreEqual(30, Subject.ActualSpending.Count());
+            Assert.AreEqual(31, Subject.ActualSpending.Count());
         }
 
         [TestMethod]
-        public void AnalyseShouldReturn30DaysOfBudgetElements()
+        public void AnalyseShouldReturn31DaysOfBudgetElements()
         {
-            Assert.AreEqual(30, Subject.BudgetLine.Count());
+            Assert.AreEqual(31, Subject.BudgetLine.Count());
         }
 
         [TestMethod]
-        public void AnalyseShouldReturn30DaysOfZeroLineElements()
+        public void AnalyseShouldReturn31DaysOfZeroLineElements()
         {
-            Assert.AreEqual(30, Subject.ZeroLine.Count());
+            Assert.AreEqual(31, Subject.ZeroLine.Count());
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturnAFirstBudgetElementEqualToTheLedgerAmountAvailableGivenValidLedger()
+        {
+            Assert.AreEqual(3635M, Subject.BudgetLine.First().Value);
         }
 
         [TestMethod]
@@ -45,16 +51,28 @@ namespace BudgetAnalyser.UnitTest.Reports
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnAFirstBudgetElementEqualToTheLedgerAmountAvailableGivenValidLedger()
+        public void AnalyseShouldReturnALastBudgetElementOfOneThirtythOfTheFirst()
         {
-            Assert.AreEqual(2490M, Subject.BudgetLine.First().Value);
+            decimal expected = decimal.Round(Subject.BudgetLine.First().Value / 31, 2);
+            Assert.AreEqual(expected, decimal.Round(Subject.BudgetLine.Last().Value, 2));
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnALastBudgetElementOfOneThirtythOfTheFirst()
+        public void AnalyseShouldReturnActualSpendingAxesMinimumOf0()
         {
-            decimal expected = decimal.Round(Subject.BudgetLine.First().Value / 30, 2);
-            Assert.AreEqual(expected, decimal.Round(Subject.BudgetLine.Last().Value, 2));
+            Assert.AreEqual(0, Subject.ActualSpendingAxesMinimum);
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturnActualSpendingLineElementsTotalingTo104745()
+        {
+            Assert.AreEqual(104745.78M, Subject.ActualSpending.Sum(z => z.Value));
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturnNetWorthOf258()
+        {
+            Assert.AreEqual(258.66M, Subject.NetWorth);
         }
 
         [TestMethod]
@@ -70,7 +88,7 @@ namespace BudgetAnalyser.UnitTest.Reports
             Budget = BudgetModelTestData.CreateTestData2();
             LedgerBook = LedgerBookTestData.TestData2();
             StatementModel = StatementModelTestData.TestData3();
-            
+
             Act();
         }
 
@@ -80,7 +98,7 @@ namespace BudgetAnalyser.UnitTest.Reports
                 StatementModel,
                 Budget,
                 new BudgetBucket[] { StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket() },
-                new DateTime(2013, 06, 15),
+                new DateTime(2013, 07, 15),
                 LedgerBook);
         }
     }
