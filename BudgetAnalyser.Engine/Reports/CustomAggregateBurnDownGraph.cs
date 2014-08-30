@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Reports
 {
+    /// <summary>
+    /// A data storage to store a burn down graph that combines multiple buckets.
+    /// </summary>
     public class CustomAggregateBurnDownGraph
     {
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
