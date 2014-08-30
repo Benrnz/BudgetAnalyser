@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Media;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Converters;
@@ -14,8 +15,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
     public class BucketBurnDownController : ControllerBase
     {
         private readonly IBurnDownGraphAnalyser burnDownGraphAnalyser;
-        private IEnumerable<KeyValuePair<DateTime, decimal>> doNotUseActualSpending;
-        private IEnumerable<KeyValuePair<DateTime, decimal>> doNotUseTrendLine;
+        private SeriesData doNotUseBalanceLine;
+        private SeriesData doNotUseTrendLine;
 
         public BucketBurnDownController([NotNull] IBurnDownGraphAnalyser burnDownGraphAnalyser)
         {
@@ -27,25 +28,24 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.burnDownGraphAnalyser = burnDownGraphAnalyser;
         }
 
-        public IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending
+        public decimal ActualSpendingAxesMinimum { get; private set; }
+
+        public Brush Background { get; private set; }
+
+        public SeriesData BalanceLine
         {
-            get { return this.doNotUseActualSpending; }
+            get { return this.doNotUseBalanceLine; }
 
             private set
             {
-                this.doNotUseActualSpending = value;
-                RaisePropertyChanged(() => ActualSpending);
+                this.doNotUseBalanceLine = value;
+                RaisePropertyChanged(() => BalanceLine);
             }
         }
 
-        public decimal ActualSpendingAxesMinimum { get; private set; }
-
-        public string ActualSpendingLabel { get; private set; }
-        public Brush Background { get; private set; }
-
         public BudgetBucket Bucket { get; private set; }
 
-        public IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine
+        public SeriesData BudgetLine
         {
             get { return this.doNotUseTrendLine; }
 
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         public bool IsCustomChart { get; private set; }
 
-        public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
+        public SeriesData ZeroLine { get; private set; }
 
         public BucketBurnDownController Load(
             StatementModel statementModel,
@@ -75,7 +75,6 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
             Background = ConverterHelper.TileBackgroundBrush;
             Bucket = bucket;
-            ActualSpendingLabel = Bucket.Code;
             ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
 
             this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, beginDate, ledgerBook);
@@ -95,7 +94,6 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             IsCustomChart = true;
             Background = ConverterHelper.SecondaryBackgroundBrush;
             ChartTitle = chartTitle;
-            ActualSpendingLabel = "Combined Spending";
             Bucket = null;
             this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, buckets, beginDate, ledgerBook);
             CopyOutputFromAnalyser();
@@ -105,10 +103,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void CopyOutputFromAnalyser()
         {
-            ActualSpendingAxesMinimum = this.burnDownGraphAnalyser.ActualSpendingAxesMinimum;
-            ActualSpending = this.burnDownGraphAnalyser.ActualSpending;
-            BudgetLine = this.burnDownGraphAnalyser.BudgetLine;
-            ZeroLine = this.burnDownGraphAnalyser.ZeroLine;
+            ActualSpendingAxesMinimum = this.burnDownGraphAnalyser.GraphLines.GraphMinimumValue;
+            BalanceLine = this.burnDownGraphAnalyser.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BalanceSeriesName);
+            BudgetLine = this.burnDownGraphAnalyser.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BudgetSeriesName);
+            ZeroLine = this.burnDownGraphAnalyser.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.ZeroSeriesName);
         }
     }
 }

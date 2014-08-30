@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
@@ -18,28 +19,43 @@ namespace BudgetAnalyser.UnitTest.Reports
         private StatementModel StatementModel { get; set; }
         private BurnDownGraphAnalyser Subject { get; set; }
 
-        [TestMethod]
-        public void AnalyseShouldReturn31DaysOfActualSpendingElements()
+        private SeriesData BudgetLine
         {
-            Assert.AreEqual(31, Subject.ActualSpending.Count());
+            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BudgetSeriesName); }
+        }
+
+        private SeriesData ZeroLine
+        {
+            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.ZeroSeriesName); }
+        }
+
+        private SeriesData BalanceLine
+        {
+            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BalanceSeriesName); }
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturn31DaysOfBalanceLineElements()
+        {
+            Assert.AreEqual(31, BalanceLine.Plots.Count());
         }
 
         [TestMethod]
         public void AnalyseShouldReturn31DaysOfBudgetElements()
         {
-            Assert.AreEqual(31, Subject.BudgetLine.Count());
+            Assert.AreEqual(31, BudgetLine.Plots.Count());
         }
 
         [TestMethod]
         public void AnalyseShouldReturn31DaysOfZeroLineElements()
         {
-            Assert.AreEqual(31, Subject.ZeroLine.Count());
+            Assert.AreEqual(31, ZeroLine.Plots.Count());
         }
 
         [TestMethod]
         public void AnalyseShouldReturnAFirstBudgetElementEqualToTheLedgerAmountAvailableGivenValidLedger()
         {
-            Assert.AreEqual(3635M, Subject.BudgetLine.First().Value);
+            Assert.AreEqual(3635M, BudgetLine.Plots.First().Amount);
         }
 
         [TestMethod]
@@ -47,32 +63,32 @@ namespace BudgetAnalyser.UnitTest.Reports
         {
             LedgerBook = null;
             Act();
-            Assert.AreEqual(1435M, Subject.BudgetLine.First().Value);
+            Assert.AreEqual(1435M, BudgetLine.Plots.First().Amount);
         }
 
         [TestMethod]
         public void AnalyseShouldReturnALastBudgetElementOfOneThirtythOfTheFirst()
         {
-            decimal expected = decimal.Round(Subject.BudgetLine.First().Value / 31, 2);
-            Assert.AreEqual(expected, decimal.Round(Subject.BudgetLine.Last().Value, 2));
+            decimal expected = decimal.Round(BudgetLine.Plots.First().Amount / 31, 2);
+            Assert.AreEqual(expected, decimal.Round(BudgetLine.Plots.Last().Amount, 2));
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnActualSpendingAxesMinimumOf0()
+        public void AnalyseShouldReturnBalanceLineAxesMinimumOf0()
         {
-            Assert.AreEqual(0, Subject.ActualSpendingAxesMinimum);
+            Assert.AreEqual(0, Subject.GraphLines.GraphMinimumValue);
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnActualSpendingLineElementsTotalingTo104745()
+        public void AnalyseShouldReturnBalanceLineLineElementsTotalingTo104745()
         {
-            Assert.AreEqual(104745.78M, Subject.ActualSpending.Sum(z => z.Value));
+            Assert.AreEqual(104745.78M, BalanceLine.Plots.Sum(z => z.Amount));
         }
 
         [TestMethod]
         public void AnalyseShouldReturnZeroLineElementsTotalingToZero()
         {
-            Assert.AreEqual(0, Subject.ZeroLine.Sum(z => z.Value));
+            Assert.AreEqual(0, ZeroLine.Plots.Sum(z => z.Amount));
         }
 
         [TestMethod]
@@ -86,7 +102,7 @@ namespace BudgetAnalyser.UnitTest.Reports
         {
             foreach (var transaction in Subject.ReportTransactions)
             {
-                Console.WriteLine("{0} {1} {2:N} {3:N}", transaction.Date, transaction.Narrative.PadRight(25), transaction.Amount, transaction.Balance);
+                Console.WriteLine("{0} {1} {2:N} {3:N}", transaction.Date, transaction.Narrative.Truncate(30).PadRight(30), transaction.Amount.ToString().Truncate(10).PadRight(10), transaction.Balance);
             }
       
             Assert.AreEqual(3376.34M, Subject.ReportTransactions.Last().Balance);

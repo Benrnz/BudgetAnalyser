@@ -8,11 +8,8 @@ namespace BudgetAnalyser.Engine.Reports
 {
     public interface IBurnDownGraphAnalyser
     {
-        IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending { get; }
-        decimal ActualSpendingAxesMinimum { get; }
-        IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine { get; }
+        GraphData GraphLines { get; }
         IEnumerable<ReportTransactionWithRunningBalance> ReportTransactions { get; }
-        IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; }
 
         void Analyse(
             StatementModel statementModel,

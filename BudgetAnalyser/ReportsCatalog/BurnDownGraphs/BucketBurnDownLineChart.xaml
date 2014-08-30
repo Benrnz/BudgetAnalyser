@@ -100,10 +100,11 @@
                                VerticalAlignment="Top"
                                Width="500">
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource MainLineDataPointStyle}"
-                                        DependentValuePath="Value"
-                                        IsSelectionEnabled="False"
-                                        ItemsSource="{Binding ActualSpending}"
-                                        Title="{Binding ActualSpendingLabel}">
+                                        DependentValuePath="Amount"
+                                        IsSelectionEnabled="True"
+                                        ItemsSource="{Binding BalanceLine.Plots}"
+                                        Title="{Binding BalanceLine.SeriesName}"
+                                        ToolTip="{Binding BalanceLine.Description}">
                 <chartingToolkit:LineSeries.DependentRangeAxis>
                     <chartingToolkit:LinearAxis AxisLabelStyle="{StaticResource AxesLabelStyle}"
                                                 Minimum="{Binding ActualSpendingAxesMinimum}"
@@ -111,7 +112,7 @@
                                                 Title="$" />
                 </chartingToolkit:LineSeries.DependentRangeAxis>
                 <chartingToolkit:LineSeries.IndependentValueBinding>
-                    <Binding Path="Key"
+                    <Binding Path="Date"
                              StringFormat="d/MMM/yy" />
                 </chartingToolkit:LineSeries.IndependentValueBinding>
                 <chartingToolkit:LineSeries.IndependentAxis>
@@ -120,18 +121,20 @@
                 </chartingToolkit:LineSeries.IndependentAxis>
             </chartingToolkit:LineSeries>
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource BudgetLineDataPointStyle}"
-                                        DependentValuePath="Value"
-                                        IndependentValuePath="Key"
-                                        IsSelectionEnabled="False"
-                                        ItemsSource="{Binding BudgetLine}"
+                                        DependentValuePath="Amount"
+                                        IndependentValuePath="Date"
+                                        IsSelectionEnabled="True"
+                                        ItemsSource="{Binding BudgetLine.Plots}"
                                         PolylineStyle="{StaticResource DashedPolyLine}"
-                                        Title="Budget Line" />
+                                        Title="{Binding BudgetLine.SeriesName}"
+                                        ToolTip="{Binding BudgetLine.Description}"/>
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource ZeroLineDataPointStyle}"
-                                        DependentValuePath="Value"
-                                        IndependentValuePath="Key"
+                                        DependentValuePath="Amount"
+                                        IndependentValuePath="Date"
                                         IsSelectionEnabled="False"
-                                        ItemsSource="{Binding ZeroLine}"
-                                        Title="Zero Line" />
+                                        ItemsSource="{Binding ZeroLine.Plots}"
+                                        Title="{Binding ZeroLine.SeriesName}"
+                                        ToolTip="{Binding ZeroLine.Description}"/>
         </chartingToolkit:Chart>
     </Grid>
 

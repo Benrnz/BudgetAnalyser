@@ -14,11 +14,13 @@ namespace BudgetAnalyser.Engine.Reports
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BurnDownGraphAnalyser : IBurnDownGraphAnalyser
     {
+        public const string BalanceSeriesName = "Balance Line";
+        public const string BudgetSeriesName = "Budget Line";
+        public const string ZeroSeriesName = "Zero Line";
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
 
-        private List<KeyValuePair<DateTime, decimal>> actualSpending;
-        private List<KeyValuePair<DateTime, decimal>> budgetLine;
+        private GraphData graphLines;
 
         public BurnDownGraphAnalyser([NotNull] LedgerCalculation ledgerCalculator, [NotNull] ILogger logger)
         {
@@ -37,38 +39,17 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         /// <summary>
-        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
-        ///     friendly with the graph control than a dictionary.
-        ///     These values shows actual spending over the month.
+        ///     Gets the series lines for the burndown graph.  It consists of three lines: Budget, Balance, and zero-line.
         /// </summary>
-        public IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending
+        public GraphData GraphLines
         {
-            get { return this.actualSpending; }
-        }
-
-        public decimal ActualSpendingAxesMinimum { get; private set; }
-
-        /// <summary>
-        ///     Gets a collection of x,y cordinate values used to plot a graph line.
-        ///     These values shows how the budget should be spent in a linear fashion over the month.
-        ///     Using a List of Key Value Pairs is more friendly with the graph control than a dictionary.
-        /// </summary>
-        public IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine
-        {
-            get { return this.budgetLine; }
+            get { return this.graphLines; }
         }
 
         /// <summary>
-        /// The report transactions that decrease the total budgeted amount over time to make up the burn down graph.
+        ///     The report transactions that decrease the total budgeted amount over time to make up the burn down graph.
         /// </summary>
         public IEnumerable<ReportTransactionWithRunningBalance> ReportTransactions { get; private set; }
-
-        /// <summary>
-        ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
-        ///     friendly with the graph control than a dictionary.
-        ///     These values are used draw a horizontal zero line on the graph.
-        /// </summary>
-        public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
         /// <summary>
         ///     Analyse the actual spending over a month as a burn down of the available budget.
@@ -95,18 +76,15 @@ namespace BudgetAnalyser.Engine.Reports
 
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
             this.logger.LogInfo(l => "BurnDownGraphAnalyser.Analyse: " + string.Join(" ", bucketsCopy.Select(b => b.Code)));
-            ZeroLine = null;
-            this.budgetLine = null;
-            this.actualSpending = null;
+            this.graphLines = new GraphData();
 
             List<DateTime> datesOfTheMonth = YieldAllDaysInDateRange(beginDate);
             DateTime lastDate = datesOfTheMonth.Last();
 
-            // TODO try using dictionaries here instead of lists of kvps.
-            ZeroLine = new List<KeyValuePair<DateTime, decimal>>(datesOfTheMonth.Select(d => new KeyValuePair<DateTime, decimal>(d, 0)));
+            CreateZeroLine(datesOfTheMonth);
 
             decimal openingBalance = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, beginDate);
-            CalculateBudgetLineValues(openingBalance);
+            CalculateBudgetLineValues(openingBalance, datesOfTheMonth);
 
             List<ReportTransactionWithRunningBalance> spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, beginDate, lastDate, openingBalance);
 
@@ -121,10 +99,10 @@ namespace BudgetAnalyser.Engine.Reports
                     UpdateReportTransactionRunningBalances(spendingTransactions);
                 }
             }
-            
+
             // Copy running balance from transaction list into burndown chart data
-            decimal dayClosingBalance = openingBalance;
-            this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(datesOfTheMonth.Count);
+            var actualSpending = new SeriesData { SeriesName = BalanceSeriesName, Description = "Running balance over time as transactions spend, the balance decreases." };
+            GraphLines.SeriesList.Add(actualSpending);
             foreach (DateTime day in datesOfTheMonth)
             {
                 if (day > DateTime.Today)
@@ -132,12 +110,11 @@ namespace BudgetAnalyser.Engine.Reports
                     break;
                 }
 
-                dayClosingBalance = GetDayClosingBalance(spendingTransactions, day);
-                this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day, dayClosingBalance));
+                decimal dayClosingBalance = GetDayClosingBalance(spendingTransactions, day);
+                actualSpending.PlotsList.Add(new DatedGraphPlot { Date = day, Amount = dayClosingBalance });
                 this.logger.LogInfo(l => l.Format("    {0} Close Bal:{1:N}", day, dayClosingBalance));
             }
 
-            ActualSpendingAxesMinimum = dayClosingBalance < 0 ? dayClosingBalance : 0;
             ReportTransactions = spendingTransactions;
         }
 
@@ -243,15 +220,35 @@ namespace BudgetAnalyser.Engine.Reports
             return data;
         }
 
-        private void CalculateBudgetLineValues(decimal budgetTotal)
+        private void CalculateBudgetLineValues(decimal budgetTotal, List<DateTime> datesOfTheMonth)
         {
-            decimal average = budgetTotal / ZeroLine.Count();
+            decimal average = budgetTotal / datesOfTheMonth.Count(); 
 
-            this.budgetLine = new List<KeyValuePair<DateTime, decimal>>();
-            int iteration = 0;
-            foreach (var day in ZeroLine)
+            var seriesData = new SeriesData
             {
-                this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
+                Description = "The budget line shows ideal linear spending over the month to keep within your budget.",
+                SeriesName = BudgetSeriesName,
+            };
+            this.graphLines.SeriesList.Add(seriesData);
+
+            int iteration = 0;
+            foreach (var day in datesOfTheMonth)
+            {
+                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - (average * iteration++), Date = day });
+            }
+        }
+
+        private void CreateZeroLine(IEnumerable<DateTime> datesOfTheMonth)
+        {
+            var series = new SeriesData
+            {
+                SeriesName = ZeroSeriesName,
+                Description = "Zero line",
+            };
+            GraphLines.SeriesList.Add(series);
+            foreach (DateTime day in datesOfTheMonth)
+            {
+                series.PlotsList.Add(new DatedGraphPlot { Amount = 0, Date = day });
             }
         }
 

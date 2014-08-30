@@ -2,6 +2,10 @@
 
 namespace BudgetAnalyser.Engine.Reports
 {
+    /// <summary>
+    /// A data storage class to store one single plot on a two dimensional graph.
+    /// Where the x axis is a Date line and the y axis is a monetary amount.
+    /// </summary>
     public class DatedGraphPlot
     {
         public decimal Amount { get; set; }
