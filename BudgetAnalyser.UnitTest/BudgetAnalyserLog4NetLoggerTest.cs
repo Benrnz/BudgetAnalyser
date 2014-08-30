@@ -78,7 +78,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogErrorShouldThrowIfDisposed()
         {
             Subject.Dispose();
-            Subject.LogError(() => "Foo");
+            Subject.LogError(_ => "Foo");
             Assert.Fail();
         }
 
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogWarningShouldThrowIfDisposed()
         {
             Subject.Dispose();
-            Subject.LogWarning(() => "Foo");
+            Subject.LogWarning(_ => "Foo");
             Assert.Fail();
         }
 
@@ -96,14 +96,14 @@ namespace BudgetAnalyser.UnitTest
         public void LogInfoShouldThrowIfDisposed()
         {
             Subject.Dispose();
-            Subject.LogInfo(() => "Foo");
+            Subject.LogInfo(_ => "Foo");
             Assert.Fail();
         }
 
         [TestMethod]
         public void LogErrorWithExceptionShouldNotThrowGivenNullException()
         {
-            Subject.LogError(null, () => "Foo");
+            Subject.LogError(null, _ => "Foo");
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogErrorShouldLogWhenErrorLoggingIsEnabled()
         {
             MockLogger.Setup(m => m.IsErrorEnabled).Returns(true);
-            Subject.LogError(() => "Foo");
+            Subject.LogError(_ => "Foo");
             MockLogger.Verify(m => m.Error(It.IsAny<string>()));
         }
 
@@ -127,14 +127,14 @@ namespace BudgetAnalyser.UnitTest
         {
             MockLogger.Setup(m => m.IsErrorEnabled).Returns(false);
             MockLogger.Setup(m => m.Error(It.IsAny<string>())).Throws(new Exception());
-            Subject.LogError(() => "Foo");
+            Subject.LogError(_ => "Foo");
         }
 
         [TestMethod]
         public void LogErrorWithExceptionShouldLogWhenErrorLoggingIsEnabled()
         {
             MockLogger.Setup(m => m.IsErrorEnabled).Returns(true);
-            Subject.LogError(new Exception(), () => "Foo");
+            Subject.LogError(new Exception(), _ => "Foo");
             MockLogger.Verify(m => m.Error(It.IsAny<string>(), It.IsAny<Exception>()));
         }
 
@@ -143,14 +143,14 @@ namespace BudgetAnalyser.UnitTest
         {
             MockLogger.Setup(m => m.IsErrorEnabled).Returns(false);
             MockLogger.Setup(m => m.Error(It.IsAny<string>())).Throws(new Exception());
-            Subject.LogError(new Exception(), () => "Foo");
+            Subject.LogError(new Exception(), _ => "Foo");
         }
 
         [TestMethod]
         public void LogWarningShouldLogWhenErrorLoggingIsEnabled()
         {
             MockLogger.Setup(m => m.IsWarnEnabled).Returns(true);
-            Subject.LogWarning(() => "Foo");
+            Subject.LogWarning(_ => "Foo");
             MockLogger.Verify(m => m.Warn(It.IsAny<string>()));
         }
 
@@ -159,14 +159,14 @@ namespace BudgetAnalyser.UnitTest
         {
             MockLogger.Setup(m => m.IsWarnEnabled).Returns(false);
             MockLogger.Setup(m => m.Warn(It.IsAny<string>())).Throws(new Exception());
-            Subject.LogWarning(() => "Foo");
+            Subject.LogWarning(_ => "Foo");
         }
 
         [TestMethod]
         public void LogInfoShouldLogWhenErrorLoggingIsEnabled()
         {
             MockLogger.Setup(m => m.IsInfoEnabled).Returns(true);
-            Subject.LogInfo(() => "Foo");
+            Subject.LogInfo(_ => "Foo");
             MockLogger.Verify(m => m.Info(It.IsAny<string>()));
         }
 
@@ -175,14 +175,14 @@ namespace BudgetAnalyser.UnitTest
         {
             MockLogger.Setup(m => m.IsInfoEnabled).Returns(false);
             MockLogger.Setup(m => m.Info(It.IsAny<string>())).Throws(new Exception());
-            Subject.LogInfo(() => "Foo");
+            Subject.LogInfo(_ => "Foo");
         }
 
         [TestMethod]
         public void LogAlwaysShouldLogWhenInfoLoggingIsDisabled()
         {
             MockLogger.Setup(m => m.IsInfoEnabled).Returns(false);
-            Subject.LogAlways(() => "Foo");
+            Subject.LogAlways(_ => "Foo");
             MockLogger.Verify(m => m.Info(It.IsAny<string>()));
         }
 
@@ -190,7 +190,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogAlwaysShouldLogWhenWarningLoggingIsDisabled()
         {
             MockLogger.Setup(m => m.IsWarnEnabled).Returns(false);
-            Subject.LogAlways(() => "Foo");
+            Subject.LogAlways(_ => "Foo");
             MockLogger.Verify(m => m.Info(It.IsAny<string>()));
         }
 
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogAlwaysShouldLogWhenErrorLoggingIsDisabled()
         {
             MockLogger.Setup(m => m.IsErrorEnabled).Returns(false);
-            Subject.LogAlways(() => "Foo");
+            Subject.LogAlways(_ => "Foo");
             MockLogger.Verify(m => m.Info(It.IsAny<string>()));
         }
 
@@ -206,7 +206,7 @@ namespace BudgetAnalyser.UnitTest
         public void LogAlwaysShouldNotChangeLogLevel()
         {
             var level = Subject.LoggingLevel;
-            Subject.LogAlways(() => "The quick brown fox jumped over the lazy dog.");
+            Subject.LogAlways(_ => "The quick brown fox jumped over the lazy dog.");
             Assert.AreEqual(level, Subject.LoggingLevel);
         }
 
@@ -227,7 +227,7 @@ namespace BudgetAnalyser.UnitTest
                     {
                         for (int i = 0; i < 10; i++)
                         {
-                            Subject.LogError(() => "Foo");
+                            Subject.LogError(_ => "Foo");
                         }
                     }));
                 }
@@ -237,7 +237,7 @@ namespace BudgetAnalyser.UnitTest
                     {
                         for (int i = 0; i < 10; i++)
                         {
-                            Subject.LogAlways(() => "Always");
+                            Subject.LogAlways(_ => "Always");
                         }
                     }));
                 }

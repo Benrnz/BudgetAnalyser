@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine
                         args.Origin,
                         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         sender);
-                    this.logger.LogInfo(() => "Executing batch file with commandline: " + commandLine);
+                    this.logger.LogInfo(_ => "Executing batch file with commandline: " + commandLine);
 
                     var processInfo = new ProcessStartInfo("cmd.exe", "/c " + commandLine)
                     {
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine
                     {
                         Process process = Process.Start(processInfo);
                         process.WaitForExit(5000);
-                        this.logger.LogInfo(() => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
+                        this.logger.LogInfo(_ => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
                     }
                     catch
                     {

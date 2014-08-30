@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
                 .ForMember(dto => dto.Transactions, m => m.MapFrom(model => model.AllTransactions));
 
 
-            this.logger.LogInfo(() => "Statement AutoMapper Configuration Mappings Registered.");
+            this.logger.LogInfo(_ => "Statement AutoMapper Configuration Mappings Registered.");
         }
     }
 }

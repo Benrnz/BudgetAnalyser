@@ -58,7 +58,10 @@ namespace BudgetAnalyser.Engine.Reports
             get { return this.budgetLine; }
         }
 
-        public decimal NetWorth { get; private set; }
+        /// <summary>
+        /// The report transactions that decrease the total budgeted amount over time to make up the burn down graph.
+        /// </summary>
+        public IEnumerable<ReportTransactionWithRunningBalance> ReportTransactions { get; private set; }
 
         /// <summary>
         ///     Gets a collection of x,y cordinate values used to plot a graph line. Using a List of Key Value Pairs is more
@@ -68,9 +71,10 @@ namespace BudgetAnalyser.Engine.Reports
         public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
         /// <summary>
-        /// Analyse the actual spending over a month as a burn down of the available budget.
-        /// The available budget is either the <paramref name="ledgerBook"/> balance of the ledger or if not tracked in the ledger, then 
-        /// the budgeted amount from the <paramref name="budgetModel"/>.
+        ///     Analyse the actual spending over a month as a burn down of the available budget.
+        ///     The available budget is either the <paramref name="ledgerBook" /> balance of the ledger or if not tracked in the
+        ///     ledger, then
+        ///     the budgeted amount from the <paramref name="budgetModel" />.
         /// </summary>
         public void Analyse(
             [NotNull] StatementModel statementModel,
@@ -89,65 +93,74 @@ namespace BudgetAnalyser.Engine.Reports
                 throw new ArgumentNullException("budgetModel");
             }
 
-            this.logger.LogInfo(() => "BurnDownGraphAnalyser.Analyse: " + string.Join(" ", bucketsSubset.Select(b => b.Code)));
+            List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
+            this.logger.LogInfo(l => "BurnDownGraphAnalyser.Analyse: " + string.Join(" ", bucketsCopy.Select(b => b.Code)));
             ZeroLine = null;
             this.budgetLine = null;
             this.actualSpending = null;
 
-            Dictionary<DateTime, decimal> chartData = YieldAllDaysInDateRange(beginDate);
-            DateTime earliestDate = beginDate;
-            DateTime latestDate = chartData.Keys.Max(k => k);
-            ZeroLine = chartData.ToList();
-            List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
-            decimal budgetTotal = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, earliestDate);
+            List<DateTime> datesOfTheMonth = YieldAllDaysInDateRange(beginDate);
+            DateTime lastDate = datesOfTheMonth.Last();
 
-            CollateAndInsertStatementTransactions(statementModel, bucketsCopy, earliestDate, latestDate, chartData);
+            // TODO try using dictionaries here instead of lists of kvps.
+            ZeroLine = new List<KeyValuePair<DateTime, decimal>>(datesOfTheMonth.Select(d => new KeyValuePair<DateTime, decimal>(d, 0)));
 
-            // Only relevant when calculating surplus burndown
+            decimal openingBalance = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, beginDate);
+            CalculateBudgetLineValues(openingBalance);
+
+            List<ReportTransactionWithRunningBalance> spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, beginDate, lastDate, openingBalance);
+
+            // Only relevant when calculating surplus burndown - ovespent ledgers are supplemented from surplus so affect its burndown.
             if (ledgerBook != null && bucketsCopy.OfType<SurplusBucket>().Any())
             {
-                this.logger.LogInfo(() => "    Overspent Ledgers Subtract from Surplus:");
-                foreach (var transaction in this.ledgerCalculator.CalculateOverspentLedgers(statementModel, ledgerBook, beginDate))
+                List<ReportTransaction> overSpentLedgers = this.ledgerCalculator.CalculateOverspentLedgers(statementModel, ledgerBook, beginDate).ToList();
+                if (overSpentLedgers.Any())
                 {
-                    chartData[transaction.Date] -= transaction.Amount;
-                    this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", transaction.Date, transaction.Amount));
+                    spendingTransactions.AddRange(overSpentLedgers.Select(t => new ReportTransactionWithRunningBalance(t)));
+                    spendingTransactions = spendingTransactions.OrderBy(t => t.Date).ToList();
+                    UpdateReportTransactionRunningBalances(spendingTransactions);
                 }
             }
-
-            decimal runningTotal = budgetTotal;
-            this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(chartData.Count);
-            this.logger.LogInfo(() => "    Convert totals to running total burndown:");
-            foreach (var day in chartData)
+            
+            // Copy running balance from transaction list into burndown chart data
+            decimal dayClosingBalance = openingBalance;
+            this.actualSpending = new List<KeyValuePair<DateTime, decimal>>(datesOfTheMonth.Count);
+            foreach (DateTime day in datesOfTheMonth)
             {
-                if (day.Key > DateTime.Today)
+                if (day > DateTime.Today)
                 {
                     break;
                 }
 
-                NetWorth += day.Value;
-                runningTotal -= day.Value;
-                this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day.Key, runningTotal));
-                this.logger.LogInfo(() => this.logger.Format("    {0} {1:N}", day.Key, runningTotal));
+                dayClosingBalance = GetDayClosingBalance(spendingTransactions, day);
+                this.actualSpending.Add(new KeyValuePair<DateTime, decimal>(day, dayClosingBalance));
+                this.logger.LogInfo(l => l.Format("    {0} Close Bal:{1:N}", day, dayClosingBalance));
             }
 
-            CalculateBudgetLineValues(budgetTotal);
-
-            ActualSpendingAxesMinimum = runningTotal < 0 ? runningTotal : 0;
+            ActualSpendingAxesMinimum = dayClosingBalance < 0 ? dayClosingBalance : 0;
+            ReportTransactions = spendingTransactions;
         }
 
-        private static void CollateAndInsertStatementTransactions(StatementModel statementModel, IEnumerable<BudgetBucket> bucketsCopy, DateTime earliestDate, DateTime latestDate, Dictionary<DateTime, decimal> chartData)
+        private static List<ReportTransactionWithRunningBalance> CollateStatementTransactions(
+            StatementModel statementModel,
+            IEnumerable<BudgetBucket> bucketsCopy,
+            DateTime beginDate,
+            DateTime lastDate,
+            decimal openingBalance)
         {
-            var query = statementModel.Transactions
+            List<ReportTransactionWithRunningBalance> query = statementModel.Transactions
                 .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
-                .Where(t => t.Date >= earliestDate && t.Date <= latestDate)
-                .GroupBy(t => t.Date, (date, txns) => new { Date = date, Total = txns.Sum(t => -t.Amount) })
+                .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)
-                .AsParallel();
+                .Select(t => new ReportTransactionWithRunningBalance { Amount = t.Amount, Date = t.Date, Narrative = t.Description })
+                .ToList();
 
-            foreach (var transaction in query)
-            {
-                chartData[transaction.Date] = transaction.Total;
-            }
+            // Insert the opening balance transaction with the earliest date in the list.
+            query.Insert(0, new ReportTransactionWithRunningBalance { Amount = openingBalance, Date = beginDate.AddSeconds(-1), Narrative = "Opening Balance", Balance = openingBalance });
+
+            UpdateReportTransactionRunningBalances(query);
+
+            return query;
         }
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)
@@ -178,9 +191,74 @@ namespace BudgetAnalyser.Engine.Reports
             return 0;
         }
 
+        private static decimal GetDayClosingBalance(IEnumerable<ReportTransactionWithRunningBalance> spendingTransactions, DateTime day)
+        {
+            return spendingTransactions.Last(t => t.Date <= day).Balance;
+        }
+
+        private static decimal GetLedgerBalanceForBucket(BudgetModel budgetModel, LedgerEntryLine applicableLine, BudgetBucket bucket)
+        {
+            if (bucket is SurplusBucket)
+            {
+                return applicableLine.CalculatedSurplus;
+            }
+
+            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == bucket);
+            if (ledger != null)
+            {
+                return ledger.Balance;
+            }
+
+            // The Ledger line might not actually have a ledger for the given bucket.
+            return GetBudgetModelTotalForBucket(budgetModel, bucket);
+        }
+
+        private static void UpdateReportTransactionRunningBalances(List<ReportTransactionWithRunningBalance> query)
+        {
+            decimal balance = query.First().Balance;
+            // Skip 1 because the first row has the opening balance.
+            foreach (ReportTransactionWithRunningBalance transaction in query.Skip(1))
+            {
+                balance += transaction.Amount;
+                transaction.Balance = balance;
+            }
+        }
+
         /// <summary>
-        /// Calculates the appropriate budgeted amount for the given buckets.
-        /// This can either be the ledger balance from the ledger book or if not tracked by the ledger book, then from the budget model.
+        ///     Populate a dictionary with an entry for each day of a month beginning at the start date.
+        /// </summary>
+        private static List<DateTime> YieldAllDaysInDateRange(DateTime beginDate)
+        {
+            DateTime startDate = beginDate;
+            DateTime end = beginDate.AddMonths(1).AddDays(-1);
+
+            var data = new List<DateTime>();
+            DateTime current = startDate;
+            do
+            {
+                data.Add(current);
+                current = current.AddDays(1);
+            } while (current <= end);
+
+            return data;
+        }
+
+        private void CalculateBudgetLineValues(decimal budgetTotal)
+        {
+            decimal average = budgetTotal / ZeroLine.Count();
+
+            this.budgetLine = new List<KeyValuePair<DateTime, decimal>>();
+            int iteration = 0;
+            foreach (var day in ZeroLine)
+            {
+                this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
+            }
+        }
+
+        /// <summary>
+        ///     Calculates the appropriate budgeted amount for the given buckets.
+        ///     This can either be the ledger balance from the ledger book or if not tracked by the ledger book, then from the
+        ///     budget model.
         /// </summary>
         private decimal GetBudgetedTotal(
             [NotNull] BudgetModel budgetModel,
@@ -203,54 +281,6 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             return budgetTotal;
-        }
-
-        private static decimal GetLedgerBalanceForBucket(BudgetModel budgetModel, LedgerEntryLine applicableLine, BudgetBucket bucket)
-        {
-            if (bucket is SurplusBucket)
-            {
-                return applicableLine.CalculatedSurplus;
-            }
-
-            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == bucket);
-            if (ledger != null)
-            {
-                return ledger.Balance;
-            }
-
-            // The Ledger line might not actually have a ledger for the given bucket.
-            return GetBudgetModelTotalForBucket(budgetModel, bucket);
-        }
-
-        /// <summary>
-        /// Populate a dictionary with an entry for each day of a month beginning at the start date.
-        /// </summary>
-        private static Dictionary<DateTime, decimal> YieldAllDaysInDateRange(DateTime beginDate)
-        {
-            DateTime startDate = beginDate;
-            DateTime end = beginDate.AddMonths(1).AddDays(-1);
-
-            var data = new Dictionary<DateTime, decimal>();
-            DateTime current = startDate;
-            do
-            {
-                data.Add(current, 0);
-                current = current.AddDays(1);
-            } while (current <= end);
-
-            return data;
-        }
-
-        private void CalculateBudgetLineValues(decimal budgetTotal)
-        {
-            decimal average = budgetTotal / ZeroLine.Count();
-
-            this.budgetLine = new List<KeyValuePair<DateTime, decimal>>();
-            int iteration = 0;
-            foreach (var day in ZeroLine)
-            {
-                this.budgetLine.Add(new KeyValuePair<DateTime, decimal>(day.Key, budgetTotal - (average * iteration++)));
-            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Reports
         IEnumerable<KeyValuePair<DateTime, decimal>> ActualSpending { get; }
         decimal ActualSpendingAxesMinimum { get; }
         IEnumerable<KeyValuePair<DateTime, decimal>> BudgetLine { get; }
-        decimal NetWorth { get; }
+        IEnumerable<ReportTransactionWithRunningBalance> ReportTransactions { get; }
         IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; }
 
         void Analyse(

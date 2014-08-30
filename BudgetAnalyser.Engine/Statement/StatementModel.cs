@@ -249,7 +249,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).ToList();
-            this.logger.LogWarning(() => this.logger.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
             Parallel.ForEach(query, duplicate =>
             {
                 foreach (Transaction txn in duplicate)

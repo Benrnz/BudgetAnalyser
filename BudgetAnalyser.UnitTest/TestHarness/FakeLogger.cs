@@ -6,35 +6,35 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class FakeLogger : ILogger
     {
-        public void LogInfo(Func<string> logEntryBuilder)
+        public void LogInfo(Func<ILogger, string> logEntryBuilder)
         {
-            System.Diagnostics.Debug.WriteLine("LOG INFO:");
-            System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+            System.Diagnostics.Debug.Write("LOG INFO:");
+            System.Diagnostics.Debug.WriteLine(logEntryBuilder(this));
         }
 
-        public void LogWarning(Func<string> logEntryBuilder)
+        public void LogWarning(Func<ILogger, string> logEntryBuilder)
         {
-            System.Diagnostics.Debug.WriteLine("LOG WARNING:");
-            System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+            System.Diagnostics.Debug.Write("LOG WARNING:");
+            System.Diagnostics.Debug.WriteLine(logEntryBuilder(this));
         }
 
-        public void LogError(Func<string> logEntryBuilder)
+        public void LogError(Func<ILogger, string> logEntryBuilder)
         {
-            System.Diagnostics.Debug.WriteLine("ERROR:");
-            System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+            System.Diagnostics.Debug.Write("ERROR:");
+            System.Diagnostics.Debug.WriteLine(logEntryBuilder(this));
         }
 
-        public void LogError(Exception ex, Func<string> logEntryBuilder)
+        public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
         {
-            System.Diagnostics.Debug.WriteLine("ERROR:");
-            System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+            System.Diagnostics.Debug.Write("ERROR:");
+            System.Diagnostics.Debug.WriteLine(logEntryBuilder(this));
             System.Diagnostics.Debug.WriteLine(ex.ToString());
         }
 
-        public void LogAlways(Func<string> logEntryBuilder)
+        public void LogAlways(Func<ILogger, string> logEntryBuilder)
         {
-            System.Diagnostics.Debug.WriteLine("LOG ALWAYS:");
-            System.Diagnostics.Debug.WriteLine(logEntryBuilder());
+            System.Diagnostics.Debug.Write("LOG ALWAYS:");
+            System.Diagnostics.Debug.WriteLine(logEntryBuilder(this));
         }
 
         public string Format(string format, params object[] parameters)

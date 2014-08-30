@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             bool matchesOccured = false;
-            this.logger.LogInfo(() => this.logger.Format("Matchmaker: Matching operation started."));
+            this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation started."));
             Parallel.ForEach(transactions, transaction =>
             {
                 if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
@@ -48,15 +48,15 @@ namespace BudgetAnalyser.Engine.Matching
                             matchesOccured = true;
                             Transaction loggedTransaction = transaction;
                             this.logger.LogInfo(
-                                () =>
-                                    this.logger.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount,
+                                l =>
+                                    l.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount,
                                         loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
                         }
                     }
                 }
             });
 
-            this.logger.LogInfo(() => this.logger.Format("Matchmaker: Matching operation finished."));
+            this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation finished."));
             return matchesOccured;
         }
     }

@@ -34,8 +34,8 @@ namespace BudgetAnalyser
             compositionRoot.Compose(this);
             this.logger = compositionRoot.Logger;
 
-            this.logger.LogAlways(() => "=========== Budget Analyser Starting ===========");
-            this.logger.LogAlways(() => compositionRoot.ShellController.DashboardController.VersionString);
+            this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
+            this.logger.LogAlways(_ => compositionRoot.ShellController.DashboardController.VersionString);
             var initialisableShell = compositionRoot.ShellController as IInitializableController;
             if (initialisableShell != null)
             {
@@ -43,7 +43,7 @@ namespace BudgetAnalyser
             }
 
             compositionRoot.ShellWindow.DataContext = compositionRoot.ShellController;
-            this.logger.LogInfo(() => "Initialisation finished.");
+            this.logger.LogInfo(_ => "Initialisation finished.");
             compositionRoot.ShellWindow.Show();
         }
 
@@ -55,7 +55,7 @@ namespace BudgetAnalyser
             builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
             builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
             builder.AppendLine(ex.ToString());
-            this.logger.LogError(builder.ToString);
+            this.logger.LogError(_ => builder.ToString());
 
             Current.Shutdown();
         }
@@ -70,7 +70,7 @@ namespace BudgetAnalyser
 
             Current.Exit -= OnApplicationExit;
             Messenger.Default.Send(new ShutdownMessage());
-            this.logger.LogAlways(() => "=========== Application Exiting ===========");
+            this.logger.LogAlways(_ => "=========== Application Exiting ===========");
         }
 
         private void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)

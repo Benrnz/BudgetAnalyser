@@ -12,10 +12,10 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         string Format(string formatTemplate, params object[] parameters);
 
-        void LogAlways(Func<string> logEntryBuilder);
-        void LogError(Func<string> logEntryBuilder);
-        void LogError(Exception ex, Func<string> logEntryBuilder);
-        void LogInfo(Func<string> logEntryBuilder);
-        void LogWarning(Func<string> logEntryBuilder);
+        void LogAlways(Func<ILogger, string> logEntryBuilder);
+        void LogError(Func<ILogger, string> logEntryBuilder);
+        void LogError(Exception ex, Func<ILogger, string> logEntryBuilder);
+        void LogInfo(Func<ILogger, string> logEntryBuilder);
+        void LogWarning(Func<ILogger, string> logEntryBuilder);
     }
 }

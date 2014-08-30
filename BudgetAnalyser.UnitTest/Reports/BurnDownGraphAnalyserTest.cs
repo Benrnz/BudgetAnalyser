@@ -70,15 +70,32 @@ namespace BudgetAnalyser.UnitTest.Reports
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnNetWorthOf258()
-        {
-            Assert.AreEqual(258.66M, Subject.NetWorth);
-        }
-
-        [TestMethod]
         public void AnalyseShouldReturnZeroLineElementsTotalingToZero()
         {
             Assert.AreEqual(0, Subject.ZeroLine.Sum(z => z.Value));
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturnReportTransactionsAmountsTotaling3376()
+        {
+            Assert.AreEqual(3376.34M, Subject.ReportTransactions.Sum(t => t.Amount));
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturnALastReportTransactionsElementWithBalanceEqualTo3376()
+        {
+            foreach (var transaction in Subject.ReportTransactions)
+            {
+                Console.WriteLine("{0} {1} {2:N} {3:N}", transaction.Date, transaction.Narrative.PadRight(25), transaction.Amount, transaction.Balance);
+            }
+      
+            Assert.AreEqual(3376.34M, Subject.ReportTransactions.Last().Balance);
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturn5ReportTransactions()
+        {
+            Assert.AreEqual(5, Subject.ReportTransactions.Count());
         }
 
         [TestInitialize]

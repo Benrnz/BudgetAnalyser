@@ -34,7 +34,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseActualSpending = value;
-                RaisePropertyChanged(() => this.ActualSpending);
+                RaisePropertyChanged(() => ActualSpending);
             }
         }
 
@@ -52,20 +52,19 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseTrendLine = value;
-                RaisePropertyChanged(() => this.BudgetLine);
+                RaisePropertyChanged(() => BudgetLine);
             }
         }
 
         public string ChartTitle { get; private set; }
 
         public bool IsCustomChart { get; private set; }
-        public decimal NetWorth { get; private set; }
 
         public IEnumerable<KeyValuePair<DateTime, decimal>> ZeroLine { get; private set; }
 
         public BucketBurnDownController Load(
             StatementModel statementModel,
-            BudgetModel budgetModel, 
+            BudgetModel budgetModel,
             [NotNull] BudgetBucket bucket,
             DateTime beginDate,
             Engine.Ledger.LedgerBook ledgerBook)
@@ -74,10 +73,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             {
                 throw new ArgumentNullException("bucket");
             }
-            this.Background = ConverterHelper.TileBackgroundBrush;
-            this.Bucket = bucket;
-            this.ActualSpendingLabel = this.Bucket.Code;
-            this.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
+            Background = ConverterHelper.TileBackgroundBrush;
+            Bucket = bucket;
+            ActualSpendingLabel = Bucket.Code;
+            ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
 
             this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, new[] { bucket }, beginDate, ledgerBook);
             CopyOutputFromAnalyser();
@@ -93,11 +92,11 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             Engine.Ledger.LedgerBook ledgerBook,
             string chartTitle)
         {
-            this.IsCustomChart = true;
-            this.Background = ConverterHelper.SecondaryBackgroundBrush;
-            this.ChartTitle = chartTitle;
-            this.ActualSpendingLabel = "Combined Spending";
-            this.Bucket = null;
+            IsCustomChart = true;
+            Background = ConverterHelper.SecondaryBackgroundBrush;
+            ChartTitle = chartTitle;
+            ActualSpendingLabel = "Combined Spending";
+            Bucket = null;
             this.burnDownGraphAnalyser.Analyse(statementModel, budgetModel, buckets, beginDate, ledgerBook);
             CopyOutputFromAnalyser();
 
@@ -106,11 +105,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void CopyOutputFromAnalyser()
         {
-            this.ActualSpendingAxesMinimum = this.burnDownGraphAnalyser.ActualSpendingAxesMinimum;
-            this.ActualSpending = this.burnDownGraphAnalyser.ActualSpending;
-            this.BudgetLine = this.burnDownGraphAnalyser.BudgetLine;
-            this.ZeroLine = this.burnDownGraphAnalyser.ZeroLine;
-            this.NetWorth = this.burnDownGraphAnalyser.NetWorth;
+            ActualSpendingAxesMinimum = this.burnDownGraphAnalyser.ActualSpendingAxesMinimum;
+            ActualSpending = this.burnDownGraphAnalyser.ActualSpending;
+            BudgetLine = this.burnDownGraphAnalyser.BudgetLine;
+            ZeroLine = this.burnDownGraphAnalyser.ZeroLine;
         }
     }
 }

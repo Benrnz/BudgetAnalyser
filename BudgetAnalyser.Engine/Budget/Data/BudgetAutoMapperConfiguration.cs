@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             Mapper.CreateMap<BudgetCollectionDto, BudgetCollection>()
                 .ConstructUsing(dto => new BudgetCollection(dto.Budgets.Select(Mapper.Map<BudgetModelDto, BudgetModel>)));
 
-            this.logger.LogInfo(() => "Budget AutoMapper Configuration Mappings Registered.");
+            this.logger.LogInfo(_ => "Budget AutoMapper Configuration Mappings Registered.");
         }
     }
 }

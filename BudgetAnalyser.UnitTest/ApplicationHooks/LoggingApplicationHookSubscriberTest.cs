@@ -27,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.ApplicationHooks
 
             RaisePublisherEvents();
 
-            MockLogger.Verify(m => m.LogInfo(It.IsAny<Func<string>>()));
+            MockLogger.Verify(m => m.LogInfo(It.IsAny<Func<ILogger, string>>()));
         }
 
         [TestMethod]

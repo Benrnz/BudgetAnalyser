@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine
             return string.Format(CultureInfo.CurrentCulture, formatTemplate, parameters);
         }
 
-        public void LogAlways([NotNull] Func<string> logEntryBuilder)
+        public void LogAlways([NotNull] Func<ILogger, string> logEntryBuilder)
         {
             if (logEntryBuilder == null)
             {
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine
             try
             {
                 SetLogLevelToAll();
-                Log4NetLogger.Info(logEntryBuilder());
+                Log4NetLogger.Info(logEntryBuilder(this));
             }
             finally
             {
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public void LogError([NotNull] Func<string> logEntryBuilder)
+        public void LogError([NotNull] Func<ILogger, string> logEntryBuilder)
         {
             if (logEntryBuilder == null)
             {
@@ -107,11 +107,11 @@ namespace BudgetAnalyser.Engine
 
             if (Log4NetLogger.IsErrorEnabled)
             {
-                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this)));
             }
         }
 
-        public void LogError(Exception ex, [NotNull] Func<string> logEntryBuilder)
+        public void LogError(Exception ex, [NotNull] Func<ILogger, string> logEntryBuilder)
         {
             if (logEntryBuilder == null)
             {
@@ -125,11 +125,11 @@ namespace BudgetAnalyser.Engine
 
             if (Log4NetLogger.IsErrorEnabled)
             {
-                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(), ex));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Error(logEntryBuilder(this), ex));
             }
         }
 
-        public void LogInfo([NotNull] Func<string> logEntryBuilder)
+        public void LogInfo([NotNull] Func<ILogger, string> logEntryBuilder)
         {
             if (logEntryBuilder == null)
             {
@@ -143,11 +143,11 @@ namespace BudgetAnalyser.Engine
 
             if (Log4NetLogger.IsInfoEnabled)
             {
-                SynchroniseWithAlwaysLog(() => Log4NetLogger.Info(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Info(logEntryBuilder(this)));
             }
         }
 
-        public void LogWarning([NotNull] Func<string> logEntryBuilder)
+        public void LogWarning([NotNull] Func<ILogger, string> logEntryBuilder)
         {
             if (logEntryBuilder == null)
             {
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.Engine
 
             if (Log4NetLogger.IsWarnEnabled)
             {
-                SynchroniseWithAlwaysLog(() => Log4NetLogger.Warn(logEntryBuilder()));
+                SynchroniseWithAlwaysLog(() => Log4NetLogger.Warn(logEntryBuilder(this)));
             }
         }
 

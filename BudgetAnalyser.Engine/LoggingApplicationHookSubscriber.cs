@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine
                 if (disposing)
                 {
                     this.isDisposed = true;
-                    this.logger.LogInfo(() => "LoggingApplicationHookSubscriber is being disposed.");
+                    this.logger.LogInfo(l => "LoggingApplicationHookSubscriber is being disposed.");
                     if (this.myPublishers != null)
                     {
                         foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine
 
         protected virtual void PerformAction(object sender, ApplicationHookEventArgs args)
         {
-            this.logger.LogInfo(() => string.Format(CultureInfo.CurrentCulture, "Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.EventType, args.Origin));
+            this.logger.LogInfo(l => l.Format("Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.EventType, args.Origin));
         }
 
         private void OnEventOccurred(object sender, ApplicationHookEventArgs args)

@@ -238,15 +238,15 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 IEnumerable<Transaction> uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
                 int count = 0;
-                this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
+                this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
                 foreach (Transaction transaction in uncategorised)
                 {
                     count++;
                     Transaction transactionCopy = transaction;
-                    this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id + transactionCopy.BudgetBucket);
+                    this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id + transactionCopy.BudgetBucket);
                     if (count > 5)
                     {
-                        this.logger.LogWarning(() => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
+                        this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
                     }
                 }
 

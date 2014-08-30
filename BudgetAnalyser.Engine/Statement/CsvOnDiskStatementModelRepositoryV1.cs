@@ -319,7 +319,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
             {
                 this.logger.LogError(
-                    () => this.logger.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
+                    l => l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
                 throw new StatementModelChecksumException(
                     calcTxnCheckSum.ToString(CultureInfo.InvariantCulture),
                     string.Format(

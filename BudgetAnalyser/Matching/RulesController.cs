@@ -293,7 +293,7 @@ namespace BudgetAnalyser.Matching
             }
 
             SaveRules();
-            this.logger.LogInfo(() => "Matching Rule Added: " + rule);
+            this.logger.LogInfo(_ => "Matching Rule Added: " + rule);
             EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
             if (handler != null)
             {
@@ -384,15 +384,15 @@ namespace BudgetAnalyser.Matching
             SelectedRule = null;
             SaveRules();
 
-            this.logger.LogInfo(() => "Matching Rule is being Removed: " + removedRule);
+            this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
             if (!success1)
             {
-                this.logger.LogWarning(() => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
+                this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
             }
 
             if (!success2)
             {
-                this.logger.LogWarning(() => "Matching Rule was not removed successfully from the flat list: " + removedRule);
+                this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
             }
 
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;

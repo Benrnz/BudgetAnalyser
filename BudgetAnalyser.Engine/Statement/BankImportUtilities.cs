@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Statement
             DateTime retval;
             if (!DateTime.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse date: " + stringToParse);
+                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
                 return DateTime.MinValue;
             }
 
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Statement
             Decimal retval;
             if (!Decimal.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
+                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
                 return 0;
             }
 
@@ -139,7 +139,7 @@ namespace BudgetAnalyser.Engine.Statement
             long retval;
             if (!long.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(() => "BankImportUtilities: Unable to parse long: " + stringToParse);
+                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse long: " + stringToParse);
                 return 0;
             }
 
