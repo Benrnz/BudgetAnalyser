@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static DateTime CacheLastUpdated;
 
-        public IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
+        public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
             if (ledgerBook == null)
             {

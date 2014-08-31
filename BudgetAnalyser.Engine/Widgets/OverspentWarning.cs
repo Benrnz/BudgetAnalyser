@@ -10,6 +10,10 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    /// A widget to show the number of overspent buckets for the month. Compares actual spent transactions against a ledger in the ledgerbook, if there is one, or the current Budget if there isn't.
+    /// The budget used is the currently selected budget from the <see cref="BudgetCurrencyContext"/> instance given.  It may not be the current one as compared to today's date.
+    /// </summary>
     public class OverspentWarning : Widget
     {
         private decimal tolerance;
@@ -17,7 +21,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public OverspentWarning()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(StatementModel), typeof(BudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
+            Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
             DetailedText = "Overspent";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
@@ -29,6 +33,8 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.tolerance; }
             set { this.tolerance = Math.Abs(value); }
         }
+
+        internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; }
 
         public override void Update([NotNull] params object[] input)
         {
@@ -44,7 +50,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var statement = (StatementModel)input[0];
-            var budget = (BudgetCurrencyContext)input[1];
+            var budget = (IBudgetCurrencyContext)input[1];
             var filter = (GlobalFilterCriteria)input[2];
             var ledgerBook = (LedgerBook)input[3];
             var ledgerCalculator = (LedgerCalculation)input[4];
@@ -67,13 +73,14 @@ namespace BudgetAnalyser.Engine.Widgets
             int warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 
             // Check other budget buckets that are not represented in the ledger book.
-            SearchForOverspentLedgers(statement, filter, budget, overspendingSummary, warnings);
+            warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter, budget, overspendingSummary);
 
             if (warnings > 0)
             {
                 LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
                 var builder = new StringBuilder();
-                foreach (var ledger in overspendingSummary.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key))
+                OverSpentSummary = overspendingSummary.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
+                foreach (var ledger in OverSpentSummary)
                 {
                     builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
                     builder.AppendLine();
@@ -90,8 +97,13 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        private void SearchForOverspentLedgers(StatementModel statement, GlobalFilterCriteria filter, BudgetCurrencyContext budget, IDictionary<BudgetBucket, decimal> overspendingSummary, int warnings)
+        private int SearchForOtherNonLedgerBookOverspentBuckets(
+            StatementModel statement,
+            GlobalFilterCriteria filter,
+            IBudgetCurrencyContext budget,
+            IDictionary<BudgetBucket, decimal> overspendingSummary)
         {
+            int warnings = 0;
             List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate.Value.AddMonths(1)).ToList();
             foreach (Expense expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
             {
@@ -107,6 +119,8 @@ namespace BudgetAnalyser.Engine.Widgets
                     warnings++;
                 }
             }
+
+            return warnings;
         }
     }
 }

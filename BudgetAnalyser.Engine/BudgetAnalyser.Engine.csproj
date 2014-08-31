@@ -83,6 +83,7 @@
     <Compile Include="ApplicationHookEventType.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
+    <Compile Include="Budget\IBudgetCurrencyContext.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
+    <Compile Include="NullLogger.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />

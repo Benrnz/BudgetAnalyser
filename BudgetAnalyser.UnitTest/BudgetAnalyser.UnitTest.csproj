@@ -203,6 +203,7 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
     <Compile Include="AutoMapperConfigurationTest.cs" />
+    <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
@@ -259,6 +260,7 @@
       <Link>TestData\DemoLedgerBook.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

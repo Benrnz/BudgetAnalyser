@@ -187,7 +187,7 @@ namespace BudgetAnalyser.Dashboard
         {
             this.availableDependencies[typeof(StatementModel)] = null;
             this.availableDependencies[typeof(BudgetCollection)] = null;
-            this.availableDependencies[typeof(BudgetCurrencyContext)] = null;
+            this.availableDependencies[typeof(IBudgetCurrencyContext)] = null;
             this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = null;
             this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
             this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
@@ -280,8 +280,8 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.availableDependencies[typeof(BudgetCollection)] = message.Budgets;
-            this.availableDependencies[typeof(BudgetCurrencyContext)] = message.ActiveBudget;
-            UpdateWidgets(typeof(BudgetCollection), typeof(BudgetCurrencyContext));
+            this.availableDependencies[typeof(IBudgetCurrencyContext)] = message.ActiveBudget;
+            UpdateWidgets(typeof(BudgetCollection), typeof(IBudgetCurrencyContext));
         }
 
         private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)

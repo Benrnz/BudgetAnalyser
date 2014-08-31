@@ -19,13 +19,13 @@ namespace BudgetAnalyser.Engine.Widgets
         protected RemainingBudgetBucketWidget()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository) };
+            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             this.standardStyle = "WidgetStandardStyle3";
         }
 
         protected string BucketCode { get; set; }
-        protected BudgetCurrencyContext Budget { get; private set; }
+        protected IBudgetCurrencyContext Budget { get; private set; }
         protected string DependencyMissingToolTip { get; set; }
         protected GlobalFilterCriteria Filter { get; private set; }
         protected string RemainingBudgetToolTip { get; set; }
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            Budget = (BudgetCurrencyContext)input[0];
+            Budget = (IBudgetCurrencyContext)input[0];
             this.statement = (StatementModel)input[1];
             Filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];

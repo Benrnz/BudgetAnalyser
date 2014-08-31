@@ -15,14 +15,11 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly List<LedgerColumn> newlyAddedLedgers = new List<LedgerColumn>();
         private List<LedgerEntryLine> datedEntries;
 
-        public LedgerBook([NotNull] ILogger logger)
-        {
-            if (logger == null)
-            {
-                throw new ArgumentNullException("logger");
-            }
+        public LedgerBook() : this(null) { } 
 
-            this.logger = logger;
+        public LedgerBook(ILogger logger)
+        {
+            this.logger = logger ?? new NullLogger();
             this.datedEntries = new List<LedgerEntryLine>();
         }
 

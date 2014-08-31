@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public SavingsGoalWidget()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
+            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             this.standardStyle = "WidgetStandardStyle3";
             DetailedText = "Savings Commitment";
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            var budget = (BudgetCurrencyContext)input[0];
+            var budget = (IBudgetCurrencyContext)input[0];
             var statement = (StatementModel)input[1];
             var filter = (GlobalFilterCriteria)input[2];
             var ledger = (LedgerBook)input[3];

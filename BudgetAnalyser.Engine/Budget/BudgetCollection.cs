@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Budget
             return GetEnumerator();
         }
 
-        internal int IndexOf(BudgetModel budget)
+        internal virtual int IndexOf(BudgetModel budget)
         {
             return this.budgetStorage.IndexOfValue(budget);
         }

@@ -57,7 +57,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// <summary>
         /// Statement Model with transactions between 15/07/2013 and 14/09/2013
         /// Includes income transactions.
-        /// Adjusted for use with LedgerCalculator.
+        /// Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
         /// </summary>
         public static StatementModel TestData3()
         {

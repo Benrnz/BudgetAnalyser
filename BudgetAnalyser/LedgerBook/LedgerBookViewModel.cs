@@ -7,7 +7,7 @@ namespace BudgetAnalyser.LedgerBook
 {
     public class LedgerBookViewModel : ViewModelBase
     {
-        private BudgetCurrencyContext doNotUseCurrentBudget;
+        private IBudgetCurrencyContext doNotUseCurrentBudget;
         private StatementModel doNotUseCurrentStatement;
         private Engine.Ledger.LedgerBook ledgerBook;
 
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         internal LedgerEntryLine NewLedgerLine { get; set; }
 
-        internal BudgetCurrencyContext CurrentBudget
+        internal IBudgetCurrencyContext CurrentBudget
         {
             get { return this.doNotUseCurrentBudget; }
             set

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public CurrentFilesWidget()
         {
             Category = "Files";
-            Dependencies = new[] { typeof(StatementModel), typeof(BudgetCurrencyContext), typeof(LedgerBook) };
+            Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(LedgerBook) };
             Size = WidgetSize.Medium;
             WidgetStyle = "ModernTileMediumStyle1";
             Clickable = true;
@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var statementModel = input[0] as StatementModel;
-            var budgetModel = input[1] as BudgetCurrencyContext;
+            var budgetModel = input[1] as IBudgetCurrencyContext;
             var ledgerBook = input[2] as LedgerBook;
 
             int number = 0;

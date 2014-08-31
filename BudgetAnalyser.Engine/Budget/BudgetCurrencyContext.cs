@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -10,10 +9,15 @@ namespace BudgetAnalyser.Engine.Budget
     ///     A transient wrapper class to indicate a budget's active state in relation to other budgets in the collection.
     ///     This class will tell you if a budget is active, future dated, or has past and is archived.
     /// </summary>
-    public class BudgetCurrencyContext
+    public class BudgetCurrencyContext : IBudgetCurrencyContext
     {
         private readonly BudgetCollection budgets;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="BudgetCurrencyContext"/> class.
+        /// </summary>
+        /// <param name="budgets">The collection of available budgets loaded.</param>
+        /// <param name="budget">The currently selected budget. This isn't necessarily the current one compared with today's date. Can be any in the <paramref name="budgets"/> collection.</param>
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
             if (budgets == null)
@@ -29,7 +33,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgets = budgets;
             Model = budget;
 
-            if (budgets.All(b => b != budget))
+            if (budgets.IndexOf(budget) < 0)
             {
                 throw new KeyNotFoundException("The given budget is not found in the given collection.");
             }
@@ -75,6 +79,6 @@ namespace BudgetAnalyser.Engine.Budget
             get { return this.budgets.FileName; }
         }
 
-        public BudgetModel Model { get; private set; }
+        public virtual BudgetModel Model { get; private set; }
     }
 }

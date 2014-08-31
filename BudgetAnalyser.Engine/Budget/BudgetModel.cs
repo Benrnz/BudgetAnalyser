@@ -18,9 +18,9 @@ namespace BudgetAnalyser.Engine.Budget
 
         public DateTime EffectiveFrom { get; set; }
 
-        public IEnumerable<Expense> Expenses { get; private set; }
+        public virtual IEnumerable<Expense> Expenses { get; private set; }
 
-        public IEnumerable<Income> Incomes { get; private set; }
+        public virtual IEnumerable<Income> Incomes { get; private set; }
 
         /// <summary>
         ///     Gets the date and time the budget model was last modified by the user.

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
 
-        private BudgetCurrencyContext budget;
+        private IBudgetCurrencyContext budget;
         private string doNotUseBucketCode;
         private string doNotUseId;
         private GlobalFilterCriteria filter;
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public BudgetBucketMonitorWidget()
         {
             Category = "Monthly Budget";
-            Dependencies = new[] { typeof(BudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
+            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle3";
 
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            this.budget = (BudgetCurrencyContext)input[0];
+            this.budget = (IBudgetCurrencyContext)input[0];
             this.statement = (StatementModel)input[1];
             this.filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];
