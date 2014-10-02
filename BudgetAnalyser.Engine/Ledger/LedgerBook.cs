@@ -12,8 +12,8 @@ namespace BudgetAnalyser.Engine.Ledger
     public class LedgerBook : IModelValidate
     {
         private readonly ILogger logger;
-        private readonly List<LedgerColumn> newlyAddedLedgers = new List<LedgerColumn>();
         private List<LedgerEntryLine> datedEntries;
+        private List<LedgerColumn> ledgersColumns = new List<LedgerColumn>();
 
         public LedgerBook() : this(null) { } 
 
@@ -34,14 +34,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public IEnumerable<LedgerColumn> Ledgers
         {
-            get
-            {
-                return this.datedEntries.SelectMany(e => e.Entries)
-                    .Select(e => e.LedgerColumn)
-                    .Union(this.newlyAddedLedgers)
-                    .Distinct()
-                    .OrderBy(l => l.BudgetBucket.Code);
-            }
+            get { return this.ledgersColumns; }
+            internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
         }
 
         public DateTime Modified { get; internal set; }
@@ -49,13 +43,14 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public void AddLedger(ExpenseBucket budgetBucket)
         {
-            if (Ledgers.Any(l => l.BudgetBucket == budgetBucket))
+            if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
                 // Ledger already exists in this ledger book.
                 return;
             }
-
-            this.newlyAddedLedgers.Add(new LedgerColumn { BudgetBucket = budgetBucket });
+            
+            // TODO How to select the Account for this new Ledger Column?
+            this.ledgersColumns.Add(new LedgerColumn { BudgetBucket = budgetBucket });
         }
 
         /// <summary>
@@ -115,7 +110,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.datedEntries.Insert(0, newLine);
-            this.newlyAddedLedgers.Clear();
             return newLine;
         }
 

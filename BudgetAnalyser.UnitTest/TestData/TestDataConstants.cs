@@ -18,5 +18,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         public const string WaterBucketCode = "WATER";
         public const string InsuranceHomeBucketCode = "INSHOME";
         public const string DoctorBucketCode = "DOC";
+
+        public const string ChequeAccountName = "CHEQUE";
+        public const string SavingsAccountName = "SAVINGS";
+        public const string VisaAccountName = "VISA";
     }
 }

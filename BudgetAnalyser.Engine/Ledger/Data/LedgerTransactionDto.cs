@@ -2,6 +2,9 @@
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    /// <summary>
+    /// A Dto for <see cref="LedgerTransaction"/>
+    /// </summary>
     public class LedgerTransactionDto
     {
         public string AccountType { get; set; }

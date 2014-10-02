@@ -117,5 +117,12 @@
       </LedgerEntryLineDto>
     </scg:List>
   </LedgerBookDto.DatedEntries>
+  <LedgerBookDto.Ledgers>
+    <scg:List x:TypeArguments="LedgerColumnDto" Capacity="4">
+      <LedgerColumnDto BucketCode="HAIRCUT" StoredInAccount="CHEQUE" />
+      <LedgerColumnDto BucketCode="POWER" StoredInAccount="CHEQUE" />
+      <LedgerColumnDto BucketCode="PHNET" StoredInAccount="CHEQUE" />
+    </scg:List>
+  </LedgerBookDto.Ledgers>
 </LedgerBookDto>
 

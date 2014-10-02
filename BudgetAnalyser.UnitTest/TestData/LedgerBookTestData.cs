@@ -97,6 +97,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     }));
 
             book.SetDatedEntries(list);
+            
             return Finalise(book);
         }
 
@@ -205,15 +206,15 @@ namespace BudgetAnalyser.UnitTest.TestData
             var ratesLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
             var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-            var waterLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket("WATER", "Poo bar") };
-            var houseInsLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket("INSHOME", "Poo bar") };
+            var waterLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
+            var houseInsLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
             var carInsLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
             var lifeInsLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
             var carMtcLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
             var regoLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
             var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
             var clothesLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
-            var docLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("DOC", "") };
+            var docLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
 
             var book = new LedgerBook(new FakeLogger())
             {
@@ -392,15 +393,19 @@ namespace BudgetAnalyser.UnitTest.TestData
 
         private static LedgerBook Finalise(LedgerBook book)
         {
+            var ledgers = new Dictionary<BudgetBucket, LedgerColumn>();
             foreach (LedgerEntryLine line in book.DatedEntries)
             {
                 PrivateAccessor.SetProperty(line, "IsNew", false);
                 foreach (LedgerEntry entry in line.Entries)
                 {
                     PrivateAccessor.SetField(entry, "isNew", false);
+                    entry.LedgerColumn.StoredInAccount = StatementModelTestData.ChequeAccount;
+                    if (!ledgers.ContainsKey(entry.LedgerColumn.BudgetBucket)) ledgers.Add(entry.LedgerColumn.BudgetBucket, entry.LedgerColumn);
                 }
             }
 
+            book.Ledgers = ledgers.Values;
             return book;
         }
 

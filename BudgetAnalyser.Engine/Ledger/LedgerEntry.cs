@@ -7,12 +7,12 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A single entry on a <see cref="LedgerColumn" /> for a date (which comes from the <see cref="LedgerEntryLine" />).
+    ///     A single entry on a <see cref="BudgetBucket" /> for a date (which comes from the <see cref="LedgerEntryLine" />).
     ///     This
     ///     instance can contain one or
-    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="BudgetBucket" /> for this date.
+    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="Budget.BudgetBucket" /> for this date.
     ///     Possible transactions
-    ///     include budgeted 'saved up for expenses' credited into this <see cref="LedgerColumn" /> and all statement
+    ///     include budgeted 'saved up for expenses' credited into this <see cref="BudgetBucket" /> and all statement
     ///     transactions
     ///     that are debitted to this
     ///     budget bucket ledger.

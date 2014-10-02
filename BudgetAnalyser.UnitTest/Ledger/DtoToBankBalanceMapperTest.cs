@@ -7,28 +7,32 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class BankBalanceToDtoMapperTest
+    public class DtoToBankBalanceMapperTest
     {
-        private BankBalanceDto Result { get; set; }
+        private BankBalance Result { get; set; }
 
-        private BankBalance TestData
+        private BankBalanceDto TestData
         {
             get
             {
-                return new BankBalance(StatementModelTestData.ChequeAccount, 44552.21M);
+                return new BankBalanceDto
+                {
+                    Account = StatementModelTestData.ChequeAccount.Name,
+                    Balance = 44552.44M,
+                };
             }
         }
 
         [TestMethod]
         public void ShouldMapAmount()
         {
-            Assert.AreEqual(44552.21M, Result.Balance);
+            Assert.AreEqual(44552.44M, Result.Balance);
         }
 
         [TestMethod]
         public void ShouldMapBankAccount()
         {
-            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account);
+            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account.Name);
         }
 
         [TestInitialize]
@@ -36,7 +40,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             
 
-            Result = Mapper.Map<BankBalanceDto>(TestData);
+            Result = Mapper.Map<BankBalance>(TestData);
         }
     }
 }

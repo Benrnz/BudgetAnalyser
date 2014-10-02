@@ -111,7 +111,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerBook ArrangeAndAct()
         {
-            return TestData.LedgerBookTestData.TestData1();
+            return LedgerBookTestData.TestData1();
         }
     }
     // ReSharper restore InconsistentNaming

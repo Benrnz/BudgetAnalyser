@@ -18,9 +18,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = -95.15M,
-                        BudgetBucketCode = "POWER",
+                        BudgetBucketCode = TestDataConstants.PowerBucketCode,
                         Date = new DateTime(2013, 7, 15),
                         Description = "Engery Online Electricity",
                         Id = new Guid("b227e353-cfe4-4e5d-a045-2f31cdea3412"),
@@ -31,9 +31,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = -58.19M,
-                        BudgetBucketCode = "PHNET",
+                        BudgetBucketCode = TestDataConstants.PhoneBucketCode,
                         Date = new DateTime(2013, 7, 16),
                         Description = "Vodafone Mobile Ltd",
                         Id = new Guid("e669028f-0214-4d14-8b15-14639e25c9a0"),
@@ -44,9 +44,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
-                        BudgetBucketCode = "INCOME",
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 7, 20),
                         Description = "Payroll",
                         Id = new Guid("8d85c973-77f3-48cc-aec8-edb86b06faf5"),
@@ -57,9 +57,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = -89.15M,
-                        BudgetBucketCode = "POWER",
+                        BudgetBucketCode = TestDataConstants.PowerBucketCode,
                         Date = new DateTime(2013, 8, 15),
                         Description = "Engery Online Electricity",
                         Id = new Guid("8abda989-5127-476b-b96a-98660d7d84f1"),
@@ -70,9 +70,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "VISA",
+                        AccountType = TestDataConstants.VisaAccountName,
                         Amount = -91.00M,
-                        BudgetBucketCode = "CAR MTC",
+                        BudgetBucketCode = TestDataConstants.CarMtcBucketCode,
                         Date = new DateTime(2013, 8, 15),
                         Description = "Ford Ellerslie",
                         Id = new Guid("54bc8f8e-52c2-49e7-b12f-0a662bb23ec2"),
@@ -83,9 +83,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = -68.29M,
-                        BudgetBucketCode = "PHNET",
+                        BudgetBucketCode = TestDataConstants.PhoneBucketCode,
                         Date = new DateTime(2013, 8, 16),
                         Description = "Vodafone Mobile Ltd",
                         Id = new Guid("932b224f-66f3-4ba2-a015-b5f7c03baa8f"),
@@ -96,9 +96,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
-                        BudgetBucketCode = "INCOME",
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 8, 20),
                         Description = "Payroll",
                         Id = new Guid("13ba59b9-052c-4eed-bf37-65b3d3af0aea"),
@@ -109,9 +109,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "VISA",
+                        AccountType = TestDataConstants.VisaAccountName,
                         Amount = -55.00M,
-                        BudgetBucketCode = "HAIRCUT",
+                        BudgetBucketCode = TestDataConstants.HairBucketCode,
                         Date = new DateTime(2013, 8, 22),
                         Description = "Rodney Wayne",
                         Id = new Guid("058a140b-b6bc-4933-b017-7970a773a69c"),
@@ -122,9 +122,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "VISA",
+                        AccountType = TestDataConstants.VisaAccountName,
                         Amount = -350.00M,
-                        BudgetBucketCode = "REGO",
+                        BudgetBucketCode = TestDataConstants.RegoBucketCode,
                         Date = new DateTime(2013, 9, 1),
                         Description = "nzpost nzta car regisration",
                         Id = new Guid("300c7e27-b057-4cd3-8e74-d7058290d4f8"),
@@ -135,9 +135,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = "CHEQUE",
+                        AccountType = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
-                        BudgetBucketCode = "INCOME",
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 9, 20),
                         Description = "Payroll",
                         Id = new Guid("1465431b-5991-481a-94da-704ecbfe6c20"),

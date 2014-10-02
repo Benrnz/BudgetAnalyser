@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    /// <summary>
+    /// A Dto for <see cref="LedgerEntry"/>.
+    /// </summary>
     public class LedgerEntryDto
     {
         public LedgerEntryDto()

@@ -1,4 +1,8 @@
-﻿<LedgerBookDto Checksum="2728.88" 
+﻿<!-- 
+THIS FILE MUST BE KEPT IN SYNC WITH BudgetAnalyser.UnitTest.TestData.LedgerBookTestData.TestData2()
+It is used in conjunction with that C# test class for unit testing.
+-->
+<LedgerBookDto Checksum="2728.88" 
 				FileName="" 
 				Modified="2013-12-29T15:31:03.5480436+13:00" 
 				Name="Demo LedgerBook" 
@@ -8,9 +12,11 @@
 	<LedgerBookDto.DatedEntries>
 		<scg:List x:TypeArguments="LedgerEntryLineDto" 
 			      Capacity="4">
+      
 			<LedgerEntryLineDto BankBalance="1700" 
 								 Date="2013-10-20" 
 								 Remarks="Not a full pay this month, some unpaid leave.">
+        
 				<LedgerEntryLineDto.BankBalanceAdjustments>
 					<scg:List x:TypeArguments="LedgerTransactionDto" 
 					          Capacity="4">
@@ -26,7 +32,8 @@
 											   TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
 					</scg:List>
 				</LedgerEntryLineDto.BankBalanceAdjustments>
-				<LedgerEntryLineDto.Entries>
+
+        <LedgerEntryLineDto.Entries>
 					<scg:List x:TypeArguments="LedgerEntryDto" 
 					          Capacity="16">
 						<LedgerEntryDto Balance="37.00" 
@@ -188,4 +195,12 @@
 			</LedgerEntryLineDto>
 			</scg:List>
 	</LedgerBookDto.DatedEntries>
+  <LedgerBookDto.Ledgers>
+    <scg:List x:TypeArguments="LedgerColumnDto" Capacity="4">
+      <LedgerColumnDto BucketCode="WATER" StoredInAccount="CHEQUE" />
+      <LedgerColumnDto BucketCode="INSHOME" StoredInAccount="CHEQUE" />
+      <LedgerColumnDto BucketCode="DOC" StoredInAccount="CHEQUE" />
+      <LedgerColumnDto BucketCode="RENT" StoredInAccount="CHEQUE" />
+    </scg:List>
+  </LedgerBookDto.Ledgers>
 </LedgerBookDto>

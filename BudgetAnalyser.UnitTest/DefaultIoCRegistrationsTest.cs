@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +23,7 @@ namespace BudgetAnalyser.UnitTest
                     typeof (IBankStatementImporter), // The implementations of this interface are discovered by reflection.
                     typeof (IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
                     typeof (IMultiInstanceWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
+                    typeof (IBudgetCurrencyContext), // Used to wrap a Budget Model and how it relates to time - is it the most current, an old one, or a future one.
                 };
             }
         }

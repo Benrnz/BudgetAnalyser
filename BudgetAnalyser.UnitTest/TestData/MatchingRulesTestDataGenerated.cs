@@ -67,7 +67,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "PHNET",
+                    BucketCode = TestDataConstants.PhoneBucketCode,
                     Created = new DateTime(2014, 4, 20),
                     Description = "2 Degrees Ben",
                     LastMatch = new DateTime(2014, 5, 18),
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "PHNET",
+                    BucketCode = TestDataConstants.PhoneBucketCode,
                     Created = new DateTime(2014, 4, 28),
                     Description = "2Degrees Ness",
                     LastMatch = new DateTime(2014, 5, 30),
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "RATES",
+                    BucketCode = TestDataConstants.RatesBucketCode,
                     Created = new DateTime(2014, 2, 26),
                     Description = "Auckland City",
                     LastMatch = new DateTime(2014, 5, 30),
@@ -202,7 +202,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "POWER",
+                    BucketCode = TestDataConstants.PowerBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Auckland Energy Cons",
                     LastMatch = null,
@@ -532,7 +532,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 12),
                     Description = "Countdown                Auckland     Nz",
                     LastMatch = new DateTime(2014, 4, 12),
@@ -547,7 +547,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 28),
                     Description = "Countdown              Auckland      Nzl",
                     LastMatch = new DateTime(2014, 6, 6),
@@ -562,7 +562,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 1, 21),
                     Description = "Countdown - Pakurang     Auckland     Nz",
                     LastMatch = new DateTime(2014, 1, 21),
@@ -577,7 +577,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 2, 26),
                     Description = "Countdown Meadowbank",
                     LastMatch = new DateTime(2014, 2, 26),
@@ -592,7 +592,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Countdown Sylvia Par     Auckland     Nz",
                     LastMatch = null,
@@ -622,7 +622,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "CAR MTC",
+                    BucketCode = TestDataConstants.CarMtcBucketCode,
                     Created = new DateTime(2013, 10, 19),
                     Description = "Cyclespot Spare Parts    North Shore  Nz",
                     LastMatch = new DateTime(2013, 10, 19),
@@ -667,7 +667,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 2, 21),
                     Description = "Dorchester Superette",
                     LastMatch = new DateTime(2014, 2, 21),
@@ -682,7 +682,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 12),
                     Description = "Dorchester Superette     Meadowbank   Nz",
                     LastMatch = new DateTime(2014, 4, 12),
@@ -712,7 +712,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "POWER",
+                    BucketCode = TestDataConstants.PowerBucketCode,
                     Created = new DateTime(2014, 4, 23),
                     Description = "Energy Online",
                     LastMatch = new DateTime(2014, 6, 6),
@@ -757,7 +757,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Farro Fresh              Mt Wellingtonnz",
                     LastMatch = null,
@@ -982,7 +982,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "CAR MTC",
+                    BucketCode = TestDataConstants.CarMtcBucketCode,
                     Created = new DateTime(2014, 2, 8),
                     Description = "John Andrew Ford & M",
                     LastMatch = new DateTime(2014, 2, 8),
@@ -1207,7 +1207,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 3, 20),
                     Description = "Meadowbank Bakery        Auckland     Nz",
                     LastMatch = new DateTime(2014, 3, 20),
@@ -1222,7 +1222,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Meadowbank Bakery      Auckland      Nz",
                     LastMatch = new DateTime(2014, 5, 30),
@@ -1432,7 +1432,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2013, 12, 7),
                     Description = "New World Eastridge      Auckland     Nz",
                     LastMatch = new DateTime(2013, 12, 7),
@@ -1447,7 +1447,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 1, 2),
                     Description = "New World Stonefields    Auckland Nz  Nz",
                     LastMatch = new DateTime(2014, 1, 2),
@@ -1462,7 +1462,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Nosh Gourmet Food Market Warkworth    Nz",
                     LastMatch = null,
@@ -1477,7 +1477,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "REGO",
+                    BucketCode = TestDataConstants.RegoBucketCode,
                     Created = new DateTime(2014, 3, 20),
                     Description = "Nz Transport Agency      Palm North   Nz",
                     LastMatch = new DateTime(2014, 3, 20),
@@ -1537,7 +1537,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 6),
                     Description = "Pak N Save Glenn Innes   Auckland     Nz",
                     LastMatch = new DateTime(2014, 4, 6),
@@ -1552,7 +1552,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Pak N Save Sylvia Park   Mt Wellingtonnz",
                     LastMatch = null,
@@ -1567,7 +1567,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 5, 3),
                     Description = "Pak N Save Sylvia Park Mt Wellington Nz",
                     LastMatch = new DateTime(2014, 5, 8),
@@ -1597,7 +1597,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2013, 11, 9),
                     Description = "Paknsave Glen Innes      Glen Innes   Nz",
                     LastMatch = new DateTime(2013, 11, 9),
@@ -1807,7 +1807,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "HAIRCUT",
+                    BucketCode = TestDataConstants.HairBucketCode,
                     Created = new DateTime(2014, 4, 23),
                     Description = "Rodney Wayne Pakuranga   Pakuranga    Nz",
                     LastMatch = new DateTime(2014, 4, 23),
@@ -1822,7 +1822,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "HAIRCUT",
+                    BucketCode = TestDataConstants.HairBucketCode,
                     Created = new DateTime(2014, 4, 20),
                     Description = "Rodney Wayne Pakuranga Pakuranga     Nzl",
                     LastMatch = new DateTime(2014, 5, 18),
@@ -1837,7 +1837,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "HAIRCUT",
+                    BucketCode = TestDataConstants.HairBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Rodney Wayne Shampoo     Auckland     Nz",
                     LastMatch = null,
@@ -1867,7 +1867,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 3, 8),
                     Description = "Saint Johns Butchery     Auckland     Nz",
                     LastMatch = new DateTime(2014, 3, 8),
@@ -1912,7 +1912,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 3, 8),
                     Description = "St Johns Dairy",
                     LastMatch = new DateTime(2014, 6, 6),
@@ -1927,7 +1927,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 2, 21),
                     Description = "St Johns Dairy           Meadowbank Aunz",
                     LastMatch = new DateTime(2014, 2, 21),
@@ -1957,7 +1957,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 1, 21),
                     Description = "Subway Beach Road        Auckland     Nz",
                     LastMatch = new DateTime(2014, 1, 21),
@@ -1972,7 +1972,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Subway Britomart         Auckland Citynz",
                     LastMatch = null,
@@ -1987,7 +1987,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 6),
                     Description = "Subway Fort Street       Auckland     Nz",
                     LastMatch = new DateTime(2014, 4, 6),
@@ -2002,7 +2002,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 28),
                     Description = "Subway Fort Street     Auckland      Nz",
                     LastMatch = new DateTime(2014, 6, 6),
@@ -2017,7 +2017,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Subway Quay St           Parnell      Nz",
                     LastMatch = null,
@@ -2032,7 +2032,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "Sunhill Fruit Centre",
                     LastMatch = new DateTime(2014, 5, 8),
@@ -2152,7 +2152,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 4, 29),
                     Description = "The Mad Butcher          Glen Innes   Nz",
                     LastMatch = null,
@@ -2332,7 +2332,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "PHNET",
+                    BucketCode = TestDataConstants.PhoneBucketCode,
                     Created = new DateTime(2014, 4, 28),
                     Description = "Vodafone",
                     LastMatch = new DateTime(2014, 5, 30),
@@ -2347,7 +2347,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "FOOD",
+                    BucketCode = TestDataConstants.FoodBucketCode,
                     Created = new DateTime(2014, 3, 8),
                     Description = "V'S Fruit & Vege         Saint Johns  Nz",
                     LastMatch = new DateTime(2014, 3, 8),
@@ -2377,7 +2377,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "WATER",
+                    BucketCode = TestDataConstants.WaterBucketCode,
                     Created = new DateTime(2014, 4, 20),
                     Description = "Watercare Services",
                     LastMatch = new DateTime(2014, 5, 18),

@@ -197,6 +197,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.IsNotNull(result.Name);
         }
 
+        [TestMethod]
+        public void ShouldMapCorrectNumberOfLedgers()
+        {
+            var result = ArrangeAndAct();
+
+            Assert.AreEqual(3, result.Ledgers.Count());
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
