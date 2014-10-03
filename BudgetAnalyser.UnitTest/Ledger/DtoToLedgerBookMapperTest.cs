@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.TestData;
@@ -205,16 +206,51 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(3, result.Ledgers.Count());
         }
 
+        [TestMethod]
+        public void ShouldMapLedgerColumnsOnLedgerEntriesWithAccountNotNull()
+        {
+            var result = ArrangeAndAct();
+            Assert.IsFalse(result.DatedEntries.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerColumnsWithNoDuplicateInstances()
+        {
+            var result = ArrangeAndAct();
+            var ledgerColumns = result.DatedEntries
+                .SelectMany(e => e.Entries)
+                .Select(e => e.LedgerColumn)
+                .Union(result.Ledgers)
+                .Distinct();
+
+            Assert.AreEqual(3, ledgerColumns.Count());
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerColumnsAutoPopulateLedgersCollection()
+        {
+            TestData.Ledgers.Clear();
+            var result = ArrangeAndAct();
+            Assert.AreEqual(3, result.Ledgers.Count());
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerColumnAndDefaultToChequeIfNull()
+        {
+            TestData.Ledgers.Clear();
+            var result = ArrangeAndAct();
+            Assert.IsFalse(result.DatedEntries.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
             TestData = LedgerBookDtoTestData.TestData1();
         }
 
         private LedgerBook ArrangeAndAct()
         {
-            var mapper = new DtoToLedgerBookMapper();
+            var mapper = new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository());
             return mapper.Map(TestData);
         }
     }

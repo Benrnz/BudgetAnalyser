@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.Helper;
@@ -193,7 +194,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             LedgerBookDto bookDto;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(), new BasicMapperFake<LedgerBook, LedgerBookDto>());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository()), new BasicMapperFake<LedgerBook, LedgerBookDto>());
                 subject.FileExistsOverride = f => true;
                 subject.LoadXamlAsStringOverride = f => serialisedData;
                 subject.LoadXamlFromDiskFromEmbeddedResources = false;
@@ -229,7 +230,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()
         {
-            return new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(), new LedgerBookToDtoMapper());
+            return new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository()), new LedgerBookToDtoMapper());
         }
     }
 }

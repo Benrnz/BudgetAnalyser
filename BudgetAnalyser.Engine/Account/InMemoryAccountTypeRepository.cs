@@ -6,15 +6,6 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Account
 {
-    public static class AccountTypeRepositoryConstants
-    {
-        public const string Amex = "AMEX";
-        public const string Cheque = "CHEQUE";
-        public const string Mastercard = "MASTERCARD";
-        public const string Savings = "SAVINGS";
-        public const string Visa = "VISA";
-    }
-
     /// <summary>
     ///     A very simple in memory account type repository.  Only one of each type is supported at the moment.
     ///     You cannot have two Cheque accounts for example.

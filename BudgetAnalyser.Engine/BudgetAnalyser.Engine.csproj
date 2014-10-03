@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\AccountType.cs" />
+    <Compile Include="Account\AccountTypeRepositoryConstants.cs" />
     <Compile Include="Account\InMemoryAccountTypeRepository.cs" />
     <Compile Include="Account\ChequeAccount.cs" />
     <Compile Include="Account\AmexAccount.cs" />
