@@ -9,16 +9,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class DtoToLedgerColumnMapperTest
     {
-        private LedgerColumnDto Result { get; set; }
+        private LedgerColumn Result { get; set; }
 
-        private LedgerColumn TestData
+        private LedgerColumnDto TestData
         {
             get
             {
-                return new LedgerColumn
+                return new LedgerColumnDto
                 {
-                    BudgetBucket = StatementModelTestData.RegoBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount,
+                    BucketCode = TestDataConstants.RegoBucketCode,
+                    StoredInAccount = TestDataConstants.ChequeAccountName,
                 };
             }
         }
@@ -26,19 +26,19 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapBudgetBucketCode()
         {
-            Assert.AreEqual(TestDataConstants.RegoBucketCode, Result.BucketCode);
+            Assert.AreEqual(TestDataConstants.RegoBucketCode, Result.BudgetBucket.Code);
         }
 
         [TestMethod]
         public void ShouldMapBankAccount()
         {
-            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.StoredInAccount);
+            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.StoredInAccount.Name);
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerColumnDto>(TestData);
+            Result = Mapper.Map<LedgerColumn>(TestData);
         }
     }
 }
