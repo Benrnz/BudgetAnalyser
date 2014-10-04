@@ -1,11 +1,15 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Statement.AccountTypeUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
+    <UserControl.Resources>
+        <converters:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
+    </UserControl.Resources>
     <Grid>
         <Image Height="20"
                HorizontalAlignment="Left"
                Margin="6,2,6,2"
-               Source="{Binding ImagePath, Converter={StaticResource Converter.ImagePath}, ConverterParameter=UI}"
+               Source="{Binding ImagePath, Converter={StaticResource Converter.TextToStaticResource}}"
                Stretch="Uniform"
                ToolTip="{Binding Name}"
                VerticalAlignment="Top"

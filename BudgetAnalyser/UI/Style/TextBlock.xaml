@@ -58,7 +58,7 @@
         <Setter Property="FontStyle"
                 Value="Italic" />
         <Setter Property="FontSize"
-                Value="18" />
+                Value="36" />
     </Style>
 
     <Style x:Key="TextBlock.Paragraph"

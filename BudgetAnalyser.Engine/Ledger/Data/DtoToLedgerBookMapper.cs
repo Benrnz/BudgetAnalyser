@@ -31,6 +31,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.cachedLedgers.Clear();
             foreach (var ledgerColumn in book.Ledgers)
             {
+                if (ledgerColumn.StoredInAccount == null)
+                {
+                    // Defaults to Cheque Account if unspecified.
+                    ledgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
+                }
+
                 // Add the outer ledgers map collection to the cache
                 this.cachedLedgers.GetOrAdd(ledgerColumn.BudgetBucket.Code, ledgerColumn);
             }

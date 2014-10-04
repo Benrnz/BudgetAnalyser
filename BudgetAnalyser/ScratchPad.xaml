@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="BudgetAnalyser.ScratchPad"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="50"
+             d:DesignWidth="100">
+    <Viewbox>
+        <Grid>
+            <Path Data="M1,0 L10,0 10,2 9,3 0,3 0,1" 
+                  Fill="Blue"
+                  Stretch="Uniform"/>
+            <TextBlock Text="Cheque"
+                       Margin="10,0,10,5"
+                       FontStyle="Italic"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center" />
+        </Grid>
+    </Viewbox>
+</UserControl>

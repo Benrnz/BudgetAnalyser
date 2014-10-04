@@ -149,7 +149,8 @@
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
                 <ContentPresenter Grid.Column="8"
-                       Content="{Binding AccountType}"/>
+                                  Margin="5,0,5,0"
+                                  Content="{Binding AccountType}"/>
             </Grid>
         </Border>
         <DataTemplate.Triggers>
@@ -273,16 +274,10 @@
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
-                <Image Grid.Column="8"
-                       Grid.Row="1"
-                       Height="20"
-                       HorizontalAlignment="Left"
-                       Margin="4"
-                       Source="{Binding AccountType.ImagePath}"
-                       Stretch="Uniform"
-                       ToolTip="{Binding AccountType.Name}"
-                       VerticalAlignment="Top"
-                       Width="62" />
+                <ContentPresenter Grid.Column="8"
+                                  Grid.Row="1"
+                                  Margin="5,0,5,0"
+                                  Content="{Binding AccountType}" />
             </Grid>
         </Border>
     </DataTemplate>
