@@ -7,7 +7,7 @@
     </UserControl.Resources>
     <Grid>
         <Image Height="20"
-               HorizontalAlignment="Left"
+               HorizontalAlignment="Center"
                Margin="6,2,6,2"
                Source="{Binding ImagePath, Converter={StaticResource Converter.TextToStaticResource}}"
                Stretch="Uniform"
