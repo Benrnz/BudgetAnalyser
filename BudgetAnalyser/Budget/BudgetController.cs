@@ -335,6 +335,10 @@ namespace BudgetAnalyser.Budget
                     MessengerInstance.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
                 }
             }
+            catch (FileFormatException)
+            {
+                this.messageBox.Show("That is not a valid Budget-Analyser Budget file.");
+            }
             finally
             {
                 this.loading = false;
