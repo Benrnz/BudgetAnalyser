@@ -7,29 +7,28 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1"
-              Grid.RowSpan="3">
+        
+        <Grid Grid.RowSpan="2">
             <Image Source="../UI/Assets/PieChart.png"
                    Stretch="Uniform"
                    VerticalAlignment="Center" />
         </Grid>
-        <StackPanel Grid.ColumnSpan="2"
-                    Grid.Row="1"
-                    Width="475">
+        
+        <StackPanel Grid.ColumnSpan="2">
             <budget:BudgetModelNameUserControl />
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding FileName}"
                        ToolTip="{Binding FileName}" />
         </StackPanel>
+        
         <StackPanel Grid.Column="1"
-                    Grid.Row="2">
+                    Grid.Row="1">
             <TextBlock Text="Effective From:" />
             <TextBlock Text="{Binding Model.EffectiveFrom, StringFormat=D}"
                        FontStyle="Italic" />
