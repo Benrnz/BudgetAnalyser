@@ -173,7 +173,6 @@
     <Compile Include="LedgerBook\ILedgerBookGridBuilder.cs" />
     <Compile Include="LedgerBook\LedgerBookControllerFileOperations.cs" />
     <Compile Include="LedgerBook\LedgerBookGridBuilderV2.cs" />
-    <Compile Include="LedgerBook\LedgerBookGridBuilder.cs" />
     <Compile Include="LedgerBook\LedgerBookGridBuilderFactory.cs" />
     <Compile Include="LedgerBook\LedgerBookViewModel.cs" />
     <Compile Include="LedgerBook\LedgerTransactionCommands.cs" />

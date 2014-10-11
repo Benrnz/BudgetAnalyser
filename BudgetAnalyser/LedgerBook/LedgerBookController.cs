@@ -23,7 +23,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly LedgerBookGridBuilderFactory uiBuilder;
 
         private bool doNotUseShown;
-        private bool pivotGridToHorizontal;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
@@ -83,11 +82,6 @@ namespace BudgetAnalyser.LedgerBook
         public LedgerRemarksController LedgerRemarksController { get; private set; }
 
         public LedgerTransactionsController LedgerTransactionsController { get; private set; }
-
-        public ICommand PivotCommand
-        {
-            get { return new RelayCommand(OnPivotCommandExecuted); }
-        }
 
         public ICommand RemoveLedgerEntryLineCommand
         {
@@ -168,11 +162,6 @@ namespace BudgetAnalyser.LedgerBook
 
         internal ILedgerBookGridBuilder GridBuilder()
         {
-            if (this.pivotGridToHorizontal)
-            {
-                return this.uiBuilder.GridBuilderV1(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
-            }
-
             return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
         }
 
@@ -314,13 +303,6 @@ namespace BudgetAnalyser.LedgerBook
             ViewModel.NewLedgerLine.UpdateBankBalances(AddLedgerReconciliationController.BankBalances);
             FileOperations.SaveLedgerBook();
             FileOperations.ReloadCurrentLedgerBook();
-        }
-
-        private void OnPivotCommandExecuted()
-        {
-            this.pivotGridToHorizontal = !this.pivotGridToHorizontal;
-            FileOperations.ReloadCurrentLedgerBook();
-            RaiseLedgerBookUpdated();
         }
 
         private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
