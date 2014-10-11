@@ -9,11 +9,11 @@
           KeyUp="OnShellDialogKeyUp"
           Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".1*" />
-            <RowDefinition Height=".6*"
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="6*"
                            MinHeight="75"
                            MaxHeight="600" />
-            <RowDefinition Height=".3*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
         <Border Background="{StaticResource Brush.DialogBackground}"
                 Grid.Row="1">
