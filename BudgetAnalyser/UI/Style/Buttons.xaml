@@ -345,6 +345,38 @@
                 Value="New" />
     </Style>
 
+    <Style x:Key="Button.Round.Minus"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
+                                   FontFamily="Segoe UI"
+                                   FontWeight="Bold"
+                                   FontSize="38"
+                                   Margin="1,-8,0,0"
+                                   HorizontalAlignment="Center"
+                                   Text="-"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ToolTip"
+                Value="New" />
+    </Style>
+
     <Style x:Key="Button.Round.Ok"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">

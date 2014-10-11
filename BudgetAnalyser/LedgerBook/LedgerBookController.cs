@@ -22,6 +22,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly LedgerBookGridBuilderFactory uiBuilder;
 
+        private int doNotUseNumberOfMonthsToShow;
         private bool doNotUseShown;
 
         public LedgerBookController(
@@ -53,6 +54,7 @@ namespace BudgetAnalyser.LedgerBook
             AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
             LedgerTransactionsController = uiContext.LedgerTransactionsController;
             LedgerRemarksController = uiContext.LedgerRemarksController;
+            NumberOfMonthsToShow = 2;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
@@ -83,6 +85,16 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerTransactionsController LedgerTransactionsController { get; private set; }
 
+        public int NumberOfMonthsToShow
+        {
+            get { return this.doNotUseNumberOfMonthsToShow; }
+            set
+            {
+                this.doNotUseNumberOfMonthsToShow = value;
+                RaisePropertyChanged(() => NumberOfMonthsToShow);
+            }
+        }
+
         public ICommand RemoveLedgerEntryLineCommand
         {
             get { return new RelayCommand<LedgerEntryLine>(OnRemoveLedgerEntryLineCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
@@ -91,6 +103,11 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand ShowBankBalancesCommand
         {
             get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null); }
+        }
+
+        public ICommand ShowHideMonthsCommand
+        {
+            get { return new RelayCommand<int>(OnShowHideMonthsCommandExecuted); }
         }
 
         public ICommand ShowRemarksCommand
@@ -162,7 +179,7 @@ namespace BudgetAnalyser.LedgerBook
 
         internal ILedgerBookGridBuilder GridBuilder()
         {
-            return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand);
+            return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand, ShowHideMonthsCommand);
         }
 
         private bool CanExecuteAddNewLedgerCommand()
@@ -322,6 +339,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
             AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
+        }
+
+        private void OnShowHideMonthsCommandExecuted(int increment)
+        {
+            NumberOfMonthsToShow += increment;
+            MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
