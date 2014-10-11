@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
@@ -15,21 +15,9 @@ namespace BudgetAnalyser.LedgerBook
     {
         private LedgerEntryLine ledgerEntryLine;
 
-        public decimal BankBalanceTotal
+        public bool HasNegativeBalances
         {
-            get { return this.ledgerEntryLine.CalculatedSurplus; }
-        }
-
-        public ObservableCollection<BankBalance> BankBalances { get; private set; }
-
-        public bool CanExecuteCancelButton
-        {
-            get { return false; }
-        }
-
-        public bool CanExecuteOkButton
-        {
-            get { return true; }
+            get { return SurplusBalances.Any(b => b.Balance < 0); }
         }
 
         public ICommand RemoveBankBalanceCommand
@@ -41,14 +29,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool CanExecuteSaveButton
+        public ObservableCollection<BankBalance> SurplusBalances { get; private set; }
+
+        public decimal SurplusTotal
         {
-            get { return false; }
+            get { return this.ledgerEntryLine.CalculatedSurplus; }
         }
 
         public void ShowDialog(LedgerEntryLine ledgerLine)
         {
-            BankBalances = new ObservableCollection<BankBalance>(ledgerLine.SurplusBalances);
+            SurplusBalances = new ObservableCollection<BankBalance>(ledgerLine.SurplusBalances);
             this.ledgerEntryLine = ledgerLine;
 
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
