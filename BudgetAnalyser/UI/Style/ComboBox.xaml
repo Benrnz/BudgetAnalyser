@@ -120,7 +120,7 @@
                 Value="true" />
         <Setter Property="MinWidth"
                 Value="120" />
-        <Setter Property="MinHeight"
+        <Setter Property="Height"
                 Value="30" />
         <Setter Property="VerticalAlignment" 
                 Value="Center"/>

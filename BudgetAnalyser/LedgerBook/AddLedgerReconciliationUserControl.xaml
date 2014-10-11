@@ -33,6 +33,7 @@
                      Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}"
                      Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
+                      MaxWidth="300"
                       SelectedItem="{Binding SelectedBankAccount}"
                       Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Command="{Binding AddBankBalanceCommand}"
@@ -64,7 +65,7 @@
             <Border BorderThickness="0,2,0,0"
                     BorderBrush="{StaticResource Brush.Text.Default}"
                     Margin="0,2,0,0">
-                <TextBlock HorizontalAlignment="Right" 
+                <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
                            Text="{Binding BankBalanceTotal, StringFormat=N}" />
             </Border>
         </Border>

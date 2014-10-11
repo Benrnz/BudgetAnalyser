@@ -10,9 +10,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <ContentPresenter Content="{Binding Account}" />
+        <ContentPresenter Content="{Binding Account}" 
+                          Height="60"/>
         <TextBlock Grid.Column="1"
-                   Style="{StaticResource TextBlock.Number}"
+                   Style="{StaticResource TextBlock.ImportantNumber}"
                    Text="{Binding Balance, StringFormat=N}" />
         
         <Button Style="{StaticResource Button.Round.Cross}"
