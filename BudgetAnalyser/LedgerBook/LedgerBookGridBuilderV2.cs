@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -231,8 +232,18 @@ namespace BudgetAnalyser.LedgerBook
             surplusTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
 
             gridRow = 5;
+            AccountType currentBankAccount = null;
             foreach (LedgerColumn ledger in this.sortedLedgers)
             {
+                if (currentBankAccount != ledger.StoredInAccount)
+                {
+                    currentBankAccount = ledger.StoredInAccount;
+                    Border bankAccountBorder = AddBorderToGridCell(grid, false, false, gridRow, 0);
+                    Grid.SetColumnSpan(bankAccountBorder, 2);
+                    Grid.SetRow(bankAccountBorder, gridRow++);
+                    bankAccountBorder.Child = new ContentPresenter { Content = currentBankAccount, Margin = new Thickness(20) };
+                }
+
                 gridColumn = 0;
                 Border border = AddBorderToGridCell(grid, true, true, gridRow, gridColumn);
                 // SpentMonthly Legders do not show the transaction total (NetAmount) because its always the same.
@@ -332,9 +343,15 @@ namespace BudgetAnalyser.LedgerBook
                 TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, ImportantNumberStyle);
                 surplusText.Foreground = (Brush)FindResource(SurplusTextBrush);
 
-
+                AccountType currentBankAccount = null;
                 foreach (LedgerColumn ledger in this.sortedLedgers)
                 {
+                    if (currentBankAccount != ledger.StoredInAccount)
+                    {
+                        gridRow++;
+                        currentBankAccount = ledger.StoredInAccount;
+                    }
+
                     LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
                     decimal balance, netAmount;
 
@@ -443,6 +460,8 @@ namespace BudgetAnalyser.LedgerBook
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             // Remarks
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            // Bank account heading lines
+            this.sortedLedgers.Select(l => l.StoredInAccount).Distinct().ToList().ForEach(x => grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }));
 
             this.contentPresenter.Content = grid;
             AddGridColumns(grid, numberOfMonthsToShow);
