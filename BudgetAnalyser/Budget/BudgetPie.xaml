@@ -75,7 +75,7 @@
                 VerticalAlignment="Top" />
         <!-- Expense Pie -->
         <Border x:Name="ExpenseBorder"
-                Background="{StaticResource DebitBackgroundLightBrush}"
+                Background="{StaticResource Brush.DebitBackgroundLight}"
                 Grid.Column="1"
                 Grid.Row="1"
                 HorizontalAlignment="Stretch"
@@ -111,7 +111,7 @@
         </StackPanel>
         <!-- Income Pie -->
         <Border x:Name="IncomeBorder"
-                Background="{StaticResource CreditBackground2Brush}"
+                Background="{StaticResource Brush.CreditBackground2}"
                 Grid.Column="0"
                 Grid.Row="1"
                 HorizontalAlignment="Stretch"

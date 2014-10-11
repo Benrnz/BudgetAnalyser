@@ -174,6 +174,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        /// <summary>
+        /// Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine"/> to the <see cref="LedgerBook"/>.
+        /// </summary>
         public void ShowCreateDialog()
         {
             Date = DateTime.Today;
@@ -185,6 +188,9 @@ namespace BudgetAnalyser.LedgerBook
             ShowDialogCommon("New Reconciliation");
         }
 
+        /// <summary>
+        /// Used to show and edit all the bank balances involved in this <see cref="LedgerEntryLine"/>.
+        /// </summary>
         public void ShowEditDialog([NotNull] LedgerEntryLine line, bool isNewLine)
         {
             if (line == null)

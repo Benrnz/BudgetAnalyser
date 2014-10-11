@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -11,8 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
     ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerColumn" />s
-    ///     for a
-    ///     date.
+    ///     for a date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
     public class LedgerEntryLine : IModelValidate
@@ -51,6 +51,23 @@ namespace BudgetAnalyser.Engine.Ledger
         public decimal CalculatedSurplus
         {
             get { return LedgerBalance - Entries.Sum(e => e.Balance); }
+        }
+
+        public IEnumerable<BankBalance> SurplusBalances
+        {
+            get
+            {
+                var adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                var results = Entries.GroupBy(
+                    e => e.LedgerColumn.StoredInAccount, 
+                    (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
+                return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
+            }
+        }
+
+        private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
+        {
+            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Credit - a.Debit);
         }
 
         /// <summary>

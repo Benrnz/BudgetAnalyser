@@ -15,7 +15,7 @@
         <TextBlock Grid.Column="1"
                    Style="{StaticResource TextBlock.ImportantNumber}"
                    Text="{Binding Balance, StringFormat=N}" />
-        
+
         <Button Style="{StaticResource Button.Round.Cross}"
                 Grid.Column="2"
                 Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveBankBalanceCommand}"

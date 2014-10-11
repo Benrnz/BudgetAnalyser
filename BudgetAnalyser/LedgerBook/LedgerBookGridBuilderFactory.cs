@@ -11,9 +11,10 @@ namespace BudgetAnalyser.LedgerBook
             ICommand showBankBalancesCommand,
             ICommand showRemarksCommand,
             ICommand removeLedgerEntryLineCommand,
-            ICommand showHideMonthsCommand)
+            ICommand showHideMonthsCommand,
+            ICommand showSurplusBalancesCommand)
         {
-            return new LedgerBookGridBuilderV2(showTransactionsCommand, showBankBalancesCommand, showRemarksCommand, removeLedgerEntryLineCommand, showHideMonthsCommand);
+            return new LedgerBookGridBuilderV2(showTransactionsCommand, showBankBalancesCommand, showRemarksCommand, removeLedgerEntryLineCommand, showHideMonthsCommand, showSurplusBalancesCommand);
         }
     }
 }

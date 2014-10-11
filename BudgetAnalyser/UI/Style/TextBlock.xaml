@@ -29,10 +29,12 @@
     <Style x:Key="TextBlock.LabelStyle"
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Setter Property="Foreground" Value="{StaticResource Brush.Text.Label}"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Text.Label}" />
+        <Setter Property="FontSize"
+                Value="15" />
     </Style>
-    
+
     <Style x:Key="TextBlock.TransactionStyle"
            TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -80,7 +82,7 @@
         <Setter Property="FontSize"
                 Value="11" />
     </Style>
-    
+
     <Style x:Key="TextBlock.Number"
            TargetType="TextBlock"
            BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -93,6 +95,21 @@
            BasedOn="{StaticResource TextBlock.Number}">
         <Setter Property="FontSize"
                 Value="24" />
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <Binding RelativeSource="{RelativeSource Self}"
+                         Path="Text"
+                         Converter="{StaticResource Converter.NumberToBrush}"
+                         ConverterParameter="Light" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontWeight">
+            <Setter.Value>
+                <Binding RelativeSource="{RelativeSource Self}"
+                         Path="Text"
+                         Converter="{StaticResource Converter.NumberToBold}" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="TextBlock.TransactionNumber"

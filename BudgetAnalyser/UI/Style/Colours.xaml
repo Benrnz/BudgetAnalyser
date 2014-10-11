@@ -252,14 +252,14 @@
     <SolidColorBrush x:Key="Brush.NeutralNumberBackground"
                      Color="{StaticResource Colour.NeutralNumber}" />
 
-    <SolidColorBrush x:Key="CreditBackground2Brush"
-                     Color="{StaticResource Colour.Credit2}" />
-
-    <SolidColorBrush x:Key="DebitBackgroundLightBrush"
+    <SolidColorBrush x:Key="Brush.DebitBackgroundLight"
                      Color="{StaticResource Colour.DebitLight}" />
 
     <SolidColorBrush x:Key="Brush.CreditBackground1"
                      Color="{StaticResource Colour.Credit1}" />
+
+    <SolidColorBrush x:Key="Brush.CreditBackground2"
+                     Color="{StaticResource Colour.Credit2}" />
 
     <SolidColorBrush x:Key="Brush.DebitBackground1"
                      Color="{StaticResource Colour.Debit1}" />

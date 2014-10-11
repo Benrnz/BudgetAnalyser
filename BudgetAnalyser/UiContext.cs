@@ -61,6 +61,7 @@ namespace BudgetAnalyser
             Messenger = messenger;
         }
 
+        public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
 
         public OverallPerformanceController OverallPerformanceController { get; set; }

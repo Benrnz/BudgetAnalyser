@@ -17,11 +17,6 @@
                     Modifiers="Control" />
     </UserControl.InputBindings>
 
-    <UserControl.Resources>
-        <converters:NumberSignToColorConverter x:Key="NumberSignToColorConverter" />
-
-    </UserControl.Resources>
-
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
             <!-- Menu bar -->
@@ -250,7 +245,7 @@
                                Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                 </StackPanel>
             </Border>
-            <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource NumberSignToColorConverter}}"
+            <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     ToolTip="Difference between total displayed credits and total displayed debits."
                     Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">

@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.ShowSurplusBalancesUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- DataContext ShowSurplusBalancesController  -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Background="{StaticResource Brush.MainBackground}"
+                BorderBrush="{StaticResource Brush.ControlBorder}"
+                BorderThickness="2"
+                Margin="5,0,5,10"
+                MinHeight="40"
+                VerticalAlignment="Top">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          MinWidth="250">
+                <ItemsControl ItemsSource="{Binding BankBalances}"
+                              Margin="5" >
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="1"
+                BorderThickness="0,2,0,0"
+                BorderBrush="{StaticResource Brush.Text.Default}"
+                HorizontalAlignment="Right"
+                Width="120">
+            <Border BorderThickness="0,2,0,0"
+                    BorderBrush="{StaticResource Brush.Text.Default}"
+                    Margin="0,2,0,0">
+                <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
+                           Text="{Binding BankBalanceTotal, StringFormat=N}" />
+            </Border>
+        </Border>
+    </Grid>
+
+</UserControl>

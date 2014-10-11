@@ -134,7 +134,8 @@
     <Compile Include="Converters\ConverterHelper.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\MatchingRuleDescriptorConverter.cs" />
-    <Compile Include="Converters\NumberSignToColorConverter.cs" />
+    <Compile Include="Converters\NumberSignToBrushConverter.cs" />
+    <Compile Include="Converters\NumberToBoldConverter.cs" />
     <Compile Include="Converters\PercentToColourConverter.cs" />
     <Compile Include="Dashboard\DashboardApplicationStateModel.cs" />
     <Compile Include="Dashboard\DashboardCommands.cs" />
@@ -161,6 +162,10 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="LedgerBook\ShowSurplusBalancesController.cs" />
+    <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
+      <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScratchPad.xaml.cs">
       <DependentUpon>ScratchPad.xaml</DependentUpon>
     </Compile>
@@ -325,6 +330,10 @@
     <Page Include="Filtering\GlobalDateFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\ShowSurplusBalancesUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="LedgerBook\BankBalanceUserControl.xaml">
       <SubType>Designer</SubType>

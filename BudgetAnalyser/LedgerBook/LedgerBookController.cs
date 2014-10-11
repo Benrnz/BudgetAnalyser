@@ -24,6 +24,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private int doNotUseNumberOfMonthsToShow;
         private bool doNotUseShown;
+        private UiContext uiContext;
 
         public LedgerBookController(
             [NotNull] UiContext uiContext,
@@ -50,10 +51,7 @@ namespace BudgetAnalyser.LedgerBook
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
             FileOperations = fileOperations;
-            ChooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
-            AddLedgerReconciliationController = uiContext.AddLedgerReconciliationController;
-            LedgerTransactionsController = uiContext.LedgerTransactionsController;
-            LedgerRemarksController = uiContext.LedgerRemarksController;
+            this.uiContext = uiContext;
             NumberOfMonthsToShow = 2;
 
             MessengerInstance = uiContext.Messenger;
@@ -65,8 +63,6 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler LedgerBookUpdated;
 
-        public AddLedgerReconciliationController AddLedgerReconciliationController { get; private set; }
-
         public ICommand AddNewLedgerCommand
         {
             get { return new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand); }
@@ -77,13 +73,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
         }
 
-        public ChooseBudgetBucketController ChooseBudgetBucketController { get; private set; }
-
         public LedgerBookControllerFileOperations FileOperations { get; private set; }
-
-        public LedgerRemarksController LedgerRemarksController { get; private set; }
-
-        public LedgerTransactionsController LedgerTransactionsController { get; private set; }
 
         public int NumberOfMonthsToShow
         {
@@ -113,6 +103,11 @@ namespace BudgetAnalyser.LedgerBook
         public ICommand ShowRemarksCommand
         {
             get { return new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand); }
+        }
+
+        public ICommand ShowSurplusBalancesCommand
+        {
+            get { return new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null); }
         }
 
         public ICommand ShowTransactionsCommand
@@ -179,7 +174,7 @@ namespace BudgetAnalyser.LedgerBook
 
         internal ILedgerBookGridBuilder GridBuilder()
         {
-            return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand, ShowHideMonthsCommand);
+            return this.uiBuilder.GridBuilderV2(ShowTransactionsCommand, ShowBankBalancesCommand, ShowRemarksCommand, RemoveLedgerEntryLineCommand, ShowHideMonthsCommand, ShowSurplusBalancesCommand);
         }
 
         private bool CanExecuteAddNewLedgerCommand()
@@ -213,8 +208,8 @@ namespace BudgetAnalyser.LedgerBook
             try
             {
                 ViewModel.NewLedgerLine = ViewModel.LedgerBook.Reconcile(
-                    AddLedgerReconciliationController.Date,
-                    AddLedgerReconciliationController.BankBalances,
+                    this.uiContext.AddLedgerReconciliationController.Date,
+                    this.uiContext.AddLedgerReconciliationController.BankBalances,
                     ViewModel.CurrentBudget.Model,
                     ViewModel.CurrentStatement,
                     ignoreWarnings);
@@ -239,20 +234,20 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnAddNewLedgerCommandExecuted()
         {
-            ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
-            ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
-            ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
+            this.uiContext.ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
+            this.uiContext.ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
+            this.uiContext.ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
         }
 
         private void OnAddNewReconciliationCommandExecuted()
         {
-            AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
-            AddLedgerReconciliationController.ShowCreateDialog();
+            this.uiContext.AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
+            this.uiContext.AddLedgerReconciliationController.ShowCreateDialog();
         }
 
         private void OnAddReconciliationComplete(object sender, EditBankBalancesEventArgs e)
         {
-            AddLedgerReconciliationController.Complete -= OnAddReconciliationComplete;
+            this.uiContext.AddLedgerReconciliationController.Complete -= OnAddReconciliationComplete;
 
             if (e.Canceled)
             {
@@ -279,20 +274,20 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBudgetBucketChosen(object sender, EventArgs e)
         {
-            ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
-            if (ChooseBudgetBucketController.Selected == null)
+            this.uiContext.ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
+            if (this.uiContext.ChooseBudgetBucketController.Selected == null)
             {
                 this.messageBox.Show("You must select a budget bucket to track when adding a new Ledger Column.");
                 return;
             }
 
-            var selectedBucket = ChooseBudgetBucketController.Selected as ExpenseBucket;
+            var selectedBucket = this.uiContext.ChooseBudgetBucketController.Selected as ExpenseBucket;
             if (selectedBucket == null)
             {
                 return;
             }
 
-            ViewModel.LedgerBook.AddLedger(selectedBucket, ChooseBudgetBucketController.StoreInThisAccount);
+            ViewModel.LedgerBook.AddLedger(selectedBucket, this.uiContext.ChooseBudgetBucketController.StoreInThisAccount);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
@@ -305,7 +300,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnEditBankBalancesCompleted(object sender, EditBankBalancesEventArgs editBankBalancesEventArgs)
         {
-            AddLedgerReconciliationController.Complete -= OnEditBankBalancesCompleted;
+            this.uiContext.AddLedgerReconciliationController.Complete -= OnEditBankBalancesCompleted;
             if (editBankBalancesEventArgs.Canceled || ViewModel.NewLedgerLine == null)
             {
                 return;
@@ -318,7 +313,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             FileOperations.Dirty = true;
-            ViewModel.NewLedgerLine.UpdateBankBalances(AddLedgerReconciliationController.BankBalances);
+            ViewModel.NewLedgerLine.UpdateBankBalances(this.uiContext.AddLedgerReconciliationController.BankBalances);
             FileOperations.SaveLedgerBook();
             FileOperations.ReloadCurrentLedgerBook();
         }
@@ -338,8 +333,8 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)
         {
-            AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
-            AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
+            this.uiContext.AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
+            this.uiContext.AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
         }
 
         private void OnShowHideMonthsCommandExecuted(int increment)
@@ -350,13 +345,18 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
         {
-            LedgerRemarksController.Completed += OnShowRemarksCompleted;
-            LedgerRemarksController.Show(parameter, parameter == ViewModel.NewLedgerLine);
+            this.uiContext.LedgerRemarksController.Completed += OnShowRemarksCompleted;
+            this.uiContext.LedgerRemarksController.Show(parameter, parameter == ViewModel.NewLedgerLine);
         }
 
         private void OnShowRemarksCompleted(object sender, EventArgs e)
         {
-            LedgerRemarksController.Completed -= OnShowRemarksCompleted;
+            this.uiContext.LedgerRemarksController.Completed -= OnShowRemarksCompleted;
+        }
+
+        private void OnShowSurplusBalancesCommandExecuted(LedgerEntryLine line)
+        {
+            this.uiContext.ShowSurplusBalancesController.ShowDialog(line);
         }
 
         private void OnShowTransactionsCommandExecuted(object parameter)
@@ -366,7 +366,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            LedgerTransactionsController.Complete += OnShowTransactionsCompleted;
+            this.uiContext.LedgerTransactionsController.Complete += OnShowTransactionsCompleted;
 
             var ledgerEntry = parameter as LedgerEntry; // used when legder entry transactions are being displayed
             var bankBalanceAdjustments = parameter as LedgerEntryLine; // used when balance adjustments are being displayed
@@ -374,11 +374,11 @@ namespace BudgetAnalyser.LedgerBook
             if (ledgerEntry != null)
             {
                 bool isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
-                LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
+                this.uiContext.LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
             }
             else if (bankBalanceAdjustments != null)
             {
-                LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
+                this.uiContext.LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
             }
             else
             {
@@ -388,7 +388,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowTransactionsCompleted(object sender, LedgerTransactionEventArgs args)
         {
-            LedgerTransactionsController.Complete -= OnShowTransactionsCompleted;
+            this.uiContext.LedgerTransactionsController.Complete -= OnShowTransactionsCompleted;
 
             if (args.WasModified)
             {

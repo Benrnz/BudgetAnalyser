@@ -37,6 +37,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showHideMonthsCommand;
         private readonly ICommand showRemarksCommand;
+        private readonly ICommand showSurplusBalancesCommand;
         private readonly ICommand showTransactionsCommand;
         private ContentPresenter contentPresenter;
         private Engine.Ledger.LedgerBook ledgerBook;
@@ -48,13 +49,15 @@ namespace BudgetAnalyser.LedgerBook
             ICommand showBankBalancesCommand,
             ICommand showRemarksCommand,
             ICommand removeLedgerEntryLineCommand,
-            ICommand showHideMonthsCommand)
+            ICommand showHideMonthsCommand,
+            ICommand showSurplusBalancesCommand)
         {
             this.showTransactionsCommand = showTransactionsCommand;
             this.showBankBalancesCommand = showBankBalancesCommand;
             this.showRemarksCommand = showRemarksCommand;
             this.removeLedgerEntryLineCommand = removeLedgerEntryLineCommand;
             this.showHideMonthsCommand = showHideMonthsCommand;
+            this.showSurplusBalancesCommand = showSurplusBalancesCommand;
         }
 
         /// <summary>
@@ -312,10 +315,9 @@ namespace BudgetAnalyser.LedgerBook
 
                 gridRow = AddDateCellToLedgerEntryLine(grid, gridRow, ref gridColumn, line);
 
-                TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref gridRow, gridColumn, NormalStyle, line.Remarks);
+                TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref gridRow, gridColumn, NormalStyle, line.Remarks, line);
                 var hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
                 hyperlink.Command = this.showRemarksCommand;
-                hyperlink.CommandParameter = line;
 
                 AddBorderToGridCell(grid, BankBalanceBackground, false, gridRow, gridColumn);
                 TextBlock bankBalanceText = AddHyperlinkToGrid(
@@ -328,7 +330,6 @@ namespace BudgetAnalyser.LedgerBook
                     line);
                 hyperlink = (Hyperlink)bankBalanceText.Inlines.FirstInline;
                 hyperlink.Command = this.showBankBalancesCommand;
-                hyperlink.CommandParameter = line;
                 bankBalanceText.Foreground = (Brush)FindResource(BankBalanceTextBrush);
 
                 AddHyperlinkToGrid(
@@ -339,9 +340,18 @@ namespace BudgetAnalyser.LedgerBook
                     ImportantNumberStyle,
                     parameter: line);
 
-                Border surplusBorder = AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
-                TextBlock surplusText = AddContentToGrid(surplusBorder, line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, ImportantNumberStyle);
+                AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
+                TextBlock surplusText = AddHyperlinkToGrid(
+                    grid, 
+                    line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), 
+                    ref gridRow, 
+                    gridColumn, 
+                    ImportantNumberStyle,
+                    string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus), 
+                    line);
                 surplusText.Foreground = (Brush)FindResource(SurplusTextBrush);
+                hyperlink = (Hyperlink)surplusText.Inlines.FirstInline;
+                hyperlink.Command = this.showSurplusBalancesCommand;
 
                 AccountType currentBankAccount = null;
                 foreach (LedgerColumn ledger in this.sortedLedgers)
