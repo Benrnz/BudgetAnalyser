@@ -11,6 +11,9 @@
         <StackPanel Orientation="Horizontal"
                     Grid.Row="1"
                     Margin="50,10,2,2">
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="Bucket:"
+                       Margin="20,5,5,5" />
             <ComboBox DisplayMemberPath="Code"
                       HorizontalAlignment="Left"
                       ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
@@ -19,6 +22,17 @@
                       SelectedItem="{Binding Selected}"
                       TabIndex="1"
                       ToolTip="{Binding Selected}"
+                      VerticalAlignment="Top" />
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="Store in this bank account:"
+                       Margin="20,5,5,5"
+                       Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}"/>
+            <ComboBox HorizontalAlignment="Left"
+                      ItemsSource="{Binding BankAccounts}"
+                      SelectedItem="{Binding StoreInThisAccount}"
+                      TabIndex="2"
+                      ToolTip="{Binding StoreInThisAccount}"
+                      Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}"
                       VerticalAlignment="Top" />
         </StackPanel>
     </Grid>

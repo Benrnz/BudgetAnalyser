@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -15,7 +16,9 @@ namespace BudgetAnalyser.Engine.Ledger
         private List<LedgerEntryLine> datedEntries;
         private List<LedgerColumn> ledgersColumns = new List<LedgerColumn>();
 
-        public LedgerBook() : this(null) { } 
+        public LedgerBook() : this(null)
+        {
+        }
 
         public LedgerBook(ILogger logger)
         {
@@ -26,8 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntryLine> DatedEntries
         {
             get { return this.datedEntries; }
-            [UsedImplicitly]
-            private set { this.datedEntries = value.ToList(); }
+            [UsedImplicitly] private set { this.datedEntries = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
@@ -41,16 +43,15 @@ namespace BudgetAnalyser.Engine.Ledger
         public DateTime Modified { get; internal set; }
         public string Name { get; set; }
 
-        public void AddLedger(ExpenseBucket budgetBucket)
+        public void AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
                 // Ledger already exists in this ledger book.
                 return;
             }
-            
-            // TODO How to select the Account for this new Ledger Column?
-            this.ledgersColumns.Add(new LedgerColumn { BudgetBucket = budgetBucket });
+
+            this.ledgersColumns.Add(new LedgerColumn { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount });
         }
 
         /// <summary>

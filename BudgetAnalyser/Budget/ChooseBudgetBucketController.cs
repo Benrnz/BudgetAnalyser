@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
@@ -13,6 +14,7 @@ namespace BudgetAnalyser.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
     {
+        private readonly IAccountTypeRepository accountRepo;
         private readonly IBudgetBucketRepository bucketRepository;
         private Guid dialogCorrelationId;
         private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
@@ -20,7 +22,7 @@ namespace BudgetAnalyser.Budget
         private bool filtered;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public ChooseBudgetBucketController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
+        public ChooseBudgetBucketController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
         {
             if (uiContext == null)
             {
@@ -32,7 +34,13 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("bucketRepository");
             }
 
+            if (accountRepo == null)
+            {
+                throw new ArgumentNullException("accountRepo");
+            }
+
             this.bucketRepository = bucketRepository;
+            this.accountRepo = accountRepo;
             BudgetBuckets = bucketRepository.Buckets.ToList();
 
             MessengerInstance = uiContext.Messenger;
@@ -44,6 +52,11 @@ namespace BudgetAnalyser.Budget
         public string ActionButtonToolTip
         {
             get { return "Select and use this Expense Budget Bucket."; }
+        }
+
+        public IEnumerable<AccountType> BankAccounts
+        {
+            get { return this.accountRepo.ListCurrentlyUsedAccountTypes(); }
         }
 
         public IEnumerable<BudgetBucket> BudgetBuckets
@@ -88,6 +101,9 @@ namespace BudgetAnalyser.Budget
         }
 
         public BudgetBucket Selected { get; set; }
+        public bool ShowBankAccount { get; set; }
+
+        public AccountType StoreInThisAccount { get; set; }
 
         public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
         {
@@ -96,7 +112,7 @@ namespace BudgetAnalyser.Budget
             this.filtered = true;
         }
 
-        public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null)
+        public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null, bool showBankAccountSelector = false)
         {
             if (correlationId == null)
             {
@@ -106,6 +122,8 @@ namespace BudgetAnalyser.Budget
             {
                 this.dialogCorrelationId = correlationId.Value;
             }
+
+            ShowBankAccount = showBankAccountSelector;
 
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
@@ -117,13 +135,11 @@ namespace BudgetAnalyser.Budget
 
         private void CompleteSelection()
         {
-            var handler = Chosen;
+            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
             if (handler != null)
             {
                 handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId));
             }
-
-            FilterDescription = null;
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -136,10 +152,17 @@ namespace BudgetAnalyser.Budget
             ResetFilter();
             if (message.Response == ShellDialogButton.Cancel)
             {
-                Selected = null;
+                Reset();
             }
 
             CompleteSelection();
+            Reset();
+        }
+
+        private void Reset()
+        {
+            Selected = null;
+            StoreInThisAccount = null;
         }
 
         private void ResetFilter()

@@ -241,7 +241,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
             ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
-            ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book");
+            ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
         }
 
         private void OnAddNewReconciliationCommandExecuted()
@@ -282,6 +282,7 @@ namespace BudgetAnalyser.LedgerBook
             ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
             if (ChooseBudgetBucketController.Selected == null)
             {
+                this.messageBox.Show("You must select a budget bucket to track when adding a new Ledger Column.");
                 return;
             }
 
@@ -291,7 +292,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            ViewModel.LedgerBook.AddLedger(selectedBucket);
+            ViewModel.LedgerBook.AddLedger(selectedBucket, ChooseBudgetBucketController.StoreInThisAccount);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
