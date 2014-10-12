@@ -36,20 +36,25 @@
                            Text="{Binding SurplusTotal, StringFormat=N}" />
             </Border>
         </Border>
-        
-        <TextBlock Grid.Row="2"
-                   Margin="10,30,10,10"
-                   MaxWidth="800"
-                   Style="{StaticResource TextBlock.Paragraph}"
-                   TextWrapping="Wrap"
-                   Visibility="{Binding HasNegativeBalances, Converter={StaticResource Converter.BoolToVis}}">
+
+        <StackPanel Grid.Row="2"
+                    Margin="10,30,10,10"
+                    Orientation="Horizontal"
+                    Visibility="{Binding HasNegativeBalances, Converter={StaticResource Converter.BoolToVis}}">
+            <ContentControl Template="{StaticResource WarningImage}"
+                            Margin="5"
+                            Height="100"/>
+            <TextBlock MaxWidth="800"
+                       Style="{StaticResource TextBlock.Paragraph}"
+                       TextWrapping="Wrap">
             <Run>
                 It seems you have one or more negative surplus balances.  This means there are not enough funds in your bank account to cover all the Budget Bucket's being tracked in the 
                 Ledger Book.  There will not be enough actual funds in the bank if you need to spend all the amounts from the buckets in that account.
                 You can transfer some money into the account with the negative surplus balance from another account. Alternatively you can decrease the balance of one or more 
                 Budget Buckets in the same account as the negative surplus balance and this will increase the surplus balance.
             </Run>
-        </TextBlock>
+            </TextBlock>
+        </StackPanel>
     </Grid>
 
 </UserControl>

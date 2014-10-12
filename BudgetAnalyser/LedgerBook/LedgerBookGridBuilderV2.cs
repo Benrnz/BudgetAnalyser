@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,8 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Xaml;
 using BudgetAnalyser.Converters;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
@@ -313,12 +316,15 @@ namespace BudgetAnalyser.LedgerBook
                     break;
                 }
 
+                // Date
                 gridRow = AddDateCellToLedgerEntryLine(grid, gridRow, ref gridColumn, line);
 
+                // Remarks
                 TextBlock remarksHyperlink = AddHyperlinkToGrid(grid, "...", ref gridRow, gridColumn, NormalStyle, line.Remarks, line);
                 var hyperlink = (Hyperlink)remarksHyperlink.Inlines.FirstInline;
                 hyperlink.Command = this.showRemarksCommand;
 
+                // Bank Balance
                 AddBorderToGridCell(grid, BankBalanceBackground, false, gridRow, gridColumn);
                 TextBlock bankBalanceText = AddHyperlinkToGrid(
                     grid,
@@ -332,6 +338,7 @@ namespace BudgetAnalyser.LedgerBook
                 hyperlink.Command = this.showBankBalancesCommand;
                 bankBalanceText.Foreground = (Brush)FindResource(BankBalanceTextBrush);
 
+                // Balance Adjustments
                 AddHyperlinkToGrid(
                     grid,
                     line.TotalBalanceAdjustments.ToString("N", CultureInfo.CurrentCulture),
@@ -340,19 +347,10 @@ namespace BudgetAnalyser.LedgerBook
                     ImportantNumberStyle,
                     parameter: line);
 
-                AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
-                TextBlock surplusText = AddHyperlinkToGrid(
-                    grid, 
-                    line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture), 
-                    ref gridRow, 
-                    gridColumn, 
-                    ImportantNumberStyle,
-                    string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus), 
-                    line);
-                surplusText.Foreground = (Brush)FindResource(SurplusTextBrush);
-                hyperlink = (Hyperlink)surplusText.Inlines.FirstInline;
-                hyperlink.Command = this.showSurplusBalancesCommand;
+                // Surplus
+                gridRow = AddSurplusCell(grid, gridRow, gridColumn, line);
 
+                // Ledgers
                 AccountType currentBankAccount = null;
                 foreach (LedgerColumn ledger in this.sortedLedgers)
                 {
@@ -393,6 +391,43 @@ namespace BudgetAnalyser.LedgerBook
 
                 gridColumn++;
             }
+        }
+
+        private int AddSurplusCell(Grid grid, int gridRow, int gridColumn, LedgerEntryLine line)
+        {
+            AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
+ 
+            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+            grid.Children.Add(stackPanel);
+            Grid.SetRow(stackPanel, gridRow);
+            Grid.SetColumn(stackPanel, gridColumn);
+
+            if (line.SurplusBalances.Any(b => b.Balance < 0))
+            {
+                var warningImage = new ContentControl
+                {
+                    Template = (ControlTemplate)FindResource("WarningImage"),
+                    Width = 20,
+                    Height = 20,
+                    Margin = new Thickness(5),
+                    ToolTip = "There are one or more negative surplus balances!"
+                };
+                stackPanel.Children.Add(warningImage);
+            }
+
+            var hyperlink = new Hyperlink(new Run(line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture)))
+            {
+                Command = this.showSurplusBalancesCommand,
+                CommandParameter = line,
+            };
+            var textBlock = new TextBlock(hyperlink)
+            {
+                Style = (Style)FindResource(ImportantNumberStyle),
+                ToolTip = string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus),
+                Foreground = (Brush)FindResource(SurplusTextBrush),
+            };
+            stackPanel.Children.Add(textBlock);
+            return ++gridRow;
         }
 
         private void AddLedgerRows(Grid grid)
@@ -483,7 +518,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         private object FindResource(string resourceName)
-        {
+        {            
             object localResource = this.localResources[resourceName];
             if (localResource != null)
             {
