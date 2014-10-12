@@ -148,7 +148,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             subject.ValidateAgainstDuplicates();
             stopwatch.Stop();
             Console.WriteLine("{0:N0} ms", stopwatch.ElapsedMilliseconds);
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 5);
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 10);
         }
 
         [TestMethod]

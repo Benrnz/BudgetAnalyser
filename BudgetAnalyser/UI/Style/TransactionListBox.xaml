@@ -9,7 +9,6 @@
 
     <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
 
-
     <Style x:Key="ListBox.TransactionContainer"
            BasedOn="{StaticResource ListBox.StandardContainerStyle}"
            TargetType="ListBoxItem">
@@ -26,7 +25,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
 
     <Style x:Key="ListBox.TransactionContainer2"
            BasedOn="{StaticResource ListBox.TransactionContainer}"
@@ -86,8 +84,6 @@
             </MenuItem.Header>
         </MenuItem>
     </ContextMenu>
-
-
 
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type statement:Transaction}">
@@ -149,7 +145,7 @@
                            Text="{Binding TransactionType}"
                            ToolTip="{Binding TransactionType}" />
                 <ContentPresenter Grid.Column="8"
-                                  Margin="5,0,5,0"
+                                  Margin="5"
                                   Content="{Binding AccountType}" />
             </Grid>
         </Border>
@@ -276,7 +272,7 @@
                            ToolTip="{Binding TransactionType}" />
                 <ContentPresenter Grid.Column="8"
                                   Grid.Row="1"
-                                  Margin="5,0,5,0"
+                                  Margin="5"
                                   Content="{Binding AccountType}" />
             </Grid>
         </Border>

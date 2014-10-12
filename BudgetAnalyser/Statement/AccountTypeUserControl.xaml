@@ -2,12 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
-        <ContentControl Height="20"
-                        HorizontalAlignment="Center"
-                        Margin="6,2,6,2"
+        <ContentControl HorizontalAlignment="Center"
                         Template="{Binding ImagePath, Converter={StaticResource Converter.TextToControlTemplate}}"
                         ToolTip="{Binding Name}"
-                        VerticalAlignment="Top"
-                        Width="62" />
+                        VerticalAlignment="Center" />
     </Grid>
 </UserControl>
