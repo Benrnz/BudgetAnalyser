@@ -59,8 +59,8 @@
                              ToolTip="Search for text within a transaction"
                              Width="27">
                     </TextBox>
-                    <Image Grid.Column="0"
-                           Source="{StaticResource SearchImage}"
+                    <ContentControl Grid.Column="0"
+                           Template="{StaticResource SearchImage}"
                            IsHitTestVisible="False"
                            HorizontalAlignment="Right"
                            Margin="0,0,7,0"
@@ -83,12 +83,12 @@
                               MinWidth="37"
                               SelectedItem="{Binding ViewModel.BucketFilter}"
                               Width="37" />
-                    <Image Grid.Column="2"
+                    <ContentControl Grid.Column="2"
                            Height="17"
                            HorizontalAlignment="Right"
                            IsHitTestVisible="False"
                            Margin="0,0,20,0"
-                           Source="{StaticResource Filter2Image}"
+                           Template="{StaticResource Filter2Image}"
                            ToolTip="Budget Bucket Filter"
                            Visibility="{Binding ViewModel.BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
                            Width="17" />
@@ -250,9 +250,9 @@
                     ToolTip="Difference between total displayed credits and total displayed debits."
                     Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
                 <StackPanel Orientation="Horizontal">
-                    <Image Height="15"
+                    <ContentControl Height="15"
                            Margin="5,0,0,0"
-                           Source="{StaticResource DeltaImage}"
+                           Template="{StaticResource DeltaImage}"
                            Width="15" />
                     <TextBlock FontSize="16"
                                Style="{StaticResource Badge.TextBlock.WarningLightStyle}"

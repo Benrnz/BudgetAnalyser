@@ -1,35 +1,39 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <DrawingImage x:Key="SearchImage">
-        <DrawingImage.Drawing>
-            <DrawingGroup Opacity="1">
-                <DrawingGroup.Children>
-                    <DrawingGroup Opacity="1">
-                        <DrawingGroup.Children>
-                            <GeometryDrawing Brush="{x:Null}">
-                                <GeometryDrawing.Pen>
-                                    <Pen Brush="{StaticResource Brush.Button.Glyph}"
-                                         Thickness="1" />
-                                </GeometryDrawing.Pen>
-                                <GeometryDrawing.Geometry>
-                                    <PathGeometry FillRule="Nonzero"
-                                                  Figures="M0,0L512,0 512,512 0,512 0,0z" />
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                        </DrawingGroup.Children>
-                    </DrawingGroup>
-                    <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
-                                     Pen="{x:Null}">
-                        <GeometryDrawing.Geometry>
-                            <PathGeometry FillRule="Nonzero"
-                                          Figures="M192,64C121.307998657227,64 64,121.307998657227 64,192 64,262.691986083984 121.307998657227,320 192,320 262.692993164063,320 320,262.691986083984 320,192 320,121.307998657227 262.691986083984,64 192,64z M192,-3.41060513164848E-10C298.039001464844,0 384,85.9609985351563 384,192 384,239.54899597168 366.707000732422,283.053985595703 338.079010009766,316.588012695313 348.910003662109,316.088012695313 362.317993164063,321.268005371094 374.855010986328,332.550994873047L496.131011962891,435.697998046875C515.754028320313,453.359008789063 517.406982421875,482.209014892578 499.808013916016,499.808013916016 482.209014892578,517.406982421875 453.359008789063,515.752990722656 435.697998046875,496.130004882813L332.550994873047,374.85400390625C321.268005371094,362.316986083984 316.088012695313,348.908996582031 316.588012695313,338.078002929688 283.053985595703,366.707000732422 239.54899597168,384 192,384 85.9609985351563,384 0,298.039001464844 0,192 0,85.9609985351563 85.9619979858398,0 192,-3.41060513164848E-10z" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingImage.Drawing>
-    </DrawingImage>
-
+    <ControlTemplate  x:Key="SearchImage">
+        <Image Stretch="Uniform">
+            <Image.Source>
+                <DrawingImage>
+                    <DrawingImage.Drawing>
+                        <DrawingGroup Opacity="1">
+                            <DrawingGroup.Children>
+                                <DrawingGroup Opacity="1">
+                                    <DrawingGroup.Children>
+                                        <GeometryDrawing Brush="{x:Null}">
+                                            <GeometryDrawing.Pen>
+                                                <Pen Brush="{StaticResource Brush.Button.Glyph}"
+                                                     Thickness="1" />
+                                            </GeometryDrawing.Pen>
+                                            <GeometryDrawing.Geometry>
+                                                <PathGeometry FillRule="Nonzero"
+                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup.Children>
+                                </DrawingGroup>
+                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
+                                                 Pen="{x:Null}">
+                                    <GeometryDrawing.Geometry>
+                                        <PathGeometry FillRule="Nonzero"
+                                                      Figures="M192,64C121.307998657227,64 64,121.307998657227 64,192 64,262.691986083984 121.307998657227,320 192,320 262.692993164063,320 320,262.691986083984 320,192 320,121.307998657227 262.691986083984,64 192,64z M192,-3.41060513164848E-10C298.039001464844,0 384,85.9609985351563 384,192 384,239.54899597168 366.707000732422,283.053985595703 338.079010009766,316.588012695313 348.910003662109,316.088012695313 362.317993164063,321.268005371094 374.855010986328,332.550994873047L496.131011962891,435.697998046875C515.754028320313,453.359008789063 517.406982421875,482.209014892578 499.808013916016,499.808013916016 482.209014892578,517.406982421875 453.359008789063,515.752990722656 435.697998046875,496.130004882813L332.550994873047,374.85400390625C321.268005371094,362.316986083984 316.088012695313,348.908996582031 316.588012695313,338.078002929688 283.053985595703,366.707000732422 239.54899597168,384 192,384 85.9609985351563,384 0,298.039001464844 0,192 0,85.9609985351563 85.9619979858398,0 192,-3.41060513164848E-10z" />
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup.Children>
+                        </DrawingGroup>
+                    </DrawingImage.Drawing>
+                </DrawingImage>
+            </Image.Source>
+        </Image>
+    </ControlTemplate>
 
 </ResourceDictionary>

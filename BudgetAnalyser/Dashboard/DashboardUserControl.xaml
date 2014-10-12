@@ -99,16 +99,16 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image HorizontalAlignment="Left"
-                           Margin="5"
-                           Source="{Binding ImageResourceName, Converter={StaticResource Converter.TextToStaticResource}}"
-                           VerticalAlignment="Top"
-                           Width="40" />
-                    <Image HorizontalAlignment="Left"
-                           Margin="40,25,0,0"
-                           Source="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToStaticResource}}"
-                           VerticalAlignment="Top"
-                           Width="20" />
+                    <ContentControl HorizontalAlignment="Left"
+                                    Margin="5"
+                                    Template="{Binding ImageResourceName, Converter={StaticResource Converter.TextToControlTemplate}}"
+                                    VerticalAlignment="Top"
+                                    Width="40" />
+                    <ContentControl HorizontalAlignment="Left"
+                                    Margin="40,25,0,0"
+                                    Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
+                                    VerticalAlignment="Top"
+                                    Width="20" />
                     <TextBlock FontSize="24"
                                Margin="5,2,2,2"
                                Text="{Binding LargeNumber}" />
@@ -148,14 +148,14 @@
                 <DataTemplate DataType="{x:Type dashboard:WidgetGroup}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Heading}"/>
+                        <TextBlock Text="{Binding Heading}" />
                         <Border BorderThickness="1"
                                 Grid.Column="1"
                                 Grid.Row="0"
@@ -164,7 +164,7 @@
                                 Margin="2,1,0,0"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Stretch" />
-                        <ItemsControl Grid.Row="1" 
+                        <ItemsControl Grid.Row="1"
                                       Grid.ColumnSpan="2"
                                       ItemsSource="{Binding Widgets}"
                                       Margin="5,10,2,30">

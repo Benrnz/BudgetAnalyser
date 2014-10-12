@@ -86,8 +86,8 @@
             </MenuItem.Header>
         </MenuItem>
     </ContextMenu>
-   
-    
+
+
 
     <DataTemplate x:Key="TransactionTemplate1"
                   DataType="{x:Type statement:Transaction}">
@@ -150,7 +150,7 @@
                            ToolTip="{Binding TransactionType}" />
                 <ContentPresenter Grid.Column="8"
                                   Margin="5,0,5,0"
-                                  Content="{Binding AccountType}"/>
+                                  Content="{Binding AccountType}" />
             </Grid>
         </Border>
         <DataTemplate.Triggers>
@@ -287,11 +287,11 @@
                   DataType="statement:TransactionGroupedByBucket">
         <Expander Style="{StaticResource Expander.Style1}">
             <Expander.Resources>
-                <Style x:Key="Local.Badge.WarningLightStyle" 
+                <Style x:Key="Local.Badge.WarningLightStyle"
                        BasedOn="{StaticResource Badge.TextBlock.WarningLightStyle}"
                        TargetType="TextBlock">
                     <Setter Property="FontSize"
-                            Value="13"/>
+                            Value="13" />
                 </Style>
             </Expander.Resources>
             <Expander.Header>
@@ -340,10 +340,10 @@
                             ToolTip="Difference between total debits and total credits."
                             Visibility="{Binding TotalDifference, Converter={StaticResource Converter.ZeroToVisibility}}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource DeltaImage}"
-                                   Margin="3,0,3,0"
-                                   Height="15"
-                                   Width="15"/>
+                            <ContentControl Template="{StaticResource DeltaImage}"
+                                            Margin="3,0,3,0"
+                                            Height="15"
+                                            Width="15" />
                             <TextBlock Style="{StaticResource Local.Badge.WarningLightStyle}"
                                        Text="{Binding TotalDifference, StringFormat=C}" />
                         </StackPanel>

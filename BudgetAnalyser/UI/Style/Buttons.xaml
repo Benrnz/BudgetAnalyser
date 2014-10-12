@@ -31,7 +31,7 @@
     </Style>
 
     <!-- Circular Buttons -->
-    <Style x:Key="Button.Round.Base" 
+    <Style x:Key="Button.Round.Base"
            TargetType="Button">
         <Setter Property="Margin"
                 Value="2" />
@@ -56,7 +56,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style x:Key="Button.Round.All"
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource Button.Round.Base}">
@@ -192,7 +192,7 @@
                 Value="True" />
     </Style>
 
-   <Style x:Key="Button.Round.SmallCross"
+    <Style x:Key="Button.Round.SmallCross"
            BasedOn="{StaticResource Button.Round.Cross}"
            TargetType="Button">
         <Setter Property="HorizontalAlignment"
@@ -210,7 +210,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="Button.Round.Info"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
@@ -427,11 +427,11 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <Image Source="{StaticResource PieChartImage}"
-                               Height="20"
-                               HorizontalAlignment="Center"
-                               Width="20"
-                               VerticalAlignment="Center" />
+                        <ContentControl Template="{StaticResource PieChartImage}"
+                                        Height="20"
+                                        HorizontalAlignment="Center"
+                                        Width="20"
+                                        VerticalAlignment="Center" />
 
                     </Grid>
                 </ControlTemplate>
@@ -727,7 +727,7 @@
         <Setter Property="ToolTip"
                 Value="Unlock" />
     </Style>
-    
+
     <Style x:Key="Button.Round.SquareLoop"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
