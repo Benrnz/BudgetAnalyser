@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="UI/Assets/AmexLogoImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/MastercardLogoImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/WarningImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/AccountImages.xaml" />
 
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 

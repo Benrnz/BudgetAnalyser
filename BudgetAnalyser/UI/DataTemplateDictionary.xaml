@@ -106,36 +106,6 @@
         <ledgerBook:BankBalanceUserControl/>
     </DataTemplate>
 
-    <!-- Drawn using a different more specific data template because I'd like to avoid using DrawingImages, they are no longer used in WinRT. -->
-    <DataTemplate DataType="{x:Type account:ChequeAccount}">
-        <Viewbox>
-            <Grid>
-                <Path Data="M1,0 L10,0 10,2 9,3 0,3 0,1"
-                      Fill="#FF0069CF"
-                      Stretch="Uniform" />
-                <TextBlock Text="Cheque"
-                           Margin="10,0,10,5"
-                           FontStyle="Italic"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Grid>
-        </Viewbox>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type account:SavingsAccount}">
-        <Viewbox>
-            <Grid>
-                <Path Data="M1,0 L10,0 10,2 9,3 0,3 0,1"
-                      Fill="#FF00CF72"
-                      Stretch="Uniform" />
-                <TextBlock Text="Savings"
-                           Margin="10,0,10,5"
-                           FontStyle="Italic"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center" />
-            </Grid>
-        </Viewbox>
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type account:AccountType}">
         <statement:AccountTypeUserControl/>
     </DataTemplate>

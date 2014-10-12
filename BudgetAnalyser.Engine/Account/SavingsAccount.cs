@@ -9,7 +9,7 @@
 
         public override string ImagePath
         {
-            get { return "../Assets/SavingsLogo.png"; }
+            get { return "SavingsLogoImage"; }
         }
 
         internal override string[] KeyWords

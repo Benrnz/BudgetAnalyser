@@ -247,7 +247,7 @@ namespace BudgetAnalyser.LedgerBook
                     Border bankAccountBorder = AddBorderToGridCell(grid, false, false, gridRow, 0);
                     Grid.SetColumnSpan(bankAccountBorder, 2);
                     Grid.SetRow(bankAccountBorder, gridRow++);
-                    bankAccountBorder.Child = new ContentPresenter { Content = currentBankAccount, Margin = new Thickness(20) };
+                    bankAccountBorder.Child = new ContentControl { Template = (ControlTemplate)FindResource(ledger.StoredInAccount.ImagePath), Margin = new Thickness(5), Height = 50, Width = 100 };
                 }
 
                 gridColumn = 0;
