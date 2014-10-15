@@ -249,7 +249,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 ? new List<Transaction>()
                 : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
 
-            Dictionary<LedgerColumn, decimal> previousLedgerBalances = CompilePreviousEntries(parentLedgerBook);
+            Dictionary<LedgerColumn, decimal> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
             foreach (var previousLedgerBalance in previousLedgerBalances)
             {
@@ -280,7 +280,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private static Dictionary<LedgerColumn, decimal> CompilePreviousEntries(LedgerBook parentLedgerBook)
+        private static Dictionary<LedgerColumn, decimal> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
         {
             var ledgersAndBalances = new Dictionary<LedgerColumn, decimal>();
             LedgerEntryLine previousLine = parentLedgerBook.DatedEntries.FirstOrDefault();

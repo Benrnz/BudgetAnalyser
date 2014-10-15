@@ -397,7 +397,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
  
-            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
             grid.Children.Add(stackPanel);
             Grid.SetRow(stackPanel, gridRow);
             Grid.SetColumn(stackPanel, gridColumn);
