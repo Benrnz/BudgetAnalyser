@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -12,7 +10,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class DtoToLedgerBookMapper : MagicMapper<LedgerBookDto, LedgerBook>
     {
         private readonly IAccountTypeRepository accountRepo;
-        private readonly ConcurrentDictionary<string, LedgerColumn> cachedLedgers = new ConcurrentDictionary<string, LedgerColumn>();
+        private readonly Dictionary<LedgerColumn, LedgerColumn> cachedLedgers = new Dictionary<LedgerColumn, LedgerColumn>();
 
         public DtoToLedgerBookMapper([NotNull] IAccountTypeRepository accountRepo)
         {
@@ -24,12 +22,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.accountRepo = accountRepo;
         }
 
-        public override LedgerBook Map([NotNull] LedgerBookDto source)
+        public override LedgerBook Map(LedgerBookDto source)
         {
             LedgerBook book = base.Map(source);
 
             this.cachedLedgers.Clear();
-            foreach (var ledgerColumn in book.Ledgers)
+            foreach (LedgerColumn ledgerColumn in book.Ledgers)
             {
                 if (ledgerColumn.StoredInAccount == null)
                 {
@@ -37,33 +35,46 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                     ledgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                 }
 
-                // Add the outer ledgers map collection to the cache
-                this.cachedLedgers.GetOrAdd(ledgerColumn.BudgetBucket.Code, ledgerColumn);
+                GetOrAddFromCache(ledgerColumn);
             }
 
             bool ledgersMapWasEmpty = !book.Ledgers.Any();
 
             // Make sure there are no duplicate LedgerColumn instances.
-            // Also make sure there are no BudgetBucket duplicates.
             foreach (LedgerEntryLine line in book.DatedEntries)
             {
                 foreach (LedgerEntry entry in line.Entries)
                 {
-                    entry.LedgerColumn = this.cachedLedgers.GetOrAdd(entry.LedgerColumn.BudgetBucket.Code, code => entry.LedgerColumn);
                     if (entry.LedgerColumn.StoredInAccount == null)
                     {
-                        // Outer Ledgers map collection was empty - will need to default the ledgers to CHEQUE.
+                        // Default to CHEQUE when StoredInAccount is null.
                         entry.LedgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                     }
+
+                    // If there is already an instance in the cache that is "equal" the instance will be replace.
+                    // This will remove any duplicate instances that are "equal".
+                    entry.LedgerColumn = GetOrAddFromCache(entry.LedgerColumn);
                 }
             }
 
-            if (ledgersMapWasEmpty)
+            // If ledger column map at the book level was empty, default it to the last used ledger columns in the Dated Entries.
+            if (ledgersMapWasEmpty && book.DatedEntries.Any())
             {
-                book.Ledgers = this.cachedLedgers.Values.ToList();
+                book.Ledgers = book.DatedEntries.First().Entries.Select(e => e.LedgerColumn);
             }
 
             return book;
+        }
+
+        private LedgerColumn GetOrAddFromCache(LedgerColumn key)
+        {
+            if (this.cachedLedgers.ContainsKey(key))
+            {
+                return this.cachedLedgers[key];
+            }
+
+            this.cachedLedgers.Add(key, key);
+            return key;
         }
     }
 }

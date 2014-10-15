@@ -26,6 +26,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public string FileName { get; set; }
 
+        /// <summary>
+        /// The ledger to Bucket mapping for when a new reconciliation creates a new instances of LedgerEntry's.
+        /// </summary>
         public List<LedgerColumnDto> Ledgers { get; set; }
 
         public DateTime Modified { get; set; }

@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    //TODO Extract a specific subclass transaction type. This will allow removal of BankAccount from this base class.
     public abstract class LedgerTransaction
     {
         protected LedgerTransaction()
@@ -18,8 +19,9 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets or sets the Bank Account for this transaction.  This is sourced originally from the original <see cref="StatementModel"/>'s 
-        /// <see cref="Transaction"/>. It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
+        /// Gets or sets the Bank Account for this transaction.  
+        /// It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
+        /// In the case of <see cref="LedgerEntry"/> transactions it is set by the <see cref="LedgerEntry.LedgerColumn"/>.
         /// </summary>
         public AccountType BankAccount { get; internal set; }
 

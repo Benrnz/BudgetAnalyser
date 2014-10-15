@@ -67,9 +67,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(balance => balance.Account,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
-            Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
-                .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code));
-
             Mapper.CreateMap<LedgerColumn, LedgerColumnDto>()
                 .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledger => ledger.BudgetBucket.Code))
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledger => ledger.StoredInAccount.Name));
@@ -78,9 +75,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(ledger => ledger.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BucketCode)))
                 .ForMember(ledger => ledger.StoredInAccount, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.StoredInAccount)));
 
-            // TODO Will need to change the way LedgerColumn's are persisted to store Account?
+            Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
+                .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code))
+                .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.StoredInAccount.Name));
+
             Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
-                .ForMember(entry => entry.LedgerColumn, m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode) }));
+                .ForMember(entry => entry.LedgerColumn, 
+                    m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }));
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));

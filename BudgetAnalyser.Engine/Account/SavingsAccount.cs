@@ -4,7 +4,7 @@
     {
         public SavingsAccount(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         public override string ImagePath

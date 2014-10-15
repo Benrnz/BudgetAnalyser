@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
         /// <summary>
-        ///     Constructs a new instance of <see cref="LedgerEntryLine" />. 
+        ///     Constructs a new instance of <see cref="LedgerEntryLine" />.
         ///     Use this constructor for adding a new line when reconciling once a month.
         /// </summary>
         /// <param name="date">The date of the line</param>
@@ -34,40 +34,36 @@ namespace BudgetAnalyser.Engine.Ledger
             this.bankBalancesList = bankBalances.ToList();
         }
 
+        /// <summary>
+        ///     A collection of optional adjustments to the bank balance that can be added during a reconciliation.
+        ///     This is to compensate for transactions that may not have been reflected in the bank account at the time of the
+        ///     reconciliation.
+        ///     Most commonly this is a credit card payment once the user has ascertained how much surplus they have.
+        /// </summary>
         public IEnumerable<LedgerTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
-            [UsedImplicitly]
-            private set { this.bankBalanceAdjustments = value.ToList(); }
+            [UsedImplicitly] private set { this.bankBalanceAdjustments = value.ToList(); }
         }
 
+        /// <summary>
+        ///     The bank balances of all the bank accounts being tracked by the ledger book.
+        /// </summary>
         public IEnumerable<BankBalance> BankBalances
         {
             get { return this.bankBalancesList; }
-            [UsedImplicitly]
-            private set { this.bankBalancesList = value.ToList(); }
+            [UsedImplicitly] private set { this.bankBalancesList = value.ToList(); }
         }
 
+        /// <summary>
+        ///     The total surplus as at the given date.  This is the total surplus across all the bank accounts being tracked by
+        ///     the ledger book.
+        ///     This is the amount of money left over after funds have been allocated to all budget buckets being tracked by the
+        ///     ledger entries.
+        /// </summary>
         public decimal CalculatedSurplus
         {
             get { return LedgerBalance - Entries.Sum(e => e.Balance); }
-        }
-
-        public IEnumerable<BankBalance> SurplusBalances
-        {
-            get
-            {
-                var adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
-                var results = Entries.GroupBy(
-                    e => e.LedgerColumn.StoredInAccount, 
-                    (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
-                return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
-            }
-        }
-
-        private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
-        {
-            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Credit - a.Debit);
         }
 
         /// <summary>
@@ -81,8 +77,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
-            [UsedImplicitly]
-            private set { this.entries = value.ToList(); }
+            [UsedImplicitly] private set { this.entries = value.ToList(); }
         }
 
         public decimal LedgerBalance
@@ -91,6 +86,22 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         public string Remarks { get; internal set; }
+
+        /// <summary>
+        ///     The individual surplus balance in each bank account being tracked by the Legder book.  These will add up to the
+        ///     <see cref="CalculatedSurplus" />.
+        /// </summary>
+        public IEnumerable<BankBalance> SurplusBalances
+        {
+            get
+            {
+                IEnumerable<BankBalance> adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                IEnumerable<BankBalance> results = Entries.GroupBy(
+                    e => e.LedgerColumn.StoredInAccount,
+                    (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
+                return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
+            }
+        }
 
         public decimal TotalBalanceAdjustments
         {
@@ -195,7 +206,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 result = false;
             }
 
-            foreach (var ledgerEntry in Entries)
+            foreach (LedgerEntry ledgerEntry in Entries)
             {
                 if (!ledgerEntry.Validate())
                 {
@@ -211,14 +222,22 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Called by <see cref="LedgerBook.Reconcile" />. It builds the contents of the new ledger line based on budget and
         ///     statement input.
         /// </summary>
-        /// <param name="previousEntries">
-        ///     A collection of previous <see cref="LedgerEntry" />s to construct the running balance for
-        ///     the entries this line contains.
+        /// <param name="parentLedgerBook">
+        ///     The parent Ledger Book.  Used to extract information from previous <see cref="LedgerEntry" />s to construct the
+        ///     running
+        ///     balance for the entries this line contains. Also used to get the LedgerColumn instance for the new Ledger Entries.
+        ///     This is intentionally not necessarily the same as the previous Ledger Entry from last month, to allow the ledger to
+        ///     be
+        ///     transfered to a different bank account.
         /// </param>
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
         /// <param name="startDateIncl">The date for this ledger line.</param>
-        internal void AddNew(IEnumerable<KeyValuePair<LedgerColumn, LedgerEntry>> previousEntries, BudgetModel currentBudget, StatementModel statement, DateTime startDateIncl)
+        internal void AddNew(
+            LedgerBook parentLedgerBook,
+            BudgetModel currentBudget,
+            StatementModel statement,
+            DateTime startDateIncl)
         {
             if (!IsNew)
             {
@@ -229,12 +248,15 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
                 : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
-            foreach (var previousEntry in previousEntries)
+
+            Dictionary<LedgerColumn, decimal> previousLedgerBalances = CompilePreviousEntries(parentLedgerBook);
+
+            foreach (var previousLedgerBalance in previousLedgerBalances)
             {
-                LedgerColumn ledger = previousEntry.Key;
-                decimal balance = previousEntry.Value == null ? 0 : previousEntry.Value.Balance;
-                var newEntry = new LedgerEntry(true) { Balance = balance, LedgerColumn = ledger };
-                Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledger.BudgetBucket.Code);
+                LedgerColumn ledgerColumn = previousLedgerBalance.Key;
+                decimal balance = previousLedgerBalance.Value;
+                var newEntry = new LedgerEntry(true) { Balance = balance, LedgerColumn = ledgerColumn };
+                Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
                 var transactions = new List<LedgerTransaction>();
                 if (expenseBudget != null)
                 {
@@ -256,6 +278,36 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 entry.Unlock();
             }
+        }
+
+        private static Dictionary<LedgerColumn, decimal> CompilePreviousEntries(LedgerBook parentLedgerBook)
+        {
+            var ledgersAndBalances = new Dictionary<LedgerColumn, decimal>();
+            LedgerEntryLine previousLine = parentLedgerBook.DatedEntries.FirstOrDefault();
+            if (previousLine == null)
+            {
+                return parentLedgerBook.Ledgers.ToDictionary(ledger => ledger, ledger => 0M);
+            }
+
+            foreach (LedgerColumn ledger in parentLedgerBook.Ledgers)
+            {
+                // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
+                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
+
+                // Its important to use the ledger column value from the book level map, not from the previous entry. The user
+                // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
+                if (previousEntry == null)
+                {
+                    // Indicates a new ledger column has been added to the book starting this month.
+                    ledgersAndBalances.Add(ledger, 0M);
+                }
+                else
+                {
+                    ledgersAndBalances.Add(ledger, previousEntry.Balance);
+                }
+            }
+
+            return ledgersAndBalances;
         }
 
         private static string ExtractNarrative(Transaction t)
@@ -308,6 +360,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return new List<LedgerTransaction>();
+        }
+
+        private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
+        {
+            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Credit - a.Debit);
         }
     }
 }

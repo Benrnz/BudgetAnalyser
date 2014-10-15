@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -45,8 +46,17 @@ namespace BudgetAnalyser.Engine.Ledger
             this.isNew = isNew;
         }
 
+        /// <summary>
+        /// The balance of the ledger as at the date after the transactions are applied in the parent <see cref="LedgerEntryLine"/>.
+        /// </summary>
         public decimal Balance { get; internal set; }
 
+        /// <summary>
+        /// The Ledger Column instance that tracks which <see cref="BudgetBucket"/> is being tracked by this Ledger.
+        /// This will also designate which Bank Account the ledger funds are stored.
+        /// Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers"/>. This is because this 
+        /// instance shows which account stored the funds at the date in the parent <see cref="LedgerEntryLine"/>.
+        /// </summary>
         public LedgerColumn LedgerColumn { get; internal set; }
 
         /// <summary>
@@ -73,6 +83,7 @@ namespace BudgetAnalyser.Engine.Ledger
             this.transactions.Add(newTransaction);
             decimal newBalance = Balance + (newTransaction.Credit - newTransaction.Debit);
             Balance = newBalance > 0 ? newBalance : 0;
+            newTransaction.BankAccount = LedgerColumn.StoredInAccount;
         }
 
         public void RemoveTransaction(Guid transactionId)
@@ -107,7 +118,12 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            var zeroTxn = new BudgetCreditLedgerTransaction { Debit = Balance, Narrative = narrative ?? "Zeroing balance - excess funds in this account." };
+            var zeroTxn = new BudgetCreditLedgerTransaction
+            {
+                Debit = Balance, 
+                Narrative = narrative ?? "Zeroing balance - excess funds in this account.",
+                BankAccount = LedgerColumn.StoredInAccount,
+            };
             this.transactions.Add(zeroTxn);
             Balance = 0;
         }
@@ -131,6 +147,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             Credit = -NetAmount,
                             Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
+                            BankAccount = LedgerColumn.StoredInAccount,
                         };
                     }
                     else
@@ -141,6 +158,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             {
                                 Credit = -(Balance + NetAmount),
                                 Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
+                                BankAccount = LedgerColumn.StoredInAccount,
                             };
                         }
                     }
@@ -151,6 +169,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     {
                         Debit = NetAmount,
                         Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder",
+                        BankAccount = LedgerColumn.StoredInAccount,
                     };
                 }
 

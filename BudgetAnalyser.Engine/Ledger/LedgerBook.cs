@@ -34,6 +34,11 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public string FileName { get; internal set; }
 
+        /// <summary>
+        ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" />
+        ///     class
+        ///     during the next reconciliation. Changing these values will only effect the next reconciliation, not current data.
+        /// </summary>
         public IEnumerable<LedgerColumn> Ledgers
         {
             get { return this.ledgersColumns; }
@@ -90,20 +95,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             decimal consistencyCheck1 = DatedEntries.Sum(e => e.CalculatedSurplus);
             var newLine = new LedgerEntryLine(date, bankBalances);
-            var previousEntries = new Dictionary<LedgerColumn, LedgerEntry>();
-            LedgerEntryLine previousLine = this.datedEntries.FirstOrDefault();
-            foreach (LedgerColumn ledger in Ledgers)
-            {
-                LedgerEntry previousEntry = null;
-                if (previousLine != null)
-                {
-                    previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
-                }
-
-                previousEntries.Add(ledger, previousEntry);
-            }
-
-            newLine.AddNew(previousEntries, budget, statement, CalculateStartDateForReconcile(date));
+            newLine.AddNew(this, budget, statement, CalculateStartDateForReconcile(date));
             decimal consistencyCheck2 = DatedEntries.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {

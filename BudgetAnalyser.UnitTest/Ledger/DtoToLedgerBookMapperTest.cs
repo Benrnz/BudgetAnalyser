@@ -231,6 +231,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             TestData.Ledgers.Clear();
             var result = ArrangeAndAct();
+            foreach (var ledger in result.Ledgers)
+            {
+                Console.WriteLine("Ledger Column: {0} {1} {2}", ledger.BudgetBucket.Code, ledger.StoredInAccount.Name, ledger.GetHashCode());
+            }
+
             Assert.AreEqual(3, result.Ledgers.Count());
         }
 

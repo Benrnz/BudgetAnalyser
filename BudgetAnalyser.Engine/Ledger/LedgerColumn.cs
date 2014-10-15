@@ -5,41 +5,61 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    /// Represents a column in a ledger.  A <see cref="LedgerColumn"/> tracks the balance of one <see cref="BudgetBucket"/>.
+    ///     Represents a column in a ledger.  A <see cref="LedgerColumn" /> tracks the balance of one
+    ///     <see cref="BudgetBucket" /> and the
+    ///     Bank Account in which it is stored.
     /// </summary>
     [DebuggerDisplay("Ledger({BudgetBucket})")]
     public class LedgerColumn
     {
         /// <summary>
-        /// Gets or sets the Budget Bucket this ledger column is tracking.
+        ///     Gets or sets the Budget Bucket this ledger column is tracking.
         /// </summary>
         public BudgetBucket BudgetBucket { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the Account in which this ledger's funds are stored.
+        ///     Gets or sets the Account in which this ledger's funds are stored.
         /// </summary>
         public AccountType StoredInAccount { get; internal set; }
 
+        public static bool operator ==(LedgerColumn left, LedgerColumn right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(LedgerColumn left, LedgerColumn right)
+        {
+            return !Equals(left, right);
+        }
+
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
-            var otherLedger = obj as LedgerColumn;
-            if (otherLedger == null)
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != GetType())
             {
                 return false;
             }
-
-            return BudgetBucket.Code.Equals(otherLedger.BudgetBucket.Code);
+            return Equals((LedgerColumn)obj);
         }
 
         public override int GetHashCode()
         {
-            int hash = BudgetBucket.Code.GetHashCode();
-            return hash;
+            unchecked
+            {
+                return ((BudgetBucket != null ? BudgetBucket.GetHashCode() : 0) * 397) ^ (StoredInAccount != null ? StoredInAccount.GetHashCode() : 0);
+            }
+        }
+
+        protected bool Equals(LedgerColumn other)
+        {
+            return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
         }
     }
 }
