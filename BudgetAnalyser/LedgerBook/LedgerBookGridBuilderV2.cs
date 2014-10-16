@@ -379,7 +379,7 @@ namespace BudgetAnalyser.LedgerBook
                         currentBankAccount = ledger.StoredInAccount;
                     }
 
-                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.Equals(ledger));
+                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
                     decimal balance, netAmount;
 
                     if (entry == null)

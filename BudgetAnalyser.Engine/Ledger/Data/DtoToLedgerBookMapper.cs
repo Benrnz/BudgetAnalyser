@@ -40,20 +40,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
             bool ledgersMapWasEmpty = !book.Ledgers.Any();
 
-            // Make sure there are no duplicate LedgerColumn instances.
+            // Default to CHEQUE when StoredInAccount is null.
             foreach (LedgerEntryLine line in book.DatedEntries)
             {
                 foreach (LedgerEntry entry in line.Entries)
                 {
                     if (entry.LedgerColumn.StoredInAccount == null)
                     {
-                        // Default to CHEQUE when StoredInAccount is null.
                         entry.LedgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                     }
-
-                    // If there is already an instance in the cache that is "equal" the instance will be replace.
-                    // This will remove any duplicate instances that are "equal".
-                    entry.LedgerColumn = GetOrAddFromCache(entry.LedgerColumn);
                 }
             }
 
@@ -66,15 +61,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return book;
         }
 
-        private LedgerColumn GetOrAddFromCache(LedgerColumn key)
+        private void GetOrAddFromCache(LedgerColumn key)
         {
             if (this.cachedLedgers.ContainsKey(key))
             {
-                return this.cachedLedgers[key];
+                return;
             }
 
             this.cachedLedgers.Add(key, key);
-            return key;
         }
     }
 }

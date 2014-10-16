@@ -107,8 +107,9 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Deletes the most recent <see cref="LedgerEntryLine"/> from the <see cref="DatedEntries"/> collection. Only the most recent one can be deleted and 
-        /// only if it is unlocked (generally means just created and not yet saved).
+        ///     Deletes the most recent <see cref="LedgerEntryLine" /> from the <see cref="DatedEntries" /> collection. Only the
+        ///     most recent one can be deleted and
+        ///     only if it is unlocked (generally means just created and not yet saved).
         /// </summary>
         public void RemoveLine([NotNull] LedgerEntryLine line)
         {
@@ -131,9 +132,27 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Used to unlock the most recent <see cref="LedgerEntryLine"/>. Lines are locked as soon as they are saved after creation to prevent changes.
-        /// Use with caution, this is intended to keep data integrity intact and prevent accidental changes. After financial records are completed for 
-        /// the month, they are not supposed to change.
+        /// Used to allow the UI to set a ledger's account, but only if it is an instance in the <see cref="Ledgers"/> collection.
+        /// </summary>
+        /// <param name="ledger"></param>
+        /// <param name="storedInAccount"></param>
+        public void SetLedgerAccount(LedgerColumn ledger, AccountType storedInAccount)
+        {
+            if (Ledgers.Any(l => l == ledger))
+            {
+                ledger.StoredInAccount = storedInAccount;
+                return;
+            }
+
+            throw new InvalidOperationException("You cannot change the account in a ledger that is not in the Ledgers collection.");
+        }
+
+        /// <summary>
+        ///     Used to unlock the most recent <see cref="LedgerEntryLine" />. Lines are locked as soon as they are saved after
+        ///     creation to prevent changes.
+        ///     Use with caution, this is intended to keep data integrity intact and prevent accidental changes. After financial
+        ///     records are completed for
+        ///     the month, they are not supposed to change.
         /// </summary>
         public LedgerEntryLine UnlockMostRecentLine()
         {

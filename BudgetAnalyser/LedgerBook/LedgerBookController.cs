@@ -350,7 +350,16 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowLedgerColumnDetailsCommand(LedgerColumn ledgerColumn)
         {
-            this.uiContext.LedgerColumnViewController.ShowDialog(ledgerColumn, ViewModel.CurrentBudget.Model);
+            this.uiContext.LedgerColumnViewController.Updated += OnLedgerColumnUpdated;
+            this.uiContext.LedgerColumnViewController.ShowDialog(ViewModel.LedgerBook, ledgerColumn, ViewModel.CurrentBudget.Model);
+        }
+
+        private void OnLedgerColumnUpdated(object sender, EventArgs e)
+        {
+            this.uiContext.LedgerColumnViewController.Updated -= OnLedgerColumnUpdated;
+            RaiseLedgerBookUpdated();
+            FileOperations.Dirty = true;
+            // TODO the ui needs to updated to show ledgers can exist historically in different accounts.
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

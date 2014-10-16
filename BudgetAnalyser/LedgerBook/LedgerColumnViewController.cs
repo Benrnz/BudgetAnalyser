@@ -15,14 +15,21 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerColumnViewController : ControllerBase
     {
         private readonly IAccountTypeRepository accountRepo;
+        private Guid correlationId;
+        private LedgerColumn ledger;
+        private Engine.Ledger.LedgerBook ledgerBook;
 
-        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo)
+        public event EventHandler Updated;
+
+        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, IUiContext uiContext)
         {
             if (accountRepo == null)
             {
                 throw new ArgumentNullException("accountRepo");
             }
 
+            MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.accountRepo = accountRepo;
         }
 
@@ -33,20 +40,49 @@ namespace BudgetAnalyser.LedgerBook
         public decimal MonthlyBudgetAmount { get; private set; }
         public AccountType StoredInAccount { get; set; }
 
-        public void ShowDialog(LedgerColumn ledgerColumn, BudgetModel budgetModel)
+        public void ShowDialog(Engine.Ledger.LedgerBook parentLedgerBook, LedgerColumn ledgerColumn, BudgetModel budgetModel)
         {
+            this.ledger = ledgerColumn;
+            this.ledgerBook = parentLedgerBook;
             BankAccounts = new ObservableCollection<AccountType>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerColumn.BudgetBucket;
             StoredInAccount = ledgerColumn.StoredInAccount;
             MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
+            this.correlationId = Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
-                CorrelationId = Guid.NewGuid(),
+                CorrelationId = this.correlationId,
                 Title = "Ledger - " + BucketBeingTracked,
             };
 
             MessengerInstance.Send(dialogRequest);
+        }
+
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (!message.IsItForMe(this.correlationId))
+            {
+                return;
+            }
+
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                return;
+            }
+
+            this.ledgerBook.SetLedgerAccount(this.ledger, StoredInAccount);
+            Reset();
+            var handler = Updated;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        private void Reset()
+        {
+            this.ledger = null;
+            MonthlyBudgetAmount = 0;
+            BankAccounts.Clear();
+            StoredInAccount = null;
         }
     }
 }
