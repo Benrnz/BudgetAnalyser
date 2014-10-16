@@ -1,92 +1,94 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionsUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
+             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
         <!-- Stripe -->
-        <Border Grid.Column="0"
-                Grid.RowSpan="3"
+        <Border BorderBrush="{Binding LedgerEntry.LedgerColumn.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
                 BorderThickness="24,0,0,0"
-                BorderBrush="{Binding LedgerEntry.LedgerColumn.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
+                Grid.Column="0"
+                Grid.RowSpan="3"
+                HorizontalAlignment="Left"
                 Margin="-6,0,12,0"
                 ToolTip="{Binding LedgerEntry.LedgerColumn.BudgetBucket.TypeDescription}"
-                HorizontalAlignment="Left"
                 VerticalAlignment="Stretch" />
-
-        <Grid Grid.Row="0"
-              Grid.Column="1">
+        <Grid Grid.Column="1"
+              Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add new transaction" />
-
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-
-                <TextBlock HorizontalAlignment="Right"
-                           VerticalAlignment="Top"
+                <TextBlock Margin="0,5,50,5"
                            Style="{StaticResource TextBlock.LabelStyle}"
-                           Text="Net Amount: " />
-
+                           Text="Bank Account: "
+                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
+                <ContentPresenter Content="{Binding LedgerEntry.LedgerColumn.StoredInAccount}"
+                                  Grid.Column="0"
+                                  Grid.Row="1"
+                                  Margin="0,5,50,5"
+                                  MaxHeight="35"
+                                  Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBlock Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Net Amount: "
+                           VerticalAlignment="Top" />
+                <TextBlock Grid.Column="2"
+                           Grid.Row="0"
                            Style="{StaticResource TextBlock.Number}"
                            Text="{Binding TransactionsTotal, StringFormat=N}" />
-
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Column="1"
+                           Grid.Row="1"
                            HorizontalAlignment="Right"
-                           Text="Closing Balance: "
                            Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Closing Balance: "
                            VerticalAlignment="Top"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
-
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1"
+                <TextBlock Grid.Column="2"
+                           Grid.Row="1"
                            Style="{StaticResource TextBlock.Number}"
                            Text="{Binding LedgerEntry.Balance, StringFormat=N}"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
             </Grid>
-
         </Grid>
-
         <Border Background="{StaticResource Brush.MainBackground}"
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
-                Grid.Row="1"
                 Grid.Column="1"
+                Grid.Row="1"
                 Margin="5,10,5,10">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding ShownTransactions}"
                               Margin="5">
                     <ItemsControl.ItemTemplate>
+
                         <DataTemplate>
                             <ledgerBook:LedgerTransactionUserControl />
                         </DataTemplate>
@@ -94,14 +96,13 @@
                 </ItemsControl>
             </ScrollViewer>
         </Border>
-
         <GroupBox Background="{StaticResource Brush.DialogBackground}"
-                  Grid.Row="1"
                   Grid.Column="1"
+                  Grid.Row="1"
                   Header="Add Transaction"
+                  IsVisibleChanged="OnNewTransactionVisibilityChanged"
                   Margin="5,-5,5,5"
                   TabIndex="9"
-                  IsVisibleChanged="OnNewTransactionVisibilityChanged"
                   Visibility="{Binding ShowAddingNewTransactionPanel, Converter={StaticResource Converter.BoolToVis}}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -116,10 +117,10 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.ColumnSpan="2"
-                          Margin="5,1,5,1"
-                          BorderBrush="Transparent"
+                <GroupBox BorderBrush="Transparent"
                           BorderThickness="0"
+                          Grid.ColumnSpan="2"
+                          Margin="5,1,5,1"
                           Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton GroupName="TransactionType"
@@ -141,47 +142,44 @@
                         </RadioButton>
                     </StackPanel>
                 </GroupBox>
-
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
-                           Margin="5,1,5,1"
-                           Text="Narrative:"
+                <TextBlock Grid.Column="0"
+                           Grid.Row="1"
                            HorizontalAlignment="Right"
+                           Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Narrative:"
                            Width="100" />
                 <TextBox x:Name="NewTransactionNarrativeTextBox"
-                         Grid.Row="1"
                          Grid.Column="1"
+                         Grid.Row="1"
                          Margin="5,1,5,1"
                          MinWidth="200"
                          Text="{Binding NewTransactionNarrative}" />
-
-                <TextBlock Grid.Row="0"
-                           Grid.Column="2"
-                           Text="Account Type:"
+                <TextBlock Grid.Column="2"
+                           Grid.Row="0"
                            HorizontalAlignment="Right"
-                           Width="100"
                            Margin="5,1,5,1"
-                           Style="{StaticResource TextBlock.LabelStyle}" />
-                <ComboBox Grid.Row="0"
-                          Grid.Column="3"
-                          Margin="5,1,5,1"
-                          Width="100"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Account Type:"
+                           Width="100" />
+                <ComboBox Grid.Column="3"
+                          Grid.Row="0"
                           HorizontalAlignment="Left"
                           ItemsSource="{Binding AccountTypes}"
-                          SelectedItem="{Binding NewTransactionAccountType}" 
-                          ToolTip="Optionally set the account type for this transaction to a specific bank account."/>
-
+                          Margin="5,1,5,1"
+                          SelectedItem="{Binding NewTransactionAccountType}"
+                          ToolTip="Optionally set the account type for this transaction to a specific bank account."
+                          Width="100" />
                 <TextBlock Grid.Column="2"
                            Grid.Row="1"
-                           Text="Amount:"
-                           Margin="5,1,5,1"
                            HorizontalAlignment="Right"
+                           Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Amount:"
                            Width="100" />
-                <StackPanel Orientation="Horizontal"
-                            Grid.Column="3"
-                            Grid.Row="1">
+                <StackPanel Grid.Column="3"
+                            Grid.Row="1"
+                            Orientation="Horizontal">
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              Margin="5,1,5,1"
                              Text="{Binding NewTransactionAmount}" />
@@ -189,29 +187,26 @@
                             Style="{StaticResource Button.Round.Clear}"
                             ToolTip="Calculate amount so that the net change for this ledger will be zero." />
                 </StackPanel>
-
-                <CheckBox Grid.Row="1" 
-                          Grid.Column="4"
-                          Margin="5,1,5,1"
+                <CheckBox Grid.Column="4"
+                          Grid.Row="1"
                           IsChecked="{Binding NewTransactionIsReversal}"
+                          Margin="5,1,5,1"
                           VerticalAlignment="Center">
                     <CheckBox.Content>
                         <TextBlock Text="Reversal?" />
                     </CheckBox.Content>
                 </CheckBox>
-                <Button Grid.Row="1"
+                <Button Command="{Binding AddTransactionCommand}"
                         Grid.Column="5"
-                        Command="{Binding AddTransactionCommand}"
-                        Style="{StaticResource Button.Round.Save}"
+                        Grid.Row="1"
                         HorizontalAlignment="Right"
                         Margin="5,1,5,1"
+                        Style="{StaticResource Button.Round.Save}"
                         ToolTip="Add new transaction" />
             </Grid>
         </GroupBox>
-
-        <StackPanel Grid.Row="2"
-                    Grid.Column="1">
-
+        <StackPanel Grid.Column="1"
+                    Grid.Row="2">
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap"
                        Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}">

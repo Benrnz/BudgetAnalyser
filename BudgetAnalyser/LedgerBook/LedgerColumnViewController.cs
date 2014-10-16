@@ -50,7 +50,7 @@ namespace BudgetAnalyser.LedgerBook
             MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
             this.correlationId = Guid.NewGuid();
 
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.correlationId,
                 Title = "Ledger - " + BucketBeingTracked,
@@ -66,15 +66,26 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            if (message.Response == ShellDialogButton.Cancel)
+            try
             {
-                return;
-            }
+                if (message.Response == ShellDialogButton.Cancel)
+                {
+                    return;
+                }
 
-            this.ledgerBook.SetLedgerAccount(this.ledger, StoredInAccount);
-            Reset();
-            var handler = Updated;
-            if (handler != null) handler(this, EventArgs.Empty);
+                if (this.ledger.StoredInAccount == StoredInAccount)
+                {
+                    return;
+                }
+
+                this.ledgerBook.SetLedgerAccount(this.ledger, StoredInAccount);
+                var handler = Updated;
+                if (handler != null) handler(this, EventArgs.Empty);
+            }
+            finally
+            {
+                Reset();
+            }
         }
 
         private void Reset()

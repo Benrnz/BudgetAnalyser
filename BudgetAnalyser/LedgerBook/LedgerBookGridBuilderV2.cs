@@ -248,10 +248,12 @@ namespace BudgetAnalyser.LedgerBook
             // Ledgers
             gridRow = 5;
             AccountType currentBankAccount = null;
+
             foreach (LedgerColumn ledger in this.sortedLedgers)
             {
                 if (currentBankAccount != ledger.StoredInAccount)
                 {
+                    // Bank account group separater
                     currentBankAccount = ledger.StoredInAccount;
                     Border bankAccountBorder = AddBorderToGridCell(grid, false, false, gridRow, 0);
                     Grid.SetColumnSpan(bankAccountBorder, 2);
@@ -278,7 +280,7 @@ namespace BudgetAnalyser.LedgerBook
                 var hyperlink = new Hyperlink(new Run(ledger.BudgetBucket.Code))
                 {
                     Command = this.showLedgerColumnDetailsCommand,
-                    CommandParameter = ledger,
+                    CommandParameter = this.ledgerBook.Ledgers.Single(l => l.BudgetBucket == ledger.BudgetBucket),  // Must be Main Ledger Map from book
                 };
                 var textBlock = new TextBlock(hyperlink)
                 {
@@ -509,7 +511,11 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             // Sort ledgers so that the ledgers in the same bank account are grouped together
-            this.sortedLedgers = this.ledgerBook.Ledgers.OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code).ToList();
+            // this.sortedLedgers = this.ledgerBook.Ledgers.OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code).ToList();
+            this.sortedLedgers = this.ledgerBook.DatedEntries.SelectMany(line => line.Entries).Select(e => e.LedgerColumn)
+                .OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code)
+                .Distinct()
+                .ToList();
 
             var grid = new Grid();
             // Date

@@ -187,8 +187,6 @@ namespace BudgetAnalyser.LedgerBook
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
         /// </summary>
-        /// <param name="ledgerEntry"></param>
-        /// <param name="isNew"></param>
         public void ShowDialog(LedgerEntry ledgerEntry, bool isNew)
         {
             if (ledgerEntry == null)
