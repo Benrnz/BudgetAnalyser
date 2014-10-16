@@ -41,6 +41,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly ICommand showHideMonthsCommand;
         private readonly ICommand showRemarksCommand;
         private readonly ICommand showSurplusBalancesCommand;
+        private readonly ICommand showLedgerColumnDetailsCommand;
         private readonly ICommand showTransactionsCommand;
         private ContentPresenter contentPresenter;
         private Engine.Ledger.LedgerBook ledgerBook;
@@ -53,7 +54,8 @@ namespace BudgetAnalyser.LedgerBook
             ICommand showRemarksCommand,
             ICommand removeLedgerEntryLineCommand,
             ICommand showHideMonthsCommand,
-            ICommand showSurplusBalancesCommand)
+            ICommand showSurplusBalancesCommand,
+            ICommand showLedgerColumnDetailsCommand)
         {
             this.showTransactionsCommand = showTransactionsCommand;
             this.showBankBalancesCommand = showBankBalancesCommand;
@@ -61,6 +63,7 @@ namespace BudgetAnalyser.LedgerBook
             this.removeLedgerEntryLineCommand = removeLedgerEntryLineCommand;
             this.showHideMonthsCommand = showHideMonthsCommand;
             this.showSurplusBalancesCommand = showSurplusBalancesCommand;
+            this.showLedgerColumnDetailsCommand = showLedgerColumnDetailsCommand;
         }
 
         /// <summary>
@@ -210,33 +213,39 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddHeadingColumnContent(Grid grid)
         {
+            // Date
             int gridRow = 0;
             int gridColumn = 0;
             Border dateBorder = AddBorderToGridCell(grid, true, true, gridRow, gridColumn);
             Grid.SetColumnSpan(dateBorder, 2);
             AddContentToGrid(dateBorder, "Date", ref gridRow, gridColumn, DateColumnStyle);
 
+            // Remarks
             Border remarksBorder = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
             Grid.SetColumnSpan(remarksBorder, 2);
             AddContentToGrid(grid, "Remarks", ref gridRow, gridColumn, RemarksStyle);
 
+            // Bank Balance
             Border bankBalanceBorder = AddBorderToGridCell(grid, BankBalanceBackground, false, gridRow, gridColumn);
             Grid.SetColumnSpan(bankBalanceBorder, 2);
             TextBlock bankBalanceTextBlock = AddContentToGrid(bankBalanceBorder, "Balance", ref gridRow, gridColumn, HeadingStyle);
             bankBalanceTextBlock.Foreground = (Brush)FindResource(BankBalanceTextBrush);
             bankBalanceTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
 
+            // Balance Adjustments
             Border adjustmentsBorder = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
             Grid.SetColumnSpan(adjustmentsBorder, 2);
             TextBlock adjustmentsTextBlock = AddContentToGrid(adjustmentsBorder, "Adjustments", ref gridRow, gridColumn, HeadingStyle);
             adjustmentsTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
 
+            // Surplus
             Border surplusBorder = AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
             Grid.SetColumnSpan(surplusBorder, 2);
             TextBlock surplusTextBlock = AddContentToGrid(surplusBorder, "Surplus", ref gridRow, gridColumn, HeadingStyle);
             surplusTextBlock.Foreground = (Brush)FindResource(SurplusTextBrush);
             surplusTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
 
+            // Ledgers
             gridRow = 5;
             AccountType currentBankAccount = null;
             foreach (LedgerColumn ledger in this.sortedLedgers)
@@ -266,9 +275,19 @@ namespace BudgetAnalyser.LedgerBook
                 border.Child = stripe;
 
                 string tooltip = string.Format(CultureInfo.CurrentCulture, "{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
-                TextBlock ledgerTitle = AddContentToGrid(stripe, ledger.BudgetBucket.Code, ref gridRow, gridColumn, HeadingStyle, tooltip);
-                ledgerTitle.HorizontalAlignment = HorizontalAlignment.Center;
-                gridRow--; // Ledger heading shares a gridRow with other Ledger Headings
+                var hyperlink = new Hyperlink(new Run(ledger.BudgetBucket.Code))
+                {
+                    Command = this.showLedgerColumnDetailsCommand,
+                    CommandParameter = ledger,
+                };
+                var textBlock = new TextBlock(hyperlink)
+                {
+                    Style = (Style)FindResource(HeadingStyle),
+                    ToolTip = tooltip,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                };
+                stripe.Child = textBlock;
+
                 gridColumn++;
 
                 if (!(ledger.BudgetBucket is SpentMonthlyExpenseBucket))

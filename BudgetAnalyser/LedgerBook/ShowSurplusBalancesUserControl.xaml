@@ -5,7 +5,8 @@
     <!-- DataContext ShowSurplusBalancesController  -->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="*"
+                           MinHeight="50" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -19,7 +20,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           MinWidth="250">
                 <ItemsControl ItemsSource="{Binding SurplusBalances}"
-                              Margin="5" >
+                              Margin="5">
                 </ItemsControl>
             </ScrollViewer>
         </Border>
@@ -43,7 +44,7 @@
                     Visibility="{Binding HasNegativeBalances, Converter={StaticResource Converter.BoolToVis}}">
             <ContentControl Template="{StaticResource WarningImage}"
                             Margin="5"
-                            Height="75"/>
+                            Height="75" />
             <TextBlock MaxWidth="800"
                        Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap">

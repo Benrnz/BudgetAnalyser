@@ -162,6 +162,10 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
+    <Compile Include="LedgerBook\LedgerColumnView.xaml.cs">
+      <DependentUpon>LedgerColumnView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\LedgerColumnViewController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
@@ -328,6 +332,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Filtering\GlobalDateFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerColumnView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
