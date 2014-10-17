@@ -34,8 +34,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<BankBalanceDto>(TestData);
         }
     }

@@ -58,7 +58,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(transaction => transaction.BankAccount,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.AccountType) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
-            Mapper.CreateMap<BankBalance, BankBalanceDto>();
+            Mapper.CreateMap<BankBalance, BankBalanceDto>()
+                .ForMember(dto => dto.Account, m => m.MapFrom(bankBalance => bankBalance.Account.Name));
 
             Mapper.CreateMap<string, AccountType>()
                 .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
