@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -57,8 +58,9 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        protected bool Equals(LedgerColumn other)
+        protected bool Equals([CanBeNull] LedgerColumn other)
         {
+            if (other == null) return false;
             return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
         }
     }

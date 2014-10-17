@@ -52,7 +52,7 @@ namespace BudgetAnalyser.LedgerBook
             this.inputBox = uiContext.UserPrompts.InputBox;
             FileOperations = fileOperations;
             this.uiContext = uiContext;
-            NumberOfMonthsToShow = 2;
+            this.doNotUseNumberOfMonthsToShow = 2;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);

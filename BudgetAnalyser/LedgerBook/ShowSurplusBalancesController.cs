@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Command;
@@ -20,6 +21,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return SurplusBalances.Any(b => b.Balance < 0); }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
         public ICommand RemoveBankBalanceCommand
         {
             get
@@ -36,8 +38,13 @@ namespace BudgetAnalyser.LedgerBook
             get { return this.ledgerEntryLine.CalculatedSurplus; }
         }
 
-        public void ShowDialog(LedgerEntryLine ledgerLine)
+        public void ShowDialog([NotNull] LedgerEntryLine ledgerLine)
         {
+            if (ledgerLine == null)
+            {
+                throw new ArgumentNullException("ledgerLine");
+            }
+
             SurplusBalances = new ObservableCollection<BankBalance>(ledgerLine.SurplusBalances);
             this.ledgerEntryLine = ledgerLine;
 

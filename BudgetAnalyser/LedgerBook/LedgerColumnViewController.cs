@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
+using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -21,14 +22,19 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler Updated;
 
-        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, IUiContext uiContext)
+        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IMessenger messenger)
         {
             if (accountRepo == null)
             {
                 throw new ArgumentNullException("accountRepo");
             }
 
-            MessengerInstance = uiContext.Messenger;
+            if (messenger == null)
+            {
+                throw new ArgumentNullException("messenger");
+            }
+
+            MessengerInstance = messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.accountRepo = accountRepo;
         }
@@ -40,8 +46,23 @@ namespace BudgetAnalyser.LedgerBook
         public decimal MonthlyBudgetAmount { get; private set; }
         public AccountType StoredInAccount { get; set; }
 
-        public void ShowDialog(Engine.Ledger.LedgerBook parentLedgerBook, LedgerColumn ledgerColumn, BudgetModel budgetModel)
+        public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerColumn ledgerColumn, [NotNull] BudgetModel budgetModel)
         {
+            if (parentLedgerBook == null)
+            {
+                throw new ArgumentNullException("parentLedgerBook");
+            }
+
+            if (ledgerColumn == null)
+            {
+                throw new ArgumentNullException("ledgerColumn");
+            }
+
+            if (budgetModel == null)
+            {
+                throw new ArgumentNullException("budgetModel");
+            }
+
             this.ledger = ledgerColumn;
             this.ledgerBook = parentLedgerBook;
             BankAccounts = new ObservableCollection<AccountType>(this.accountRepo.ListCurrentlyUsedAccountTypes());

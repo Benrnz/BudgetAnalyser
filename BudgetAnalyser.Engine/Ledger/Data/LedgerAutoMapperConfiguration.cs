@@ -46,6 +46,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.logger = logger;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simple Automapper expressions artificially inflating cyclomatic complexity")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary for the mapping in this namespace")]
         public void RegisterMappings()
         {

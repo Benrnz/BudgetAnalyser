@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.Engine.Account
+﻿using BudgetAnalyser.Engine.Annotations;
+
+namespace BudgetAnalyser.Engine.Account
 {
     public abstract class AccountType
     {
@@ -52,8 +54,9 @@
             return Name + " Account";
         }
 
-        protected bool Equals(AccountType other)
+        protected bool Equals([CanBeNull] AccountType other)
         {
+            if (other == null) return false;
             return string.Equals(Name, other.Name);
         }
     }

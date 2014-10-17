@@ -162,7 +162,6 @@
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBackgroundProcessingJobMetadata.cs" />
-    <Compile Include="LedgerBook\LedgerColumnChangedEventArgs.cs" />
     <Compile Include="LedgerBook\LedgerColumnView.xaml.cs">
       <DependentUpon>LedgerColumnView.xaml</DependentUpon>
     </Compile>

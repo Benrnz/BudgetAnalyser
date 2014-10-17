@@ -9,7 +9,8 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool light = parameter is string && (string)parameter == "Light";
+            var stringParameter = parameter as string;
+            bool light = stringParameter != null && stringParameter == "Light";
             decimal? number = ConverterHelper.ParseNumber(value);
             if (number == null)
             {

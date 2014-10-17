@@ -45,8 +45,8 @@ namespace BudgetAnalyser.Dashboard
         private Timer updateTimer;
         // TODO Support for image changes when widget updates
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Timer is needed for the lifetime of the controller, and controller is single instance")
-        ]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "This class monitors and displays health and metrics for the whole app, so is linked to many classes.")] 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Timer is needed for the lifetime of the controller, and controller is single instance")]
         public DashboardController(
             [NotNull] UiContext uiContext,
             [NotNull] IWidgetRepository widgetRepository,
@@ -86,24 +86,19 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.widgetRepository = widgetRepository;
-            this.widgetRepository.WidgetRemoved += OnBudgetBucketMonitorWidgetRemoved;
             this.bucketRepository = bucketRepository;
             this.chooseBudgetBucketController = chooseBudgetBucketController;
-            this.chooseBudgetBucketController.Chosen += OnBudgetBucketMonitorWidgetAdded;
-            GlobalFilterController = uiContext.GlobalFilterController;
-            CorrelationId = Guid.NewGuid();
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.ledgerCalculator = ledgerCalculator;
+            this.widgetService = widgetService;
 
-            MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
-            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            this.widgetRepository.WidgetRemoved += OnBudgetBucketMonitorWidgetRemoved;
+            this.chooseBudgetBucketController.Chosen += OnBudgetBucketMonitorWidgetAdded;
+            
+            GlobalFilterController = uiContext.GlobalFilterController;
+            CorrelationId = Guid.NewGuid();
 
+            RegisterForMessengerNotifications(uiContext);
 
             this.updateTimer = new Timer(TimeSpan.FromMinutes(1).TotalMilliseconds)
             {
@@ -113,7 +108,18 @@ namespace BudgetAnalyser.Dashboard
             this.updateTimer.Elapsed += OnUpdateTimerElapsed;
 
             InitialiseSupportedDependenciesArray();
-            this.widgetService = widgetService;
+        }
+
+        private void RegisterForMessengerNotifications(UiContext uiContext)
+        {
+            this.MessengerInstance = uiContext.Messenger;
+            this.MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+            this.MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
+            this.MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
+            this.MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            this.MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
+            this.MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
+            this.MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
         public Guid CorrelationId
