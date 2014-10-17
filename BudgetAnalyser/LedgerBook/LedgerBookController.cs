@@ -277,10 +277,12 @@ namespace BudgetAnalyser.LedgerBook
             message.PersistThisModel(FileOperations.StateDataForPersistence());
         }
 
-        private void OnBudgetBucketChosen(object sender, EventArgs e)
+        private void OnBudgetBucketChosen(object sender, BudgetBucketChosenEventArgs e)
         {
             this.uiContext.ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
-            if (this.uiContext.ChooseBudgetBucketController.Selected == null)
+            if (e.Canceled) return;
+
+            if (e.SelectedBucket == null)
             {
                 this.messageBox.Show("You must select a budget bucket to track when adding a new Ledger Column.");
                 return;

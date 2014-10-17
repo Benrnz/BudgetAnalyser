@@ -133,15 +133,6 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Send(dialogRequest);
         }
 
-        private void CompleteSelection()
-        {
-            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
-            if (handler != null)
-            {
-                handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId));
-            }
-        }
-
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
             if (!message.IsItForMe(this.dialogCorrelationId))
@@ -149,28 +140,31 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            ResetFilter();
-            if (message.Response == ShellDialogButton.Cancel)
+            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
+            if (handler != null)
             {
-                Reset();
+                if (message.Response == ShellDialogButton.Cancel)
+                {
+                    handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId, true));
+                }
+                else
+                {
+                    handler(this, new BudgetBucketChosenEventArgs(this.dialogCorrelationId, Selected, StoreInThisAccount));
+                }
             }
 
-            CompleteSelection();
             Reset();
         }
 
         private void Reset()
         {
-            Selected = null;
-            StoreInThisAccount = null;
-        }
-
-        private void ResetFilter()
-        {
             if (this.filtered)
             {
                 BudgetBuckets = this.bucketRepository.Buckets.ToList();
             }
+
+            Selected = null;
+            StoreInThisAccount = null;
         }
     }
 }

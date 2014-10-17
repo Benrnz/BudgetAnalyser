@@ -248,7 +248,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            if (WidgetGroups.OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucket.Code))
+            if (WidgetGroups.SelectMany(group => group.Widgets).OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucket.Code))
             {
                 this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
                 return;
