@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using BudgetAnalyser.Engine.Account;
 
 namespace BudgetAnalyser.Statement
 {
@@ -10,6 +11,16 @@ namespace BudgetAnalyser.Statement
         public AccountTypeUserControl()
         {
             InitializeComponent();
+        }
+
+        public AccountType Account
+        {
+            get { return (AccountType)DataContext; }
+        }
+
+        public string FriendlyAccountName
+        {
+            get { return Account.ToString(); }
         }
     }
 }

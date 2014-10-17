@@ -36,6 +36,7 @@ namespace BudgetAnalyser.LedgerBook
         private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
         private const string SurplusBackground = "Brush.TileBackgroundAlternate";
         private const string SurplusTextBrush = "Brush.CreditBackground1";
+        private const string MainBackground = "Brush.MainBackground";
         private readonly ICommand removeLedgerEntryLineCommand;
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showHideMonthsCommand;
@@ -115,7 +116,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int gridRow, int gridColumn)
         {
-            return AddBorderToGridCell(parent, hasBackground ? NormalHighlightBackground : null, hasBorder, gridRow, gridColumn);
+            return AddBorderToGridCell(parent, hasBackground ? NormalHighlightBackground : MainBackground, hasBorder, gridRow, gridColumn);
         }
 
         private Border AddBorderToGridCell(Panel parent, string background, bool hasBorder, int gridRow, int gridColumn)
@@ -384,9 +385,17 @@ namespace BudgetAnalyser.LedgerBook
                     LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
                     decimal balance, netAmount;
 
+                    bool movedBankAccounts = false;
                     if (entry == null)
                     {
                         // New ledger added that older entries do not have.
+                        balance = 0;
+                        netAmount = 0;
+                    }
+                    else if (entry.LedgerColumn != ledger)
+                    {
+                        // This means the ledger has change bank accounts and should not be included in this bank account's group. Leave blank cells in this case.
+                        movedBankAccounts = true;
                         balance = 0;
                         netAmount = 0;
                     }
@@ -398,14 +407,30 @@ namespace BudgetAnalyser.LedgerBook
 
                     if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                     {
-                        AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
-                        AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                        var border = AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
+                        border.ToolTip = "This ledger has moved to another bank account.";
+                        if (movedBankAccounts)
+                        {
+                            gridRow++;
+                        }
+                        else
+                        {
+                            AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
+                        }
                     }
                     else
                     {
-                        AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
+                        var border1 = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
+                        var border2 = AddBorderToGridCell(grid, false, true, gridRow+1, gridColumn);
+                        if (movedBankAccounts)
+                        {
+                            border1.ToolTip = "This ledger has moved to another bank account.";
+                            border2.ToolTip = "This ledger has moved to another bank account.";
+                            gridRow += 2;
+                            continue;
+                        }
+                        
                         AddHyperlinkToGrid(grid, netAmount.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
-                        AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
                         AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
                     }
                 }

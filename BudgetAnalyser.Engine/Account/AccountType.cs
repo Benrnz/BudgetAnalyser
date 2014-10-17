@@ -49,7 +49,7 @@
 
         public override string ToString()
         {
-            return Name;
+            return Name + " Account";
         }
 
         protected bool Equals(AccountType other)

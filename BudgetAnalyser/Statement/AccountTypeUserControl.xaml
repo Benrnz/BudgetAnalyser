@@ -4,7 +4,7 @@
     <Grid>
         <ContentControl HorizontalAlignment="Center"
                         Template="{Binding ImagePath, Converter={StaticResource Converter.TextToControlTemplate}}"
-                        ToolTip="{Binding Name}"
+                        ToolTip="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=FriendlyAccountName}"
                         VerticalAlignment="Center" />
     </Grid>
 </UserControl>
