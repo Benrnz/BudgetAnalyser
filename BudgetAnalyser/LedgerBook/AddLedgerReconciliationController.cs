@@ -25,6 +25,7 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseDateEditable;
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
+        private Engine.Ledger.LedgerBook parentBook;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -107,11 +108,12 @@ namespace BudgetAnalyser.LedgerBook
                 if (CreateMode)
                 {
                     return Date != DateTime.MinValue
-                           && (BankBalances.Any() || CanExecuteAddBankBalanceCommand());
+                           && (HasRequiredBalances() || CanExecuteAddBankBalanceCommand());
                 }
+
                 return Editable
                        && Date != DateTime.MinValue
-                       && (BankBalances.Any() || CanExecuteAddBankBalanceCommand());
+                       && (HasRequiredBalances() || CanExecuteAddBankBalanceCommand());
             }
         }
 
@@ -175,24 +177,37 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         /// <summary>
-        /// Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine"/> to the <see cref="LedgerBook"/>.
+        ///     Used to start a new Ledger Book reconciliation.  This will ultimately add a new <see cref="LedgerEntryLine" /> to
+        ///     the <see cref="LedgerBook" />.
         /// </summary>
-        public void ShowCreateDialog()
+        public void ShowCreateDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException("ledgerBook");
+            }
+
+            this.parentBook = ledgerBook;
             Date = DateTime.Today;
             BankBalances = new ObservableCollection<BankBalance>();
             CreateMode = true;
             AddBalanceVisibility = true;
             Editable = DateEditable = true;
 
-            ShowDialogCommon("New Reconciliation");
+            ShowDialogCommon("New Monthly Reconciliation");
         }
 
         /// <summary>
-        /// Used to show and edit all the bank balances involved in this <see cref="LedgerEntryLine"/>.
+        ///     Used to show and edit all the bank balances involved in this <see cref="LedgerEntryLine" />.
+        ///     This allows editing the bank balance data as was entered using <see cref="ShowCreateDialog" />.
         /// </summary>
-        public void ShowEditDialog([NotNull] LedgerEntryLine line, bool isNewLine)
+        public void ShowEditDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line, bool isNewLine)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException("ledgerBook");
+            }
+
             if (line == null)
             {
                 throw new ArgumentNullException("line");
@@ -235,6 +250,15 @@ namespace BudgetAnalyser.LedgerBook
             return SelectedBankAccount != null && BankBalance > 0;
         }
 
+        /// <summary>
+        ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
+        ///     included in the reconciliation.
+        /// </summary>
+        private bool HasRequiredBalances()
+        {
+            return BankBalances.All(b => this.parentBook.Ledgers.Any(l => l.StoredInAccount == b.Account));
+        }
+
         private void OnAddBankBalanceCommandExecuted()
         {
             if (CreateMode)
@@ -270,30 +294,47 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            if (message.Response == ShellDialogButton.Cancel)
+            try
             {
-                Canceled = true;
-            }
-            else
-            {
-                if (!BankBalances.Any())
+                if (message.Response == ShellDialogButton.Cancel)
                 {
-                    if (CanExecuteAddBankBalanceCommand())
+                    Canceled = true;
+                }
+                else
+                {
+                    if (!BankBalances.Any())
                     {
-                        OnAddBankBalanceCommandExecuted();
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Failed to add any bank balances to Ledger Book reconciliation.");
+                        if (CanExecuteAddBankBalanceCommand())
+                        {
+                            // User may have entered some data to add a new bank balance to the collection, but not clicked the add button, instead they just clicked save.
+                            OnAddBankBalanceCommandExecuted();
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Failed to add any bank balances to Ledger Book reconciliation.");
+                        }
                     }
                 }
-            }
 
-            EventHandler<EditBankBalancesEventArgs> handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
+                EventHandler<EditBankBalancesEventArgs> handler = Complete;
+                if (handler != null)
+                {
+                    handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
+                }
             }
+            finally
+            {
+                Reset();
+            }
+        }
+
+        private void Reset()
+        {
+            this.parentBook = null;
+            Date = DateTime.MinValue;
+            BankBalances = null;
+            BankAccounts = null;
+            SelectedBankAccount = null;
         }
 
         private void ShowDialogCommon(string title)

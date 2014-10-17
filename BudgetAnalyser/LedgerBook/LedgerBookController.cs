@@ -247,7 +247,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnAddNewReconciliationCommandExecuted()
         {
             this.uiContext.AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
-            this.uiContext.AddLedgerReconciliationController.ShowCreateDialog();
+            this.uiContext.AddLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook);
         }
 
         private void OnAddReconciliationComplete(object sender, EditBankBalancesEventArgs e)
@@ -339,7 +339,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)
         {
             this.uiContext.AddLedgerReconciliationController.Complete += OnEditBankBalancesCompleted;
-            this.uiContext.AddLedgerReconciliationController.ShowEditDialog(line, line == ViewModel.NewLedgerLine);
+            this.uiContext.AddLedgerReconciliationController.ShowEditDialog(ViewModel.LedgerBook, line, line == ViewModel.NewLedgerLine);
         }
 
         private void OnShowHideMonthsCommandExecuted(int increment)
@@ -359,7 +359,6 @@ namespace BudgetAnalyser.LedgerBook
             this.uiContext.LedgerColumnViewController.Updated -= OnLedgerColumnUpdated;
             RaiseLedgerBookUpdated();
             FileOperations.Dirty = true;
-            // TODO the ui needs to updated to show ledgers can exist historically in different accounts.
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)
