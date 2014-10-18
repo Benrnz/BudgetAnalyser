@@ -107,13 +107,10 @@ namespace BudgetAnalyser.LedgerBook
             {
                 if (CreateMode)
                 {
-                    return Date != DateTime.MinValue
-                           && (HasRequiredBalances() || CanExecuteAddBankBalanceCommand());
+                    return Date != DateTime.MinValue && HasRequiredBalances;
                 }
 
-                return Editable
-                       && Date != DateTime.MinValue
-                       && (HasRequiredBalances() || CanExecuteAddBankBalanceCommand());
+                return Editable && Date != DateTime.MinValue && HasRequiredBalances;
             }
         }
 
@@ -158,6 +155,18 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.doNotUseEditable = value;
                 RaisePropertyChanged(() => Editable);
+            }
+        }
+
+        /// <summary>
+        ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
+        ///     included in the reconciliation.
+        /// </summary>
+        public bool HasRequiredBalances
+        {
+            get
+            {
+                return this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
             }
         }
 
@@ -228,6 +237,7 @@ namespace BudgetAnalyser.LedgerBook
             BankBalances.Add(new BankBalance(SelectedBankAccount, BankBalance));
             SelectedBankAccount = null;
             BankBalance = 0;
+            RaisePropertyChanged(() => HasRequiredBalances);
         }
 
         private bool CanExecuteAddBankBalanceCommand()
@@ -248,15 +258,6 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             return SelectedBankAccount != null && BankBalance > 0;
-        }
-
-        /// <summary>
-        ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
-        ///     included in the reconciliation.
-        /// </summary>
-        private bool HasRequiredBalances()
-        {
-            return BankBalances.All(b => this.parentBook.Ledgers.Any(l => l.StoredInAccount == b.Account));
         }
 
         private void OnAddBankBalanceCommandExecuted()
@@ -285,6 +286,8 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             BankBalances.Remove(bankBalance);
+            RaisePropertyChanged(() => BankBalanceTotal);
+            RaisePropertyChanged(() => HasRequiredBalances);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)

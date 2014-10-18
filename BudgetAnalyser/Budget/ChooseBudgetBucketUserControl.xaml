@@ -2,18 +2,19 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DataContext: ChooseBudgetBucketController -->
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding FilterDescription}" />
-        <StackPanel Orientation="Horizontal"
-                    Grid.Row="1"
-                    Margin="50,10,2,2">
-            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
-                       Text="Bucket:"
-                       Margin="20,5,5,5" />
+        <StackPanel Grid.Row="1"
+                    Margin="50,10,2,2"
+                    Orientation="Horizontal">
+            <TextBlock Margin="20,5,5,5"
+                       Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="Bucket:" />
             <ComboBox DisplayMemberPath="Code"
                       HorizontalAlignment="Left"
                       ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
@@ -23,17 +24,19 @@
                       TabIndex="1"
                       ToolTip="{Binding Selected}"
                       VerticalAlignment="Top" />
-            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+            <TextBlock Margin="20,5,5,5"
+                       Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Store in this bank account:"
-                       Margin="20,5,5,5"
-                       Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}"/>
+                       Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox HorizontalAlignment="Left"
                       ItemsSource="{Binding BankAccounts}"
                       SelectedItem="{Binding StoreInThisAccount}"
+                      Style="{StaticResource ComboBox.AccountType}"
                       TabIndex="2"
                       ToolTip="{Binding StoreInThisAccount}"
-                      Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}"
-                      VerticalAlignment="Top" />
+                      VerticalAlignment="Top"
+                      Visibility="{Binding ShowBankAccount, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
     </Grid>
+
 </UserControl>

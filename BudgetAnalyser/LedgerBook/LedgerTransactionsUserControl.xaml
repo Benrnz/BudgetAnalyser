@@ -168,6 +168,7 @@
                           ItemsSource="{Binding AccountTypes}"
                           Margin="5,1,5,1"
                           SelectedItem="{Binding NewTransactionAccountType}"
+                          Style="{StaticResource ComboBox.AccountType}"
                           ToolTip="Optionally set the account type for this transaction to a specific bank account."
                           Width="100" />
                 <TextBlock Grid.Column="2"

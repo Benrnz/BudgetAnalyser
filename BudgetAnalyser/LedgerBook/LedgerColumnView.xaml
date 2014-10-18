@@ -87,7 +87,8 @@
                        Text="Stored in bank account:" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
                       MaxWidth="300"
-                      SelectedItem="{Binding StoredInAccount}">
+                      SelectedItem="{Binding StoredInAccount}"
+                      Style="{StaticResource ComboBox.AccountType}">
                 <ComboBox.ItemTemplate>
 
                     <DataTemplate>

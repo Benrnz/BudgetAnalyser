@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
@@ -219,6 +220,7 @@ namespace BudgetAnalyser.LedgerBook
                     ViewModel.CurrentStatement,
                     ignoreWarnings);
                 FileOperations.Dirty = true;
+                NumberOfMonthsToShow++;
                 RaiseLedgerBookUpdated();
             }
             catch (ValidationWarningException ex)
@@ -327,12 +329,15 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
         {
-            bool? result = this.questionBox.Show("Are you sure you want to delete this Ledger Book Row?\nThis will also save any other unsaved changes.", "Remove Ledger Book Line");
+            bool? result = this.questionBox.Show(
+                string.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete this Reconciliation for {0:d}?", line.Date),
+                "Remove Ledger Book Line");
             if (result == null || !result.Value)
             {
                 return;
             }
 
+            NumberOfMonthsToShow--;
             ViewModel.LedgerBook.RemoveLine(line);
             FileOperations.SaveLedgerBook();
             FileOperations.ReloadCurrentLedgerBook();
