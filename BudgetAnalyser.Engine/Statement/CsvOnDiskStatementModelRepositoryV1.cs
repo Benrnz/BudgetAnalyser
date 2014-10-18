@@ -301,9 +301,10 @@ namespace BudgetAnalyser.Engine.Statement
                     throw new FileFormatException("The Budget Analyser file does not have the correct number of columns.", ex);
                 }
 
-                if (transaction.Amount == 0 || transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
+                if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
                 {
-                    throw new FileFormatException("The Budget Analyser file does not contain the correct data type for Amount and/or Date and/or Id in row " + index + 1);
+                    // Do not check for Amount == 0 here, sometimes memo transactions can appear with 0.00 or null amounts; which are valid.
+                    throw new FileFormatException("The Budget Analyser file does not contain the correct data type for Date and/or Id in row " + index + 1);
                 }
 
                 transactions.Add(transaction);
