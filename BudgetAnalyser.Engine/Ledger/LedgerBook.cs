@@ -16,7 +16,8 @@ namespace BudgetAnalyser.Engine.Ledger
         private List<LedgerEntryLine> datedEntries;
         private List<LedgerColumn> ledgersColumns = new List<LedgerColumn>();
 
-        public LedgerBook() : this(null)
+        public LedgerBook()
+            : this(null)
         {
         }
 
@@ -29,7 +30,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntryLine> DatedEntries
         {
             get { return this.datedEntries; }
-            [UsedImplicitly] private set { this.datedEntries = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.datedEntries = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
@@ -229,15 +231,23 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
             }
 
-            LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
-            if (recentEntry != null && date <= recentEntry.Date)
-            {
-                throw new InvalidOperationException("The date entered is before the previous ledger entry.");
-            }
-
             if (statement == null)
             {
                 return;
+            }
+
+            LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
+            if (recentEntry != null)
+            {
+                if (date <= recentEntry.Date)
+                {
+                    throw new InvalidOperationException("The date entered is before the previous ledger entry.");
+                }
+
+                if (recentEntry.Date.AddDays(7 * 4) > date)
+                {
+                    throw new InvalidOperationException("The date entered is not at least 4 weeks after the previous reconciliation. ");
+                }
             }
 
             DateTime startDate = date.AddMonths(-1);
