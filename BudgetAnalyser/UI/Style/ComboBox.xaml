@@ -322,6 +322,7 @@
     <Style x:Key="ComboBox.AccountType"
            BasedOn="{StaticResource {x:Type ComboBox}}"
            TargetType="ComboBox">
+        <Setter Property="Width" Value="120"/>
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>

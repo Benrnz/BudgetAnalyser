@@ -402,10 +402,7 @@ namespace BudgetAnalyser.LedgerBook
                         newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
                     }
 
-                    if (NewTransactionAccountType != null)
-                    {
-                        newTransaction.WithAccountType(NewTransactionAccountType);
-                    }
+                    newTransaction.WithAccountType(LedgerEntry.LedgerColumn.StoredInAccount);
 
                     LedgerEntry.AddTransaction(newTransaction);
                     ShownTransactions.Add(newTransaction);

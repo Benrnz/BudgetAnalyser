@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
 
+    <!-- Used to show (readonly) a transation in an items control -->
     <Grid Margin="1"
           Background="{StaticResource Brush.TileBackground}">
         <Grid.ContextMenu>

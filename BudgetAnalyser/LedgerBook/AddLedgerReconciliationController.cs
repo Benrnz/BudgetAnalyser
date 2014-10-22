@@ -222,6 +222,7 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("line");
             }
 
+            this.parentBook = ledgerBook;
             Date = line.Date;
             BankBalances = new ObservableCollection<BankBalance>(line.BankBalances);
             CreateMode = false;

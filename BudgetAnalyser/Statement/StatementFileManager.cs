@@ -172,7 +172,7 @@ namespace BudgetAnalyser.Statement
                 // can import the file.
                 if (this.importerRepository.CanImport(fullFileName))
                 {
-                    return this.importerRepository.Import(fullFileName, this.loadFileController.AccountType);
+                    return this.importerRepository.Import(fullFileName, this.loadFileController.SelectedExistingAccountName);
                 }
 
                 throw new NotSupportedException("The specified file is not a valid Budget Analyser Statement file, or any known bank statement file.");

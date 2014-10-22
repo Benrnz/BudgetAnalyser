@@ -29,7 +29,9 @@
                        Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Bank Balance:"
                        Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
-            <TextBox GotFocus="OnUIElementGotFocus"
+            <TextBox x:Name="BankBalance"
+                     GotFocus="OnBankBalanceGotFocus"
+                     PreviewMouseUp="OnBankBalanceMouseUp"
                      Text="{Binding BankBalance, StringFormat=N, UpdateSourceTrigger=PropertyChanged}"
                      Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <ComboBox ItemsSource="{Binding BankAccounts}"
@@ -38,6 +40,7 @@
                       Style="{StaticResource ComboBox.AccountType}"
                       Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Command="{Binding AddBankBalanceCommand}"
+                    Click="OnAddBankBalanceClick"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add Bank Balance" />
         </StackPanel>

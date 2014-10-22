@@ -247,7 +247,7 @@ namespace BudgetAnalyser.Engine.Ledger
             DateTime finishDateExcl = Date;
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDateExcl).ToList();
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= finishDateExcl).ToList(); // Date filter must be inclusion to be consistent with the rest of the app.
 
             Dictionary<LedgerColumn, decimal> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 

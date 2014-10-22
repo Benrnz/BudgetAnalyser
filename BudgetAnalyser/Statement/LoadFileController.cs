@@ -27,12 +27,9 @@ namespace BudgetAnalyser.Statement
         private bool actionButtonReady;
         private Guid dialogCorrelationId;
         private bool disposed;
-        private string doNotUseAccountName;
-        private bool doNotUseExistingAccountName;
         private string doNotUseFileName;
         private bool doNotUseFileTypeSelectionReady;
-        private bool doNotUseNewAccountName;
-        private string doNotUseSelectedExistingAccountName;
+        private AccountType doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
         private Task fileSelectionTask;
         private bool showingDialog;
@@ -62,7 +59,6 @@ namespace BudgetAnalyser.Statement
             this.statementModelRepository = statementModelRepository;
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
             this.accountTypeRepository = accountTypeRepository;
-            UseExistingAccountName = true;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
@@ -84,27 +80,10 @@ namespace BudgetAnalyser.Statement
             Dispose(false);
         }
 
-        public string AccountName
-        {
-            get { return this.doNotUseAccountName; }
-
-            set
-            {
-                this.doNotUseAccountName = value;
-                RaisePropertyChanged(() => AccountName);
-                CheckAccountName();
-            }
-        }
-
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
         public string AccountNameHelp
         {
             get { return "When importing a new bank statement file, you must select what account type the statement comes from.\nThis allows merging of multiple accounts into one file."; }
-        }
-
-        public AccountType AccountType
-        {
-            get { return this.accountTypeRepository.GetOrCreateNew(AccountName); }
         }
 
         public string ActionButtonToolTip { get; private set; }
@@ -134,7 +113,7 @@ namespace BudgetAnalyser.Statement
             get { return "Cancel"; }
         }
 
-        public IEnumerable<string> ExistingAccountNames { get; private set; }
+        public IEnumerable<AccountType> ExistingAccountNames { get; private set; }
 
         public string FileName
         {
@@ -166,8 +145,9 @@ namespace BudgetAnalyser.Statement
         }
 
         public bool? LastFileWasBudgetAnalyserStatementFile { get; private set; }
+        public bool MergeMode { get; private set; }
 
-        public string SelectedExistingAccountName
+        public AccountType SelectedExistingAccountName
         {
             get { return this.doNotUseSelectedExistingAccountName; }
 
@@ -188,28 +168,6 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseTitle = value;
                 RaisePropertyChanged(() => Title);
-            }
-        }
-
-        public bool UseExistingAccountName
-        {
-            get { return this.doNotUseExistingAccountName; }
-            set
-            {
-                this.doNotUseExistingAccountName = value;
-                RaisePropertyChanged(() => UseExistingAccountName);
-                CheckAccountName();
-            }
-        }
-
-        public bool UseNewAccountName
-        {
-            get { return this.doNotUseNewAccountName; }
-            set
-            {
-                this.doNotUseNewAccountName = value;
-                RaisePropertyChanged(() => UseNewAccountName);
-                CheckAccountName();
             }
         }
 
@@ -235,6 +193,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("LoadFileController.RequestUserInputForMerging");
             }
 
+            MergeMode = true;
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Merge Statement";
@@ -254,6 +213,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("LoadFileController.RequestUserInputForOpenFile");
             }
 
+            MergeMode = false;
             ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
             LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
@@ -270,12 +230,6 @@ namespace BudgetAnalyser.Statement
 
             LastFileWasBudgetAnalyserStatementFile = null;
             FileName = null;
-            AccountName = null;
-        }
-
-        private bool ActionCommandCanExecute()
-        {
-            return this.actionButtonReady;
         }
 
         private void CalculateSuggestedDateRange(StatementModel currentStatement)
@@ -314,28 +268,13 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            if (UseExistingAccountName)
+            if (SelectedExistingAccountName == null)
             {
-                if (string.IsNullOrWhiteSpace(SelectedExistingAccountName))
-                {
-                    this.actionButtonReady = false;
-                    return;
-                }
-
-                this.actionButtonReady = true;
+                this.actionButtonReady = false;
                 return;
             }
 
-            if (UseNewAccountName)
-            {
-                if (string.IsNullOrWhiteSpace(AccountName))
-                {
-                    this.actionButtonReady = false;
-                    return;
-                }
-
-                this.actionButtonReady = true;
-            }
+            this.actionButtonReady = true;
         }
 
         private void CheckFileName()
@@ -437,36 +376,17 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(AccountName))
-            {
-                AccountName = SelectedExistingAccountName;
-            }
-
             // FileName is already set by data binding.
 
             // Use the task to signal completion.
             this.fileSelectionTask.Start();
         }
 
-        private List<string> PrepareAccountNames()
-        {
-            List<string> accountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes()
-                .Select(a => a.Name)
-                .OrderBy(a => a)
-                .ToList();
-            accountNames.Insert(0, string.Empty);
-            return accountNames;
-        }
-
         private Task RequestUserInputCommomPreparation()
         {
-            UseExistingAccountName = true;
-            UseNewAccountName = false;
             FileName = null;
-            AccountName = null;
-            List<string> listOfNames = PrepareAccountNames();
-            ExistingAccountNames = listOfNames;
-            SelectedExistingAccountName = listOfNames.First();
+            ExistingAccountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            SelectedExistingAccountName = ExistingAccountNames.First();
 
             this.dialogCorrelationId = Guid.NewGuid();
             var popRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.OkCancel)

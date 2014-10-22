@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Rees.Wpf;
 
@@ -15,6 +16,17 @@ namespace BudgetAnalyser.LedgerBook
             InitializeComponent();
         }
 
+        private void OnAddBankBalanceClick(object sender, RoutedEventArgs e)
+        {
+            this.BankBalance.Focus();
+            this.BankBalance.SelectAll();
+        }
+
+        private void OnBankBalanceMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.BankBalance.SelectAll();
+        }
+
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is bool)
@@ -27,7 +39,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void OnUIElementGotFocus(object sender, RoutedEventArgs e)
+        private void OnBankBalanceGotFocus(object sender, RoutedEventArgs e)
         {
             var textBox = e.OriginalSource as TextBox;
             if (textBox != null)
