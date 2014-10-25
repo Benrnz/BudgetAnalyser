@@ -56,9 +56,9 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.0.11\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.0.13\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

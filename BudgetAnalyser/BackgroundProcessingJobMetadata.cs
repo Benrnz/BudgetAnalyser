@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -53,6 +54,7 @@ namespace BudgetAnalyser
             Description = null;
             MenuAvailable = true;
             this.jobRunning = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void StartNew(string description, bool menuAvailable)

@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 
 namespace BudgetAnalyser

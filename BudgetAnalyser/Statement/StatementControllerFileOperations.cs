@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
@@ -204,7 +204,7 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
-                BackgroundJob.Finish();
+                this.dispatcher.Invoke(() => BackgroundJob.Finish());
             }
         }
 

@@ -7,7 +7,6 @@ using Autofac;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -84,9 +83,6 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
-            // ReSharper disable once RedundantDelegateCreation
-            builder.Register(c => new Func<object, IPersistent>(model => new RecentFilesPersistentModelV1(model))).SingleInstance();
-
             builder.RegisterInstance(app).As<IApplicationHookEventPublisher>();
         }
 
@@ -95,7 +91,7 @@ namespace BudgetAnalyser
             // Wait Cursor Builder
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
-            builder.RegisterType<XmlRecentFileManager>().As<IRecentFileManager>().SingleInstance();
+            builder.RegisterType<AppStateRecentFileManager>().As<IRecentFileManager>().SingleInstance();
             builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
             builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
