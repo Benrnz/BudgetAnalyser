@@ -1,3 +1,4 @@
+[![benrnz MyGet Build Status](https://www.myget.org/BuildSource/Badge/benrnz?identifier=eaa804ca-ad35-41da-a864-eb490be52974)](https://www.myget.org/)
 ## Budget Analyser ##
 =====================
 
