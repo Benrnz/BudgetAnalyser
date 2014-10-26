@@ -31,7 +31,6 @@ namespace BudgetAnalyser
         private List<ControllerBase> controllers;
 
         public UiContext(
-            [NotNull] IBackgroundProcessingJobMetadata backgroundJobMetadata,
             [NotNull] Func<IWaitCursor> waitCursorFactory,
             [NotNull] UserPrompts userPrompts,
             [NotNull] IMessenger messenger)
@@ -51,13 +50,7 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("messenger");
             }
 
-            if (backgroundJobMetadata == null)
-            {
-                throw new ArgumentNullException("backgroundJobMetadata");
-            }
-
             WaitCursorFactory = waitCursorFactory;
-            BackgroundJob = backgroundJobMetadata;
             UserPrompts = userPrompts;
             Messenger = messenger;
         }
@@ -65,7 +58,6 @@ namespace BudgetAnalyser
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
 
         public AppliedRulesController AppliedRulesController { get; set; }
-        public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
 
         public BudgetController BudgetController { get; set; }
         public BudgetPieController BudgetPieController { get; set; }

@@ -24,6 +24,7 @@ namespace BudgetAnalyser.Statement
         private readonly IStatementFileManager statementFileManager;
         private readonly IUiContext uiContext;
         private Dispatcher dispatcher;
+        private bool doNotUseLoadingData;
         private List<ICommand> recentFileCommands;
 
         public StatementControllerFileOperations(
@@ -74,6 +75,16 @@ namespace BudgetAnalyser.Statement
         public ICommand DemoStatementCommand
         {
             get { return new RelayCommand(OnDemoStatementCommandExecuted, CanExecuteOpenStatementCommand); }
+        }
+
+        public bool LoadingData
+        {
+            get { return this.doNotUseLoadingData; }
+            private set
+            {
+                this.doNotUseLoadingData = value;
+                RaisePropertyChanged(() => LoadingData);
+            }
         }
 
         public ICommand MergeStatementCommand
@@ -159,11 +170,6 @@ namespace BudgetAnalyser.Statement
         internal StatementViewModel ViewModel { get; private set; }
         internal string WaitingForBudgetToLoad { get; private set; }
 
-        private IBackgroundProcessingJobMetadata BackgroundJob
-        {
-            get { return this.uiContext.BackgroundJob; }
-        }
-
         public void NotifyOfClosing()
         {
             if (PromptToSaveIfDirty())
@@ -182,7 +188,6 @@ namespace BudgetAnalyser.Statement
         {
             try
             {
-                BackgroundJob.StartNew("Loading previous accounts...", false);
                 if (string.IsNullOrWhiteSpace(statementFileName))
                 {
                     return;
@@ -202,10 +207,6 @@ namespace BudgetAnalyser.Statement
             {
                 // Ignore it.
             }
-            finally
-            {
-                this.dispatcher.Invoke(() => BackgroundJob.Finish());
-            }
         }
 
         internal void NotifyOfEdit()
@@ -221,12 +222,12 @@ namespace BudgetAnalyser.Statement
 
         private bool CanExecuteCloseStatementCommand()
         {
-            return BackgroundJob.MenuAvailable && ViewModel.Statement != null;
+            return ViewModel.Statement != null;
         }
 
         private bool CanExecuteOpenStatementCommand()
         {
-            return BackgroundJob.MenuAvailable;
+            return !LoadingData;
         }
 
         private async Task<bool> LoadInternal(string fullFileName)
@@ -240,6 +241,7 @@ namespace BudgetAnalyser.Statement
                 return false;
             }
 
+            LoadingData = true;
             await this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
                 // Update all UI bound properties.
@@ -256,6 +258,8 @@ namespace BudgetAnalyser.Statement
 
                 MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
             });
+
+            LoadingData = false;
             return true;
         }
 
@@ -288,7 +292,6 @@ namespace BudgetAnalyser.Statement
             Save();
             ViewModel.BucketFilter = null;
 
-            BackgroundJob.StartNew("Merging statement...", false);
             StatementModel additionalModel = null;
             Task<StatementModel> loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
 
@@ -318,7 +321,6 @@ namespace BudgetAnalyser.Statement
                 {
                     this.dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
                     {
-                        BackgroundJob.Finish();
                         if (cursor != null)
                         {
                             cursor.Dispose();
@@ -340,8 +342,6 @@ namespace BudgetAnalyser.Statement
                 Save();
             }
 
-            BackgroundJob.StartNew("Loading statement...", false);
-
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
             Task<bool> task = LoadInternal(fullFileName);
             task.ConfigureAwait(false);
@@ -349,7 +349,6 @@ namespace BudgetAnalyser.Statement
             // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
             task.ContinueWith(t =>
             {
-                BackgroundJob.Finish();
                 if (!t.IsFaulted && t.Result)
                 {
                     // Update RecentFile list for successfully loaded files only. 
@@ -406,7 +405,7 @@ namespace BudgetAnalyser.Statement
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
         {
             this.recentFileCommands =
-                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecute, x => BackgroundJob.MenuAvailable))
+                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecute, x => CanExecuteOpenStatementCommand()))
                     .ToList();
             RaisePropertyChanged(() => RecentFile1Command);
             RaisePropertyChanged(() => RecentFile2Command);

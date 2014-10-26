@@ -150,7 +150,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BackgroundProcessingJobMetadata.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetBucketChosenEventArgs.cs" />
@@ -204,7 +203,6 @@
     <Compile Include="Filtering\RequestFilterChangeMessage.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="IBackgroundProcessingJobMetadata.cs" />
     <Compile Include="LedgerBook\LedgerColumnView.xaml.cs">
       <DependentUpon>LedgerColumnView.xaml</DependentUpon>
     </Compile>

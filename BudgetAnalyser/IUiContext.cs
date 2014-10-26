@@ -16,7 +16,6 @@ namespace BudgetAnalyser
     public interface IUiContext
     {
         AppliedRulesController AppliedRulesController { get; set; }
-        IBackgroundProcessingJobMetadata BackgroundJob { get; }
         EditingTransactionController EditingTransactionController { get; }
         IMessenger Messenger { get; }
         SplitTransactionController SplitTransactionController { get; }

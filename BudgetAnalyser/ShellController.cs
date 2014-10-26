@@ -45,7 +45,6 @@ namespace BudgetAnalyser
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             this.statePersistence = statePersistence;
             this.uiContext = uiContext;
-            BackgroundJob = uiContext.BackgroundJob;
 
             LedgerBookDialog = new ShellDialogController();
             DashboardDialog = new ShellDialogController();
@@ -53,8 +52,6 @@ namespace BudgetAnalyser
             BudgetDialog = new ShellDialogController();
             ReportsDialog = new ShellDialogController();
         }
-
-        public IBackgroundProcessingJobMetadata BackgroundJob { get; private set; }
 
         public BudgetController BudgetController
         {

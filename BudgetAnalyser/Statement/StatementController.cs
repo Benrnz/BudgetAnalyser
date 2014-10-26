@@ -57,11 +57,6 @@ namespace BudgetAnalyser.Statement
             get { return this.uiContext.AppliedRulesController; }
         }
 
-        public IBackgroundProcessingJobMetadata BackgroundJob
-        {
-            get { return this.uiContext.BackgroundJob; }
-        }
-
         public ICommand ClearTextFilterCommand
         {
             get { return new RelayCommand(OnClearTextFilterCommandExecute, () => !string.IsNullOrWhiteSpace(TextFilter)); }
@@ -156,7 +151,7 @@ namespace BudgetAnalyser.Statement
 
         private bool CanExecuteSortCommand()
         {
-            return BackgroundJob.MenuAvailable && ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
+            return ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
         }
 
         private void ClearTextFilter()

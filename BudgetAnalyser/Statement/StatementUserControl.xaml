@@ -43,7 +43,6 @@
             <!-- Tool bar -->
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right"
-                        IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                         Orientation="Horizontal">
                 <Grid Visibility="{Binding ViewModel.SortByDate, Converter={StaticResource Converter.BoolToVis}}">
                     <Grid.ColumnDefinitions>
@@ -76,7 +75,6 @@
                               DropDownClosed="OnBucketFilterComboBoxDropDownClosed"
                               DropDownOpened="OnBucketFilterComboBoxDropDownOpened"
                               Grid.Column="2"
-                              IsEnabled="{Binding BackgroundJob.MenuAvailable}"
                               ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                               ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                               Margin="4"
@@ -93,8 +91,7 @@
                            Visibility="{Binding ViewModel.BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
                            Width="17" />
                 </Grid>
-                <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
-                      Style="{StaticResource RoundMenuButton}">
+                <Menu Style="{StaticResource RoundMenuButton}">
                     <Menu.Resources>
 
                         <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
@@ -126,8 +123,7 @@
                         </MenuItem>
                     </MenuItem>
                 </Menu>
-                <Menu IsEnabled="{Binding BackgroundJob.MenuAvailable}"
-                      Style="{StaticResource RoundMenuButton}">
+                <Menu Style="{StaticResource RoundMenuButton}">
                     <Menu.Resources>
 
                         <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
@@ -220,11 +216,10 @@
                        Margin="4"
                        Padding="4"
                        Text="Loading Data..."
-                       Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.NotBoolToVis}}" />
+                       Visibility="{Binding FileOperations.LoadingData, Converter={StaticResource Converter.BoolToVis}}" />
             <Border Background="{StaticResource Brush.CreditBackground1}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Total Credits currently displayed."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="Total Credits currently displayed.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="CR: " />
@@ -235,8 +230,7 @@
             </Border>
             <Border Background="{StaticResource Brush.DebitBackground1}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Total debits currently displayed."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="Total debits currently displayed.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="DR: " />
@@ -247,8 +241,7 @@
             </Border>
             <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Difference between total displayed credits and total displayed debits."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="Difference between total displayed credits and total displayed debits.">
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Height="15"
                            Margin="5,0,0,0"
@@ -261,8 +254,7 @@
             </Border>
             <Border Background="{StaticResource Brush.DebitBackground1}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The average debit transaction from the currently displayed list."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="The average debit transaction from the currently displayed list.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="Avg DR: " />
@@ -273,8 +265,7 @@
             </Border>
             <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The number of transactions currently displayed."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="The number of transactions currently displayed.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="Count: " />
@@ -285,8 +276,7 @@
             </Border>
             <Border Background="{StaticResource Brush.NeutralNumberBackground}"
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="The total numnber of months the currently displayed transaction span."
-                    Visibility="{Binding BackgroundJob.MenuAvailable, Converter={StaticResource Converter.BoolToVis}}">
+                    ToolTip="The total numnber of months the currently displayed transaction span.">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="Months: " />
