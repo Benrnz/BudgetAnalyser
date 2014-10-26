@@ -311,7 +311,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         private string[] CreateTestArray()
         {
-            return new[] { "123.34", new DateTime(2014, 04, 14).ToShortDateString(), "FUEL", "42/12/2088", "A94B4FE5-4F43-43A6-8CD2-8430F45FB58D" };
+            return new[] { "123.34", "14/04/2014", "FUEL", "42/12/2088", "A94B4FE5-4F43-43A6-8CD2-8430F45FB58D" };
         }
     }
 }
