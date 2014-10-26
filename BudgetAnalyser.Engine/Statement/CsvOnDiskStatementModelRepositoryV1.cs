@@ -258,11 +258,11 @@ namespace BudgetAnalyser.Engine.Statement
             string[] headerSplit = header.Split(',');
             var transactionSet = new TransactionSetDto
             {
-                Checksum = this.importUtilities.SafeArrayFetchLong(headerSplit, 3),
+                Checksum = this.importUtilities.FetchLong(headerSplit, 3),
                 FileName = fileName,
-                LastImport = this.importUtilities.SafeArrayFetchDate(headerSplit, 4),
+                LastImport = this.importUtilities.FetchDate(headerSplit, 4),
                 Transactions = transactions,
-                VersionHash = this.importUtilities.SafeArrayFetchString(headerSplit, 1),
+                VersionHash = this.importUtilities.FetchString(headerSplit, 1),
             };
             return transactionSet;
         }
@@ -284,21 +284,25 @@ namespace BudgetAnalyser.Engine.Statement
                 {
                     transaction = new TransactionDto
                     {
-                        TransactionType = this.importUtilities.SafeArrayFetchString(split, 0),
-                        Description = this.importUtilities.SafeArrayFetchString(split, 1),
-                        Reference1 = this.importUtilities.SafeArrayFetchString(split, 2),
-                        Reference2 = this.importUtilities.SafeArrayFetchString(split, 3),
-                        Reference3 = this.importUtilities.SafeArrayFetchString(split, 4),
-                        Amount = this.importUtilities.SafeArrayFetchDecimal(split, 5),
-                        Date = this.importUtilities.SafeArrayFetchDate(split, 6),
-                        BudgetBucketCode = this.importUtilities.SafeArrayFetchString(split, 7),
-                        AccountType = this.importUtilities.SafeArrayFetchString(split, 8),
-                        Id = this.importUtilities.SafeArrayFetchGuid(split, 9),
+                        TransactionType = this.importUtilities.FetchString(split, 0),
+                        Description = this.importUtilities.FetchString(split, 1),
+                        Reference1 = this.importUtilities.FetchString(split, 2),
+                        Reference2 = this.importUtilities.FetchString(split, 3),
+                        Reference3 = this.importUtilities.FetchString(split, 4),
+                        Amount = this.importUtilities.FetchDecimal(split, 5),
+                        Date = this.importUtilities.FetchDate(split, 6),
+                        BudgetBucketCode = this.importUtilities.FetchString(split, 7),
+                        AccountType = this.importUtilities.FetchString(split, 8),
+                        Id = this.importUtilities.FetchGuid(split, 9),
                     };
+                }
+                catch (InvalidDataException ex)
+                {
+                    throw new FileFormatException("The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
-                    throw new FileFormatException("The Budget Analyser file does not have the correct number of columns.", ex);
+                    throw new FileFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
                 }
 
                 if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)

@@ -68,11 +68,11 @@ namespace BudgetAnalyser.Engine.Statement
                 var transaction = new Transaction
                 {
                     AccountType = accountType,
-                    Reference1 = this.importUtilities.SafeArrayFetchString(split, 0),
+                    Reference1 = this.importUtilities.FetchString(split, 0),
                     TransactionType = transactionType,
                     Amount = amount,
-                    Description = this.importUtilities.SafeArrayFetchString(split, 3),
-                    Date = this.importUtilities.SafeArrayFetchDate(split, 4),
+                    Description = this.importUtilities.FetchString(split, 3),
+                    Date = this.importUtilities.FetchDate(split, 4),
                 };
                 transactions.Add(transaction);
             }
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             string[] split = line.Split(',');
-            string card = this.importUtilities.SafeArrayFetchString(split, 0);
+            string card = this.importUtilities.FetchString(split, 0);
             if (string.IsNullOrWhiteSpace(card))
             {
                 return false;
@@ -109,13 +109,13 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            decimal amount = this.importUtilities.SafeArrayFetchDecimal(split, 2);
+            decimal amount = this.importUtilities.FetchDecimal(split, 2);
             if (amount == 0)
             {
                 return false;
             }
 
-            DateTime date = this.importUtilities.SafeArrayFetchDate(split, 4);
+            DateTime date = this.importUtilities.FetchDate(split, 4);
             if (date == DateTime.MinValue)
             {
                 return false;
@@ -152,8 +152,8 @@ namespace BudgetAnalyser.Engine.Statement
 
         private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex, out decimal amount)
         {
-            string stringType = this.importUtilities.SafeArrayFetchString(array, transactionTypeindex);
-            amount = this.importUtilities.SafeArrayFetchDecimal(array, amountIndex);
+            string stringType = this.importUtilities.FetchString(array, transactionTypeindex);
+            amount = this.importUtilities.FetchDecimal(array, amountIndex);
             if (string.IsNullOrWhiteSpace(stringType))
             {
                 return null;

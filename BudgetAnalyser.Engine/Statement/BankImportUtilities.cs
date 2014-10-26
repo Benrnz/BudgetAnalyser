@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("bucketRepository");
             }
 
-            string stringType = SafeArrayFetchString(array, index);
+            string stringType = FetchString(array, index);
             if (string.IsNullOrWhiteSpace(stringType))
             {
                 return null;
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Statement
             return bucketRepository.GetByCode(stringType);
         }
 
-        internal DateTime SafeArrayFetchDate([NotNull] string[] array, int index)
+        internal DateTime FetchDate([NotNull] string[] array, int index)
         {
             if (array == null)
             {
@@ -70,14 +70,14 @@ namespace BudgetAnalyser.Engine.Statement
             DateTime retval;
             if (!DateTime.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
-                return DateTime.MinValue;
+                this.logger.LogError(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
+                throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
             }
 
             return retval;
         }
 
-        internal Decimal SafeArrayFetchDecimal([NotNull] string[] array, int index)
+        internal Decimal FetchDecimal([NotNull] string[] array, int index)
         {
             if (array == null)
             {
@@ -93,15 +93,15 @@ namespace BudgetAnalyser.Engine.Statement
             Decimal retval;
             if (!Decimal.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
-                return 0;
+                this.logger.LogError(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
+                throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
             }
 
             return retval;
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
-        internal Guid SafeArrayFetchGuid([NotNull] string[] array, int index)
+        internal Guid FetchGuid([NotNull] string[] array, int index)
         {
             if (array == null)
             {
@@ -117,13 +117,14 @@ namespace BudgetAnalyser.Engine.Statement
             Guid result;
             if (!Guid.TryParse(stringToParse, out result))
             {
-                result = Guid.NewGuid();
+                this.logger.LogError(l => "BankImportUtilities: Unable to parse Guid: " + stringToParse);
+                throw new InvalidDataException("Expected Guid, but provided data is invalid. " + stringToParse);
             }
 
             return result;
         }
 
-        internal long SafeArrayFetchLong([NotNull] string[] array, int index)
+        internal long FetchLong([NotNull] string[] array, int index)
         {
             if (array == null)
             {
@@ -139,15 +140,15 @@ namespace BudgetAnalyser.Engine.Statement
             long retval;
             if (!long.TryParse(stringToParse, out retval))
             {
-                this.logger.LogWarning(l => "BankImportUtilities: Unable to parse long: " + stringToParse);
-                return 0;
+                this.logger.LogError(l => "BankImportUtilities: Unable to parse long: " + stringToParse);
+                throw new InvalidDataException("Expected long, but provided data is invalid. " + stringToParse);
             }
 
             return retval;
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Preferable with IoC")]
-        internal string SafeArrayFetchString([NotNull] string[] array, int index)
+        internal string FetchString([NotNull] string[] array, int index)
         {
             if (array == null)
             {

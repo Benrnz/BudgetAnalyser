@@ -41,31 +41,31 @@ namespace BudgetAnalyser.UnitTest.Statement
         public void LoadShouldParseAFileWithExtraColumns()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData2();
-            StatementModel result = subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+            subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData2();
+            StatementModel result = subject.Load("foo.bar", StatementModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
+            Assert.AreEqual(13, result.AllTransactions.Count());
         }
 
         [TestMethod]
         public void LoadShouldParseAGoodFile()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = f => AnzChequeCsvTestData.TestData1();
-            StatementModel result = subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+            subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData1();
+            StatementModel result = subject.Load("foo.bar", StatementModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
-            Assert.AreEqual(7, result.AllTransactions.Count());
+            Assert.AreEqual(13, result.AllTransactions.Count());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnexpectedIndexException))]
+        [ExpectedException(typeof(InvalidDataException))]
         public void LoadShouldThrowGivenBadData()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = filename => AnzChequeCsvTestData.BadTestData1();
-            subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+            subject.Load("foo.bar", StatementModelTestData.VisaAccount);
             Assert.Fail();
         }
 
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             BankImportUtilities.AbortIfFileDoesntExistOverride = (s, m) => { throw new FileNotFoundException(); };
-            subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
+            subject.Load("foo.bar", StatementModelTestData.VisaAccount);
             Assert.Fail();
         }
 

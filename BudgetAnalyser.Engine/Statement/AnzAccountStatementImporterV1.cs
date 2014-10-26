@@ -67,12 +67,12 @@ namespace BudgetAnalyser.Engine.Statement
                 {
                     AccountType = accountType,
                     TransactionType = FetchTransactionType(split, 0),
-                    Description = this.importUtilities.SafeArrayFetchString(split, 1),
-                    Reference1 = this.importUtilities.SafeArrayFetchString(split, 2),
-                    Reference2 = this.importUtilities.SafeArrayFetchString(split, 3),
-                    Reference3 = this.importUtilities.SafeArrayFetchString(split, 4),
-                    Amount = this.importUtilities.SafeArrayFetchDecimal(split, 5),
-                    Date = this.importUtilities.SafeArrayFetchDate(split, 6),
+                    Description = this.importUtilities.FetchString(split, 1),
+                    Reference1 = this.importUtilities.FetchString(split, 2),
+                    Reference2 = this.importUtilities.FetchString(split, 3),
+                    Reference3 = this.importUtilities.FetchString(split, 4),
+                    Amount = this.importUtilities.FetchDecimal(split, 5),
+                    Date = this.importUtilities.FetchDate(split, 6),
                 };
                 transactions.Add(transaction);
             }
@@ -99,31 +99,42 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            string[] split = line.Split(',');
-            string type = this.importUtilities.SafeArrayFetchString(split, 0);
-            if (string.IsNullOrWhiteSpace(type))
+            try
+            {
+                string[] split = line.Split(',');
+                string type = this.importUtilities.FetchString(split, 0);
+                if (string.IsNullOrWhiteSpace(type))
+                {
+                    return false;
+                }
+
+                if (Char.IsDigit(type.ToCharArray()[0]))
+                {
+                    return false;
+                }
+
+                decimal amount = this.importUtilities.FetchDecimal(split, 5);
+                if (amount == 0)
+                {
+                    return false;
+                }
+
+                DateTime date = this.importUtilities.FetchDate(split, 6);
+                if (date == DateTime.MinValue)
+                {
+                    return false;
+                }
+
+                if (split.Length != 8)
+                {
+                    return false;
+                }
+            }
+            catch (InvalidDataException)
             {
                 return false;
             }
-
-            if (Char.IsDigit(type.ToCharArray()[0]))
-            {
-                return false;
-            }
-
-            decimal amount = this.importUtilities.SafeArrayFetchDecimal(split, 5);
-            if (amount == 0)
-            {
-                return false;
-            }
-
-            DateTime date = this.importUtilities.SafeArrayFetchDate(split, 6);
-            if (date == DateTime.MinValue)
-            {
-                return false;
-            }
-
-            if (split.Length != 8)
+            catch (UnexpectedIndexException)
             {
                 return false;
             }
@@ -159,7 +170,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private TransactionType FetchTransactionType(string[] array, int index)
         {
-            string stringType = this.importUtilities.SafeArrayFetchString(array, index);
+            string stringType = this.importUtilities.FetchString(array, index);
             if (string.IsNullOrWhiteSpace(stringType))
             {
                 return null;
