@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -303,7 +304,9 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             BucketRepositoryMock = new Mock<IBudgetBucketRepository>();
 
-            return new BankImportUtilities(new FakeLogger());
+            var subject = new BankImportUtilities(new FakeLogger());
+            subject.ConfigureLocale(CultureInfo.CreateSpecificCulture("en-NZ"));
+            return subject;
         }
 
         private string[] CreateTestArray()

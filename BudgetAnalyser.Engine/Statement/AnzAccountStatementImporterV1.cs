@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
@@ -39,6 +40,7 @@ namespace BudgetAnalyser.Engine.Statement
             this.userMessageBox = userMessageBox;
             this.importUtilities = importUtilities;
             this.logger = logger;
+            this.importUtilities.ConfigureLocale(CultureInfo.CreateSpecificCulture("en-NZ")); // ANZ importers are NZ specific at this stage.
         }
 
         /// <summary>

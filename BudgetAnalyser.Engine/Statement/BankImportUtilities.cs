@@ -2,15 +2,18 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    [AutoRegisterWithIoC]
     public class BankImportUtilities
     {
         private readonly ILogger logger;
+        private CultureInfo locale;
 
         public BankImportUtilities([NotNull] ILogger logger)
         {
@@ -20,6 +23,12 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.logger = logger;
+            this.locale = Thread.CurrentThread.CurrentCulture;
+        }
+
+        internal void ConfigureLocale(CultureInfo culture)
+        {
+            this.locale = culture;
         }
 
         internal virtual void AbortIfFileDoesntExist(string fileName, IUserMessageBox messageBox)
@@ -68,7 +77,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             string stringToParse = array[index];
             DateTime retval;
-            if (!DateTime.TryParse(stringToParse, out retval))
+            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None,  out retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
                 throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
