@@ -199,7 +199,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         [TestMethod]
         [ExpectedException(typeof(StatementModelChecksumException))]
-        public void SaveShouldThrowGivenMappingDoesNotMapAllTransactions()
+        public async Task SaveShouldThrowGivenMappingDoesNotMapAllTransactions()
         {
             var mockToDtoMapper = new Mock<BasicMapper<StatementModel, TransactionSetDto>>();
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = ArrangeWithMockMappers(new BasicMapperFake<TransactionSetDto, StatementModel>(), mockToDtoMapper.Object);
@@ -214,7 +214,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList(),
                 });
 
-            subject.Save(model, "Foo.bar");
+            await subject.SaveAsync(model, "Foo.bar");
 
             Assert.Fail();
         }

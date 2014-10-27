@@ -373,7 +373,7 @@ namespace BudgetAnalyser.Statement
 
         private void Save()
         {
-            this.statementFileManager.Save(ViewModel.Statement);
+            this.statementFileManager.SaveAsync(ViewModel.Statement);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
         }

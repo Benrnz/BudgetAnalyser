@@ -108,14 +108,14 @@ namespace BudgetAnalyser.Statement
         ///     Statement file format.
         ///     Saving and preserving bank statement files is not supported.
         /// </summary>
-        public void Save([NotNull] StatementModel statementModel)
+        public async Task SaveAsync([NotNull] StatementModel statementModel)
         {
             if (statementModel == null)
             {
                 throw new ArgumentNullException("statementModel");
             }
 
-            this.statementModelRepository.Save(statementModel, statementModel.FileName);
+            await this.statementModelRepository.SaveAsync(statementModel, statementModel.FileName);
         }
 
         /// <summary>

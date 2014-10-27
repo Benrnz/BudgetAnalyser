@@ -102,9 +102,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public void Save([NotNull] StatementModel model, string fileName)
+        public async Task SaveAsync([NotNull] StatementModel model, string fileName)
         {
-            // TODO this should be async as well.
             if (model == null)
             {
                 throw new ArgumentNullException("model");
@@ -124,7 +123,7 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            using (var stream = new FileStream(fileName, FileMode.Create))
+            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous))
             {
                 using (var writer = new StreamWriter(stream))
                 {
@@ -163,10 +162,10 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.Id);
                         line.Append(",");
 
-                        writer.WriteLine(line.ToString());
+                        await writer.WriteLineAsync(line.ToString());
                     }
 
-                    writer.Flush();
+                    await writer.FlushAsync();
                     writer.Close();
                 }
             }

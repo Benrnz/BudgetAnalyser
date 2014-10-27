@@ -32,6 +32,6 @@ namespace BudgetAnalyser.Statement
         ///     Statement file format.
         ///     Saving and preserving bank statement files is not supported.
         /// </summary>
-        void Save(StatementModel statementModel);
+        Task SaveAsync(StatementModel statementModel);
     }
 }

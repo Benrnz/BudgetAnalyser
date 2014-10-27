@@ -8,6 +8,6 @@ namespace BudgetAnalyser.Engine.Statement
 
         Task<StatementModel> LoadAsync(string fileName);
 
-        void Save(StatementModel model, string fileName);
+        Task SaveAsync(StatementModel model, string fileName);
     }
 }
