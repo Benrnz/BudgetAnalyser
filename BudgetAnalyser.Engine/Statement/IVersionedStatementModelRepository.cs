@@ -1,10 +1,12 @@
-﻿namespace BudgetAnalyser.Engine.Statement
+﻿using System.Threading.Tasks;
+
+namespace BudgetAnalyser.Engine.Statement
 {
     public interface IVersionedStatementModelRepository
     {
-        bool IsValidFile(string fileName);
+        Task<bool> IsValidFileAsync(string fileName);
 
-        StatementModel Load(string fileName);
+        Task<StatementModel> LoadAsync(string fileName);
 
         void Save(StatementModel model, string fileName);
     }

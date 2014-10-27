@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Statement;
+﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Statement
 {
@@ -16,7 +17,7 @@ namespace BudgetAnalyser.Statement
         ///     Imports a bank statement file and merges it into an existing statement model. You cannot merge two Budget Analyser
         ///     Statement files.
         /// </summary>
-        StatementModel ImportAndMergeBankStatement(StatementModel statementModel, bool throwIfFileNotFound = false);
+        Task<StatementModel> ImportAndMergeBankStatementAsync(StatementModel statementModel, bool throwIfFileNotFound = false);
 
         /// <summary>
         ///     Loads either an existing Budget Analyser Statement file, or creates a new Budget Analyser Statement file from a
@@ -24,7 +25,7 @@ namespace BudgetAnalyser.Statement
         ///     file.
         /// </summary>
         /// <param name="fileName">Pass a known filename to load or null to prompt the user to choose a file.</param>
-        StatementModel LoadAnyStatementFile(string fileName);
+        Task<StatementModel> LoadAnyStatementFileAsync(string fileName);
 
         /// <summary>
         ///     Save the given statement model into a file. The file will be created or updated and will be a Budget Analyser

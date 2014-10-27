@@ -140,7 +140,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.initialised = true;
-            FileOperations.Initialise(Dispatcher, this);
+            FileOperations.Initialise(this);
             FileOperations.UpdateRecentFiles();
         }
 
@@ -196,7 +196,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
             if (!message.RehydratedModels.ContainsKey(typeof(LastStatementLoadedV1)))
             {
@@ -204,7 +204,7 @@ namespace BudgetAnalyser.Statement
             }
 
             var statementFileName = message.RehydratedModels[typeof(LastStatementLoadedV1)].AdaptModel<string>();
-            FileOperations.LoadStatementFromApplicationState(statementFileName);
+            await FileOperations.LoadStatementFromApplicationStateAsync(statementFileName);
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
@@ -216,7 +216,7 @@ namespace BudgetAnalyser.Statement
             message.PersistThisModel(lastStatement);
         }
 
-        private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
+        private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
             if (!message.ActiveBudget.BudgetActive)
             {
@@ -230,7 +230,7 @@ namespace BudgetAnalyser.Statement
             if (FileOperations.WaitingForBudgetToLoad != null)
             {
                 // We've been waiting for the budget to load so we can load previous statement.
-                FileOperations.LoadStatementFromApplicationState(FileOperations.WaitingForBudgetToLoad);
+                await FileOperations.LoadStatementFromApplicationStateAsync(FileOperations.WaitingForBudgetToLoad);
                 return;
             }
 

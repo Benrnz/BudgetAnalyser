@@ -4,14 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
 
@@ -23,7 +21,6 @@ namespace BudgetAnalyser.Statement
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementFileManager statementFileManager;
         private readonly IUiContext uiContext;
-        private Dispatcher dispatcher;
         private bool doNotUseLoadingData;
         private List<ICommand> recentFileCommands;
 
@@ -94,7 +91,7 @@ namespace BudgetAnalyser.Statement
 
         public ICommand OpenStatementCommand
         {
-            get { return new RelayCommand(() => OnOpenStatementExecute(null), CanExecuteOpenStatementCommand); }
+            get { return new RelayCommand(() => OnOpenStatementExecuteAsync(null), CanExecuteOpenStatementCommand); }
         }
 
         public ICommand RecentFile1Command
@@ -178,13 +175,12 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        internal void Initialise(Dispatcher currentDispatcher, StatementController controller)
+        internal void Initialise(StatementController controller)
         {
-            this.dispatcher = currentDispatcher;
             ViewModel.Initialise(controller);
         }
 
-        internal async void LoadStatementFromApplicationState(string statementFileName)
+        internal async Task LoadStatementFromApplicationStateAsync(string statementFileName)
         {
             try
             {
@@ -200,7 +196,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                await LoadInternal(statementFileName);
+                await LoadInternalAsync(statementFileName);
                 WaitingForBudgetToLoad = null;
             }
             catch (FileNotFoundException)
@@ -230,10 +226,9 @@ namespace BudgetAnalyser.Statement
             return !LoadingData;
         }
 
-        private async Task<bool> LoadInternal(string fullFileName)
+        private async Task<bool> LoadInternalAsync(string fullFileName)
         {
-            StatementModel statementModel = null;
-            await Task.Run(() => statementModel = this.statementFileManager.LoadAnyStatementFile(fullFileName));
+            StatementModel statementModel = await this.statementFileManager.LoadAnyStatementFileAsync(fullFileName);
 
             if (statementModel == null)
             {
@@ -242,22 +237,22 @@ namespace BudgetAnalyser.Statement
             }
 
             LoadingData = true;
-            await this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            //await this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            //{
+            // Update all UI bound properties.
+            ViewModel.Statement = statementModel;
+            var requestCurrentFilterMessage = new RequestFilterMessage(this);
+            MessengerInstance.Send(requestCurrentFilterMessage);
+            if (requestCurrentFilterMessage.Criteria != null)
             {
-                // Update all UI bound properties.
-                ViewModel.Statement = statementModel;
-                var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                MessengerInstance.Send(requestCurrentFilterMessage);
-                if (requestCurrentFilterMessage.Criteria != null)
-                {
-                    ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
-                }
+                ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
+            }
 
-                NotifyOfReset();
-                ViewModel.TriggerRefreshTotalsRow();
+            NotifyOfReset();
+            ViewModel.TriggerRefreshTotalsRow();
 
-                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-            });
+            MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+            //});
 
             LoadingData = false;
             return true;
@@ -284,58 +279,47 @@ namespace BudgetAnalyser.Statement
 
         private void OnDemoStatementCommandExecuted()
         {
-            OnOpenStatementExecute(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
+            OnOpenStatementExecuteAsync(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
         }
 
-        private void OnMergeStatementCommandExecute()
+        private async void OnMergeStatementCommandExecute()
         {
             Save();
             ViewModel.BucketFilter = null;
 
-            StatementModel additionalModel = null;
-            Task<StatementModel> loadModelTask = Task.Factory.StartNew(() => additionalModel = this.statementFileManager.ImportAndMergeBankStatement(ViewModel.Statement));
+            StatementModel additionalModel = await this.statementFileManager.ImportAndMergeBankStatementAsync(ViewModel.Statement);
 
-            IWaitCursor cursor = null;
-            loadModelTask.ContinueWith(t =>
+            try
             {
-                try
+                if (additionalModel == null)
                 {
-                    if (additionalModel == null)
-                    {
-                        // User cancelled.
-                        return;
-                    }
-
-                    this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () => cursor = this.uiContext.WaitCursorFactory());
-                    ViewModel.Statement.Merge(additionalModel);
-
-                    this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                    {
-                        RaisePropertyChanged(() => ViewModel);
-                        MessengerInstance.Send(new TransactionsChangedMessage());
-                        NotifyOfEdit();
-                        ViewModel.TriggerRefreshTotalsRow();
-                    });
+                    // User cancelled.
+                    return;
                 }
-                finally
+
+                ViewModel.Statement.Merge(additionalModel);
+
+                //this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                //{
+                RaisePropertyChanged(() => ViewModel);
+                MessengerInstance.Send(new TransactionsChangedMessage());
+                NotifyOfEdit();
+                ViewModel.TriggerRefreshTotalsRow();
+                //});
+            }
+            finally
+            {
+                //this.dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+                //{
+                if (additionalModel != null)
                 {
-                    this.dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-                    {
-                        if (cursor != null)
-                        {
-                            cursor.Dispose();
-                        }
-
-                        if (additionalModel != null)
-                        {
-                            MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-                        }
-                    });
+                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
                 }
-            });
+                //});
+            }
         }
 
-        private void OnOpenStatementExecute(string fullFileName)
+        private async void OnOpenStatementExecuteAsync(string fullFileName)
         {
             if (PromptToSaveIfDirty())
             {
@@ -343,41 +327,33 @@ namespace BudgetAnalyser.Statement
             }
 
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
-            Task<bool> task = LoadInternal(fullFileName);
-            task.ConfigureAwait(false);
-
-            // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
-            task.ContinueWith(t =>
+            try
             {
-                if (!t.IsFaulted && t.Result)
+                bool result = await LoadInternalAsync(fullFileName);
+
+                // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
+                if (result)
                 {
                     // Update RecentFile list for successfully loaded files only. 
                     UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.FileName));
                 }
-
-                if (t.IsFaulted && t.Exception != null)
+            }
+            catch (FileNotFoundException ex)
+            {
+                if (!string.IsNullOrWhiteSpace(ex.FileName))
                 {
-                    var fileNotFoundException = t.Exception.InnerExceptions.FirstOrDefault(e => e is FileNotFoundException) as FileNotFoundException;
-                    if (fileNotFoundException != null)
-                    {
-                        if (!string.IsNullOrWhiteSpace(fileNotFoundException.FileName))
-                        {
-                            // Remove the bad file that caused the exception from the RecentFiles list.
-                            UpdateRecentFiles(this.recentFileManager.Remove(fileNotFoundException.FileName));
-                        }
-                    }
+                    // Remove the bad file that caused the exception from the RecentFiles list.
+                    UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
                 }
-            });
+            }
         }
 
         private void OnSaveStatementExecute()
         {
+            // TODO reassess this
             // Not async at this stage, because saving of data while user edits are taking place will result in inconsistent results.
-            using (this.uiContext.WaitCursorFactory())
-            {
-                Save();
-                UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
-            }
+            Save();
+            UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
         }
 
         private bool PromptToSaveIfDirty()
@@ -405,7 +381,7 @@ namespace BudgetAnalyser.Statement
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
         {
             this.recentFileCommands =
-                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecute, x => CanExecuteOpenStatementCommand()))
+                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecuteAsync, x => CanExecuteOpenStatementCommand()))
                     .ToList();
             RaisePropertyChanged(() => RecentFile1Command);
             RaisePropertyChanged(() => RecentFile2Command);

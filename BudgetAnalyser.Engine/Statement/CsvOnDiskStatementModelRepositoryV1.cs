@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement.Data;
 using Rees.UserInteraction.Contracts;
@@ -64,10 +65,10 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public bool IsValidFile(string fileName)
+        public async Task<bool> IsValidFileAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
-            List<string> allLines = ReadLines(fileName, 2).ToList();
+            List<string> allLines = (await ReadLinesAsync(fileName, 2)).ToList();
             if (!VersionCheck(allLines))
             {
                 return false;
@@ -76,16 +77,16 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        public StatementModel Load(string fileName)
+        public async Task<StatementModel> LoadAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
 
-            if (!IsValidFile(fileName))
+            if (!(await IsValidFileAsync(fileName)))
             {
                 throw new VersionNotFoundException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
-            List<string> allLines = ReadLines(fileName).ToList();
+            List<string> allLines = (await ReadLinesAsync(fileName)).ToList();
             long totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
@@ -103,6 +104,7 @@ namespace BudgetAnalyser.Engine.Statement
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
         public void Save([NotNull] StatementModel model, string fileName)
         {
+            // TODO this should be async as well.
             if (model == null)
             {
                 throw new ArgumentNullException("model");
@@ -176,22 +178,24 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        protected virtual IEnumerable<string> ReadLines(string fileName)
+        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            return File.ReadLines(fileName);
+            // This will read the entire file then return the complete collection when done. 
+            // Given the file size is expected to be relatively small this is the fastest way to do this.  Excessive tasking actually results in poorer performance until file size 
+            // becomes large. 
+            return await Task.Run(() => File.ReadAllLines(fileName).ToList());
         }
 
-        protected virtual IEnumerable<string> ReadLines(string fileName, int lines)
+        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             var responseList = new List<string>();
-            using (FileStream stream = File.OpenRead(fileName))
+            using (var reader = File.OpenText(fileName))
             {
-                var reader = new StreamReader(stream);
                 try
                 {
                     for (int index = 0; index < lines; index++)
                     {
-                        string line = reader.ReadLine();
+                        string line = await reader.ReadLineAsync();
                         if (string.IsNullOrWhiteSpace(line))
                         {
                             break;

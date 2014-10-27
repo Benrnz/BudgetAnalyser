@@ -17,7 +17,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
-        private readonly Func<IWaitCursor> waitCursorFactory;
 
         private string ledgerBookFileName;
 
@@ -52,7 +51,6 @@ namespace BudgetAnalyser.LedgerBook
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
 
-            this.waitCursorFactory = uiContext.WaitCursorFactory;
             this.ledgerRepository = ledgerBookRepository;
             this.demoFileHelper = demoFileHelper;
             MessengerInstance = messenger;
@@ -159,26 +157,23 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            using (this.waitCursorFactory())
+            try
             {
-                try
+                if (!this.ledgerRepository.Exists(fileName))
                 {
-                    if (!this.ledgerRepository.Exists(fileName))
-                    {
-                        throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + fileName, fileName);
-                    }
+                    throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + fileName, fileName);
+                }
 
-                    ViewModel.LedgerBook = this.ledgerRepository.Load(fileName);
-                    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
-                }
-                catch (Engine.FileFormatException ex)
-                {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
-                }
-                catch (FileNotFoundException ex)
-                {
-                    this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
-                }
+                ViewModel.LedgerBook = this.ledgerRepository.Load(fileName);
+                MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
+            }
+            catch (Engine.FileFormatException ex)
+            {
+                this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
             }
         }
 

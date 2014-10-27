@@ -67,7 +67,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            bool result = subject.IsValidFile("Foo.foo");
+            bool result = subject.IsValidFileAsync("Foo.foo");
 
             Assert.IsFalse(result);
         }
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            bool result = subject.IsValidFile("Foo.foo");
+            bool result = subject.IsValidFileAsync("Foo.foo");
 
             Assert.IsTrue(result);
         }
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.IsNotNull(result);
         }
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual("Foo.foo", result.FileName);
         }
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
             Console.WriteLine(result.LastImport);
             Assert.AreEqual(new DateTime(2012, 08, 20), result.LastImport);
         }
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(0, result.AllTransactions.Count());
         }
@@ -127,7 +127,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(1, result.DurationInMonths);
         }
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(15, result.AllTransactions.Count());
         }
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel result = subject.Load("Foo.foo");
+            StatementModel result = subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(0, result.DurationInMonths);
         }
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectChecksum();
-            subject.Load("foo.foo");
+            subject.LoadAsync("foo.foo");
 
             Assert.Fail();
         }
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectDataTypeInRow1();
-            subject.Load("foo.foo");
+            subject.LoadAsync("foo.foo");
 
             Assert.Fail();
         }
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            subject.Load("Foo.foo");
+            subject.LoadAsync("Foo.foo");
 
             Assert.Fail();
         }
@@ -191,7 +191,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
 
-            StatementModel model = subject.Load(StatementDemoFile);
+            StatementModel model = subject.LoadAsync(StatementDemoFile);
 
             Assert.IsNotNull(model);
             Assert.AreEqual(33, model.AllTransactions.Count());

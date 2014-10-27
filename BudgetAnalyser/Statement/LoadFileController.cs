@@ -277,9 +277,9 @@ namespace BudgetAnalyser.Statement
             this.actionButtonReady = true;
         }
 
-        private void CheckFileName()
+        private async void CheckFileName()
         {
-            LastFileWasBudgetAnalyserStatementFile = this.statementModelRepository.IsValidFile(FileName);
+            LastFileWasBudgetAnalyserStatementFile = await this.statementModelRepository.IsValidFileAsync(FileName);
             if (LastFileWasBudgetAnalyserStatementFile ?? false)
             {
                 FileTypeSelectionReady = false;

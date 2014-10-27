@@ -31,15 +31,9 @@ namespace BudgetAnalyser
         private List<ControllerBase> controllers;
 
         public UiContext(
-            [NotNull] Func<IWaitCursor> waitCursorFactory,
             [NotNull] UserPrompts userPrompts,
             [NotNull] IMessenger messenger)
         {
-            if (waitCursorFactory == null)
-            {
-                throw new ArgumentNullException("waitCursorFactory");
-            }
-
             if (userPrompts == null)
             {
                 throw new ArgumentNullException("userPrompts");
@@ -50,7 +44,6 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("messenger");
             }
 
-            WaitCursorFactory = waitCursorFactory;
             UserPrompts = userPrompts;
             Messenger = messenger;
         }
@@ -98,7 +91,6 @@ namespace BudgetAnalyser
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
         public UserPrompts UserPrompts { get; private set; }
-        public Func<IWaitCursor> WaitCursorFactory { get; private set; }
 
         private List<ControllerBase> DiscoverAllControllers()
         {

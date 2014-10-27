@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
@@ -34,24 +35,24 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, IEnumerable<string>> ReadLinesOverride { get; set; }
 
-        protected override IEnumerable<string> ReadLines(string fileName)
+        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             if (ReadLinesOverride == null)
             {
-                return new List<string>();
+                return Task.FromResult<IEnumerable<string>>(new List<string>());
             }
 
-            return ReadLinesOverride(fileName);
+            return Task.FromResult(ReadLinesOverride(fileName));
         }
 
-        protected override IEnumerable<string> ReadLines(string fileName, int lines)
+        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             if (ReadLinesOverride == null)
             {
-                return new List<string>();
+                return Task.FromResult<IEnumerable<string>>(new List<string>());
             }
 
-            return ReadLinesOverride(fileName).Take(lines);
+            return Task.FromResult(ReadLinesOverride(fileName).Take(lines));
         }
     }
 }

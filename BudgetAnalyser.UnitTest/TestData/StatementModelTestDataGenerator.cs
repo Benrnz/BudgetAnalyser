@@ -22,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new TransactionSetDtoToStatementModelMapper(),
                 new StatementModelToTransactionSetDtoMapper());
 
-            var model = importer.Load(fileName);
+            var model = importer.LoadAsync(fileName);
 
             Console.WriteLine(@"
 /// <summary>THIS IS GENERATED CODE </summary>

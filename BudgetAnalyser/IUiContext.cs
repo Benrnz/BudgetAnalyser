@@ -1,8 +1,6 @@
-using System;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -20,6 +18,5 @@ namespace BudgetAnalyser
         IMessenger Messenger { get; }
         SplitTransactionController SplitTransactionController { get; }
         UserPrompts UserPrompts { get; }
-        Func<IWaitCursor> WaitCursorFactory { get; }
     }
 }

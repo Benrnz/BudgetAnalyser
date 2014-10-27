@@ -21,7 +21,6 @@ namespace BudgetAnalyser.ReportsCatalog
     public class ReportsCatalogController : ControllerBase, IShowableController
     {
         private readonly NewWindowViewLoader newWindowViewLoader;
-        private readonly Func<IDisposable> waitCursorFactory;
         private BudgetCollection budgets;
         private Engine.Ledger.LedgerBook currentLedgerBook;
         private StatementModel currentStatementModel;
@@ -40,7 +39,6 @@ namespace BudgetAnalyser.ReportsCatalog
             }
 
             this.newWindowViewLoader = newWindowViewLoader;
-            this.waitCursorFactory = uiContext.WaitCursorFactory;
             BudgetPieController = uiContext.BudgetPieController;
             LongTermSpendingGraphController = uiContext.LongTermSpendingGraphController;
             CurrentMonthBurnDownGraphsController = uiContext.CurrentMonthBurnDownGraphsController;
@@ -109,10 +107,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnBudgetPieCommandExecute()
         {
-            using (this.waitCursorFactory())
-            {
-                BudgetPieController.Load(this.budgets.CurrentActiveBudget);
-            }
+            BudgetPieController.Load(this.budgets.CurrentActiveBudget);
 
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 800;
@@ -136,10 +131,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnLongTermSpendingGraphCommandExecute()
         {
-            using (this.waitCursorFactory())
-            {
-                LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
-            }
+            LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
 
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
@@ -148,10 +140,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnOverallBudgetPerformanceCommandExecute()
         {
-            using (this.waitCursorFactory())
-            {
-                OverallPerformanceController.Load(this.currentStatementModel, this.budgets, RequestCurrentFilter());
-            }
+            OverallPerformanceController.Load(this.currentStatementModel, this.budgets, RequestCurrentFilter());
 
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 650;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 740;
@@ -160,10 +149,7 @@ namespace BudgetAnalyser.ReportsCatalog
 
         private void OnSpendingTrendCommandExecute()
         {
-            using (this.waitCursorFactory())
-            {
-                CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
-            }
+            CurrentMonthBurnDownGraphsController.Load(this.currentStatementModel, this.budgets.CurrentActiveBudget, RequestCurrentFilter(), this.currentLedgerBook);
 
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;

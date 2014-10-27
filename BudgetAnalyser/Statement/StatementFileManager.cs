@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Statement
         ///     Imports a bank statement file and merges it into an existing statement model. You cannot merge two Budget Analyser
         ///     Statement files.
         /// </summary>
-        public StatementModel ImportAndMergeBankStatement(StatementModel statementModel, bool throwIfFileNotFound = false)
+        public async Task<StatementModel> ImportAndMergeBankStatementAsync(StatementModel statementModel, bool throwIfFileNotFound = false)
         {
             var task = GetFileNameFromUser(OpenMode.Merge, statementModel);
             task.Wait();
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Statement
                 return null;
             }
 
-            return LoadAnyStatementFile(fileName);
+            return await LoadAnyStatementFileAsync(fileName);
         }
 
         /// <summary>
@@ -88,13 +88,11 @@ namespace BudgetAnalyser.Statement
         ///     file.
         /// </summary>
         /// <param name="fileName">Pass a known filename to load or null to prompt the user to choose a file.</param>
-        public StatementModel LoadAnyStatementFile(string fileName)
+        public async Task<StatementModel> LoadAnyStatementFileAsync(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                var task = GetFileNameFromUser(OpenMode.Open);
-                task.Wait();
-                fileName = task.Result;
+                fileName = await GetFileNameFromUser(OpenMode.Open);
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
                     // User cancelled
@@ -102,7 +100,7 @@ namespace BudgetAnalyser.Statement
                 }
             }
 
-            return LoadStatement(fileName);
+            return await LoadStatementAsync(fileName);
         }
 
         /// <summary>
@@ -148,7 +146,7 @@ namespace BudgetAnalyser.Statement
             return this.loadFileController.FileName;
         }
 
-        private StatementModel LoadStatement(string fullFileName)
+        private async Task<StatementModel> LoadStatementAsync(string fullFileName)
         {
             // TODO add generic UI to let user classify columns.
             try
@@ -157,21 +155,22 @@ namespace BudgetAnalyser.Statement
                 {
                     case null:
                         // Load File Controller was not called because a filename was already known, so check to see if file is a valid analyser file.
-                        if (this.statementModelRepository.IsValidFile(fullFileName))
+                        if (await this.statementModelRepository.IsValidFileAsync(fullFileName))
                         {
-                            return this.statementModelRepository.Load(fullFileName);
+                            return await this.statementModelRepository.LoadAsync(fullFileName);
                         }
                         break;
 
                     case true:
                         // Load File Controller was called and the file chosen was found to be a Budget Analyser statement file.
-                        return this.statementModelRepository.Load(fullFileName);
+                        return await this.statementModelRepository.LoadAsync(fullFileName);
                 }
 
                 // Anything not found to be a budget analyser statement file is given to the importer repository to see if it has any importer that
                 // can import the file.
                 if (this.importerRepository.CanImport(fullFileName))
                 {
+                    // TODO this should be async also
                     return this.importerRepository.Import(fullFileName, this.loadFileController.SelectedExistingAccountName);
                 }
 
