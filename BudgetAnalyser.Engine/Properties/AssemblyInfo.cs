@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("BudgetAnalyser.Engine")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The budget analyser engine library.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
 [assembly: AssemblyProduct("BudgetAnalyser.Engine")]

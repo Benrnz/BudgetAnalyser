@@ -167,11 +167,11 @@ namespace BudgetAnalyser.Statement
         internal StatementViewModel ViewModel { get; private set; }
         internal string WaitingForBudgetToLoad { get; private set; }
 
-        public void NotifyOfClosing()
+        public async void NotifyOfClosingAsync()
         {
             if (PromptToSaveIfDirty())
             {
-                Save();
+                await SaveAsync();
             }
         }
 
@@ -264,11 +264,11 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
         }
 
-        private void OnCloseStatementExecute()
+        private async void OnCloseStatementExecute()
         {
             if (PromptToSaveIfDirty())
             {
-                Save();
+                await SaveAsync();
             }
 
             ViewModel.Statement = null;
@@ -284,7 +284,7 @@ namespace BudgetAnalyser.Statement
 
         private async void OnMergeStatementCommandExecute()
         {
-            Save();
+            await SaveAsync();
             ViewModel.BucketFilter = null;
 
             StatementModel additionalModel = await this.statementFileManager.ImportAndMergeBankStatementAsync(ViewModel.Statement);
@@ -323,7 +323,7 @@ namespace BudgetAnalyser.Statement
         {
             if (PromptToSaveIfDirty())
             {
-                Save();
+                await SaveAsync();
             }
 
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
@@ -348,11 +348,10 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void OnSaveStatementExecute()
+        private async void OnSaveStatementExecute()
         {
-            // TODO reassess this
-            // Not async at this stage, because saving of data while user edits are taking place will result in inconsistent results.
-            Save();
+            // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
+            await SaveAsync(); 
             UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
         }
 
@@ -371,9 +370,9 @@ namespace BudgetAnalyser.Statement
             return false;
         }
 
-        private void Save()
+        private async Task SaveAsync()
         {
-            this.statementFileManager.SaveAsync(ViewModel.Statement);
+            await this.statementFileManager.SaveAsync(ViewModel.Statement);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
         }

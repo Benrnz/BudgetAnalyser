@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            Controller.FileOperations.NotifyOfClosing();
+            Controller.FileOperations.NotifyOfClosingAsync();
         }
 
         private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)

@@ -78,10 +78,9 @@
                    TextWrapping="Wrap"
                    Visibility="{Binding CreateMode, Converter={StaticResource Converter.BoolToVis}}">
             <Run>
-                Use this feature to add a new reconciliation to the ledger book. This will add a new line to the LedgerBook grid.
-                The date field is used to date the ledger book line and also to find transactions to include.
-                Transactions will be found by searching one month prior to the given date, excluding the given date.
-                The idea is to use your pay day as the date, and perform adding a reconciliation once per month.
+                Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month.
+                The date used will also be used to select transactions from the statement to calculate the ledger balance. 
+                Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated.
                 The bank balance is the balance as at the date given, after your pay has been credited.
             </Run>
         </TextBlock>

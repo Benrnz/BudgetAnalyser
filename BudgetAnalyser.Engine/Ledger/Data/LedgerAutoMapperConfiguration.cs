@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -82,8 +83,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
-                .ForMember(entry => entry.LedgerColumn, 
-                    m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }));
+                .ForMember(entry => entry.LedgerColumn,
+                    m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
+                .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));
