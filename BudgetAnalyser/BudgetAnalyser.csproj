@@ -309,11 +309,12 @@
     <Compile Include="Statement\SplitTransactionView.xaml.cs">
       <DependentUpon>SplitTransactionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementControllerFileOperations.cs" />
     <Compile Include="Statement\StatementControllerNavigation.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
     <Compile Include="Statement\IStatementFileManager.cs" />
-    <Compile Include="Statement\LastStatementLoadedV1.cs" />
+    <Compile Include="Statement\StatementApplicationStateV1.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
     <Compile Include="Statement\StatementController.cs" />
     <Compile Include="Statement\StatementFileManager.cs" />

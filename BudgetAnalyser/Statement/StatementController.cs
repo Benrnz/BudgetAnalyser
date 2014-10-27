@@ -198,22 +198,28 @@ namespace BudgetAnalyser.Statement
 
         private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof(LastStatementLoadedV1)))
+            if (!message.RehydratedModels.ContainsKey(typeof(StatementApplicationStateV1)))
             {
                 return;
             }
 
-            var statementFileName = message.RehydratedModels[typeof(LastStatementLoadedV1)].AdaptModel<string>();
-            await FileOperations.LoadStatementFromApplicationStateAsync(statementFileName);
+            var statementMetadata = ((StatementApplicationStateV1)message.RehydratedModels[typeof(StatementApplicationStateV1)]).StatementApplicationState;
+            await FileOperations.LoadStatementFromApplicationStateAsync(statementMetadata.FileName);
+            ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
+            OnSortCommandExecute();
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var lastStatement = new LastStatementLoadedV1
+            var statementMetadata = new StatementApplicationStateV1
             {
-                Model = ViewModel.Statement == null ? null : ViewModel.Statement.FileName,
+                StatementApplicationState = new StatementApplicationState
+                {
+                    FileName = ViewModel.Statement == null ? null : ViewModel.Statement.FileName,
+                    SortByBucket = ViewModel.SortByBucket,
+                }
             };
-            message.PersistThisModel(lastStatement);
+            message.PersistThisModel(statementMetadata);
         }
 
         private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
