@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
@@ -22,7 +23,6 @@ namespace BudgetAnalyser.LedgerBook
         private IEnumerable<AccountType> doNotUseBankAccounts;
         private decimal doNotUseBankBalance;
         private DateTime doNotUseDate;
-        private bool doNotUseDateEditable;
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
         private Engine.Ledger.LedgerBook parentBook;
@@ -138,16 +138,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool DateEditable
-        {
-            get { return this.doNotUseDateEditable; }
-            private set
-            {
-                this.doNotUseDateEditable = value;
-                RaisePropertyChanged(() => DateEditable);
-            }
-        }
-
         public bool Editable
         {
             get { return this.doNotUseEditable; }
@@ -197,11 +187,14 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.parentBook = ledgerBook;
-            Date = DateTime.Today;
             BankBalances = new ObservableCollection<BankBalance>();
             CreateMode = true;
             AddBalanceVisibility = true;
-            Editable = DateEditable = true;
+            Editable = true;
+
+            var requestFilterMessage = new RequestFilterMessage(this);
+            MessengerInstance.Send(requestFilterMessage);
+            Date = requestFilterMessage.Criteria.EndDate == null ? DateTime.Today : requestFilterMessage.Criteria.EndDate.Value.AddDays(1);
 
             ShowDialogCommon("New Monthly Reconciliation");
         }
@@ -228,7 +221,6 @@ namespace BudgetAnalyser.LedgerBook
             CreateMode = false;
             AddBalanceVisibility = false;
             Editable = isNewLine;
-            DateEditable = false;
 
             ShowDialogCommon(Editable ? "Edit Bank Balances" : "Bank Balances");
         }

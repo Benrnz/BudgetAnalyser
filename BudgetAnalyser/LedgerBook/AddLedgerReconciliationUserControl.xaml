@@ -15,16 +15,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Date:" />
-            <DatePicker x:Name="ReconDate"
-                        CalendarStyle="{StaticResource CalendarStyle}"
-                        DisplayDate="{Binding Date, StringFormat=d}"
-                        IsEnabled="{Binding DateEditable}"
-                        SelectedDate="{Binding Date}"
-                        VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Date, StringFormat=d}"
+                       VerticalAlignment="Center" />
             <TextBlock Margin="20,2,2,2"
                        Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Bank Balance:"
@@ -42,12 +39,15 @@
             <Button Command="{Binding AddBankBalanceCommand}"
                     Click="OnAddBankBalanceClick"
                     Style="{StaticResource Button.Round.Add}"
-                    ToolTip="Add Bank Balance" />
+                    ToolTip="Add Bank Balance" 
+                    Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}"/>
         </StackPanel>
+        
         <Border Background="{StaticResource Brush.MainBackground}"
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.Column="1"
+                Grid.Row="0"
                 Margin="5,0,5,10"
                 MinHeight="40"
                 VerticalAlignment="Top">
@@ -57,11 +57,13 @@
                               Margin="5" />
             </ScrollViewer>
         </Border>
+        
         <Border BorderBrush="{StaticResource Brush.Text.Default}"
                 BorderThickness="0,2,0,0"
                 Grid.Column="1"
                 Grid.Row="1"
                 HorizontalAlignment="Right"
+                Margin="0,0,5,0"
                 Width="120">
             <Border BorderBrush="{StaticResource Brush.Text.Default}"
                     BorderThickness="0,2,0,0"
@@ -70,6 +72,7 @@
                            Text="{Binding BankBalanceTotal, StringFormat=N}" />
             </Border>
         </Border>
+        
         <TextBlock Grid.Column="0"
                    Grid.Row="1"
                    Margin="10,30,10,10"
@@ -80,6 +83,7 @@
             <Run>
                 Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month.
                 The date used will also be used to select transactions from the statement to calculate the ledger balance. 
+                The date is set from the current date range filter (on the dashboard page), using the day after the end date.
                 Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated.
                 The bank balance is the balance as at the date given, after your pay has been credited.
             </Run>

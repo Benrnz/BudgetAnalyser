@@ -34,7 +34,8 @@
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
-                    ToolTip="Add new transaction" />
+                    ToolTip="Add new transaction" 
+                    Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

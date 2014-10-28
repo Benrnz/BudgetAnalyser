@@ -34,7 +34,7 @@ namespace BudgetAnalyser.LedgerBook
                 var visible = (bool)e.NewValue;
                 if (visible)
                 {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.ReconDate.Focus());
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.BankBalance.Focus());
                 }
             }
         }
