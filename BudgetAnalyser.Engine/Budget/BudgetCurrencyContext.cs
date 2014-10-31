@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
-    ///     A transient wrapper class to indicate a budget's active state in relation to other budgets in the collection.
+    ///     A transient helper wrapper class to indicate a budget's active state in relation to other budgets in the
+    ///     collection.
     ///     This class will tell you if a budget is active, future dated, or has past and is archived.
+    ///     This class has no state of its own it calculates all of its properties.
     /// </summary>
     public class BudgetCurrencyContext : IBudgetCurrencyContext
     {
-        private readonly BudgetCollection budgets;
-
         /// <summary>
-        /// Creates a new instance of the <see cref="BudgetCurrencyContext"/> class.
+        ///     Creates a new instance of the <see cref="BudgetCurrencyContext" /> class.
         /// </summary>
         /// <param name="budgets">The collection of available budgets loaded.</param>
-        /// <param name="budget">The currently selected budget. This isn't necessarily the current one compared with today's date. Can be any in the <paramref name="budgets"/> collection.</param>
+        /// <param name="budget">
+        ///     The currently selected budget. This isn't necessarily the current one compared with today's date.
+        ///     Can be any in the <paramref name="budgets" /> collection.
+        /// </param>
         public BudgetCurrencyContext([NotNull] BudgetCollection budgets, [NotNull] BudgetModel budget)
         {
             if (budgets == null)
@@ -30,7 +32,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("budget");
             }
 
-            this.budgets = budgets;
+            BudgetCollection = budgets;
             Model = budget;
 
             if (budgets.IndexOf(budget) < 0)
@@ -44,24 +46,26 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         public bool BudgetActive
         {
-            get { return this.budgets.IsCurrentBudget(Model); }
+            get { return BudgetCollection.IsCurrentBudget(Model); }
         }
 
         public bool BudgetArchived
         {
-            get { return this.budgets.IsArchivedBudget(Model); }
+            get { return BudgetCollection.IsArchivedBudget(Model); }
         }
+
+        public BudgetCollection BudgetCollection { get; private set; }
 
         public bool BudgetInFuture
         {
-            get { return this.budgets.IsFutureBudget(Model); }
+            get { return BudgetCollection.IsFutureBudget(Model); }
         }
 
         public DateTime? EffectiveUntil
         {
             get
             {
-                int myIndex = this.budgets.IndexOf(Model);
+                int myIndex = BudgetCollection.IndexOf(Model);
                 if (myIndex == 0)
                 {
                     // There is no superceding budget, so this budget is effective indefinitely (no expiry date).
@@ -69,14 +73,14 @@ namespace BudgetAnalyser.Engine.Budget
                     return null;
                 }
 
-                BudgetModel nextBudget = this.budgets[myIndex - 1];
+                BudgetModel nextBudget = BudgetCollection[myIndex - 1];
                 return nextBudget.EffectiveFrom;
             }
         }
 
         public string FileName
         {
-            get { return this.budgets.FileName; }
+            get { return BudgetCollection.FileName; }
         }
 
         public virtual BudgetModel Model { get; private set; }

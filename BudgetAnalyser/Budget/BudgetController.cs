@@ -9,6 +9,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Services;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
@@ -23,14 +24,14 @@ namespace BudgetAnalyser.Budget
     {
         private const string CloseBudgetMenuName = "Close _Budget";
         private const string EditBudgetMenuName = "Edit Current _Budget";
-        private readonly IBudgetBucketRepository bucketRepo;
 
-        private readonly IBudgetRepository budgetRepository;
         private readonly DemoFileHelper demoFileHelper;
+        private readonly IBudgetMaintenanceService maintenanceService;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
         private readonly IUserMessageBox messageBox;
+        private readonly List<BudgetBucket> newBuckets = new List<BudgetBucket>();
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
         private Guid dialogCorrelationId;
@@ -44,16 +45,10 @@ namespace BudgetAnalyser.Budget
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
-            [NotNull] IBudgetRepository budgetRepository,
             [NotNull] UiContext uiContext,
-            [NotNull] DemoFileHelper demoFileHelper,
-            [NotNull] IBudgetBucketRepository bucketRepo)
+            [NotNull] DemoFileHelper demoFileHelper, 
+            [NotNull] IBudgetMaintenanceService maintenanceService)
         {
-            if (budgetRepository == null)
-            {
-                throw new ArgumentNullException("budgetRepository");
-            }
-
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
@@ -63,15 +58,14 @@ namespace BudgetAnalyser.Budget
             {
                 throw new ArgumentNullException("demoFileHelper");
             }
-
-            if (bucketRepo == null)
+            
+            if (maintenanceService == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException("maintenanceService");
             }
 
             this.demoFileHelper = demoFileHelper;
-            this.bucketRepo = bucketRepo;
-            this.budgetRepository = budgetRepository;
+            this.maintenanceService = maintenanceService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.fileOpenDialogFactory = uiContext.UserPrompts.OpenFileFactory;
@@ -85,8 +79,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
 
-            var budget = new BudgetModel();
-            CurrentBudget = new BudgetCurrencyContext(new BudgetCollection(new[] { budget }), budget);
+            CurrentBudget = this.maintenanceService.CreateNewBudgetCollection();
         }
 
         public ICommand AddNewExpenseCommand
@@ -255,23 +248,17 @@ namespace BudgetAnalyser.Budget
             return Path.Combine(path, "BudgetModel.xml");
         }
 
-        private List<BudgetBucket> newBuckets = new List<BudgetBucket>();
-
         protected virtual bool SaveBudgetCollection()
         {
-            string input = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
-            if (input == null)
+            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+            if (comment == null)
             {
                 return false;
             }
 
-            CurrentBudget.Model.LastModifiedComment = input;
-            CurrentBudget.Model.LastModified = DateTime.Now;
-            
-            newBuckets.ForEach(b => this.bucketRepo.GetOrCreateNew(b.Code, () => b));
-            newBuckets.Clear();
+            this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
+            this.newBuckets.Clear();
 
-            this.budgetRepository.Save(Budgets);
             return true;
         }
 
@@ -326,9 +313,9 @@ namespace BudgetAnalyser.Budget
             try
             {
                 this.loading = true;
-                Budgets = this.budgetRepository.Load(fileName);
-                BudgetBucketBindingSource.BucketRepository = this.budgetRepository.BudgetBucketRepository;
-                CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
+                CurrentBudget = this.maintenanceService.LoadBudgetsCollection(fileName);
+                Budgets = CurrentBudget.BudgetCollection;
+                BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
                 RaisePropertyChanged(() => TruncatedFileName);
                 if (CurrentBudget != null)
                 {
@@ -353,8 +340,11 @@ namespace BudgetAnalyser.Budget
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             this.dirty = true;
-            Expense newExpense = Expenses.AddNew();
+            Expense newExpense = Expenses.AddNew(); 
             newExpense.Amount = 0;
+
+            // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
+            // If it was used, the same instance would overwritten each time an expense is created.
             if (expense is SpentMonthlyExpenseBucket)
             {
                 newExpense.Bucket = new SpentMonthlyExpenseBucket(string.Empty, string.Empty);
@@ -372,7 +362,9 @@ namespace BudgetAnalyser.Budget
                 throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
             }
 
+            // With every new expense created we need to create a new bucket.
             this.newBuckets.Add(newExpense.Bucket);
+
             Expenses.RaiseListChangedEvents = true;
             newExpense.PropertyChanged += OnExpenseAmountPropertyChanged;
         }
@@ -567,10 +559,9 @@ namespace BudgetAnalyser.Budget
 
         private bool SaveBudgetModel()
         {
-            // Copy view model bound data back into model.
-            CurrentBudget.Model.Update(Incomes, Expenses);
             var validationMessages = new StringBuilder();
-            if (!Budgets.Validate(validationMessages))
+            bool valid = this.maintenanceService.UpdateAndValidateBudget(CurrentBudget.Model, Incomes, Expenses, validationMessages);
+            if (!valid)
             {
                 this.messageBox.Show(validationMessages.ToString(), "Unable to save, some data is invalid");
                 return false;
@@ -579,18 +570,6 @@ namespace BudgetAnalyser.Budget
             if (SaveBudgetCollection())
             {
                 this.dirty = false;
-                foreach (Income income in CurrentBudget.Model.Incomes)
-                {
-                    Income incomeCopy = income;
-                    this.bucketRepo.GetOrCreateNew(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
-                }
-
-                foreach (Expense expense in CurrentBudget.Model.Expenses)
-                {
-                    Expense expenseCopy = expense;
-                    this.bucketRepo.GetOrCreateNew(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
-                }
-
                 return true;
             }
 
@@ -623,8 +602,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            bool valid = ValidateAndSaveIfRequired();
-            if (valid)
+            if (ValidateAndSaveIfRequired())
             {
                 if (CurrentBudget.Model != Budgets.CurrentActiveBudget)
                 {

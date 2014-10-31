@@ -54,6 +54,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
         {
+            // TODO this can be made internal when services are copied into this library.
             Incomes = incomes.ToList();
             Expenses = expenses.ToList();
             LastModified = DateTime.Now;

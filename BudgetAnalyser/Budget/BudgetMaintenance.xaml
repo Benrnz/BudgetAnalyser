@@ -1,7 +1,6 @@
 <UserControl x:Class="BudgetAnalyser.Budget.BudgetMaintenance"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
-             xmlns:converters1="clr-namespace:BudgetAnalyser.Converters"
              xmlns:views1="clr-namespace:BudgetAnalyser.Budget"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DataContextChanged="OnDataContextChanged">
