@@ -36,9 +36,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldMapBankAccount()
+        public void ShouldMapBankBalanceAdjustment()
         {
-            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.BankAccount.Name);
+            Assert.Inconclusive();
         }
 
         [TestMethod]
@@ -62,8 +62,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerTransaction>(TestData);
         }
     }

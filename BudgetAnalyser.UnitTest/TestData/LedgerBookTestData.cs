@@ -428,22 +428,22 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = savingsAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount", },
                     }),
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount", },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut", },
                     }),
                     CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount", },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill", },
                     }),
                     CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount", },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones", },
                     })
                 }),
             };
@@ -461,21 +461,21 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = savingsAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill",  },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones",  },
                     })
                 }));
 
@@ -491,21 +491,21 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = savingsAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill",  },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount", BankAccount = chequeAccount },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones", BankAccount = chequeAccount },
+                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones",  },
                     })
                 });
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.").WithAccountType(chequeAccount);

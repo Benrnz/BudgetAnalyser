@@ -51,14 +51,20 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary for the mapping in this namespace")]
         public void RegisterMappings()
         {
-            Mapper.CreateMap<LedgerTransaction, LedgerTransactionDto>()
-                .ForMember(dto => dto.AccountType, m => m.MapFrom(transaction => transaction.BankAccount.Name))
-                .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName));
+            Mapper.CreateMap<BankBalanceAdjustmentTransaction, LedgerTransactionDto>()
+                .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName))
+                .ForMember(dto => dto.AccountType, m => m.MapFrom(transaction => transaction.BankAccount.Name));
 
-            Mapper.CreateMap<LedgerTransactionDto, LedgerTransaction>()
-                .ConstructUsing(dto => this.ledgerTransactionFactory.Build(dto.TransactionType, dto.Id))
+            Mapper.CreateMap<LedgerTransactionDto, BankBalanceAdjustmentTransaction>()
                 .ForMember(transaction => transaction.BankAccount,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.AccountType) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
+
+            Mapper.CreateMap<LedgerTransaction, LedgerTransactionDto>()
+                .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName))
+                .ForMember(dto => dto.AccountType, m => m.Ignore());
+
+            Mapper.CreateMap<LedgerTransactionDto, LedgerTransaction>()
+                .ConstructUsing(dto => this.ledgerTransactionFactory.Build(dto.TransactionType, dto.Id));
 
             Mapper.CreateMap<BankBalance, BankBalanceDto>()
                 .ForMember(dto => dto.Account, m => m.MapFrom(bankBalance => bankBalance.Account.Name));

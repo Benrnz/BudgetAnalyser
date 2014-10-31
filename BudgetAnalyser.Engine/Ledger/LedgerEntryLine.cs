@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine : IModelValidate
     {
-        private List<LedgerTransaction> bankBalanceAdjustments = new List<LedgerTransaction>();
+        private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments = new List<BankBalanceAdjustmentTransaction>();
         private List<BankBalance> bankBalancesList;
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     reconciliation.
         ///     Most commonly this is a credit card payment once the user has ascertained how much surplus they have.
         /// </summary>
-        public IEnumerable<LedgerTransaction> BankBalanceAdjustments
+        public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
             [UsedImplicitly] private set { this.bankBalanceAdjustments = value.ToList(); }
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal bool IsNew { get; private set; }
 
-        public LedgerTransaction BalanceAdjustment(decimal adjustment, string narrative)
+        public BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
         {
             if (!IsNew)
             {
@@ -134,22 +134,14 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
             }
 
-            LedgerTransaction newAdjustment;
+            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative };
             if (adjustment < 0)
             {
-                newAdjustment = new DebitLedgerTransaction
-                {
-                    Debit = -adjustment,
-                    Narrative = narrative,
-                };
+                newAdjustment.Debit = -adjustment; // This value is entered in the UI as a negative value, so negating it turns it into a positive value.
             }
             else
             {
-                newAdjustment = new CreditLedgerTransaction
-                {
-                    Credit = adjustment,
-                    Narrative = narrative,
-                };
+                newAdjustment.Credit = adjustment;
             }
 
             this.bankBalanceAdjustments.Add(newAdjustment);
@@ -163,7 +155,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            LedgerTransaction txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
+            BankBalanceAdjustmentTransaction txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.bankBalanceAdjustments.Remove(txn);
@@ -342,7 +334,6 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             return new DebitLedgerTransaction(t.Id)
                             {
-                                BankAccount = t.AccountType,
                                 Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
                                 Narrative = ExtractNarrative(t),
                             };
@@ -350,7 +341,6 @@ namespace BudgetAnalyser.Engine.Ledger
 
                         return new CreditLedgerTransaction(t.Id)
                         {
-                            BankAccount = t.AccountType,
                             Credit = t.Amount,
                             Narrative = ExtractNarrative(t),
                         };

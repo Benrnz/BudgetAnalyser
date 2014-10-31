@@ -129,6 +129,7 @@
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
+    <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerColumnDto.cs" />

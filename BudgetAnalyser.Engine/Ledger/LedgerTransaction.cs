@@ -5,7 +5,6 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    //TODO Extract a specific subclass transaction type. This will allow removal of BankAccount from this base class.
     public abstract class LedgerTransaction
     {
         protected LedgerTransaction()
@@ -17,13 +16,6 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             Id = id;
         }
-
-        /// <summary>
-        /// Gets or sets the Bank Account for this transaction.  
-        /// It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
-        /// In the case of <see cref="LedgerEntry"/> transactions it is set by the <see cref="LedgerEntry.LedgerColumn"/>.
-        /// </summary>
-        public AccountType BankAccount { get; internal set; }
 
         /// <summary>
         ///     Gets the amount of the credit value.
@@ -46,17 +38,6 @@ namespace BudgetAnalyser.Engine.Ledger
         public Guid Id { get; private set; }
 
         public string Narrative { get; internal set; }
-
-        public LedgerTransaction WithAccountType([NotNull] AccountType accountType)
-        {
-            if (accountType == null)
-            {
-                throw new ArgumentNullException("accountType");
-            }
-
-            this.BankAccount = accountType;
-            return this;
-        }
 
         public virtual LedgerTransaction WithAmount(decimal amount)
         {

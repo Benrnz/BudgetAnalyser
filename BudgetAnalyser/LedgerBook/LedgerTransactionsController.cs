@@ -371,7 +371,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            LedgerTransaction newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
+            BankBalanceAdjustmentTransaction newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
                 .WithAccountType(NewTransactionAccountType);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
@@ -401,8 +401,6 @@ namespace BudgetAnalyser.LedgerBook
                     {
                         newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
                     }
-
-                    newTransaction.WithAccountType(LedgerEntry.LedgerColumn.StoredInAccount);
 
                     LedgerEntry.AddTransaction(newTransaction);
                     ShownTransactions.Add(newTransaction);
