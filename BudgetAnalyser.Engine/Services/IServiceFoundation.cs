@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Services
+﻿namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     A UI Service is a service that marshalls and returns data to and encapsulates business functionality.

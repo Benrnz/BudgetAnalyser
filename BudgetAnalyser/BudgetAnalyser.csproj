@@ -214,9 +214,6 @@
     <Compile Include="ScratchPad.xaml.cs">
       <DependentUpon>ScratchPad.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\BudgetMaintenanceService.cs" />
-    <Compile Include="Services\IBudgetMaintenanceService.cs" />
-    <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="ShellPersistentStateV1.cs" />
     <Compile Include="LedgerBook\BankBalanceUserControl.xaml.cs">
       <DependentUpon>BankBalanceUserControl.xaml</DependentUpon>

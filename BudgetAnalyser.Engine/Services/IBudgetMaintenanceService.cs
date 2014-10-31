@@ -2,7 +2,7 @@
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Services
+namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     /// A service to maintain the full collection of budgets.

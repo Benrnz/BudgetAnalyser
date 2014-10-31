@@ -70,9 +70,7 @@ namespace BudgetAnalyser.Statement
         /// </summary>
         public async Task<StatementModel> ImportAndMergeBankStatementAsync(StatementModel statementModel, bool throwIfFileNotFound = false)
         {
-            var task = GetFileNameFromUser(OpenMode.Merge, statementModel);
-            task.Wait();
-            var fileName = task.Result;
+            var fileName = await GetFileNameFromUser(OpenMode.Merge, statementModel);
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 // User cancelled

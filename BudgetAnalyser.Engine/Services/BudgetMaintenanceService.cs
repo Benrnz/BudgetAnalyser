@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.Services
+namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     A service to provide maintenance support for budget models and collections.
@@ -38,7 +37,7 @@ namespace BudgetAnalyser.Services
             }
 
             this.budgetRepository = budgetRepository;
-            BudgetBucketRepository = bucketRepo;
+            this.BudgetBucketRepository = bucketRepo;
         }
 
         /// <summary>
@@ -99,13 +98,13 @@ namespace BudgetAnalyser.Services
             foreach (Income income in modifiedBudget.Incomes)
             {
                 Income incomeCopy = income;
-                BudgetBucketRepository.GetOrCreateNew(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
+                this.BudgetBucketRepository.GetOrCreateNew(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
             }
 
             foreach (Expense expense in modifiedBudget.Expenses)
             {
                 Expense expenseCopy = expense;
-                BudgetBucketRepository.GetOrCreateNew(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
+                this.BudgetBucketRepository.GetOrCreateNew(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
             }
         }
 
