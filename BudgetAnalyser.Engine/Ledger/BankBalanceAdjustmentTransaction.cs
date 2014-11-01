@@ -9,6 +9,14 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class BankBalanceAdjustmentTransaction : LedgerTransaction
     {
+        public BankBalanceAdjustmentTransaction() : base()
+        {
+        }
+
+        public BankBalanceAdjustmentTransaction(Guid id) : base(id)
+        {
+        }
+
         /// <summary>
         /// Gets or sets the Bank Account for this transaction.  
         /// It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.

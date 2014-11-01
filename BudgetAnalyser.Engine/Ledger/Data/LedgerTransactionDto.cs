@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     /// <summary>
-    /// A Dto for <see cref="LedgerTransaction"/>
+    /// A Dto for all subclasses of <see cref="LedgerTransaction"/>.  All subclasses are flattened into this type.
     /// </summary>
     public class LedgerTransactionDto
     {
