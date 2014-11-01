@@ -23,9 +23,6 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
         private decimal doNotUseNewTransactionAmount;
-        private bool doNotUseNewTransactionIsCredit;
-        private bool doNotUseNewTransactionIsDebit;
-        private bool doNotUseNewTransactionIsReversal;
         private string doNotUseNewTransactionNarrative;
         private bool doNotUseShowAddingNewTransactionPanel;
         private string doNotUseTitle;
@@ -112,36 +109,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool NewTransactionIsCredit
-        {
-            get { return this.doNotUseNewTransactionIsCredit; }
-            set
-            {
-                this.doNotUseNewTransactionIsCredit = value;
-                RaisePropertyChanged(() => NewTransactionIsCredit);
-            }
-        }
-
-        public bool NewTransactionIsDebit
-        {
-            get { return this.doNotUseNewTransactionIsDebit; }
-            set
-            {
-                this.doNotUseNewTransactionIsDebit = value;
-                RaisePropertyChanged(() => NewTransactionIsDebit);
-            }
-        }
-
-        public bool NewTransactionIsReversal
-        {
-            get { return this.doNotUseNewTransactionIsReversal; }
-            set
-            {
-                this.doNotUseNewTransactionIsReversal = value;
-                RaisePropertyChanged(() => NewTransactionIsReversal);
-            }
-        }
-
         public string NewTransactionNarrative
         {
             get { return this.doNotUseNewTransactionNarrative; }
@@ -176,7 +143,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public decimal TransactionsTotal
         {
-            get { return ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Credit - t.Debit); }
+            get { return ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Amount); }
         }
 
         public ICommand ZeroNetAmountCommand
@@ -320,15 +287,11 @@ namespace BudgetAnalyser.LedgerBook
 
             if (LedgerEntry.NetAmount > 0)
             {
-                NewTransactionIsDebit = true;
-                NewTransactionIsCredit = false;
                 NewTransactionNarrative = "Zero the remainder - don't accumulate credits";
                 NewTransactionAmount = LedgerEntry.NetAmount;
             }
             else
             {
-                NewTransactionIsDebit = false;
-                NewTransactionIsCredit = true;
                 NewTransactionNarrative = "Zero the remainder - supplement shortfall from surplus";
                 NewTransactionAmount = -LedgerEntry.NetAmount;
             }
@@ -342,9 +305,6 @@ namespace BudgetAnalyser.LedgerBook
             LedgerEntry = null;
             // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             NewTransactionAmount = 0;
-            NewTransactionIsCredit = false;
-            NewTransactionIsDebit = true;
-            NewTransactionIsReversal = false;
             NewTransactionNarrative = null;
             NewTransactionAccountType = null;
         }
@@ -381,30 +341,10 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                if (NewTransactionIsCredit || NewTransactionIsDebit)
-                {
-                    LedgerTransaction newTransaction;
-                    if (NewTransactionIsCredit)
-                    {
-                        newTransaction = new CreditLedgerTransaction();
-                    }
-                    else
-                    {
-                        newTransaction = new DebitLedgerTransaction();
-                    }
-
-                    if (NewTransactionIsReversal)
-                    {
-                        newTransaction.WithReversal(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
-                    }
-                    else
-                    {
-                        newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
-                    }
-
-                    LedgerEntry.AddTransaction(newTransaction);
-                    ShownTransactions.Add(newTransaction);
-                }
+                LedgerTransaction newTransaction = new CreditLedgerTransaction();
+                newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
+                LedgerEntry.AddTransaction(newTransaction);
+                ShownTransactions.Add(newTransaction);
             }
             catch (ArgumentException)
             {

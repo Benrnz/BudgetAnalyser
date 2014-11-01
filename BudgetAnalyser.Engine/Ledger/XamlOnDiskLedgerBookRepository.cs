@@ -172,7 +172,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 return dataEntity.DatedEntries.Sum(l =>
                     (double)l.LedgerBalance
-                    + l.BankBalanceAdjustments.Sum(b => (double)b.Credit - (double)b.Debit)
+                    + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
                     + l.Entries.Sum(e => (double)e.Balance));
             }
         }

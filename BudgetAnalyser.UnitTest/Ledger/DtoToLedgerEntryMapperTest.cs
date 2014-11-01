@@ -26,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
               <LedgerEntryDto.Transactions>
                 <scg:List x:TypeArguments="LedgerTransactionDto" Capacity="4">
                   <LedgerTransactionDto AccountType="{x:Null}" Credit="140" Debit="0" Id="601d77e5-63d5-479c-a0e5-d56a18c975f1" Narrative="Budgeted amount" TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
-                  <LedgerTransactionDto AccountType="{x:Null}" Credit="0" Debit="98.56" Id="450f9b46-010a-4508-afc5-d46042c80d02" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                  <LedgerTransactionDto AccountType="{x:Null}" Credit="0" Debit="98.56" Id="450f9b46-010a-4508-afc5-d46042c80d02" Narrative="Power bill" TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
                 </scg:List>
               </LedgerEntryDto.Transactions>
             </LedgerEntryDto>                 */
@@ -39,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                         new LedgerTransactionDto
                         {
                             AccountType = StatementModelTestData.ChequeAccount.Name,
-                            Credit = 140M,
+                            Amount = 140M,
                             Id = Guid.NewGuid(),
                             Narrative = "Foo...",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
@@ -47,10 +47,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
                         new LedgerTransactionDto
                         {
                             AccountType = StatementModelTestData.ChequeAccount.Name,
-                            Debit = 98.56M,
+                            Amount = -98.56M,
                             Id = Guid.NewGuid(),
                             Narrative = "Bar...",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         },
                     },
                 };

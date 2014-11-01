@@ -52,7 +52,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Console.WriteLine("Balance Adjustments:");
             foreach (var adjustment in Subject.BankBalanceAdjustments)
             {
-                Console.WriteLine("    {0} {1} {2:N}", adjustment.BankAccount.Name, adjustment.Narrative, adjustment.Credit - adjustment.Debit);
+                Console.WriteLine("    {0} {1} {2:N}", adjustment.BankAccount.Name, adjustment.Narrative, adjustment.Amount);
             }
             Console.WriteLine("    ========================");
             Console.WriteLine("TotalBalanceAdjustments: " + Subject.TotalBalanceAdjustments);

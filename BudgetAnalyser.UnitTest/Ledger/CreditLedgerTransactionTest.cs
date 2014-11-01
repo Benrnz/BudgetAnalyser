@@ -17,13 +17,13 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void WithAmount50ShouldAZeroDebitAmount()
+        public void WithAmountMinus50ShouldCreateADebitOf50()
         {
             var subject = new CreditLedgerTransaction();
 
-            LedgerTransaction result = subject.WithAmount(50);
+            LedgerTransaction result = subject.WithAmount(-50);
 
-            Assert.AreEqual(0M, result.Debit);
+            Assert.AreEqual(-50M, result.Amount);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             LedgerTransaction result = subject.WithAmount(50);
 
-            Assert.AreEqual(50M, result.Credit);
+            Assert.AreEqual(50M, result.Amount);
         }
 
         [TestMethod]
@@ -42,36 +42,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var subject = new CreditLedgerTransaction();
 
             LedgerTransaction result = subject.WithAmount(50);
-
-            Assert.AreSame(subject, result);
-        }
-
-        [TestMethod]
-        public void WithReversal50ShouldAZeroDebitAmount()
-        {
-            var subject = new CreditLedgerTransaction();
-
-            LedgerTransaction result = subject.WithReversal(50);
-
-            Assert.AreEqual(0M, result.Debit);
-        }
-
-        [TestMethod]
-        public void WithReversal50ShouldCreateANegativeCreditOf50()
-        {
-            var subject = new CreditLedgerTransaction();
-
-            LedgerTransaction result = subject.WithReversal(50);
-
-            Assert.AreEqual(-50M, result.Credit);
-        }
-
-        [TestMethod]
-        public void WithReversal50ShouldReturnSameObjectForChaining()
-        {
-            var subject = new CreditLedgerTransaction();
-
-            LedgerTransaction result = subject.WithReversal(50);
 
             Assert.AreSame(subject, result);
         }

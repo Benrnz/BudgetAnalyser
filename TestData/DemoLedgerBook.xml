@@ -21,17 +21,15 @@ It is used in conjunction with that C# test class for unit testing.
           <scg:List x:TypeArguments="LedgerTransactionDto"
                     Capacity="4">
             <LedgerTransactionDto AccountType="CHEQUE" 
-                                  Credit="0"
-                                  Debit="100"
+                                  Amount="-100"
                                   Id="e70314e0-aaab-455a-90d8-b0d456e4de6a"
                                   Narrative="Visa payment, not yet reflected in bank balance."
-                                  TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                  TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
             <LedgerTransactionDto AccountType="CHEQUE" 
-                                  Credit="0"
-                                  Debit="50"
+                                  Amount="-50"
                                   Id="bc344b4a-6ff7-4511-90d1-bdea709034ce"
                                   Narrative="Savings yet to go out not reflected in bank balance"
-                                  TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                  TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
           </scg:List>
         </LedgerEntryLineDto.BankBalanceAdjustments>
 
@@ -44,20 +42,17 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="4">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="37.00"
-                                        Debit="0"
+                                        Amount="37.00"
                                         Id="b050ccf4-2f6f-413d-ae9d-dbfe1ca6c39e"
                                         Narrative="Budgeted Amount"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="0"
-                                        Debit="34.17"
+                                        Amount="-34.17"
                                         Id="500debc5-7f72-4071-be68-1961b7341fb2"
                                         Narrative="Watercare Services"
-                                        TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                        TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Debit="2.83"
-                                        Credit="0"
+                                        Amount="-2.83"
                                         Id="2bf7a802-8de5-49b8-bac4-e43a2c812070"
                                         Narrative="Zero the remainder - no need to accumulate."
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
@@ -70,19 +65,17 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="4">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="100.00"
-                                        Debit="0"
+                                        Amount="100.00"
                                         Id="a7d8dc68-8cc5-4fa2-b2e7-939226b4f997"
                                         Narrative="Budgeted Amount"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="0"
-                                        Debit="100.96"
+                                        Amount="-100.96"
                                         Id="8f606d2f-b569-4bf6-af6f-a10b48f69d95"
                                         Narrative="Pay home and contents to Foo Insurance Ltd"
-                                        TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
-                  <LedgerTransactionDto AccountType="{x:Null}" Credit="0.96"
-                                        Debit="0"
+                                        TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
+                  <LedgerTransactionDto AccountType="{x:Null}" 
+                                        Amount="0.96"
                                         Id="6aa34d0f-9d26-4e31-abe8-be9019ad2601"
                                         Narrative="Zero the remainder - supplement shortfall from surplus."
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
@@ -95,17 +88,15 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="4">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="95.00"
-                                        Debit="0"
+                                        Amount="95.00"
                                         Id="97adeaf4-5c5a-4aa0-90c8-d5c2938df1d0"
                                         Narrative="Budgeted Amount"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="0"
-                                        Debit="89.00"
+                                        Amount="-89.00"
                                         Id="6a1f1045-0740-4b53-a6d0-fecfbb6d693d"
                                         Narrative="Life Pharmacy Sylvia Pk  Sylvia Park  Nz"
-                                        TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                        TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
                 </scg:List>
               </LedgerEntryDto.Transactions>
             </LedgerEntryDto>
@@ -115,17 +106,15 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="8">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="1200.00"
-                                        Debit="0"
+                                        Amount="1200.00"
                                         Id="7c518808-c57e-4d4f-9f8f-d790273fcc08"
                                         Narrative="Budgeted Amount"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.BudgetCreditLedgerTransaction" />
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="0"
-                                        Debit="1200.00"
+                                        Amount="-1200.00"
                                         Id="0bf223a0-d618-441e-88bf-1d7427e3b5e1"
                                         Narrative="Rent to Rentals R Us"
-                                        TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                        TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
                 </scg:List>
               </LedgerEntryDto.Transactions>
             </LedgerEntryDto>
@@ -140,11 +129,10 @@ It is used in conjunction with that C# test class for unit testing.
           <scg:List x:TypeArguments="LedgerTransactionDto"
                     Capacity="1">
             <LedgerTransactionDto AccountType="CHEQUE" 
-                                  Credit="0"
-                                  Debit="37"
+                                  Amount="-37"
                                   Id="bc344b4a-6ff7-4511-90d1-bdea709034bb"
                                   Narrative="Starting balance"
-                                  TransactionType="BudgetAnalyser.Engine.Ledger.DebitLedgerTransaction" />
+                                  TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
           </scg:List>
         </LedgerEntryLineDto.BankBalanceAdjustments>
         <LedgerEntryLineDto.Entries>
@@ -156,8 +144,7 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="1">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="37.00"
-                                        Debit="0"
+                                        Amount="37.00"
                                         Id="b050ccf4-2f6f-413d-ae9d-dbfe1ca6c3bb"
                                         Narrative="Starting balance"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
@@ -170,8 +157,7 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="1">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="100.00"
-                                        Debit="0"
+                                        Amount="100.00"
                                         Id="a7d8dc68-8cc5-4fa2-b2e7-939226b4f9bb"
                                         Narrative="Starting balance"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
@@ -184,8 +170,7 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="1">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="211.44"
-                                        Debit="0"
+                                        Amount="211.44"
                                         Id="97adeaf4-5c5a-4aa0-90c8-d5c2938bb1bb"
                                         Narrative="Starting balance"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />
@@ -198,8 +183,7 @@ It is used in conjunction with that C# test class for unit testing.
                 <scg:List x:TypeArguments="LedgerTransactionDto"
                           Capacity="1">
                   <LedgerTransactionDto AccountType="{x:Null}" 
-                                        Credit="1200"
-                                        Debit="0"
+                                        Amount="1200"
                                         Id="0bf223a0-d618-441e-88bf-1d7427e3b5e1"
                                         Narrative="Rent to Rentals R Us"
                                         TransactionType="BudgetAnalyser.Engine.Ledger.CreditLedgerTransaction" />

@@ -9,9 +9,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     {
         public string AccountType { get; set; }
 
-        public decimal Credit { get; set; }
+        public decimal Amount { get; set; }
 
-        public decimal Debit { get; set; }
         public Guid Id { get; set; }
 
         public string Narrative { get; set; }

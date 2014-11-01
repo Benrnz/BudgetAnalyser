@@ -1,7 +1,8 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerTransactionUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
+             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
+             x:Name="ControlRoot">
 
     <!-- Used to show (readonly) a transation in an items control -->
     <Grid Margin="1"
@@ -32,19 +33,19 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock Text="{Binding Narrative}" />
-        <TextBlock Grid.Column="1"
+        <TextBlock x:Name="CreditAmount" 
+                   Grid.Column="1"
                    Style="{StaticResource TextBlock.Number}"
-                   Text="{Binding Credit, StringFormat=N}"
-                   Visibility="{Binding Credit, Converter={StaticResource Converter.ZeroToVisibility}}" />
-        <TextBlock Grid.Column="2"
-                   Text="CR"
-                   Visibility="{Binding Credit, Converter={StaticResource Converter.ZeroToVisibility}}"/>
-        <TextBlock Grid.Column="3"
+                   Text="{Binding Amount, StringFormat=N}"/>
+        <TextBlock x:Name="CreditLabel"
+                   Grid.Column="2"
+                   Text="CR"/>
+        <TextBlock x:Name="DebitAmount" 
+                   Grid.Column="3"
                    Style="{StaticResource TextBlock.Number}"
-                   Text="{Binding Debit, StringFormat=N}"
-                   Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}" />
-        <TextBlock Grid.Column="4"
-                   Visibility="{Binding Debit, Converter={StaticResource Converter.ZeroToVisibility}}"
+                   Text="{Binding Amount, StringFormat=N}"/>
+        <TextBlock x:Name="DebitLabel"
+                   Grid.Column="4"
                    Text="DR" />
         <Button Style="{StaticResource Button.Round.SmallCross}"
                 Grid.Column="5"

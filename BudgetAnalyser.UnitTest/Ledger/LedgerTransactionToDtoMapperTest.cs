@@ -15,9 +15,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         public LedgerTransactionToDtoMapperTest()
         {
-            TestData = new DebitLedgerTransaction(new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6"))
+            TestData = new CreditLedgerTransaction(new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6"))
             {
-                Debit = 123.99M,
+                Amount = 123.99M,
                 Narrative = "Foo bar.",
             };
         }
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapAmount()
         {
-            Assert.AreEqual(123.99M, Result.Debit);
+            Assert.AreEqual(123.99M, Result.Amount);
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             TestData = new BankBalanceAdjustmentTransaction(TransactionId)
             {
                 BankAccount = new ChequeAccount("CHEQUE"),
-                Debit = -101,
+                Amount = -101,
                 Narrative = "TEsting 123",
             };
             TestInitialise(); // Re-initialise to use different test data.
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapTransactionType()
         {
-            Assert.AreEqual(typeof(DebitLedgerTransaction).FullName, Result.TransactionType);
+            Assert.AreEqual(typeof(CreditLedgerTransaction).FullName, Result.TransactionType);
         }
 
         [TestMethod]

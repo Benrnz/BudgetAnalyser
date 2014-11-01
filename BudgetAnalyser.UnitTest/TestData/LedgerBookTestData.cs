@@ -31,18 +31,18 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                 {
-                    new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
-                    new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut" },
+                    new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
+                    new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" },
                 }),
                 CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                 {
-                    new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                    new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill" },
+                    new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                    new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" },
                 }),
                 CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                 {
-                    new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                    new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones" },
+                    new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                    new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" },
                 })
             });
 
@@ -58,17 +58,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" },
                     })
                 }));
 
@@ -82,17 +82,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                     {
                         CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                         {
-                            new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                            new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                         }),
                         CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                         {
-                            new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                            new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill" },
+                            new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                            new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" },
                         }),
                         CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                         {
-                            new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                            new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones" },
+                            new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                            new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" },
                         })
                     }));
 
@@ -127,18 +127,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" },
                     }),
                     CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" },
                     })
                 }),
             };
@@ -153,17 +153,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" },
                     })
                 }));
 
@@ -176,17 +176,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" },
                     })
                 });
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.");
@@ -230,51 +230,51 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(ratesLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 573M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 573M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 200M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 200M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 215M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 215M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(waterLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 50M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 50M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(houseInsLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 100M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 100M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(carInsLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 421M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 421M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(lifeInsLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 1626M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 1626M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(carMtcLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 163M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 163M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(regoLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 434.73M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 434.73M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 105M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 105M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(clothesLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 403.56M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 403.56M,  Narrative = "Opening ledger balance" },
                     }),
                     CreateLedgerEntry(docLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new CreditLedgerTransaction { Credit = 292.41M, Debit = 0M, Narrative = "Opening ledger balance" },
+                        new CreditLedgerTransaction { Amount = 292.41M,  Narrative = "Opening ledger balance" },
                     }),
                 }),
             };
@@ -309,18 +309,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" },
                     }),
                     CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones" },
                     })
                 }),
             };
@@ -335,17 +335,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones" },
                     })
                 }));
 
@@ -359,17 +359,17 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount" },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount" },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill" },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount" },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones" },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount" },
+                        new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" },
                     })
                 });
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.");
@@ -428,22 +428,22 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount", },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount", },
                     }),
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount", },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 45M, Narrative = "Hair cut", },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount", },
+                        new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut", },
                     }),
                     CreateLedgerEntry(powerLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount", },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 123.56M, Narrative = "Power bill", },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount", },
+                        new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill", },
                     }),
                     CreateLedgerEntry(phoneLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount", },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 86.43M, Narrative = "Pay phones", },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount", },
+                        new CreditLedgerTransaction { Amount = -86.43M, Narrative = "Pay phones", },
                     })
                 }),
             };
@@ -461,21 +461,21 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount",  },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 145.56M, Narrative = "Power bill",  },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount",  },
+                        new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill",  },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount",  },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 66.43M, Narrative = "Pay phones",  },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount",  },
+                        new CreditLedgerTransaction { Amount = -66.43M, Narrative = "Pay phones",  },
                     })
                 }));
 
@@ -491,21 +491,21 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 300M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 55M, Debit = 0M, Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 55M,  Narrative = "Budgeted amount",  },
                     }),
                     CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 140M, Debit = 0M, Narrative = "Budgeted amount",  },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 98.56M, Narrative = "Power bill",  },
+                        new BudgetCreditLedgerTransaction { Amount = 140M,  Narrative = "Budgeted amount",  },
+                        new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill",  },
                     }),
                     CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Credit = 95M, Debit = 0M, Narrative = "Budgeted amount",  },
-                        new DebitLedgerTransaction { Credit = 0M, Debit = 67.43M, Narrative = "Pay phones",  },
+                        new BudgetCreditLedgerTransaction { Amount = 95M,  Narrative = "Budgeted amount",  },
+                        new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones",  },
                     })
                 });
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.").WithAccountType(chequeAccount);

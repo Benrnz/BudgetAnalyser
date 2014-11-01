@@ -97,7 +97,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook result = ArrangeAndAct();
             LedgerEntryLine subject = result.DatedEntries.First();
 
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.Sum(a => a.Credit - a.Debit), subject.TotalBalanceAdjustments);
+            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.Sum(a => a.Amount), subject.TotalBalanceAdjustments);
             Assert.AreNotEqual(0, subject.BankBalanceAdjustments.Count());
         }
 
@@ -129,21 +129,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldMapLineEntryTransactionCredit()
+        public void ShouldMapLineEntryTransactionAmount()
         {
             LedgerBook result = ArrangeAndAct();
-            decimal subject = result.DatedEntries.First().Entries.First().Transactions.First().Credit;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Credit, subject);
+            decimal subject = result.DatedEntries.First().Entries.First().Transactions.First().Amount;
+            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Amount, subject);
             Assert.AreNotEqual(0, subject);
-        }
-
-        [TestMethod]
-        public void ShouldMapLineEntryTransactionDebit()
-        {
-            LedgerBook result = ArrangeAndAct();
-            decimal subject = result.DatedEntries.First().Entries.First().Transactions.First().Debit;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Debit, subject);
-            Assert.AreEqual(0, subject);
         }
 
         [TestMethod]

@@ -12,33 +12,41 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private static readonly Guid TransactionId = new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6");
 
+        public DtoToLedgerTransactionMapperTest()
+        {
+            TestData = new LedgerTransactionDto
+            {
+                Id = TransactionId,
+                Amount = -123.99M,
+                Narrative = "Foo bar.",
+                TransactionType = typeof(CreditLedgerTransaction).FullName,
+            };
+        }
+
         private LedgerTransaction Result { get; set; }
 
-        private LedgerTransactionDto TestData
+        private LedgerTransactionDto TestData { get; set; }
+
+        [TestMethod]
+        public void ShouldMapAccountTypeForBalanceAdjustmentTransaction()
         {
-            get
-            {
-                return new LedgerTransactionDto
+            TestData = new LedgerTransactionDto
                 {
                     Id = TransactionId,
-                    Debit = 123.99M,
+                    Amount = -123.99M,
                     Narrative = "Foo bar.",
                     AccountType = StatementModelTestData.ChequeAccount.Name,
-                    TransactionType = typeof(DebitLedgerTransaction).FullName,
+                    TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
                 };
-            }
+            Result = Mapper.Map<BankBalanceAdjustmentTransaction>(TestData);
+
+            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, ((BankBalanceAdjustmentTransaction)Result).BankAccount.Name);
         }
 
         [TestMethod]
         public void ShouldMapAmount()
         {
-            Assert.AreEqual(123.99M, Result.Debit);
-        }
-
-        [TestMethod]
-        public void ShouldMapBankBalanceAdjustment()
-        {
-            Assert.Inconclusive();
+            Assert.AreEqual(-123.99M, Result.Amount);
         }
 
         [TestMethod]
@@ -56,7 +64,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapTransactionType()
         {
-            Assert.IsInstanceOfType(Result, typeof(DebitLedgerTransaction));
+            Assert.IsInstanceOfType(Result, typeof(CreditLedgerTransaction));
         }
 
         [TestInitialize]

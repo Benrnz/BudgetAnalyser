@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal NetAmount
         {
-            get { return this.transactions.Sum(t => t.Credit - t.Debit); }
+            get { return this.transactions.Sum(t => t.Amount); }
         }
 
         public IEnumerable<LedgerTransaction> Transactions
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            decimal newBalance = Balance + (newTransaction.Credit - newTransaction.Debit);
+            decimal newBalance = Balance + (newTransaction.Amount);
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.Ledger
             if (txn != null)
             {
                 this.transactions.Remove(txn);
-                Balance -= (txn.Credit - txn.Debit);
+                Balance -= txn.Amount;
             }
         }
 
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             var zeroTxn = new BudgetCreditLedgerTransaction
             {
-                Debit = Balance, 
+                Amount = -Balance, 
                 Narrative = narrative ?? "Zeroing balance - excess funds in this account.",
             };
             this.transactions.Add(zeroTxn);
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     {
                         zeroingTransaction = new CreditLedgerTransaction
                         {
-                            Credit = -NetAmount,
+                            Amount = -NetAmount,
                             Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
                         };
                     }
@@ -157,7 +157,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             zeroingTransaction = new CreditLedgerTransaction
                             {
-                                Credit = -(Balance + NetAmount),
+                                Amount = -(Balance + NetAmount),
                                 Narrative = "SpentMonthlyLedger: automatically supplementing shortfall from surplus",
                             };
                         }
@@ -165,9 +165,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
                 else
                 {
-                    zeroingTransaction = new DebitLedgerTransaction
+                    zeroingTransaction = new CreditLedgerTransaction
                     {
-                        Debit = NetAmount,
+                        Amount = -NetAmount,
                         Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder",
                     };
                 }

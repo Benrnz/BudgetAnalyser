@@ -65,16 +65,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameCredit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Credit,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Credit);
+            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Amount,
+                result.DatedEntries.First().BankBalanceAdjustments.First().Amount);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameDebit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Debit,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Debit);
+            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Amount,
+                result.DatedEntries.First().BankBalanceAdjustments.First().Amount);
         }
 
         [TestMethod]
@@ -118,19 +118,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameCredit()
+        public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameAmount()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Credit,
-                result.DatedEntries.First().Entries.First().Transactions.First().Credit);
-        }
-
-        [TestMethod]
-        public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameDebit()
-        {
-            LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Debit,
-                result.DatedEntries.First().Entries.First().Transactions.First().Debit);
+            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Amount,
+                result.DatedEntries.First().Entries.First().Transactions.First().Amount);
         }
 
         [TestMethod]
@@ -184,7 +176,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void NumberOfDataLedgerTransactionPropertiesShouldBe5()
         {
             int dataProperties = typeof(LedgerTransactionDto).CountProperties();
-            Assert.AreEqual(6, dataProperties);
+            Assert.AreEqual(5, dataProperties);
         }
 
         [TestInitialize]

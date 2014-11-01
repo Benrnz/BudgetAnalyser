@@ -232,7 +232,6 @@
     <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
-    <Compile Include="Ledger\DebitLedgerTransaction.cs" />
     <Compile Include="Ledger\LedgerColumn.cs" />
     <Compile Include="Ledger\LedgerBook.cs" />
     <Compile Include="Ledger\LedgerEntry.cs" />

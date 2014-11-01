@@ -59,8 +59,7 @@
                 <TextBlock Grid.Column="1"
                            HorizontalAlignment="Right"
                            Style="{StaticResource TextBlock.LabelStyle}"
-                           Text="Net Amount: "
-                           VerticalAlignment="Top" />
+                           Text="Net Amount: " />
                 <TextBlock Grid.Column="2"
                            Grid.Row="0"
                            Style="{StaticResource TextBlock.Number}"
@@ -70,7 +69,6 @@
                            HorizontalAlignment="Right"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Closing Balance: "
-                           VerticalAlignment="Top"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBlock Grid.Column="2"
                            Grid.Row="1"
@@ -89,7 +87,6 @@
                 <ItemsControl ItemsSource="{Binding ShownTransactions}"
                               Margin="5">
                     <ItemsControl.ItemTemplate>
-
                         <DataTemplate>
                             <ledgerBook:LedgerTransactionUserControl />
                         </DataTemplate>
@@ -107,7 +104,6 @@
                   Visibility="{Binding ShowAddingNewTransactionPanel, Converter={StaticResource Converter.BoolToVis}}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -117,34 +113,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <GroupBox BorderBrush="Transparent"
-                          BorderThickness="0"
-                          Grid.ColumnSpan="2"
-                          Margin="5,1,5,1"
-                          Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}">
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="TransactionType"
-                                     IsChecked="{Binding NewTransactionIsCredit}"
-                                     VerticalAlignment="Top">
-                            <RadioButton.Content>
-                                <TextBlock Text="Credit Transaction"
-                                           VerticalAlignment="Top" />
-                            </RadioButton.Content>
-                        </RadioButton>
-                        <RadioButton GroupName="TransactionType"
-                                     IsChecked="{Binding NewTransactionIsDebit}"
-                                     Margin="10,0,0,0"
-                                     VerticalAlignment="Top">
-                            <RadioButton.Content>
-                                <TextBlock Text="Debit Transaction"
-                                           VerticalAlignment="Top" />
-                            </RadioButton.Content>
-                        </RadioButton>
-                    </StackPanel>
-                </GroupBox>
+                
                 <TextBlock Grid.Column="0"
-                           Grid.Row="1"
+                           Grid.Row="0"
                            HorizontalAlignment="Right"
                            Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
@@ -152,7 +125,7 @@
                            Width="100" />
                 <TextBox x:Name="NewTransactionNarrativeTextBox"
                          Grid.Column="1"
-                         Grid.Row="1"
+                         Grid.Row="0"
                          Margin="5,1,5,1"
                          MinWidth="200"
                          Text="{Binding NewTransactionNarrative}" />
@@ -162,6 +135,7 @@
                            Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Account Type:"
+                           Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}"
                            Width="100" />
                 <ComboBox Grid.Column="3"
                           Grid.Row="0"
@@ -173,15 +147,13 @@
                           ToolTip="Optionally set the account type for this transaction to a specific bank account."
                           Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}"
                           Width="100" />
-                <TextBlock Grid.Column="2"
-                           Grid.Row="1"
+                <TextBlock Grid.Column="4"
                            HorizontalAlignment="Right"
                            Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Amount:"
                            Width="100" />
-                <StackPanel Grid.Column="3"
-                            Grid.Row="1"
+                <StackPanel Grid.Column="5"
                             Orientation="Horizontal">
                     <TextBox x:Name="NewTransactionAmountTextBox"
                              Margin="5,1,5,1"
@@ -190,18 +162,9 @@
                             Style="{StaticResource Button.Round.Clear}"
                             ToolTip="Calculate amount so that the net change for this ledger will be zero." />
                 </StackPanel>
-                <CheckBox Grid.Column="4"
-                          Grid.Row="1"
-                          IsChecked="{Binding NewTransactionIsReversal}"
-                          Margin="5,1,5,1"
-                          VerticalAlignment="Center">
-                    <CheckBox.Content>
-                        <TextBlock Text="Reversal?" />
-                    </CheckBox.Content>
-                </CheckBox>
+
                 <Button Command="{Binding AddTransactionCommand}"
-                        Grid.Column="5"
-                        Grid.Row="1"
+                        Grid.Column="6"
                         HorizontalAlignment="Right"
                         Margin="5,1,5,1"
                         Style="{StaticResource Button.Round.Save}"

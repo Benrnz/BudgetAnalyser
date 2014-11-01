@@ -88,7 +88,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
             LedgerEntryLine entryLine = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            var newTransaction = new DebitLedgerTransaction { Debit = 100 };
+            var newTransaction = new CreditLedgerTransaction { Amount = -100 };
             LedgerEntry entry = entryLine.Entries.First();
             entry.AddTransaction(newTransaction);
 
@@ -103,7 +103,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
             LedgerEntryLine entryLine = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            var newTransaction = new DebitLedgerTransaction { Debit = 100 };
+            var newTransaction = new CreditLedgerTransaction { Amount = -100 };
             LedgerEntry entry = entryLine.Entries.First();
             entry.AddTransaction(newTransaction);
 
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             LedgerEntryLine entryLine = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             LedgerEntry entry = entryLine.Entries.First();
-            entry.RemoveTransaction(entry.Transactions.First(t => t is DebitLedgerTransaction).Id);
+            entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
             Assert.AreEqual(175M, entry.Balance);
         }
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             LedgerEntryLine entryLine = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             LedgerEntry entry = entryLine.Entries.First();
-            entry.RemoveTransaction(entry.Transactions.First(t => t is DebitLedgerTransaction).Id);
+            entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
             Assert.AreEqual(55M, entry.NetAmount);
         }
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             LedgerEntryLine entryLine = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             LedgerEntry entry = entryLine.Entries.First();
-            entry.RemoveTransaction(entry.Transactions.First(t => t is DebitLedgerTransaction).Id);
+            entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
             book.Output();
             Assert.AreEqual(1558.47M, entryLine.CalculatedSurplus);

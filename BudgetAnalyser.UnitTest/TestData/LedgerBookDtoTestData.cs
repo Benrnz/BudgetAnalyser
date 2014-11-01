@@ -43,16 +43,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id1,
-                            Credit = 75,
+                            Amount = 75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id2,
-                            Debit = 195,
+                            Amount = -195,
                             Narrative = "Rates payment",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         },
                     }
                 },
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id3,
-                            Credit = 21.15M,
+                            Amount = 21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -80,16 +80,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id4,
-                            Credit = 95,
+                            Amount = 95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id5,
-                            Debit = 295.45M,
+                            Amount = -295.45M,
                             Narrative = "Fix car",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         }
                     }
                 }
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id6,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id7,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -134,7 +134,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id8,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id9,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id10,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -181,7 +181,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id11,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -222,7 +222,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id1,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -237,7 +237,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id2,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -252,7 +252,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id3,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -271,7 +271,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id4,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -285,7 +285,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id5,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -299,7 +299,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id6,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -318,16 +318,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id7,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id8,
-                            Debit = 195,
+                            Amount = -195,
                             Narrative = "Rates payment",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         },
                     }
                 },
@@ -339,7 +339,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id9,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -353,16 +353,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id10,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id11,
-                            Debit = 295.45M,
+                            Amount = -295.45M,
                             Narrative = "Fix car",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         }
                     }
                 }
@@ -405,16 +405,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id1,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id2,
-                            Debit = 195,
+                            Amount = -195,
                             Narrative = "Rates payment",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         },
                     }
                 },
@@ -427,7 +427,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id3,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -442,16 +442,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id4,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
                         new LedgerTransactionDto
                         {
                             Id = id5,
-                            Debit = 295.45M,
+                            Amount = -295.45M,
                             Narrative = "Fix car",
-                            TransactionType = typeof(DebitLedgerTransaction).FullName,
+                            TransactionType = typeof(CreditLedgerTransaction).FullName,
                         }
                     }
                 }
@@ -468,7 +468,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id6,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -482,7 +482,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id7,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -496,7 +496,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id8,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -515,7 +515,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id9,
-                            Credit = 75,
+                            Amount =75,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -529,7 +529,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id10,
-                            Credit = 21.15M,
+                            Amount =21.15M,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         }
@@ -543,7 +543,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new LedgerTransactionDto
                         {
                             Id = id11,
-                            Credit = 95,
+                            Amount =95,
                             Narrative = "Budgeted Amount",
                             TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
                         },
@@ -554,7 +554,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             line3.BankBalanceAdjustments.Add(new LedgerTransactionDto
             {
                 AccountType = StatementModelTestData.ChequeAccount.Name,
-                Debit = 100.01M,
+                Amount = -100.01M,
                 Narrative = "Visa payment yet to go out",
                 Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),
                 TransactionType = typeof(CreditLedgerTransaction).FullName,
@@ -598,7 +598,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 Remarks = "Lorem ipsum dolor. Mit solo darte.",
                 BankBalanceAdjustments = new List<LedgerTransactionDto>
                 {
-                    new LedgerTransactionDto { Debit = 99M, Narrative = "The quick brown fox", TransactionType = typeof(DebitLedgerTransaction).FullName},
+                    new LedgerTransactionDto { Amount = -99M, Narrative = "The quick brown fox", TransactionType = typeof(CreditLedgerTransaction).FullName},
                 },
             };
 
@@ -619,7 +619,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             foreach (var entry in currentLine.Entries)
             {
                 var previousEntry = previousLine.Entries.Single(e => e.BucketCode == entry.BucketCode);
-                entry.Balance = previousEntry.Balance + entry.Transactions.Sum(t => t.Credit - t.Debit);
+                entry.Balance = previousEntry.Balance + entry.Transactions.Sum(t => t.Amount);
                 if (entry.Balance < 0)
                 {
                     entry.Balance = 0;

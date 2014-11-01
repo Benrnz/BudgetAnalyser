@@ -181,7 +181,6 @@
     <Compile Include="Ledger\DtoToLedgerEntryMapperTest.cs" />
     <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
     <Compile Include="Ledger\DtoToBankBalanceMapperTest.cs" />
-    <Compile Include="Ledger\DebitLedgerTransactionTest.cs" />
     <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />
     <Compile Include="Ledger\BankBalanceToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBookDtoTest.cs" />

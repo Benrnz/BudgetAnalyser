@@ -42,10 +42,9 @@ namespace BudgetAnalyser.UnitTest.Helper
                     {
                         foreach (var transaction in entry.Transactions)
                         {
-                            Console.WriteLine("          {0} {1} {2} {3}", 
+                            Console.WriteLine("          {0} {1} {2}", 
                                 entry.LedgerColumn.BudgetBucket.Code.PadRight(6), 
-                                (transaction.Credit.ToString("N") + "Cr").PadRight(8), 
-                                (transaction.Debit.ToString("N") + "Dr").PadRight(8), 
+                                transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16), 
                                 transaction.Narrative);
                         }
                     }
@@ -78,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                 }
 
                 Console.Write(line.BankBalance.ToString("N").PadRight(13));
-                Console.Write(line.BankBalanceAdjustments.Sum(t => t.Credit - t.Debit).ToString("N").PadRight(12));
+                Console.Write(line.BankBalanceAdjustments.Sum(t => t.Amount).ToString("N").PadRight(12));
                 Console.Write(line.BankBalances.Sum(b => b.Balance).ToString("N").PadRight(9));
                 Console.WriteLine();
 
@@ -88,10 +87,9 @@ namespace BudgetAnalyser.UnitTest.Helper
                     {
                         foreach (var transaction in entry.Transactions)
                         {
-                            Console.WriteLine("          {0} {1} {2} {3}",
+                            Console.WriteLine("          {0} {1} {2}",
                                 entry.BucketCode.PadRight(6),
-                                (transaction.Credit.ToString("N") + "Cr").PadRight(8),
-                                (transaction.Debit.ToString("N") + "Dr").PadRight(8),
+                                transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                                 transaction.Narrative);
                         }
                     }

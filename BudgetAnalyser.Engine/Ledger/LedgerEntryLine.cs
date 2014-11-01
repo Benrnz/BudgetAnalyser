@@ -105,7 +105,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public decimal TotalBalanceAdjustments
         {
-            get { return BankBalanceAdjustments.Sum(a => a.Credit - a.Debit); }
+            get { return BankBalanceAdjustments.Sum(a => a.Amount); }
         }
 
         public decimal TotalBankBalance
@@ -134,15 +134,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
             }
 
-            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative };
-            if (adjustment < 0)
-            {
-                newAdjustment.Debit = -adjustment; // This value is entered in the UI as a negative value, so negating it turns it into a positive value.
-            }
-            else
-            {
-                newAdjustment.Credit = adjustment;
-            }
+            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment };
 
             this.bankBalanceAdjustments.Add(newAdjustment);
             return newAdjustment;
@@ -252,7 +244,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 var transactions = new List<LedgerTransaction>();
                 if (expenseBudget != null)
                 {
-                    var budgetedAmount = new BudgetCreditLedgerTransaction { Credit = expenseBudget.Amount, Narrative = "Budgeted Amount" };
+                    var budgetedAmount = new BudgetCreditLedgerTransaction { Amount = expenseBudget.Amount, Narrative = "Budgeted Amount" };
                     transactions.Add(budgetedAmount);
                 }
 
@@ -332,16 +324,16 @@ namespace BudgetAnalyser.Engine.Ledger
                     {
                         if (t.Amount < 0)
                         {
-                            return new DebitLedgerTransaction(t.Id)
+                            return new CreditLedgerTransaction(t.Id)
                             {
-                                Debit = -t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
+                                Amount = t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
                                 Narrative = ExtractNarrative(t),
                             };
                         }
 
                         return new CreditLedgerTransaction(t.Id)
                         {
-                            Credit = t.Amount,
+                            Amount = t.Amount,
                             Narrative = ExtractNarrative(t),
                         };
                     });
@@ -354,7 +346,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
         {
-            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Credit - a.Debit);
+            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }
     }
 }
