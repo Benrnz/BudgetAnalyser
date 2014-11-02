@@ -256,8 +256,12 @@ namespace BudgetAnalyser.Budget
                 return false;
             }
 
-            this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
             this.newBuckets.Clear();
+            var valid = this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
+            if (!valid)
+            {
+                return SaveBudgetModel();
+            }
 
             return true;
         }

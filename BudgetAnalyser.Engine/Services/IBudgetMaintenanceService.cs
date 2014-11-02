@@ -34,7 +34,8 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="modifiedBudget">The modified budget.</param>
         /// <param name="comment">The optional comment.</param>
-        void SaveBudget(BudgetModel modifiedBudget, string comment = "");
+        /// <returns>true if the budget was saved successfully, otherwise false - this indicates there are validation errors.</returns>
+        bool SaveBudget(BudgetModel modifiedBudget, string comment = "");
 
         /// <summary>
         /// Updates the budget with the full collection of incomes and expenses and then validates the budget.

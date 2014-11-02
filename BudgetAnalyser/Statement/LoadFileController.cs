@@ -126,6 +126,7 @@ namespace BudgetAnalyser.Statement
                 if (!string.IsNullOrWhiteSpace(FileName))
                 {
                     CheckFileName();
+                    CheckAccountName();
                 }
                 else
                 {
@@ -156,6 +157,7 @@ namespace BudgetAnalyser.Statement
                 this.doNotUseSelectedExistingAccountName = value;
                 RaisePropertyChanged(() => SelectedExistingAccountName);
                 CheckAccountName();
+                CheckFileName();
             }
         }
 
@@ -279,6 +281,13 @@ namespace BudgetAnalyser.Statement
 
         private async void CheckFileName()
         {
+            if (string.IsNullOrEmpty(FileName))
+            {
+                this.actionButtonReady = false;
+                FileTypeSelectionReady = false;
+                return;
+            }
+
             LastFileWasBudgetAnalyserStatementFile = await this.statementModelRepository.IsValidFileAsync(FileName);
             if (LastFileWasBudgetAnalyserStatementFile ?? false)
             {
@@ -289,7 +298,7 @@ namespace BudgetAnalyser.Statement
             {
                 // Appears to be a new statement that has never been loaded before.
                 FileTypeSelectionReady = true;
-                this.actionButtonReady = false;
+                this.actionButtonReady = true;
             }
         }
 
