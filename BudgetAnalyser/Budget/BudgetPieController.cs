@@ -5,6 +5,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 
@@ -13,7 +14,7 @@ namespace BudgetAnalyser.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class BudgetPieController : ControllerBase, IShowableController
     {
-        private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly IBudgetPieGraphService budgetPieService;
         private BudgetModel budgetModel;
         private Expense doNotUseCurrentExpense;
         private Income doNotUseCurrentIncome;
@@ -22,14 +23,14 @@ namespace BudgetAnalyser.Budget
         private bool doNotUseShown;
         private Expense surplus;
 
-        public BudgetPieController([NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public BudgetPieController([NotNull] IBudgetPieGraphService service)
         {
-            if (budgetBucketRepository == null)
+            if (service == null)
             {
-                throw new ArgumentNullException("budgetBucketRepository");
+                throw new ArgumentNullException("service");
             }
 
-            this.budgetBucketRepository = budgetBucketRepository;
+            this.budgetPieService = service;
         }
 
         public ICommand CloseCommand
@@ -94,15 +95,13 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseExpenseSelectedItem = value;
-                if (this.doNotUseExpenseSelectedItem.Key == this.budgetBucketRepository.SurplusBucket.Code)
+                if (this.doNotUseExpenseSelectedItem.Key == SurplusBucket.SurplusCode)
                 {
                     CurrentExpense = this.surplus;
                 }
                 else
                 {
-                    CurrentExpense =
-                        this.budgetModel.Expenses.SingleOrDefault(
-                            x => x.Bucket.Code == this.doNotUseExpenseSelectedItem.Key);
+                    CurrentExpense = this.budgetModel.Expenses.SingleOrDefault(x => x.Bucket.Code == this.doNotUseExpenseSelectedItem.Key);
                 }
 
                 RaisePropertyChanged(() => ExpenseSelectedItem);
@@ -119,8 +118,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseIncomeSelectedItem = value;
-                CurrentIncome =
-                    this.budgetModel.Incomes.SingleOrDefault(x => x.Bucket.Code == this.doNotUseIncomeSelectedItem.Key);
+                CurrentIncome = this.budgetModel.Incomes.SingleOrDefault(x => x.Bucket.Code == this.doNotUseIncomeSelectedItem.Key);
                 RaisePropertyChanged(() => IncomeSelectedItem);
                 RaisePropertyChanged(() => CurrentIncomePercent);
             }
@@ -165,18 +163,10 @@ namespace BudgetAnalyser.Budget
                 throw new ArgumentNullException("model");
             }
 
+            this.surplus = this.budgetPieService.SurplusExpense(model);
             this.budgetModel = model;
-            this.surplus = new Expense { Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
-            List<KeyValuePair<string, decimal>> list =
-                model.Expenses.Select(expense => new KeyValuePair<string, decimal>(expense.Bucket.Code, expense.Amount))
-                    .ToList();
-            list.Add(new KeyValuePair<string, decimal>(this.budgetBucketRepository.SurplusBucket.Code, model.Surplus));
-            ExpensePieChartValues = list.OrderByDescending(x => x.Value).ToList();
-
-            list =
-                model.Incomes.Select(income => new KeyValuePair<string, decimal>(income.Bucket.Code, income.Amount))
-                    .ToList();
-            IncomePieChartValues = list.OrderByDescending(x => x.Value).ToList();
+            ExpensePieChartValues = this.budgetPieService.PrepareExpenseGraphData(model);
+            IncomePieChartValues = this.budgetPieService.PrepareIncomeGraphData(model);
 
             Shown = true;
             RaisePropertyChanged(() => ExpensePieChartValues);

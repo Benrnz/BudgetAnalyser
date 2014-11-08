@@ -206,7 +206,9 @@
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />
     <Compile Include="Reports\SeriesData.cs" />
     <Compile Include="Services\BudgetMaintenanceService.cs" />
+    <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
+    <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
