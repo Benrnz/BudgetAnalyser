@@ -207,9 +207,12 @@
     <Compile Include="Reports\SeriesData.cs" />
     <Compile Include="Services\BudgetMaintenanceService.cs" />
     <Compile Include="Services\BudgetPieGraphService.cs" />
+    <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
+    <Compile Include="Services\IWidgetService.cs" />
+    <Compile Include="Services\WidgetService.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
     <Compile Include="Statement\Data\TransactionSetDtoToStatementModelMapper.cs" />
@@ -266,6 +269,7 @@
     <Compile Include="Widgets\CurrentFilesWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
     <Compile Include="Widgets\IMultiInstanceWidget.cs" />
+    <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
     <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
     <Compile Include="Widgets\IWidgetRepository.cs" />
@@ -278,6 +282,8 @@
     <Compile Include="Widgets\RemainingSurplusWidget.cs" />
     <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widgets\Widget.cs" />
+    <Compile Include="Widgets\WidgetGroup.cs" />
+    <Compile Include="Widgets\WidgetPersistentState.cs" />
     <Compile Include="Widgets\WidgetRepositoryChangedEventArgs.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
   </ItemGroup>
