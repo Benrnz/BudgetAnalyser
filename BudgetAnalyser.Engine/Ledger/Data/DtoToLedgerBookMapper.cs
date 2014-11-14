@@ -39,7 +39,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 GetOrAddFromCache(ledgerColumn);
             }
 
-            bool ledgersMapWasEmpty = !book.Ledgers.Any();
+            bool ledgersMapWasEmpty = book.Ledgers.None();
 
             // Default to CHEQUE when StoredInAccount is null.
             foreach (LedgerEntryLine line in book.DatedEntries)

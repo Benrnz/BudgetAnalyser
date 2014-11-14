@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
-    public class StatementModel : INotifyPropertyChanged
+    public class StatementModel : INotifyPropertyChanged, IDataChangeDetection
     {
         private readonly ILogger logger;
         private GlobalFilterCriteria currentFilter;
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.logger = logger;
-            ChangeHash = Guid.NewGuid();
+            this.changeHash = Guid.NewGuid();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
         ///     The hash does not persist between Application Loads.
         /// </summary>
-        public Guid ChangeHash { get; private set; }
+        private Guid changeHash;
 
         public int DurationInMonths
         {
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Statement
             private set
             {
                 this.doNotUseTransactions = value;
-                ChangeHash = Guid.NewGuid();
+                this.changeHash = Guid.NewGuid();
                 OnPropertyChanged();
             }
         }
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (criteria == null)
             {
-                ChangeHash = Guid.NewGuid();
+                this.changeHash = Guid.NewGuid();
                 Transactions = AllTransactions.ToList();
                 DurationInMonths = this.fullDuration;
                 Filtered = false;
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             this.currentFilter = criteria;
 
-            ChangeHash = Guid.NewGuid();
+            this.changeHash = Guid.NewGuid();
             if (criteria.Cleared)
             {
                 Transactions = AllTransactions.ToList();
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            // Do not modify the ChangeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
+            // Do not modify the changeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
             Filtered = true;
             Transactions = Transactions.Where(t => MatchTransactionText(textFilter, t))
                 .AsParallel()
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("additionalModel");
             }
 
-            this.LastImport = additionalModel.LastImport;
+            LastImport = additionalModel.LastImport;
 
             Merge(additionalModel.AllTransactions);
         }
@@ -195,7 +195,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             transaction.PropertyChanged -= OnTransactionPropertyChanged;
-            ChangeHash = Guid.NewGuid();
+            this.changeHash = Guid.NewGuid();
             this.doNotUseAllTransactions.Remove(transaction);
             Filter(this.currentFilter);
         }
@@ -269,7 +269,7 @@ namespace BudgetAnalyser.Engine.Statement
         internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
         {
             UnsubscribeToTransactionChangedEvents();
-            ChangeHash = Guid.NewGuid();
+            this.changeHash = Guid.NewGuid();
             var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
             Transactions = listOfTransactions;
             AllTransactions = Transactions;
@@ -335,7 +335,7 @@ namespace BudgetAnalyser.Engine.Statement
         private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
         {
             UnsubscribeToTransactionChangedEvents();
-            ChangeHash = Guid.NewGuid();
+            this.changeHash = Guid.NewGuid();
             List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
             AllTransactions = mergedTransactions;
             this.duplicates = null;
@@ -352,7 +352,7 @@ namespace BudgetAnalyser.Engine.Statement
                 case Transaction.AmountPropertyName:
                 case Transaction.BucketPropertyName:
                 case Transaction.DatePropertyName:
-                    ChangeHash = Guid.NewGuid();
+                    this.changeHash = Guid.NewGuid();
                     break;
             }
         }
@@ -375,6 +375,11 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
+        }
+
+        public long SignificantDataChangeHash()
+        {
+            return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
         }
     }
 }

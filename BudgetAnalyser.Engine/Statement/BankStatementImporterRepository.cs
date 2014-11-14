@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public BankStatementImporterRepository([NotNull] IEnumerable<IBankStatementImporter> importers)
         {
-            if (importers == null || !importers.Any())
+            if (importers == null || importers.None())
             {
                 throw new ArgumentNullException("importers");
             }

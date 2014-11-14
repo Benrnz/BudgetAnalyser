@@ -184,7 +184,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             bool result = true;
 
-            if (!Entries.Any())
+            if (Entries.None())
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
                 result = false;
@@ -311,7 +311,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
         {
-            if (!filteredStatementTransactions.Any())
+            if (filteredStatementTransactions.None())
             {
                 return new List<LedgerTransaction>();
             }

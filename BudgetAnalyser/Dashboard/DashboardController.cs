@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
@@ -13,7 +12,6 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -25,32 +23,20 @@ using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Dashboard
 {
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary in this case, this class is used to monitor all parts of the system.")]
+    //[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary in this case, this class is used to monitor all parts of the system.")]
     [AutoRegisterWithIoC(SingleInstance = true)]
     public sealed class DashboardController : ControllerBase, IShowableController
     {
-        private readonly Dictionary<Type, object> availableDependencies = new Dictionary<Type, object>();
         private readonly ChooseBudgetBucketController chooseBudgetBucketController;
         private readonly IDashboardService dashboardService;
         private readonly IUserMessageBox messageBox;
-        private readonly IWidgetRepository widgetRepository;
-        private readonly WidgetService widgetService;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
-        private TimeSpan elapsedTime;
-        private int filterChangeHash;
-        private Guid statementChangeHash;
         // TODO Support for image changes when widget updates
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling",
-            Justification = "This class monitors and displays health and metrics for the whole app, so is linked to many classes.")]
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Timer is needed for the lifetime of the controller, and controller is single instance")
-        ]
         public DashboardController(
             [NotNull] UiContext uiContext,
-            [NotNull] IWidgetRepository widgetRepository,
             [NotNull] ChooseBudgetBucketController chooseBudgetBucketController,
-            [NotNull] WidgetService widgetService,
             [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
@@ -58,19 +44,9 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (widgetRepository == null)
-            {
-                throw new ArgumentNullException("widgetRepository");
-            }
-
             if (chooseBudgetBucketController == null)
             {
                 throw new ArgumentNullException("chooseBudgetBucketController");
-            }
-
-            if (widgetService == null)
-            {
-                throw new ArgumentNullException("widgetService");
             }
 
             if (dashboardService == null)
@@ -78,22 +54,20 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("dashboardService");
             }
 
-            this.widgetRepository = widgetRepository;
             this.chooseBudgetBucketController = chooseBudgetBucketController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.dashboardService = dashboardService;
-            this.widgetService = widgetService;
 
-            this.widgetRepository.WidgetRemoved += OnBudgetBucketMonitorWidgetRemoved;
-            this.chooseBudgetBucketController.Chosen += OnBudgetBucketMonitorWidgetAdded;
+            this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
 
             GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
 
-            RegisterForMessengerNotifications(uiContext);
+            // Must initialise the service, as messages will start arriving immediately after constructor.
+            // TODO do we have to do this.
+            WidgetGroups = this.dashboardService.InitialiseWidgetGroups(null);
 
-            this.dashboardService.WidgetRefreshRequested += OnWidgetUpdateRequested;
-            this.dashboardService.InitialiseSupportedDependenciesArray();
+            RegisterForMessengerNotifications(uiContext);
         }
 
         public Guid CorrelationId
@@ -161,13 +135,13 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            WidgetGroups = this.dashboardService.ViewWidgetGroups(storedState.WidgetStates);
-            UpdateWidgets();
+            // Now that we have the previously persisted state data we can properly intialise the service.
+            WidgetGroups = this.dashboardService.InitialiseWidgetGroups(storedState.WidgetStates);
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            IEnumerable<WidgetPersistentState> widgetStates = this.dashboardService.PreparePersistentData(WidgetGroups);
+            IEnumerable<WidgetPersistentState> widgetStates = this.dashboardService.PreparePersistentData();
 
             message.PersistThisModel(
                 new DashboardApplicationStateV1
@@ -176,7 +150,7 @@ namespace BudgetAnalyser.Dashboard
                 });
         }
 
-        private void OnBudgetBucketMonitorWidgetAdded(object sender, BudgetBucketChosenEventArgs args)
+        private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
         {
             if (args.CorrelationId != CorrelationId)
             {
@@ -191,19 +165,11 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            var baseWidget = this.dashboardService.CreateNewBucketMonitorWidget(WidgetGroups, bucket.Code);
-            if (baseWidget == null)
+            Widget widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
+            if (widget == null)
             {
                 this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
-                return;
             }
-
-            UpdateWidget(baseWidget);
-        }
-
-        private void OnBudgetBucketMonitorWidgetRemoved(object sender, WidgetRepositoryChangedEventArgs eventArgs)
-        {
-            this.dashboardService.RemoveBucketMonitorWidget(WidgetGroups, eventArgs.WidgetRemoved);
         }
 
         private void OnBudgetReadyMessageReceived([NotNull] BudgetReadyMessage message)
@@ -213,9 +179,8 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            this.availableDependencies[typeof(BudgetCollection)] = message.Budgets;
-            this.availableDependencies[typeof(IBudgetCurrencyContext)] = message.ActiveBudget;
-            UpdateWidgets(typeof(BudgetCollection), typeof(IBudgetCurrencyContext));
+            this.dashboardService.NotifyOfDependencyChange(message.Budgets);
+            this.dashboardService.NotifyOfDependencyChange<IBudgetCurrencyContext>(message.ActiveBudget);
         }
 
         private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)
@@ -225,15 +190,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            Type key = typeof(GlobalFilterCriteria);
-            this.availableDependencies[key] = message.Criteria;
-
-            int newHash = message.Criteria.GetHashCode();
-            if (newHash != this.filterChangeHash)
-            {
-                this.filterChangeHash = newHash;
-                UpdateWidgets(key);
-            }
+            this.dashboardService.NotifyOfDependencyChange(message.Criteria);
         }
 
         private void OnLedgerBookReadyMessageReceived([NotNull] LedgerBookReadyMessage message)
@@ -243,8 +200,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            this.availableDependencies[typeof(Engine.Ledger.LedgerBook)] = message.LedgerBook;
-            UpdateWidgets(typeof(Engine.Ledger.LedgerBook));
+            this.dashboardService.NotifyOfDependencyChange(message.LedgerBook);
         }
 
         private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
@@ -254,18 +210,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            if (message.StatementModel == null)
-            {
-                return;
-            }
-
-            if (this.statementChangeHash != message.StatementModel.ChangeHash)
-            {
-                this.statementChangeHash = message.StatementModel.ChangeHash;
-                Type key = typeof(StatementModel);
-                this.availableDependencies[key] = message.StatementModel;
-                UpdateWidgets(key);
-            }
+            this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
         }
 
         private void OnStatementReadyMessageReceived([NotNull] StatementReadyMessage message)
@@ -275,9 +220,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            Type key = typeof(StatementModel);
-            this.availableDependencies[key] = message.StatementModel;
-            UpdateWidgets(key);
+            this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
         }
 
         private void OnWidgetCommandExecuted(Widget widget)
@@ -285,22 +228,24 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
 
-        private void OnWidgetUpdateRequested(object sender, EventArgs e)
-        {
-            this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
-            foreach (Widget widget in WidgetGroups.SelectMany(group => group.Widgets).Where(w => w.RecommendedTimeIntervalUpdate != null))
-            {
-                Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
-                if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
-                {
-                    Widget widgetCopy = widget;
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
-                }
-            }
-        }
+        //private void OnWidgetUpdateRequested(object sender, EventArgs e)
+        //{
+        //    // TODO this should use individual tasks with delays.
+        //    this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
+        //    foreach (Widget widget in WidgetGroups.SelectMany(group => group.Widgets).Where(w => w.RecommendedTimeIntervalUpdate != null))
+        //    {
+        //        Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
+        //        if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
+        //        {
+        //            Widget widgetCopy = widget;
+        //            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
+        //        }
+        //    }
+        //}
 
         private void RegisterForMessengerNotifications(UiContext uiContext)
         {
+            // Register for all dependent objects change messages.
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
@@ -309,62 +254,6 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
-        }
-
-        private void UpdateWidget(Widget widget)
-        {
-            if (widget.Dependencies == null || !widget.Dependencies.Any())
-            {
-                widget.Update();
-                return;
-            }
-
-            var parameters = new object[widget.Dependencies.Count()];
-            int index = 0;
-            foreach (Type dependencyType in widget.Dependencies)
-            {
-                if (!this.availableDependencies.ContainsKey(dependencyType))
-                {
-                    // If you get an exception here first check the InitialiseSupportedDependenciesArray method.
-                    throw new NotSupportedException(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            "The requested dependency {0} for the widget {1} is not supported.",
-                            dependencyType.Name,
-                            widget.Name));
-                }
-
-                parameters[index++] = this.availableDependencies[dependencyType];
-            }
-
-            widget.Update(parameters);
-        }
-
-        private void UpdateWidgets(params Type[] filterDependencyTypes)
-        {
-            if (WidgetGroups == null)
-            {
-                return;
-            }
-
-            if (!WidgetGroups.Any())
-            {
-                return;
-            }
-
-            if (filterDependencyTypes != null && filterDependencyTypes.Length > 0)
-            {
-                // targeted update
-                List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
-                    .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
-                    .ToList();
-                affectedWidgets.ForEach(UpdateWidget);
-            }
-            else
-            {
-                // update all
-                WidgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
-            }
         }
     }
 }

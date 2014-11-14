@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using GalaSoft.MvvmLight.CommandWpf;
 
@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Dashboard
 
         public static ICommand RemoveWidgetCommand
         {
-            get { return new RelayCommand<Widget>(w => WidgetRepository.Remove(w as IMultiInstanceWidget), w => w is BudgetBucketMonitorWidget); }
+            get { return new RelayCommand<Widget>(w => DashboardService.RemoveMultiInstanceWidget((IMultiInstanceWidget)w), w => w is BudgetBucketMonitorWidget); }
         }
 
         public static ICommand UnhideAllWidgetsCommand
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Dashboard
         }
 
         [PropertyInjection]
-        public static IWidgetRepository WidgetRepository { get; set; }
+        public static IDashboardService DashboardService { get; set; }
 
         private static void OnAddNewBucketMonitorWidgetCommandExecute(Guid correlationId)
         {
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Dashboard
 
         private static void UnhideAllWidgetsCommandExecute()
         {
-            WidgetRepository.GetAll().ToList().ForEach(w => w.Visibility = true);
+            DashboardService.ShowAllWidgets();
         }
     }
 }

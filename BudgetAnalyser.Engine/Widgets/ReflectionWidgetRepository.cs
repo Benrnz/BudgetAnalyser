@@ -15,8 +15,6 @@ namespace BudgetAnalyser.Engine.Widgets
             this.cachedWidgets = new SortedList<string, Widget>();
         }
 
-        public event EventHandler<WidgetRepositoryChangedEventArgs> WidgetRemoved;
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IMultiInstanceWidget")]
         public IMultiInstanceWidget Create(string widgetType, string id)
         {
@@ -41,7 +39,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public IEnumerable<Widget> GetAll()
         {
-            if (!this.cachedWidgets.Any())
+            if (this.cachedWidgets.None())
             {
                 IEnumerable<Type> widgetTypes = GetType().Assembly.GetExportedTypes()
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
@@ -64,14 +62,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget)))
-            {
-                var handler = WidgetRemoved;
-                if (handler != null)
-                {
-                    handler(this, new WidgetRepositoryChangedEventArgs((Widget)widget));
-                }
-            }
+            this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget));
         }
 
         private static string BuildMultiUseWidgetKey(IMultiInstanceWidget widget)

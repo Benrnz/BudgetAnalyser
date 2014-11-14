@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
-    public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate
+    public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
     {
         private AccountType doNotUseAccountType;
         private DateTime? doNotUseBeginDate;
@@ -65,34 +65,7 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public static bool operator ==(GlobalFilterCriteria left, GlobalFilterCriteria right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(GlobalFilterCriteria left, GlobalFilterCriteria right)
-        {
-            return !Equals(left, right);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((GlobalFilterCriteria)obj);
-        }
-
-        public override int GetHashCode()
+        public long SignificantDataChangeHash()
         {
             unchecked
             {

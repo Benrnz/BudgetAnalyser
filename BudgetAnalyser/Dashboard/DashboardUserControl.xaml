@@ -145,7 +145,7 @@
                       Margin="20"
                       ItemsSource="{Binding WidgetGroups}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type dashboard:WidgetGroup}">
+                <DataTemplate DataType="{x:Type widget:WidgetGroup}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

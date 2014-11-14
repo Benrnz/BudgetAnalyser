@@ -63,7 +63,6 @@ namespace BudgetAnalyser.Engine.Statement.Data
             Mapper.CreateMap<TransactionSetDto, StatementModel>()
                 .ConstructUsing(new Func<TransactionSetDto, StatementModel>(dto => new StatementModel(logger)))
                 .ForMember(model => model.AllTransactions, m => m.MapFrom(dto => dto.Transactions))
-                .ForMember(model => model.ChangeHash, m => m.Ignore())
                 .ForMember(model => model.DurationInMonths, m => m.Ignore())
                 .ForMember(model => model.Filtered, m => m.Ignore())
                 .AfterMap((dto, model) => model.LoadTransactions(model.AllTransactions));

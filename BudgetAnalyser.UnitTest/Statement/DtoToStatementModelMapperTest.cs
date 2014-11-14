@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ChangeHashShouldNotBeNull()
         {
-            Assert.IsNotNull(Result.ChangeHash);
+            Assert.IsNotNull(Result.SignificantDataChangeHash());
         }
 
         [TestMethod]

@@ -128,6 +128,8 @@
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
+    <Compile Include="IDataChangeDetection.cs" />
+    <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
+    <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Services\IWidgetService.cs" />
     <Compile Include="Services\WidgetService.cs" />

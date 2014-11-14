@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -92,7 +91,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         private void RefreshCollection()
         {
-            if (Analysis == null || Analysis.Analyses == null || !Analysis.Analyses.Any())
+            if (Analysis == null || Analysis.Analyses == null || Analysis.Analyses.None())
             {
                 return;
             }

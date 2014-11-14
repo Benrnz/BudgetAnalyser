@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
@@ -11,33 +13,23 @@ using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
 {
-    public interface IDashboardService
-    {
-        event EventHandler WidgetRefreshRequested;
-
-        Widget CreateNewBucketMonitorWidget(IList<WidgetGroup> widgetGroups, string bucketCode);
-
-        IDictionary<Type, object> InitialiseSupportedDependenciesArray();
-        
-        IEnumerable<WidgetPersistentState> PreparePersistentData(IEnumerable<WidgetGroup> widgetGroups);
-
-        ObservableCollection<WidgetGroup> ViewWidgetGroups(IEnumerable<WidgetPersistentState> storedState);
-        
-        void RemoveBucketMonitorWidget(IList<WidgetGroup> widgetGroups, Widget widgetToRemove);
-    }
-
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class DashboardService : IDashboardService
     {
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
+        private readonly ILogger logger;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
+        private IDictionary<Type, object> availableDependencies;
 
         public DashboardService(
             [NotNull] IWidgetService widgetService,
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] LedgerCalculation ledgerCalculator)
+            [NotNull] LedgerCalculation ledgerCalculator, 
+            [NotNull] ILogger logger)
         {
             if (widgetService == null)
             {
@@ -58,19 +50,33 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("ledgerCalculator");
             }
+            
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
 
             this.widgetService = widgetService;
             this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
             this.ledgerCalculator = ledgerCalculator;
-            RegularlyRefreshWidgetStatus();
+            this.logger = logger;
         }
 
-        public event EventHandler WidgetRefreshRequested;
+        protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
-        public Widget CreateNewBucketMonitorWidget(IList<WidgetGroup> widgetGroups, string bucketCode)
+        /// <summary>
+        ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
+        ///     Duplicates are not allowed in the collection and will not be added.
+        /// </summary>
+        /// <param name="bucketCode">The bucket code to create a new monitor widget for.</param>
+        /// <returns>
+        ///     Will return a reference to the newly created widget, or null if the widget was not created because a duplicate
+        ///     already exists.
+        /// </returns>
+        public Widget CreateNewBucketMonitorWidget(string bucketCode)
         {
-            if (widgetGroups.SelectMany(group => group.Widgets).OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucketCode))
+            if (WidgetGroups.SelectMany(group => group.Widgets).OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucketCode))
             {
                 // Bucket code already exists - so already has a bucket monitor widget.
                 return null;
@@ -78,49 +84,97 @@ namespace BudgetAnalyser.Engine.Services
 
             IMultiInstanceWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
             var baseWidget = (Widget)widget;
-            WidgetGroup widgetGroup = widgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
+            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
                 widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
-                widgetGroups.Add(widgetGroup);
+                WidgetGroups.Add(widgetGroup);
             }
 
             widgetGroup.Widgets.Add(baseWidget);
+            UpdateAllWidgets();
+            return baseWidget;
         }
 
-        public IDictionary<Type, object> InitialiseSupportedDependenciesArray()
+        public ObservableCollection<WidgetGroup> InitialiseWidgetGroups(IEnumerable<WidgetPersistentState> storedState)
         {
-            var availableDependencies = new Dictionary<Type, object>();
-            availableDependencies[typeof(StatementModel)] = null;
-            availableDependencies[typeof(BudgetCollection)] = null;
-            availableDependencies[typeof(IBudgetCurrencyContext)] = null;
-            availableDependencies[typeof(LedgerBook)] = null;
-            availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
-            availableDependencies[typeof(GlobalFilterCriteria)] = null;
-            availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
+            this.availableDependencies = InitialiseSupportedDependenciesArray();
+            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
+            UpdateAllWidgets();
+            foreach (var group in WidgetGroups)
+            {
+                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
+                {
+                    ScheduledWidgetUpdate(widget);
+                }
+            }
 
-            return availableDependencies;
+            return WidgetGroups;
         }
 
-        public IEnumerable<WidgetPersistentState> PreparePersistentData(IEnumerable<WidgetGroup> widgetGroups)
+        private async void ScheduledWidgetUpdate(Widget widget)
         {
-            return widgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
+            Debug.Assert(widget.RecommendedTimeIntervalUpdate != null);
+            this.logger.LogInfo(
+                l => l.Format(
+                    "Scheduling \"{0}\" widget to update every {1} minutes.",
+                    widget.Name,
+                    widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
+
+            // Run on UI thread
+            while (true)
+            {                
+                await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
+                this.logger.LogInfo(
+                    l => l.Format(
+                        "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes.",
+                        widget.Name,
+                        widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
+                UpdateWidget(widget);
+            }
+
+            // Run on the thread pool
+            //Task.Run(() => Task.Delay(widget.RecommendedTimeIntervalUpdate.Value)
+            //    .ContinueWith(t => ScheduledWidgetUpdate(widgetCopy)));
         }
 
-        public ObservableCollection<WidgetGroup> ViewWidgetGroups(IEnumerable<WidgetPersistentState> storedState)
+        public void NotifyOfDependencyChange<T>(object dependency)
         {
-            return new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
+            NotifyOfDependencyChangeInternal(dependency, typeof(T));
         }
 
-        public void RemoveBucketMonitorWidget(IList<WidgetGroup> widgetGroups, Widget widgetToRemove)
+        public void NotifyOfDependencyChange(object dependency)
         {
-            WidgetGroup widgetGroup = widgetGroups.FirstOrDefault(group => group.Heading == widgetToRemove.Category);
+            NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
+        }
+
+        public IEnumerable<WidgetPersistentState> PreparePersistentData()
+        {
+            return WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
+        }
+
+        public void RemoveMultiInstanceWidget(IMultiInstanceWidget widgetToRemove)
+        {
+            this.widgetRepository.Remove(widgetToRemove);
+
+            var baseWidget = (Widget)widgetToRemove;
+            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
                 return;
             }
 
-            widgetGroup.Widgets.Remove(widgetToRemove);
+            widgetGroup.Widgets.Remove(baseWidget);
+        }
+
+        public void ShowAllWidgets()
+        {
+            if (WidgetGroups == null)
+            {
+                return;
+            }
+
+            WidgetGroups.ToList().ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
         }
 
         private static WidgetPersistentState CreateWidgetState(Widget widget)
@@ -143,18 +197,104 @@ namespace BudgetAnalyser.Engine.Services
             };
         }
 
-        private async void RegularlyRefreshWidgetStatus()
+        private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
         {
-            while (true)
+            var supportsDataChangeDetection = dependency as IDataChangeDetection;
+            if (supportsDataChangeDetection == null)
             {
-                // TODO Consider changing to use a task for every widget with a time dependency.
-                await Task.Delay(TimeSpan.FromSeconds(60));
-                EventHandler handler = WidgetRefreshRequested;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                // Dependency doesn't support change hashes so every change is deemed worthy to trigger an update the UI.
+                return true;
             }
+
+            long newHash = supportsDataChangeDetection.SignificantDataChangeHash();
+            if (!this.changesHashes.ContainsKey(typeKey))
+            {
+                this.changesHashes.Add(typeKey, newHash);
+                return true;
+            }
+
+            bool result = this.changesHashes[typeKey] != newHash;
+            this.changesHashes[typeKey] = newHash;
+            return result;
+        }
+
+        private IDictionary<Type, object> InitialiseSupportedDependenciesArray()
+        {
+            this.availableDependencies = new Dictionary<Type, object>();
+            this.availableDependencies[typeof(StatementModel)] = null;
+            this.availableDependencies[typeof(BudgetCollection)] = null;
+            this.availableDependencies[typeof(IBudgetCurrencyContext)] = null;
+            this.availableDependencies[typeof(LedgerBook)] = null;
+            this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
+            this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
+            this.availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
+            return this.availableDependencies;
+        }
+
+        private void NotifyOfDependencyChangeInternal(object dependency, Type typeKey)
+        {
+            this.availableDependencies[typeKey] = dependency;
+
+            if (HasDependencySignificantlyChanged(dependency, typeKey))
+            {
+                UpdateAllWidgets(typeKey);
+            }
+        }
+
+        private void UpdateAllWidgets(params Type[] filterDependencyTypes)
+        {
+            if (WidgetGroups == null)
+            {
+                return;
+            }
+
+            if (!WidgetGroups.Any())
+            {
+                return;
+            }
+
+            if (filterDependencyTypes != null && filterDependencyTypes.Length > 0)
+            {
+                // targeted update
+                List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
+                    .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
+                    .ToList();
+                affectedWidgets.ForEach(UpdateWidget);
+            }
+            else
+            {
+                // update all
+                WidgetGroups.SelectMany(group => group.Widgets).ToList().ForEach(UpdateWidget);
+            }
+        }
+
+        private void UpdateWidget(Widget widget)
+        {
+            if (widget.Dependencies == null || widget.Dependencies.None())
+            {
+                widget.Update();
+                return;
+            }
+
+            var parameters = new object[widget.Dependencies.Count()];
+            int index = 0;
+            foreach (Type dependencyType in widget.Dependencies)
+            {
+                if (!this.availableDependencies.ContainsKey(dependencyType))
+                {
+                    // If you get an exception here first check the InitialiseSupportedDependenciesArray method.
+                    throw new NotSupportedException(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "The requested dependency {0} for the widget {1} is not supported.",
+                            dependencyType.Name,
+                            widget.Name));
+                }
+
+                parameters[index++] = this.availableDependencies[dependencyType];
+            }
+
+            widget.Update(parameters);
         }
     }
 }

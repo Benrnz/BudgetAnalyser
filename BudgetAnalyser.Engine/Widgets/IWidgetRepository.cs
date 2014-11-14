@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Widgets
@@ -13,8 +12,6 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <param name="widgetType">The full type name of the widget type.</param>
         /// <param name="id">A unique identifier for the instance</param>
         IMultiInstanceWidget Create(string widgetType, string id);
-
-        event EventHandler<WidgetRepositoryChangedEventArgs> WidgetRemoved;
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Prefered term in repository")]
         IEnumerable<Widget> GetAll();

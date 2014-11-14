@@ -298,7 +298,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
                 else
                 {
-                    if (!BankBalances.Any())
+                    if (BankBalances.None())
                     {
                         if (CanExecuteAddBankBalanceCommand())
                         {

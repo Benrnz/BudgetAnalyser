@@ -74,17 +74,17 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        public void TwoInstancesWithSameValuesAreEqual()
+        public void TwoInstancesWithSameValuesShouldHaveSameEqualityHash()
         {
             var subject1 = CreateSubject_StandardPayMonth();
             var subject2 = CreateSubject_StandardPayMonth();
 
-            Assert.AreEqual(subject1, subject2);
-            Assert.IsFalse(subject1 != subject2);
-            Assert.IsTrue(subject1 == subject2);
-            Assert.IsTrue(subject1.Equals(subject2));
+            Assert.AreEqual(subject1.SignificantDataChangeHash(), subject2.SignificantDataChangeHash());
+            Assert.IsFalse(subject1.SignificantDataChangeHash() != subject2.SignificantDataChangeHash());
+            Assert.IsTrue(subject1.SignificantDataChangeHash() == subject2.SignificantDataChangeHash());
+            Assert.IsTrue(subject1.SignificantDataChangeHash().Equals(subject2.SignificantDataChangeHash()));
             Assert.AreNotSame(subject1, subject2);
-            Assert.AreEqual(subject1.GetHashCode(), subject2.GetHashCode());
+            Assert.AreNotEqual(subject1.GetHashCode(), subject2.GetHashCode());
         }
 
         [TestMethod]
