@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Widgets
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed ok here")]
         public DateFilterWidget()
         {
-            Category = "Global Filter";
+            Category = "1 Global Filter";
             Dependencies = new[] { typeof(GlobalFilterCriteria) };
             ImageResourceName = "DateFilterBeakerImage";
             ImageResourceName2 = "DateFilterCalendarImage";

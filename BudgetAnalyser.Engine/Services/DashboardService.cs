@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<WidgetGroup> InitialiseWidgetGroups(IEnumerable<WidgetPersistentState> storedState)
         {
-            this.availableDependencies = InitialiseSupportedDependenciesArray();
+            if (this.availableDependencies == null) this.availableDependencies = InitialiseSupportedDependenciesArray();
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
             UpdateAllWidgets();
             foreach (var group in WidgetGroups)
@@ -233,6 +233,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void NotifyOfDependencyChangeInternal(object dependency, Type typeKey)
         {
+            if (this.availableDependencies == null) this.availableDependencies = InitialiseSupportedDependenciesArray();
             this.availableDependencies[typeKey] = dependency;
 
             if (HasDependencySignificantlyChanged(dependency, typeKey))
@@ -243,13 +244,9 @@ namespace BudgetAnalyser.Engine.Services
 
         private void UpdateAllWidgets(params Type[] filterDependencyTypes)
         {
-            if (WidgetGroups == null)
+            if (WidgetGroups == null || WidgetGroups.None())
             {
-                return;
-            }
-
-            if (!WidgetGroups.Any())
-            {
+                // Widget Groups have not yet been initialised and persistent state has not yet been loaded.
                 return;
             }
 

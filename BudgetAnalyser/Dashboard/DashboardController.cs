@@ -63,10 +63,6 @@ namespace BudgetAnalyser.Dashboard
             GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
 
-            // Must initialise the service, as messages will start arriving immediately after constructor.
-            // TODO do we have to do this.
-            WidgetGroups = this.dashboardService.InitialiseWidgetGroups(null);
-
             RegisterForMessengerNotifications(uiContext);
         }
 

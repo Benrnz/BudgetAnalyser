@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public SavingsGoalWidget()
         {
-            Category = "Monthly Budget";
+            Category = "2 Overview";
             Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             this.standardStyle = "WidgetStandardStyle3";

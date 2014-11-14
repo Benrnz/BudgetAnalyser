@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public BudgetBucketMonitorWidget()
         {
-            Category = "Monthly Budget";
+            Category = "3 Monthly Tracking";
             Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle3";
