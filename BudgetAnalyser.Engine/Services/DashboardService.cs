@@ -143,8 +143,13 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, typeof(T));
         }
 
-        public void NotifyOfDependencyChange(object dependency)
+        public void NotifyOfDependencyChange([NotNull] object dependency)
         {
+            if (dependency == null)
+            {
+                throw new ArgumentNullException("dependency");
+            }
+
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 

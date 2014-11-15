@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -19,7 +20,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (Credit != null && Credit >= 0)
             {
-                CreditAmount.Text = Credit.Value.ToString("N");
+                CreditAmount.Text = Credit.Value.ToString("N", CultureInfo.CurrentCulture);
                 CreditAmount.Visibility = Visibility.Visible;
                 CreditLabel.Visibility = Visibility.Visible;
                 DebitAmount.Visibility = Visibility.Hidden;
@@ -28,7 +29,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (Debit != null && Debit > 0)
             {
-                DebitAmount.Text = Debit.Value.ToString("N");
+                DebitAmount.Text = Debit.Value.ToString("N", CultureInfo.CurrentCulture);
                 CreditAmount.Visibility = Visibility.Hidden;
                 CreditLabel.Visibility = Visibility.Hidden;
                 DebitAmount.Visibility = Visibility.Visible;

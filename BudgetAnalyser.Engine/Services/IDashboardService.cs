@@ -28,6 +28,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
         /// </summary>
         /// <typeparam name="T">The type to register if not the actual concrete type.</typeparam>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
         void NotifyOfDependencyChange<T>(object dependency);
 
         /// <summary>
@@ -44,6 +45,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Removes a multi-instance widget from the widget groups.
         /// </summary>
         /// <param name="widgetToRemove">The widget to remove.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred spelling")]
         void RemoveMultiInstanceWidget(IMultiInstanceWidget widgetToRemove);
 
         /// <summary>

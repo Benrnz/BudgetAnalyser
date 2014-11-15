@@ -32,8 +32,13 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         /// Prepares the income graph data.
         /// </summary>
-        public IDictionary<string, decimal> PrepareIncomeGraphData(BudgetModel budget)
+        public IDictionary<string, decimal> PrepareIncomeGraphData([NotNull] BudgetModel budget)
         {
+            if (budget == null)
+            {
+                throw new ArgumentNullException("budget");
+            }
+
             var list = budget.Incomes
                 .Select(income => new KeyValuePair<string, decimal>(income.Bucket.Code, income.Amount))
                 .ToList();
@@ -44,8 +49,13 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         /// Prepares the expense graph data.
         /// </summary>
-        public IDictionary<string, decimal> PrepareExpenseGraphData(BudgetModel budget)
+        public IDictionary<string, decimal> PrepareExpenseGraphData([NotNull] BudgetModel budget)
         {
+            if (budget == null)
+            {
+                throw new ArgumentNullException("budget");
+            }
+            
             var surplus = new Expense { Amount = budget.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
             var interim = budget.Expenses.Select(expense => new KeyValuePair<string, decimal>(expense.Bucket.Code, expense.Amount)).ToList();
             interim.Add(new KeyValuePair<string, decimal>(surplus.Bucket.Code, surplus.Amount));
@@ -55,8 +65,13 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         /// A model Surplus expense object for the UI to bind to.
         /// </summary>
-        public Expense SurplusExpense(BudgetModel model)
+        public Expense SurplusExpense([NotNull] BudgetModel model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             return new Expense { Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
         }
     }

@@ -140,11 +140,16 @@ namespace BudgetAnalyser.Engine.Services
         ///     <paramref name="validationMessages" /> string builder.
         /// </returns>
         public bool UpdateAndValidateBudget(
-            BudgetModel model,
+            [NotNull] BudgetModel model,
             IEnumerable<Income> allIncomes,
             IEnumerable<Expense> allExpenses,
             StringBuilder validationMessages)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             // Copy view model bound data back into model.
             model.Update(allIncomes, allExpenses);
             return this.budgetsCollection.Validate(validationMessages);

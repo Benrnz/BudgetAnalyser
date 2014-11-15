@@ -123,7 +123,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
 
             // Mocking out the Calculator means we dont need the LedgerBook
             var ledgerCalculatorMock = new Mock<LedgerCalculation>();
-            ledgerCalculatorMock.Setup(m => m.CalculateCurrentMonthLedgerBalances(LedgerBook, Filter, Statement)).Returns(LedgerBalancesFake);
+            ledgerCalculatorMock.Setup(m => m.CalculateCurrentMonthLedgerBalances(It.IsAny<LedgerBook>(), It.IsAny<GlobalFilterCriteria>(), It.IsAny<StatementModel>())).Returns(LedgerBalancesFake);
             LedgerCalculator = ledgerCalculatorMock.Object;
 
             Subject.Update(Statement, BudgetCurrencyContext, Filter, LedgerBook, LedgerCalculator);
