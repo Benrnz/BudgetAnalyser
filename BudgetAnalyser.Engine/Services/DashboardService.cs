@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -121,21 +122,21 @@ namespace BudgetAnalyser.Engine.Services
                     widget.Name,
                     widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
 
-            // Run on UI thread
-            while (true)
-            {                
-                await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
-                this.logger.LogInfo(
-                    l => l.Format(
-                        "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes.",
-                        widget.Name,
-                        widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
-                UpdateWidget(widget);
-            }
-
-            // Run on the thread pool
-            //Task.Run(() => Task.Delay(widget.RecommendedTimeIntervalUpdate.Value)
-            //    .ContinueWith(t => ScheduledWidgetUpdate(widgetCopy)));
+            // Run the scheduling on a different thread.
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
+                    this.logger.LogInfo(
+                        l => l.Format(
+                            "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
+                            widget.Name,
+                            widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
+                            Thread.CurrentThread.ManagedThreadId));
+                    UpdateWidget(widget);
+                }
+            });
         }
 
         public void NotifyOfDependencyChange<T>(object dependency)
