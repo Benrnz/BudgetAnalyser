@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -17,6 +18,7 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class DashboardService : IDashboardService
     {
+        private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
@@ -29,7 +31,8 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IWidgetService widgetService,
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] LedgerCalculation ledgerCalculator, 
+            [NotNull] LedgerCalculation ledgerCalculator,
+            [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ILogger logger)
         {
             if (widgetService == null)
@@ -51,7 +54,12 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("ledgerCalculator");
             }
-            
+
+            if (accountTypeRepository == null)
+            {
+                throw new ArgumentNullException("accountTypeRepository");
+            }
+
             if (logger == null)
             {
                 throw new ArgumentNullException("logger");
@@ -61,6 +69,7 @@ namespace BudgetAnalyser.Engine.Services
             this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
             this.ledgerCalculator = ledgerCalculator;
+            this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
         }
 
@@ -97,46 +106,30 @@ namespace BudgetAnalyser.Engine.Services
             return baseWidget;
         }
 
+        public IEnumerable<AccountType> FilterableAccountTypes()
+        {
+            List<AccountType> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            accountTypeList.Insert(0, null);
+            return accountTypeList;
+        }
+
         public ObservableCollection<WidgetGroup> InitialiseWidgetGroups(IEnumerable<WidgetPersistentState> storedState)
         {
-            if (this.availableDependencies == null) this.availableDependencies = InitialiseSupportedDependenciesArray();
+            if (this.availableDependencies == null)
+            {
+                this.availableDependencies = InitialiseSupportedDependenciesArray();
+            }
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
             UpdateAllWidgets();
-            foreach (var group in WidgetGroups)
+            foreach (WidgetGroup group in WidgetGroups)
             {
-                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
+                foreach (Widget widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
                 {
                     ScheduledWidgetUpdate(widget);
                 }
             }
 
             return WidgetGroups;
-        }
-
-        private async void ScheduledWidgetUpdate(Widget widget)
-        {
-            Debug.Assert(widget.RecommendedTimeIntervalUpdate != null);
-            this.logger.LogInfo(
-                l => l.Format(
-                    "Scheduling \"{0}\" widget to update every {1} minutes.",
-                    widget.Name,
-                    widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
-
-            // Run the scheduling on a different thread.
-            await Task.Run(async () =>
-            {
-                while (true)
-                {
-                    await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
-                    this.logger.LogInfo(
-                        l => l.Format(
-                            "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
-                            widget.Name,
-                            widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
-                            Thread.CurrentThread.ManagedThreadId));
-                    UpdateWidget(widget);
-                }
-            });
         }
 
         public void NotifyOfDependencyChange<T>(object dependency)
@@ -239,13 +232,42 @@ namespace BudgetAnalyser.Engine.Services
 
         private void NotifyOfDependencyChangeInternal(object dependency, Type typeKey)
         {
-            if (this.availableDependencies == null) this.availableDependencies = InitialiseSupportedDependenciesArray();
+            if (this.availableDependencies == null)
+            {
+                this.availableDependencies = InitialiseSupportedDependenciesArray();
+            }
             this.availableDependencies[typeKey] = dependency;
 
             if (HasDependencySignificantlyChanged(dependency, typeKey))
             {
                 UpdateAllWidgets(typeKey);
             }
+        }
+
+        private async void ScheduledWidgetUpdate(Widget widget)
+        {
+            Debug.Assert(widget.RecommendedTimeIntervalUpdate != null);
+            this.logger.LogInfo(
+                l => l.Format(
+                    "Scheduling \"{0}\" widget to update every {1} minutes.",
+                    widget.Name,
+                    widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
+
+            // Run the scheduling on a different thread.
+            await Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
+                    this.logger.LogInfo(
+                        l => l.Format(
+                            "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
+                            widget.Name,
+                            widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
+                            Thread.CurrentThread.ManagedThreadId));
+                    UpdateWidget(widget);
+                }
+            });
         }
 
         private void UpdateAllWidgets(params Type[] filterDependencyTypes)

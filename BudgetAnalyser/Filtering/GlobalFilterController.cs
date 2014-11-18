@@ -8,6 +8,7 @@ using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -20,7 +21,7 @@ namespace BudgetAnalyser.Filtering
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
-        private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly IDashboardService dashboardService;
         private readonly IUserMessageBox userMessageBox;
         private Guid dialogCorrelationId;
         private string doNotUseAccountTypeSummary;
@@ -31,20 +32,20 @@ namespace BudgetAnalyser.Filtering
         private FilterMode filterMode;
 
         public GlobalFilterController(
-            [NotNull] UiContext uiContext,
-            [NotNull] IAccountTypeRepository accountTypeRepository)
+            [NotNull] UiContext uiContext, 
+            [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
-
-            if (accountTypeRepository == null)
+         
+            if (dashboardService == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException("dashboardService");
             }
 
-            this.accountTypeRepository = accountTypeRepository;
+            this.dashboardService = dashboardService;
             this.userMessageBox = uiContext.UserPrompts.MessageBox;
             this.doNotUseCriteria = new GlobalFilterCriteria();
 
@@ -139,12 +140,12 @@ namespace BudgetAnalyser.Filtering
 
         public void PromptUserForAccountType()
         {
-            this.filterMode = FilterMode.AccountType;
-            List<AccountType> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
-            accountTypeList.Insert(0, null);
-            AccountTypes = accountTypeList;
-            SelectedAccountType = Criteria.AccountType;
             this.dialogCorrelationId = Guid.NewGuid();
+            this.filterMode = FilterMode.AccountType;
+
+            AccountTypes = this.dashboardService.FilterableAccountTypes();
+            
+            SelectedAccountType = Criteria.AccountType;
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
@@ -18,6 +20,11 @@ namespace BudgetAnalyser.Engine.Services
         Widget CreateNewBucketMonitorWidget(string bucketCode);
 
         /// <summary>
+        /// Retrieves a list of filterable account types for use on the dashboard, (to select an account type to filter by).
+        /// </summary>
+        IEnumerable<AccountType> FilterableAccountTypes();
+
+        /// <summary>
         ///     Initialises and returns the widget groups to view in the UI.
         ///     This must be called first before other methods of this service can be used.
         ///     The collection of widget groups is cached inside the service for use by the other methods.
@@ -28,7 +35,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
         /// </summary>
         /// <typeparam name="T">The type to register if not the actual concrete type.</typeparam>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
         void NotifyOfDependencyChange<T>(object dependency);
 
         /// <summary>
@@ -45,7 +52,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Removes a multi-instance widget from the widget groups.
         /// </summary>
         /// <param name="widgetToRemove">The widget to remove.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred spelling")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred spelling")]
         void RemoveMultiInstanceWidget(IMultiInstanceWidget widgetToRemove);
 
         /// <summary>
