@@ -48,17 +48,19 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         public DateTime Modified { get; internal set; }
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
-        public void AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
+        internal LedgerColumn AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
                 // Ledger already exists in this ledger book.
-                return;
+                return null;
             }
 
-            this.ledgersColumns.Add(new LedgerColumn { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount });
+            var newLedger = new LedgerColumn { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount };
+            this.ledgersColumns.Add(newLedger);
+            return newLedger;
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
-        public LedgerEntryLine Reconcile(
+        internal LedgerEntryLine Reconcile(
             DateTime date,
             IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,

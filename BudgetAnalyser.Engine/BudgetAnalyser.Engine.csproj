@@ -213,6 +213,7 @@
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IDashboardService.cs" />
+    <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Services\IWidgetService.cs" />
     <Compile Include="Services\WidgetService.cs" />

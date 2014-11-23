@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
@@ -17,6 +18,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
+        private ILedgerService ledgerService;
 
         private string ledgerBookFileName;
 
@@ -101,13 +103,13 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        internal void ExtractDataFromApplicationState(string lastLedgerBookFileName)
+        internal void ExtractDataFromApplicationState(ILedgerService ledgerService, string lastLedgerBookFileName)
         {
             this.ledgerBookFileName = lastLedgerBookFileName;
 
             if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
             {
-                LoadLedgerBookFromFile(this.ledgerBookFileName);
+                LoadLedgerBookFromFile(this.ledgerBookFileName, ledgerService);
                 this.ledgerBookFileName = null;
             }
         }
@@ -150,7 +152,7 @@ namespace BudgetAnalyser.LedgerBook
             return ViewModel.LedgerBook != null && Dirty;
         }
 
-        private void LoadLedgerBookFromFile(string fileName)
+        private void LoadLedgerBookFromFile(string fileName, ILedgerService controllerLedgerService)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
@@ -159,12 +161,8 @@ namespace BudgetAnalyser.LedgerBook
 
             try
             {
-                if (!this.ledgerRepository.Exists(fileName))
-                {
-                    throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + fileName, fileName);
-                }
-
-                ViewModel.LedgerBook = this.ledgerRepository.Load(fileName);
+                this.ledgerService = controllerLedgerService;
+                ViewModel.LedgerBook = this.ledgerService.DisplayLedgerBook(fileName);
                 MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
             }
             catch (Engine.FileFormatException ex)

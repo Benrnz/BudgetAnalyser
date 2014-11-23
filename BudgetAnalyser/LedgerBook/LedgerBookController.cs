@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
@@ -22,6 +23,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly LedgerBookGridBuilderFactory uiBuilder;
+        private readonly ILedgerService ledgerService;
         private readonly UiContext uiContext;
 
         private int doNotUseNumberOfMonthsToShow;
@@ -30,7 +32,8 @@ namespace BudgetAnalyser.LedgerBook
         public LedgerBookController(
             [NotNull] UiContext uiContext,
             [NotNull] LedgerBookControllerFileOperations fileOperations,
-            [NotNull] LedgerBookGridBuilderFactory uiBuilder)
+            [NotNull] LedgerBookGridBuilderFactory uiBuilder, 
+            [NotNull] ILedgerService ledgerService)
         {
             if (uiContext == null)
             {
@@ -46,8 +49,14 @@ namespace BudgetAnalyser.LedgerBook
             {
                 throw new ArgumentNullException("uiBuilder");
             }
+            
+            if (ledgerService == null)
+            {
+                throw new ArgumentNullException("ledgerService");
+            }
 
             this.uiBuilder = uiBuilder;
+            this.ledgerService = ledgerService;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
@@ -164,7 +173,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            ViewModel.LedgerBook.Name = result;
+            this.ledgerService.RenameLedgerBook(ViewModel.LedgerBook, result);
             FileOperations.Dirty = true;
         }
 
@@ -213,12 +222,11 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                ViewModel.NewLedgerLine = ViewModel.LedgerBook.Reconcile(
+                this.ledgerService.MonthEndReconciliation(
                     this.uiContext.AddLedgerReconciliationController.Date,
                     this.uiContext.AddLedgerReconciliationController.BankBalances,
-                    ViewModel.CurrentBudget.Model,
-                    ViewModel.CurrentStatement,
                     ignoreWarnings);
+
                 FileOperations.Dirty = true;
                 NumberOfMonthsToShow++;
                 RaiseLedgerBookUpdated();
@@ -241,7 +249,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnAddNewLedgerCommandExecuted()
         {
-            this.uiContext.ChooseBudgetBucketController.Chosen += OnBudgetBucketChosen;
+            this.uiContext.ChooseBudgetBucketController.Chosen += OnAddNewLedgerComplete;
             this.uiContext.ChooseBudgetBucketController.Filter(bucket => bucket is ExpenseBucket, "Choose an Expense Budget Bucket");
             this.uiContext.ChooseBudgetBucketController.ShowDialog(BudgetAnalyserFeature.LedgerBook, "Add New Ledger to Ledger Book", Guid.NewGuid(), true);
         }
@@ -279,24 +287,19 @@ namespace BudgetAnalyser.LedgerBook
             message.PersistThisModel(FileOperations.StateDataForPersistence());
         }
 
-        private void OnBudgetBucketChosen(object sender, BudgetBucketChosenEventArgs e)
+        private void OnAddNewLedgerComplete(object sender, BudgetBucketChosenEventArgs e)
         {
-            this.uiContext.ChooseBudgetBucketController.Chosen -= OnBudgetBucketChosen;
+            this.uiContext.ChooseBudgetBucketController.Chosen -= OnAddNewLedgerComplete;
             if (e.Canceled) return;
 
-            if (e.SelectedBucket == null)
+            var expenseBucket = e.SelectedBucket as ExpenseBucket;
+            if (expenseBucket == null)
             {
-                this.messageBox.Show("You must select a budget bucket to track when adding a new Ledger Column.");
+                this.messageBox.Show("You must select an expense budget bucket to track when adding a new Ledger Column.");
                 return;
             }
 
-            var selectedBucket = this.uiContext.ChooseBudgetBucketController.Selected as ExpenseBucket;
-            if (selectedBucket == null)
-            {
-                return;
-            }
-
-            ViewModel.LedgerBook.AddLedger(selectedBucket, this.uiContext.ChooseBudgetBucketController.StoreInThisAccount);
+            this.ledgerService.TrackNewBudgetBucket(expenseBucket, e.StoreInThisAccount);
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
