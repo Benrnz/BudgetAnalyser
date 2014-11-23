@@ -200,8 +200,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         /// <summary>
-        ///     Used to show and edit all the bank balances involved in this <see cref="LedgerEntryLine" />.
-        ///     This allows editing the bank balance data as was entered using <see cref="ShowCreateDialog" />.
+        ///     Used to show the bank balances involved in this <see cref="LedgerEntryLine" />.
         /// </summary>
         public void ShowEditDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line, bool isNewLine)
         {
@@ -220,7 +219,7 @@ namespace BudgetAnalyser.LedgerBook
             BankBalances = new ObservableCollection<BankBalance>(line.BankBalances);
             CreateMode = false;
             AddBalanceVisibility = false;
-            Editable = isNewLine;
+            Editable = false; // Bank balances are not editable after creating a new Ledger Line at this stage.
 
             ShowDialogCommon(Editable ? "Edit Bank Balances" : "Bank Balances");
         }

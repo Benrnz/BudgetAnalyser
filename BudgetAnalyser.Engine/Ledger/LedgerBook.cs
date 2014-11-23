@@ -30,8 +30,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntryLine> DatedEntries
         {
             get { return this.datedEntries; }
-            [UsedImplicitly]
-            private set { this.datedEntries = value.ToList(); }
+            [UsedImplicitly] private set { this.datedEntries = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
@@ -44,14 +43,44 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerColumn> Ledgers
         {
             get { return this.ledgersColumns; }
-            internal set
-            {
-                this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList();
-            }
+            internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
         }
 
         public DateTime Modified { get; internal set; }
         public string Name { get; internal set; }
+
+        public bool Validate([NotNull] StringBuilder validationMessages)
+        {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
+            if (string.IsNullOrWhiteSpace(FileName))
+            {
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "A ledger book must have a file name.");
+                return false;
+            }
+
+            DateTime last = DateTime.MaxValue;
+            foreach (LedgerEntryLine line in this.datedEntries)
+            {
+                DateTime thisDate = line.Date;
+                if (thisDate >= last)
+                {
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the dated entries for this Ledger Book.");
+                    return false;
+                }
+
+                last = thisDate;
+                if (!line.Validate(validationMessages))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         internal LedgerColumn AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
         {
@@ -118,7 +147,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     most recent one can be deleted and
         ///     only if it is unlocked (generally means just created and not yet saved).
         /// </summary>
-        public void RemoveLine([NotNull] LedgerEntryLine line)
+        internal void RemoveLine([NotNull] LedgerEntryLine line)
         {
             if (line == null)
             {
@@ -138,12 +167,18 @@ namespace BudgetAnalyser.Engine.Ledger
             this.datedEntries.Remove(line);
         }
 
+        internal void SetDatedEntries(List<LedgerEntryLine> lines)
+        {
+            this.datedEntries = lines.OrderByDescending(l => l.Date).ToList();
+        }
+
         /// <summary>
-        /// Used to allow the UI to set a ledger's account, but only if it is an instance in the <see cref="Ledgers"/> collection.
+        ///     Used to allow the UI to set a ledger's account, but only if it is an instance in the <see cref="Ledgers" />
+        ///     collection.
         /// </summary>
         /// <param name="ledger"></param>
         /// <param name="storedInAccount"></param>
-        public void SetLedgerAccount(LedgerColumn ledger, AccountType storedInAccount)
+        internal void SetLedgerAccount(LedgerColumn ledger, AccountType storedInAccount)
         {
             if (Ledgers.Any(l => l == ledger))
             {
@@ -161,7 +196,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     records are completed for
         ///     the month, they are not supposed to change.
         /// </summary>
-        public LedgerEntryLine UnlockMostRecentLine()
+        internal LedgerEntryLine UnlockMostRecentLine()
         {
             LedgerEntryLine line = DatedEntries.FirstOrDefault();
             if (line != null)
@@ -170,44 +205,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return line;
-        }
-
-        public bool Validate([NotNull] StringBuilder validationMessages)
-        {
-            if (validationMessages == null)
-            {
-                throw new ArgumentNullException("validationMessages");
-            }
-
-            if (string.IsNullOrWhiteSpace(FileName))
-            {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "A ledger book must have a file name.");
-                return false;
-            }
-
-            DateTime last = DateTime.MaxValue;
-            foreach (LedgerEntryLine line in this.datedEntries)
-            {
-                DateTime thisDate = line.Date;
-                if (thisDate >= last)
-                {
-                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the dated entries for this Ledger Book.");
-                    return false;
-                }
-
-                last = thisDate;
-                if (!line.Validate(validationMessages))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        internal void SetDatedEntries(List<LedgerEntryLine> lines)
-        {
-            this.datedEntries = lines.OrderByDescending(l => l.Date).ToList();
         }
 
         /// <summary>

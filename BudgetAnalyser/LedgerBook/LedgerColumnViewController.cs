@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
@@ -16,13 +17,14 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerColumnViewController : ControllerBase
     {
         private readonly IAccountTypeRepository accountRepo;
+        private readonly ILedgerService ledgerService;
         private Guid correlationId;
         private LedgerColumn ledger;
         private Engine.Ledger.LedgerBook ledgerBook;
 
         public event EventHandler Updated;
 
-        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IMessenger messenger)
+        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IMessenger messenger, [NotNull] ILedgerService ledgerService)
         {
             if (accountRepo == null)
             {
@@ -34,9 +36,15 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("messenger");
             }
 
+            if (ledgerService == null)
+            {
+                throw new ArgumentNullException("ledgerService");
+            }
+
             MessengerInstance = messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.accountRepo = accountRepo;
+            this.ledgerService = ledgerService;
         }
 
         public ObservableCollection<AccountType> BankAccounts { get; private set; }
@@ -99,7 +107,7 @@ namespace BudgetAnalyser.LedgerBook
                     return;
                 }
 
-                this.ledgerBook.SetLedgerAccount(this.ledger, StoredInAccount);
+                this.ledgerService.MoveLedgerToAccount(this.ledgerBook, this.ledger, StoredInAccount);
                 var handler = Updated;
                 if (handler != null) handler(this, EventArgs.Empty);
             }

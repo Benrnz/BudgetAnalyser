@@ -103,10 +103,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public void Save([NotNull] LedgerBook book)
         {
-            if (book == null)
-            {
-                throw new ArgumentNullException("book");
-            }
+            if (book == null) throw new ArgumentNullException("book");
 
             Save(book, book.FileName);
         }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -13,47 +12,27 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerBookControllerFileOperations
     {
         private readonly DemoFileHelper demoFileHelper;
-        private readonly ILedgerBookRepository ledgerRepository;
         private readonly IUserMessageBox messageBox;
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
-        private ILedgerService ledgerService;
 
         private string ledgerBookFileName;
 
         public LedgerBookControllerFileOperations(
             [NotNull] UiContext uiContext,
             [NotNull] IMessenger messenger,
-            [NotNull] ILedgerBookRepository ledgerBookRepository,
             [NotNull] DemoFileHelper demoFileHelper)
         {
-            if (uiContext == null)
-            {
-                throw new ArgumentNullException("uiContext");
-            }
-
-            if (messenger == null)
-            {
-                throw new ArgumentNullException("messenger");
-            }
-
-            if (ledgerBookRepository == null)
-            {
-                throw new ArgumentNullException("ledgerBookRepository");
-            }
-
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException("demoFileHelper");
-            }
+            if (uiContext == null) throw new ArgumentNullException("uiContext");
+            if (messenger == null) throw new ArgumentNullException("messenger");
+            if (demoFileHelper == null) throw new ArgumentNullException("demoFileHelper");
 
             this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
 
-            this.ledgerRepository = ledgerBookRepository;
             this.demoFileHelper = demoFileHelper;
             MessengerInstance = messenger;
 
@@ -91,6 +70,11 @@ namespace BudgetAnalyser.LedgerBook
 
         internal LedgerBookViewModel ViewModel { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController"/> during its initialisation.
+        /// </summary>
+        internal ILedgerService LedgerService { get; set; }
+
         internal void CheckIfSaveRequired()
         {
             if (Dirty)
@@ -103,13 +87,13 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        internal void ExtractDataFromApplicationState(ILedgerService ledgerService, string lastLedgerBookFileName)
+        internal void ExtractDataFromApplicationState(LastLedgerBookLoadedV1 ledgerBookPersistedStateData)
         {
-            this.ledgerBookFileName = lastLedgerBookFileName;
+            this.ledgerBookFileName = ledgerBookPersistedStateData.AdaptModel<string>();
 
             if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
             {
-                LoadLedgerBookFromFile(this.ledgerBookFileName, ledgerService);
+                LoadLedgerBookFromFile(this.ledgerBookFileName);
                 this.ledgerBookFileName = null;
             }
         }
@@ -123,18 +107,18 @@ namespace BudgetAnalyser.LedgerBook
 
         internal void SaveLedgerBook()
         {
-            this.ledgerRepository.Save(ViewModel.LedgerBook);
+            LedgerService.Save(ViewModel.LedgerBook);
             Dirty = false;
             ViewModel.NewLedgerLine = null;
         }
 
         internal LastLedgerBookLoadedV1 StateDataForPersistence()
         {
-            var lastLedgerBook = new LastLedgerBookLoadedV1
+            var ledgerBookStateData = new LastLedgerBookLoadedV1
             {
                 Model = ViewModel.LedgerBook == null ? this.ledgerBookFileName : ViewModel.LedgerBook.FileName,
             };
-            return lastLedgerBook;
+            return ledgerBookStateData;
         }
 
         private bool CanExecuteCloseLedgerBookCommand()
@@ -152,7 +136,7 @@ namespace BudgetAnalyser.LedgerBook
             return ViewModel.LedgerBook != null && Dirty;
         }
 
-        private void LoadLedgerBookFromFile(string fileName, ILedgerService controllerLedgerService)
+        private void LoadLedgerBookFromFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
@@ -161,8 +145,7 @@ namespace BudgetAnalyser.LedgerBook
 
             try
             {
-                this.ledgerService = controllerLedgerService;
-                ViewModel.LedgerBook = this.ledgerService.DisplayLedgerBook(fileName);
+                ViewModel.LedgerBook = LedgerService.DisplayLedgerBook(fileName);
                 MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
             }
             catch (Engine.FileFormatException ex)
@@ -235,7 +218,7 @@ namespace BudgetAnalyser.LedgerBook
 
             OnCloseLedgerBookCommandExecuted();
 
-            ViewModel.LedgerBook = this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", fileName);
+            ViewModel.LedgerBook = LedgerService.CreateNew(fileName);
             Dirty = true;
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
         }

@@ -216,6 +216,7 @@
     <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Services\IWidgetService.cs" />
+    <Compile Include="Services\LedgerService.cs" />
     <Compile Include="Services\WidgetService.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
