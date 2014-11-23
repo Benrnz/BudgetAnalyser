@@ -12,6 +12,15 @@
             get { return "ChequeLogoImage"; }
         }
 
+        public override bool IsSalaryAccount
+        {
+            get
+            {
+                // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this will need to be more robust.
+                return true;
+            }
+        }
+
         internal override string[] KeyWords
         {
             get { return new[] { "CHEQUE", "CHECK" }; }

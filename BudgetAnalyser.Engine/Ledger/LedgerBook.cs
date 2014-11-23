@@ -44,7 +44,10 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerColumn> Ledgers
         {
             get { return this.ledgersColumns; }
-            internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
+            internal set
+            {
+                this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList();
+            }
         }
 
         public DateTime Modified { get; internal set; }
@@ -97,7 +100,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             decimal consistencyCheck1 = DatedEntries.Sum(e => e.CalculatedSurplus);
             var newLine = new LedgerEntryLine(date, bankBalances);
-            newLine.AddNew(this, budget, statement, CalculateStartDateForReconcile(date));
+            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(date));
             decimal consistencyCheck2 = DatedEntries.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {
@@ -213,7 +216,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     exist.
         /// </summary>
         /// <param name="date">The chosen date from the user</param>
-        private DateTime CalculateStartDateForReconcile(DateTime date)
+        private DateTime CalculateDateForReconcile(DateTime date)
         {
             if (DatedEntries.Any())
             {
