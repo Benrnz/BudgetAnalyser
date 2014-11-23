@@ -15,6 +15,11 @@ namespace BudgetAnalyser.Engine.Account
 
         internal abstract string[] KeyWords { get; }
 
+        public virtual bool IsSalaryAccount
+        {
+            get { return false; }
+        }
+
         public static bool operator ==(AccountType left, AccountType right)
         {
             return Equals(left, right);

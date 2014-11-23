@@ -12,6 +12,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -175,6 +176,11 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
+            if (message.Budgets == null)
+            {
+                throw new InvalidOperationException("The budgets collection should never be null.");
+            }
+
             this.dashboardService.NotifyOfDependencyChange(message.Budgets);
             this.dashboardService.NotifyOfDependencyChange<IBudgetCurrencyContext>(message.ActiveBudget);
         }
@@ -184,6 +190,11 @@ namespace BudgetAnalyser.Dashboard
             if (message == null)
             {
                 throw new ArgumentNullException("message");
+            }
+
+            if (message.Criteria == null)
+            {
+                throw new InvalidOperationException("The Criteria object should never be null.");
             }
 
             this.dashboardService.NotifyOfDependencyChange(message.Criteria);
@@ -196,7 +207,14 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            this.dashboardService.NotifyOfDependencyChange(message.LedgerBook);
+            if (message.LedgerBook == null)
+            {
+                this.dashboardService.NotifyOfDependencyChange<Engine.Ledger.LedgerBook>(null);
+            }
+            else
+            {
+                this.dashboardService.NotifyOfDependencyChange(message.LedgerBook);
+            }
         }
 
         private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
@@ -206,6 +224,12 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
+            // TODO Can this logic be moved to the Dashboard Service.
+            if (message.StatementModel == null)
+            {
+                return;
+            }
+            
             this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
         }
 
@@ -216,28 +240,20 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
+            if (message.StatementModel == null)
+            {
+                this.dashboardService.NotifyOfDependencyChange<StatementModel>(null);
+            }
+            else
+            {
+                this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
+            }
         }
 
         private void OnWidgetCommandExecuted(Widget widget)
         {
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
-
-        //private void OnWidgetUpdateRequested(object sender, EventArgs e)
-        //{
-        //    // TODO this should use individual tasks with delays.
-        //    this.elapsedTime = this.elapsedTime.Add(TimeSpan.FromMinutes(1));
-        //    foreach (Widget widget in WidgetGroups.SelectMany(group => group.Widgets).Where(w => w.RecommendedTimeIntervalUpdate != null))
-        //    {
-        //        Debug.Assert(widget.RecommendedTimeIntervalUpdate != null, "widget.RecommendedTimeIntervalUpdate != null");
-        //        if (this.elapsedTime >= widget.RecommendedTimeIntervalUpdate.Value)
-        //        {
-        //            Widget widgetCopy = widget;
-        //            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => UpdateWidget(widgetCopy));
-        //        }
-        //    }
-        //}
 
         private void RegisterForMessengerNotifications(UiContext uiContext)
         {

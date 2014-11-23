@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
@@ -36,12 +37,12 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <typeparam name="T">The type to register if not the actual concrete type.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
-        void NotifyOfDependencyChange<T>(object dependency);
+        void NotifyOfDependencyChange<T>([CanBeNull] object dependency);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
         /// </summary>
-        void NotifyOfDependencyChange(object dependency);
+        void NotifyOfDependencyChange([CanBeNull] object dependency);
 
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.

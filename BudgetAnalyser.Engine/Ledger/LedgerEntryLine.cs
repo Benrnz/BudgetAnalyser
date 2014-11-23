@@ -228,10 +228,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
 
-            DateTime finishDateExcl = Date;
+            DateTime finishDate = Date;
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= finishDateExcl).ToList(); // Date filter must be inclusion to be consistent with the rest of the app.
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= finishDate).ToList(); // Date filter must be inclusive to be consistent with the rest of the app.
 
             Dictionary<LedgerColumn, decimal> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
@@ -240,19 +240,33 @@ namespace BudgetAnalyser.Engine.Ledger
                 LedgerColumn ledgerColumn = previousLedgerBalance.Key;
                 decimal balance = previousLedgerBalance.Value;
                 var newEntry = new LedgerEntry(true) { Balance = balance, LedgerColumn = ledgerColumn };
-                Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
-                var transactions = new List<LedgerTransaction>();
-                if (expenseBudget != null)
-                {
-                    var budgetedAmount = new BudgetCreditLedgerTransaction { Amount = expenseBudget.Amount, Narrative = "Budgeted Amount" };
-                    transactions.Add(budgetedAmount);
-                }
-
+                var transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-
                 newEntry.SetTransactionsForReconciliation(transactions);
                 this.entries.Add(newEntry);
             }
+        }
+
+        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerColumn ledgerColumn)
+        {
+            Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
+            var transactions = new List<LedgerTransaction>();
+            if (expenseBudget != null)
+            {
+                BudgetCreditLedgerTransaction budgetedAmount;
+                if (ledgerColumn.StoredInAccount.IsSalaryAccount)
+                {
+                    budgetedAmount = new BudgetCreditLedgerTransaction { Amount = expenseBudget.Amount, Narrative = "Budgeted Amount" };
+                }
+                else
+                {
+                    budgetedAmount = new BudgetCreditLedgerTransaction { Amount = 0, Narrative = "Budgeted Amount {0:C} (Budget amount is transferred into this account with a real transaction)." };
+                }
+
+                transactions.Add(budgetedAmount);
+            }
+
+            return transactions;
         }
 
         internal void Unlock()
@@ -326,7 +340,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             return new CreditLedgerTransaction(t.Id)
                             {
-                                Amount = t.Amount, // Statement debits are negative, I want them to be positive here unless they are debit reversals where they should be negative.
+                                Amount = t.Amount, 
                                 Narrative = ExtractNarrative(t),
                             };
                         }
