@@ -11,19 +11,19 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     ///     A service to provide access to manipulate ledger books.
     /// </summary>
-    public interface ILedgerService
+    public interface ILedgerService : IServiceFoundation
     {
         /// <summary>
         ///     Creates a new empty <see cref="LedgerBook" />.
         /// </summary>
-        /// <param name="fileName">Path to a ledger book file to create. Will be overwritten if it exists.</param>
-        LedgerBook CreateNew([NotNull] string fileName);
+        /// <param name="storageKey">A new unique identifier for a ledger book. Will be overwritten if it exists.</param>
+        LedgerBook CreateNew([NotNull] string storageKey);
 
         /// <summary>
         ///     Retrieves and returns the ledger book from the specified file to display in the UI.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        LedgerBook DisplayLedgerBook([NotNull] string fileName);
+        /// <param name="storageKey">The unique identifier of the Ledger Book.</param>
+        LedgerBook DisplayLedgerBook([NotNull] string storageKey);
 
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
@@ -73,8 +73,8 @@ namespace BudgetAnalyser.Engine.Services
         ///     Saves the specified ledger book.
         /// </summary>
         /// <param name="ledgerBook">The ledger book.</param>
-        /// <param name="fileName">Name of the file.</param>
-        void Save([NotNull] LedgerBook ledgerBook, string fileName = null);
+        /// <param name="storageKey">The unique identifier of the Ledger Book.</param>
+        void Save([NotNull] LedgerBook ledgerBook, string storageKey = null);
 
         /// <summary>
         ///     Tracks a new budget bucket by creating a new <see cref="LedgerColumn" /> for the given <see cref="BudgetBucket" />

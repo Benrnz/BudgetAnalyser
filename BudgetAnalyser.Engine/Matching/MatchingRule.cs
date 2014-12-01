@@ -199,8 +199,8 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Checks for a match with the given transactions.  
-        /// All the properties on this rule are 'And'ed together.  This is an exact match search.
+        ///     Checks for a match with the given transactions.
+        ///     All the properties on this rule are 'And'ed together.  This is an exact match search.
         /// </summary>
         /// <returns>true if a the rule matches the transactions</returns>
         public bool Match([NotNull] Transaction transaction)
@@ -243,6 +243,11 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             return matched;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("MatchingRule({0} {1} {2})", Bucket.Code, Description, Amount);
         }
 
         [NotifyPropertyChangedInvocator]

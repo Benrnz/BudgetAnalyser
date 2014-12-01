@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     /// A service to prepare and present data ready for convenient consumption by the Budget Pie Graph.
     /// </summary>
-    public interface IBudgetPieGraphService
+    public interface IBudgetPieGraphService : IServiceFoundation
     {
         /// <summary>
         /// Prepares the income graph data.

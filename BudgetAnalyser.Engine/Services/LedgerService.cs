@@ -25,29 +25,29 @@ namespace BudgetAnalyser.Engine.Services
             this.ledgerRepository = ledgerRepository;
         }
 
-        public LedgerBook CreateNew(string fileName)
+        public LedgerBook CreateNew(string storageKey)
         {
-            if (fileName == null)
+            if (storageKey == null)
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("storageKey");
             }
 
-            return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", fileName);
+            return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", storageKey);
         }
 
-        public LedgerBook DisplayLedgerBook(string fileName)
+        public LedgerBook DisplayLedgerBook(string storageKey)
         {
-            if (fileName == null)
+            if (storageKey == null)
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("storageKey");
             }
 
-            if (!this.ledgerRepository.Exists(fileName))
+            if (!this.ledgerRepository.Exists(storageKey))
             {
-                throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + fileName, fileName);
+                throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + storageKey, storageKey);
             }
 
-            this.book = this.ledgerRepository.Load(fileName);
+            this.book = this.ledgerRepository.Load(storageKey);
             return this.book;
         }
 
@@ -135,19 +135,19 @@ namespace BudgetAnalyser.Engine.Services
             ledgerBook.Name = newName;
         }
 
-        public void Save(LedgerBook ledgerBook, string fileName = null)
+        public void Save(LedgerBook ledgerBook, string storageKey = null)
         {
             if (ledgerBook == null)
             {
                 throw new ArgumentNullException("ledgerBook");
             }
-            if (string.IsNullOrWhiteSpace(fileName))
+            if (string.IsNullOrWhiteSpace(storageKey))
             {
                 this.ledgerRepository.Save(ledgerBook);
             }
             else
             {
-                this.ledgerRepository.Save(ledgerBook, fileName);
+                this.ledgerRepository.Save(ledgerBook, storageKey);
             }
         }
 

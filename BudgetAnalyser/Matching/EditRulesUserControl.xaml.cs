@@ -129,8 +129,11 @@ namespace BudgetAnalyser.Matching
             flatList.Remove(rule);
 
             var groupedList = (ObservableCollection<RulesGroupedByBucket>)this.GroupedByListBox.ItemsSource;
-            RulesGroupedByBucket group = groupedList.Single(g => g.Bucket == rule.Bucket);
-            group.Rules.Remove(rule);
+            RulesGroupedByBucket group = groupedList.FirstOrDefault(g => g.Bucket == rule.Bucket);
+            if (group != null)
+            {
+                group.Rules.Remove(rule);
+            }
         }
 
         private void OnSortChanged(object sender, EventArgs e)

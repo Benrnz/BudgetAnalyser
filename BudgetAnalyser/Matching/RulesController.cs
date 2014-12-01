@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
@@ -25,9 +23,8 @@ namespace BudgetAnalyser.Matching
         public const string BucketSortKey = "Bucket";
         public const string DescriptionSortKey = "Description";
         public const string MatchesSortKey = "Matches";
-        private readonly ILogger logger;
         private readonly IUserQuestionBoxYesNo questionBox;
-        private readonly IMatchingRuleRepository ruleRepository;
+        private readonly ITransactionRuleMaintenanceService ruleMaintenanceService;
         private bool doNotUseEditingRule;
         private bool doNotUseFlatListBoxVisibility;
         private bool doNotUseGroupByListBoxVisibility;
@@ -36,28 +33,23 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseShown;
 
         private string doNotUseSortBy;
+        private bool initialised;
 
-        /// <summary>
-        ///     Only used if a custom matching rules file is being used. If this is null when the application state has loaded
-        ///     message
-        ///     arrives nothing will happen, if its a string value this will be used as a full file and path.
-        /// </summary>
-        private string rulesFileName;
-
-        public RulesController(
-            [NotNull] UiContext uiContext,
-            [NotNull] IMatchingRuleRepository ruleRepository)
+        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleMaintenanceService ruleMaintenanceService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            this.logger = uiContext.Logger;
+            if (ruleMaintenanceService == null)
+            {
+                throw new ArgumentNullException("ruleMaintenanceService");
+            }
+
+            this.ruleMaintenanceService = ruleMaintenanceService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
-            this.ruleRepository = ruleRepository;
             NewRuleController = uiContext.NewRuleController;
-            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
 
             MessengerInstance = uiContext.Messenger;
             uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
@@ -171,11 +163,12 @@ namespace BudgetAnalyser.Matching
             get { return this.doNotUseSortBy; }
             set
             {
+                string oldValue = this.doNotUseSortBy;
                 this.doNotUseSortBy = value;
                 RaisePropertyChanged(() => SortBy);
                 GroupByListBoxVisibility = false;
                 FlatListBoxVisibility = false;
-                switch (this.doNotUseSortBy)
+                switch (SortBy)
                 {
                     case BucketSortKey:
                         GroupByListBoxVisibility = true;
@@ -187,7 +180,8 @@ namespace BudgetAnalyser.Matching
                         break;
 
                     default:
-                        throw new ArgumentException(this.doNotUseSortBy + " is not a valid sort by argument.");
+                        this.doNotUseSortBy = oldValue;
+                        throw new ArgumentException(value + " is not a valid sort by argument.");
                 }
 
                 EventHandler handler = SortChanged;
@@ -231,69 +225,41 @@ namespace BudgetAnalyser.Matching
 
         public void Initialize()
         {
-            try
+            if (this.initialised)
             {
-                LoadRules();
+                return;
             }
-            catch (FileNotFoundException)
-            {
-                // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                this.ruleRepository.SaveRules(new List<MatchingRule>(), BuildDefaultFileName());
-                LoadRules();
-            }
+            this.initialised = true;
+            Rules = new ObservableCollection<MatchingRule>();
+            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
+            LoadRules();
         }
 
         public void SaveRules()
         {
-            this.ruleRepository.SaveRules(Rules, BuildDefaultFileName());
+            this.ruleMaintenanceService.SaveRules(Rules);
         }
 
-        protected virtual string BuildDefaultFileName()
+        protected void LoadRules(string rulesFileName = "")
         {
-            if (string.IsNullOrWhiteSpace(this.rulesFileName))
+            SortBy = BucketSortKey; // Defaults to Bucket sort order.
+            if (string.IsNullOrWhiteSpace(rulesFileName))
             {
-                string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                return Path.Combine(path, "MatchingRules.xml");
+                this.ruleMaintenanceService.PopulateRules(Rules, RulesGroupedByBucket);
             }
-
-            return this.rulesFileName;
-        }
-
-        protected void LoadRules()
-        {
-            List<MatchingRule> rules = this.ruleRepository.LoadRules(BuildDefaultFileName())
-                .OrderBy(r => r.Description)
-                .ToList();
-
-            Rules = new ObservableCollection<MatchingRule>(rules);
-            SortBy = BucketSortKey;
-
-            IEnumerable<RulesGroupedByBucket> grouped = rules.GroupBy(rule => rule.Bucket)
-                .Where(group => group.Key != null)
-                // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
-                .Select(group => new RulesGroupedByBucket(group.Key, group))
-                .OrderBy(group => group.Bucket.Code);
-
-            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(grouped.ToList());
+            else
+            {
+                this.ruleMaintenanceService.PopulateRules(rulesFileName, Rules, RulesGroupedByBucket);
+            }
         }
 
         private void AddToList(MatchingRule rule)
         {
-            RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(group => group.Bucket == rule.Bucket);
-            if (existingGroup == null)
+            if (!this.ruleMaintenanceService.AddRule(Rules, RulesGroupedByBucket, rule))
             {
-                var addNewGroup = new RulesGroupedByBucket(rule.Bucket, new[] { rule });
-                RulesGroupedByBucket.Add(addNewGroup);
-                Rules.Add(rule);
-            }
-            else
-            {
-                existingGroup.Rules.Add(rule);
-                Rules.Add(rule);
+                return;
             }
 
-            SaveRules();
-            this.logger.LogInfo(_ => "Matching Rule Added: " + rule);
             EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
             if (handler != null)
             {
@@ -313,15 +279,15 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            this.rulesFileName = message.RehydratedModels[typeof(LastMatchingRulesLoadedV1)].AdaptModel<string>();
-            LoadRules();
+            var rulesFileName = message.RehydratedModels[typeof(LastMatchingRulesLoadedV1)].AdaptModel<string>();
+            LoadRules(rulesFileName);
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             var lastRuleSet = new LastMatchingRulesLoadedV1
             {
-                Model = this.rulesFileName,
+                Model = this.ruleMaintenanceService.RulesStorageKey,
             };
             message.PersistThisModel(lastRuleSet);
         }
@@ -372,34 +338,18 @@ namespace BudgetAnalyser.Matching
                 EditingRule = false;
             }
 
-            RulesGroupedByBucket existingGroup = RulesGroupedByBucket.FirstOrDefault(g => g.Bucket == SelectedRule.Bucket);
-            if (existingGroup == null)
+            if (!this.ruleMaintenanceService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
             {
                 return;
-            }
-
-            bool success1 = existingGroup.Rules.Remove(SelectedRule);
-            bool success2 = Rules.Remove(SelectedRule);
-            MatchingRule removedRule = SelectedRule;
-            SelectedRule = null;
-            SaveRules();
-
-            this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
-            if (!success1)
-            {
-                this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
-            }
-
-            if (!success2)
-            {
-                this.logger.LogWarning(_ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
             }
 
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
             if (handler != null)
             {
-                handler(removedRule, new MatchingRuleEventArgs { Rule = removedRule });
+                handler(SelectedRule, new MatchingRuleEventArgs { Rule = SelectedRule });
             }
+
+            SelectedRule = null;
         }
     }
 }

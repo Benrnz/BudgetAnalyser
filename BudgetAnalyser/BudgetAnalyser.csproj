@@ -263,7 +263,6 @@
     <Compile Include="Matching\NewRuleController.cs" />
     <Compile Include="Matching\MatchingRuleEventArgs.cs" />
     <Compile Include="Matching\RulesController.cs" />
-    <Compile Include="Matching\RulesGroupedByBucket.cs" />
     <Compile Include="ShellDialog\ShellDialogController.cs" />
     <Compile Include="ShellDialog\ShellDialogRequestMessage.cs" />
     <Compile Include="ShellDialog\ShellDialogButton.cs" />

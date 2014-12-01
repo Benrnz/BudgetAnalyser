@@ -6,17 +6,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Matching;
 
-namespace BudgetAnalyser.Matching
+namespace BudgetAnalyser.Engine.Matching
 {
     /// <summary>
-    /// A class that models a group of matching rules grouped by a single <see cref="BudgetBucket"/>.
+    ///     A class that models a group of matching rules grouped by a single <see cref="BudgetBucket" />.
     /// </summary>
     public class RulesGroupedByBucket : INotifyPropertyChanged
     {
-        private BudgetBucket doNotUseBucket;
-        private ObservableCollection<MatchingRule> doNotUseRules;
+        private readonly BudgetBucket doNotUseBucket;
+        private readonly ObservableCollection<MatchingRule> doNotUseRules;
 
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
@@ -34,6 +33,8 @@ namespace BudgetAnalyser.Matching
             this.doNotUseRules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public BudgetBucket Bucket
         {
             get { return this.doNotUseBucket; }
@@ -48,8 +49,6 @@ namespace BudgetAnalyser.Matching
         {
             get { return Rules.Count(); }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

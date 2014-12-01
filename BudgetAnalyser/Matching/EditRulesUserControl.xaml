@@ -44,7 +44,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type matching1:RulesGroupedByBucket}">
+        <DataTemplate DataType="{x:Type matching:RulesGroupedByBucket}">
             <Expander IsExpanded="False"
                       Style="{StaticResource Expander.Style1}">
                 <Expander.Header>

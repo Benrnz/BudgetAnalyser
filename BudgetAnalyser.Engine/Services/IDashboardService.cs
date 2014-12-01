@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
 {
-    public interface IDashboardService
+    public interface IDashboardService : IServiceFoundation
     {
         /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
