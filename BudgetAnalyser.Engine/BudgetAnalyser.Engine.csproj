@@ -216,10 +216,10 @@
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
-    <Compile Include="Services\ITransactionRuleMaintenanceService.cs" />
+    <Compile Include="Services\ITransactionRuleService.cs" />
     <Compile Include="Services\IWidgetService.cs" />
     <Compile Include="Services\LedgerService.cs" />
-    <Compile Include="Services\TransactionRuleMaintenanceService.cs" />
+    <Compile Include="Services\TransactionRuleService.cs" />
     <Compile Include="Services\WidgetService.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />

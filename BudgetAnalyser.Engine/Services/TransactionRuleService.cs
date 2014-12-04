@@ -4,16 +4,18 @@ using System.IO;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC]
-    public class TransactionRuleMaintenanceService : ITransactionRuleMaintenanceService
+    public class TransactionRuleService : ITransactionRuleService
     {
         private readonly ILogger logger;
+        private readonly IMatchmaker matchMaker;
         private readonly IMatchingRuleRepository ruleRepository;
 
-        public TransactionRuleMaintenanceService([NotNull] IMatchingRuleRepository ruleRepository, [NotNull] ILogger logger)
+        public TransactionRuleService([NotNull] IMatchingRuleRepository ruleRepository, [NotNull] ILogger logger, [NotNull] IMatchmaker matchMaker)
         {
             if (ruleRepository == null)
             {
@@ -25,8 +27,14 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("logger");
             }
 
+            if (matchMaker == null)
+            {
+                throw new ArgumentNullException("matchMaker");
+            }
+
             this.ruleRepository = ruleRepository;
             this.logger = logger;
+            this.matchMaker = matchMaker;
         }
 
         public string RulesStorageKey { get; private set; }
@@ -77,6 +85,11 @@ namespace BudgetAnalyser.Engine.Services
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
 
             return true;
+        }
+
+        public bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules)
+        {
+            return this.matchMaker.Match(transactions, rules);
         }
 
         public void PopulateRules(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket)

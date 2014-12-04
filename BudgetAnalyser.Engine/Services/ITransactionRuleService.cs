@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -8,7 +9,7 @@ namespace BudgetAnalyser.Engine.Services
     /// An interface describing how to maintain <see cref="MatchingRule"/>s.
     /// The collections are owned by the consumer and passed into this service to be manipulated.  
     /// </summary>
-    public interface ITransactionRuleMaintenanceService : IServiceFoundation
+    public interface ITransactionRuleService : IServiceFoundation
     {
         /// <summary>
         /// Gets the unique identifer of the currently loaded Matching Rules set.
@@ -29,6 +30,14 @@ namespace BudgetAnalyser.Engine.Services
         /// or <see cref="PopulateRules(System.String, System.Collections.Generic.ICollection{BudgetAnalyser.Engine.Matching.MatchingRule},System.Collections.Generic.ICollection{BudgetAnalyser.Engine.Matching.RulesGroupedByBucket})"/>
         /// </exception>
         bool AddRule([NotNull] ICollection<MatchingRule> rules, [NotNull] ICollection<RulesGroupedByBucket> rulesGroupedByBucket, [NotNull] MatchingRule ruleToAdd);
+
+        /// <summary>
+        /// Matches the specified transactions using the provided rules.
+        /// </summary>
+        /// <param name="transactions">The transactions to scan for matches.</param>
+        /// <param name="rules">The rules to use.</param>
+        /// <returns>True, if matches were made, otherwise false.</returns>
+        bool Match([NotNull] IEnumerable<Transaction> transactions, [NotNull] IEnumerable<MatchingRule> rules);
 
         /// <summary>
         /// Initialises the service for use with an empty, default Matching Rules set (for first time use).

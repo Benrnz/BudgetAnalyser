@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Matching
         public const string DescriptionSortKey = "Description";
         public const string MatchesSortKey = "Matches";
         private readonly IUserQuestionBoxYesNo questionBox;
-        private readonly ITransactionRuleMaintenanceService ruleMaintenanceService;
+        private readonly ITransactionRuleService ruleService;
         private bool doNotUseEditingRule;
         private bool doNotUseFlatListBoxVisibility;
         private bool doNotUseGroupByListBoxVisibility;
@@ -35,19 +35,19 @@ namespace BudgetAnalyser.Matching
         private string doNotUseSortBy;
         private bool initialised;
 
-        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleMaintenanceService ruleMaintenanceService)
+        public RulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (ruleMaintenanceService == null)
+            if (ruleService == null)
             {
-                throw new ArgumentNullException("ruleMaintenanceService");
+                throw new ArgumentNullException("ruleService");
             }
 
-            this.ruleMaintenanceService = ruleMaintenanceService;
+            this.ruleService = ruleService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
 
@@ -237,7 +237,7 @@ namespace BudgetAnalyser.Matching
 
         public void SaveRules()
         {
-            this.ruleMaintenanceService.SaveRules(Rules);
+            this.ruleService.SaveRules(Rules);
         }
 
         protected void LoadRules(string rulesFileName = "")
@@ -245,17 +245,17 @@ namespace BudgetAnalyser.Matching
             SortBy = BucketSortKey; // Defaults to Bucket sort order.
             if (string.IsNullOrWhiteSpace(rulesFileName))
             {
-                this.ruleMaintenanceService.PopulateRules(Rules, RulesGroupedByBucket);
+                this.ruleService.PopulateRules(Rules, RulesGroupedByBucket);
             }
             else
             {
-                this.ruleMaintenanceService.PopulateRules(rulesFileName, Rules, RulesGroupedByBucket);
+                this.ruleService.PopulateRules(rulesFileName, Rules, RulesGroupedByBucket);
             }
         }
 
         private void AddToList(MatchingRule rule)
         {
-            if (!this.ruleMaintenanceService.AddRule(Rules, RulesGroupedByBucket, rule))
+            if (!this.ruleService.AddRule(Rules, RulesGroupedByBucket, rule))
             {
                 return;
             }
@@ -287,7 +287,7 @@ namespace BudgetAnalyser.Matching
         {
             var lastRuleSet = new LastMatchingRulesLoadedV1
             {
-                Model = this.ruleMaintenanceService.RulesStorageKey,
+                Model = this.ruleService.RulesStorageKey,
             };
             message.PersistThisModel(lastRuleSet);
         }
@@ -338,7 +338,7 @@ namespace BudgetAnalyser.Matching
                 EditingRule = false;
             }
 
-            if (!this.ruleMaintenanceService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
+            if (!this.ruleService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
             {
                 return;
             }

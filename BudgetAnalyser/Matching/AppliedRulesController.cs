@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
@@ -13,24 +13,24 @@ namespace BudgetAnalyser.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AppliedRulesController
     {
-        private readonly IMatchmaker matchmaker;
         private readonly IUserMessageBox messageBox;
+        private readonly ITransactionRuleService ruleService;
         private readonly StatementController statementController;
 
-        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] IMatchmaker matchmaker)
+        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] ITransactionRuleService ruleService)
         {
-            this.matchmaker = matchmaker;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (matchmaker == null)
+            if (ruleService == null)
             {
-                throw new ArgumentNullException("matchmaker");
+                throw new ArgumentNullException("ruleService");
             }
 
             RulesController = uiContext.RulesController;
+            this.ruleService = ruleService;
             this.statementController = uiContext.StatementController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
         }
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnApplyRulesCommandExecute()
         {
-            if (this.matchmaker.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
+            if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
             {
                 RulesController.SaveRules();
             }
