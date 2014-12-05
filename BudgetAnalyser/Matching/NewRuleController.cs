@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching
@@ -17,8 +18,8 @@ namespace BudgetAnalyser.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
     {
-        private readonly IBudgetBucketRepository budgetBucketRepository;
-        private readonly IMatchingRuleFactory ruleFactory;
+        private readonly IUserMessageBox messageBoxService;
+        private readonly ITransactionRuleService rulesService;
         private decimal doNotUseAmount;
         private string doNotUseDescription;
         private string doNotUseReference1;
@@ -32,31 +33,28 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
 
-        public event EventHandler RuleCreated;
-
-        public NewRuleController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] IMatchingRuleFactory ruleFactory)
+        public NewRuleController(
+            [NotNull] UiContext uiContext,
+            [NotNull] ITransactionRuleService rulesService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (budgetBucketRepository == null)
+            if (rulesService == null)
             {
-                throw new ArgumentNullException("budgetBucketRepository");
+                throw new ArgumentNullException("rulesService");
             }
 
-            if (ruleFactory == null)
-            {
-                throw new ArgumentNullException("ruleFactory");
-            }
-
-            this.budgetBucketRepository = budgetBucketRepository;
-            this.ruleFactory = ruleFactory;
+            this.rulesService = rulesService;
+            this.messageBoxService = uiContext.UserPrompts.MessageBox;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
+
+        public event EventHandler RuleCreated;
 
         public string ActionButtonToolTip
         {
@@ -147,7 +145,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public IEnumerable<object> SimilarRules { get; private set; }
+        public IEnumerable<MatchingRule> SimilarRules { get; private set; }
 
         public bool SimilarRulesExist { get; private set; }
 
@@ -242,18 +240,7 @@ namespace BudgetAnalyser.Matching
 
         public void ShowDialog(IEnumerable<MatchingRule> allRules)
         {
-            SimilarRules = new List<object>(
-                allRules.Select(rule => new
-                {
-                    rule.Amount,
-                    rule.Description,
-                    rule.Reference1,
-                    rule.Reference2,
-                    rule.Reference3,
-                    this.budgetBucketRepository.Buckets.Single(b => b.Code == rule.Bucket.Code).Code,
-                    rule.TransactionType
-                }));
-
+            SimilarRules = allRules.ToList();
             UpdateSimilarRules();
 
             this.shellDialogCorrelationId = Guid.NewGuid();
@@ -265,16 +252,6 @@ namespace BudgetAnalyser.Matching
             MessengerInstance.Send(dialogRequest);
         }
 
-        private static bool IsEqualButNotBlank(string operand1, string operand2)
-        {
-            if (string.IsNullOrWhiteSpace(operand1) || string.IsNullOrWhiteSpace(operand2))
-            {
-                return false;
-            }
-
-            return operand1 == operand2;
-        }
-
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
         {
             if (!message.IsItForMe(this.shellDialogCorrelationId))
@@ -282,41 +259,24 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
-            var newRule = this.ruleFactory.CreateRule(Bucket.Code); //new MatchingRule(this.budgetBucketRepository) { Bucket = Bucket };
-
             if (Bucket == null)
             {
-                MessageBox.Show("Bucket cannot be null.");
+                this.messageBoxService.Show("Bucket cannot be null.");
                 return;
             }
 
-            if (UseDescription)
-            {
-                newRule.Description = Description;
-            }
+            NewRule = this.rulesService.CreateNewRule(
+                Bucket,
+                UseDescription ? Description : null,
+                new[]
+                {
+                    UseReference1 ? Reference1 : null,
+                    UseReference2 ? Reference2 : null,
+                    UseReference3 ? Reference3 : null
+                },
+                UseTransactionType ? TransactionType : null);
 
-            if (UseReference1)
-            {
-                newRule.Reference1 = Reference1;
-            }
-
-            if (UseReference2)
-            {
-                newRule.Reference2 = Reference2;
-            }
-
-            if (UseReference3)
-            {
-                newRule.Reference3 = Reference3;
-            }
-
-            if (UseTransactionType)
-            {
-                newRule.TransactionType = TransactionType;
-            }
-
-            NewRule = newRule;
-            var handler = RuleCreated;
+            EventHandler handler = RuleCreated;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -332,16 +292,7 @@ namespace BudgetAnalyser.Matching
             }
 
             ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
-            view.Filter = item =>
-            {
-                dynamic currentRule = item;
-                return Amount == currentRule.Amount
-                       || IsEqualButNotBlank(Description, currentRule.Description)
-                       || IsEqualButNotBlank(Reference1, currentRule.Reference1)
-                       || IsEqualButNotBlank(Reference2, currentRule.Reference2)
-                       || IsEqualButNotBlank(Reference3, currentRule.Reference3)
-                       || IsEqualButNotBlank(TransactionType, currentRule.TransactionType);
-            };
+            view.Filter = item => this.rulesService.IsRuleSimilar((MatchingRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
 
             SimilarRulesExist = !view.IsEmpty;
             RaisePropertyChanged(() => SimilarRulesExist);

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
 
@@ -13,9 +15,14 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly ILogger logger;
         private readonly IMatchmaker matchMaker;
+        private readonly IMatchingRuleFactory ruleFactory;
         private readonly IMatchingRuleRepository ruleRepository;
 
-        public TransactionRuleService([NotNull] IMatchingRuleRepository ruleRepository, [NotNull] ILogger logger, [NotNull] IMatchmaker matchMaker)
+        public TransactionRuleService(
+            [NotNull] IMatchingRuleRepository ruleRepository, 
+            [NotNull] ILogger logger, 
+            [NotNull] IMatchmaker matchMaker, 
+            [NotNull] IMatchingRuleFactory ruleFactory)
         {
             if (ruleRepository == null)
             {
@@ -31,10 +38,16 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("matchMaker");
             }
+            
+            if (ruleFactory == null)
+            {
+                throw new ArgumentNullException("ruleFactory");
+            }
 
             this.ruleRepository = ruleRepository;
             this.logger = logger;
             this.matchMaker = matchMaker;
+            this.ruleFactory = ruleFactory;
         }
 
         public string RulesStorageKey { get; private set; }
@@ -85,6 +98,57 @@ namespace BudgetAnalyser.Engine.Services
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
 
             return true;
+        }
+
+        public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName)
+        {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException("bucket");
+            }
+
+            if (references == null)
+            {
+                throw new ArgumentNullException("references");
+            }
+
+            if (references.Length != 3)
+            {
+                throw new ArgumentException("The references array is expected to contain 3 elements.");
+            }
+
+            MatchingRule newRule = this.ruleFactory.CreateRule(bucket.Code);
+            if (description != null)
+            {
+                newRule.Description = description;
+            }
+
+            if (references[0] != null)
+            {
+                newRule.Reference1 = references[0];
+            }
+
+            if (references[1] != null)
+            {
+                newRule.Reference2 = references[1];
+            }
+
+            if (references[2] != null)
+            {
+                newRule.Reference3 = references[2];
+            }
+
+            return newRule;
+        }
+
+        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionTypeName)
+        {
+            return amount == rule.Amount
+                   || IsEqualButNotBlank(description, rule.Description)
+                   || IsEqualButNotBlank(references[0], rule.Reference1)
+                   || IsEqualButNotBlank(references[1], rule.Reference2)
+                   || IsEqualButNotBlank(references[2], rule.Reference3)
+                   || IsEqualButNotBlank(transactionTypeName, rule.TransactionType);
         }
 
         public bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules)
@@ -211,6 +275,16 @@ namespace BudgetAnalyser.Engine.Services
         {
             string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             return Path.Combine(path, "MatchingRules.xml");
+        }
+
+        private static bool IsEqualButNotBlank(string operand1, string operand2)
+        {
+            if (string.IsNullOrWhiteSpace(operand1) || string.IsNullOrWhiteSpace(operand2))
+            {
+                return false;
+            }
+
+            return operand1 == operand2;
         }
     }
 }
