@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Reports
         //[TestMethod]
         //public void TestMethod1()
         //{
-        //    BurnDownGraphAnalyser subject = CreateSubject();
+        //    BurnDownChartAnalyserResult subject = CreateSubject();
         //    BudgetModel budgetModel;
         //    StatementModel statementModel = CreateStatementModel(out budgetModel);
         //    var criteria = new GlobalFilterCriteria { BeginDate = new DateTime(2013, 5, 1), EndDate = new DateTime(2013, 5, 31) };
@@ -42,9 +42,9 @@ namespace BudgetAnalyser.UnitTest.Reports
         //    return statementImporter.ImportFromFile(@"C:\Development\xxx\BudgetAnalyserProject\Trunk\TestData\8Months.csv", budgetModel, new ChequeAccount("Cheque"));
         //}
 
-        //private BurnDownGraphAnalyser CreateSubject()
+        //private BurnDownChartAnalyserResult CreateSubject()
         //{
-        //    var analyser = new BurnDownGraphAnalyser();
+        //    var analyser = new BurnDownChartAnalyserResult();
         //    return analyser;
         //}
     }

@@ -17,21 +17,22 @@ namespace BudgetAnalyser.UnitTest.Reports
         private BudgetModel Budget { get; set; }
         private LedgerBook LedgerBook { get; set; }
         private StatementModel StatementModel { get; set; }
-        private BurnDownGraphAnalyser Subject { get; set; }
+        private BurnDownChartAnalyser Subject { get; set; }
+        private BurnDownChartAnalyserResult Result { get; set; }
 
         private SeriesData BudgetLine
         {
-            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BudgetSeriesName); }
+            get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName); }
         }
 
         private SeriesData ZeroLine
         {
-            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.ZeroSeriesName); }
+            get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName); }
         }
 
         private SeriesData BalanceLine
         {
-            get { return Subject.GraphLines.Series.Single(s => s.SeriesName == BurnDownGraphAnalyser.BalanceSeriesName); }
+            get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName); }
         }
 
         [TestMethod]
@@ -76,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Reports
         [TestMethod]
         public void AnalyseShouldReturnBalanceLineAxesMinimumOf0()
         {
-            Assert.AreEqual(0, Subject.GraphLines.GraphMinimumValue);
+            Assert.AreEqual(0, Result.GraphLines.GraphMinimumValue);
         }
 
         [TestMethod]
@@ -94,30 +95,30 @@ namespace BudgetAnalyser.UnitTest.Reports
         [TestMethod]
         public void AnalyseShouldReturnReportTransactionsAmountsTotaling3376()
         {
-            Assert.AreEqual(3376.34M, Subject.ReportTransactions.Sum(t => t.Amount));
+            Assert.AreEqual(3376.34M, Result.ReportTransactions.Sum(t => t.Amount));
         }
 
         [TestMethod]
         public void AnalyseShouldReturnALastReportTransactionsElementWithBalanceEqualTo3376()
         {
-            foreach (var transaction in Subject.ReportTransactions)
+            foreach (var transaction in Result.ReportTransactions)
             {
                 Console.WriteLine("{0} {1} {2:N} {3:N}", transaction.Date, transaction.Narrative.Truncate(30).PadRight(30), transaction.Amount.ToString().Truncate(10).PadRight(10), transaction.Balance);
             }
-      
-            Assert.AreEqual(3376.34M, Subject.ReportTransactions.Last().Balance);
+
+            Assert.AreEqual(3376.34M, Result.ReportTransactions.Last().Balance);
         }
 
         [TestMethod]
         public void AnalyseShouldReturn5ReportTransactions()
         {
-            Assert.AreEqual(5, Subject.ReportTransactions.Count());
+            Assert.AreEqual(5, Result.ReportTransactions.Count());
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            Subject = new BurnDownGraphAnalyser(new LedgerCalculation(), new FakeLogger());
+            Subject = new BurnDownChartAnalyser(new LedgerCalculation(), new FakeLogger());
             Budget = BudgetModelTestData.CreateTestData2();
             LedgerBook = LedgerBookTestData.TestData2();
             StatementModel = StatementModelTestData.TestData3();
@@ -131,8 +132,8 @@ namespace BudgetAnalyser.UnitTest.Reports
                 StatementModel,
                 Budget,
                 new BudgetBucket[] { StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket() },
-                new DateTime(2013, 07, 15),
-                LedgerBook);
+                LedgerBook,
+                new DateTime(2013, 07, 15));
         }
     }
 }

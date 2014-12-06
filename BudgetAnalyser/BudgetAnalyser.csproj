@@ -207,6 +207,7 @@
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReportsCatalog\BurnDownGraphs\CustomBurnDownChartsV1.cs" />
     <Compile Include="ScratchPad.xaml.cs">
       <DependentUpon>ScratchPad.xaml</DependentUpon>
     </Compile>
@@ -237,13 +238,10 @@
     <Compile Include="ReportsCatalog\BurnDownGraphs\BucketBurnDownLineChart.xaml.cs">
       <DependentUpon>BucketBurnDownLineChart.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartBuilderResults.cs" />
-    <Compile Include="ReportsCatalog\BurnDownGraphs\BurnDownChartsBuilder.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphsController.cs" />
     <Compile Include="ReportsCatalog\BurnDownGraphs\CurrentMonthBurnDownGraphView.xaml.cs">
       <DependentUpon>CurrentMonthBurnDownGraphView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReportsCatalog\BurnDownGraphs\CustomBurnDownChartsV1.cs" />
     <Compile Include="ReportsCatalog\LongTermSpendingLineGraph\LongTermSpendingGraph.xaml.cs">
       <DependentUpon>LongTermSpendingGraph.xaml</DependentUpon>
     </Compile>

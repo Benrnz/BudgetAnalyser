@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -12,25 +13,25 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
     public class AddUserDefinedBurnDownController : ControllerBase
     {
-        private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IBurnDownChartsService chartsService;
         private readonly IViewLoader viewLoader;
 
         public AddUserDefinedBurnDownController(
             [NotNull] AddUserDefinedBurnDownDialogViewLoader viewLoader,
-            [NotNull] IBudgetBucketRepository bucketRepository)
+            [NotNull] IBurnDownChartsService chartsService)
         {
             if (viewLoader == null)
             {
                 throw new ArgumentNullException("viewLoader");
             }
 
-            if (bucketRepository == null)
+            if (chartsService == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException("chartsService");
             }
 
             this.viewLoader = viewLoader;
-            this.bucketRepository = bucketRepository;
+            this.chartsService = chartsService;
         }
 
         public ICommand AddChartCommand
@@ -56,9 +57,9 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         public bool AddChart()
         {
-            this.SelectedBuckets = new BindingList<BudgetBucket>();
-            this.UnselectedBuckets = new BindingList<BudgetBucket>(this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket).ToList());
-            this.ChartTitle = string.Empty;
+            SelectedBuckets = new BindingList<BudgetBucket>();
+            UnselectedBuckets = new BindingList<BudgetBucket>(this.chartsService.AvailableBucketsForBurnDownCharts().ToList());
+            ChartTitle = string.Empty;
 
             bool? result = this.viewLoader.ShowDialog(this);
             if (result != null && result.Value)
@@ -81,14 +82,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void OnAddSelectedCommandExecute(BudgetBucket parameter)
         {
-            this.UnselectedBuckets.Remove(parameter);
-            this.SelectedBuckets.Add(parameter);
+            UnselectedBuckets.Remove(parameter);
+            SelectedBuckets.Add(parameter);
         }
 
         private void OnRemoveSelectedCommandExecute(BudgetBucket parameter)
         {
-            this.SelectedBuckets.Remove(parameter);
-            this.UnselectedBuckets.Add(parameter);
+            SelectedBuckets.Remove(parameter);
+            UnselectedBuckets.Add(parameter);
         }
     }
 }

@@ -57,7 +57,16 @@ namespace BudgetAnalyser
             builder.AppendLine(ex.ToString());
             this.logger.LogError(_ => builder.ToString());
 
-            Current.Shutdown();
+            // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that Autofac doesn't have a registration for.
+            // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoc]
+            try
+            {
+                Current.Shutdown();
+            }
+            catch
+            {
+                // Exceptions are already handled and logged, ignore all others attempting to shut down.
+            }
         }
 
         private void OnApplicationExit(object sender, ExitEventArgs e)
