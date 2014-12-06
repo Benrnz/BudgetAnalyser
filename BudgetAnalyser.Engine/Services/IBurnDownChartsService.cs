@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="budgetModel">The current budget model.</param>
         /// <param name="ledgerBookModel">The current ledger book model.</param>
         /// <returns>An object that contains all compiled information for the charts including the chart data itself.</returns>
-        BurnDownCharts BuildCharts(
+        BurnDownCharts BuildAllCharts(
             GlobalFilterCriteria criteria, 
             StatementModel statementModel, 
             BudgetModel budgetModel, 
