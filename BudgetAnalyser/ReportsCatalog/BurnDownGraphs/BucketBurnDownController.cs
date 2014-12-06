@@ -6,7 +6,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
-    public class BucketBurnDownController : ControllerBase, IBurnDownChartViewModel
+    public class BucketBurnDownController : ControllerBase
     {
         private SeriesData doNotUseBalanceLine;
         private SeriesData doNotUseTrendLine;
@@ -26,8 +26,6 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        //public BudgetBucket Bucket { get; private set; }
-
         public SeriesData BudgetLine
         {
             get { return this.doNotUseTrendLine; }
@@ -39,7 +37,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        public string ChartTitle { get; set; }
+        public string ChartTitle { get; private set; }
 
         public bool IsCustomChart { get; private set; }
 
@@ -63,6 +61,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             BalanceLine = analysisResult.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName);
             BudgetLine = analysisResult.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName);
             ZeroLine = analysisResult.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName);
+            ChartTitle = analysisResult.ChartTitle;
         }
 
         private void LoadBucketChart(BurnDownChartAnalyserResult analysisResult)

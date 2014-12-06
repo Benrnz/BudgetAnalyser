@@ -208,7 +208,6 @@
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\IBurnDownChartAnalyser.cs" />
-    <Compile Include="Reports\IBurnDownChartViewModel.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
     <Compile Include="Reports\ReportTransaction.cs" />
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />

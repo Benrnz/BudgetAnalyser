@@ -148,7 +148,12 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
 
             List<BudgetBucket> buckets = this.addUserDefinedBurnDownController.SelectedBuckets.ToList();
-            BurnDownChartAnalyserResult result = this.chartsService.CreateNewCustomAggregateChart(this.statement, this.budget, buckets, this.ledgerBook, this.beginDate,
+            BurnDownChartAnalyserResult result = this.chartsService.CreateNewCustomAggregateChart(
+                this.statement, 
+                this.budget, 
+                buckets, 
+                this.ledgerBook, 
+                this.beginDate,
                 this.addUserDefinedBurnDownController.ChartTitle);
             BucketBurnDownController newChart = BuildBucketBurnDownController(result);
             ChartControllers.Insert(0, newChart);

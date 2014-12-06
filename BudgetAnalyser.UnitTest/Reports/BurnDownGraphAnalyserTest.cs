@@ -128,7 +128,7 @@ namespace BudgetAnalyser.UnitTest.Reports
 
         private void Act()
         {
-            Subject.Analyse(
+            Result = Subject.Analyse(
                 StatementModel,
                 Budget,
                 new BudgetBucket[] { StatementModelTestData.PhoneBucket, StatementModelTestData.PowerBucket, new SurplusBucket() },

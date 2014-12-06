@@ -5,6 +5,7 @@ namespace BudgetAnalyser.Engine.Reports
 {
     /// <summary>
     /// A class used to store compiled results for a series of charts.
+    /// Primarily a collection of <see cref="BurnDownChartAnalyserResult"/> that describes each chart and some overarching meta-data for all charts.
     /// </summary>
     public class BurnDownCharts
     {
