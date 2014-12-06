@@ -21,16 +21,12 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         /// Builds all the charts.
         /// </summary>
-        /// <param name="criteria">The global filter criteria.</param>
         /// <param name="statementModel">The current statement model.</param>
         /// <param name="budgetModel">The current budget model.</param>
         /// <param name="ledgerBookModel">The current ledger book model.</param>
+        /// <param name="criteria">The global filter criteria.</param>
         /// <returns>An object that contains all compiled information for the charts including the chart data itself.</returns>
-        BurnDownCharts BuildAllCharts(
-            GlobalFilterCriteria criteria, 
-            StatementModel statementModel, 
-            BudgetModel budgetModel, 
-            LedgerBook ledgerBookModel);
+        BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, GlobalFilterCriteria criteria);
 
         /// <summary>
         /// Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.

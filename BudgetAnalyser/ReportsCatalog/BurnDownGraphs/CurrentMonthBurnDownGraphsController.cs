@@ -125,7 +125,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.budget = budgetModel;
             this.ledgerBook = ledgerBookModel;
 
-            BurnDownCharts results = this.chartsService.BuildAllCharts(criteria, statementModel, this.budget, this.ledgerBook);
+            BurnDownCharts results = this.chartsService.BuildAllCharts(statementModel, this.budget, this.ledgerBook, criteria);
             this.beginDate = results.BeginDate;
             DateRangeDescription = results.DateRangeDescription;
             ChartControllers = new BindingList<BucketBurnDownController>(results.Charts.Select(BuildBucketBurnDownController).ToList());

@@ -43,11 +43,7 @@ namespace BudgetAnalyser.Engine.Services
             return this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket);
         }
 
-        public BurnDownCharts BuildAllCharts(
-            GlobalFilterCriteria criteria, 
-            StatementModel statementModel, 
-            BudgetModel budgetModel, 
-            LedgerBook ledgerBookModel)
+        public BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, GlobalFilterCriteria criteria)
         {
             this.chartsBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
             return this.chartsBuilder.Results;

@@ -3,6 +3,7 @@ using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
@@ -10,21 +11,21 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 {
     public sealed class LongTermSpendingGraphController : ControllerBase
     {
-        private readonly LongTermSpendingTrendAnalyser analyser;
+        private readonly ILongTermSpendingChartService chartService;
         private decimal doNotUseGraphMaximumValue;
         private decimal doNotUseGraphMinimumValue;
         private bool doNotUseToggleAll;
         private SeriesData doNotUseSelectedSeriesData;
         private DatedGraphPlot doNotUseSelectedPlotPoint;
 
-        public LongTermSpendingGraphController([NotNull] LongTermSpendingTrendAnalyser analyser)
+        public LongTermSpendingGraphController([NotNull] ILongTermSpendingChartService chartService)
         {
-            if (analyser == null)
+            if (chartService == null)
             {
-                throw new ArgumentNullException("analyser");
+                throw new ArgumentNullException("chartService");
             }
-
-            this.analyser = analyser;
+        
+            this.chartService = chartService;
             ToggleAll = true;
         }
 
@@ -48,10 +49,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             }
         }
 
-        public GraphData Graph
-        {
-            get { return this.analyser.Graph; }
-        }
+        public GraphData Graph { get; private set; }
 
         public decimal GraphMaximumValue
         {
@@ -92,14 +90,13 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public void Load(StatementModel statementModel, GlobalFilterCriteria criteria)
         {
-            this.analyser.Analyse(statementModel, criteria);
+            Graph = this.chartService.BuildChart(statementModel, criteria);
             GraphMaximumValue = Graph.Series.Max(s => s.Plots.Max(p => p.Amount));
             GraphMinimumValue = Graph.Series.Min(s => s.MinimumValue);
         }
 
         public void NotifyOfClose()
         {
-            this.analyser.Reset();
             ToggleAll = true;
         }
 
