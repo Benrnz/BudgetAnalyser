@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="references">The references.</param>
         /// <param name="transactionTypeName">Name of the transaction type.</param>
         /// <returns>True, if the data is similar to the rule, otherwise false.</returns>
-        bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionTypeName);
+        bool IsRuleSimilar([NotNull] MatchingRule rule, decimal amount, string description, [NotNull] string[] references, string transactionTypeName);
 
         /// <summary>
         ///     Matches the specified transactions using the provided rules.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -247,7 +248,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public override string ToString()
         {
-            return string.Format("MatchingRule({0} {1} {2})", Bucket.Code, Description, Amount);
+            return string.Format(CultureInfo.CurrentCulture, "MatchingRule({0} {1} {2})", Bucket.Code, Description, Amount);
         }
 
         [NotifyPropertyChangedInvocator]

@@ -54,13 +54,13 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
         /// </summary>
-        /// <param name="date">
+        /// <param name="reconciliationDate">
         ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
         ///     <see cref="statement" />. This date ideally is your payday of the month, and should be the same date
         ///     every month. Transactions are searched for up to but not including this date.
         /// </param>
         /// <param name="balances">
-        ///     The bank balances as at the <see cref="date" /> to include in this new single line of the
+        ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <param name="budgetContext">The current budget context.</param>
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     balances or budgetContext or statement
         /// </exception>
         /// <exception cref="System.InvalidOperationException">Reconciling against an inactive budget is invalid.</exception>
-        public LedgerEntryLine MonthEndReconciliation(DateTime date, IEnumerable<BankBalance> balances, IBudgetCurrencyContext budgetContext, StatementModel statement, bool ignoreWarnings = false)
+        public LedgerEntryLine MonthEndReconciliation(DateTime reconciliationDate, IEnumerable<BankBalance> balances, IBudgetCurrencyContext budgetContext, StatementModel statement, bool ignoreWarnings = false)
         {
             if (balances == null)
             {
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            return this.book.Reconcile(date, balances, budgetContext.Model, statement, ignoreWarnings);
+            return this.book.Reconcile(reconciliationDate, balances, budgetContext.Model, statement, ignoreWarnings);
         }
 
         public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerColumn ledger, AccountType storedInAccount)

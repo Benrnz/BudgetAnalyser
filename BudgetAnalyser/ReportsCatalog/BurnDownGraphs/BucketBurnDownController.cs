@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Reports;
 using Rees.Wpf;
 
@@ -43,8 +45,13 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         public SeriesData ZeroLine { get; private set; }
 
-        public void Load(BurnDownChartAnalyserResult analysisResult)
+        public void Load([NotNull] BurnDownChartAnalyserResult analysisResult)
         {
+            if (analysisResult == null)
+            {
+                throw new ArgumentNullException("analysisResult");
+            }
+
             if (analysisResult.IsCustomAggregateChart)
             {
                 LoadCustomChart(analysisResult);

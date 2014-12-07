@@ -14,14 +14,14 @@ namespace BudgetAnalyser.Engine.Services
     public class TransactionRuleService : ITransactionRuleService
     {
         private readonly ILogger logger;
-        private readonly IMatchmaker matchMaker;
+        private readonly IMatchmaker matchmaker;
         private readonly IMatchingRuleFactory ruleFactory;
         private readonly IMatchingRuleRepository ruleRepository;
 
         public TransactionRuleService(
             [NotNull] IMatchingRuleRepository ruleRepository, 
             [NotNull] ILogger logger, 
-            [NotNull] IMatchmaker matchMaker, 
+            [NotNull] IMatchmaker matchmaker, 
             [NotNull] IMatchingRuleFactory ruleFactory)
         {
             if (ruleRepository == null)
@@ -34,9 +34,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("logger");
             }
 
-            if (matchMaker == null)
+            if (matchmaker == null)
             {
-                throw new ArgumentNullException("matchMaker");
+                throw new ArgumentNullException("matchmaker");
             }
             
             if (ruleFactory == null)
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Engine.Services
 
             this.ruleRepository = ruleRepository;
             this.logger = logger;
-            this.matchMaker = matchMaker;
+            this.matchmaker = matchmaker;
             this.ruleFactory = ruleFactory;
         }
 
@@ -143,6 +143,16 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionTypeName)
         {
+            if (rule == null)
+            {
+                throw new ArgumentNullException("rule");
+            }
+
+            if (references == null)
+            {
+                throw new ArgumentNullException("references");
+            }
+
             return amount == rule.Amount
                    || IsEqualButNotBlank(description, rule.Description)
                    || IsEqualButNotBlank(references[0], rule.Reference1)
@@ -153,7 +163,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules)
         {
-            return this.matchMaker.Match(transactions, rules);
+            return this.matchmaker.Match(transactions, rules);
         }
 
         public void PopulateRules(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket)

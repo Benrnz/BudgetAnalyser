@@ -22,6 +22,16 @@ namespace BudgetAnalyser.Engine.Services
 
         public GraphData BuildChart(StatementModel statementModel, GlobalFilterCriteria criteria)
         {
+            if (statementModel == null)
+            {
+                throw new ArgumentNullException("statementModel");
+            }
+
+            if (criteria == null)
+            {
+                throw new ArgumentNullException("criteria");
+            }
+
             this.analyser.Analyse(statementModel, criteria);
             var result = this.analyser.Graph;
             this.analyser.Reset();

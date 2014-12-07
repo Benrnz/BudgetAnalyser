@@ -47,6 +47,7 @@ namespace BudgetAnalyser
             compositionRoot.ShellWindow.Show();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "All exceptions are already logged, any further exceptions attempting to gracefully shutdown can be ignored.")]
         private void LogUnhandledException(string origin, object ex)
         {
             var builder = new StringBuilder();

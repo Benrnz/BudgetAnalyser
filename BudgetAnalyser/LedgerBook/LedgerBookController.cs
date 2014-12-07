@@ -341,7 +341,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)
         {
-            this.uiContext.AddLedgerReconciliationController.ShowEditDialog(ViewModel.LedgerBook, line, line == ViewModel.NewLedgerLine);
+            this.uiContext.AddLedgerReconciliationController.ShowEditDialog(ViewModel.LedgerBook, line);
         }
 
         private void OnShowHideMonthsCommandExecuted(int increment)

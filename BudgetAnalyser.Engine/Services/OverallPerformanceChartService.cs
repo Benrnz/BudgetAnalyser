@@ -23,6 +23,21 @@ namespace BudgetAnalyser.Engine.Services
 
         public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
+            if (statementModel == null)
+            {
+                throw new ArgumentNullException("statementModel");
+            }
+
+            if (budgets == null)
+            {
+                throw new ArgumentNullException("budgets");
+            }
+
+            if (criteria == null)
+            {
+                throw new ArgumentNullException("criteria");
+            }
+
             return this.analyser.Analyse(statementModel, budgets, criteria);
         }
     }
