@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
@@ -12,22 +13,22 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 {
     public class OverallPerformanceController : ControllerBase
     {
-        private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IOverallPerformanceChartService chartService;
         private bool doNotUseExpenseFilter;
         private bool doNotUseIncomeFilter;
 
-        public OverallPerformanceController([NotNull] IBudgetBucketRepository bucketRepository)
+        public OverallPerformanceController([NotNull] IOverallPerformanceChartService chartService)
         {
-            if (bucketRepository == null)
+            if (chartService == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException("chartService");
             }
-
+        
+            this.chartService = chartService;
             this.doNotUseExpenseFilter = true;
-            this.bucketRepository = bucketRepository;
         }
 
-        public OverallPerformanceBudgetAnalyser Analysis { get; private set; }
+        public OverallPerformanceBudgetResult Analysis { get; private set; }
 
         public bool ExpenseFilter
         {
@@ -63,8 +64,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
-            Analysis = new OverallPerformanceBudgetAnalyser(statementModel, budgets, this.bucketRepository);
-            Analysis.Analyse(criteria);
+            Analysis = this.chartService.BuildChart(statementModel, budgets, criteria);
             OverallPerformance = (double)Analysis.OverallPerformance;
             ExpenseFilter = true;
             IncomeFilter = false;
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             ICollectionView view = CollectionViewSource.GetDefaultView(Analysis.Analyses);
             view.Filter = x =>
             {
-                var bucketAnalysis = x as BucketPerformanceAnalyser;
+                var bucketAnalysis = x as BucketPerformanceResult;
                 if (bucketAnalysis == null)
                 {
                     return true;
