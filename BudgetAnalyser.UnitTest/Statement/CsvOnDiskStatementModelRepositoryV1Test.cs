@@ -100,7 +100,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
             var model = await subject.LoadAsync("Foo.foo");
 
-            Assert.AreEqual("Foo.foo", model.FileName);
+            Assert.AreEqual("Foo.foo", model.StorageKey);
         }
 
         [TestMethod]

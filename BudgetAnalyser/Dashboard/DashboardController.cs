@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            IEnumerable<WidgetPersistentState> widgetStates = this.dashboardService.PreparePersistentData();
+            IEnumerable<WidgetPersistentState> widgetStates = this.dashboardService.PreparePersistentStateData();
 
             message.PersistThisModel(
                 new DashboardApplicationStateV1

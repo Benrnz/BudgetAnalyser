@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Statement
             {
                 if (Statement != null)
                 {
-                    return Path.GetFileNameWithoutExtension(Statement.FileName);
+                    return Path.GetFileNameWithoutExtension(Statement.StorageKey);
                 }
 
                 return "[No Transactions Loaded]";

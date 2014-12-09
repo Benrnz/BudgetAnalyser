@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("statementModel");
             }
 
-            await this.statementModelRepository.SaveAsync(statementModel, statementModel.FileName);
+            await this.statementModelRepository.SaveAsync(statementModel, statementModel.StorageKey);
         }
 
         /// <summary>

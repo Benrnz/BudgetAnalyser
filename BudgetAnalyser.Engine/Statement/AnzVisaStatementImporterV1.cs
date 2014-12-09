@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             return new StatementModel(this.logger)
             {
-                FileName = fileName,
+                StorageKey = fileName,
                 LastImport = DateTime.Now,
             }.LoadTransactions(transactions);
         }

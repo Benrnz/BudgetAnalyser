@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
 using BudgetAnalyser.UnitTest.TestData;
@@ -258,7 +259,8 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
                     new Mock<IStatementFileManager>().Object,
                     new Mock<IRecentFileManager>().Object,
                     new DemoFileHelper(),
-                    MockBucketRepo.Object)
+                    MockBucketRepo.Object),
+                new Mock<ITransactionManagerService>().Object
                 );
         }
 

@@ -5,6 +5,8 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
@@ -21,6 +23,7 @@ namespace BudgetAnalyser.Statement
         public const string SortByDateKey = "Date";
 
         private readonly IUiContext uiContext;
+        private readonly ITransactionManagerService transactionService;
         private bool doNotUseShown;
         private string doNotUseTextFilter;
         private bool filterByTextActive;
@@ -29,7 +32,8 @@ namespace BudgetAnalyser.Statement
 
         public StatementController(
             [NotNull] IUiContext uiContext,
-            [NotNull] StatementControllerFileOperations fileOperations)
+            [NotNull] StatementControllerFileOperations fileOperations, 
+            [NotNull] ITransactionManagerService transactionService)
         {
             if (uiContext == null)
             {
@@ -40,9 +44,15 @@ namespace BudgetAnalyser.Statement
             {
                 throw new ArgumentNullException("fileOperations");
             }
+            
+            if (transactionService == null)
+            {
+                throw new ArgumentNullException("transactionService");
+            }
 
             FileOperations = fileOperations;
             this.uiContext = uiContext;
+            this.transactionService = transactionService;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterApplied);
@@ -204,7 +214,7 @@ namespace BudgetAnalyser.Statement
             }
 
             var statementMetadata = ((StatementApplicationStateV1)message.RehydratedModels[typeof(StatementApplicationStateV1)]).StatementApplicationState;
-            await FileOperations.LoadStatementFromApplicationStateAsync(statementMetadata.FileName);
+            await FileOperations.LoadStatementFromApplicationStateAsync(statementMetadata.StorageKey);
             ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
             OnSortCommandExecute();
         }
@@ -215,7 +225,7 @@ namespace BudgetAnalyser.Statement
             {
                 StatementApplicationState = new StatementApplicationState
                 {
-                    FileName = ViewModel.Statement == null ? null : ViewModel.Statement.FileName,
+                    StorageKey = ViewModel.Statement == null ? null : ViewModel.Statement.StorageKey,
                     SortByBucket = ViewModel.SortByBucket,
                 }
             };
@@ -247,7 +257,7 @@ namespace BudgetAnalyser.Statement
                 && ViewModel.Statement.AllTransactions.Any())
             {
                 this.uiContext.UserPrompts.MessageBox.Show(
-                    "WARNING! By loading a different budget with a Statement loaded data loss may occur. There may be budget categories used in the Statement that do not exist in the loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
+                    "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
                     "Data Loss Wanring!");
             }
 

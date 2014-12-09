@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
     {
         public long Checksum { get; set; }
 
-        public string FileName { get; set; }
+        public string StorageKey { get; set; }
 
         public DateTime LastImport { get; set; }
 

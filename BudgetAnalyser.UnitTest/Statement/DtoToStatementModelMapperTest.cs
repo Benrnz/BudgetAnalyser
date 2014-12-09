@@ -29,14 +29,14 @@ namespace BudgetAnalyser.UnitTest.Statement
 //public TransactionSetDto TestData2() {{
 //    return new TransactionSetDto() {{
 //        Checksum = 252523523525,
-//        FileName = ""{0}"",
+//        StorageKey = ""{0}"",
 //        LastImport = new DateTime({1}, {2}, {3}),
 //        VersionHash = ""uiwhgr8972y59872gh5972798gh"",
 //        Transactions = new List<TransactionDto>
 //        {{ {4} }},
 //    }};
 //}}
-//", result.FileName, result.LastImport.Year, result.LastImport.Month, result.LastImport.Day, GenerateTransactionsCode(result));
+//", result.StorageKey, result.LastImport.Year, result.LastImport.Month, result.LastImport.Day, GenerateTransactionsCode(result));
 
 //        }
 
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ShouldMapFileName()
         {
-            Assert.AreEqual(TestData.FileName, Result.FileName);
+            Assert.AreEqual(TestData.FileName, Result.StorageKey);
         }
 
         [TestMethod]

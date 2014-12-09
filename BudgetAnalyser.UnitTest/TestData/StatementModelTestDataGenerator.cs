@@ -34,7 +34,7 @@ public static StatementModel TestDataGenerated()
     var model = new StatementModel(new FakeLogger()) 
     {{", DateTime.Now);
             Console.WriteLine(@"
-        FileName = @""C:\Foo\StatementModel.csv"",");
+        StorageKey = @""C:\Foo\StatementModel.csv"",");
             Console.WriteLine(@"
         Imported = new DateTime({0}, {1}, {2}),", model.LastImport.Year, model.LastImport.Month, model.LastImport.Day);
             Console.WriteLine(@"

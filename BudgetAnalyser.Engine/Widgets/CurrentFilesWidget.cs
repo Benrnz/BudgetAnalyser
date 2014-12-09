@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 number++;
                 HasStatement = true;
-                this.statementName = ShortenFileName(statementModel.FileName);
+                this.statementName = ShortenFileName(statementModel.StorageKey);
             }
 
             if (budgetModel == null)

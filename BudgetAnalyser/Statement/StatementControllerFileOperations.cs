@@ -237,8 +237,7 @@ namespace BudgetAnalyser.Statement
             }
 
             LoadingData = true;
-            //await this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-            //{
+            
             // Update all UI bound properties.
             ViewModel.Statement = statementModel;
             var requestCurrentFilterMessage = new RequestFilterMessage(this);
@@ -252,7 +251,6 @@ namespace BudgetAnalyser.Statement
             ViewModel.TriggerRefreshTotalsRow();
 
             MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-            //});
 
             LoadingData = false;
             return true;
@@ -299,23 +297,17 @@ namespace BudgetAnalyser.Statement
 
                 ViewModel.Statement.Merge(additionalModel);
 
-                //this.dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
-                //{
                 RaisePropertyChanged(() => ViewModel);
                 MessengerInstance.Send(new TransactionsChangedMessage());
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
-                //});
             }
             finally
             {
-                //this.dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-                //{
                 if (additionalModel != null)
                 {
                     MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
                 }
-                //});
             }
         }
 
@@ -335,7 +327,7 @@ namespace BudgetAnalyser.Statement
                 if (result)
                 {
                     // Update RecentFile list for successfully loaded files only. 
-                    UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.FileName));
+                    UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.StorageKey));
                 }
             }
             catch (FileNotFoundException ex)
@@ -352,7 +344,7 @@ namespace BudgetAnalyser.Statement
         {
             // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
             await SaveAsync(); 
-            UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.FileName));
+            UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.StorageKey));
         }
 
         private bool PromptToSaveIfDirty()

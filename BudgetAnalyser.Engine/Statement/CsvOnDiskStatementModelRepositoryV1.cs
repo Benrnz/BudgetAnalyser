@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Engine.Statement
             long totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
-                return new StatementModel(this.logger) { FileName = fileName }.LoadTransactions(new List<Transaction>());
+                return new StatementModel(this.logger) { StorageKey = fileName }.LoadTransactions(new List<Transaction>());
             }
 
             List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             var transactionSet = this.domainToDtoMapper.Map(model);
             transactionSet.VersionHash = VersionHash;
-            transactionSet.FileName = fileName;
+            transactionSet.StorageKey = fileName;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
             if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
             {
@@ -262,7 +262,7 @@ namespace BudgetAnalyser.Engine.Statement
             var transactionSet = new TransactionSetDto
             {
                 Checksum = this.importUtilities.FetchLong(headerSplit, 3),
-                FileName = fileName,
+                StorageKey = fileName,
                 LastImport = this.importUtilities.FetchDate(headerSplit, 4),
                 Transactions = transactions,
                 VersionHash = this.importUtilities.FetchString(headerSplit, 1),

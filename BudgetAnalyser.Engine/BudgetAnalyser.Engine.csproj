@@ -225,6 +225,7 @@
     <Compile Include="Services\ILongTermSpendingChartService.cs" />
     <Compile Include="Services\IOverallPerformanceChartService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
+    <Compile Include="Services\ITransactionManagerService.cs" />
     <Compile Include="Services\ITransactionRuleService.cs" />
     <Compile Include="Services\IWidgetService.cs" />
     <Compile Include="Services\LedgerService.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
     <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
+    <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />
     <Compile Include="Statement\Transaction.cs" />

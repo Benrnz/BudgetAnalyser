@@ -58,7 +58,11 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        public string FileName { get; set; }
+        /// <summary>
+        /// Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
+        /// </summary>
+        public string StorageKey { get; set; }
+
         public bool Filtered { get; private set; }
         public DateTime LastImport { get; internal set; }
 

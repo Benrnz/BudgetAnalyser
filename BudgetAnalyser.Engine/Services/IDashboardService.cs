@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.
         /// </summary>
-        IEnumerable<WidgetPersistentState> PreparePersistentData();
+        IEnumerable<WidgetPersistentState> PreparePersistentStateData();
 
         /// <summary>
         ///     Removes a multi-instance widget from the widget groups.

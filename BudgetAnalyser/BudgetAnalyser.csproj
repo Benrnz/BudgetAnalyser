@@ -301,7 +301,6 @@
     <Compile Include="Statement\SplitTransactionView.xaml.cs">
       <DependentUpon>SplitTransactionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementControllerFileOperations.cs" />
     <Compile Include="Statement\StatementControllerNavigation.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />

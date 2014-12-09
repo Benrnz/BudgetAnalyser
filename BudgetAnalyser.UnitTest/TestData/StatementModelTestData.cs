@@ -28,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var statement = new StatementModel(new FakeLogger())
             {
-                FileName = @"C:\TestData1\FooStatement.csv",
+                StorageKey = @"C:\TestData1\FooStatement.csv",
                 LastImport = new DateTime(2013, 08, 15),
             };
 
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var statement = new StatementModel(new FakeLogger())
             {
-                FileName = @"C:\TestData2\Foo2Statement.csv",
+                StorageKey = @"C:\TestData2\Foo2Statement.csv",
                 LastImport = new DateTime(2013, 08, 15),
             };
 
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var statement = new StatementModel(new FakeLogger())
             {
-                FileName = @"C:\TestData3\Foo2Statement.csv",
+                StorageKey = @"C:\TestData3\Foo2Statement.csv",
                 LastImport = new DateTime(2013, 08, 15),
             };
 

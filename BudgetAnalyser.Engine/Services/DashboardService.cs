@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public IEnumerable<WidgetPersistentState> PreparePersistentData()
+        public IEnumerable<WidgetPersistentState> PreparePersistentStateData()
         {
             return WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
         }
