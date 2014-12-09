@@ -22,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ShouldMapFileName()
         {
-            Assert.AreEqual(TestData.StorageKey, Result.FileName);
+            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
         }
 
         [TestMethod]

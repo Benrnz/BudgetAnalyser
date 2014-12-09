@@ -11,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return new TransactionSetDto
             {
                 Checksum = 252523523525,
-                FileName = @"C:\Foo\Bar.csv",
+                StorageKey = @"C:\Foo\Bar.csv",
                 LastImport = new DateTime(2013, 8, 15),
                 VersionHash = "uiwhgr8972y59872gh5972798gh",
                 Transactions = new List<TransactionDto>
