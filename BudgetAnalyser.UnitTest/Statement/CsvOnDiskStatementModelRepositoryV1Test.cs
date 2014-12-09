@@ -209,7 +209,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             mockToDtoMapper.Setup(m => m.Map(model)).Returns(
                 new TransactionSetDto
                 {
-                    FileName = "Foo.bar",
+                    StorageKey = "Foo.bar",
                     LastImport = new DateTime(2013, 07, 20),
                     Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList(),
                 });
