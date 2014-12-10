@@ -36,7 +36,7 @@ namespace BudgetAnalyser.UnitTest
             DefaultIoCRegistrations.RegisterDefaultMappings(builder);
             var container = builder.Build();
 
-            var interfaces = typeof(FileFormatException).Assembly.GetTypes().Where(t => t.IsInterface);
+            var interfaces = typeof(DataFormatException).Assembly.GetTypes().Where(t => t.IsInterface);
 
             foreach (var interfaceType in interfaces.Except(ExemptionList))
             {

@@ -241,6 +241,7 @@
     <Compile Include="Statement\Data\TransactionDtoToTransactionMapper.cs" />
     <Compile Include="Statement\Data\TransactionToTransactionDtoMapper.cs" />
     <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
+    <Compile Include="Statement\IStatementRepository.cs" />
     <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementApplicationState.cs" />
@@ -251,7 +252,7 @@
     <Compile Include="Statement\TransactionListExtension.cs" />
     <Compile Include="Statement\TransactionType.cs" />
     <Compile Include="ValidationWarningException.cs" />
-    <Compile Include="FileFormatException.cs" />
+    <Compile Include="DataFormatException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="AutoRegisterWithIoCProcessor.cs" />
     <Compile Include="Ledger\ILedgerBookRepository.cs" />

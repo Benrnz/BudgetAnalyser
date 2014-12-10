@@ -54,7 +54,14 @@ namespace BudgetAnalyser.Engine.Statement
         /// </param>
         public StatementModel Load(string fileName, AccountType accountType)
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+            try
+            {
+                this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new KeyNotFoundException(ex.Message, ex);
+            }
 
             var transactions = new List<Transaction>();
             foreach (string line in ReadLines(fileName))

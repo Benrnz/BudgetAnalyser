@@ -67,12 +67,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             catch (Exception ex)
             {
-                throw new FileFormatException("Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+                throw new DataFormatException("Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             if (dataEntity == null)
             {
-                throw new FileFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", fileName));
+                throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", fileName));
             }
 
             dataEntity.FileName = fileName;
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var messages = new StringBuilder();
             if (!book.Validate(messages))
             {
-                throw new FileFormatException(messages.ToString());
+                throw new DataFormatException(messages.ToString());
             }
 
             if (Math.Abs(dataEntity.Checksum - (-1)) < 0.0001)
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 double calculatedChecksum = CalculateChecksum(book);
                 if (Math.Abs(calculatedChecksum - dataEntity.Checksum) > 0.0001)
                 {
-                    throw new FileFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
+                    throw new DataFormatException("The Ledger Book has been tampered with, checksum should be " + calculatedChecksum);
                 }
             }
 

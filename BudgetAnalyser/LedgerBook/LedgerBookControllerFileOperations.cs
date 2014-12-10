@@ -148,7 +148,7 @@ namespace BudgetAnalyser.LedgerBook
                 ViewModel.LedgerBook = LedgerService.DisplayLedgerBook(fileName);
                 MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
             }
-            catch (Engine.FileFormatException ex)
+            catch (Engine.DataFormatException ex)
             {
                 this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
             }

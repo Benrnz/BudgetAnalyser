@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public async Task<bool> IsValidFileAsync(string fileName)
+        public async Task<bool> IsStatementModelAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
             List<string> allLines = (await ReadLinesAsync(fileName, 2)).ToList();
@@ -79,11 +79,18 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<StatementModel> LoadAsync(string fileName)
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
-
-            if (!(await IsValidFileAsync(fileName)))
+            try
             {
-                throw new VersionNotFoundException("The CSV file is not supported by this version of the Budget Analyser.");
+                this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new KeyNotFoundException(ex.Message, ex);
+            }
+
+            if (!(await IsStatementModelAsync(fileName)))
+            {
+                throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
             List<string> allLines = (await ReadLinesAsync(fileName)).ToList();
@@ -255,7 +262,7 @@ namespace BudgetAnalyser.Engine.Statement
             string header = allLines[0];
             if (string.IsNullOrWhiteSpace(header))
             {
-                throw new FileFormatException("The Budget Analyser file does not have a valid header row.");
+                throw new DataFormatException("The Budget Analyser file does not have a valid header row.");
             }
 
             string[] headerSplit = header.Split(',');
@@ -301,17 +308,17 @@ namespace BudgetAnalyser.Engine.Statement
                 }
                 catch (InvalidDataException ex)
                 {
-                    throw new FileFormatException("The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
+                    throw new DataFormatException("The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
-                    throw new FileFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
+                    throw new DataFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
                 }
 
                 if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
                 {
                     // Do not check for Amount == 0 here, sometimes memo transactions can appear with 0.00 or null amounts; which are valid.
-                    throw new FileFormatException("The Budget Analyser file does not contain the correct data type for Date and/or Id in row " + index + 1);
+                    throw new DataFormatException("The Budget Analyser file does not contain the correct data type for Date and/or Id in row " + index + 1);
                 }
 
                 transactions.Add(transaction);

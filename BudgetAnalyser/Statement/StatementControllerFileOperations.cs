@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.RecentFiles;
 
@@ -18,17 +20,20 @@ namespace BudgetAnalyser.Statement
     public class StatementControllerFileOperations : ViewModelBase
     {
         private readonly DemoFileHelper demoFileHelper;
+        private readonly LoadFileController loadFileController;
         private readonly IRecentFileManager recentFileManager;
-        private readonly IStatementFileManager statementFileManager;
-        private readonly IUiContext uiContext;
+        private readonly IStatementRepository statementRepository;
         private bool doNotUseLoadingData;
         private List<ICommand> recentFileCommands;
+        private readonly IUserMessageBox messageBox;
+        private readonly IUserQuestionBoxYesNo yesNoBox;
 
         public StatementControllerFileOperations(
             [NotNull] IUiContext uiContext,
-            [NotNull] IStatementFileManager statementFileManager,
+            [NotNull] IStatementRepository statementRepository,
             [NotNull] IRecentFileManager recentFileManager,
             [NotNull] DemoFileHelper demoFileHelper,
+            [NotNull] LoadFileController loadFileController,
             [NotNull] IBudgetBucketRepository budgetBucketRepository)
         {
             if (uiContext == null)
@@ -36,9 +41,9 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("uiContext");
             }
 
-            if (statementFileManager == null)
+            if (statementRepository == null)
             {
-                throw new ArgumentNullException("statementFileManager");
+                throw new ArgumentNullException("statementRepository");
             }
 
             if (recentFileManager == null)
@@ -51,15 +56,22 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("demoFileHelper");
             }
 
+            if (loadFileController == null)
+            {
+                throw new ArgumentNullException("loadFileController");
+            }
+
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
             }
 
-            this.uiContext = uiContext;
-            this.statementFileManager = statementFileManager;
+            this.yesNoBox = uiContext.UserPrompts.YesNoBox;
+            this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.statementRepository = statementRepository;
             this.recentFileManager = recentFileManager;
             this.demoFileHelper = demoFileHelper;
+            this.loadFileController = loadFileController;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
             ViewModel = new StatementViewModel(budgetBucketRepository);
         }
@@ -82,6 +94,35 @@ namespace BudgetAnalyser.Statement
                 this.doNotUseLoadingData = value;
                 RaisePropertyChanged(() => LoadingData);
             }
+        }
+
+        /// <summary>
+        ///     Prompts the user for a filename and other required parameters to be able to load/import/merge the file.
+        /// </summary>
+        /// <param name="mode">Open or Merge mode.</param>
+        /// <returns>
+        ///     The user selected filename. All other required parameters are accessible from the
+        ///     <see cref="LoadFileController" />.
+        /// </returns>
+        private async Task<string> GetFileNameFromUser(StatementOpenMode mode)
+        {
+            switch (mode)
+            {
+                case StatementOpenMode.Merge:
+                    await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
+                    break;
+
+                case StatementOpenMode.Open:
+                    await this.loadFileController.RequestUserInputForOpenFile();
+                    break;
+            }
+
+            return this.loadFileController.FileName;
+        }
+
+        private void FileCannotBeLoaded(Exception ex)
+        {
+            this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
         }
 
         public ICommand MergeStatementCommand
@@ -199,7 +240,7 @@ namespace BudgetAnalyser.Statement
                 await LoadInternalAsync(statementFileName);
                 WaitingForBudgetToLoad = null;
             }
-            catch (FileNotFoundException)
+            catch (KeyNotFoundException)
             {
                 // Ignore it.
             }
@@ -228,16 +269,48 @@ namespace BudgetAnalyser.Statement
 
         private async Task<bool> LoadInternalAsync(string fullFileName)
         {
-            StatementModel statementModel = await this.statementFileManager.LoadAnyStatementFileAsync(fullFileName);
-
-            if (statementModel == null)
+            if (string.IsNullOrWhiteSpace(fullFileName))
             {
-                // User cancelled.
+                fullFileName = await GetFileNameFromUser(StatementOpenMode.Open);
+                if (string.IsNullOrWhiteSpace(fullFileName))
+                {
+                    // User cancelled
+                    return false;
+                }
+            }
+
+            StatementModel statementModel;
+            try
+            {
+                statementModel = await this.statementRepository.LoadStatementModelAsync(fullFileName);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                FileCannotBeLoaded(ex);
                 return false;
+            }
+            catch (StatementModelChecksumException ex)
+            {
+                this.messageBox.Show("The file being loaded is corrupt. The internal checksum does not match the transactions.\nFile Checksum:" + ex.FileChecksum);
+                return false;
+            }
+            catch (DataFormatException ex)
+            {
+                FileCannotBeLoaded(ex);
+                return false;
+            }
+            catch (NotSupportedException ex)
+            {
+                FileCannotBeLoaded(ex);
+                return false;
+            }
+            finally
+            {
+                this.loadFileController.Reset();
             }
 
             LoadingData = true;
-            
+
             // Update all UI bound properties.
             ViewModel.Statement = statementModel;
             var requestCurrentFilterMessage = new RequestFilterMessage(this);
@@ -285,10 +358,19 @@ namespace BudgetAnalyser.Statement
             await SaveAsync();
             ViewModel.BucketFilter = null;
 
-            StatementModel additionalModel = await this.statementFileManager.ImportAndMergeBankStatementAsync(ViewModel.Statement);
+            var fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                // User cancelled
+                return;
+            }
 
+            StatementModel additionalModel = null;
             try
             {
+                var account = this.loadFileController.SelectedExistingAccountName;
+                additionalModel = this.statementRepository.ImportAndMergeBankStatementAsync(fileName, ViewModel.Statement, account);
+
                 if (additionalModel == null)
                 {
                     // User cancelled.
@@ -302,12 +384,22 @@ namespace BudgetAnalyser.Statement
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
             }
+            catch (NotSupportedException ex)
+            {
+                FileCannotBeLoaded(ex);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                FileCannotBeLoaded(ex);
+            }
             finally
             {
                 if (additionalModel != null)
                 {
                     MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
                 }
+
+                this.loadFileController.Reset();
             }
         }
 
@@ -343,7 +435,7 @@ namespace BudgetAnalyser.Statement
         private async void OnSaveStatementExecute()
         {
             // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
-            await SaveAsync(); 
+            await SaveAsync();
             UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.StorageKey));
         }
 
@@ -351,7 +443,7 @@ namespace BudgetAnalyser.Statement
         {
             if (ViewModel.Statement != null && ViewModel.Dirty)
             {
-                bool? result = this.uiContext.UserPrompts.YesNoBox.Show("Statement has been modified, save changes?",
+                bool? result = this.yesNoBox.Show("Statement has been modified, save changes?",
                     "Budget Analyser");
                 if (result != null && result.Value)
                 {
@@ -364,7 +456,7 @@ namespace BudgetAnalyser.Statement
 
         private async Task SaveAsync()
         {
-            await this.statementFileManager.SaveAsync(ViewModel.Statement);
+            await this.statementRepository.SaveAsync(ViewModel.Statement);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
         }

@@ -35,6 +35,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (!File.Exists(fileName))
             {
+                // TODO shouldnt be using message boxes in the engine.
                 messageBox.Show("The file name provided no longer exists at its location.", "File Not Found");
                 throw new FileNotFoundException("File not found.", fileName);
             }

@@ -15,7 +15,6 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
-using FileFormatException = BudgetAnalyser.Engine.FileFormatException;
 
 namespace BudgetAnalyser.Budget
 {
@@ -326,7 +325,7 @@ namespace BudgetAnalyser.Budget
                     MessengerInstance.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
                 }
             }
-            catch (FileFormatException)
+            catch (DataFormatException)
             {
                 this.messageBox.Show("That is not a valid Budget-Analyser Budget file.");
             }
@@ -400,7 +399,7 @@ namespace BudgetAnalyser.Budget
 
                 LoadBudget(budgetFileName);
             }
-            catch (FileFormatException)
+            catch (DataFormatException)
             {
                 HandleBudgetFileExceptions("The last Budget file is an invalid file format. A empty default file will use the default file instead.");
             }

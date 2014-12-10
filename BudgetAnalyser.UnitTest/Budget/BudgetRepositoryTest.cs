@@ -139,7 +139,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public void LoadShouldThrowIfAnyOtherExceptionIsThrownAndWrapItIntoFileFormatException()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
@@ -151,7 +151,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public void LoadShouldThrowIfDeserialisedObjectIsNotBudgetCollection()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public void LoadShouldThrowIfFileFormatIsInvalid()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();

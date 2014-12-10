@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             var type = Type.GetType(transactionTypeName);
             if (type == null)
             {
-                throw new FileFormatException("Invalid transaction type encountered: " + transactionTypeName);
+                throw new DataFormatException("Invalid transaction type encountered: " + transactionTypeName);
             }
 
             return Activator.CreateInstance(type, id) as LedgerTransaction;

@@ -288,7 +288,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            LastFileWasBudgetAnalyserStatementFile = await this.statementModelRepository.IsValidFileAsync(FileName);
+            LastFileWasBudgetAnalyserStatementFile = await this.statementModelRepository.IsStatementModelAsync(FileName);
             if (LastFileWasBudgetAnalyserStatementFile ?? false)
             {
                 FileTypeSelectionReady = false;

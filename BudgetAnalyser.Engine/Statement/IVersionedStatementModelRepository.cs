@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public interface IVersionedStatementModelRepository
     {
-        Task<bool> IsValidFileAsync(string fileName);
+        Task<bool> IsStatementModelAsync(string fileName);
 
         Task<StatementModel> LoadAsync(string fileName);
 

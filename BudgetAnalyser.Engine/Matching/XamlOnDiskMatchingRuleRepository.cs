@@ -58,12 +58,12 @@ namespace BudgetAnalyser.Engine.Matching
             }
             catch (Exception ex)
             {
-                throw new FileFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+                throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             if (dataEntities == null)
             {
-                throw new FileFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
+                throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));

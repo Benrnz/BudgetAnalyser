@@ -256,9 +256,10 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
                 MockUiContext.Object,
                 new StatementControllerFileOperations(
                     MockUiContext.Object,
-                    new Mock<IStatementFileManager>().Object,
+                    new Mock<IStatementRepository>().Object,
                     new Mock<IRecentFileManager>().Object,
                     new DemoFileHelper(),
+                    new Mock<LoadFileController>().Object,
                     MockBucketRepo.Object),
                 new Mock<ITransactionManagerService>().Object
                 );

@@ -303,12 +303,12 @@
     </Compile>
     <Compile Include="Statement\StatementControllerFileOperations.cs" />
     <Compile Include="Statement\StatementControllerNavigation.cs" />
+    <Compile Include="Statement\StatementOpenMode.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
-    <Compile Include="Statement\IStatementFileManager.cs" />
     <Compile Include="Statement\StatementApplicationStateV1.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
     <Compile Include="Statement\StatementController.cs" />
-    <Compile Include="Statement\StatementFileManager.cs" />
+    <Compile Include="Statement\StatementRepository.cs" />
     <Compile Include="Statement\StatementHasBeenModifiedMessage.cs" />
     <Compile Include="Statement\StatementViewModel.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketViewModel.cs" />

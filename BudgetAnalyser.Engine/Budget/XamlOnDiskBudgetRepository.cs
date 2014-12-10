@@ -82,18 +82,18 @@ namespace BudgetAnalyser.Engine.Budget
             }
             catch (XamlObjectWriterException ex)
             {
-                throw new FileFormatException(
+                throw new DataFormatException(
                     string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName), ex);
             }
             catch (Exception ex)
             {
-                throw new FileFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+                throw new DataFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             var correctDataFormat = serialised as BudgetCollectionDto;
             if (correctDataFormat == null)
             {
-                throw new FileFormatException(
+                throw new DataFormatException(
                     string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", fileName));
             }
 

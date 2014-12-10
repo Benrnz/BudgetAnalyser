@@ -25,7 +25,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             }
             catch (AutoMapperMappingException ex)
             {
-                if (ex.InnerException is FileFormatException)
+                if (ex.InnerException is DataFormatException)
                 {
                     return;
                 }

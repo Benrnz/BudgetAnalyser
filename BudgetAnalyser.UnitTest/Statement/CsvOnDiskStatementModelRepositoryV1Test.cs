@@ -68,7 +68,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            var result = await subject.IsValidFileAsync("Foo.foo");
+            var result = await subject.IsStatementModelAsync("Foo.foo");
 
             Assert.IsFalse(result);
         }
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var result = await subject.IsValidFileAsync("Foo.foo");
+            var result = await subject.IsStatementModelAsync("Foo.foo");
 
             Assert.IsTrue(result);
         }
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public async Task LoadShouldThrowGivenFileWithIncorrectDataTypes()
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();

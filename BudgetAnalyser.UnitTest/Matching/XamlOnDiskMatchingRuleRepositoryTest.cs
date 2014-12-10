@@ -42,7 +42,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public void LoadShouldThrowGivenBadFileFormat()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
@@ -71,7 +71,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileFormatException))]
+        [ExpectedException(typeof(DataFormatException))]
         public void LoadShouldThrowIfLoadedNullFile()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
