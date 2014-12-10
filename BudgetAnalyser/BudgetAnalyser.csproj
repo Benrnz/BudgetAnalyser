@@ -308,7 +308,6 @@
     <Compile Include="Statement\StatementApplicationStateV1.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
     <Compile Include="Statement\StatementController.cs" />
-    <Compile Include="Statement\StatementRepository.cs" />
     <Compile Include="Statement\StatementHasBeenModifiedMessage.cs" />
     <Compile Include="Statement\StatementViewModel.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketViewModel.cs" />

@@ -369,7 +369,7 @@ namespace BudgetAnalyser.Statement
             try
             {
                 var account = this.loadFileController.SelectedExistingAccountName;
-                additionalModel = this.statementRepository.ImportAndMergeBankStatementAsync(fileName, ViewModel.Statement, account);
+                additionalModel = this.statementRepository.ImportAndMergeBankStatementAsync(fileName, account);
 
                 if (additionalModel == null)
                 {

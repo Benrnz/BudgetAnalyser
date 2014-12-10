@@ -246,6 +246,7 @@
     <Compile Include="Statement\NamedTransaction.cs" />
     <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementModel.cs" />
+    <Compile Include="Statement\StatementRepository.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />
     <Compile Include="Statement\Transaction.cs" />
     <Compile Include="Statement\TransactionGroupedByBucket.cs" />
