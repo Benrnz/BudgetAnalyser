@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
+        private BudgetCollection currentBudgetCollection;
 
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
@@ -102,7 +103,18 @@ namespace BudgetAnalyser.Engine.Budget
 
             BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
             budgetCollection.FileName = fileName;
+            this.currentBudgetCollection = budgetCollection;
             return budgetCollection;
+        }
+
+        public void Save()
+        {
+            if (this.currentBudgetCollection == null)
+            {
+                throw new InvalidOperationException("There is no current budget collection loaded.");
+            }
+
+            Save(this.currentBudgetCollection);
         }
 
         public void Save(BudgetCollection budget)

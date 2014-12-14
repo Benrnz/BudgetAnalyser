@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
@@ -21,7 +23,21 @@ namespace BudgetAnalyser.Engine.Services
         Widget CreateNewBucketMonitorWidget(string bucketCode);
 
         /// <summary>
-        /// Retrieves a list of filterable account types for use on the dashboard, (to select an account type to filter by).
+        ///     Creates the new fixed budget monitor widget. Also creates all supporting background infrastructure to support the
+        ///     project including a sub-class
+        ///     of Surplus.
+        /// </summary>
+        /// <param name="bucketCode">
+        ///     The code to use for a <see cref="BudgetBucket" /> bucket code. This will be a bucket that
+        ///     inherits from Surplus.
+        /// </param>
+        /// <param name="description">The description.</param>
+        /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
+        /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
+        Widget CreateNewFixedBudgetMonitorWidget([NotNull] string bucketCode, [NotNull] string description, decimal fixedBudgetAmount);
+
+        /// <summary>
+        ///     Retrieves a list of filterable account types for use on the dashboard, (to select an account type to filter by).
         /// </summary>
         IEnumerable<AccountType> FilterableAccountTypes();
 
@@ -30,7 +46,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     This must be called first before other methods of this service can be used.
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
-        ObservableCollection<WidgetGroup> InitialiseWidgetGroups(IEnumerable<WidgetPersistentState> storedState);
+        ObservableCollection<WidgetGroup> LoadPersistedStateData(IEnumerable<WidgetPersistentState> storedState);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
@@ -54,7 +70,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="widgetToRemove">The widget to remove.</param>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred spelling")]
-        void RemoveMultiInstanceWidget(IMultiInstanceWidget widgetToRemove);
+        void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove);
 
         /// <summary>
         ///     Makes all widgets visible.

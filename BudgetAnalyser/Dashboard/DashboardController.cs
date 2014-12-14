@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Input;
-using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -28,16 +23,18 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC(SingleInstance = true)]
     public sealed class DashboardController : ControllerBase, IShowableController
     {
-        private readonly ChooseBudgetBucketController chooseBudgetBucketController;
-        private readonly IDashboardService dashboardService;
-        private readonly IUserMessageBox messageBox;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
+        private readonly ChooseBudgetBucketController chooseBudgetBucketController;
+        private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
+        private readonly IDashboardService dashboardService;
+        private readonly IUserMessageBox messageBox;
         // TODO Support for image changes when widget updates
 
         public DashboardController(
             [NotNull] UiContext uiContext,
             [NotNull] ChooseBudgetBucketController chooseBudgetBucketController,
+            [NotNull] CreateNewFixedBudgetController createNewFixedBudgetController,
             [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
@@ -50,16 +47,23 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("chooseBudgetBucketController");
             }
 
+            if (createNewFixedBudgetController == null)
+            {
+                throw new ArgumentNullException("createNewFixedBudgetController");
+            }
+
             if (dashboardService == null)
             {
                 throw new ArgumentNullException("dashboardService");
             }
 
             this.chooseBudgetBucketController = chooseBudgetBucketController;
+            this.createNewFixedBudgetController = createNewFixedBudgetController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.dashboardService = dashboardService;
 
             this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
+            this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
 
             GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
@@ -79,6 +83,22 @@ namespace BudgetAnalyser.Dashboard
 
         public GlobalFilterController GlobalFilterController { get; private set; }
 
+        public string VersionString
+        {
+            get
+            {
+                var assemblyName = GetType().Assembly.GetName();
+                return assemblyName.Name + "Version: " + assemblyName.Version;
+            }
+        }
+
+        public ICommand WidgetCommand
+        {
+            get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
+        }
+
+        public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
+
         public bool Shown
         {
             get { return this.doNotUseShown; }
@@ -91,27 +111,6 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
-        }
-
-        public string VersionString
-        {
-            get
-            {
-                AssemblyName assemblyName = GetType().Assembly.GetName();
-                return assemblyName.Name + "Version: " + assemblyName.Version;
-            }
-        }
-
-        public ICommand WidgetCommand
-        {
-            get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
-        }
-
-        public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
-
-        private static bool WidgetCommandCanExecute(Widget widget)
-        {
-            return widget.Clickable;
         }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
@@ -133,12 +132,12 @@ namespace BudgetAnalyser.Dashboard
             }
 
             // Now that we have the previously persisted state data we can properly intialise the service.
-            WidgetGroups = this.dashboardService.InitialiseWidgetGroups(storedState.WidgetStates);
+            WidgetGroups = this.dashboardService.LoadPersistedStateData(storedState.WidgetStates);
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            IEnumerable<WidgetPersistentState> widgetStates = this.dashboardService.PreparePersistentStateData();
+            var widgetStates = this.dashboardService.PreparePersistentStateData();
 
             message.PersistThisModel(
                 new DashboardApplicationStateV1
@@ -155,14 +154,14 @@ namespace BudgetAnalyser.Dashboard
             }
 
             CorrelationId = Guid.NewGuid();
-            BudgetBucket bucket = this.chooseBudgetBucketController.Selected;
+            var bucket = this.chooseBudgetBucketController.Selected;
             if (bucket == null)
             {
                 // Cancelled by user.
                 return;
             }
 
-            Widget widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
+            var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
             if (widget == null)
             {
                 this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
@@ -183,6 +182,27 @@ namespace BudgetAnalyser.Dashboard
 
             this.dashboardService.NotifyOfDependencyChange(message.Budgets);
             this.dashboardService.NotifyOfDependencyChange<IBudgetCurrencyContext>(message.ActiveBudget);
+        }
+
+        private void OnCreateNewFixedProjectComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)
+        {
+            if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
+            {
+                return;
+            }
+
+            CorrelationId = Guid.NewGuid();
+            try
+            {
+                this.dashboardService.CreateNewFixedBudgetMonitorWidget(
+                    this.createNewFixedBudgetController.Code,
+                    this.createNewFixedBudgetController.Description,
+                    this.createNewFixedBudgetController.Amount);
+            }
+            catch (ArgumentException ex)
+            {
+                this.messageBox.Show(ex.Message, "Unable to create new fixed budget project");
+            }
         }
 
         private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)
@@ -229,7 +249,7 @@ namespace BudgetAnalyser.Dashboard
             {
                 return;
             }
-            
+
             this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
         }
 
@@ -266,6 +286,11 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+        }
+
+        private static bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
         }
     }
 }

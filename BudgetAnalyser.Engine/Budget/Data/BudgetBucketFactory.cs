@@ -21,6 +21,8 @@ namespace BudgetAnalyser.Engine.Budget.Data
                     return new SavingsCommitmentBucket();
                 case BucketDtoType.SpentMonthlyExpense:
                     return new SpentMonthlyExpenseBucket();
+                case BucketDtoType.FixedBudgetProject:
+                    return new FixedBudgetProjectBucket();
                 default:
                     throw new NotSupportedException("Unsupported Bucket type detected: " + type);
             }
@@ -36,6 +38,11 @@ namespace BudgetAnalyser.Engine.Budget.Data
             if (bucket is IncomeBudgetBucket)
             {
                 return BucketDtoType.Income;
+            }
+
+            if (bucket is FixedBudgetProjectBucket)
+            {
+                throw new NotSupportedException();
             }
 
             if (bucket is SurplusBucket)

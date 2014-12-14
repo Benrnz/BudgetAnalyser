@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
-    public sealed class BudgetBucketMonitorWidget : ProgressBarWidget, IMultiInstanceWidget
+    public sealed class BudgetBucketMonitorWidget : ProgressBarWidget, IUserDefinedWidget
     {
         private readonly string disabledToolTip;
         private LedgerCalculation ledgerCalculator;

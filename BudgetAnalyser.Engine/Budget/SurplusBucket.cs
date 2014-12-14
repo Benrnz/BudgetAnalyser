@@ -9,6 +9,8 @@
         {
         }
 
+        protected SurplusBucket(string bucketCode, string description) : base(bucketCode, description) { }
+
         public override string TypeDescription
         {
             get { return "Calculated Surplus"; }

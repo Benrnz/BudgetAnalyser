@@ -15,8 +15,8 @@ namespace BudgetAnalyser.Engine.Widgets
             this.cachedWidgets = new SortedList<string, Widget>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IMultiInstanceWidget")]
-        public IMultiInstanceWidget Create(string widgetType, string id)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IUserDefinedWidget")]
+        public IUserDefinedWidget Create(string widgetType, string id)
         {
             Type type = Type.GetType(widgetType);
             if (type == null)
@@ -24,12 +24,12 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new NotSupportedException("The widget type specified " + widgetType + " is not found in any known type library.");
             }
 
-            if (!typeof(IMultiInstanceWidget).IsAssignableFrom(type))
+            if (!typeof(IUserDefinedWidget).IsAssignableFrom(type))
             {
-                throw new NotSupportedException("The widget type specified " + widgetType + " is not a IMultiInstanceWidget");
+                throw new NotSupportedException("The widget type specified " + widgetType + " is not a IUserDefinedWidget");
             }
 
-            var widget = Activator.CreateInstance(type) as IMultiInstanceWidget;
+            var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
             Debug.Assert(widget != null);
             widget.Id = id;
             var baseWidget = (Widget)widget;
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Widgets
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
 
                 foreach (Widget widget in widgetTypes
-                    .Where(t => !typeof(IMultiInstanceWidget).IsAssignableFrom(t))
+                    .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
                     .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
                 {
                     this.cachedWidgets.Add(widget.Category + widget.Name, widget);
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Widgets
             return this.cachedWidgets.Values;
         }
 
-        public void Remove(IMultiInstanceWidget widget)
+        public void Remove(IUserDefinedWidget widget)
         {
             if (widget == null)
             {
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.cachedWidgets.Remove(BuildMultiUseWidgetKey(widget));
         }
 
-        private static string BuildMultiUseWidgetKey(IMultiInstanceWidget widget)
+        private static string BuildMultiUseWidgetKey(IUserDefinedWidget widget)
         {
             var baseWidget = (Widget)widget;
             return baseWidget.Category + baseWidget.Name + widget.Id;

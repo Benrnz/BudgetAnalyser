@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Services
                     if (multiInstanceState != null)
                     {
                         // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-                        IMultiInstanceWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+                        IUserDefinedWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
                         newIdWidget.Visibility = multiInstanceState.Visible;
                     }
                     else
