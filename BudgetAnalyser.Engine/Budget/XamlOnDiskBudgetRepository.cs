@@ -119,6 +119,11 @@ namespace BudgetAnalyser.Engine.Budget
 
         public void Save(BudgetCollection budget)
         {
+            if (this.currentBudgetCollection == null)
+            {
+                throw new InvalidOperationException("There is no current budget collection loaded.");
+            }
+
             BudgetCollectionDto dataFormat = this.toDtoMapper.Map(budget);
 
             string serialised = Serialise(dataFormat);

@@ -143,6 +143,8 @@
     <Compile Include="Account\VisaAccountTest.cs" />
     <Compile Include="ApplicationHooks\LoggingApplicationHookSubscriberTest.cs" />
     <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
+    <Compile Include="Budget\DtoToFixedBudgetProjectBucketTest.cs" />
+    <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
@@ -157,7 +159,7 @@
     <Compile Include="Budget\BudgetItemTest.cs" />
     <Compile Include="Budget\BudgetModelTest.cs" />
     <Compile Include="Budget\BudgetModelToDtoMapperTest.cs" />
-    <Compile Include="Budget\BudgetRepositoryTest.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepositoryTest.cs" />
     <Compile Include="Budget\DtoToBudgetBucketTest.cs" />
     <Compile Include="Budget\DtoToBudgetCollectionMapperTest.cs" />
     <Compile Include="Budget\DtoToBudgetModelMapperTest.cs" />

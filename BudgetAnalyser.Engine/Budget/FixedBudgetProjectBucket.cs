@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public static string CreateCode(string subCode)
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", SurplusCode, subCode);
+            return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", SurplusCode, subCode.ToUpperInvariant());
         }
     }
 }
