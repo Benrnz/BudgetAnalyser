@@ -19,10 +19,10 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public FixedBudgetMonitorWidget()
         {
-            Category = "3 Monthly Tracking";
+            Category = WidgetGroup.ProjectsSectionName;
             Dependencies = new[] { typeof(StatementModel), typeof(IBudgetBucketRepository) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
-            this.standardStyle = "WidgetStandardStyle3";
+            this.standardStyle = "WidgetStandardStyle1";
 
             this.disabledToolTip = "No Statement file is loaded, or bucket doesn't exist.";
             this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}";

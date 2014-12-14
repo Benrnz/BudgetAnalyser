@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public OverspentWarning()
         {
-            Category = "2 Overview";
+            Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
             DetailedText = "Overspent";
             ImageResourceName = null;
