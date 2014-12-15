@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight;
 
@@ -16,6 +17,7 @@ namespace BudgetAnalyser.Statement
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository budgetBucketRepository;
+        private readonly ITransactionManagerService transactionService;
         private StatementController statementController;
 
         private string doNotUseBucketFilter;
@@ -27,14 +29,19 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
 
-        public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository)
+        public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] ITransactionManagerService transactionService)
         {
             if (budgetBucketRepository == null)
             {
                 throw new ArgumentNullException("budgetBucketRepository");
             }
+            if (transactionService == null)
+            {
+                throw new ArgumentNullException("transactionService");
+            }
 
             this.budgetBucketRepository = budgetBucketRepository;
+            this.transactionService = transactionService;
             this.doNotUseSortByDate = true;
         }
 
@@ -350,11 +357,7 @@ namespace BudgetAnalyser.Statement
             }
             else
             {
-                List<IGrouping<int, Transaction>> duplicates = Statement.ValidateAgainstDuplicates().ToList();
-                DuplicateSummary = duplicates.Any()
-                    ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
-                        duplicates.Sum(group => group.Count()))
-                    : null;
+                DuplicateSummary = this.transactionService.DetectDuplicateTransactions();
             }
         }
 

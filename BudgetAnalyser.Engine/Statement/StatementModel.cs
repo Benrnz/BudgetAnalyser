@@ -12,14 +12,19 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection
     {
-        private readonly ILogger logger;
+        /// <summary>
+        ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
+        ///     The hash does not persist between Application Loads.
+        /// </summary>
+        private Guid changeHash;
+
         private GlobalFilterCriteria currentFilter;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
         private IEnumerable<Transaction> doNotUseTransactions;
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
-
         private int fullDuration;
+        private readonly ILogger logger;
 
         public StatementModel([NotNull] ILogger logger)
         {
@@ -41,12 +46,6 @@ namespace BudgetAnalyser.Engine.Statement
             private set { this.doNotUseAllTransactions = value.ToList(); }
         }
 
-        /// <summary>
-        ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
-        ///     The hash does not persist between Application Loads.
-        /// </summary>
-        private Guid changeHash;
-
         public int DurationInMonths
         {
             get { return this.doNotUseDurationInMonths; }
@@ -58,13 +57,13 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        /// <summary>
-        /// Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
-        /// </summary>
-        public string StorageKey { get; set; }
-
         public bool Filtered { get; private set; }
         public DateTime LastImport { get; internal set; }
+
+        /// <summary>
+        ///     Gets or sets the storage key.  This could be the filename for the statement's persistence, or a database unique id.
+        /// </summary>
+        public string StorageKey { get; set; }
 
         public IEnumerable<Transaction> Transactions
         {
@@ -78,38 +77,44 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        /// <summary>
-        ///     Calculates the duration in months from the beginning of the period to the end.
-        /// </summary>
-        /// <param name="criteria">
-        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-        ///     statement dates.
-        /// </param>
-        /// <param name="transactions">The list of transactions to use to determine duration.</param>
-        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
+        public long SignificantDataChangeHash()
         {
-            List<Transaction> list = transactions.ToList();
-            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
-
-            if (criteria != null && !criteria.Cleared)
-            {
-                if (criteria.BeginDate != null)
-                {
-                    minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate != null);
-                    maxDate = criteria.EndDate.Value;
-                }
-            }
-            else
-            {
-                minDate = list.Min(t => t.Date);
-                maxDate = list.Max(t => t.Date);
-            }
-
-            return minDate.DurationInMonths(maxDate);
+            return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
         }
 
-        public void Filter(GlobalFilterCriteria criteria)
+        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
+        {
+            if (this.duplicates != null)
+            {
+                // TODO How to reset this ?! Not Good.
+                return this.duplicates;
+            }
+
+            var query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
+            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            query.ForEach(
+                duplicate =>
+                {
+                    foreach (var txn in duplicate)
+                    {
+                        txn.IsSuspectedDuplicate = true;
+                    }
+                });
+            this.duplicates = query;
+            return this.duplicates;
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        internal void Filter(GlobalFilterCriteria criteria)
         {
             if (criteria == null)
             {
@@ -136,7 +141,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            IEnumerable<Transaction> query = AllTransactions;
+            var query = AllTransactions;
             if (criteria.BeginDate != null)
             {
                 query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
@@ -158,16 +163,16 @@ namespace BudgetAnalyser.Engine.Statement
             Filtered = true;
         }
 
-        public bool FilterByText(string textFilter)
+        internal void FilterByText([NotNull] string textFilter)
         {
             if (string.IsNullOrWhiteSpace(textFilter))
             {
-                return false;
+                throw new ArgumentNullException("textFilter");
             }
 
             if (textFilter.Length < 3)
             {
-                return false;
+                return;
             }
 
             // Do not modify the changeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
@@ -175,11 +180,33 @@ namespace BudgetAnalyser.Engine.Statement
             Transactions = Transactions.Where(t => MatchTransactionText(textFilter, t))
                 .AsParallel()
                 .ToList();
-
-            return true;
         }
 
-        public void Merge([NotNull] StatementModel additionalModel)
+        /// <summary>
+        ///     Used internally by the importers to load transactions into the statement model.
+        /// </summary>
+        /// <param name="transactions">The transactions to load.</param>
+        /// <returns>Returns this instance, to allow chaining.</returns>
+        internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
+        {
+            UnsubscribeToTransactionChangedEvents();
+            this.changeHash = Guid.NewGuid();
+            var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
+            Transactions = listOfTransactions;
+            AllTransactions = Transactions;
+            if (listOfTransactions.Any())
+            {
+                this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
+                DurationInMonths = CalculateDuration(null, Transactions);
+            }
+
+            this.duplicates = null;
+            OnPropertyChanged("Transactions");
+            SubscribeToTransactionChangedEvents();
+            return this;
+        }
+
+        internal void Merge([NotNull] StatementModel additionalModel)
         {
             if (additionalModel == null)
             {
@@ -191,7 +218,7 @@ namespace BudgetAnalyser.Engine.Statement
             Merge(additionalModel.AllTransactions);
         }
 
-        public void RemoveTransaction([NotNull] Transaction transaction)
+        internal void RemoveTransaction([NotNull] Transaction transaction)
         {
             if (transaction == null)
             {
@@ -204,7 +231,7 @@ namespace BudgetAnalyser.Engine.Statement
             Filter(this.currentFilter);
         }
 
-        public void SplitTransaction(
+        internal void SplitTransaction(
             [NotNull] Transaction originalTransaction,
             decimal splinterAmount1,
             decimal splinterAmount2,
@@ -245,102 +272,11 @@ namespace BudgetAnalyser.Engine.Statement
             Merge(new[] { splinterTransaction1, splinterTransaction2 });
         }
 
-        public IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
-        {
-            if (this.duplicates != null)
-            {
-                return this.duplicates;
-            }
-
-            List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).ToList();
-            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
-            Parallel.ForEach(query, duplicate =>
-            {
-                foreach (Transaction txn in duplicate)
-                {
-                    txn.IsSuspectedDuplicate = true;
-                }
-            });
-            this.duplicates = query;
-            return this.duplicates;
-        }
-
-        /// <summary>
-        ///     Used internally by the importers to load transactions into the statement model.
-        /// </summary>
-        /// <param name="transactions">The transactions to load.</param>
-        /// <returns>Returns this instance, to allow chaining.</returns>
-        internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
-        {
-            UnsubscribeToTransactionChangedEvents();
-            this.changeHash = Guid.NewGuid();
-            var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
-            Transactions = listOfTransactions;
-            AllTransactions = Transactions;
-            if (listOfTransactions.Any())
-            {
-                this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
-                DurationInMonths = CalculateDuration(null, Transactions);
-            }
-
-            this.duplicates = null;
-            OnPropertyChanged("Transactions");
-            SubscribeToTransactionChangedEvents();
-            return this;
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        private static bool MatchTransactionText(string textFilter, Transaction t)
-        {
-            if (!string.IsNullOrWhiteSpace(t.Description))
-            {
-                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference1))
-            {
-                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference2))
-            {
-                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference3))
-            {
-                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
         {
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
+            var mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
             AllTransactions = mergedTransactions;
             this.duplicates = null;
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
@@ -381,9 +317,72 @@ namespace BudgetAnalyser.Engine.Statement
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
         }
 
-        public long SignificantDataChangeHash()
+        /// <summary>
+        ///     Calculates the duration in months from the beginning of the period to the end.
+        /// </summary>
+        /// <param name="criteria">
+        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
+        ///     statement dates.
+        /// </param>
+        /// <param name="transactions">The list of transactions to use to determine duration.</param>
+        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
+            var list = transactions.ToList();
+            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
+
+            if (criteria != null && !criteria.Cleared)
+            {
+                if (criteria.BeginDate != null)
+                {
+                    minDate = criteria.BeginDate.Value;
+                    Debug.Assert(criteria.EndDate != null);
+                    maxDate = criteria.EndDate.Value;
+                }
+            }
+            else
+            {
+                minDate = list.Min(t => t.Date);
+                maxDate = list.Max(t => t.Date);
+            }
+
+            return minDate.DurationInMonths(maxDate);
+        }
+
+        private static bool MatchTransactionText(string textFilter, Transaction t)
+        {
+            if (!string.IsNullOrWhiteSpace(t.Description))
+            {
+                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference1))
+            {
+                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference2))
+            {
+                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(t.Reference3))
+            {
+                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

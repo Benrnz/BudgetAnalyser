@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -54,3 +55,5 @@ using System.Windows;
 [assembly: AssemblyFileVersion("1.9.1")]
 
 [assembly: CLSCompliant(false)]
+
+[assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]

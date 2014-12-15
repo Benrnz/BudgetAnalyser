@@ -7,6 +7,7 @@ using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
@@ -21,6 +22,7 @@ namespace BudgetAnalyser.Statement
     {
         private readonly DemoFileHelper demoFileHelper;
         private readonly LoadFileController loadFileController;
+        private readonly ITransactionManagerService transactionService;
         private readonly IRecentFileManager recentFileManager;
         private readonly IStatementRepository statementRepository;
         private bool doNotUseLoadingData;
@@ -34,7 +36,8 @@ namespace BudgetAnalyser.Statement
             [NotNull] IRecentFileManager recentFileManager,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] LoadFileController loadFileController,
-            [NotNull] IBudgetBucketRepository budgetBucketRepository)
+            [NotNull] IBudgetBucketRepository budgetBucketRepository,
+            [NotNull] ITransactionManagerService transactionService)
         {
             if (uiContext == null)
             {
@@ -65,6 +68,10 @@ namespace BudgetAnalyser.Statement
             {
                 throw new ArgumentNullException("budgetBucketRepository");
             }
+            if (transactionService == null)
+            {
+                throw new ArgumentNullException("transactionService");
+            }
 
             this.yesNoBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
@@ -72,8 +79,9 @@ namespace BudgetAnalyser.Statement
             this.recentFileManager = recentFileManager;
             this.demoFileHelper = demoFileHelper;
             this.loadFileController = loadFileController;
+            this.transactionService = transactionService;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
-            ViewModel = new StatementViewModel(budgetBucketRepository);
+            ViewModel = new StatementViewModel(budgetBucketRepository, this.transactionService);
         }
 
         public ICommand CloseStatementCommand
@@ -317,7 +325,7 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Send(requestCurrentFilterMessage);
             if (requestCurrentFilterMessage.Criteria != null)
             {
-                ViewModel.Statement.Filter(requestCurrentFilterMessage.Criteria);
+                this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
             }
 
             NotifyOfReset();
@@ -377,8 +385,8 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
 
-                ViewModel.Statement.Merge(additionalModel);
-
+                this.transactionService.Merge(additionalModel);
+                
                 RaisePropertyChanged(() => ViewModel);
                 MessengerInstance.Send(new TransactionsChangedMessage());
                 NotifyOfEdit();

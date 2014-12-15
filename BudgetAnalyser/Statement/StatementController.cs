@@ -168,12 +168,12 @@ namespace BudgetAnalyser.Statement
         {
             var requestFilter = new RequestFilterMessage(this);
             MessengerInstance.Send(requestFilter);
-            ViewModel.Statement.Filter(requestFilter.Criteria);
+            this.transactionService.FilterTransactions(requestFilter.Criteria);
         }
 
         private void DeleteTransaction()
         {
-            ViewModel.Statement.RemoveTransaction(ViewModel.SelectedRow);
+            this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
             ViewModel.TriggerRefreshTotalsRow();
             FileOperations.NotifyOfEdit();
         }
@@ -194,7 +194,7 @@ namespace BudgetAnalyser.Statement
         {
             if (message.Response == ShellDialogButton.Save)
             {
-                ViewModel.Statement.SplitTransaction(
+                this.transactionService.SplitTransaction(
                     SplitTransactionController.OriginalTransaction,
                     SplitTransactionController.SplinterAmount1,
                     SplitTransactionController.SplinterAmount2,
@@ -308,7 +308,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            ViewModel.Statement.Filter(message.Criteria);
+            this.transactionService.FilterTransactions(message.Criteria);
             ViewModel.TriggerRefreshTotalsRow();
             ViewModel.TriggerRefreshBucketFilter();
         }
@@ -346,11 +346,11 @@ namespace BudgetAnalyser.Statement
 
         private void PerformTextSearch(string textFilter)
         {
-            bool filtered = ViewModel.Statement.FilterByText(textFilter);
+            this.transactionService.FilterTransactions(textFilter);
 
             if (string.IsNullOrWhiteSpace(TextFilter))
             {
-                if (this.filterByTextActive && !filtered)
+                if (this.filterByTextActive && !ViewModel.Statement.Filtered)
                 {
                     ClearTextFilter();
                 }
