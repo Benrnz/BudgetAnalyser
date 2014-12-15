@@ -13,6 +13,14 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC]
     public class WidgetService : IWidgetService
     {
+        private static readonly Dictionary<string, int> GroupSequence = new Dictionary<string, int>
+        {
+            { WidgetGroup.GlobalFilterSectionName, 1 },
+            { WidgetGroup.OverviewSectionName, 2 },
+            { WidgetGroup.MonthlyTrackingSectionName, 3 },
+            { WidgetGroup.ProjectsSectionName, 4 }
+        };
+
         private readonly IWidgetRepository widgetRepo;
 
         public WidgetService([NotNull] IWidgetRepository widgetRepo)
@@ -29,21 +37,21 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedStates != null)
             {
-                List<Widget> widgets = this.widgetRepo.GetAll().ToList();
-                foreach (WidgetPersistentState widgetState in storedStates)
+                var widgets = this.widgetRepo.GetAll().ToList();
+                foreach (var widgetState in storedStates)
                 {
-                    WidgetPersistentState stateClone = widgetState;
+                    var stateClone = widgetState;
                     var multiInstanceState = widgetState as MultiInstanceWidgetState;
                     if (multiInstanceState != null)
                     {
                         // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-                        IMultiInstanceWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+                        var newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
                         newIdWidget.Visibility = multiInstanceState.Visible;
                     }
                     else
                     {
                         // Ordinary widgets will already exist in the repository as they are single instance per class.
-                        Widget typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                        var typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
                         if (typedWidget != null)
                         {
                             typedWidget.Visibility = widgetState.Visible;
@@ -54,7 +62,14 @@ namespace BudgetAnalyser.Engine.Services
 
             return this.widgetRepo.GetAll()
                 .GroupBy(w => w.Category)
-                .Select(group => new WidgetGroup { Heading = group.Key, Widgets = new ObservableCollection<Widget>(group) });
+                .Select(
+                    group => new WidgetGroup
+                    {
+                        Heading = group.Key,
+                        Widgets = new ObservableCollection<Widget>(group),
+                        Sequence = GroupSequence[group.Key]
+                    })
+                .OrderBy(g => g.Sequence).ThenBy(g => g.Heading);
         }
     }
 }

@@ -7,6 +7,7 @@
         Surplus,
         Journal,
         Income,
-        SavingsCommitment
+        SavingsCommitment,
+        FixedBudgetProject
     }
 }

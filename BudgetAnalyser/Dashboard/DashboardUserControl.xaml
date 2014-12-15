@@ -37,10 +37,16 @@
                     <TextBlock Text="New Bucket Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewFixedBudgetMonitorWidgetCommand}"
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                <MenuItem.Header>
+                    <TextBlock Text="New Fixed Budget Project Monitor Widget" />
+                </MenuItem.Header>
+            </MenuItem>
             <MenuItem Command="{x:Static dashboard:DashboardCommands.RemoveWidgetCommand}"
                       CommandParameter="{Binding .}">
                 <MenuItem.Header>
-                    <TextBlock Text="Remove Bucket Monitor Widget" />
+                    <TextBlock Text="Remove Widget" />
                 </MenuItem.Header>
             </MenuItem>
         </ContextMenu>

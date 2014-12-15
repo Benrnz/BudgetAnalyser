@@ -32,10 +32,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             SpentMonthlyExpenseBucket testData = StatementModelTestData.CarMtcBucket;
             Result = Mapper.Map<BudgetBucketDto>(testData);
+        }
+
+        [TestMethod]
+        public void ShouldMapBucketType()
+        {
+            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Result.Type);
         }
     }
 }

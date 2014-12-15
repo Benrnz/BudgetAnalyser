@@ -85,11 +85,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper.Net4">
-      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    <Reference Include="AutoMapper.Net4, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
@@ -141,6 +143,8 @@
     <Compile Include="Account\VisaAccountTest.cs" />
     <Compile Include="ApplicationHooks\LoggingApplicationHookSubscriberTest.cs" />
     <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
+    <Compile Include="Budget\DtoToFixedBudgetProjectBucketTest.cs" />
+    <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
     <Compile Include="AutoRegisterWithIoCProcessorTest.cs" />
@@ -155,7 +159,7 @@
     <Compile Include="Budget\BudgetItemTest.cs" />
     <Compile Include="Budget\BudgetModelTest.cs" />
     <Compile Include="Budget\BudgetModelToDtoMapperTest.cs" />
-    <Compile Include="Budget\BudgetRepositoryTest.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepositoryTest.cs" />
     <Compile Include="Budget\DtoToBudgetBucketTest.cs" />
     <Compile Include="Budget\DtoToBudgetCollectionMapperTest.cs" />
     <Compile Include="Budget\DtoToBudgetModelMapperTest.cs" />
@@ -333,7 +337,7 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

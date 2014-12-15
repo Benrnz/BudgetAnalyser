@@ -18,19 +18,21 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class DashboardService : IDashboardService
     {
+        private IDictionary<Type, object> availableDependencies;
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IBudgetRepository budgetRepository;
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
-        private IDictionary<Type, object> availableDependencies;
 
         public DashboardService(
             [NotNull] IWidgetService widgetService,
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
+            [NotNull] IBudgetRepository budgetRepository,
             [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ILogger logger)
@@ -48,6 +50,11 @@ namespace BudgetAnalyser.Engine.Services
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException("bucketRepository");
+            }
+
+            if (budgetRepository == null)
+            {
+                throw new ArgumentNullException("budgetRepository");
             }
 
             if (ledgerCalculator == null)
@@ -68,6 +75,7 @@ namespace BudgetAnalyser.Engine.Services
             this.widgetService = widgetService;
             this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
+            this.budgetRepository = budgetRepository;
             this.ledgerCalculator = ledgerCalculator;
             this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
@@ -92,38 +100,52 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            IMultiInstanceWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
-            var baseWidget = (Widget)widget;
-            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
-            if (widgetGroup == null)
+            var widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        }
+
+        public Widget CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
+        {
+            if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
-                WidgetGroups.Add(widgetGroup);
+                throw new ArgumentNullException("bucketCode");
             }
 
-            widgetGroup.Widgets.Add(baseWidget);
-            UpdateAllWidgets();
-            return baseWidget;
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentNullException("description");
+            }
+
+            if (fixedBudgetAmount <= 0)
+            {
+                throw new ArgumentException("Fixed Budget amount must be greater than zero.", "fixedBudgetAmount");
+            }
+
+            var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
+            this.budgetRepository.Save();
+            var widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
         public IEnumerable<AccountType> FilterableAccountTypes()
         {
-            List<AccountType> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            var accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             accountTypeList.Insert(0, null);
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> InitialiseWidgetGroups(IEnumerable<WidgetPersistentState> storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(IEnumerable<WidgetPersistentState> storedState)
         {
             if (this.availableDependencies == null)
             {
                 this.availableDependencies = InitialiseSupportedDependenciesArray();
             }
+
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
             UpdateAllWidgets();
-            foreach (WidgetGroup group in WidgetGroups)
+            foreach (var group in WidgetGroups)
             {
-                foreach (Widget widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
+                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
                 {
                     ScheduledWidgetUpdate(widget);
                 }
@@ -139,7 +161,10 @@ namespace BudgetAnalyser.Engine.Services
 
         public void NotifyOfDependencyChange(object dependency)
         {
-            if (dependency == null) return;
+            if (dependency == null)
+            {
+                return;
+            }
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
@@ -148,12 +173,17 @@ namespace BudgetAnalyser.Engine.Services
             return WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
         }
 
-        public void RemoveMultiInstanceWidget(IMultiInstanceWidget widgetToRemove)
+        public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)
         {
+            if (widgetToRemove is FixedBudgetMonitorWidget)
+            {
+                throw new NotImplementedException();
+            }
+
             this.widgetRepository.Remove(widgetToRemove);
 
             var baseWidget = (Widget)widgetToRemove;
-            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
+            var widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
                 return;
@@ -172,26 +202,6 @@ namespace BudgetAnalyser.Engine.Services
             WidgetGroups.ToList().ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
         }
 
-        private static WidgetPersistentState CreateWidgetState(Widget widget)
-        {
-            var multiInstanceWidget = widget as IMultiInstanceWidget;
-            if (multiInstanceWidget != null)
-            {
-                return new MultiInstanceWidgetState
-                {
-                    Id = multiInstanceWidget.Id,
-                    Visible = multiInstanceWidget.Visibility,
-                    WidgetType = multiInstanceWidget.WidgetType.FullName,
-                };
-            }
-
-            return new WidgetPersistentState
-            {
-                Visible = widget.Visibility,
-                WidgetType = widget.GetType().FullName,
-            };
-        }
-
         private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
         {
             var supportsDataChangeDetection = dependency as IDataChangeDetection;
@@ -201,14 +211,14 @@ namespace BudgetAnalyser.Engine.Services
                 return true;
             }
 
-            long newHash = supportsDataChangeDetection.SignificantDataChangeHash();
+            var newHash = supportsDataChangeDetection.SignificantDataChangeHash();
             if (!this.changesHashes.ContainsKey(typeKey))
             {
                 this.changesHashes.Add(typeKey, newHash);
                 return true;
             }
 
-            bool result = this.changesHashes[typeKey] != newHash;
+            var result = this.changesHashes[typeKey] != newHash;
             this.changesHashes[typeKey] = newHash;
             return result;
         }
@@ -250,20 +260,21 @@ namespace BudgetAnalyser.Engine.Services
                     widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
 
             // Run the scheduling on a different thread.
-            await Task.Run(async () =>
-            {
-                while (true)
+            await Task.Run(
+                async () =>
                 {
-                    await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
-                    this.logger.LogInfo(
-                        l => l.Format(
-                            "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
-                            widget.Name,
-                            widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
-                            Thread.CurrentThread.ManagedThreadId));
-                    UpdateWidget(widget);
-                }
-            });
+                    while (true)
+                    {
+                        await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
+                        this.logger.LogInfo(
+                            l => l.Format(
+                                "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
+                                widget.Name,
+                                widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
+                                Thread.CurrentThread.ManagedThreadId));
+                        UpdateWidget(widget);
+                    }
+                });
         }
 
         private void UpdateAllWidgets(params Type[] filterDependencyTypes)
@@ -277,7 +288,7 @@ namespace BudgetAnalyser.Engine.Services
             if (filterDependencyTypes != null && filterDependencyTypes.Length > 0)
             {
                 // targeted update
-                List<Widget> affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
+                var affectedWidgets = WidgetGroups.SelectMany(group => group.Widgets)
                     .Where(w => w.Dependencies.Any(filterDependencyTypes.Contains))
                     .ToList();
                 affectedWidgets.ForEach(UpdateWidget);
@@ -298,8 +309,8 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var parameters = new object[widget.Dependencies.Count()];
-            int index = 0;
-            foreach (Type dependencyType in widget.Dependencies)
+            var index = 0;
+            foreach (var dependencyType in widget.Dependencies)
             {
                 if (!this.availableDependencies.ContainsKey(dependencyType))
                 {
@@ -316,6 +327,40 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             widget.Update(parameters);
+        }
+
+        private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
+        {
+            var widgetGroup = WidgetGroups.FirstOrDefault(group => @group.Heading == baseWidget.Category);
+            if (widgetGroup == null)
+            {
+                widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
+                WidgetGroups.Add(widgetGroup);
+            }
+
+            widgetGroup.Widgets.Add(baseWidget);
+            UpdateAllWidgets();
+            return baseWidget;
+        }
+
+        private static WidgetPersistentState CreateWidgetState(Widget widget)
+        {
+            var multiInstanceWidget = widget as IUserDefinedWidget;
+            if (multiInstanceWidget != null)
+            {
+                return new MultiInstanceWidgetState
+                {
+                    Id = multiInstanceWidget.Id,
+                    Visible = multiInstanceWidget.Visibility,
+                    WidgetType = multiInstanceWidget.WidgetType.FullName
+                };
+            }
+
+            return new WidgetPersistentState
+            {
+                Visible = widget.Visibility,
+                WidgetType = widget.GetType().FullName
+            };
         }
     }
 }

@@ -41,6 +41,14 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
         public void RegisterMappings()
         {
+            Mapper.CreateMap<FixedBudgetProjectBucket, FixedBudgetBucketDto>()
+                .IncludeBase<BudgetBucket, BudgetBucketDto>()
+                .ForMember(dto => dto.Type, m => m.Ignore());
+
+            Mapper.CreateMap<FixedBudgetBucketDto, FixedBudgetProjectBucket>()
+                .IncludeBase<BudgetBucketDto, BudgetBucket>()
+                .ConstructUsing(dto => (FixedBudgetProjectBucket)this.bucketFactory.Build(dto.Type));
+
             Mapper.CreateMap<BudgetBucket, BudgetBucketDto>()
                 .ForMember(dto => dto.Type, m => m.MapFrom(budgetBucket => this.bucketFactory.SerialiseType(budgetBucket)));
 

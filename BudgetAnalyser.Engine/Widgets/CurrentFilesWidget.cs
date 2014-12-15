@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public CurrentFilesWidget()
         {
-            Category = "2 Overview";
+            Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(LedgerBook) };
             Size = WidgetSize.Medium;
             WidgetStyle = "ModernTileMediumStyle1";

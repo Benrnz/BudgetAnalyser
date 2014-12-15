@@ -14,7 +14,13 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void BucketDtoTypeEnumHas6SupportedValues()
         {
             // If this test fails you may need to consider adding code to the BudgetBucketFactory class.
-            Assert.AreEqual(6, Enum.GetNames(typeof(BucketDtoType)).Length);
+            Assert.AreEqual(7, Enum.GetNames(typeof(BucketDtoType)).Length);
+        }
+
+        [TestMethod]
+        public void BuildShouldCreateFixedBudgetProject()
+        {
+            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.FixedBudgetProject), typeof(FixedBudgetProjectBucket));
         }
 
         [TestMethod]
@@ -91,6 +97,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void SerialiseTypeShouldReturnSurplusGivenSurplusBucket()
         {
             Assert.AreEqual(BucketDtoType.Surplus, Subject.SerialiseType(new SurplusBucket()));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotSupportedException))]
+        public void SerialiseTypeShouldThrowGivenFixedBudgetProject()
+        {
+            Subject.SerialiseType(new FixedBudgetProjectBucket("Foo", "Foobar", 1000));
+            Assert.Fail();
         }
 
         [TestMethod]

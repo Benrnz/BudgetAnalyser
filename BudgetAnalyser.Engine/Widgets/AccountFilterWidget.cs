@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Widgets
     {
         public AccountFilterWidget()
         {
-            Category = "1 Global Filter";
+            Category = WidgetGroup.GlobalFilterSectionName;
             Dependencies = new[] { typeof(GlobalFilterCriteria) };
             ImageResourceName = "DateFilterBeakerImage";
             Size = WidgetSize.Medium;

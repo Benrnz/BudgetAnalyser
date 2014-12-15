@@ -166,7 +166,12 @@
       <DependentUpon>BudgetSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Budget\BudgetSelectionViewModel.cs" />
+    <Compile Include="Budget\CreateNewFixedBudgetController.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
+    <Compile Include="Budget\CreateNewFixedBudgetProjectUserControl.xaml.cs">
+      <DependentUpon>CreateNewFixedBudgetProjectUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\DialogResponseEventArgs.cs" />
     <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="ConcurrentMessenger.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
@@ -356,6 +361,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Budget\BudgetSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\CreateNewFixedBudgetProjectUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

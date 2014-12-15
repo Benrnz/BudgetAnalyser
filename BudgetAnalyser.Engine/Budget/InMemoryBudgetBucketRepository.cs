@@ -36,6 +36,42 @@ namespace BudgetAnalyser.Engine.Budget
 
         public BudgetBucket SurplusBucket { get; protected set; }
 
+        public FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
+        {
+            if (string.IsNullOrWhiteSpace(bucketCode))
+            {
+                throw new ArgumentNullException("bucketCode");
+            }
+
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentNullException("description");
+            }
+
+            if (fixedBudgetAmount <= 0)
+            {
+                throw new ArgumentException("The fixed budget amount must be greater than zero.", "fixedBudgetAmount");
+            }
+
+            var upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
+            if (IsValidCode(upperCode))
+            {
+                throw new ArgumentException("A new fixed budget project bucket cannot be created, because the code " + bucketCode + " already exists.", bucketCode);
+            }
+
+            lock (this.syncRoot)
+            {
+                if (IsValidCode(upperCode))
+                {
+                    throw new ArgumentException("A new fixed budget project bucket cannot be created, because the code " + bucketCode + " already exists.", bucketCode);
+                }
+
+                var bucket = new FixedBudgetProjectBucket(bucketCode, description, fixedBudgetAmount);
+                this.lookupTable.Add(upperCode, bucket);
+                return bucket;
+            }
+        }
+
         public virtual BudgetBucket GetByCode([NotNull] string code)
         {
             if (code == null)

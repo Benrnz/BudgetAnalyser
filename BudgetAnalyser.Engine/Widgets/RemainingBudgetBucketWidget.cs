@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         protected RemainingBudgetBucketWidget()
         {
-            Category = "3 Monthly Tracking";
+            Category = WidgetGroup.MonthlyTrackingSectionName;
             Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             this.standardStyle = "WidgetStandardStyle3";

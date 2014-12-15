@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public TimedUpdateCounterWidget()
         {
-            Category = "2 Overview";
+            Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[]
             {
                 typeof(StatementModel), typeof(BudgetCollection), typeof(IBudgetCurrencyContext), typeof(LedgerBook), typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria),
