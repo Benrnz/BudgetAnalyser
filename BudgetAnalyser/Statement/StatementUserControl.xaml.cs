@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 
@@ -55,7 +56,7 @@ namespace BudgetAnalyser.Statement
             {
                 defaultView.Filter = null;
             }
-            else if (Controller.ViewModel.BucketFilter == StatementViewModel.UncategorisedFilter)
+            else if (Controller.ViewModel.BucketFilter == TransactionManagerService.UncategorisedFilter)
             {
                 defaultView.Filter = t =>
                 {

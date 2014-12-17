@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
@@ -21,9 +22,8 @@ namespace BudgetAnalyser.Statement
     {
         public const string SortByBucketKey = "Bucket";
         public const string SortByDateKey = "Date";
-
-        private readonly IUiContext uiContext;
         private readonly ITransactionManagerService transactionService;
+        private readonly IUiContext uiContext;
         private bool doNotUseShown;
         private string doNotUseTextFilter;
         private bool filterByTextActive;
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Statement
 
         public StatementController(
             [NotNull] IUiContext uiContext,
-            [NotNull] StatementControllerFileOperations fileOperations, 
+            [NotNull] StatementControllerFileOperations fileOperations,
             [NotNull] ITransactionManagerService transactionService)
         {
             if (uiContext == null)
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Statement
             {
                 throw new ArgumentNullException("fileOperations");
             }
-            
+
             if (transactionService == null)
             {
                 throw new ArgumentNullException("transactionService");
@@ -75,6 +75,11 @@ namespace BudgetAnalyser.Statement
         public ICommand DeleteTransactionCommand
         {
             get { return new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow); }
+        }
+
+        internal EditingTransactionController EditingTransactionController
+        {
+            get { return this.uiContext.EditingTransactionController; }
         }
 
         public ICommand EditTransactionCommand
@@ -108,6 +113,11 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
+        internal SplitTransactionController SplitTransactionController
+        {
+            get { return this.uiContext.SplitTransactionController; }
+        }
+
         public string TextFilter
         {
             get { return this.doNotUseTextFilter; }
@@ -132,16 +142,6 @@ namespace BudgetAnalyser.Statement
             get { return FileOperations.ViewModel; }
         }
 
-        internal EditingTransactionController EditingTransactionController
-        {
-            get { return this.uiContext.EditingTransactionController; }
-        }
-
-        internal SplitTransactionController SplitTransactionController
-        {
-            get { return this.uiContext.SplitTransactionController; }
-        }
-
         public void Initialize()
         {
             if (this.initialised)
@@ -150,7 +150,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.initialised = true;
-            FileOperations.Initialise(this);
+            FileOperations.Initialise(this, this.transactionService);
             FileOperations.UpdateRecentFiles();
         }
 
@@ -162,6 +162,16 @@ namespace BudgetAnalyser.Statement
         private bool CanExecuteSortCommand()
         {
             return ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
+        }
+
+        private async Task CheckBudgetContainsAllUsedBucketsInStatement(BudgetCollection budgets = null)
+        {
+            if (!await this.transactionService.CheckBudgetContainsAllUsedBucketsInStatementAsync(budgets))
+            {
+                this.uiContext.UserPrompts.MessageBox.Show(
+                    "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
+                    "Data Loss Wanring!");
+            }
         }
 
         private void ClearTextFilter()
@@ -213,10 +223,11 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            var statementMetadata = ((StatementApplicationStateV1)message.RehydratedModels[typeof(StatementApplicationStateV1)]).StatementApplicationState;
+            var statementMetadata = this.transactionService.LoadPersistedStateData(message.RehydratedModels[typeof(StatementApplicationStateV1)].Model);
             await FileOperations.LoadStatementFromApplicationStateAsync(statementMetadata.StorageKey);
             ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
             OnSortCommandExecute();
+            await CheckBudgetContainsAllUsedBucketsInStatement();
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
@@ -226,7 +237,7 @@ namespace BudgetAnalyser.Statement
                 StatementApplicationState = new StatementApplicationState
                 {
                     StorageKey = ViewModel.Statement == null ? null : ViewModel.Statement.StorageKey,
-                    SortByBucket = ViewModel.SortByBucket,
+                    SortByBucket = ViewModel.SortByBucket
                 }
             };
             message.PersistThisModel(statementMetadata);
@@ -234,33 +245,14 @@ namespace BudgetAnalyser.Statement
 
         private async void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
+            // Budget ready message will always arrive before statement is loaded from application state.
             if (!message.ActiveBudget.BudgetActive)
             {
-                // Not the current budget for today so ignore.
+                // Not the current budget for today so ignore this one.
                 return;
             }
 
-            BudgetModel oldBudget = ViewModel.BudgetModel;
-            ViewModel.BudgetModel = message.ActiveBudget.Model;
-
-            if (FileOperations.WaitingForBudgetToLoad != null)
-            {
-                // We've been waiting for the budget to load so we can load previous statement.
-                await FileOperations.LoadStatementFromApplicationStateAsync(FileOperations.WaitingForBudgetToLoad);
-                return;
-            }
-
-            if (oldBudget != null
-                && (oldBudget.Expenses.Any() || oldBudget.Incomes.Any())
-                && oldBudget.Name != ViewModel.BudgetModel.Name
-                && ViewModel.Statement != null
-                && ViewModel.Statement.AllTransactions.Any())
-            {
-                this.uiContext.UserPrompts.MessageBox.Show(
-                    "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
-                    "Data Loss Wanring!");
-            }
-
+            await CheckBudgetContainsAllUsedBucketsInStatement(message.Budgets);
             ViewModel.TriggerRefreshBucketFilterList();
         }
 
@@ -277,8 +269,9 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            bool? confirm = this.uiContext.UserPrompts.YesNoBox.Show(
-                "Are you sure you want to delete this transaction?", "Delete Transaction");
+            var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
+                "Are you sure you want to delete this transaction?",
+                "Delete Transaction");
             if (confirm != null && confirm.Value)
             {
                 DeleteTransaction();

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using BudgetAnalyser.Annotations;
@@ -15,33 +14,18 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementViewModel : ViewModelBase
     {
-        public const string UncategorisedFilter = "[Uncategorised Only]";
-        private readonly IBudgetBucketRepository budgetBucketRepository;
-        private readonly ITransactionManagerService transactionService;
-        private StatementController statementController;
-
+        private ITransactionManagerService transactionService;
         private string doNotUseBucketFilter;
-
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
         private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
         private Transaction doNotUseSelectedRow;
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
+        private StatementController statementController;
 
-        public StatementViewModel([NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] ITransactionManagerService transactionService)
+        public StatementViewModel()
         {
-            if (budgetBucketRepository == null)
-            {
-                throw new ArgumentNullException("budgetBucketRepository");
-            }
-            if (transactionService == null)
-            {
-                throw new ArgumentNullException("transactionService");
-            }
-
-            this.budgetBucketRepository = budgetBucketRepository;
-            this.transactionService = transactionService;
             this.doNotUseSortByDate = true;
         }
 
@@ -63,9 +47,9 @@ namespace BudgetAnalyser.Statement
                     }
                 }
 
-                if (BucketFilter == UncategorisedFilter)
+                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
                 {
-                    List<Transaction> query2 =
+                    var query2 =
                         Statement.Transactions.Where(
                             t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code)).ToList();
                     if (query2.Any())
@@ -103,17 +87,8 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public IEnumerable<string> BudgetBuckets
-        {
-            get
-            {
-                return this.budgetBucketRepository.Buckets
-                    .Select(b => b.Code)
-                    .Union(new[] { string.Empty }).OrderBy(b => b);
-            }
-        }
-
-        public BudgetModel BudgetModel { get; set; }
+        // TODO Remove this
+        //public BudgetModel BudgetModel { get; set; }
 
         public bool Dirty
         {
@@ -139,7 +114,7 @@ namespace BudgetAnalyser.Statement
 
         public IEnumerable<string> FilterBudgetBuckets
         {
-            get { return BudgetBuckets.Union(new[] { UncategorisedFilter }).OrderBy(b => b); }
+            get { return this.transactionService.FilterableBuckets(); }
         }
 
         public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
@@ -249,7 +224,7 @@ namespace BudgetAnalyser.Statement
                     return Statement.Transactions.Count();
                 }
 
-                if (BucketFilter == UncategorisedFilter)
+                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
                 {
                     return
                         Statement.Transactions.Count(
@@ -274,7 +249,7 @@ namespace BudgetAnalyser.Statement
                     return Statement.Transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
                 }
 
-                if (BucketFilter == UncategorisedFilter)
+                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
                 {
                     return
                         Statement.Transactions.Where(
@@ -303,7 +278,7 @@ namespace BudgetAnalyser.Statement
                     return Statement.Transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
                 }
 
-                if (BucketFilter == UncategorisedFilter)
+                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
                 {
                     return
                         Statement.Transactions.Where(
@@ -328,6 +303,13 @@ namespace BudgetAnalyser.Statement
             return SelectedRow != null;
         }
 
+        public StatementViewModel Initialise(StatementController controller, ITransactionManagerService transactionManagerService)
+        {
+            this.statementController = controller;
+            this.transactionService = transactionManagerService;
+            return this;
+        }
+
         public void TriggerRefreshBucketFilter()
         {
             RaisePropertyChanged(() => BucketFilter);
@@ -336,7 +318,6 @@ namespace BudgetAnalyser.Statement
         public void TriggerRefreshBucketFilterList()
         {
             RaisePropertyChanged(() => FilterBudgetBuckets);
-            RaisePropertyChanged(() => BudgetBuckets);
         }
 
         public void TriggerRefreshTotalsRow()
@@ -372,7 +353,7 @@ namespace BudgetAnalyser.Statement
 
             if (SortByBucket)
             {
-                IEnumerable<TransactionGroupedByBucketViewModel> query = Statement.Transactions
+                var query = Statement.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucketViewModel(group, group.Key, this.statementController));
@@ -384,12 +365,6 @@ namespace BudgetAnalyser.Statement
                 // Do it later - its not shown right now.
                 GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
             }
-        }
-
-        public StatementViewModel Initialise(StatementController controller)
-        {
-            this.statementController = controller;
-            return this;
         }
 
         private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

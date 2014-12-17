@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         public void BudgetBucketsShouldIncludeBlank()
         {
             var subject = Arrange();
-            Assert.IsTrue(subject.BudgetBuckets.Any(string.IsNullOrWhiteSpace));
+            Assert.IsTrue(subject.FilterBudgetBuckets.Any(string.IsNullOrWhiteSpace));
         }
 
         [TestMethod]
@@ -61,20 +61,20 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         public void FilterBudgetBucketsShouldIncludeUncategorisedItem()
         {
             var subject = Arrange();
-            Assert.IsTrue(subject.FilterBudgetBuckets.Any(b => b == StatementViewModel.UncategorisedFilter));
+            Assert.IsTrue(subject.FilterBudgetBuckets.Any(b => b == TransactionManagerService.UncategorisedFilter));
         }
 
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = new StatementViewModel(MockBucketRepo.Object, this.mockTransactionService.Object);
+            var subject = new StatementViewModel(this.mockTransactionService.Object);
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = new StatementViewModel(MockBucketRepo.Object, this.mockTransactionService.Object);
+            var subject = new StatementViewModel(this.mockTransactionService.Object);
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
@@ -282,7 +282,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange()
         {
-            return new StatementViewModel(MockBucketRepo.Object, this.mockTransactionService.Object)
+            return new StatementViewModel(this.mockTransactionService.Object)
             {
                 Statement = StatementModelTestData.TestData1()
             }.Initialise(FakeStatetmentController);
@@ -290,7 +290,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange2()
         {
-            return new StatementViewModel(MockBucketRepo.Object, this.mockTransactionService.Object)
+            return new StatementViewModel(this.mockTransactionService.Object)
             {
                 Statement = StatementModelTestData.TestData2()
             }.Initialise(FakeStatetmentController);
