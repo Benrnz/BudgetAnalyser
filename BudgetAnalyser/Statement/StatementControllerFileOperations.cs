@@ -170,7 +170,7 @@ namespace BudgetAnalyser.Statement
         {
             if (PromptToSaveIfDirty())
             {
-                await SaveAsync();
+                await SaveAsync(true);
             }
         }
 
@@ -180,68 +180,7 @@ namespace BudgetAnalyser.Statement
             ViewModel.Initialise(controller, this.transactionService);
         }
 
-        internal async Task LoadStatementFromApplicationStateAsync(string statementFileName)
-        {
-            if (string.IsNullOrWhiteSpace(statementFileName))
-            {
-                // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
-                return;
-            }
-
-            await LoadInternalAsync(statementFileName);
-        }
-
-        internal void NotifyOfEdit()
-        {
-            ViewModel.Dirty = true;
-            MessengerInstance.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
-        }
-
-        internal void UpdateRecentFiles()
-        {
-            UpdateRecentFiles(this.recentFileManager.Files());
-        }
-
-        private bool CanExecuteCloseStatementCommand()
-        {
-            return ViewModel.Statement != null;
-        }
-
-        private bool CanExecuteOpenStatementCommand()
-        {
-            return !LoadingData;
-        }
-
-        private void FileCannotBeLoaded(Exception ex)
-        {
-            this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
-        }
-
-        /// <summary>
-        ///     Prompts the user for a filename and other required parameters to be able to load/import/merge the file.
-        /// </summary>
-        /// <param name="mode">Open or Merge mode.</param>
-        /// <returns>
-        ///     The user selected filename. All other required parameters are accessible from the
-        ///     <see cref="LoadFileController" />.
-        /// </returns>
-        private async Task<string> GetFileNameFromUser(StatementOpenMode mode)
-        {
-            switch (mode)
-            {
-                case StatementOpenMode.Merge:
-                    await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
-                    break;
-
-                case StatementOpenMode.Open:
-                    await this.loadFileController.RequestUserInputForOpenFile();
-                    break;
-            }
-
-            return this.loadFileController.FileName;
-        }
-
-        private async Task<bool> LoadInternalAsync(string fullFileName)
+        internal async Task<bool> LoadFileAsync(string fullFileName)
         {
             if (string.IsNullOrWhiteSpace(fullFileName))
             {
@@ -311,6 +250,56 @@ namespace BudgetAnalyser.Statement
             return true;
         }
 
+        internal void NotifyOfEdit()
+        {
+            ViewModel.Dirty = true;
+            MessengerInstance.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
+        }
+
+        internal void UpdateRecentFiles()
+        {
+            UpdateRecentFiles(this.recentFileManager.Files());
+        }
+
+        private bool CanExecuteCloseStatementCommand()
+        {
+            return ViewModel.Statement != null;
+        }
+
+        private bool CanExecuteOpenStatementCommand()
+        {
+            return !LoadingData;
+        }
+
+        private void FileCannotBeLoaded(Exception ex)
+        {
+            this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
+        }
+
+        /// <summary>
+        ///     Prompts the user for a filename and other required parameters to be able to load/import/merge the file.
+        /// </summary>
+        /// <param name="mode">Open or Merge mode.</param>
+        /// <returns>
+        ///     The user selected filename. All other required parameters are accessible from the
+        ///     <see cref="LoadFileController" />.
+        /// </returns>
+        private async Task<string> GetFileNameFromUser(StatementOpenMode mode)
+        {
+            switch (mode)
+            {
+                case StatementOpenMode.Merge:
+                    await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
+                    break;
+
+                case StatementOpenMode.Open:
+                    await this.loadFileController.RequestUserInputForOpenFile();
+                    break;
+            }
+
+            return this.loadFileController.FileName;
+        }
+
         private void NotifyOfReset()
         {
             ViewModel.Dirty = false;
@@ -321,7 +310,7 @@ namespace BudgetAnalyser.Statement
         {
             if (PromptToSaveIfDirty())
             {
-                await SaveAsync();
+                await SaveAsync(true);
             }
 
             ViewModel.Statement = null;
@@ -337,7 +326,7 @@ namespace BudgetAnalyser.Statement
 
         private async void OnMergeStatementCommandExecute()
         {
-            await SaveAsync();
+            await SaveAsync(false);
             ViewModel.BucketFilter = null;
 
             var fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
@@ -347,24 +336,16 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            StatementModel additionalModel = null;
             try
             {
                 var account = this.loadFileController.SelectedExistingAccountName;
-                additionalModel = this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
-
-                if (additionalModel == null)
-                {
-                    // User cancelled.
-                    return;
-                }
-
-                this.transactionService.Merge(additionalModel);
+                this.transactionService.ImportAndMergeBankStatement(fileName, account);
 
                 RaisePropertyChanged(() => ViewModel);
                 MessengerInstance.Send(new TransactionsChangedMessage());
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
+                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
             }
             catch (NotSupportedException ex)
             {
@@ -376,11 +357,6 @@ namespace BudgetAnalyser.Statement
             }
             finally
             {
-                if (additionalModel != null)
-                {
-                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-                }
-
                 this.loadFileController.Reset();
             }
         }
@@ -389,13 +365,13 @@ namespace BudgetAnalyser.Statement
         {
             if (PromptToSaveIfDirty())
             {
-                await SaveAsync();
+                await SaveAsync(true);
             }
 
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
             try
             {
-                var result = await LoadInternalAsync(fullFileName);
+                var result = await LoadFileAsync(fullFileName);
 
                 // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
                 if (result)
@@ -417,7 +393,7 @@ namespace BudgetAnalyser.Statement
         private async void OnSaveStatementExecute()
         {
             // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
-            await SaveAsync();
+            await SaveAsync(false);
             UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.StorageKey));
         }
 
@@ -437,9 +413,9 @@ namespace BudgetAnalyser.Statement
             return false;
         }
 
-        private async Task SaveAsync()
+        private async Task SaveAsync(bool close)
         {
-            await this.transactionService.SaveAsync();
+            await this.transactionService.SaveAsync(close);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
         }

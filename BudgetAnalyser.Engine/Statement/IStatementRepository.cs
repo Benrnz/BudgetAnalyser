@@ -17,11 +17,11 @@ namespace BudgetAnalyser.Engine.Statement
     {
         /// <summary>
         ///     Imports a bank's transaction extract and returns it as a new <see cref="StatementModel"/>.  This can then be merged
-        ///     with another <see cref="StatementModel"/> using the <see cref="StatementModel.Merge"/> method.
+        ///     with another <see cref="StatementModel"/> using the <see cref="StatementModel.Merge(BudgetAnalyser.Engine.Statement.StatementModel)"/> method.
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
         /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey"/></exception>
-        StatementModel ImportAndMergeBankStatementAsync(
+        StatementModel ImportAndMergeBankStatement(
             [NotNull] string storageKey, 
             [NotNull] AccountType account);
 

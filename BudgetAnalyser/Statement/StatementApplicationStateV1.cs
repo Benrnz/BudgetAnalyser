@@ -1,4 +1,3 @@
-using BudgetAnalyser.Engine.Statement;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
@@ -7,12 +6,6 @@ namespace BudgetAnalyser.Statement
     {
         public object Model { get; set; }
         public int Sequence { get { return 20; } }
-
-        public StatementApplicationState StatementApplicationState
-        {
-            get { return AdaptModel<StatementApplicationState>(); }
-            set { Model = value; }
-        }
 
         public T AdaptModel<T>()
         {

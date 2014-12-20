@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight;
@@ -14,7 +12,6 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementViewModel : ViewModelBase
     {
-        private ITransactionManagerService transactionService;
         private string doNotUseBucketFilter;
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
@@ -23,6 +20,7 @@ namespace BudgetAnalyser.Statement
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
         private StatementController statementController;
+        private ITransactionManagerService transactionService;
 
         public StatementViewModel()
         {
@@ -75,6 +73,13 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the bucket filter.
+        ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a
+        ///     bucket.
+        ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
+        ///     mode.
+        /// </summary>
         public string BucketFilter
         {
             get { return this.doNotUseBucketFilter; }
@@ -120,7 +125,7 @@ namespace BudgetAnalyser.Statement
         public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
         {
             get { return this.doNotUseGroupedByBucket; }
-            private set
+            internal set
             {
                 this.doNotUseGroupedByBucket = value;
                 RaisePropertyChanged(() => GroupedByBucket);
@@ -344,27 +349,10 @@ namespace BudgetAnalyser.Statement
 
         public void UpdateGroupedByBucket()
         {
-            if (Statement == null)
-            {
-                // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
-                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
-                return;
-            }
-
-            if (SortByBucket)
-            {
-                var query = Statement.Transactions
-                    .GroupBy(t => t.BudgetBucket)
-                    .OrderBy(g => g.Key)
-                    .Select(group => new TransactionGroupedByBucketViewModel(group, group.Key, this.statementController));
-                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(query);
-                BucketFilter = string.Empty;
-            }
-            else
-            {
-                // Do it later - its not shown right now.
-                GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>();
-            }
+            BucketFilter = string.Empty;
+            GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
+                this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
+                    .Select(x => new TransactionGroupedByBucketViewModel(x, this.statementController)));
         }
 
         private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

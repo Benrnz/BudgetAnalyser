@@ -280,7 +280,7 @@
 
 
     <DataTemplate x:Key="GroupedByBucketTemplate"
-                  DataType="statement:TransactionGroupedByBucket">
+                  DataType="statement1:TransactionGroupedByBucketViewModel">
         <Expander Style="{StaticResource Expander.Style1}">
             <Expander.Resources>
                 <Style x:Key="Local.Badge.WarningLightStyle"

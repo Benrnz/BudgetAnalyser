@@ -40,11 +40,11 @@ namespace BudgetAnalyser.Engine.Statement
             this.importerRepository = importerRepository;
         }
 
-        public StatementModel ImportAndMergeBankStatementAsync(
+        public StatementModel ImportAndMergeBankStatement(
             string storageKey,
             AccountType account)
         {
-            if (storageKey == null)
+            if (string.IsNullOrWhiteSpace(storageKey))
             {
                 throw new ArgumentNullException("storageKey");
             }

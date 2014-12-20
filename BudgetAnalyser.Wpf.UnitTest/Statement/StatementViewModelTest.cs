@@ -67,14 +67,14 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = new StatementViewModel(this.mockTransactionService.Object);
+            var subject = new StatementViewModel();
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = new StatementViewModel(this.mockTransactionService.Object);
+            var subject = new StatementViewModel();
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
@@ -258,12 +258,9 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
                 MockUiContext.Object,
                 new StatementControllerFileOperations(
                     MockUiContext.Object,
-                    new Mock<IStatementRepository>().Object,
                     new Mock<IRecentFileManager>().Object,
                     new DemoFileHelper(),
-                    new Mock<LoadFileController>().Object,
-                    MockBucketRepo.Object,
-                    this.mockTransactionService.Object
+                    new Mock<LoadFileController>().Object
                     ),
                 this.mockTransactionService.Object
                 );
@@ -282,18 +279,18 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel Arrange()
         {
-            return new StatementViewModel(this.mockTransactionService.Object)
+            return new StatementViewModel
             {
                 Statement = StatementModelTestData.TestData1()
-            }.Initialise(FakeStatetmentController);
+            }.Initialise(FakeStatetmentController, this.mockTransactionService.Object);
         }
 
         private StatementViewModel Arrange2()
         {
-            return new StatementViewModel(this.mockTransactionService.Object)
+            return new StatementViewModel
             {
                 Statement = StatementModelTestData.TestData2()
-            }.Initialise(FakeStatetmentController);
+            }.Initialise(FakeStatetmentController, this.mockTransactionService.Object);
         }
 
         private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)

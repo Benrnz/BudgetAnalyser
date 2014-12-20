@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Statement
                 new ShellDialogRequestMessage(
                     BudgetAnalyserFeature.Transactions,
                     this,
-                    ShellDialogType.Ok)
+                    ShellDialogType.SaveCancel)
                 {
                     CorrelationId = correlationId,
                     Title = "Edit Transaction",

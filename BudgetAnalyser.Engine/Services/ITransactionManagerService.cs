@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -10,30 +8,57 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
+    /// <summary>
+    ///     An interface for managing, viewing, and storing transactions
+    /// </summary>
     public interface ITransactionManagerService : IServiceFoundation
     {
-        StatementModel StatementModel { get; }
-        Task<bool> CheckBudgetContainsAllUsedBucketsInStatementAsync(BudgetCollection budgets = null);
+        /// <summary>
+        ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for
+        ///     displaying in the UI.
+        ///     Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" />
+        ///     property.
+        /// </summary>
+        /// <returns>A textual summary of duplicates found. Null if none are detected or no statement is loaded.</returns>
         string DetectDuplicateTransactions();
+
+        /// <summary>
+        ///     Provides a list of buckets for display purposes for filtering the transactions shown.
+        ///     This list will include a blank item to represent no filtering, and a [Uncategorised] to represent a filter to show
+        ///     only transactions
+        ///     with no bucket allocation.
+        /// </summary>
+        /// <returns>A string list of bucket codes.</returns>
         IEnumerable<string> FilterableBuckets();
+
+        /// <summary>
+        ///     Filters the transactions using the filter object provided.
+        /// </summary>
         void FilterTransactions([NotNull] GlobalFilterCriteria criteria);
+
+        /// <summary>
+        ///     Filters the transactions using the search text provided against any text field in <see cref="Transaction" />.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
         void FilterTransactions([NotNull] string searchText);
 
         /// <summary>
-        ///     Imports a bank's transaction extract and returns it as a new <see cref="StatementModel" />.  This can then be
-        ///     merged
-        ///     with another <see cref="StatementModel" /> using the
-        ///     <see cref="Statement.StatementModel.Merge(BudgetAnalyser.Engine.Statement.StatementModel)" /> method.
+        ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
+        ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
         /// <exception cref="KeyNotFoundException">
         ///     Will be thrown if the bank extract cannot be located using the given
         ///     <paramref name="storageKey" />
         /// </exception>
-        StatementModel ImportAndMergeBankStatementAsync(
+        void ImportAndMergeBankStatement(
             [NotNull] string storageKey,
             [NotNull] AccountType account);
 
+        /// <summary>
+        ///     Parses and loads the persisted state data from the provided object.
+        /// </summary>
+        /// <param name="stateData">The state data loaded from persistent storage.</param>
         StatementApplicationState LoadPersistedStateData(object stateData);
 
         /// <summary>
@@ -42,250 +67,75 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="storageKey">Pass a known storage key (database identifier or filename) to load.</param>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
         /// <exception cref="KeyNotFoundException">
-        ///     Will be thrown if the bank extract cannot be located using the given
-        ///     <paramref name="storageKey" />
+        ///     Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" />
         /// </exception>
         /// <exception cref="StatementModelChecksumException">
-        ///     Will be thrown if the statement model's internal checksum detects
-        ///     corrupt data indicating tampering.
+        ///     Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.
         /// </exception>
         /// <exception cref="DataFormatException">
         ///     Will be thrown if the format of the bank extract contains unexpected data
-        ///     indicating it is corrupt or an old file.
+        ///     indicating it is corrupt or an old unsupported file.
         /// </exception>
         Task<StatementModel> LoadStatementModelAsync([NotNull] string storageKey);
 
-        void Merge([NotNull] StatementModel additionalModel);
+        /// <summary>
+        ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.
+        /// </summary>
+        /// <param name="groupByBucket">
+        ///     True if the UI is currently showing the transactions grouped by bucket, false if not.
+        /// </param>
+        IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket);
+
+        /// <summary>
+        ///     Prepares the persistent state data to save to storage.
+        /// </summary>
         object PreparePersistentStateData();
+
+        /// <summary>
+        ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
+        /// </summary>
+        /// <param name="transactionToRemove">The transaction to remove.</param>
         void RemoveTransaction([NotNull] Transaction transactionToRemove);
 
         /// <summary>
-        ///     Save the given <see cref="StatementModel" /> into persistent storage.
+        ///     Save the currently loaded <see cref="StatementModel" /> into persistent storage.
         ///     (Saving and preserving bank statement files is not supported.)
         /// </summary>
-        Task SaveAsync();
+        /// <param name="close">If true, will close the currently loaded Budget Analyser statement, false to keep it open.</param>
+        Task SaveAsync(bool close);
 
+        /// <summary>
+        ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are
+        ///     created.
+        ///     Both transactions must add up to the existing transaction amount.
+        /// </summary>
+        /// <param name="originalTransaction">The original transaction.</param>
+        /// <param name="splinterAmount1">The splinter amount1.</param>
+        /// <param name="splinterAmount2">The splinter amount2.</param>
+        /// <param name="splinterBucket1">The splinter bucket1.</param>
+        /// <param name="splinterBucket2">The splinter bucket2.</param>
         void SplitTransaction(
             [NotNull] Transaction originalTransaction,
             decimal splinterAmount1,
             decimal splinterAmount2,
             [NotNull] BudgetBucket splinterBucket1,
             [NotNull] BudgetBucket splinterBucket2);
-    }
-
-    [AutoRegisterWithIoC]
-    public class TransactionManagerService : ITransactionManagerService
-    {
-        public const string UncategorisedFilter = "[Uncategorised Only]";
-        private readonly IBudgetBucketRepository bucketRepository;
-        private readonly ILogger logger;
-        private readonly IStatementRepository statementRepository;
-        private BudgetCollection budgetCollection;
-        private int budgetHash;
-        private string currentStorageKey;
-        private bool sortedByBucket;
-
-        public TransactionManagerService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IStatementRepository statementRepository, [NotNull] ILogger logger)
-        {
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException("bucketRepository");
-            }
-
-            if (statementRepository == null)
-            {
-                throw new ArgumentNullException("statementRepository");
-            }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException("logger");
-            }
-
-            this.bucketRepository = bucketRepository;
-            this.statementRepository = statementRepository;
-            this.logger = logger;
-        }
-
-        public StatementModel StatementModel { get; private set; }
-
-        public async Task<bool> CheckBudgetContainsAllUsedBucketsInStatementAsync(BudgetCollection budgets = null)
-        {
-            // This method must be called at least once with a budget collection.  Second and subsequent times do not require the budget.
-            if (this.budgetCollection == null && budgets == null)
-            {
-                throw new ArgumentNullException("budgets");
-            }
-
-            this.budgetCollection = budgets ?? this.budgetCollection;
-
-            if (StatementModel == null)
-            {
-                // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
-                return true;
-            }
-
-            if (this.budgetCollection.GetHashCode() == this.budgetHash)
-            {
-                // This budget has already been checked against this statement. No need to repeatedly check the validity below, this is an expensive operation.
-                // Everything is ok.
-                return true;
-            }
-
-            var allBuckets = new List<BudgetBucket>(this.bucketRepository.Buckets.OrderBy(b => b.Code));
-            var allTransactionHaveABucket = await Task.Run(
-                () =>
-                {
-                    return StatementModel.AllTransactions
-                        .AsParallel()
-                        .All(
-                            t =>
-                            {
-                                var bucketExists = allBuckets.Contains(t.BudgetBucket);
-                                if (!bucketExists)
-                                {
-                                    this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
-                                }
-                                return bucketExists;
-                            });
-                });
-
-            this.budgetHash = this.budgetCollection.GetHashCode();
-            return allTransactionHaveABucket;
-        }
-
-        public string DetectDuplicateTransactions()
-        {
-            var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
-            return duplicates.Any()
-                ? String.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!", duplicates.Sum(group => group.Count()))
-                : null;
-        }
-
-        public IEnumerable<string> FilterableBuckets()
-        {
-            return this.bucketRepository.Buckets
-                .Select(b => b.Code)
-                .Union(new[] { String.Empty, UncategorisedFilter })
-                .OrderBy(b => b);
-        }
-
-        public void FilterTransactions(GlobalFilterCriteria criteria)
-        {
-            if (criteria == null)
-            {
-                throw new ArgumentNullException("criteria");
-            }
-
-            StatementModel.Filter(criteria);
-        }
-
-        public void FilterTransactions(string searchText)
-        {
-            if (String.IsNullOrWhiteSpace(searchText))
-            {
-                throw new ArgumentNullException("searchText");
-            }
-
-            StatementModel.FilterByText(searchText);
-        }
-
-        public StatementModel ImportAndMergeBankStatementAsync(string storageKey, AccountType account)
-        {
-            return this.statementRepository.ImportAndMergeBankStatementAsync(storageKey, account);
-        }
-
-        public StatementApplicationState LoadPersistedStateData(object stateData)
-        {
-            this.budgetHash = 0;
-            var state = (StatementApplicationState)stateData;
-            this.sortedByBucket = state.SortByBucket ?? false;
-            this.currentStorageKey = state.StorageKey;
-            return state;
-        }
 
         /// <summary>
-        ///     Loads an existing Budget Analyser <see cref="ITransactionManagerService.StatementModel" />.
+        ///     Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets
+        ///     used by the transactions
+        ///     exist in the budgets.  This is performed asynchronously.
+        ///     This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
         /// </summary>
-        /// <param name="storageKey">Pass a known storage key (database identifier or filename) to load.</param>
-        /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
-        /// <exception cref="KeyNotFoundException">
-        ///     Will be thrown if the bank extract cannot be located using the given
-        ///     <paramref name="storageKey" />
-        /// </exception>
-        /// <exception cref="StatementModelChecksumException">
-        ///     Will be thrown if the statement model's internal checksum detects
-        ///     corrupt data indicating tampering.
-        /// </exception>
-        /// <exception cref="DataFormatException">
-        ///     Will be thrown if the format of the bank extract contains unexpected data
-        ///     indicating it is corrupt or an old file.
-        /// </exception>
-        public async Task<StatementModel> LoadStatementModelAsync(string storageKey)
-        {
-            StatementModel = await this.statementRepository.LoadStatementModelAsync(storageKey);
-            return StatementModel;
-        }
-
-        public void Merge(StatementModel additionalModel)
-        {
-            if (additionalModel == null)
-            {
-                throw new ArgumentNullException("additionalModel");
-            }
-
-            StatementModel.Merge(additionalModel);
-        }
-
-        public object PreparePersistentStateData()
-        {
-            throw new NotImplementedException();
-            //return new StatementApplicationState()
-            //{
-            //    StorageKey = StatementModel.StorageKey,
-            //    SortByBucket = 
-
-            //}
-        }
-
-        public void RemoveTransaction(Transaction transactionToRemove)
-        {
-            if (transactionToRemove == null)
-            {
-                throw new ArgumentNullException("transactionToRemove");
-            }
-
-            StatementModel.RemoveTransaction(transactionToRemove);
-        }
-
-        public async Task SaveAsync()
-        {
-            await this.statementRepository.SaveAsync(StatementModel);
-        }
-
-        public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
-        {
-            if (originalTransaction == null)
-            {
-                throw new ArgumentNullException("originalTransaction");
-            }
-
-            if (splinterBucket1 == null)
-            {
-                throw new ArgumentNullException("splinterBucket1");
-            }
-
-            if (splinterBucket2 == null)
-            {
-                throw new ArgumentNullException("splinterBucket2");
-            }
-
-            StatementModel.SplitTransaction(
-                originalTransaction,
-                splinterAmount1,
-                splinterAmount2,
-                splinterBucket1,
-                splinterBucket2);
-        }
+        /// <param name="budgets">
+        ///     The current budgets. This must be provided at least once. It can be omitted when
+        ///     calling this method after the statement model has changed if the budget was previously provided.
+        /// </param>
+        /// <returns>
+        ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false.
+        ///     If false, this indicates that some transactions may have their bucket allocation removed possibly resulting in
+        ///     unintended data loss.
+        /// </returns>
+        Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection budgets = null);
     }
 }

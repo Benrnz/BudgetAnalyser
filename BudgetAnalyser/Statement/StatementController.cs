@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -7,7 +8,6 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Statement
 
         private async Task CheckBudgetContainsAllUsedBucketsInStatement(BudgetCollection budgets = null)
         {
-            if (!await this.transactionService.CheckBudgetContainsAllUsedBucketsInStatementAsync(budgets))
+            if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
             {
                 this.uiContext.UserPrompts.MessageBox.Show(
                     "WARNING! By loading a different budget with a Statement loaded, data loss may occur. There may be budget buckets used in the Statement that do not exist in the new loaded Budget. This will result in those Statement Transactions being declassified. \nCheck for unclassified transactions.",
@@ -176,21 +176,15 @@ namespace BudgetAnalyser.Statement
 
         private void ClearTextFilter()
         {
+            TextFilter = null;
             var requestFilter = new RequestFilterMessage(this);
             MessengerInstance.Send(requestFilter);
             this.transactionService.FilterTransactions(requestFilter.Criteria);
         }
 
-        private void DeleteTransaction()
-        {
-            this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
-            ViewModel.TriggerRefreshTotalsRow();
-            FileOperations.NotifyOfEdit();
-        }
-
         private void FinaliseEditTransaction(ShellDialogResponseMessage message)
         {
-            if (message.Response == ShellDialogButton.Ok)
+            if (message.Response == ShellDialogButton.Save)
             {
                 var viewModel = (EditingTransactionController)message.Content;
                 if (viewModel.HasChanged)
@@ -224,7 +218,14 @@ namespace BudgetAnalyser.Statement
             }
 
             var statementMetadata = this.transactionService.LoadPersistedStateData(message.RehydratedModels[typeof(StatementApplicationStateV1)].Model);
-            await FileOperations.LoadStatementFromApplicationStateAsync(statementMetadata.StorageKey);
+            if (string.IsNullOrWhiteSpace(statementMetadata.StorageKey))
+            {
+                // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
+                return;
+            }
+
+            await FileOperations.LoadFileAsync(statementMetadata.StorageKey);
+
             ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
             OnSortCommandExecute();
             await CheckBudgetContainsAllUsedBucketsInStatement();
@@ -234,11 +235,7 @@ namespace BudgetAnalyser.Statement
         {
             var statementMetadata = new StatementApplicationStateV1
             {
-                StatementApplicationState = new StatementApplicationState
-                {
-                    StorageKey = ViewModel.Statement == null ? null : ViewModel.Statement.StorageKey,
-                    SortByBucket = ViewModel.SortByBucket
-                }
+                Model = this.transactionService.PreparePersistentStateData()
             };
             message.PersistThisModel(statementMetadata);
         }
@@ -258,7 +255,6 @@ namespace BudgetAnalyser.Statement
 
         private void OnClearTextFilterCommandExecute()
         {
-            TextFilter = null;
             ClearTextFilter();
         }
 
@@ -274,7 +270,9 @@ namespace BudgetAnalyser.Statement
                 "Delete Transaction");
             if (confirm != null && confirm.Value)
             {
-                DeleteTransaction();
+                this.transactionService.RemoveTransaction(ViewModel.SelectedRow);
+                ViewModel.TriggerRefreshTotalsRow();
+                FileOperations.NotifyOfEdit();
             }
         }
 
@@ -328,7 +326,10 @@ namespace BudgetAnalyser.Statement
         private void OnSortCommandExecute()
         {
             // The bindings are processed before commands, so the bound boolean for SortByBucket will be set to true by now.
-            ViewModel.UpdateGroupedByBucket();
+            ViewModel.BucketFilter = string.Empty;
+            ViewModel.GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
+                this.transactionService.PopulateGroupByBucketCollection(ViewModel.SortByBucket)
+                    .Select(x => new TransactionGroupedByBucketViewModel(x, this)));
         }
 
         private void OnSplitTransactionCommandExecute()

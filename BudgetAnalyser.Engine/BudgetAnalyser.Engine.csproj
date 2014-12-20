@@ -235,6 +235,7 @@
     <Compile Include="Services\LedgerService.cs" />
     <Compile Include="Services\LongTermSpendingChartService.cs" />
     <Compile Include="Services\OverallPerformanceChartService.cs" />
+    <Compile Include="Services\TransactionManagerService.cs" />
     <Compile Include="Services\TransactionRuleService.cs" />
     <Compile Include="Services\WidgetService.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />

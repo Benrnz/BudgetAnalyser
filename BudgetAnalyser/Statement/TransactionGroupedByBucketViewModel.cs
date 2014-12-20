@@ -12,17 +12,9 @@ namespace BudgetAnalyser.Statement
     {
         private readonly StatementController statementController;
 
-        public TransactionGroupedByBucketViewModel(
-            [NotNull] IEnumerable<Transaction> transactions,
-            [NotNull] BudgetBucket groupByThisBucket,
-            [NotNull] StatementController statementController)
-            : base(transactions, groupByThisBucket)
+        public TransactionGroupedByBucketViewModel(TransactionGroupedByBucket baseLine, StatementController statementController)
+            : base(baseLine.Transactions, baseLine.Bucket)
         {
-            if (statementController == null)
-            {
-                throw new ArgumentNullException("statementController");
-            }
-
             this.statementController = statementController;
         }
 
