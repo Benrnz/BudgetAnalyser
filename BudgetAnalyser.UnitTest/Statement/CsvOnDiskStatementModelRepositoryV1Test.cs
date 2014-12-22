@@ -175,7 +175,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        [ExpectedException(typeof(VersionNotFoundException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public async Task LoadShouldThrowGivenIncorrectVersionHashFile()
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();

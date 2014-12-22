@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Matching
         private readonly ITransactionRuleService ruleService;
         private readonly StatementController statementController;
 
-        public AppliedRulesController([NotNull] UiContext uiContext, [NotNull] ITransactionRuleService ruleService)
+        public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService)
         {
             if (uiContext == null)
             {

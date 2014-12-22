@@ -210,6 +210,7 @@
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
     <Compile Include="Reports\GraphDataTest.cs" />
+    <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />

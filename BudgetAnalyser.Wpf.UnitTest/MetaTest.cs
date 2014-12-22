@@ -8,6 +8,8 @@ namespace BudgetAnalyser.Wpf.UnitTest
     [TestClass]
     public class MetaTest
     {
+        private const int MinimumTestCount = 14;
+
         [TestMethod]
         public void ListAllTests()
         {
@@ -35,7 +37,7 @@ namespace BudgetAnalyser.Wpf.UnitTest
             var assembly = GetType().Assembly;
             int count = (from type in assembly.ExportedTypes let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>() where testClassAttrib != null select type.GetMethods().Count(method => method.GetCustomAttribute<TestMethodAttribute>() != null)).Sum();
             Console.WriteLine(count);
-            Assert.IsTrue(count >= 27);
+            Assert.IsTrue(count >= MinimumTestCount);
         }
     }
 }

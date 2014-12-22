@@ -18,7 +18,9 @@ namespace BudgetAnalyser
         EditingTransactionController EditingTransactionController { get; }
         IMessenger Messenger { get; }
         NewRuleController NewRuleController { get; }
+        RulesController RulesController { get; }
         SplitTransactionController SplitTransactionController { get; }
+        StatementController StatementController { get; }
         UserPrompts UserPrompts { get; }
     }
 }

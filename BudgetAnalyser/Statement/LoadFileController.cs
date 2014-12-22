@@ -16,10 +16,8 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.Statement
 {
-    public sealed class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips, IDisposable
+    public class LoadFileController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips, IDisposable
     {
-        // Track whether Dispose has been called. 
-
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
         private readonly IVersionedStatementModelRepository statementModelRepository;
@@ -36,7 +34,7 @@ namespace BudgetAnalyser.Statement
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
-            [NotNull] UiContext uiContext,
+            [NotNull] IUiContext uiContext,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] IVersionedStatementModelRepository statementModelRepository)
         {

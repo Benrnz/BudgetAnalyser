@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BudgetAnalyser.Engine.Statement;
@@ -70,7 +71,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
+        [ExpectedException(typeof(KeyNotFoundException))]
         public void LoadShouldThrowIfFileNotFound()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();

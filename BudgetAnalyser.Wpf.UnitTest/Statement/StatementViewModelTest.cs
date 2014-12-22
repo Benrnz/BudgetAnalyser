@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
@@ -8,7 +7,6 @@ using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UserInteraction.Contracts;
-using Rees.Wpf;
 
 namespace BudgetAnalyser.Wpf.UnitTest.Statement
 {
@@ -16,65 +14,19 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
     public class StatementViewModelTest
     {
         private Mock<ITransactionManagerService> mockTransactionService;
-        private StatementController FakeStatetmentController { get; set; }
-        private Mock<IBudgetBucketRepository> MockBucketRepo { get; set; }
-        private Mock<IUiContext> MockUiContext { get; set; }
-
-        [TestMethod]
-        public void BudgetBucketsShouldIncludeBlank()
-        {
-            var subject = Arrange();
-            Assert.IsTrue(subject.FilterBudgetBuckets.Any(string.IsNullOrWhiteSpace));
-        }
-
-        [TestMethod]
-        public void EditingTransactionFromFullListShouldSyncWithGroupedList()
-        {
-            var subject = Arrange2();
-            subject.SortByBucket = true;
-            subject.UpdateGroupedByBucket();
-
-            var transactionFromFullList = GetPhoneTxnFromFullList(subject);
-            var transactionFromGroupedList = GetPhoneTxnFromGroupedList(subject);
-
-            transactionFromFullList.Amount = -999.99M;
-
-            Assert.AreEqual(-999.99M, transactionFromGroupedList.Amount);
-        }
-
-        [TestMethod]
-        public void EditingTransactionFromGroupedListShouldSyncWithFullList()
-        {
-            var subject = Arrange2();
-            subject.SortByBucket = true;
-            subject.UpdateGroupedByBucket();
-
-            var transactionFromFullList = GetPhoneTxnFromFullList(subject);
-            var transactionFromGroupedList = GetPhoneTxnFromGroupedList(subject);
-
-            transactionFromGroupedList.Amount = -999.99M;
-
-            Assert.AreEqual(-999.99M, transactionFromFullList.Amount);
-        }
-
-        [TestMethod]
-        public void FilterBudgetBucketsShouldIncludeUncategorisedItem()
-        {
-            var subject = Arrange();
-            Assert.IsTrue(subject.FilterBudgetBuckets.Any(b => b == TransactionManagerService.UncategorisedFilter));
-        }
+        private Mock<IUiContext> mockUiContext;
 
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = new StatementViewModel();
+            var subject = CreateSubject();
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = new StatementViewModel();
+            var subject = CreateSubject();
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
@@ -84,16 +36,6 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             var subject = Arrange();
             subject.SortByBucket = true;
             Assert.IsFalse(subject.SortByDate);
-        }
-
-        [TestMethod]
-        public void GivenSortByBucketUpdateGroupedByBucketShouldUpdateGroupedList()
-        {
-            var subject = Arrange();
-            subject.SortByDate = true;
-            subject.SortByBucket = true;
-            subject.UpdateGroupedByBucket();
-            Assert.IsTrue(subject.GroupedByBucket.Any());
         }
 
         [TestMethod]
@@ -115,38 +57,10 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenTestData1AverageDebitShouldBe115()
-        {
-            var subject = Arrange();
-            Assert.AreEqual(-115.25M, decimal.Round(subject.AverageDebit, 2));
-        }
-
-        [TestMethod]
-        public void GivenTestData1BucketFilterShouldBeNullByDefault()
-        {
-            var subject = Arrange();
-            Assert.IsNull(subject.BucketFilter);
-        }
-
-        [TestMethod]
         public void GivenTestData1HasTransactionsShouldBeTrue()
         {
             var subject = Arrange();
             Assert.IsTrue(subject.HasTransactions);
-        }
-
-        [TestMethod]
-        public void GivenTestData1MinDateShouldBe01Sep13()
-        {
-            var subject = Arrange();
-            Assert.AreEqual(new DateTime(2013, 09, 1), subject.MaxTransactionDate);
-        }
-
-        [TestMethod]
-        public void GivenTestData1MinDateShouldBe20Jul13()
-        {
-            var subject = Arrange();
-            Assert.AreEqual(new DateTime(2013, 07, 15), subject.MinTransactionDate);
         }
 
         [TestMethod]
@@ -157,13 +71,6 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenTestData1TotalCountShouldBe7()
-        {
-            var subject = Arrange();
-            Assert.AreEqual(7, subject.TotalCount);
-        }
-
-        [TestMethod]
         public void GivenTestData1TotalCreditsShouldBe0()
         {
             var subject = Arrange();
@@ -171,20 +78,13 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenTestData1TotalDebitsShouldBe806()
-        {
-            var subject = Arrange();
-            Assert.AreEqual(-806.78M, subject.TotalDebits);
-        }
-
-        [TestMethod]
         public void GivenTestData2OutputGroupedList()
         {
-            var subject = Arrange2();
+            var subject = Arrange();
             subject.SortByBucket = true;
             subject.UpdateGroupedByBucket();
 
-            foreach (TransactionGroupedByBucket group in subject.GroupedByBucket)
+            foreach (TransactionGroupedByBucketViewModel group in subject.GroupedByBucket)
             {
                 Console.WriteLine(
                     "{0}, AvgDr:{1:C} {2:d} {3:d} Count:{4} TotalCr:{5:C} TotalDr{6:C} Diff{7:C}",
@@ -208,33 +108,12 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         }
 
         [TestMethod]
-        public void GivenTestData2TotalCreditsShouldBe2552()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()
         {
-            var subject = Arrange2();
-            Assert.AreEqual(2552.97M, subject.TotalCredits);
-        }
-
-        [TestMethod]
-        public void GivenTestData2TotalDifferenceShouldBe1746()
-        {
-            var subject = Arrange2();
-            Assert.AreEqual(1746.19M, subject.TotalDifference);
-        }
-
-        [TestMethod]
-        public void RemovingTransactionShouldDeleteFromBothLists()
-        {
-            var subject = Arrange2();
-            subject.SortByBucket = true;
-            subject.UpdateGroupedByBucket();
-
-            var transactionFromFullList = GetPhoneTxnFromFullList(subject);
-            var count = subject.Statement.Transactions.Count();
-
-            subject.Statement.RemoveTransaction(transactionFromFullList);
-
-            Assert.AreEqual(count - 1, subject.Statement.Transactions.Count());
-            Assert.AreEqual(count - 1, subject.GroupedByBucket.SelectMany(g => g.Transactions).Count());
+            var subject = CreateSubject();
+            subject.Statement = StatementModelTestData.TestData1();
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -247,23 +126,9 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            MockBucketRepo = new Mock<IBudgetBucketRepository>();
-
-            MockUiContext = new Mock<IUiContext>();
-            // Todo Need message, yesnobox, waitcursorfactory, backgroundjob, appliedrulescontroller
-
+            this.mockUiContext = new Mock<IUiContext>();
             this.mockTransactionService = new Mock<ITransactionManagerService>();
-
-            FakeStatetmentController = new StatementController(
-                MockUiContext.Object,
-                new StatementControllerFileOperations(
-                    MockUiContext.Object,
-                    new Mock<IRecentFileManager>().Object,
-                    new DemoFileHelper(),
-                    new Mock<LoadFileController>().Object
-                    ),
-                this.mockTransactionService.Object
-                );
+            this.mockTransactionService.Setup(m => m.DetectDuplicateTransactions()).Returns(string.Empty);
         }
 
         [TestMethod]
@@ -274,23 +139,19 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             subject.PropertyChanged += (s, e) => eventCount++;
             subject.TriggerRefreshTotalsRow();
 
-            Assert.AreEqual(10, eventCount);
+            Assert.AreEqual(8, eventCount);
         }
 
         private StatementViewModel Arrange()
         {
-            return new StatementViewModel
-            {
-                Statement = StatementModelTestData.TestData1()
-            }.Initialise(FakeStatetmentController, this.mockTransactionService.Object);
+            var subject = CreateSubject().Initialise(this.mockTransactionService.Object);
+            subject.Statement = StatementModelTestData.TestData1();
+            return subject;
         }
 
-        private StatementViewModel Arrange2()
+        private StatementViewModel CreateSubject()
         {
-            return new StatementViewModel
-            {
-                Statement = StatementModelTestData.TestData2()
-            }.Initialise(FakeStatetmentController, this.mockTransactionService.Object);
+            return new StatementViewModel(this.mockUiContext.Object);
         }
 
         private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)

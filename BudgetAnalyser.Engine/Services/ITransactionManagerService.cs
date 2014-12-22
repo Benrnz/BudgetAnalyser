@@ -13,6 +13,11 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ITransactionManagerService : IServiceFoundation
     {
+        decimal AverageDebit { get; }
+        decimal TotalCount { get; }
+        decimal TotalCredits { get; }
+        decimal TotalDebits { get; }
+
         /// <summary>
         ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for
         ///     displaying in the UI.

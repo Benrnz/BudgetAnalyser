@@ -326,10 +326,7 @@ namespace BudgetAnalyser.Statement
         private void OnSortCommandExecute()
         {
             // The bindings are processed before commands, so the bound boolean for SortByBucket will be set to true by now.
-            ViewModel.BucketFilter = string.Empty;
-            ViewModel.GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
-                this.transactionService.PopulateGroupByBucketCollection(ViewModel.SortByBucket)
-                    .Select(x => new TransactionGroupedByBucketViewModel(x, this)));
+            ViewModel.UpdateGroupedByBucket();
         }
 
         private void OnSplitTransactionCommandExecute()

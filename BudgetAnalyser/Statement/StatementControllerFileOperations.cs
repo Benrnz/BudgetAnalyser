@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Statement
             this.demoFileHelper = demoFileHelper;
             this.loadFileController = loadFileController;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
-            ViewModel = new StatementViewModel();
+            ViewModel = new StatementViewModel(uiContext);
         }
 
         public ICommand CloseStatementCommand
@@ -177,7 +177,7 @@ namespace BudgetAnalyser.Statement
         internal void Initialise(StatementController controller, ITransactionManagerService transactionManagerService)
         {
             this.transactionService = transactionManagerService;
-            ViewModel.Initialise(controller, this.transactionService);
+            ViewModel.Initialise(this.transactionService);
         }
 
         internal async Task<bool> LoadFileAsync(string fullFileName)

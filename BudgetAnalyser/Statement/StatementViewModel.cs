@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementViewModel : ViewModelBase
     {
+        private readonly IUiContext uiContext;
         private string doNotUseBucketFilter;
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
@@ -19,58 +20,17 @@ namespace BudgetAnalyser.Statement
         private Transaction doNotUseSelectedRow;
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
-        private StatementController statementController;
         private ITransactionManagerService transactionService;
 
-        public StatementViewModel()
+        public StatementViewModel(IUiContext uiContext)
         {
             this.doNotUseSortByDate = true;
+            this.uiContext = uiContext;
         }
 
         public decimal AverageDebit
         {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    IEnumerable<Transaction> query = Statement.Transactions.Where(t => t.Amount < 0).ToList();
-                    if (query.Any())
-                    {
-                        return query.Average(t => t.Amount);
-                    }
-                }
-
-                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
-                {
-                    var query2 =
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code)).ToList();
-                    if (query2.Any())
-                    {
-                        return query2.Average(t => t.Amount);
-                    }
-
-                    return 0;
-                }
-
-                IEnumerable<Transaction> query3 = Statement.Transactions
-                    .Where(
-                        t =>
-                            t.Amount < 0 && t.BudgetBucket != null &&
-                            t.BudgetBucket.Code == BucketFilter)
-                    .ToList();
-                if (query3.Any())
-                {
-                    return query3.Average(t => t.Amount);
-                }
-
-                return 0;
-            }
+            get { return this.transactionService.AverageDebit; }
         }
 
         /// <summary>
@@ -91,9 +51,6 @@ namespace BudgetAnalyser.Statement
                 TriggerRefreshTotalsRow();
             }
         }
-
-        // TODO Remove this
-        //public BudgetModel BudgetModel { get; set; }
 
         public bool Dirty
         {
@@ -137,15 +94,15 @@ namespace BudgetAnalyser.Statement
             get { return Statement != null && Statement.Transactions.Any(); }
         }
 
-        public DateTime MaxTransactionDate
-        {
-            get { return Statement.Transactions.Max(t => t.Date); }
-        }
-
-        public DateTime MinTransactionDate
-        {
-            get { return Statement.Transactions.Min(t => t.Date); }
-        }
+        // TODO Is this really reqd?
+        //public DateTime MaxTransactionDate
+        //{
+        //    get { return Statement.Transactions.Max(t => t.Date); }
+        //}
+        //public DateTime MinTransactionDate
+        //{
+        //    get { return Statement.Transactions.Min(t => t.Date); }
+        //}
 
         public Transaction SelectedRow
         {
@@ -185,6 +142,11 @@ namespace BudgetAnalyser.Statement
 
             set
             {
+                if (this.transactionService == null)
+                {
+                    throw new InvalidOperationException("Initialise has not been called.");
+                }
+
                 if (this.doNotUseStatement != null)
                 {
                     this.doNotUseStatement.PropertyChanged -= OnStatementPropertyChanged;
@@ -217,85 +179,17 @@ namespace BudgetAnalyser.Statement
 
         public decimal TotalCount
         {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Count();
-                }
-
-                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Count(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code));
-                }
-
-                return Statement.Transactions.Count(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter);
-            }
+            get { return this.transactionService.TotalCount; }
         }
 
         public decimal TotalCredits
         {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-                }
-
-                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code))
-                            .Sum(t => t.Amount);
-                }
-
-                return
-                    Statement.Transactions.Where(
-                        t => t.Amount > 0 && t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter)
-                        .Sum(t => t.Amount);
-            }
+            get { return this.transactionService.TotalCredits; }
         }
 
         public decimal TotalDebits
         {
-            get
-            {
-                if (Statement == null || Statement.Transactions == null)
-                {
-                    return 0;
-                }
-
-                if (string.IsNullOrWhiteSpace(BucketFilter))
-                {
-                    return Statement.Transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
-                }
-
-                if (BucketFilter == TransactionManagerService.UncategorisedFilter)
-                {
-                    return
-                        Statement.Transactions.Where(
-                            t => t.BudgetBucket == null || string.IsNullOrWhiteSpace(t.BudgetBucket.Code))
-                            .Sum(t => t.Amount);
-                }
-
-                return
-                    Statement.Transactions.Where(
-                        t => t.Amount < 0 && t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter)
-                        .Sum(t => t.Amount);
-            }
+            get { return this.transactionService.TotalDebits; }
         }
 
         public decimal TotalDifference
@@ -308,9 +202,8 @@ namespace BudgetAnalyser.Statement
             return SelectedRow != null;
         }
 
-        public StatementViewModel Initialise(StatementController controller, ITransactionManagerService transactionManagerService)
+        public StatementViewModel Initialise(ITransactionManagerService transactionManagerService)
         {
-            this.statementController = controller;
             this.transactionService = transactionManagerService;
             return this;
         }
@@ -334,9 +227,7 @@ namespace BudgetAnalyser.Statement
             RaisePropertyChanged(() => TotalCount);
             RaisePropertyChanged(() => HasTransactions);
             RaisePropertyChanged(() => StatementName);
-            RaisePropertyChanged(() => MinTransactionDate);
-            RaisePropertyChanged(() => MaxTransactionDate);
-
+            
             if (Statement == null)
             {
                 DuplicateSummary = null;
@@ -352,7 +243,7 @@ namespace BudgetAnalyser.Statement
             BucketFilter = string.Empty;
             GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
                 this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
-                    .Select(x => new TransactionGroupedByBucketViewModel(x, this.statementController)));
+                    .Select(x => new TransactionGroupedByBucketViewModel(x, this.uiContext)));
         }
 
         private void OnStatementPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
