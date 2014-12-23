@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
@@ -15,35 +18,59 @@ namespace BudgetAnalyser.UnitTest.Services
         private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
         private Mock<IStatementRepository> mockStatementRepo;
         private TransactionManagerService subject;
+        private StatementModel testData;
 
         [TestMethod]
-        public void GivenTestData1AverageDebitShouldBe115()
+        public void AverageDebit_ShouldBe115_GivenTestData2()
         {
             Assert.AreEqual(-115.25M, decimal.Round(this.subject.AverageDebit, 2));
         }
 
         [TestMethod]
-        public void GivenTestData1TotalCountShouldBe7()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ShouldThrow_GivenNullBucketRepo()
         {
-            Assert.AreEqual(10, this.subject.TotalCount);
+            new TransactionManagerService(null, this.mockStatementRepo.Object, new FakeLogger());
+            Assert.Fail();
         }
 
         [TestMethod]
-        public void GivenTestData1TotalDebitsShouldBe806()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ShouldThrow_GivenNullLogger()
         {
-            Assert.AreEqual(-806.78M, this.subject.TotalDebits);
+            new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, null);
+            Assert.Fail();
         }
 
         [TestMethod]
-        public void GivenTestData2TotalCreditsShouldBe2552()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ShouldThrow_GivenNullStatementRepo()
         {
-            Assert.AreEqual(2552.97M, this.subject.TotalCredits);
+            new TransactionManagerService(this.mockBudgetBucketRepo.Object, null, new FakeLogger());
+            Assert.Fail();
         }
 
         [TestMethod]
-        public void GivenTestData2TotalDifferenceShouldBe1746()
+        public void DetectDuplicateTransactions_ShouldReturnEmpty_GivenTestData2()
         {
-            Assert.AreEqual(1746.19M, this.subject.TotalCredits + this.subject.TotalDebits);
+            Assert.IsTrue(string.IsNullOrWhiteSpace(this.subject.DetectDuplicateTransactions()));
+        }
+
+        [TestMethod]
+        public void DetectDuplicateTransactions_ShouldReturnNull_GivenNullStatementModel()
+        {
+            Assert.IsNull(this.subject.DetectDuplicateTransactions());
+        }
+
+        [TestMethod]
+        public void DetectDuplicateTransactions_ShouldSummaryText_GivenTestData4()
+        {
+            this.testData = StatementModelTestData.TestData4();
+            CreateSubject();
+
+            var result = this.subject.DetectDuplicateTransactions();
+            Console.WriteLine(result);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result));
         }
 
         [TestMethod]
@@ -56,15 +83,108 @@ namespace BudgetAnalyser.UnitTest.Services
             Assert.IsNotNull(statement);
         }
 
+        [TestMethod]
+        public void FilterableBuckets_ShouldContainABlankElement_GivenAnyBucketList()
+        {
+            Assert.IsTrue(this.subject.FilterableBuckets().Any(string.IsNullOrWhiteSpace));
+        }
+
+        [TestMethod]
+        public void FilterableBuckets_ShouldContainUncatergorised_GivenAnyBucketList()
+        {
+            Assert.IsTrue(this.subject.FilterableBuckets().Any(b => b == TransactionManagerService.UncategorisedFilter));
+        }
+
+        [TestMethod]
+        public void FilterTransactions_ShouldCallStatementModel_GivenFilterObject()
+        {
+            this.testData = new StatementModelTestHarness();
+            var criteria = new GlobalFilterCriteria { BeginDate = new DateTime(2014, 07, 01), EndDate = new DateTime(2014, 08, 01) };
+
+            CreateSubject();
+
+            this.subject.FilterTransactions(criteria);
+
+            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).FilterByCriteriaWasCalled);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void FilterTransactions_ShouldThrow_GivenNullFilter()
+        {
+            this.subject.FilterTransactions((GlobalFilterCriteria)null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FilterTransactions_ShouldCallStatementModel_GivenSearchText()
+        {
+            this.testData = new StatementModelTestHarness();
+
+            CreateSubject();
+
+            this.subject.FilterTransactions("Fooey");
+
+            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).FilterByTextWasCalled);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void FilterTransactions_ShouldThrow_GivenNullSearchText()
+        {
+            this.testData = new StatementModelTestHarness();
+
+            CreateSubject();
+
+            this.subject.FilterTransactions(string.Empty);
+            Assert.Fail();
+        }
+
         [TestInitialize]
         public void TestInit()
         {
+            this.testData = StatementModelTestData.TestData2();
+
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockStatementRepo = new Mock<IStatementRepository>();
-            this.subject = new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, new FakeLogger());
+
+            this.mockBudgetBucketRepo
+                .Setup(m => m.Buckets)
+                .Returns(BudgetBucketTestData.BudgetModelTestData1Buckets);
+
+            CreateSubject();
+        }
+
+        [TestMethod]
+        public void TotalCount_ShouldBe10_GivenTestData2()
+        {
+            Assert.AreEqual(10, this.subject.TotalCount);
+        }
+
+        [TestMethod]
+        public void TotalCredits_ShouldBe2552_GivenTestData2()
+        {
+            Assert.AreEqual(2552.97M, this.subject.TotalCredits);
+        }
+
+        [TestMethod]
+        public void TotalDebits_ShouldBe806_GivenTestData2()
+        {
+            Assert.AreEqual(-806.78M, this.subject.TotalDebits);
+        }
+
+        [TestMethod]
+        public void TotalDifference_ShouldBe1746_GivenTestData2()
+        {
+            Assert.AreEqual(1746.19M, this.subject.TotalCredits + this.subject.TotalDebits);
+        }
+
+        private void CreateSubject()
+        {
             this.mockStatementRepo
                 .Setup(m => m.LoadStatementModelAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(StatementModelTestData.TestData2()));
+                .Returns(Task.FromResult(this.testData));
+            this.subject = new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, new FakeLogger());
             this.subject.LoadStatementModelAsync("Foo").Wait();
         }
     }

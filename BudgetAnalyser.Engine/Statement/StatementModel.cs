@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        internal void Filter(GlobalFilterCriteria criteria)
+        internal virtual void Filter(GlobalFilterCriteria criteria)
         {
             if (criteria == null)
             {
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.Statement
             return query;
         }
 
-        internal void FilterByText([NotNull] string textFilter)
+        internal virtual void FilterByText([NotNull] string textFilter)
         {
             if (string.IsNullOrWhiteSpace(textFilter))
             {

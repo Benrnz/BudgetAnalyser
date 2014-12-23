@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -68,6 +69,26 @@ namespace BudgetAnalyser.UnitTest.TestData
             };
 
             var transactions = CreateTransactions3();
+            statement.LoadTransactions(transactions);
+            return statement;
+        }
+
+        /// <summary>
+        /// Statement Model with transactions between 15/07/2013 and 14/09/2013
+        /// Includes income transactions.
+        /// Adjusted for use with LedgerCalculator - No ledgers will be overdrawn when using LedgerBook TestData 1.
+        /// Includes some duplicate transactions
+        /// </summary>
+        public static StatementModel TestData4()
+        {
+            var statement = new StatementModel(new FakeLogger())
+            {
+                StorageKey = @"C:\TestData4\Foo2Statement.csv",
+                LastImport = new DateTime(2013, 08, 15),
+            };
+
+            List<Transaction> transactions = CreateTransactions3().ToList();
+            transactions.AddRange(CreateTransactions1());
             statement.LoadTransactions(transactions);
             return statement;
         }

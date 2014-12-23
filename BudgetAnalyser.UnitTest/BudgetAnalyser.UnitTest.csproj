@@ -210,6 +210,7 @@
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
     <Compile Include="Reports\GraphDataTest.cs" />
+    <Compile Include="Services\StatementModelTestHarness.cs" />
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
+    <Compile Include="TestData\BudgetBucketTestData.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
     <Compile Include="TestData\LedgerBookDtoTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
