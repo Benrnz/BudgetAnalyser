@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
@@ -32,14 +31,14 @@ namespace BudgetAnalyser.Filtering
         private FilterMode filterMode;
 
         public GlobalFilterController(
-            [NotNull] UiContext uiContext, 
+            [NotNull] UiContext uiContext,
             [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
-         
+
             if (dashboardService == null)
             {
                 throw new ArgumentNullException("dashboardService");
@@ -59,6 +58,8 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
+        public IEnumerable<AccountType> AccountTypes { get; private set; }
+
         public string AccountTypeSummary
         {
             get { return this.doNotUseAccountTypeSummary; }
@@ -69,11 +70,19 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public IEnumerable<AccountType> AccountTypes { get; private set; }
-
         public string ActionButtonToolTip
         {
             get { return "Apply filter and close."; }
+        }
+
+        public ICommand AddMonthCommand
+        {
+            get { return new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue); }
+        }
+
+        public ICommand BackMonthCommand
+        {
+            get { return new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue); }
         }
 
         public ICommand ClearCommand
@@ -144,12 +153,12 @@ namespace BudgetAnalyser.Filtering
             this.filterMode = FilterMode.AccountType;
 
             AccountTypes = this.dashboardService.FilterableAccountTypes();
-            
+
             SelectedAccountType = Criteria.AccountType;
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Global Filters - Account Type",
+                Title = "Global Filters - Account Type"
             };
             RaisePropertyChanged(() => IsAccountFilterView);
             RaisePropertyChanged(() => IsDateFilterView);
@@ -163,18 +172,24 @@ namespace BudgetAnalyser.Filtering
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Global Filters - Date Range",
+                Title = "Global Filters - Date Range"
             };
             RaisePropertyChanged(() => IsAccountFilterView);
             RaisePropertyChanged(() => IsDateFilterView);
             MessengerInstance.Send(dialogRequest);
         }
 
-        private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
+        private void OnAddMonthCommandExecute(DateTime date)
         {
-            if (Criteria == null || Criteria.Cleared)
+            if (Criteria.BeginDate != null && date == Criteria.BeginDate)
             {
-                SendFilterAppliedMessage();
+                Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(1);
+                return;
+            }
+
+            if (Criteria.EndDate != null && date == Criteria.EndDate)
+            {
+                Criteria.EndDate = Criteria.EndDate.Value.AddMonths(1);
             }
         }
 
@@ -190,26 +205,48 @@ namespace BudgetAnalyser.Filtering
             {
                 AccountType = rehydratedFilters.AccountType,
                 BeginDate = rehydratedFilters.BeginDate,
-                EndDate = rehydratedFilters.EndDate,
+                EndDate = rehydratedFilters.EndDate
             };
 
             SendFilterAppliedMessage();
         }
 
+        private void OnApplicationStateLoadFinished(ApplicationStateLoadFinishedMessage message)
+        {
+            if (Criteria == null || Criteria.Cleared)
+            {
+                SendFilterAppliedMessage();
+            }
+        }
+
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            bool noCriteria = Criteria == null;
+            var noCriteria = Criteria == null;
             var filterState = new PersistentFiltersV1
             {
                 Model = new FilterStateV1
                 {
                     BeginDate = noCriteria ? null : Criteria.BeginDate,
                     EndDate = noCriteria ? null : Criteria.EndDate,
-                    AccountType = noCriteria ? null : Criteria.AccountType,
-                },
+                    AccountType = noCriteria ? null : Criteria.AccountType
+                }
             };
 
             message.PersistThisModel(filterState);
+        }
+
+        private void OnBackMonthCommandExecute(DateTime date)
+        {
+            if (Criteria.BeginDate != null && date == Criteria.BeginDate)
+            {
+                Criteria.BeginDate = Criteria.BeginDate.Value.AddMonths(-1);
+                return;
+            }
+
+            if (Criteria.EndDate != null && date == Criteria.EndDate)
+            {
+                Criteria.EndDate = Criteria.EndDate.Value.AddMonths(-1);
+            }
         }
 
         private void OnClearCommandExecute()

@@ -10,38 +10,71 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="233" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
-                       Text="Begin Date (inclusive)" />
-            <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}" />
-            
+                       Text="Begin Date (inclusive)"
+                       Height="21"
+                       Margin="2,6" />
+            <StackPanel  Grid.Column="1"
+                         Grid.Row="0"
+                         Margin="3,3,0,3"
+                         Orientation="Horizontal">
+                <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
+                            HorizontalAlignment="Left"
+                            MaxWidth="200"
+                            SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}"
+                            Width="113" />
+                <Button Style="{StaticResource Button.Round.Minus}"
+                        Command="{Binding BackMonthCommand}"
+                        CommandParameter="{Binding Criteria.BeginDate}" 
+                        ToolTip="Back a month"/>
+                <Button Style="{StaticResource Button.Round.Add}"
+                        Command="{Binding AddMonthCommand}"
+                        CommandParameter="{Binding Criteria.BeginDate}"
+                        ToolTip="Forward a month" />
+            </StackPanel>
             <TextBlock Grid.Row="1"
-                       Text="End Date (inclusive)" />
-            <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
-                        Grid.Column="1"
+                       Text="End Date (inclusive)"
+                       Height="22"
+                       Margin="2,11" />
+            <StackPanel Grid.Column="1"
                         Grid.Row="1"
-                        SelectedDate="{Binding Criteria.EndDate, StringFormat=d}" />
+                        Margin="3,3,0,3"
+                        Orientation="Horizontal">
+                <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
+                            HorizontalAlignment="Left"
+                            MaxWidth="200"
+                            SelectedDate="{Binding Criteria.EndDate, StringFormat=d}"
+                            Width="113" />
+                <Button Style="{StaticResource Button.Round.Minus}"
+                        Command="{Binding BackMonthCommand}"
+                        CommandParameter="{Binding Criteria.EndDate}"
+                        ToolTip="Back a month" />
+                <Button Style="{StaticResource Button.Round.Add}"
+                        Command="{Binding AddMonthCommand}"
+                        CommandParameter="{Binding Criteria.EndDate}"
+                        ToolTip="Forward a month" />
+            </StackPanel>
             <StackPanel Grid.Column="2"
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         Margin="10,0,0,0"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        Width="44">
                 <Button Command="{Binding ClearCommand}"
                         Style="{StaticResource Button.Round.Clear}" />
             </StackPanel>
-            
+
             <TextBlock Grid.Row="2"
                        Grid.Column="0"
-                       Grid.ColumnSpan="3" 
+                       Grid.ColumnSpan="3"
                        MaxWidth="{Binding ElementName=MainContainer, Path=ActualWidth}"
                        TextWrapping="Wrap"
-                       Style="{StaticResource TextBlock.Paragraph}">
+                       Style="{StaticResource TextBlock.Paragraph}"
+                       Margin="2,2,0,2">
                 <Run>
                     When choosing a date range, its best to begin your pay month so your pay day is the first day in the range.  For example: If you are paid on the 20th, start your month date range
                     on the 20th and finish it on the 19th of the following month. Selecting one month will activate the dashboard widgets to monitor your spending through the month.
