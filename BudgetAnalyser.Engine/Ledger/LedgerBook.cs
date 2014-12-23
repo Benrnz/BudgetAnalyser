@@ -250,6 +250,11 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     throw new InvalidOperationException("The date entered is not at least 4 weeks after the previous reconciliation. ");
                 }
+
+                if (recentEntry.Date.Day != date.Day)
+                {
+                    throw new ValidationWarningException("The date chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
+                }
             }
 
             DateTime startDate = date.AddMonths(-1);
