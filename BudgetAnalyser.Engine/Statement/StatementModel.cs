@@ -141,6 +141,21 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
+            var query = BaseFilterQuery(criteria);
+
+            Transactions = query.ToList();
+            DurationInMonths = CalculateDuration(criteria, Transactions);
+            this.duplicates = null;
+            Filtered = true;
+        }
+
+        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared)
+            {
+                return AllTransactions.ToList();
+            }
+
             var query = AllTransactions;
             if (criteria.BeginDate != null)
             {
@@ -156,11 +171,7 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 query = query.Where(t => t.AccountType == criteria.AccountType);
             }
-
-            Transactions = query.ToList();
-            DurationInMonths = CalculateDuration(criteria, Transactions);
-            this.duplicates = null;
-            Filtered = true;
+            return query;
         }
 
         internal void FilterByText([NotNull] string textFilter)
@@ -177,7 +188,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             // Do not modify the changeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
             Filtered = true;
-            Transactions = Transactions.Where(t => MatchTransactionText(textFilter, t))
+            Transactions = BaseFilterQuery(this.currentFilter).Where(t => MatchTransactionText(textFilter, t))
                 .AsParallel()
                 .ToList();
         }

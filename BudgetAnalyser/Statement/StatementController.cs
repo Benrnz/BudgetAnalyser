@@ -1,5 +1,4 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -176,7 +175,6 @@ namespace BudgetAnalyser.Statement
 
         private void ClearTextFilter()
         {
-            TextFilter = null;
             var requestFilter = new RequestFilterMessage(this);
             MessengerInstance.Send(requestFilter);
             this.transactionService.FilterTransactions(requestFilter.Criteria);
@@ -255,6 +253,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnClearTextFilterCommandExecute()
         {
+            TextFilter = null;
             ClearTextFilter();
         }
 
@@ -337,11 +336,9 @@ namespace BudgetAnalyser.Statement
 
         private void PerformTextSearch(string textFilter)
         {
-            this.transactionService.FilterTransactions(textFilter);
-
             if (string.IsNullOrWhiteSpace(TextFilter))
             {
-                if (this.filterByTextActive && !ViewModel.Statement.Filtered)
+                if (this.filterByTextActive && ViewModel.Statement.Filtered)
                 {
                     ClearTextFilter();
                 }
@@ -350,6 +347,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
+            this.transactionService.FilterTransactions(textFilter);
             this.filterByTextActive = true;
         }
     }

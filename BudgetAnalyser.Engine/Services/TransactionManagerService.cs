@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public void FilterTransactions(string searchText)
         {
-            if (String.IsNullOrWhiteSpace(searchText))
+            if (string.IsNullOrWhiteSpace(searchText))
             {
                 throw new ArgumentNullException("searchText");
             }
@@ -265,7 +265,10 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.statementRepository.SaveAsync(this.statementModel);
-            if (close) this.statementModel = null;
+            if (close)
+            {
+                this.statementModel = null;
+            }
         }
 
         public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
