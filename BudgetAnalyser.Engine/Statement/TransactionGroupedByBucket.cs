@@ -11,8 +11,18 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public class TransactionGroupedByBucket : INotifyPropertyChanged
     {
-        public TransactionGroupedByBucket(IEnumerable<Transaction> transactions, BudgetBucket groupByThisBucket)
+        public TransactionGroupedByBucket([NotNull] IEnumerable<Transaction> transactions, [NotNull] BudgetBucket groupByThisBucket)
         {
+            if (transactions == null)
+            {
+                throw new ArgumentNullException("transactions");
+            }
+
+            if (groupByThisBucket == null)
+            {
+                throw new ArgumentNullException("groupByThisBucket");
+            }
+
             Bucket = groupByThisBucket;
             Transactions = new ObservableCollection<Transaction>(transactions.Where(t => t.BudgetBucket == groupByThisBucket).OrderBy(t => t.Date));
         }

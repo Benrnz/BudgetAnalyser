@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -238,6 +239,31 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
+            ValidateDate(date, statement);
+
+            if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
+            {
+                IEnumerable<Transaction> uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
+                int count = 0;
+                this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
+                foreach (Transaction transaction in uncategorised)
+                {
+                    count++;
+                    Transaction transactionCopy = transaction;
+                    this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id + transactionCopy.BudgetBucket);
+                    if (count > 5)
+                    {
+                        this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
+                    }
+                }
+
+                throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.");
+            }
+        }
+
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        private void ValidateDate(DateTime date, StatementModel statement)
+        {
             LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
             if (recentEntry != null)
             {
@@ -261,25 +287,6 @@ namespace BudgetAnalyser.Engine.Ledger
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
                 throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + date.ToShortDateString());
-            }
-
-            if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
-            {
-                IEnumerable<Transaction> uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
-                int count = 0;
-                this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
-                foreach (Transaction transaction in uncategorised)
-                {
-                    count++;
-                    Transaction transactionCopy = transaction;
-                    this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id + transactionCopy.BudgetBucket);
-                    if (count > 5)
-                    {
-                        this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There are more than 5 transactions.");
-                    }
-                }
-
-                throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.");
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -45,8 +46,13 @@ namespace BudgetAnalyser.Engine.Budget
             return string.Format(CultureInfo.CurrentCulture, "[{0}] {1} {2}", Code, Description, Created.ToShortDateString());
         }
 
-        public static string CreateCode(string subCode)
+        public static string CreateCode([NotNull] string subCode)
         {
+            if (subCode == null)
+            {
+                throw new ArgumentNullException("subCode");
+            }
+
             return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", SurplusCode, subCode.ToUpperInvariant());
         }
     }

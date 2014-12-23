@@ -260,7 +260,11 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
                 else
                 {
-                    budgetedAmount = new BudgetCreditLedgerTransaction { Amount = 0, Narrative = string.Format("Budgeted Amount {0:C} (Budget amount is transferred into this account with a real transaction).", expenseBudget.Amount) };
+                    budgetedAmount = new BudgetCreditLedgerTransaction
+                    {
+                        Amount = 0, 
+                        Narrative = string.Format(CultureInfo.CurrentCulture, "Budgeted Amount {0:C} (Budget amount is transferred into this account with a real transaction).", expenseBudget.Amount)
+                    };
                 }
 
                 transactions.Add(budgetedAmount);

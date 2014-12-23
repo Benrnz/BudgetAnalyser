@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        internal void Initialise(StatementController controller, ITransactionManagerService transactionManagerService)
+        internal void Initialise(ITransactionManagerService transactionManagerService)
         {
             this.transactionService = transactionManagerService;
             ViewModel.Initialise(this.transactionService);

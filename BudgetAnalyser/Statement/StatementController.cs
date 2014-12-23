@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Statement
             }
 
             this.initialised = true;
-            FileOperations.Initialise(this, this.transactionService);
+            FileOperations.Initialise(this.transactionService);
             FileOperations.UpdateRecentFiles();
         }
 
