@@ -217,7 +217,7 @@ namespace BudgetAnalyser.Engine.Statement
             return this;
         }
 
-        internal void Merge([NotNull] StatementModel additionalModel)
+        internal virtual void Merge([NotNull] StatementModel additionalModel)
         {
             if (additionalModel == null)
             {
@@ -229,7 +229,7 @@ namespace BudgetAnalyser.Engine.Statement
             Merge(additionalModel.AllTransactions);
         }
 
-        internal void RemoveTransaction([NotNull] Transaction transaction)
+        internal virtual void RemoveTransaction([NotNull] Transaction transaction)
         {
             if (transaction == null)
             {

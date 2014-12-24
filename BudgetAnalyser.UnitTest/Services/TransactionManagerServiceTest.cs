@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
@@ -66,7 +67,7 @@ namespace BudgetAnalyser.UnitTest.Services
         public void DetectDuplicateTransactions_ShouldSummaryText_GivenTestData4()
         {
             this.testData = StatementModelTestData.TestData4();
-            CreateSubject();
+            Arrange();
 
             var result = this.subject.DetectDuplicateTransactions();
             Console.WriteLine(result);
@@ -101,7 +102,7 @@ namespace BudgetAnalyser.UnitTest.Services
             this.testData = new StatementModelTestHarness();
             var criteria = new GlobalFilterCriteria { BeginDate = new DateTime(2014, 07, 01), EndDate = new DateTime(2014, 08, 01) };
 
-            CreateSubject();
+            Arrange();
 
             this.subject.FilterTransactions(criteria);
 
@@ -121,7 +122,7 @@ namespace BudgetAnalyser.UnitTest.Services
         {
             this.testData = new StatementModelTestHarness();
 
-            CreateSubject();
+            Arrange();
 
             this.subject.FilterTransactions("Fooey");
 
@@ -134,10 +135,56 @@ namespace BudgetAnalyser.UnitTest.Services
         {
             this.testData = new StatementModelTestHarness();
 
-            CreateSubject();
+            Arrange();
 
             this.subject.FilterTransactions(string.Empty);
             Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
+        {
+            this.subject.ImportAndMergeBankStatement(null, new ChequeAccount("Foo"));
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
+        {
+            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
+        {
+            this.mockStatementRepo
+                .Setup(m => m.ImportAndMergeBankStatement(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Returns(StatementModelTestData.TestData2)
+                .Verifiable();
+
+            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+
+            this.mockStatementRepo.Verify();
+        }
+
+        [TestMethod]
+        public void ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
+        {
+            this.testData = new StatementModelTestHarness();
+
+            Arrange();
+
+            this.mockStatementRepo
+                .Setup(m => m.ImportAndMergeBankStatement(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Returns(StatementModelTestData.TestData2)
+                .Verifiable();
+
+            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+
+            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).MergeWasCalled);
         }
 
         [TestInitialize]
@@ -148,11 +195,78 @@ namespace BudgetAnalyser.UnitTest.Services
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockStatementRepo = new Mock<IStatementRepository>();
 
+            this.mockStatementRepo.Setup(m => m.LoadStatementModelAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(this.testData))
+                .Verifiable();
+
             this.mockBudgetBucketRepo
                 .Setup(m => m.Buckets)
                 .Returns(BudgetBucketTestData.BudgetModelTestData1Buckets);
 
-            CreateSubject();
+            Arrange();
+        }
+
+        [TestMethod]
+        public void PopulateGroupByBucketCollection_ShouldReturnListOf6_GivenStatementModelAndTrue()
+        {
+            var result = this.subject.PopulateGroupByBucketCollection(true);
+
+            Assert.AreEqual(6, result.Count());
+        }
+
+        [TestMethod]
+        public void PopulateGroupByBucketCollection_ShouldReturnListSortedByBucket_GivenStatementModelAndTrue()
+        {
+            var result = this.subject.PopulateGroupByBucketCollection(true);
+
+            TransactionGroupedByBucket previous = null;
+            foreach (var groupedByBucket in result)
+            {
+                if (previous == null)
+                {
+                    previous = groupedByBucket;
+                    continue;
+                }
+
+                if (string.Compare(previous.Bucket.Code, groupedByBucket.Bucket.Code, StringComparison.Ordinal) >= 0)
+                {
+                    Assert.Fail("The grouped list should be sorted by Bucket Code in ascending order. {0} >= {1}", previous.Bucket.Code, groupedByBucket.Bucket.Code);
+                }
+
+                previous = groupedByBucket;
+            }
+        }
+
+        [TestMethod]
+        public void PopulateGroupByBucketCollection_ShouldReturnEmpty_GivenStatementModelNotLoaded()
+        {
+            this.subject = CreateSubject();
+            var result = this.subject.PopulateGroupByBucketCollection(true);
+
+            Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        public void PopulateGroupByBucketCollection_ShouldReturnEmpty_GivenFalse()
+        {
+            var result = this.subject.PopulateGroupByBucketCollection(false);
+
+            Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task LoadStatementModelAsync_ShouldThrow_GivenNullStorageKey()
+        {
+            await this.subject.LoadStatementModelAsync(null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public async Task LoadStatementModelAsync_ShouldCallStatementRepo_GivenValidStorageKey()
+        {
+            await this.subject.LoadStatementModelAsync(@"D:\kjgkjgkjgkgk.csv");
+            this.mockStatementRepo.Verify();
         }
 
         [TestMethod]
@@ -179,13 +293,40 @@ namespace BudgetAnalyser.UnitTest.Services
             Assert.AreEqual(1746.19M, this.subject.TotalCredits + this.subject.TotalDebits);
         }
 
-        private void CreateSubject()
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RemoveTransaction_ShouldThrow_GivenNullTransaction()
+        {
+            this.subject.RemoveTransaction(null);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void RemoveTransaction_ShouldCallStatementModelRemove_GivenATransaction()
+        {
+            this.testData = new StatementModelTestHarness();
+            this.testData.LoadTransactions(StatementModelTestData.TestData2().Transactions);
+            Arrange();
+            var transaction = this.testData.Transactions.Skip(1).First();
+
+            this.subject.RemoveTransaction(transaction);
+
+            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).RemoveTransactionWasCalled);
+        }
+
+        private void Arrange()
         {
             this.mockStatementRepo
                 .Setup(m => m.LoadStatementModelAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(this.testData));
-            this.subject = new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, new FakeLogger());
+            this.subject = CreateSubject();
             this.subject.LoadStatementModelAsync("Foo").Wait();
+        }
+
+        private TransactionManagerService CreateSubject()
+        {
+            return new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, new FakeLogger());
         }
     }
 }
