@@ -60,6 +60,7 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestMethod]
         public void DetectDuplicateTransactions_ShouldReturnNull_GivenNullStatementModel()
         {
+            this.subject = CreateSubject();
             Assert.IsNull(this.subject.DetectDuplicateTransactions());
         }
 
@@ -313,6 +314,39 @@ namespace BudgetAnalyser.UnitTest.Services
             this.subject.RemoveTransaction(transaction);
 
             Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).RemoveTransactionWasCalled);
+        }
+
+        [TestMethod]
+        public async Task Save_ShouldNotCallStatementRepo_GivenNullStatementModel()
+        {
+            this.subject = CreateSubject();
+            await this.subject.SaveAsync(false);
+
+            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task Save_ShouldCallStatementRepo_GivenStatementModel()
+        {
+            await this.subject.SaveAsync(false);
+
+            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void SplitTransaction_ShouldCallStatementModel_GivenValidParams()
+        {
+            this.testData = new StatementModelTestHarness();
+            var transaction = new Transaction
+            {
+                AccountType = StatementModelTestData.VisaAccount,
+            };
+
+            Arrange();
+
+            this.subject.SplitTransaction(transaction, 100, 200, StatementModelTestData.CarMtcBucket, StatementModelTestData.HairBucket);
+
+            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).SplitTransactionWasCalled);
         }
 
         private void Arrange()

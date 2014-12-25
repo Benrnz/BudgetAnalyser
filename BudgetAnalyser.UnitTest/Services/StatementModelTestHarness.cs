@@ -1,4 +1,5 @@
 ﻿using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestHarness;
 
@@ -14,6 +15,7 @@ namespace BudgetAnalyser.UnitTest.Services
         public int FilterByTextWasCalled { get; set; }
         public int MergeWasCalled { get; set; }
         public int RemoveTransactionWasCalled { get; set; }
+        public int SplitTransactionWasCalled { get; set; }
 
         internal override void Filter(GlobalFilterCriteria criteria)
         {
@@ -33,6 +35,11 @@ namespace BudgetAnalyser.UnitTest.Services
         internal override void RemoveTransaction(Transaction transaction)
         {
             RemoveTransactionWasCalled++;
+        }
+
+        internal override void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+        {
+            SplitTransactionWasCalled++;
         }
     }
 }

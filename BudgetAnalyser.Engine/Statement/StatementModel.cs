@@ -242,7 +242,7 @@ namespace BudgetAnalyser.Engine.Statement
             Filter(this.currentFilter);
         }
 
-        internal void SplitTransaction(
+        internal virtual void SplitTransaction(
             [NotNull] Transaction originalTransaction,
             decimal splinterAmount1,
             decimal splinterAmount2,
