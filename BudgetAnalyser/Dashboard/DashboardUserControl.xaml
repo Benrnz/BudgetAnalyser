@@ -66,13 +66,13 @@
                                  BorderBrush="{StaticResource Brush.Text.Default}"
                                  Foreground="{StaticResource Brush.Text.Default}"
                                  BorderThickness="1"
-                                 Height="30"
-                                 Margin="4"
+                                 Margin="12,4,12,4"
                                  Maximum="{Binding Maximum}"
                                  Minimum="{Binding Minimum}"
+                                 Orientation="Vertical"
                                  ToolTip="{Binding ToolTip}"
                                  Value="{Binding Value}"
-                                 VerticalAlignment="Top"
+                                 VerticalAlignment="Stretch"
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource Converter.BoolToVis}}" />
                     <TextBlock Grid.Row="1"
                                Margin="4,0,4,4"
@@ -115,7 +115,7 @@
                                     Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
                                     VerticalAlignment="Top"
                                     Width="20" />
-                    <TextBlock FontSize="24"
+                    <TextBlock FontSize="32"
                                Margin="5,2,2,2"
                                Text="{Binding LargeNumber}" />
                     <TextBlock Grid.ColumnSpan="2"
@@ -135,62 +135,57 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource Brush.MainBackground}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <ItemsControl Grid.ColumnSpan="3"
-                      Grid.Row="1"
-                      Margin="20"
-                      ItemsSource="{Binding WidgetGroups}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type widget:WidgetGroup}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Heading}" />
-                        <Border BorderThickness="1"
-                                Grid.Column="1"
-                                Grid.Row="0"
-                                BorderBrush="{StaticResource Brush.TileBackground}"
-                                Height="1"
-                                Margin="2,1,0,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Stretch" />
-                        <ItemsControl Grid.Row="1"
-                                      Grid.ColumnSpan="2"
-                                      ItemsSource="{Binding Widgets}"
-                                      Margin="5,10,2,30">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <TextBlock FontSize="10"
+    <DockPanel x:Name="MainPanel"
+               Background="{StaticResource Brush.MainBackground}"
+               HorizontalAlignment="Stretch">
+        <TextBlock DockPanel.Dock="Bottom"
+                   FontSize="10"
                    Foreground="{StaticResource Brush.TileBackground}"
-                   Grid.ColumnSpan="3"
-                   Grid.Row="2"
                    HorizontalAlignment="Right"
                    Text="{Binding VersionString}"
                    VerticalAlignment="Bottom" />
-    </Grid>
+        <Border>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          VerticalAlignment="Top"
+                          Width="{Binding ElementName=MainPanel, Path=ActualWidth}">
+                <ItemsControl Margin="20"
+                              ItemsSource="{Binding WidgetGroups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type widget:WidgetGroup}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Heading}" />
+                                <Border BorderThickness="1"
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        BorderBrush="{StaticResource Brush.TileBackground}"
+                                        Height="1"
+                                        Margin="2,1,0,0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch" />
+                                <ItemsControl Grid.Row="1"
+                                              Grid.ColumnSpan="2"
+                                              ItemsSource="{Binding Widgets}"
+                                              Margin="5,10,2,30">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
 
 </UserControl>

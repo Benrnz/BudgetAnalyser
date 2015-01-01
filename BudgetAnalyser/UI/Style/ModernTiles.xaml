@@ -44,9 +44,9 @@
     <Style x:Key="ModernTileMediumBaseStyle"
            TargetType="Border">
         <Setter Property="Height"
-                Value="75" />
+                Value="100" />
         <Setter Property="Width"
-                Value="250" />
+                Value="200" />
         <Setter Property="Margin"
                 Value="10,10,0,0" />
         <Style.Triggers>
@@ -78,7 +78,7 @@
            BasedOn="{StaticResource ModernTileMediumStyle1}"
            TargetType="Border">
         <Setter Property="Width"
-                Value="75" />
+                Value="100" />
     </Style>
 
     <Style x:Key="ModernTileSmallStyle2"
