@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 
@@ -22,6 +23,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private WeeklyOrFortnightly doNotUseFrequency;
         private string doNotUseId;
         private GlobalFilterCriteria filter;
+        private ILogger logger;
         private int multiplier = 1;
 
         public SurprisePaymentWidget()
@@ -68,11 +70,12 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return GetType(); }
         }
 
-        public void Initialise(MultiInstanceWidgetState state)
+        public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
             var myState = (SurprisePaymentWidgetPersistentState)state;
             StartPaymentDate = myState.PaymentStartDate;
             Frequency = myState.Frequency;
+            this.logger = logger;
         }
 
         public override void Update(params object[] input)
@@ -103,6 +106,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
+            this.logger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
             var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
@@ -111,30 +115,32 @@ namespace BudgetAnalyser.Engine.Widgets
             NextOccurance firstOccurance = null;
             do
             {
-                if (currentDate <= currentMonthTally.EndDate)
+                if (currentDate.Date <= currentMonthTally.EndDate)
                 {
-                    currentMonthTally.Tally(currentDate.Day);
+                    currentMonthTally.Tally(currentDate.Date.Day);
                 }
                 else
                 {
+                    this.logger.LogInfo(l => l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"), currentMonthTally.ConcatDates()));
                     if (AbnormalNumberOfPayments(currentMonthTally.Dates.Count))
                     {
                         if (firstOccurance == null)
                         {
                             firstOccurance = currentMonthTally;
                         }
-                        content.AppendFormat("{0},", currentMonthTally.StartDate.ToString("MMMM"));
+                        content.AppendFormat("{0}, ", currentMonthTally.StartDate.ToString("MMMM"));
                         if (currentMonthTally.EndDate == this.filter.EndDate.Value || currentMonthTally.EndDate == this.filter.EndDate.Value.AddMonths(1))
                         {
                             // Is current or next month, so signal alert status
                             alert = true;
+                            this.logger.LogInfo(l => l.Format("    ***** ALERT *****"));
                         }
                     }
-                    currentMonthTally = currentMonthTally.NextMonth(currentDate.Day);
+                    currentMonthTally = currentMonthTally.NextMonth(currentDate.Date.Day);
                 }
 
-                currentDate = currentDate.AddDays(7 * this.multiplier);
-            } while (currentDate < this.filter.BeginDate.Value.AddYears(1));
+                currentDate = CalculateNextPaymentDate(currentDate);
+            } while (currentDate.Date <= this.filter.EndDate.Value.AddYears(1));
 
             ColourStyleName = alert ? WidgetWarningStyle : WidgetStandardStyle;
             DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency, BucketCode, content);
@@ -164,13 +170,36 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        private DateTime CalculateStartDate(DateTime startPaymentDate, DateTime filterBeginDate)
+        private PaymentDate CalculateNextPaymentDate(PaymentDate paymentDate)
         {
-            while (startPaymentDate < filterBeginDate)
+            var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
+            if (this.filter.BeginDate != null)
             {
-                startPaymentDate = startPaymentDate.AddDays(7 * this.multiplier);
+                var holidays = NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value, this.filter.BeginDate.Value.AddYears(1)).ToList();
+                while (holidays.Contains(proposedDate.Date))
+                {
+                    proposedDate.Date = proposedDate.Date.AddDays(1);
+                    proposedDate.Date = proposedDate.Date.FindNextWeekDay();
+                }
             }
-            return startPaymentDate;
+
+            if (proposedDate.Date != proposedDate.ScheduledDate)
+            {
+                this.logger.LogInfo(l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
+            }
+            return proposedDate;
+        }
+
+        private PaymentDate CalculateStartDate(DateTime startPaymentDate, DateTime filterBeginDate)
+        {
+            var proposed = new PaymentDate(startPaymentDate);
+            while (proposed.Date < filterBeginDate)
+            {
+                proposed = CalculateNextPaymentDate(proposed);
+            }
+
+            this.logger.LogInfo(l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
+            return proposed;
         }
 
         private class NextOccurance
@@ -212,6 +241,18 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 Dates.Add(day);
             }
+        }
+
+        private class PaymentDate
+        {
+            public PaymentDate(DateTime initial)
+            {
+                ScheduledDate = initial;
+                Date = initial;
+            }
+
+            public DateTime Date { get; set; }
+            public DateTime ScheduledDate { get; private set; }
         }
     }
 }

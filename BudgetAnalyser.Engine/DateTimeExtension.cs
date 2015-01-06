@@ -36,7 +36,20 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static DateTime FirstDateInMonth(this DateTime instance)
         {
-            return instance.AddDays(-instance.Day + 1);
+            return new DateTime(instance.Year, instance.Month, 1);
+        }
+
+        /// <summary>
+        /// Increments the day until it is not a weekend.  If the given date is already a weekday, the same date is returned.
+        /// </summary>
+        public static DateTime FindNextWeekDay(this DateTime instance)
+        {
+            while (instance.DayOfWeek == DayOfWeek.Saturday || instance.DayOfWeek == DayOfWeek.Sunday)
+            {
+                instance = instance.AddDays(1);
+            }
+
+            return instance;
         }
     }
 }

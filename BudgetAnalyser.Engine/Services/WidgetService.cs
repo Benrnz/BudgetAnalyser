@@ -22,15 +22,22 @@ namespace BudgetAnalyser.Engine.Services
         };
 
         private readonly IWidgetRepository widgetRepo;
+        private readonly ILogger logger;
 
-        public WidgetService([NotNull] IWidgetRepository widgetRepo)
+        public WidgetService([NotNull] IWidgetRepository widgetRepo, [NotNull] ILogger logger)
         {
             if (widgetRepo == null)
             {
                 throw new ArgumentNullException("widgetRepo");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.widgetRepo = widgetRepo;
+            this.logger = logger;
         }
 
         public IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState> storedStates)
@@ -75,7 +82,7 @@ namespace BudgetAnalyser.Engine.Services
             // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
             IUserDefinedWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
             newIdWidget.Visibility = multiInstanceState.Visible;
-            newIdWidget.Initialise(multiInstanceState);
+            newIdWidget.Initialise(multiInstanceState, this.logger);
         }
     }
 }

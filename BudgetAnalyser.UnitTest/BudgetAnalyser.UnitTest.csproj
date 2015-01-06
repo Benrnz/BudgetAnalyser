@@ -206,6 +206,7 @@
     <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
     <Compile Include="MetaTest.cs" />
+    <Compile Include="PublicHolidaysTest.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />

@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return GetType(); }
         }
 
-        public void Initialise(MultiInstanceWidgetState state)
+        public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
         }
 
