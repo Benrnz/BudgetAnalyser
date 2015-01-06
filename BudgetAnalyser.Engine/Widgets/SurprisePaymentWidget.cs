@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private const int FortnightlyPaymentsInOneNormalMonth = 2;
 
         private const string ToolTipPrefix =
-            "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2.\n";
+            "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
 
         private IBudgetBucketRepository bucketRepository;
         private WeeklyOrFortnightly doNotUseFrequency;
@@ -30,7 +30,6 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[] { typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria) };
-            DetailedText = "Additional weekly payment required";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             ToolTip = ToolTipPrefix;

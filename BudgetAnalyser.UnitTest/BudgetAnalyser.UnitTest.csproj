@@ -206,7 +206,11 @@
     <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
     <Compile Include="MetaTest.cs" />
-    <Compile Include="PublicHolidaysTest.cs" />
+    <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
+    <Compile Include="PublicHolidays2014Test.cs" />
+    <Compile Include="PublicHolidays2017Test.cs" />
+    <Compile Include="PublicHolidays2016Test.cs" />
+    <Compile Include="PublicHolidays2015Test.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
