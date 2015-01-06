@@ -32,8 +32,15 @@ namespace BudgetAnalyser.Engine.Widgets
             var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
             Debug.Assert(widget != null);
             widget.Id = id;
+            var key = BuildMultiUseWidgetKey(widget);
+
+            if (this.cachedWidgets.ContainsKey(key))
+            {
+                throw new ArgumentException("A widget with this key already exists.", "id");
+            }
+
             var baseWidget = (Widget)widget;
-            this.cachedWidgets.Add(BuildMultiUseWidgetKey(widget), baseWidget);
+            this.cachedWidgets.Add(key, baseWidget);
             return widget;
         }
 

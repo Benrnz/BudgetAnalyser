@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class TransactionManagerService : ITransactionManagerService
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";

@@ -9,13 +9,12 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     public sealed class FixedBudgetMonitorWidget : ProgressBarWidget, IUserDefinedWidget
     {
-        private IBudgetBucketRepository bucketRepository;
-        private string doNotUseBucketCode;
-        private string doNotUseId;
-        private StatementModel statement;
         private readonly string disabledToolTip;
         private readonly string remainingBudgetToolTip;
         private readonly string standardStyle;
+        private IBudgetBucketRepository bucketRepository;
+        private string doNotUseBucketCode;
+        private string doNotUseId;
 
         public FixedBudgetMonitorWidget()
         {
@@ -52,6 +51,8 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        public StatementModel Statement { get; private set; }
+
         public Type WidgetType
         {
             get { return GetType(); }
@@ -75,7 +76,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            this.statement = (StatementModel)input[0];
+            Statement = (StatementModel)input[0];
             this.bucketRepository = (IBudgetBucketRepository)input[1];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
@@ -85,7 +86,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (this.statement == null)
+            if (Statement == null)
             {
                 ToolTip = this.disabledToolTip;
                 Enabled = false;
@@ -98,7 +99,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
-            var remainingBudget = totalBudget + this.statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            var remainingBudget = totalBudget + Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
 
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description, remainingBudget);

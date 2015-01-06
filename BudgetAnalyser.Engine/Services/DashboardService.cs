@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Engine.Services
     {
         private IDictionary<Type, object> availableDependencies;
         private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly ITransactionManagerService transactionManagerService;
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IBudgetRepository budgetRepository;
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
@@ -35,6 +36,7 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
+            [NotNull] ITransactionManagerService transactionManagerService,
             [NotNull] ILogger logger)
         {
             if (widgetService == null)
@@ -66,6 +68,10 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("accountTypeRepository");
             }
+            if (transactionManagerService == null)
+            {
+                throw new ArgumentNullException("transactionManagerService");
+            }
 
             if (logger == null)
             {
@@ -78,6 +84,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetRepository = budgetRepository;
             this.ledgerCalculator = ledgerCalculator;
             this.accountTypeRepository = accountTypeRepository;
+            this.transactionManagerService = transactionManagerService;
             this.logger = logger;
         }
 
@@ -200,10 +207,23 @@ namespace BudgetAnalyser.Engine.Services
 
         public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)
         {
-            if (widgetToRemove is FixedBudgetMonitorWidget)
+            var fixedProjectWidget = widgetToRemove as FixedBudgetMonitorWidget;
+            if (fixedProjectWidget != null)
             {
-                // TODO - need to do a whole lot of clean up, remove bucket, reassign transactions, probably warn user this cant be undone.
-                throw new NotImplementedException();
+                // Reassign transactions to Surplus
+                var projectBucket = this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
+                if (projectBucket == null)
+                {
+                    throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a FixedBudgetProjectBucket");
+                }
+
+                fixedProjectWidget.Statement.ReassignFixedProjectTransactions(projectBucket, this.bucketRepository.SurplusBucket);
+                this.transactionManagerService.SaveAsync(false);
+
+                // No need to remove it from the Budget, the Budget is actually not aware of these fixed project buckets in any way.
+                // Remove from Bucket Repo
+                this.bucketRepository.RemoveFixedBudgetProject(projectBucket);
+                this.budgetRepository.Save(); // Bucket Repo data is stored in the budget repo however.
             }
 
             this.widgetRepository.Remove(widgetToRemove);

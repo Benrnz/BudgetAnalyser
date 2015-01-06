@@ -12,6 +12,8 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection
     {
+        private readonly ILogger logger;
+
         /// <summary>
         ///     A hash to show when critical state of the statement model has changed. Includes child objects ie Transactions.
         ///     The hash does not persist between Application Loads.
@@ -24,7 +26,6 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<Transaction> doNotUseTransactions;
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
-        private readonly ILogger logger;
 
         public StatementModel([NotNull] ILogger logger)
         {
@@ -82,28 +83,6 @@ namespace BudgetAnalyser.Engine.Statement
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
         }
 
-        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
-        {
-            if (this.duplicates != null)
-            {
-                // TODO How to reset this ?! Not Good.
-                return this.duplicates;
-            }
-
-            var query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
-            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
-            query.ForEach(
-                duplicate =>
-                {
-                    foreach (var txn in duplicate)
-                    {
-                        txn.IsSuspectedDuplicate = true;
-                    }
-                });
-            this.duplicates = query;
-            return this.duplicates;
-        }
-
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -147,31 +126,6 @@ namespace BudgetAnalyser.Engine.Statement
             DurationInMonths = CalculateDuration(criteria, Transactions);
             this.duplicates = null;
             Filtered = true;
-        }
-
-        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
-        {
-            if (criteria.Cleared)
-            {
-                return AllTransactions.ToList();
-            }
-
-            var query = AllTransactions;
-            if (criteria.BeginDate != null)
-            {
-                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
-            }
-
-            if (criteria.EndDate != null)
-            {
-                query = query.Where(t => t.Date <= criteria.EndDate.Value);
-            }
-
-            if (criteria.AccountType != null)
-            {
-                query = query.Where(t => t.AccountType == criteria.AccountType);
-            }
-            return query;
         }
 
         internal virtual void FilterByText([NotNull] string textFilter)
@@ -229,6 +183,24 @@ namespace BudgetAnalyser.Engine.Statement
             Merge(additionalModel.AllTransactions);
         }
 
+        internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket, [NotNull] BudgetBucket reassignmentBucket)
+        {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException("bucket");
+            }
+
+            if (reassignmentBucket == null)
+            {
+                throw new ArgumentNullException("reassignmentBucket");
+            }
+
+            foreach (var transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
+            {
+                transaction.BudgetBucket = reassignmentBucket;
+            }
+        }
+
         internal virtual void RemoveTransaction([NotNull] Transaction transaction)
         {
             if (transaction == null)
@@ -281,6 +253,53 @@ namespace BudgetAnalyser.Engine.Statement
             RemoveTransaction(originalTransaction);
 
             Merge(new[] { splinterTransaction1, splinterTransaction2 });
+        }
+
+        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
+        {
+            if (this.duplicates != null)
+            {
+                // TODO How to reset this ?! Not Good.
+                return this.duplicates;
+            }
+
+            var query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
+            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            query.ForEach(
+                duplicate =>
+                {
+                    foreach (var txn in duplicate)
+                    {
+                        txn.IsSuspectedDuplicate = true;
+                    }
+                });
+            this.duplicates = query;
+            return this.duplicates;
+        }
+
+        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared)
+            {
+                return AllTransactions.ToList();
+            }
+
+            var query = AllTransactions;
+            if (criteria.BeginDate != null)
+            {
+                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
+            }
+
+            if (criteria.EndDate != null)
+            {
+                query = query.Where(t => t.Date <= criteria.EndDate.Value);
+            }
+
+            if (criteria.AccountType != null)
+            {
+                query = query.Where(t => t.AccountType == criteria.AccountType);
+            }
+            return query;
         }
 
         private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)

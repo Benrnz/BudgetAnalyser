@@ -72,14 +72,14 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public virtual BudgetBucket GetByCode([NotNull] string code)
+        public virtual BudgetBucket GetByCode(string code)
         {
             if (code == null)
             {
                 throw new ArgumentNullException("code");
             }
 
-            string upperCode = code.ToUpperInvariant();
+            var upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Budget
             return null;
         }
 
-        public BudgetBucket GetOrCreateNew([NotNull] string code, [NotNull] Func<BudgetBucket> factory)
+        public BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory)
         {
             if (code == null)
             {
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("factory");
             }
 
-            string upperCode = code.ToUpperInvariant();
+            var upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return this.lookupTable[upperCode];
                 }
 
-                BudgetBucket newBucket = factory();
+                var newBucket = factory();
                 this.lookupTable.Add(upperCode, newBucket);
                 return newBucket;
             }
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.Engine.Budget
             InitialiseMandatorySpecialBuckets();
         }
 
-        public virtual bool IsValidCode([NotNull] string code)
+        public virtual bool IsValidCode(string code)
         {
             if (code == null)
             {
@@ -143,6 +143,31 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
+        }
+
+        /// <summary>
+        ///     Removes the fixed budget project bucket permanently
+        /// </summary>
+        /// <param name="projectBucket">The project bucket to remove.</param>
+        public void RemoveFixedBudgetProject(FixedBudgetProjectBucket projectBucket)
+        {
+            if (projectBucket == null)
+            {
+                throw new ArgumentNullException("projectBucket");
+            }
+
+            lock (this.syncRoot)
+            {
+                if (!IsValidCode(projectBucket.Code))
+                {
+                    throw new ArgumentException("Unable to remove the fixed project bucket, it does not appear to exist in the bucket repository.");
+                }
+
+                if (!this.lookupTable.Remove(projectBucket.Code))
+                {
+                    throw new InvalidOperationException("Unable to remove the fixed project bucket, removal from the internal dictionary failed. " + projectBucket.Code);
+                }
+            }
         }
 
         protected void AddBucket([NotNull] BudgetBucket bucket)
