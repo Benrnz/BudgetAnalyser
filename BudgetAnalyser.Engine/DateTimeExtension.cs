@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine
         /// <summary>
         /// Increments the day until it is not a weekend.  If the given date is already a weekday, the same date is returned.
         /// </summary>
-        public static DateTime FindNextWeekDay(this DateTime instance)
+        public static DateTime FindNextWeekday(this DateTime instance)
         {
             while (instance.DayOfWeek == DayOfWeek.Saturday || instance.DayOfWeek == DayOfWeek.Sunday)
             {

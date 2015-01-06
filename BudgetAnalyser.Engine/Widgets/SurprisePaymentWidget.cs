@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private WeeklyOrFortnightly doNotUseFrequency;
         private string doNotUseId;
         private GlobalFilterCriteria filter;
-        private ILogger logger;
+        private ILogger diagLogger;
         private int multiplier = 1;
 
         public SurprisePaymentWidget()
@@ -75,9 +75,10 @@ namespace BudgetAnalyser.Engine.Widgets
             var myState = (SurprisePaymentWidgetPersistentState)state;
             StartPaymentDate = myState.PaymentStartDate;
             Frequency = myState.Frequency;
-            this.logger = logger;
+            this.diagLogger = logger;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
         public override void Update(params object[] input)
         {
             if (input == null)
@@ -106,7 +107,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            this.logger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
+            this.diagLogger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
             var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
@@ -121,7 +122,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 }
                 else
                 {
-                    this.logger.LogInfo(l => l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"), currentMonthTally.ConcatDates()));
+                    this.diagLogger.LogInfo(l => l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"), currentMonthTally.ConcatDates()));
                     if (AbnormalNumberOfPayments(currentMonthTally.Dates.Count))
                     {
                         if (firstOccurance == null)
@@ -133,7 +134,7 @@ namespace BudgetAnalyser.Engine.Widgets
                         {
                             // Is current or next month, so signal alert status
                             alert = true;
-                            this.logger.LogInfo(l => l.Format("    ***** ALERT *****"));
+                            this.diagLogger.LogInfo(l => l.Format("    ***** ALERT *****"));
                         }
                     }
                     currentMonthTally = currentMonthTally.NextMonth(currentDate.Date.Day);
@@ -153,7 +154,7 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 LargeNumber = firstOccurance.StartDate.ToString("MMMM");
                 ToolTip = ToolTipPrefix +
-                          string.Format("{0} to the {1} has payments on {2}", firstOccurance.StartDate.ToString("d-MMM"), firstOccurance.EndDate.ToString("d-MMM"), firstOccurance.ConcatDates());
+                          string.Format(CultureInfo.InvariantCulture, "{0} to the {1} has payments on {2}", firstOccurance.StartDate.ToString("d-MMM"), firstOccurance.EndDate.ToString("d-MMM"), firstOccurance.ConcatDates());
             }
         }
 
@@ -179,13 +180,13 @@ namespace BudgetAnalyser.Engine.Widgets
                 while (holidays.Contains(proposedDate.Date))
                 {
                     proposedDate.Date = proposedDate.Date.AddDays(1);
-                    proposedDate.Date = proposedDate.Date.FindNextWeekDay();
+                    proposedDate.Date = proposedDate.Date.FindNextWeekday();
                 }
             }
 
             if (proposedDate.Date != proposedDate.ScheduledDate)
             {
-                this.logger.LogInfo(l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
+                this.diagLogger.LogInfo(l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
             }
             return proposedDate;
         }
@@ -198,7 +199,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 proposed = CalculateNextPaymentDate(proposed);
             }
 
-            this.logger.LogInfo(l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
+            this.diagLogger.LogInfo(l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
             return proposed;
         }
 

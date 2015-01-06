@@ -36,7 +36,7 @@ namespace BudgetAnalyser.UnitTest
         public void Initialise()
         {
             this.dateResults = NewZealandPublicHolidays.CalculateHolidays(this.start, this.end).ToList();
-            this.results = NewZealandPublicHolidays.CalcuateHolidaysVerbose(this.start, this.end).ToList();
+            this.results = NewZealandPublicHolidays.CalculateHolidaysVerbose(this.start, this.end).ToList();
         }
     }
 }

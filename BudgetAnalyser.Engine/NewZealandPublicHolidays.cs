@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace BudgetAnalyser.Engine
 {
-    public class NewZealandPublicHolidays
+    public static class NewZealandPublicHolidays
     {
         private static readonly List<Holiday> HolidayTemplates = new List<Holiday>
         {
@@ -21,7 +22,7 @@ namespace BudgetAnalyser.Engine
             new DayClosestToHoliday { Name = "Auckland Anniversary", DesiredDay = DayOfWeek.Monday, Month = 1, CloseToDate = 29 }
         };
 
-        public static IEnumerable<Tuple<string, DateTime>> CalcuateHolidaysVerbose(DateTime start, DateTime end)
+        public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
         {
             var holidays = new Dictionary<DateTime, string>();
             foreach (var holidayTemplate in HolidayTemplates)
@@ -51,7 +52,7 @@ namespace BudgetAnalyser.Engine
 
         public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
         {
-            return CalcuateHolidaysVerbose(start, end).Select(t => t.Item2);
+            return CalculateHolidaysVerbose(start, end).Select(t => t.Item2);
         }
 
         private abstract class Holiday
@@ -77,7 +78,7 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format("Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
             }
         }
 
@@ -98,7 +99,7 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format("Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
             }
 
             private DateTime ProposeDate(int year)
@@ -122,6 +123,7 @@ namespace BudgetAnalyser.Engine
         private class DayClosestToHoliday : Holiday
         {
             public int CloseToDate { get; set; }
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Should be available to external consumers.")]
             public DayOfWeek DesiredDay { get; set; }
             public int Month { get; set; }
 
@@ -160,7 +162,7 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format("Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
             }
         }
 
@@ -215,7 +217,7 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format("Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
             }
         }
     }
