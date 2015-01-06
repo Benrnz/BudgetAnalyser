@@ -82,6 +82,10 @@
         <budget:CreateNewFixedBudgetProjectUserControl />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type dashboard:CreateNewSurprisePaymentMonitorController}">
+        <dashboard:CreateNewSurprisePaymentMonitorUserControl />
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type ledgerBook:AddLedgerReconciliationController}">
         <ledgerBook:AddLedgerReconciliationUserControl/>
     </DataTemplate>

@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Dashboard
         private bool doNotUseShown;
         private readonly ChooseBudgetBucketController chooseBudgetBucketController;
         private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
+        private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
         private readonly IDashboardService dashboardService;
         private readonly IUserMessageBox messageBox;
         // TODO Support for image changes when widget updates
@@ -35,6 +36,7 @@ namespace BudgetAnalyser.Dashboard
             [NotNull] UiContext uiContext,
             [NotNull] ChooseBudgetBucketController chooseBudgetBucketController,
             [NotNull] CreateNewFixedBudgetController createNewFixedBudgetController,
+            [NotNull] CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
             [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
@@ -59,11 +61,13 @@ namespace BudgetAnalyser.Dashboard
 
             this.chooseBudgetBucketController = chooseBudgetBucketController;
             this.createNewFixedBudgetController = createNewFixedBudgetController;
+            this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.dashboardService = dashboardService;
 
             this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
             this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
+            this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
 
             GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
@@ -182,6 +186,27 @@ namespace BudgetAnalyser.Dashboard
 
             this.dashboardService.NotifyOfDependencyChange(message.Budgets);
             this.dashboardService.NotifyOfDependencyChange<IBudgetCurrencyContext>(message.ActiveBudget);
+        }
+
+        private void OnCreateNewSurprisePaymentMonitorComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)
+        {
+            if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
+            {
+                return;
+            }
+
+            CorrelationId = Guid.NewGuid();
+            try
+            {
+                this.dashboardService.CreateNewSurprisePaymentMonitorWidget(
+                    this.createNewSurprisePaymentMonitorController.Selected.Code,
+                    this.createNewSurprisePaymentMonitorController.PaymentStartDate,
+                    this.createNewSurprisePaymentMonitorController.Frequency);
+            }
+            catch (ArgumentException ex)
+            {
+                this.messageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
+            }
         }
 
         private void OnCreateNewFixedProjectComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)

@@ -8,17 +8,17 @@
     public interface IShellDialogInteractivity
     {
         /// <summary>
-        ///     Will be called ascertain the availability of the button.
+        ///     Will be called to ascertain the availability of the button.
         /// </summary>
         bool CanExecuteCancelButton { get; }
 
         /// <summary>
-        ///     Will be called ascertain the availability of the button.
+        ///     Will be called to ascertain the availability of the button.
         /// </summary>
         bool CanExecuteOkButton { get; }
 
         /// <summary>
-        ///     Will be called ascertain the availability of the button.
+        ///     Will be called to ascertain the availability of the button.
         /// </summary>
         bool CanExecuteSaveButton { get; }
     }

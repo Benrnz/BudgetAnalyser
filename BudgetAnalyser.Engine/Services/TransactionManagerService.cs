@@ -339,6 +339,7 @@ namespace BudgetAnalyser.Engine.Services
                 () =>
                 {
                     return this.statementModel.AllTransactions
+                        .Where(t => t.BudgetBucket != null)
                         .AsParallel()
                         .All(
                             t =>
@@ -346,6 +347,7 @@ namespace BudgetAnalyser.Engine.Services
                                 var bucketExists = allBuckets.Contains(t.BudgetBucket);
                                 if (!bucketExists)
                                 {
+                                    t.BudgetBucket = null;
                                     this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
                                 }
                                 return bucketExists;

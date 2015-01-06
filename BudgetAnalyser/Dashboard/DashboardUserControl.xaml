@@ -43,6 +43,12 @@
                     <TextBlock Text="New Fixed Budget Project Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
+            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewSurprisePaymentMonitorWidgetCommand}"
+                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
+                <MenuItem.Header>
+                    <TextBlock Text="New Surprise Regular Payment Monitor Widget" />
+                </MenuItem.Header>
+            </MenuItem>
             <MenuItem Command="{x:Static dashboard:DashboardCommands.RemoveWidgetCommand}"
                       CommandParameter="{Binding .}">
                 <MenuItem.Header>

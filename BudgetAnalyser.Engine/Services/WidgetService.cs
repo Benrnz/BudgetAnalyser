@@ -44,9 +44,7 @@ namespace BudgetAnalyser.Engine.Services
                     var multiInstanceState = widgetState as MultiInstanceWidgetState;
                     if (multiInstanceState != null)
                     {
-                        // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-                        var newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
-                        newIdWidget.Visibility = multiInstanceState.Visible;
+                        CreateMultiInstanceWidget(multiInstanceState);
                     }
                     else
                     {
@@ -70,6 +68,14 @@ namespace BudgetAnalyser.Engine.Services
                         Sequence = GroupSequence[group.Key]
                     })
                 .OrderBy(g => g.Sequence).ThenBy(g => g.Heading);
+        }
+
+        private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
+        {
+            // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
+            IUserDefinedWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+            newIdWidget.Visibility = multiInstanceState.Visible;
+            newIdWidget.Initialise(multiInstanceState);
         }
     }
 }

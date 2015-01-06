@@ -127,6 +127,31 @@ namespace BudgetAnalyser.Engine.Services
             return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
+        public Widget CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+        {
+            if (string.IsNullOrWhiteSpace(bucketCode))
+            {
+                throw new ArgumentNullException("bucketCode");
+            }
+
+            if (paymentDate == DateTime.MinValue)
+            {
+                throw new ArgumentException("Payment date is not set.", "paymentDate");
+            }
+
+            var bucket = this.bucketRepository.GetByCode(bucketCode);
+            if (bucket == null)
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), "bucketCode");
+            }
+
+            var widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
+            var paymentWidget = (SurprisePaymentWidget)widget;
+            paymentWidget.StartPaymentDate = paymentDate;
+            paymentWidget.Frequency = frequency;
+            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+        }
+
         public IEnumerable<AccountType> FilterableAccountTypes()
         {
             var accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
@@ -177,6 +202,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (widgetToRemove is FixedBudgetMonitorWidget)
             {
+                // TODO - need to do a whole lot of clean up, remove bucket, reassign transactions, probably warn user this cant be undone.
                 throw new NotImplementedException();
             }
 
@@ -348,11 +374,24 @@ namespace BudgetAnalyser.Engine.Services
             var multiInstanceWidget = widget as IUserDefinedWidget;
             if (multiInstanceWidget != null)
             {
-                return new MultiInstanceWidgetState
+                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
+                if (surprisePaymentWidget == null)
                 {
-                    Id = multiInstanceWidget.Id,
-                    Visible = multiInstanceWidget.Visibility,
-                    WidgetType = multiInstanceWidget.WidgetType.FullName
+                    return new MultiInstanceWidgetState
+                    {
+                        Id = multiInstanceWidget.Id,
+                        Visible = multiInstanceWidget.Visibility,
+                        WidgetType = multiInstanceWidget.WidgetType.FullName
+                    };
+                }
+                
+                return new SurprisePaymentWidgetPersistentState
+                {
+                    Id = surprisePaymentWidget.Id,
+                    Visible = surprisePaymentWidget.Visibility,
+                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
+                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
+                    Frequency = surprisePaymentWidget.Frequency,
                 };
             }
 

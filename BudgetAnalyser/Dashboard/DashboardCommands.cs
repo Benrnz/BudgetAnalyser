@@ -22,11 +22,19 @@ namespace BudgetAnalyser.Dashboard
             get { return new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute); }
         }
 
+        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand
+        {
+            get { return new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute); }
+        }
+
         [PropertyInjection]
         public static ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
 
         [PropertyInjection]
         public static CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
+
+        [PropertyInjection]
+        public static CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
 
         [PropertyInjection]
         public static IDashboardService DashboardService { get; set; }
@@ -38,7 +46,7 @@ namespace BudgetAnalyser.Dashboard
 
         public static ICommand RemoveWidgetCommand
         {
-            get { return new RelayCommand<Widget>(w => DashboardService.RemoveUserDefinedWidget((IUserDefinedWidget)w), w => w is BudgetBucketMonitorWidget); }
+            get { return new RelayCommand<Widget>(w => DashboardService.RemoveUserDefinedWidget((IUserDefinedWidget)w), w => w is IUserDefinedWidget); }
         }
 
         public static ICommand UnhideAllWidgetsCommand
@@ -55,6 +63,11 @@ namespace BudgetAnalyser.Dashboard
         private static void OnAddNewFixedBudgetMonitorWidgetCommandExecute(Guid correlationId)
         {
             CreateNewFixedBudgetController.ShowDialog(BudgetAnalyserFeature.Dashboard, correlationId);
+        }
+
+        private static void OnAddNewSurprisePaymentMonitorWidgetCommandExecute(Guid correlationId)
+        {
+            CreateNewSurprisePaymentMonitorController.ShowDialog(BudgetAnalyserFeature.Dashboard, correlationId);
         }
 
         private static void UnhideAllWidgetsCommandExecute()

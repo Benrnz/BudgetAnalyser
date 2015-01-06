@@ -184,6 +184,10 @@
     <Compile Include="Converters\NumberSignToBrushConverter.cs" />
     <Compile Include="Converters\NumberToBoldConverter.cs" />
     <Compile Include="Converters\PercentToColourConverter.cs" />
+    <Compile Include="Dashboard\CreateNewSurprisePaymentMonitorUserControl.xaml.cs">
+      <DependentUpon>CreateNewSurprisePaymentMonitorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\CreateNewSurprisePaymentMonitorController.cs" />
     <Compile Include="Dashboard\DashboardApplicationStateModel.cs" />
     <Compile Include="Dashboard\DashboardCommands.cs" />
     <Compile Include="Dashboard\DashboardController.cs" />
@@ -367,6 +371,10 @@
     <Page Include="Budget\CreateNewFixedBudgetProjectUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dashboard\CreateNewSurprisePaymentMonitorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dashboard\DashboardUserControl.xaml">
       <SubType>Designer</SubType>

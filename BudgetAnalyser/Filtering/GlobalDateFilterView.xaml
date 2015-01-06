@@ -22,11 +22,7 @@
                          Grid.Row="0"
                          Margin="3,3,0,3"
                          Orientation="Horizontal">
-                <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
-                            HorizontalAlignment="Left"
-                            MaxWidth="200"
-                            SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}"
-                            Width="113" />
+                <DatePicker SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackMonthCommand}"
                         CommandParameter="{Binding Criteria.BeginDate}" 
@@ -44,11 +40,7 @@
                         Grid.Row="1"
                         Margin="3,3,0,3"
                         Orientation="Horizontal">
-                <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
-                            HorizontalAlignment="Left"
-                            MaxWidth="200"
-                            SelectedDate="{Binding Criteria.EndDate, StringFormat=d}"
-                            Width="113" />
+                <DatePicker SelectedDate="{Binding Criteria.EndDate, StringFormat=d}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackMonthCommand}"
                         CommandParameter="{Binding Criteria.EndDate}"

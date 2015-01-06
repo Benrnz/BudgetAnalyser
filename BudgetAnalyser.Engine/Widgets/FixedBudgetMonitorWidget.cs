@@ -57,6 +57,10 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return GetType(); }
         }
 
+        public void Initialise(MultiInstanceWidgetState state)
+        {
+        }
+
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

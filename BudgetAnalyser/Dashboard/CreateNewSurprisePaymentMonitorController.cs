@@ -1,24 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
 
-namespace BudgetAnalyser.Budget
+namespace BudgetAnalyser.Dashboard
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class CreateNewFixedBudgetController : ControllerBase, IShellDialogInteractivity
+    public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellDialogInteractivity
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private Guid dialogCorrelationId;
-        private decimal doNotUseAmount;
-        private string doNotUseCode;
-        private string doNotUseDescription;
+        private DateTime doNotUsePaymentStartDate;
+        private BudgetBucket doNotUseSelected;
+        private WeeklyOrFortnightly doNotUseFrequency;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public CreateNewFixedBudgetController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
+        public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (uiContext == null)
             {
@@ -33,16 +37,33 @@ namespace BudgetAnalyser.Budget
             this.bucketRepository = bucketRepository;
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            PaymentStartDate = DateTime.Today;
+            Frequency = WeeklyOrFortnightly.Weekly;
         }
 
         public event EventHandler<DialogResponseEventArgs> Complete;
 
-        public decimal Amount
+        public IEnumerable<BudgetBucket> BudgetBuckets
         {
-            get { return this.doNotUseAmount; }
+            get { return this.bucketRepository.Buckets.ToList(); }
+        }
+
+        public BudgetBucket Selected
+        {
+            get { return this.doNotUseSelected; }
             set
             {
-                this.doNotUseAmount = value;
+                this.doNotUseSelected = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public WeeklyOrFortnightly Frequency
+        {
+            get { return this.doNotUseFrequency; }
+            set
+            {
+                this.doNotUseFrequency = value;
                 RaisePropertyChanged();
             }
         }
@@ -62,37 +83,24 @@ namespace BudgetAnalyser.Budget
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(Code)
-                       && !this.bucketRepository.IsValidCode(FixedBudgetProjectBucket.CreateCode(Code))
-                       && !string.IsNullOrWhiteSpace(Description)
-                       && Amount > 0;
+                return Selected != null && PaymentStartDate != DateTime.MinValue;
             }
         }
 
         /// <summary>
-        ///     Will be called to ascertain the availability of the button.
+        ///     Will be called ascertain the availability of the button.
         /// </summary>
         public bool CanExecuteSaveButton
         {
             get { return false; }
         }
 
-        public string Code
+        public DateTime PaymentStartDate
         {
-            get { return this.doNotUseCode; }
+            get { return this.doNotUsePaymentStartDate; }
             set
             {
-                this.doNotUseCode = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string Description
-        {
-            get { return this.doNotUseDescription; }
-            set
-            {
-                this.doNotUseDescription = value;
+                this.doNotUsePaymentStartDate = value;
                 RaisePropertyChanged();
             }
         }
@@ -111,7 +119,7 @@ namespace BudgetAnalyser.Budget
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Create new fixed budget project"
+                Title = "Create new surprise regular payment monitor"
             };
             MessengerInstance.Send(dialogRequest);
         }

@@ -214,9 +214,7 @@
                 <TextBlock Grid.Column="8"
                            Margin="5,2,5,2"
                            Text="Account" />
-                <DatePicker CalendarStyle="{StaticResource CalendarStyle}"
-                            Grid.Row="1"
-                            HorizontalAlignment="Left"
+                <DatePicker Grid.Row="1"
                             SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}"
                             TabIndex="2"
                             VerticalAlignment="Top"

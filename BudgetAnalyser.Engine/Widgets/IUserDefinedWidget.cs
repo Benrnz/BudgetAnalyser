@@ -13,5 +13,7 @@ namespace BudgetAnalyser.Engine.Widgets
         bool Visibility { get; set; }
 
         Type WidgetType { get; }
+
+        void Initialise(MultiInstanceWidgetState state);
     }
 }
