@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.standardStyle = "WidgetStandardStyle1";
 
             this.disabledToolTip = "No Statement file is loaded, or bucket doesn't exist.";
-            this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}";
+            this.remainingBudgetToolTip = "{0} Remaining budget for this project: {1:C}. Total Spend {2:C}";
             Enabled = false;
             BucketCode = "<NOT SET>";
         }
@@ -99,10 +99,11 @@ namespace BudgetAnalyser.Engine.Widgets
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
-            var remainingBudget = totalBudget + Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            var totalSpend = Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            var remainingBudget = totalBudget + totalSpend;
 
             Value = Convert.ToDouble(remainingBudget);
-            ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description, remainingBudget);
+            ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description, remainingBudget, totalSpend);
             DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
             if (remainingBudget < 0.1M * totalBudget)
