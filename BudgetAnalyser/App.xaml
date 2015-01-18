@@ -36,7 +36,9 @@
                 <ResourceDictionary Source="UI/Style/ModernTiles.xaml" />
                 <ResourceDictionary Source="UI/Style/Menu.xaml" />
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />
-                
+                <ResourceDictionary Source="UI/Assets/OctWarningImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/BooksImage.xaml" />
+
                 <ResourceDictionary Source="UI/DataTemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 

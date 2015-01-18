@@ -9,29 +9,29 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    /// A base class for all widgets. These are used on the Dashboard view to display statistics, metrics, and oil lights.
+    ///     A base class for all widgets. These are used on the Dashboard view to display statistics, metrics, and oil lights.
     /// </summary>
     public abstract class Widget : INotifyPropertyChanged
     {
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
         protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
-
         private string doNotUseCategory;
         private bool doNotUseClickable;
         private string doNotUseColour;
         private string doNotUseDetailedText;
+        private bool doNotUseEnabled;
         private string doNotUseImageResourceName;
+        private string doNotUseImageResourceName2;
         private string doNotUseLargeNumber;
         private WidgetSize doNotUseSize;
         private string doNotUseToolTip;
         private bool doNotUseVisibility;
         private string doNotUseWidgetStyle;
-        private bool doNotUseEnabled;
 
         /// <summary>
-        /// Constructs a new instance of the <see cref="Widget"/> class.
-        /// All widgets must have a parameterless constructor. This is the constructor that will be used to create all widgets.
+        ///     Constructs a new instance of the <see cref="Widget" /> class.
+        ///     All widgets must have a parameterless constructor. This is the constructor that will be used to create all widgets.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         protected Widget()
@@ -46,7 +46,6 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public event EventHandler ColourStyleChanged;
         public event PropertyChangedEventHandler PropertyChanged;
-
         public event EventHandler WidgetStyleChanged;
 
         public string Category
@@ -74,7 +73,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseColour; }
             protected set
             {
-                bool changed = value != this.doNotUseColour;
+                var changed = value != this.doNotUseColour;
                 this.doNotUseColour = value;
                 OnPropertyChanged();
                 if (changed)
@@ -116,6 +115,16 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        public string ImageResourceName2
+        {
+            get { return this.doNotUseImageResourceName2; }
+            set
+            {
+                this.doNotUseImageResourceName2 = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string LargeNumber
         {
             get { return this.doNotUseLargeNumber; }
@@ -127,7 +136,6 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         public string Name { get; protected set; }
-
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
 
         public WidgetSize Size
@@ -165,7 +173,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseWidgetStyle; }
             protected set
             {
-                bool changed = value != this.doNotUseWidgetStyle;
+                var changed = value != this.doNotUseWidgetStyle;
                 this.doNotUseWidgetStyle = value;
                 OnPropertyChanged();
                 if (changed)
@@ -180,7 +188,7 @@ namespace BudgetAnalyser.Engine.Widgets
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
@@ -189,7 +197,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         protected void OnStyleChanged(EventHandler eventToInvoke)
         {
-            EventHandler handler = eventToInvoke;
+            var handler = eventToInvoke;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -203,16 +211,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 return false;
             }
 
-            List<Type> dependencies = Dependencies.ToList();
+            var dependencies = Dependencies.ToList();
             if (dependencies.Count() > input.Length)
             {
                 return false;
             }
 
             int index = 0, nullCount = 0;
-            foreach (Type dependencyType in Dependencies)
+            foreach (var dependencyType in Dependencies)
             {
-                object dependencyInstance = input[index++];
+                var dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.

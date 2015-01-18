@@ -30,11 +30,12 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[] { typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria) };
-            ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             ToolTip = ToolTipPrefix;
             Size = WidgetSize.Medium;
             WidgetStyle = "ModernTileMediumStyle2";
+            ImageResourceName = "BooksImage";
+            ImageResourceName2 = "OctWarningImage";
         }
 
         public string BucketCode

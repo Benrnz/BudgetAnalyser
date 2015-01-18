@@ -111,19 +111,23 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ContentControl HorizontalAlignment="Left"
-                                    Margin="5"
-                                    Template="{Binding ImageResourceName, Converter={StaticResource Converter.TextToControlTemplate}}"
-                                    VerticalAlignment="Top"
-                                    Width="40" />
-                    <ContentControl HorizontalAlignment="Left"
-                                    Margin="40,25,0,0"
-                                    Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
-                                    VerticalAlignment="Top"
-                                    Width="20" />
-                    <TextBlock FontSize="32"
-                               Margin="5,2,2,2"
-                               Text="{Binding LargeNumber}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ContentControl HorizontalAlignment="Left"
+                                        Margin="5"
+                                        Template="{Binding ImageResourceName, Converter={StaticResource Converter.TextToControlTemplate}}"
+                                        VerticalAlignment="Top"
+                                        Visibility="{Binding ImageResourceName, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}"
+                                        Width="40" />
+                        <ContentControl HorizontalAlignment="Left"
+                                        Margin="-10,25,0,0"
+                                        Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
+                                        VerticalAlignment="Top"
+                                        Visibility="{Binding ImageResourceName2, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}"
+                                        Width="20" />
+                        <TextBlock FontSize="32"
+                                   Margin="5,2,2,2"
+                                   Text="{Binding LargeNumber}" />
+                    </StackPanel>
                     <TextBlock Grid.ColumnSpan="2"
                                Grid.Row="1"
                                Margin="4,0,4,4"

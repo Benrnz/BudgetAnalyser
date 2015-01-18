@@ -8,7 +8,6 @@ namespace BudgetAnalyser.Engine.Widgets
     public class DateFilterWidget : Widget, IWidgetWithAdditionalImage
     {
         private readonly string standardStyleName;
-        private string doNotUseImageResourceName2;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed ok here")]
         public DateFilterWidget()
@@ -21,17 +20,6 @@ namespace BudgetAnalyser.Engine.Widgets
             this.standardStyleName = "Brush.ModernTile.Background2";
             WidgetStyle = "ModernTileMediumStyle2";
             Clickable = true;
-        }
-
-        // This is a little hacky.  Need to figure out how to combine the ImageSource for both images into one.
-        public string ImageResourceName2
-        {
-            get { return this.doNotUseImageResourceName2; }
-            set
-            {
-                this.doNotUseImageResourceName2 = value;
-                OnPropertyChanged();
-            }
         }
 
         public override void Update([NotNull] params object[] input)
