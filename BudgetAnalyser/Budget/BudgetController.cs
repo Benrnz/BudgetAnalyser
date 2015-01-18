@@ -23,12 +23,11 @@ namespace BudgetAnalyser.Budget
     {
         private const string CloseBudgetMenuName = "Close _Budget";
         private const string EditBudgetMenuName = "Edit Current _Budget";
-
         private readonly DemoFileHelper demoFileHelper;
-        private readonly IBudgetMaintenanceService maintenanceService;
         private readonly Func<IUserPromptOpenFile> fileOpenDialogFactory;
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
+        private readonly IBudgetMaintenanceService maintenanceService;
         private readonly IUserMessageBox messageBox;
         private readonly List<BudgetBucket> newBuckets = new List<BudgetBucket>();
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -45,7 +44,7 @@ namespace BudgetAnalyser.Budget
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
             [NotNull] UiContext uiContext,
-            [NotNull] DemoFileHelper demoFileHelper, 
+            [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IBudgetMaintenanceService maintenanceService)
         {
             if (uiContext == null)
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.Budget
             {
                 throw new ArgumentNullException("demoFileHelper");
             }
-            
+
             if (maintenanceService == null)
             {
                 throw new ArgumentNullException("maintenanceService");
@@ -103,7 +102,6 @@ namespace BudgetAnalyser.Budget
         }
 
         public BudgetPieController BudgetPieController { get; private set; }
-
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -123,17 +121,19 @@ namespace BudgetAnalyser.Budget
                 else
                 {
                     Incomes = new BindingList<Income>(this.doNotUseModel.Model.Incomes.ToList());
-                    Incomes.ToList().ForEach(i =>
-                    {
-                        i.PropertyChanged += OnIncomeAmountPropertyChanged;
-                        i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
-                    });
+                    Incomes.ToList().ForEach(
+                        i =>
+                        {
+                            i.PropertyChanged += OnIncomeAmountPropertyChanged;
+                            i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                        });
                     Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses.ToList());
-                    Expenses.ToList().ForEach(e =>
-                    {
-                        e.PropertyChanged += OnExpenseAmountPropertyChanged;
-                        e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
-                    });
+                    Expenses.ToList().ForEach(
+                        e =>
+                        {
+                            e.PropertyChanged += OnExpenseAmountPropertyChanged;
+                            e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                        });
                 }
 
                 RaisePropertyChanged(() => Incomes);
@@ -159,6 +159,8 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand(OnDetailsCommandExecute); }
         }
 
+        public BindingList<Expense> Expenses { get; private set; }
+
         public decimal ExpenseTotal
         {
             get { return this.expenseTotal; }
@@ -170,7 +172,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public BindingList<Expense> Expenses { get; private set; }
+        public BindingList<Income> Incomes { get; private set; }
 
         public decimal IncomeTotal
         {
@@ -183,8 +185,6 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public BindingList<Income> Incomes { get; private set; }
-
         public ICommand LoadBudgetCommand
         {
             get { return new RelayCommand(OnLoadBudgetCommandExecute); }
@@ -195,14 +195,14 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand(OnSaveAsCommandExecute); }
         }
 
+        public ICommand SaveCommand
+        {
+            get { return new RelayCommand(OnSaveCommandExecute, () => this.dirty); }
+        }
+
         public ICommand ShowAllCommand
         {
             get { return new RelayCommand(OnShowAllCommandExecuted); }
-        }
-
-        public ICommand ShowPieCommand
-        {
-            get { return new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand); }
         }
 
         public bool Shown
@@ -226,6 +226,11 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        public ICommand ShowPieCommand
+        {
+            get { return new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand); }
+        }
+
         public decimal Surplus
         {
             get { return this.surplus; }
@@ -243,13 +248,13 @@ namespace BudgetAnalyser.Budget
 
         protected virtual string BuildDefaultFileName()
         {
-            string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            var path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             return Path.Combine(path, "BudgetModel.xml");
         }
 
         protected virtual bool SaveBudgetCollection()
         {
-            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+            var comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
             if (comment == null)
             {
                 return false;
@@ -277,10 +282,10 @@ namespace BudgetAnalyser.Budget
 
         private string GetFileNameFromUserForOpen()
         {
-            IUserPromptOpenFile fileOpenDialog = this.fileOpenDialogFactory();
+            var fileOpenDialog = this.fileOpenDialogFactory();
             fileOpenDialog.CheckFileExists = true;
             fileOpenDialog.CheckPathExists = true;
-            bool? result = fileOpenDialog.ShowDialog();
+            var result = fileOpenDialog.ShowDialog();
             if (result == null || result == false)
             {
                 return null;
@@ -291,11 +296,11 @@ namespace BudgetAnalyser.Budget
 
         private string GetFileNameFromUserForSave()
         {
-            IUserPromptSaveFile fileSaveDialog = this.fileSaveDialogFactory();
+            var fileSaveDialog = this.fileSaveDialogFactory();
             fileSaveDialog.CheckPathExists = true;
             fileSaveDialog.AddExtension = true;
             fileSaveDialog.DefaultExt = ".xml";
-            bool? result = fileSaveDialog.ShowDialog();
+            var result = fileSaveDialog.ShowDialog();
             if (result == null || result == false)
             {
                 return null;
@@ -306,7 +311,7 @@ namespace BudgetAnalyser.Budget
 
         private void HandleBudgetFileExceptions(string message)
         {
-            string defaultFileName = BuildDefaultFileName();
+            var defaultFileName = BuildDefaultFileName();
             this.messageBox.Show("Budget File", "{0}\n{1}", message, defaultFileName);
             LoadBudget(defaultFileName);
         }
@@ -343,7 +348,7 @@ namespace BudgetAnalyser.Budget
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             this.dirty = true;
-            Expense newExpense = Expenses.AddNew(); 
+            var newExpense = Expenses.AddNew();
             newExpense.Amount = 0;
 
             // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
@@ -419,7 +424,8 @@ namespace BudgetAnalyser.Budget
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)
         {
-            bool? response = this.questionBox.Show("Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.",
+            var response = this.questionBox.Show(
+                "Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.",
                 "Delete Budget Bucket");
             if (response == null || response.Value == false)
             {
@@ -488,14 +494,14 @@ namespace BudgetAnalyser.Budget
 
         private void OnLoadBudgetCommandExecute()
         {
-            bool valid = ValidateAndSaveIfRequired();
+            var valid = ValidateAndSaveIfRequired();
             if (!valid)
             {
                 return;
             }
 
             this.dirty = false;
-            string fileName = GetFileNameFromUserForOpen();
+            var fileName = GetFileNameFromUserForOpen();
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return;
@@ -522,7 +528,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnSaveAsCommandExecute()
         {
-            string fileName = GetFileNameFromUserForSave();
+            var fileName = GetFileNameFromUserForSave();
             if (fileName == null)
             {
                 return;
@@ -530,6 +536,12 @@ namespace BudgetAnalyser.Budget
 
             this.dirty = true;
             Budgets.FileName = fileName;
+            SaveBudgetModel();
+            RaisePropertyChanged(() => TruncatedFileName);
+        }
+
+        private void OnSaveCommandExecute()
+        {
             SaveBudgetModel();
             RaisePropertyChanged(() => TruncatedFileName);
         }
@@ -551,7 +563,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            foreach (BudgetItem item in items)
+            foreach (var item in items)
             {
                 item.PropertyChanged -= OnIncomeAmountPropertyChanged;
                 item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
@@ -563,7 +575,7 @@ namespace BudgetAnalyser.Budget
         private bool SaveBudgetModel()
         {
             var validationMessages = new StringBuilder();
-            bool valid = this.maintenanceService.UpdateAndValidateBudget(CurrentBudget.Model, Incomes, Expenses, validationMessages);
+            var valid = this.maintenanceService.UpdateAndValidateBudget(CurrentBudget.Model, Incomes, Expenses, validationMessages);
             if (!valid)
             {
                 this.messageBox.Show(validationMessages.ToString(), "Unable to save, some data is invalid");
@@ -585,7 +597,7 @@ namespace BudgetAnalyser.Budget
             this.dialogCorrelationId = Guid.NewGuid();
             var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, new BudgetSelectionViewModel(Budgets), ShellDialogType.Ok)
             {
-                CorrelationId = this.dialogCorrelationId,
+                CorrelationId = this.dialogCorrelationId
             };
             MessengerInstance.Send(popUpRequest);
         }
@@ -620,12 +632,12 @@ namespace BudgetAnalyser.Budget
 
         private bool ValidateAndSaveIfRequired()
         {
-            bool valid = true;
+            var valid = true;
 
             // If no changes made to the budget model data return straight away.
             if (this.dirty)
             {
-                bool? decision = this.questionBox.Show("Save changes to the budget?", "Edit Budget");
+                var decision = this.questionBox.Show("Save changes to the budget?", "Edit Budget");
                 if (decision != null && decision == true)
                 {
                     // Yes, please save the changes.

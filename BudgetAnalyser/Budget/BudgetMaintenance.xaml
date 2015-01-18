@@ -200,6 +200,8 @@
                     Style="{StaticResource Button.Round.Load}" />
             <Button Command="{Binding SaveAsCommand}"
                     Style="{StaticResource Button.Round.SaveAs}" />
+            <Button Command="{Binding SaveCommand}"
+                    Style="{StaticResource Button.Round.Save}" />
             <Button Command="{Binding DemoBudgetCommand}"
                     Style="{StaticResource Button.Round.Smiley}" />
         </StackPanel>

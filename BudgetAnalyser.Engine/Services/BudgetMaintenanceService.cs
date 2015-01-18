@@ -151,8 +151,16 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             // Copy view model bound data back into model.
-            model.Update(allIncomes, allExpenses);
-            return this.budgetsCollection.Validate(validationMessages);
+            try
+            {
+                model.Update(allIncomes, allExpenses);
+                return this.budgetsCollection.Validate(validationMessages);
+            }
+            catch (ValidationWarningException ex)
+            {
+                validationMessages.AppendLine(ex.Message);
+                return false;
+            }
         }
     }
 }
