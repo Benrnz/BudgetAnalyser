@@ -301,7 +301,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             ShowAddingNewTransactionPanel = false;
             this.isAddDirty = false;
-            ShownTransactions = null;
             LedgerEntry = null;
             // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             NewTransactionAmount = 0;

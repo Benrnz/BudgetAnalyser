@@ -238,8 +238,8 @@ namespace BudgetAnalyser.Engine.Ledger
             foreach (var previousLedgerBalance in previousLedgerBalances)
             {
                 LedgerColumn ledgerColumn = previousLedgerBalance.Key;
-                decimal balance = previousLedgerBalance.Value;
-                var newEntry = new LedgerEntry(true) { Balance = balance, LedgerColumn = ledgerColumn };
+                decimal openingBalance = previousLedgerBalance.Value;
+                var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerColumn = ledgerColumn };
                 var transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
                 newEntry.SetTransactionsForReconciliation(transactions);
