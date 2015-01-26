@@ -265,6 +265,8 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 Save();
+                this.entryLine = null;
+                LedgerEntry = null;
             }
 
             if (message.Response == ShellDialogButton.Cancel)
@@ -312,7 +314,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             ShowAddingNewTransactionPanel = false;
             this.isAddDirty = false;
-            LedgerEntry = null;
+            // LedgerEntry = null;    // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             NewTransactionAmount = 0;
             NewTransactionNarrative = null;
@@ -344,6 +346,7 @@ namespace BudgetAnalyser.LedgerBook
             var newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccountType);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
+            RaisePropertyChanged(() => TransactionsTotal);
         }
 
         private void SaveNewEntryTransaction()
