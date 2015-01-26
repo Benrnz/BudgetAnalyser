@@ -4,9 +4,7 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class BudgetCreditLedgerTransaction : LedgerTransaction
     {
-        public BudgetCreditLedgerTransaction()
-        {
-        }
+        internal BudgetCreditLedgerTransaction() : base() {  }
 
         /// <summary>
         /// Creates a new instance of <see cref="BudgetCreditLedgerTransaction"/>.

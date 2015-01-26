@@ -143,11 +143,16 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] BudgetModel model,
             IEnumerable<Income> allIncomes,
             IEnumerable<Expense> allExpenses,
-            StringBuilder validationMessages)
+            [NotNull] StringBuilder validationMessages)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
+            }
+
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
             }
 
             // Copy view model bound data back into model.

@@ -131,8 +131,8 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             get
             {
-                var adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
-                var results = Entries.GroupBy(
+                IEnumerable<BankBalance> adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                IEnumerable<BankBalance> results = Entries.GroupBy(
                     e => e.LedgerColumn.StoredInAccount,
                     (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
                 return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
@@ -147,59 +147,6 @@ namespace BudgetAnalyser.Engine.Ledger
         public decimal TotalBankBalance
         {
             get { return this.bankBalancesList.Sum(b => b.Balance); }
-        }
-
-        public BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
-        {
-            if (!IsNew)
-            {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
-            }
-
-            if (adjustment == 0)
-            {
-                throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
-            }
-
-            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment };
-
-            this.bankBalanceAdjustments.Add(newAdjustment);
-            return newAdjustment;
-        }
-
-        public void CancelBalanceAdjustment(Guid transactionId)
-        {
-            if (!IsNew)
-            {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
-            }
-
-            var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
-            if (txn != null)
-            {
-                this.bankBalanceAdjustments.Remove(txn);
-            }
-        }
-
-        public void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
-        {
-            if (!IsNew)
-            {
-                throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
-            }
-
-            this.bankBalancesList = updatedBankBalances.ToList();
-        }
-
-        public bool UpdateRemarks(string remarks)
-        {
-            if (IsNew)
-            {
-                Remarks = remarks;
-                return true;
-            }
-
-            return false;
         }
 
         public bool Validate([NotNull] StringBuilder validationMessages)
@@ -217,7 +164,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 result = false;
             }
 
-            foreach (var ledgerEntry in Entries)
+            foreach (LedgerEntry ledgerEntry in Entries)
             {
                 if (!ledgerEntry.Validate())
                 {
@@ -255,20 +202,20 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
 
-            var finishDate = Date;
-            var filteredStatementTransactions = statement == null
+            DateTime finishDate = Date;
+            List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
                 : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= finishDate).ToList(); // Date filter must be inclusive to be consistent with the rest of the app.
             // For example the expected date range should be something like 20-Jan to 19-Feb.
 
-            var previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
+            IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
-            foreach (var previousLedgerEntry in previousLedgerBalances)
+            foreach (LedgerEntry previousLedgerEntry in previousLedgerBalances)
             {
-                var ledgerColumn = previousLedgerEntry.LedgerColumn;
-                var openingBalance = previousLedgerEntry.Balance;
+                LedgerColumn ledgerColumn = previousLedgerEntry.LedgerColumn;
+                decimal openingBalance = previousLedgerEntry.Balance;
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerColumn = ledgerColumn };
-                var transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
                 AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
                 newEntry.SetTransactionsForReconciliation(transactions);
@@ -277,20 +224,73 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
+        {
+            if (!IsNew)
+            {
+                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+            }
+
+            if (adjustment == 0)
+            {
+                throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
+            }
+
+            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment };
+
+            this.bankBalanceAdjustments.Add(newAdjustment);
+            return newAdjustment;
+        }
+
+        internal void CancelBalanceAdjustment(Guid transactionId)
+        {
+            if (!IsNew)
+            {
+                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+            }
+
+            BankBalanceAdjustmentTransaction txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
+            if (txn != null)
+            {
+                this.bankBalanceAdjustments.Remove(txn);
+            }
+        }
+
         internal void Unlock()
         {
             IsNew = true;
-            foreach (var entry in Entries)
+            foreach (LedgerEntry entry in Entries)
             {
                 entry.Unlock();
             }
         }
 
+        internal void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
+        {
+            if (!IsNew)
+            {
+                throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
+            }
+
+            this.bankBalancesList = updatedBankBalances.ToList();
+        }
+
+        internal bool UpdateRemarks(string remarks)
+        {
+            if (IsNew)
+            {
+                Remarks = remarks;
+                return true;
+            }
+
+            return false;
+        }
+
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(List<Transaction> transactions, LedgerEntry previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
         {
-            var ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
+            List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
             var checkMatchCount = 0;
-            foreach (var lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
+            foreach (LedgerTransaction lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
             {
                 this.logger.LogInfo(
                     l =>
@@ -298,8 +298,8 @@ namespace BudgetAnalyser.Engine.Ledger
                             "Ledger Reconciliation - AutoMatching - Found {0} {1} ledger transaction that require matching.",
                             ledgerAutoMatchTransactions.Count(),
                             previousLedgerEntry.LedgerColumn.BudgetBucket.Code));
-                var ledgerTxn = lastMonthLedgerTransaction;
-                foreach (var matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
+                LedgerTransaction ledgerTxn = lastMonthLedgerTransaction;
+                foreach (Transaction matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
                 {
                     this.logger.LogInfo(l => l.Format("Ledger Reconciliation - AutoMatching - Matched {0} ==> {1}", ledgerTxn, matchingStatementTransaction));
                     ledgerTxn.Id = matchingStatementTransaction.Id;
@@ -309,7 +309,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         checkMatchCount++;
                         ledgerTxn.AutoMatchingReference = string.Format(CultureInfo.InvariantCulture, "{0}{1}", MatchedPrefix, ledgerTxn.AutoMatchingReference);
                     }
-                    var duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
+                    LedgerTransaction duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
                     if (duplicateTransaction != null)
                     {
                         this.logger.LogInfo(l => l.Format("Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}", duplicateTransaction));
@@ -347,16 +347,16 @@ namespace BudgetAnalyser.Engine.Ledger
         private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
         {
             var ledgersAndBalances = new List<LedgerEntry>();
-            var previousLine = parentLedgerBook.DatedEntries.FirstOrDefault();
+            LedgerEntryLine previousLine = parentLedgerBook.DatedEntries.FirstOrDefault();
             if (previousLine == null)
             {
                 return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerColumn = ledger });
             }
 
-            foreach (var ledger in parentLedgerBook.Ledgers)
+            foreach (LedgerColumn ledger in parentLedgerBook.Ledgers)
             {
                 // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
-                var previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
+                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
 
                 // Its important to use the ledger column value from the book level map, not from the previous entry. The user
                 // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
@@ -391,7 +391,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerColumn ledgerColumn)
         {
-            var expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
+            Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
             if (expenseBudget != null)
             {
@@ -423,10 +423,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return new List<LedgerTransaction>();
             }
 
-            var transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
+            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
             if (transactions.Any())
             {
-                var newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
                     t =>
                     {
                         if (t.Amount < 0)
@@ -454,7 +454,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private static string IssueTransactionReferenceNumber()
         {
             var reference = new StringBuilder(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-            foreach (var disallowedChar in DisallowedChars)
+            foreach (string disallowedChar in DisallowedChars)
             {
                 reference.Replace(disallowedChar, string.Empty);
             }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -12,17 +13,97 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC]
     public class LedgerService : ILedgerService
     {
+        private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBookRepository ledgerRepository;
         private LedgerBook book;
 
-        public LedgerService([NotNull] ILedgerBookRepository ledgerRepository)
+        public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository)
         {
             if (ledgerRepository == null)
             {
                 throw new ArgumentNullException("ledgerRepository");
             }
 
+            if (accountTypeRepository == null)
+            {
+                throw new ArgumentNullException("accountTypeRepository");
+            }
+
             this.ledgerRepository = ledgerRepository;
+            this.accountTypeRepository = accountTypeRepository;
+        }
+
+        /// <summary>
+        ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
+        /// </summary>
+        public void CancelBalanceAdjustment(LedgerEntryLine entryLine, Guid transactionId)
+        {
+            if (entryLine == null)
+            {
+                throw new ArgumentNullException("entryLine");
+            }
+            
+            if (this.book.DatedEntries.Any(l => l == entryLine))
+            {
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+            }
+
+            entryLine.CancelBalanceAdjustment(transactionId);
+        }
+
+        /// <summary>
+        ///     Creates a new balance adjustment transaction for the given entry line.  The entry line must exist in the current
+        ///     Ledger Book.
+        /// </summary>
+        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, AccountType account)
+        {
+            if (entryLine == null)
+            {
+                throw new ArgumentNullException("entryLine");
+            }
+
+            if (narrative == null)
+            {
+                throw new ArgumentNullException("narrative");
+            }
+
+            if (account == null)
+            {
+                throw new ArgumentNullException("account");
+            }
+
+            if (this.book.DatedEntries.Any(l => l == entryLine))
+            {
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+            }
+
+            return entryLine.BalanceAdjustment(amount, narrative).WithAccountType(account);
+        }
+
+        /// <summary>
+        ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
+        /// </summary>
+        public LedgerTransaction CreateLedgerTransaction(LedgerEntry ledgerEntry, decimal amount, string narrative)
+        {
+            if (ledgerEntry == null)
+            {
+                throw new ArgumentNullException("ledgerEntry");
+            }
+
+            if (narrative == null)
+            {
+                throw new ArgumentNullException("narrative");
+            }
+
+            if (this.book.DatedEntries.First().Entries.Any(e => e == ledgerEntry))
+            {
+                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
+            }
+
+            LedgerTransaction newTransaction = new CreditLedgerTransaction();
+            newTransaction.WithAmount(amount).WithNarrative(narrative);
+            ledgerEntry.AddTransaction(newTransaction);
+            return newTransaction;
         }
 
         public LedgerBook CreateNew(string storageKey)
@@ -70,7 +151,12 @@ namespace BudgetAnalyser.Engine.Services
         ///     balances or budgetContext or statement
         /// </exception>
         /// <exception cref="System.InvalidOperationException">Reconciling against an inactive budget is invalid.</exception>
-        public LedgerEntryLine MonthEndReconciliation(DateTime reconciliationDate, IEnumerable<BankBalance> balances, IBudgetCurrencyContext budgetContext, StatementModel statement, bool ignoreWarnings = false)
+        public LedgerEntryLine MonthEndReconciliation(
+            DateTime reconciliationDate,
+            IEnumerable<BankBalance> balances,
+            IBudgetCurrencyContext budgetContext,
+            StatementModel statement,
+            bool ignoreWarnings = false)
         {
             if (balances == null)
             {
@@ -121,6 +207,24 @@ namespace BudgetAnalyser.Engine.Services
             this.book.RemoveLine(line);
         }
 
+        /// <summary>
+        ///     Removes the transaction from the specified Ledger Entry. The Ledger Entry must exist in the current Ledger Book.
+        /// </summary>
+        public void RemoveTransaction(LedgerEntry ledgerEntry, Guid transactionId)
+        {
+            if (ledgerEntry == null)
+            {
+                throw new ArgumentNullException("ledgerEntry");
+            }
+
+            if (this.book.DatedEntries.First().Entries.Any(e => e == ledgerEntry))
+            {
+                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
+            }
+
+            ledgerEntry.RemoveTransaction(transactionId);
+        }
+
         public void RenameLedgerBook(LedgerBook ledgerBook, string newName)
         {
             if (ledgerBook == null)
@@ -168,6 +272,37 @@ namespace BudgetAnalyser.Engine.Services
         public LedgerEntryLine UnlockCurrentMonth()
         {
             return this.book.UnlockMostRecentLine();
+        }
+
+        /// <summary>
+        ///     Updates the remarks for the given Ledger Entry Line. The Ledger Entry Line must exist in the current Ledger Book.
+        /// </summary>
+        public void UpdateRemarks(LedgerEntryLine entryLine, string remarks)
+        {
+            if (entryLine == null)
+            {
+                throw new ArgumentNullException("entryLine");
+            }
+
+            if (remarks == null)
+            {
+                throw new ArgumentNullException("remarks");
+            }
+
+            if (this.book.DatedEntries.Any(l => l == entryLine))
+            {
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+            }
+
+            entryLine.UpdateRemarks(remarks);
+        }
+
+        /// <summary>
+        ///     Returns a list of valid accounts for use with the Ledger Book.
+        /// </summary>
+        public IEnumerable<AccountType> ValidLedgerAccounts()
+        {
+            return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }
     }
 }

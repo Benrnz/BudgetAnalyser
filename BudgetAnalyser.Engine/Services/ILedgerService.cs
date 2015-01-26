@@ -14,6 +14,23 @@ namespace BudgetAnalyser.Engine.Services
     public interface ILedgerService : IServiceFoundation
     {
         /// <summary>
+        ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
+        ///     The Ledger Entry Line must exist in the current Ledger Book.
+        /// </summary>
+        void CancelBalanceAdjustment([NotNull] LedgerEntryLine entryLine, Guid transactionId);
+
+        /// <summary>
+        ///     Creates a new balance adjustment transaction for the given entry line.  The entry line must exist in the current
+        ///     Ledger Book.
+        /// </summary>
+        LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount, [NotNull] string narrative, [NotNull] AccountType account);
+
+        /// <summary>
+        ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
+        /// </summary>
+        LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
+
+        /// <summary>
         ///     Creates a new empty <see cref="LedgerBook" />.
         /// </summary>
         /// <param name="storageKey">A new unique identifier for a ledger book. Will be overwritten if it exists.</param>
@@ -63,6 +80,11 @@ namespace BudgetAnalyser.Engine.Services
         void RemoveReconciliation([NotNull] LedgerEntryLine line);
 
         /// <summary>
+        ///     Removes the transaction from the specified Ledger Entry. The Ledger Entry must exist in the current Ledger Book.
+        /// </summary>
+        void RemoveTransaction([NotNull] LedgerEntry ledgerEntry, Guid transactionId);
+
+        /// <summary>
         ///     Renames the ledger book.
         /// </summary>
         /// <param name="ledgerBook">The ledger book.</param>
@@ -89,5 +111,15 @@ namespace BudgetAnalyser.Engine.Services
         ///     Unlocks the current month after it has been saved and locked.
         /// </summary>
         LedgerEntryLine UnlockCurrentMonth();
+
+        /// <summary>
+        ///     Updates the remarks for the given Ledger Entry Line. The Ledger Entry Line must exist in the current Ledger Book.
+        /// </summary>
+        void UpdateRemarks([NotNull] LedgerEntryLine entryLine, [NotNull] string remarks);
+
+        /// <summary>
+        ///     Returns a list of valid accounts for use with the Ledger Book.
+        /// </summary>
+        IEnumerable<AccountType> ValidLedgerAccounts();
     }
 }

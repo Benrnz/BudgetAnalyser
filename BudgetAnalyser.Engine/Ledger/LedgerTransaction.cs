@@ -54,13 +54,13 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Format(CultureInfo.InvariantCulture, "{0} ({1:N} {2} {3} {4})", GetType().Name, Amount, Narrative, AutoMatchingReference, Id);
         }
 
-        public virtual LedgerTransaction WithAmount(decimal amount)
+        internal virtual LedgerTransaction WithAmount(decimal amount)
         {
             Amount = amount;
             return this;
         }
 
-        public virtual LedgerTransaction WithNarrative([NotNull] string narrative)
+        internal virtual LedgerTransaction WithNarrative([NotNull] string narrative)
         {
             if (narrative == null)
             {

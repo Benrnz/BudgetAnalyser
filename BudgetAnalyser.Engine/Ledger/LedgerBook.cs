@@ -258,7 +258,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             List<LedgerTransaction> unmatchedTxns = lastLine.Entries
                 .SelectMany(e => e.Transactions)
-                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(LedgerEntryLine.MatchedPrefix))
+                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(LedgerEntryLine.MatchedPrefix, StringComparison.Ordinal))
                 .ToList();
 
             if (unmatchedTxns.None())
@@ -313,18 +313,18 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (date <= recentEntry.Date)
                 {
-                    throw new InvalidOperationException("The startDate entered is before the previous ledger entry.");
+                    throw new InvalidOperationException("The start Date entered is before the previous ledger entry.");
                 }
 
                 if (recentEntry.Date.AddDays(7 * 4) > date)
                 {
-                    throw new InvalidOperationException("The startDate entered is not at least 4 weeks after the previous reconciliation. ");
+                    throw new InvalidOperationException("The start Date entered is not at least 4 weeks after the previous reconciliation. ");
                 }
 
                 if (recentEntry.Date.Day != date.Day)
                 {
                     throw new ValidationWarningException(
-                        "The startDate chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
+                        "The start Date chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
                 }
             }
 

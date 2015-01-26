@@ -9,9 +9,7 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class BankBalanceAdjustmentTransaction : LedgerTransaction
     {
-        public BankBalanceAdjustmentTransaction() : base()
-        {
-        }
+        internal BankBalanceAdjustmentTransaction() : base() { }
 
         public BankBalanceAdjustmentTransaction(Guid id) : base(id)
         {
@@ -24,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public AccountType BankAccount { get; internal set; }
 
-        public BankBalanceAdjustmentTransaction WithAccountType([NotNull] AccountType accountType)
+        internal BankBalanceAdjustmentTransaction WithAccountType([NotNull] AccountType accountType)
         {
             if (accountType == null)
             {

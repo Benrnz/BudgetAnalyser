@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class CreditLedgerTransaction : LedgerTransaction
     {
-        public CreditLedgerTransaction()
+        internal CreditLedgerTransaction()
         {
         }
 

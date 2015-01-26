@@ -214,7 +214,7 @@ namespace BudgetAnalyser.Engine.Services
                 var projectBucket = this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
                 if (projectBucket == null)
                 {
-                    throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a FixedBudgetProjectBucket");
+                    throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
                 }
 
                 fixedProjectWidget.Statement.ReassignFixedProjectTransactions(projectBucket, this.bucketRepository.SurplusBucket);

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
@@ -221,7 +222,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount, Description, BudgetBucket.Code, Reference1, Id);
+            return string.Format(CultureInfo.CurrentUICulture, "Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount, Description, BudgetBucket.Code, Reference1, Id);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

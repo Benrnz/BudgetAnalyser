@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
@@ -18,7 +19,7 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerTransactionsController : ControllerBase
     {
-        private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly ILedgerService ledgerService;
         private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
@@ -31,18 +32,19 @@ namespace BudgetAnalyser.LedgerBook
         private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] IAccountTypeRepository accountTypeRepository)
+        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
         {
-            this.accountTypeRepository = accountTypeRepository;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
-            if (accountTypeRepository == null)
+
+            if (ledgerService == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException("ledgerService");
             }
 
+            this.ledgerService = ledgerService;
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             Reset();
@@ -52,7 +54,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public IEnumerable<AccountType> AccountTypes
         {
-            get { return this.accountTypeRepository.ListCurrentlyUsedAccountTypes(); }
+            get { return this.ledgerService.ValidLedgerAccounts(); } 
         }
 
         public ICommand AddTransactionCommand
@@ -225,13 +227,13 @@ namespace BudgetAnalyser.LedgerBook
             if (InLedgerEntryMode)
             {
                 this.wasChanged = true;
-                LedgerEntry.RemoveTransaction(transaction.Id);
+                this.ledgerService.RemoveTransaction(LedgerEntry, transaction.Id);
                 ShownTransactions.Remove(transaction);
             }
             else if (InBalanceAdjustmentMode)
             {
                 this.wasChanged = true;
-                this.entryLine.CancelBalanceAdjustment(transaction.Id);
+                this.ledgerService.CancelBalanceAdjustment(this.entryLine, transaction.Id);
                 ShownTransactions.Remove(transaction);
             }
 
@@ -330,8 +332,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            BankBalanceAdjustmentTransaction newTransaction = this.entryLine.BalanceAdjustment(NewTransactionAmount, NewTransactionNarrative)
-                .WithAccountType(NewTransactionAccountType);
+            var newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccountType);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
         }
@@ -340,9 +341,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                LedgerTransaction newTransaction = new CreditLedgerTransaction();
-                newTransaction.WithAmount(NewTransactionAmount).WithNarrative(NewTransactionNarrative);
-                LedgerEntry.AddTransaction(newTransaction);
+                var newTransaction = this.ledgerService.CreateLedgerTransaction(LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
                 ShownTransactions.Add(newTransaction);
             }
             catch (ArgumentException)

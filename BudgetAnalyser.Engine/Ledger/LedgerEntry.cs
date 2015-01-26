@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Ledger
             [UsedImplicitly] private set { this.transactions = value.ToList(); }
         }
 
-        public void AddTransaction([NotNull] LedgerTransaction newTransaction)
+        internal void AddTransaction([NotNull] LedgerTransaction newTransaction)
         {
             if (newTransaction == null)
             {
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            var newBalance = Balance + (newTransaction.Amount);
+            decimal newBalance = Balance + (newTransaction.Amount);
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -92,45 +92,19 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public void RemoveTransaction(Guid transactionId)
+        internal void RemoveTransaction(Guid transactionId)
         {
             if (!this.isNew)
             {
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
+            LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.transactions.Remove(txn);
                 Balance -= txn.Amount;
             }
-        }
-
-        /// <summary>
-        ///     Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds
-        ///     can be safely used elsewhere.
-        ///     By zeroing the balance the surplus will increase.
-        /// </summary>
-        public void ZeroTheBalance(string narrative = null)
-        {
-            if (!this.isNew)
-            {
-                throw new InvalidOperationException("This is not a new entry and therefore cannot be altered. Only newly created entries from creating a new reconciliation can use this operation.");
-            }
-
-            if (Balance <= 0)
-            {
-                return;
-            }
-
-            var zeroTxn = new BudgetCreditLedgerTransaction
-            {
-                Amount = -Balance,
-                Narrative = narrative ?? "Zeroing balance - excess funds in this account."
-            };
-            this.transactions.Add(zeroTxn);
-            Balance = 0;
         }
 
         /// <summary>
@@ -189,9 +163,9 @@ namespace BudgetAnalyser.Engine.Ledger
             else
             {
                 // All other ledgers can accumulate a balance but cannot be negative.
-                var newBalance = Balance + NetAmount;
+                decimal newBalance = Balance + NetAmount;
                 Balance = newBalance < 0 ? 0 : newBalance;
-                var budgetedAmount = this.transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
+                LedgerTransaction budgetedAmount = this.transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
                 if (budgetedAmount != null && newBalance < budgetedAmount.Amount)
                 {
                     // This ledger has a monthly budgeted amount and the balance has resulted in a balance less than the monthly budgeted amount, supplement from surplus to equal budgeted amount.
@@ -236,6 +210,32 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return true;
+        }
+
+        /// <summary>
+        ///     Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds
+        ///     can be safely used elsewhere.
+        ///     By zeroing the balance the surplus will increase.
+        /// </summary>
+        internal void ZeroTheBalance(string narrative = null)
+        {
+            if (!this.isNew)
+            {
+                throw new InvalidOperationException("This is not a new entry and therefore cannot be altered. Only newly created entries from creating a new reconciliation can use this operation.");
+            }
+
+            if (Balance <= 0)
+            {
+                return;
+            }
+
+            var zeroTxn = new BudgetCreditLedgerTransaction
+            {
+                Amount = -Balance,
+                Narrative = narrative ?? "Zeroing balance - excess funds in this account."
+            };
+            this.transactions.Add(zeroTxn);
+            Balance = 0;
         }
     }
 }

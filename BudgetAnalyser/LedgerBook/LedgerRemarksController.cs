@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
 
@@ -10,16 +11,23 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerRemarksController : ControllerBase
     {
+        private readonly ILedgerService ledgerService;
         private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntryLine doNotUseLedgerEntryLine;
         private string doNotUseRemarks;
 
-        public LedgerRemarksController([NotNull] UiContext uiContext)
+        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
         {
+            this.ledgerService = ledgerService;
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
+            }
+
+            if (ledgerService == null)
+            {
+                throw new ArgumentNullException("ledgerService");
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -81,7 +89,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (!IsReadOnly)
             {
-                LedgerEntryLine.UpdateRemarks(Remarks);
+                this.ledgerService.UpdateRemarks(LedgerEntryLine, Remarks);
             }
 
             LedgerEntryLine = null;
