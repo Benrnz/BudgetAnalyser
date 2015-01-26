@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security;
 
 namespace BudgetAnalyser.Engine
 {
@@ -89,6 +90,15 @@ namespace BudgetAnalyser.Engine
             }
 
             return instance.Substring(instance.Length - truncateToLength, truncateToLength);
+        }
+
+        /// <summary>
+        /// Trims the end of a string safely.  If the string is null, null is returned.
+        /// </summary>
+        public static string TrimEndSafely(this string instance)
+        {
+            if (instance == null) return null;
+            return instance.TrimEnd();
         }
     }
 }

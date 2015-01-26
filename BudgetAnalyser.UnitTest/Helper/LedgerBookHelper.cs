@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 
@@ -13,42 +16,56 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine("Filename: {0}", book.FileName);
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
-            foreach (var ledger in book.Ledgers)
+            var ledgerOrder = new Dictionary<BudgetBucket, int>();
+            int index = 0;
+            foreach (var ledger in book.Ledgers.OrderBy(l => l.BudgetBucket))
             {
-                Console.Write("{0}", ledger.BudgetBucket.Code.PadRight(18));
+                Console.Write("{0}", ledger.BudgetBucket.Code.PadRight(20));
+                ledgerOrder.Add(ledger.BudgetBucket, index++);
             }
             
-            Console.Write("Surplus  BankBalance  Adjustments LedgerBalance");
+            Console.Write("Surplus    BankBalances             Adjustments LedgerBalance");
             Console.WriteLine();
-            Console.WriteLine("====================================================================================================================");
+            Console.WriteLine("==============================================================================================================================================");
 
             foreach (var line in book.DatedEntries)
             {
                 Console.Write("{0:d}  ", line.Date);
-                foreach (var entry in line.Entries)
+                foreach (var entry in line.Entries.OrderBy(e => e.LedgerColumn.BudgetBucket))
                 {
-                    Console.Write("{0} {1} ", entry.NetAmount.ToString("N").PadRight(8), entry.Balance.ToString("N").PadRight(8));
+                    Console.Write("{0} {1} {2}", entry.NetAmount.ToString("N").PadRight(8), entry.LedgerColumn.StoredInAccount.Name.Truncate(1), entry.Balance.ToString("N").PadRight(9));
                 }
 
                 Console.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
-                Console.Write(line.TotalBankBalance.ToString("N").PadRight(13));
-                Console.Write(line.TotalBalanceAdjustments.ToString("N").PadRight(12));
+                int balanceCount = 0;
+                foreach (var bankBalance in line.BankBalances)
+                {
+                    if (++balanceCount > 2) break;
+                    // Only two bank balances are shown in the test output at this stage.
+                    var balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
+                    Console.Write(balanceText.PadLeft(13).TruncateLeft(13));
+                }
+                Console.Write(line.TotalBalanceAdjustments.ToString("N").PadRight(13));
                 Console.Write(line.LedgerBalance.ToString("N").PadRight(9));
                 Console.WriteLine();
 
                 if (outputTransactions)
                 {
-                    foreach (var entry in line.Entries)
+                    foreach (var entry in line.Entries.OrderBy(e => e.LedgerColumn.BudgetBucket))
                     {
+                        var tab = new string(' ', 11 + 18 * ledgerOrder[entry.LedgerColumn.BudgetBucket]);
                         foreach (var transaction in entry.Transactions)
                         {
-                            Console.WriteLine("          {0} {1} {2}", 
+                            Console.WriteLine("{0} {1} {2} {3} {4} {5}", 
+                                tab,
                                 entry.LedgerColumn.BudgetBucket.Code.PadRight(6), 
                                 transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16), 
-                                transaction.Narrative);
+                                transaction.Narrative.Truncate(15),
+                                transaction.Id,
+                                transaction.AutoMatchingReference);
                         }
                     }
-                    Console.WriteLine("====================================================================================================================");
+                    Console.WriteLine("=================================================================================================================================");
                 }
             }
         }

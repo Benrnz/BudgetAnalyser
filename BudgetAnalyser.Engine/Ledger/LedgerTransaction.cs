@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 
@@ -23,12 +24,35 @@ namespace BudgetAnalyser.Engine.Ledger
         public decimal Amount { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel"/>'s <see cref="Transaction"/>.
-        /// This can be used to link back to the statement and show more transaction specific data.
+        ///     Gets or sets the automatic matching reference.
+        ///     This is allocated by the system so that when a real transactions is performed this reference number can be entered
+        ///     against the transaction.
+        ///     When the next reconciliation is done the real transaction will be matched using this reference number.
         /// </summary>
-        public Guid Id { get; private set; }
+        /// <value>
+        ///     The automatic matching reference.
+        /// </value>
+        public string AutoMatchingReference { get; internal set; }
+
+        /// <summary>
+        ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel" />'s
+        ///     <see cref="Transaction" />.
+        ///     This can be used to link back to the statement and show more transaction specific data.
+        /// </summary>
+        public Guid Id { get; internal set; }
 
         public string Narrative { get; internal set; }
+
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0} ({1:N} {2} {3} {4})", GetType().Name, Amount, Narrative, AutoMatchingReference, Id);
+        }
 
         public virtual LedgerTransaction WithAmount(decimal amount)
         {

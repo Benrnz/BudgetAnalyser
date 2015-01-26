@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
@@ -247,7 +248,102 @@ namespace BudgetAnalyser.UnitTest.Ledger
             book.Output(true);
             Assert.AreEqual(1014.47M, result.CalculatedSurplus);
         }
-    }
 
+        [TestMethod]
+        public void OutputTestData5()
+        {
+            var testData = LedgerBookTestData.TestData5();
+            testData.Output(true);
+        }
+
+        [TestMethod]
+        public void DuplicateReferenceNumberTest()
+        {
+            // ReSharper disable once CollectionNeverQueried.Local
+            var duplicateCheck = new Dictionary<string, string>();
+            for (int i = 0; i < 1000; i++)
+            {
+                var result = PrivateAccessor.InvokeStaticFunction<string>(typeof(LedgerEntryLine), "IssueTransactionReferenceNumber");
+                Console.WriteLine(result);
+                Assert.IsNotNull(result);
+                duplicateCheck.Add(result, result);
+            }
+        }
+
+        [TestMethod]
+        public void UsingTestData5_Reconcile_ShouldAutoMatchTransactionsAndResultInInsHomeBalance1200()
+        {
+            var book = ActOnTestData5();
+            Assert.AreEqual(1200M, book.DatedEntries.First().Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket).Balance);
+        }
+
+        [TestMethod]
+        public void UsingTestData5_Reconcile_ShouldAutoMatchTransactionsAndResultIn1InsHomeTransaction()
+        {
+            // Two transactions should be removed as they are automatched to the previous month.
+            var book = ActOnTestData5();
+
+            Assert.AreEqual(1, book.DatedEntries.First().Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket).Transactions.Count());
+            // Assert last month's ledger transaction has been linked to the credit 16/8/13
+        }
+
+        [TestMethod]
+        public void UsingTestData5_Reconcile_ShouldAutoMatchTransactionsAndUpdateLedgerAutoMatchRefSoItIsNotAutoMatchedAgain()
+        {
+            // Two transactions should be removed as they are automatched to the previous month.
+            var book = ActOnTestData5();
+            var previousMonthLine = book.DatedEntries.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket);
+            var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
+
+            Console.WriteLine(previousLedgerTxn.AutoMatchingReference);
+            Assert.AreNotEqual("agkT9kC", previousLedgerTxn.AutoMatchingReference);
+        }
+
+        [TestMethod]
+        public void UsingTestData5_Reconcile_ShouldAutoMatchTransactionsAndLinkToStatementTransaction()
+        {
+            // The automatched credit ledger transaction from last month should be linked to the statement transaction.
+            var statementModelTestData = StatementModelTestData.TestData5();
+            var statementTransactions = statementModelTestData.AllTransactions.Where(t => t.Reference1 == "agkT9kC").ToList();
+            Debug.Assert(statementTransactions.Count() == 2);
+
+            var book = ActOnTestData5(statementModelTestData);
+            var previousMonthLine = book.DatedEntries.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket);
+            var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
+
+            // Assert last month's ledger transaction has been linked to the credit 16/8/13
+            Assert.AreEqual(statementTransactions.Single(t => t.Amount > 0).Id, previousLedgerTxn.Id);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationWarningException))]
+        public void UsingTestData5_Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement()
+        {
+            var book = ActOnTestData5(StatementModelTestData.TestData4());
+            Assert.Fail();
+        }
+
+        private static LedgerBook ActOnTestData5(StatementModel statementTestData = null)
+        {
+            LedgerBook book = LedgerBookTestData.TestData5();
+            BudgetModel budget = BudgetModelTestData.CreateTestData5();
+            if (statementTestData == null) statementTestData = StatementModelTestData.TestData5();
+
+            Console.WriteLine("********************** BEFORE RUNNING RECONCILIATION *******************************");
+            statementTestData.Output(NextReconcileDate.AddMonths(-1));
+            book.Output(true);
+
+            book.Reconcile(
+                NextReconcileDate,
+                new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
+                budget,
+                statementTestData);
+
+            Console.WriteLine();
+            Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
+            book.Output(true);
+            return book;
+        }
+    }
     // ReSharper restore InconsistentNaming
 }

@@ -407,7 +407,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             };
             var insLedger = new LedgerColumn
             {
-                BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
+                BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
                 StoredInAccount = savingsAccount,
             };
 
@@ -428,7 +428,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount", },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount", AutoMatchingReference = "IbEMWG7" },
                     }),
                     CreateLedgerEntry(hairLedger).SetTransactions(new List<LedgerTransaction>
                     {
@@ -461,7 +461,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount", AutoMatchingReference = "9+1R06x" },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
@@ -491,7 +491,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
-                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount",  },
+                        new BudgetCreditLedgerTransaction { Amount = 300M,  Narrative = "Budgeted amount", AutoMatchingReference = "agkT9kC"  },
                     }),
                     CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactions(new List<LedgerTransaction>
                     {
@@ -523,10 +523,14 @@ namespace BudgetAnalyser.UnitTest.TestData
 
         private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
         {
-            var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
+            var line = new LedgerEntryLine(date, bankBalances, new FakeLogger()) { Remarks = remarks };
             return line;
         }
 
+        /// <summary>
+        /// Makes sure that the IsNew property on LedgerBook EntryLines is not set to true, as it will be when they are newly created.
+        /// Also ensures the StoredInAccount property for each ledger is set.
+        /// </summary>
         private static LedgerBook Finalise(LedgerBook book)
         {
             var ledgers = new Dictionary<BudgetBucket, LedgerColumn>();

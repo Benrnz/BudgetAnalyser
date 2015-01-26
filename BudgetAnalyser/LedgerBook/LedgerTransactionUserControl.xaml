@@ -32,7 +32,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBlock Text="{Binding Narrative}" />
+        <StackPanel Orientation="Horizontal">
+            <TextBox Text="{Binding AutoMatchingReference, Mode=OneWay}"
+                     HorizontalAlignment="Left"
+                     MinWidth="35"
+                     IsReadOnly="True"
+                     Visibility="{Binding AutoMatchingReference, Converter={StaticResource Converter.NullToVis}}"/>
+            <TextBlock Text="{Binding Narrative}" />
+        </StackPanel>
         <TextBlock x:Name="CreditAmount" 
                    Grid.Column="1"
                    Style="{StaticResource TextBlock.Number}"

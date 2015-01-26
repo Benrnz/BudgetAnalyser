@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Account;
@@ -10,13 +9,11 @@ namespace BudgetAnalyser.Engine.Statement
 {
     [SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes",
         Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overiden.")]
-    [DebuggerDisplay("Transaction: {Date} {Amount} {Description} {BudgetBucket}")]
     public class Transaction : INotifyPropertyChanged, IComparable, ICloneable
     {
         public const string AmountPropertyName = "Amount";
         public const string BucketPropertyName = "BudgetBucket";
         public const string DatePropertyName = "Date";
-
         private BudgetBucket budgetBucket;
         private AccountType doNotUseAccountType;
         private decimal doNotUseAmount;
@@ -91,7 +88,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during serialisation.
+        ///     The unique identifier for the transaction.  Ideally this should not be public settable, but this is used during
+        ///     serialisation.
         /// </summary>
         public Guid Id { get; internal set; }
 
@@ -149,7 +147,7 @@ namespace BudgetAnalyser.Engine.Statement
                 Reference1 = Reference1,
                 Reference2 = Reference2,
                 Reference3 = Reference3,
-                TransactionType = TransactionType,
+                TransactionType = TransactionType
             };
         }
 
@@ -176,7 +174,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             unchecked
             {
-                int result = 37; // prime
+                var result = 37; // prime
                 result += AccountType.GetType().GetHashCode();
                 result *= 397; // also prime 
                 result += Amount.GetHashCode();
@@ -215,9 +213,20 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount, Description, BudgetBucket.Code, Reference1, Id);
+        }
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));

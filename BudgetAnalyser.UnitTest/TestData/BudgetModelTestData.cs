@@ -123,5 +123,59 @@ namespace BudgetAnalyser.UnitTest.TestData
             return budget;
         }
 
+        /// <summary>
+        ///     A budget model that is effective from 01/1/13.
+        ///     Includes InsHome, and PhoneInternet, CarMtc, HairCut, Power
+        ///     Designed for use with LedgerBookTestData5 and StatementModelTestData5
+        /// </summary>
+        public static BudgetModel CreateTestData5()
+        {
+            var budget = new BudgetModel
+            {
+                EffectiveFrom = new DateTime(2013, 01, 01),
+                Name = TestDataConstants.Budget5Name,
+            };
+
+            var expenses = new List<Expense>(new[]
+            {
+                new Expense
+                {
+                    Amount = 300M,
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home Insurance"),
+                },
+                new Expense
+                {
+                    Amount = 120M,
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet"),
+                },
+                new Expense
+                {
+                    Amount = 100M,
+                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
+                },
+                new Expense
+                {
+                    Amount = 65M,
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
+                },
+                new Expense
+                {
+                    Amount = 185M,
+                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
+                }
+            });
+
+            var incomes = new List<Income>(new[]
+            {
+                new Income
+                {
+                    Amount = 2600M,
+                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
+                }
+            });
+
+            budget.Update(incomes, expenses);
+            return budget;
+        }
     }
 }

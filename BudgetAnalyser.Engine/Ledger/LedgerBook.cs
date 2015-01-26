@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
         /// <param name="date">
-        ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
+        ///     The startDate for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
         ///     <see cref="statement" />.
         /// </param>
         /// <param name="bankBalances">
@@ -118,6 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
             StatementModel statement = null,
             bool ignoreWarnings = false)
         {
+            // TODO this is misleading, the startDate passed in, is not used, except in the case of a new LedgerBook.
             try
             {
                 PreReconciliationValidation(date, statement);
@@ -131,7 +132,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal consistencyCheck1 = DatedEntries.Sum(e => e.CalculatedSurplus);
-            var newLine = new LedgerEntryLine(date, bankBalances);
+            var newLine = new LedgerEntryLine(date, bankBalances, this.logger);
             newLine.AddNew(this, budget, statement, CalculateDateForReconcile(date));
             decimal consistencyCheck2 = DatedEntries.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
@@ -209,13 +210,14 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
-        ///     between a start date and
-        ///     the date specified (today or pay day). The start date should start from the previous ledger entry line or one month
+        ///     When creating a new reconciliation a start startDate is required to be able to search a statement for transactions
+        ///     between a start startDate and
+        ///     the startDate specified (today or pay day). The start startDate should start from the previous ledger entry line or
+        ///     one month
         ///     prior if no records
         ///     exist.
         /// </summary>
-        /// <param name="date">The chosen date from the user</param>
+        /// <param name="date">The chosen startDate from the user</param>
         private DateTime CalculateDateForReconcile(DateTime date)
         {
             if (DatedEntries.Any())
@@ -226,7 +228,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return startDateIncl;
         }
 
-        private void PreReconciliationValidation(DateTime date, StatementModel statement)
+        private void PreReconciliationValidation(DateTime startDate, StatementModel statement)
         {
             var messages = new StringBuilder();
             if (!Validate(messages))
@@ -239,12 +241,54 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            ValidateDate(date, statement);
+            ValidateDate(startDate, statement);
 
+            ValidateAgainstUncategorisedTransactions(statement);
+
+            ValidateAgainstOrphanedAutoMatchingTransactions(statement);
+        }
+
+        private void ValidateAgainstOrphanedAutoMatchingTransactions(StatementModel statement)
+        {
+            LedgerEntryLine lastLine = DatedEntries.FirstOrDefault();
+            if (lastLine == null)
+            {
+                return;
+            }
+
+            List<LedgerTransaction> unmatchedTxns = lastLine.Entries
+                .SelectMany(e => e.Transactions)
+                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(LedgerEntryLine.MatchedPrefix))
+                .ToList();
+
+            if (unmatchedTxns.None())
+            {
+                return;
+            }
+
+            List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+            foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
+            {
+                IEnumerable<Transaction> statementTxns = LedgerEntryLine.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference);
+                if (statementTxns.None())
+                {
+                    this.logger.LogWarning(
+                        l =>
+                            l.Format(
+                                "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
+                                ledgerTransaction));
+                    throw new ValidationWarningException(
+                        "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.");
+                }
+            }
+        }
+
+        private void ValidateAgainstUncategorisedTransactions(StatementModel statement)
+        {
             if (statement.AllTransactions.Any(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
             {
                 IEnumerable<Transaction> uncategorised = statement.AllTransactions.Where(t => t.BudgetBucket == null || (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code)));
-                int count = 0;
+                var count = 0;
                 this.logger.LogWarning(_ => "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
                 foreach (Transaction transaction in uncategorised)
                 {
@@ -269,17 +313,18 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (date <= recentEntry.Date)
                 {
-                    throw new InvalidOperationException("The date entered is before the previous ledger entry.");
+                    throw new InvalidOperationException("The startDate entered is before the previous ledger entry.");
                 }
 
                 if (recentEntry.Date.AddDays(7 * 4) > date)
                 {
-                    throw new InvalidOperationException("The date entered is not at least 4 weeks after the previous reconciliation. ");
+                    throw new InvalidOperationException("The startDate entered is not at least 4 weeks after the previous reconciliation. ");
                 }
 
                 if (recentEntry.Date.Day != date.Day)
                 {
-                    throw new ValidationWarningException("The date chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
+                    throw new ValidationWarningException(
+                        "The startDate chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
                 }
             }
 

@@ -6,6 +6,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     {
         public const string Budget1Name = "Test Data 1 Budget";
         public const string Budget2Name = "Test Data 2 Budget";
+        public const string Budget5Name = "Test Data 3 Budget";
         public const string CarMtcBucketCode = "CAR MTC";
         public const string HairBucketCode = "HAIRCUT";
         public const string IncomeBucketCode = "INCOME";

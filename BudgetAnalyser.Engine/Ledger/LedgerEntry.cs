@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -11,7 +10,8 @@ namespace BudgetAnalyser.Engine.Ledger
     ///     A single entry on a <see cref="BudgetBucket" /> for a date (which comes from the <see cref="LedgerEntryLine" />).
     ///     This
     ///     instance can contain one or
-    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="Budget.BudgetBucket" /> for this date.
+    ///     more <see cref="LedgerTransaction" />s defining all movements for this <see cref="Budget.BudgetBucket" /> for this
+    ///     date.
     ///     Possible transactions
     ///     include budgeted 'saved up for expenses' credited into this <see cref="BudgetBucket" /> and all statement
     ///     transactions
@@ -48,15 +48,16 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// The balance of the ledger as at the date after the transactions are applied in the parent <see cref="LedgerEntryLine"/>.
+        ///     The balance of the ledger as at the date after the transactions are applied in the parent
+        ///     <see cref="LedgerEntryLine" />.
         /// </summary>
         public decimal Balance { get; internal set; }
 
         /// <summary>
-        /// The Ledger Column instance that tracks which <see cref="BudgetBucket"/> is being tracked by this Ledger.
-        /// This will also designate which Bank Account the ledger funds are stored.
-        /// Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers"/>. This is because this 
-        /// instance shows which account stored the funds at the date in the parent <see cref="LedgerEntryLine"/>.
+        ///     The Ledger Column instance that tracks which <see cref="BudgetBucket" /> is being tracked by this Ledger.
+        ///     This will also designate which Bank Account the ledger funds are stored.
+        ///     Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers" />. This is because this
+        ///     instance shows which account stored the funds at the date in the parent <see cref="LedgerEntryLine" />.
         /// </summary>
         public LedgerColumn LedgerColumn { get; internal set; }
 
@@ -71,8 +72,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> Transactions
         {
             get { return this.transactions; }
-            [UsedImplicitly]
-            private set { this.transactions = value.ToList(); }
+            [UsedImplicitly] private set { this.transactions = value.ToList(); }
         }
 
         public void AddTransaction([NotNull] LedgerTransaction newTransaction)
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            decimal newBalance = Balance + (newTransaction.Amount);
+            var newBalance = Balance + (newTransaction.Amount);
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
+            var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.transactions.Remove(txn);
@@ -127,7 +127,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var zeroTxn = new BudgetCreditLedgerTransaction
             {
                 Amount = -Balance,
-                Narrative = narrative ?? "Zeroing balance - excess funds in this account.",
+                Narrative = narrative ?? "Zeroing balance - excess funds in this account."
             };
             this.transactions.Add(zeroTxn);
             Balance = 0;
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         zeroingTransaction = new CreditLedgerTransaction
                         {
                             Amount = -NetAmount,
-                            Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText,
+                            Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
                         };
                     }
                     else
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             zeroingTransaction = new CreditLedgerTransaction
                             {
                                 Amount = -(Balance + NetAmount),
-                                Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText,
+                                Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
                             };
                         }
                         else
@@ -182,14 +182,14 @@ namespace BudgetAnalyser.Engine.Ledger
                     zeroingTransaction = new CreditLedgerTransaction
                     {
                         Amount = -NetAmount,
-                        Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder",
+                        Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder"
                     };
                 }
             }
             else
             {
                 // All other ledgers can accumulate a balance but cannot be negative.
-                decimal newBalance = Balance + NetAmount;
+                var newBalance = Balance + NetAmount;
                 Balance = newBalance < 0 ? 0 : newBalance;
                 var budgetedAmount = this.transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
                 if (budgetedAmount != null && newBalance < budgetedAmount.Amount)
@@ -199,7 +199,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     zeroingTransaction = new CreditLedgerTransaction
                     {
                         Amount = budgetedAmount.Amount - newBalance,
-                        Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount",
+                        Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount"
                     };
                 }
                 else if (newBalance < 0)

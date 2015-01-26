@@ -94,6 +94,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
+                .ConstructUsing((LedgerEntryLineDto x) => new LedgerEntryLine(this.logger))
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));
 
             Mapper.CreateMap<LedgerEntryLine, LedgerEntryLineDto>()

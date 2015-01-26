@@ -173,10 +173,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerTransactionDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataLedgerTransactionPropertiesShouldBe5()
+        public void NumberOfDataLedgerTransactionPropertiesShouldBe6()
         {
             int dataProperties = typeof(LedgerTransactionDto).CountProperties();
-            Assert.AreEqual(5, dataProperties);
+            Assert.AreEqual(6, dataProperties);
         }
 
         [TestInitialize]
