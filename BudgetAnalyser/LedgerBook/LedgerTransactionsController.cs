@@ -30,6 +30,7 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine entryLine;
         private bool isAddDirty;
         private bool wasChanged;
+        private AccountType doNotUseNewTransactionAccountType;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
@@ -99,7 +100,15 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public AccountType NewTransactionAccountType { get; set; }
+        public AccountType NewTransactionAccountType
+        {
+            get { return this.doNotUseNewTransactionAccountType; }
+            set
+            {
+                this.doNotUseNewTransactionAccountType = value;
+                RaisePropertyChanged(() => NewTransactionAccountType);
+            }
+        }
 
         public decimal NewTransactionAmount
         {

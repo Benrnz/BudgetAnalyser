@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerService : ILedgerService
     {
         private readonly IAccountTypeRepository accountTypeRepository;
@@ -42,8 +42,8 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("entryLine");
             }
-            
-            if (this.book.DatedEntries.Any(l => l == entryLine))
+
+            if (this.book.DatedEntries.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("account");
             }
 
-            if (this.book.DatedEntries.Any(l => l == entryLine))
+            if (this.book.DatedEntries.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("narrative");
             }
 
-            if (this.book.DatedEntries.First().Entries.Any(e => e == ledgerEntry))
+            if (this.book.DatedEntries.First().Entries.All(e => e != ledgerEntry))
             {
                 throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
             }
@@ -289,7 +289,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("remarks");
             }
 
-            if (this.book.DatedEntries.Any(l => l == entryLine))
+            if (this.book.DatedEntries.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
