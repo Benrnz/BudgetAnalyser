@@ -338,6 +338,7 @@ namespace BudgetAnalyser.Matching
                 EditingRule = false;
             }
 
+            var selectedRule = SelectedRule;
             if (!this.ruleService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
             {
                 return;
@@ -346,7 +347,7 @@ namespace BudgetAnalyser.Matching
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
             if (handler != null)
             {
-                handler(SelectedRule, new MatchingRuleEventArgs { Rule = SelectedRule });
+                handler(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
             }
 
             SelectedRule = null;
