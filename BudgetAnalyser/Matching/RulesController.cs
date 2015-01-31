@@ -29,9 +29,7 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseFlatListBoxVisibility;
         private bool doNotUseGroupByListBoxVisibility;
         private MatchingRule doNotUseSelectedRule;
-
         private bool doNotUseShown;
-
         private string doNotUseSortBy;
         private bool initialised;
 
@@ -70,7 +68,7 @@ namespace BudgetAnalyser.Matching
 
         public string AndOrText
         {
-            get { return SelectedRule.And ? "AND" : "OR"; }
+            get { return SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR"; }
         }
 
         public ICommand CloseCommand
@@ -83,11 +81,6 @@ namespace BudgetAnalyser.Matching
             get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
         }
 
-        public ICommand EditRuleCommand
-        {
-            get { return new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null); }
-        }
-
         public bool EditingRule
         {
             get { return this.doNotUseEditingRule; }
@@ -97,6 +90,11 @@ namespace BudgetAnalyser.Matching
                 RaisePropertyChanged(() => EditingRule);
                 RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
             }
+        }
+
+        public ICommand EditRuleCommand
+        {
+            get { return new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null); }
         }
 
         public bool FlatListBoxVisibility
@@ -120,7 +118,6 @@ namespace BudgetAnalyser.Matching
         }
 
         public NewRuleController NewRuleController { get; private set; }
-
         public ObservableCollection<MatchingRule> Rules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
@@ -141,15 +138,6 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public bool ShowReadOnlyRuleDetails
-        {
-            get
-            {
-                bool result = SelectedRule != null && !EditingRule;
-                return result;
-            }
-        }
-
         public bool Shown
         {
             get { return this.doNotUseShown; }
@@ -161,6 +149,15 @@ namespace BudgetAnalyser.Matching
                 }
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
+            }
+        }
+
+        public bool ShowReadOnlyRuleDetails
+        {
+            get
+            {
+                bool result = SelectedRule != null && !EditingRule;
+                return result;
             }
         }
 
@@ -294,7 +291,7 @@ namespace BudgetAnalyser.Matching
         {
             var lastRuleSet = new LastMatchingRulesLoadedV1
             {
-                Model = this.ruleService.RulesStorageKey,
+                Model = this.ruleService.RulesStorageKey
             };
             message.PersistThisModel(lastRuleSet);
         }
@@ -346,7 +343,7 @@ namespace BudgetAnalyser.Matching
                 EditingRule = false;
             }
 
-            var selectedRule = SelectedRule;
+            MatchingRule selectedRule = SelectedRule;
             if (!this.ruleService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
             {
                 return;

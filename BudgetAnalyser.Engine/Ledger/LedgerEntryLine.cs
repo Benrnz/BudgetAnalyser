@@ -70,7 +70,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
-            [UsedImplicitly] private set { this.bankBalanceAdjustments = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.bankBalanceAdjustments = value.ToList(); }
         }
 
         /// <summary>
@@ -79,7 +80,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalance> BankBalances
         {
             get { return this.bankBalancesList; }
-            [UsedImplicitly] private set { this.bankBalancesList = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.bankBalancesList = value.ToList(); }
         }
 
         /// <summary>
@@ -104,7 +106,8 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
-            [UsedImplicitly] private set { this.entries = value.ToList(); }
+            [UsedImplicitly]
+            private set { this.entries = value.ToList(); }
         }
 
         /// <summary>
@@ -190,7 +193,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </param>
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
-        /// <param name="startDateIncl">The date for this ledger line.</param>
+        /// <param name="startDateIncl">The date of the previous ledger line. This is used to include transactions from the Statement up to but excluding the date of this reconciliation.</param>
         internal void AddNew(
             LedgerBook parentLedgerBook,
             BudgetModel currentBudget,
@@ -203,10 +206,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             DateTime finishDate = Date;
+            // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
+            // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
+            // 20/Jan (inclusive) and 19/Feb (inclusive).
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date <= finishDate).ToList(); // Date filter must be inclusive to be consistent with the rest of the app.
-            // For example the expected date range should be something like 20-Jan to 19-Feb.
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDate).ToList(); 
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
@@ -215,7 +220,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 LedgerColumn ledgerColumn = previousLedgerEntry.LedgerColumn;
                 decimal openingBalance = previousLedgerEntry.Balance;
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerColumn = ledgerColumn };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn, finishDate);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
                 AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
                 newEntry.SetTransactionsForReconciliation(transactions);
@@ -309,6 +314,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         checkMatchCount++;
                         ledgerTxn.AutoMatchingReference = string.Format(CultureInfo.InvariantCulture, "{0}{1}", MatchedPrefix, ledgerTxn.AutoMatchingReference);
                     }
+
                     LedgerTransaction duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
                     if (duplicateTransaction != null)
                     {
@@ -389,7 +395,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Empty;
         }
 
-        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerColumn ledgerColumn)
+        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerColumn ledgerColumn, DateTime reconciliationDate)
         {
             Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
@@ -410,6 +416,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     };
                 }
 
+                budgetedAmount.Date = reconciliationDate;
                 transactions.Add(budgetedAmount);
             }
 
@@ -434,14 +441,16 @@ namespace BudgetAnalyser.Engine.Ledger
                             return new CreditLedgerTransaction(t.Id)
                             {
                                 Amount = t.Amount,
-                                Narrative = ExtractNarrative(t)
+                                Narrative = ExtractNarrative(t),
+                                Date = t.Date,
                             };
                         }
 
                         return new CreditLedgerTransaction(t.Id)
                         {
                             Amount = t.Amount,
-                            Narrative = ExtractNarrative(t)
+                            Narrative = ExtractNarrative(t),
+                            Date = t.Date,
                         };
                     });
 

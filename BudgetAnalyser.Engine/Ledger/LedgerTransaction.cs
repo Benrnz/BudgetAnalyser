@@ -35,6 +35,11 @@ namespace BudgetAnalyser.Engine.Ledger
         public string AutoMatchingReference { get; internal set; }
 
         /// <summary>
+        /// Gets or sets the transaction date.
+        /// </summary>
+        public DateTime? Date { get; internal set; }
+
+        /// <summary>
         ///     Gets or sets the Transaction ID. This is the same ID as the <see cref="StatementModel" />'s
         ///     <see cref="Transaction" />.
         ///     This can be used to link back to the statement and show more transaction specific data.

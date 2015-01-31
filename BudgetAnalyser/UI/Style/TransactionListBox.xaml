@@ -115,10 +115,11 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Date, StringFormat=\{0:d\}}"
-                           ToolTip="{Binding Date, StringFormat=\{0:D\}}" />
+                           ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='D'}" />
                 <TextBlock Grid.Column="1"
                            Style="{StaticResource TextBlock.TransactionNumber}"
-                           Text="{Binding Amount, StringFormat=\{0:N\}}" />
+                           Text="{Binding Amount, StringFormat=\{0:N\}}" 
+                           ToolTip="{Binding Amount, Converter={StaticResource Converter.ToString}, ConverterParameter='C'}"/>
                 <TextBlock Grid.Column="2"
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Description}"
@@ -127,7 +128,7 @@
                            MinWidth="120"
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding BudgetBucket, Converter={StaticResource Converter.BudgetBucketToString}}"
-                           ToolTip="{Binding BudgetBucket}" />
+                           ToolTip="{Binding BudgetBucket, Converter={StaticResource Converter.ToString}}" />
                 <TextBlock Grid.Column="4"
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Reference1}"
@@ -143,7 +144,7 @@
                 <TextBlock Grid.Column="7"
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding TransactionType}"
-                           ToolTip="{Binding TransactionType}" />
+                           ToolTip="{Binding TransactionType, Converter={StaticResource Converter.ToString}}" />
                 <ContentPresenter Grid.Column="8"
                                   Margin="5"
                                   Content="{Binding AccountType}" />

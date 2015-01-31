@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
             StatementModel statement = null,
             bool ignoreWarnings = false)
         {
-            // TODO this is misleading, the startDate passed in, is not used, except in the case of a new LedgerBook.
+            // TODO this is misleading, the startDate passed in, and is not used, except in the case of a new LedgerBook.
             try
             {
                 PreReconciliationValidation(date, statement);

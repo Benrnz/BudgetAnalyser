@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -10,8 +11,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         public string AccountType { get; set; }
         public decimal Amount { get; set; }
 
+        [UsedImplicitly]
         public string AutoMatchingReference { get; set; }
-        
+
+        [UsedImplicitly]
+        public DateTime? Date { get; set; }
+
         public Guid Id { get; set; }
         public string Narrative { get; set; }
         public string TransactionType { get; set; }

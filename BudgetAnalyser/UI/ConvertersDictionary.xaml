@@ -3,16 +3,22 @@
                     xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
                     xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
     <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
-    <converters:BudgetBucketToStringConverter x:Key="Converter.BudgetBucketToString" />
+    
+    <!-- Rees.Wpf -->
     <converters1:NotBoolToVisibilityConverter x:Key="Converter.NotBoolToVis" />
     <converters1:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
     <converters1:NullToVisibilityConverter x:Key="Converter.NullToVis" />
     <converters1:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis" />
     <converters1:ZeroToVisibilityConverter x:Key="Converter.ZeroToVisibility" />
     <converters1:MultiBoolToVisibilityConverter x:Key="Converter.MultiBoolToVisibility" />
+    <converters1:TextToResourceControlTemplateConverter x:Key="Converter.TextToControlTemplate" />
+    <converters1:ConvertToStringConverter x:Key="Converter.ToString" />
+    <converters1:DebuggerConverter x:Key="Converter.Debugger" />
+
+    <!-- Local -->
+    <converters:BudgetBucketToStringConverter x:Key="Converter.BudgetBucketToString" />
     <converters:BucketToColourConverter x:Key="Converter.BucketToColour" />
     <converters:ImagePathConverter x:Key="Converter.ImagePath"/>
     <converters:NumberSignToBrushConverter x:Key="Converter.NumberToBrush" />
     <converters:NumberToBoldConverter x:Key="Converter.NumberToBold" />
-    <converters1:TextToResourceControlTemplateConverter x:Key="Converter.TextToControlTemplate" />
 </ResourceDictionary>

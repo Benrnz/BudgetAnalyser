@@ -77,7 +77,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
 
-            return entryLine.BalanceAdjustment(amount, narrative).WithAccountType(account);
+            var adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative).WithAccountType(account);
+            adjustmentTransaction.Date = entryLine.Date;
+            return adjustmentTransaction;
         }
 
         /// <summary>
@@ -102,6 +104,7 @@ namespace BudgetAnalyser.Engine.Services
 
             LedgerTransaction newTransaction = new CreditLedgerTransaction();
             newTransaction.WithAmount(amount).WithNarrative(narrative);
+            newTransaction.Date = book.DatedEntries.First().Date;
             ledgerEntry.AddTransaction(newTransaction);
             return newTransaction;
         }
