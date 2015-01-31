@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -12,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     {
         public LedgerBookDto()
         {
-            DatedEntries = new List<LedgerEntryLineDto>();
+            Reconciliations = new List<LedgerEntryLineDto>();
             Ledgers = new List<LedgerColumnDto>();
         }
 
@@ -23,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
-        public List<LedgerEntryLineDto> DatedEntries { get; set; }
+        public List<LedgerEntryLineDto> Reconciliations { get; set; }
 
         public string FileName { get; set; }
 

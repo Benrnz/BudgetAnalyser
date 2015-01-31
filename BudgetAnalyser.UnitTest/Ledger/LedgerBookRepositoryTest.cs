@@ -87,9 +87,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
             LedgerBook book = subject.Load(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
-            LedgerEntryLine line = book.DatedEntries.First();
+            LedgerEntryLine line = book.Reconciliations.First();
 
-            Assert.AreEqual(testData2.DatedEntries.First().TotalBankBalance, line.TotalBankBalance);
+            Assert.AreEqual(testData2.Reconciliations.First().TotalBankBalance, line.TotalBankBalance);
         }
 
         [TestMethod]
@@ -102,9 +102,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook testData2 = LedgerBookTestData.TestData2();
             testData2.Output();
 
-            LedgerEntryLine line = book.DatedEntries.First();
+            LedgerEntryLine line = book.Reconciliations.First();
 
-            Assert.AreEqual(testData2.DatedEntries.First().CalculatedSurplus, line.CalculatedSurplus);
+            Assert.AreEqual(testData2.Reconciliations.First().CalculatedSurplus, line.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -128,13 +128,13 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithSameNumberOfDatedEntries()
+        public void Load_ShouldCreateBookWithSameNumberOfReconciliations()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
             LedgerBook book = subject.Load(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
-            Assert.AreEqual(testData2.DatedEntries.Count(), book.DatedEntries.Count());
+            Assert.AreEqual(testData2.Reconciliations.Count(), book.Reconciliations.Count());
         }
 
         [TestMethod]

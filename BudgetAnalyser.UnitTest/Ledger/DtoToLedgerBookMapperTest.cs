@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             try
             {
-                TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
+                TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
                 ArrangeAndAct();
             }
             catch (AutoMapperMappingException ex)
@@ -39,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             try
             {
-                TestData.DatedEntries.First().Entries.Last().Transactions.First().TransactionType = null;
+                TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = null;
                 ArrangeAndAct();
             }
             catch (AutoMapperMappingException ex)
@@ -65,21 +65,21 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapCorrectNumberOfLineEntries()
         {
             LedgerBook result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.Count, result.DatedEntries.First().Entries.Count());
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.Count, result.Reconciliations.First().Entries.Count());
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfLineEntryTransactions()
         {
             LedgerBook result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.Count, result.DatedEntries.First().Entries.First().Transactions.Count());
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count, result.Reconciliations.First().Entries.First().Transactions.Count());
         }
 
         [TestMethod]
         public void ShouldMapCorrectNumberOfLines()
         {
             LedgerBook result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.Count, result.DatedEntries.Count());
+            Assert.AreEqual(TestData.Reconciliations.Count, result.Reconciliations.Count());
         }
 
         [TestMethod]
@@ -95,9 +95,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             TestData = LedgerBookDtoTestData.TestData2();
             LedgerBook result = ArrangeAndAct();
-            LedgerEntryLine subject = result.DatedEntries.First();
+            LedgerEntryLine subject = result.Reconciliations.First();
 
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.Sum(a => a.Amount), subject.TotalBalanceAdjustments);
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.Sum(a => a.Amount), subject.TotalBalanceAdjustments);
             Assert.AreNotEqual(0, subject.BankBalanceAdjustments.Count());
         }
 
@@ -105,8 +105,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineBankBalance()
         {
             LedgerBook result = ArrangeAndAct();
-            LedgerEntryLine subject = result.DatedEntries.First();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalance, subject.TotalBankBalance);
+            LedgerEntryLine subject = result.Reconciliations.First();
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalance, subject.TotalBankBalance);
             Assert.AreNotEqual(0, subject.TotalBankBalance);
         }
 
@@ -114,8 +114,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineDate()
         {
             LedgerBook result = ArrangeAndAct();
-            DateTime subject = result.DatedEntries.First().Date;
-            Assert.AreEqual(TestData.DatedEntries.First().Date, subject);
+            DateTime subject = result.Reconciliations.First().Date;
+            Assert.AreEqual(TestData.Reconciliations.First().Date, subject);
             Assert.AreNotEqual(DateTime.MinValue, subject);
         }
 
@@ -123,8 +123,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryBucketCode()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().BucketCode, subject);
+            string subject = result.Reconciliations.First().Entries.First().LedgerColumn.BudgetBucket.Code;
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().BucketCode, subject);
             Assert.IsNotNull(subject);
         }
 
@@ -132,8 +132,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryTransactionAmount()
         {
             LedgerBook result = ArrangeAndAct();
-            decimal subject = result.DatedEntries.First().Entries.First().Transactions.First().Amount;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Amount, subject);
+            decimal subject = result.Reconciliations.First().Entries.First().Transactions.First().Amount;
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Amount, subject);
             Assert.AreNotEqual(0, subject);
         }
 
@@ -141,8 +141,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryTransactionId()
         {
             LedgerBook result = ArrangeAndAct();
-            Guid subject = result.DatedEntries.First().Entries.First().Transactions.First().Id;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Id, subject);
+            Guid subject = result.Reconciliations.First().Entries.First().Transactions.First().Id;
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Id, subject);
             Assert.AreNotEqual(Guid.Empty, subject);
         }
 
@@ -150,8 +150,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryTransactionNarrative()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.DatedEntries.First().Entries.First().Transactions.First().Narrative;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Narrative, subject);
+            string subject = result.Reconciliations.First().Entries.First().Transactions.First().Narrative;
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Narrative, subject);
             Assert.IsNotNull(subject);
         }
 
@@ -159,8 +159,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryTransactionType()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.DatedEntries.First().Entries.First().Transactions.First().GetType().FullName;
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().TransactionType, subject);
+            string subject = result.Reconciliations.First().Entries.First().Transactions.First().GetType().FullName;
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().TransactionType, subject);
             Assert.IsNotNull(subject);
         }
 
@@ -168,8 +168,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineRemarks()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.DatedEntries.First().Remarks;
-            Assert.AreEqual(TestData.DatedEntries.First().Remarks, subject);
+            string subject = result.Reconciliations.First().Remarks;
+            Assert.AreEqual(TestData.Reconciliations.First().Remarks, subject);
             Assert.IsNotNull(subject);
         }
 
@@ -201,14 +201,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLedgerColumnsOnLedgerEntriesWithAccountNotNull()
         {
             var result = ArrangeAndAct();
-            Assert.IsFalse(result.DatedEntries.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
         }
 
         [TestMethod]
         public void ShouldMapLedgerColumnsWithNoDuplicateInstances()
         {
             var result = ArrangeAndAct();
-            var ledgerColumns = result.DatedEntries
+            var ledgerColumns = result.Reconciliations
                 .SelectMany(e => e.Entries)
                 .Select(e => e.LedgerColumn)
                 .Union(result.Ledgers)
@@ -235,7 +235,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             TestData.Ledgers.Clear();
             var result = ArrangeAndAct();
-            Assert.IsFalse(result.DatedEntries.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
         }
 
         [TestInitialize]

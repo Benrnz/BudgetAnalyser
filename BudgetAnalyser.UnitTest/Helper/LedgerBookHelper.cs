@@ -28,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine();
             Console.WriteLine("==============================================================================================================================================");
 
-            foreach (var line in book.DatedEntries)
+            foreach (var line in book.Reconciliations)
             {
                 Console.Write("{0:d}  ", line.Date);
                 foreach (var entry in line.Entries.OrderBy(e => e.LedgerColumn.BudgetBucket))
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine("Filename: {0}", book.FileName);
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
-            foreach (var ledger in book.DatedEntries.SelectMany(l => l.Entries.Select(e => e.BucketCode)))
+            foreach (var ledger in book.Reconciliations.SelectMany(l => l.Entries.Select(e => e.BucketCode)))
             {
                 Console.Write("{0}", ledger.PadRight(18));
             }
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine();
             Console.WriteLine("====================================================================================================================");
 
-            foreach (var line in book.DatedEntries)
+            foreach (var line in book.Reconciliations)
             {
                 Console.Write("{0:d}  ", line.Date);
                 foreach (var entry in line.Entries)

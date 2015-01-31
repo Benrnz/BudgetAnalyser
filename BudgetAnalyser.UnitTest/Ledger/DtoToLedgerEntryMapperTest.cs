@@ -95,7 +95,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Result = Mapper.Map<LedgerEntry>(TestData);
 
             var book = LedgerBookTestData.TestData2();
-            Control = book.DatedEntries.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
         }
     }
 }

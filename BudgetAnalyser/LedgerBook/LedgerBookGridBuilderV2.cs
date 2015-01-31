@@ -200,9 +200,9 @@ namespace BudgetAnalyser.LedgerBook
             {
                 numberOfMonthsToShow = 1;
             }
-            if (numberOfMonthsToShow > this.ledgerBook.DatedEntries.Count())
+            if (numberOfMonthsToShow > this.ledgerBook.Reconciliations.Count())
             {
-                numberOfMonthsToShow = this.ledgerBook.DatedEntries.Count();
+                numberOfMonthsToShow = this.ledgerBook.Reconciliations.Count();
             }
 
             for (int index = 0; index < numberOfMonthsToShow + 2; index++)
@@ -329,8 +329,8 @@ namespace BudgetAnalyser.LedgerBook
             int gridColumn = 2; //because the first two columns are headings
             int monthNumber = 0;
 
-            // Loop thru all DatedEntries from most recent to oldest adding cells to the grid vertically. 
-            foreach (LedgerEntryLine line in this.ledgerBook.DatedEntries)
+            // Loop thru all Reconciliations from most recent to oldest adding cells to the grid vertically. 
+            foreach (LedgerEntryLine line in this.ledgerBook.Reconciliations)
             {
                 int gridRow = 0;
                 if (++monthNumber > numberOfMonthsToShow)
@@ -537,7 +537,7 @@ namespace BudgetAnalyser.LedgerBook
 
             // Sort ledgers so that the ledgers in the same bank account are grouped together
             // this.sortedLedgers = this.ledgerBook.Ledgers.OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code).ToList();
-            this.sortedLedgers = this.ledgerBook.DatedEntries.SelectMany(line => line.Entries).Select(e => e.LedgerColumn)
+            this.sortedLedgers = this.ledgerBook.Reconciliations.SelectMany(line => line.Entries).Select(e => e.LedgerColumn)
                 .OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code)
                 .Distinct()
                 .ToList();

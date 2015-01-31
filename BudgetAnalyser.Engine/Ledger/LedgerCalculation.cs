@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (filter.Cleared)
             {
-                return ledgerBook.DatedEntries.FirstOrDefault();
+                return ledgerBook.Reconciliations.FirstOrDefault();
             }
 
             Debug.Assert(filter.BeginDate != null);
@@ -290,7 +290,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static LedgerEntryLine LocateLedgerEntryLine(LedgerBook ledgerBook, DateTime begin, DateTime end)
         {
-            return ledgerBook.DatedEntries.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= begin && ledgerEntryLine.Date <= end);
+            return ledgerBook.Reconciliations.FirstOrDefault(ledgerEntryLine => ledgerEntryLine.Date >= begin && ledgerEntryLine.Date <= end);
         }
 
         private static void ProcessOverdrawnLedgers(

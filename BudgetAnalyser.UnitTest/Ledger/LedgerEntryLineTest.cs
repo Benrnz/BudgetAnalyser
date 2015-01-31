@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerEntryLine CreateSubject()
         {
-            return LedgerBookTestData.TestData5().DatedEntries.First();
+            return LedgerBookTestData.TestData5().Reconciliations.First();
         }
     }
 }

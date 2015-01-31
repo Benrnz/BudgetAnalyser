@@ -7,7 +7,7 @@
       <FileName>Ledger\LedgerBook.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="DatedEntries" />
+      <Property Name="Reconciliations" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>

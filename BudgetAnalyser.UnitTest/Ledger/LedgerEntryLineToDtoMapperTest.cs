@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             get
             {
                 var book = LedgerBookTestData.TestData4();
-                return book.DatedEntries.First();
+                return book.Reconciliations.First();
             }
         }
 

@@ -96,7 +96,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         })
                     }));
 
-            book.SetDatedEntries(list);
+            book.SetReconciliations(list);
 
             return Finalise(book);
         }
@@ -192,7 +192,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.");
             list.Add(line);
 
-            book.SetDatedEntries(list);
+            book.SetReconciliations(list);
 
             return Finalise(book);
         }
@@ -279,7 +279,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }),
             };
 
-            book.SetDatedEntries(list);
+            book.SetReconciliations(list);
 
             return Finalise(book);
         }
@@ -375,7 +375,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.");
             list.Add(line);
 
-            book.SetDatedEntries(list);
+            book.SetReconciliations(list);
 
             return Finalise(book);
         }
@@ -511,7 +511,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             line.BalanceAdjustment(-550, "Credit card payment yet to go out.").WithAccountType(chequeAccount);
             list.Add(line);
 
-            book.SetDatedEntries(list);
+            book.SetReconciliations(list);
 
             return Finalise(book);
         }
@@ -534,7 +534,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         private static LedgerBook Finalise(LedgerBook book)
         {
             var ledgers = new Dictionary<BudgetBucket, LedgerColumn>();
-            foreach (LedgerEntryLine line in book.DatedEntries)
+            foreach (LedgerEntryLine line in book.Reconciliations)
             {
                 PrivateAccessor.SetProperty(line, "IsNew", false);
                 foreach (LedgerEntry entry in line.Entries)

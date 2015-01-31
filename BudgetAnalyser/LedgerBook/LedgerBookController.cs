@@ -205,7 +205,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteRemoveLedgerEntryLineCommand(LedgerEntryLine line)
         {
-            return ViewModel.LedgerBook != null && ViewModel.LedgerBook.DatedEntries.FirstOrDefault() == line && line == ViewModel.NewLedgerLine;
+            return ViewModel.LedgerBook != null && ViewModel.LedgerBook.Reconciliations.FirstOrDefault() == line && line == ViewModel.NewLedgerLine;
         }
 
         private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
@@ -419,7 +419,7 @@ namespace BudgetAnalyser.LedgerBook
             bool? response = this.questionBox.Show(
                 "Unlock Ledger Entry Line",
                 "Are you sure you want to unlock the Ledger Entry Line dated {0:d} for editing?",
-                ViewModel.LedgerBook.DatedEntries.First().Date);
+                ViewModel.LedgerBook.Reconciliations.First().Date);
 
             if (response == null || response.Value == false)
             {

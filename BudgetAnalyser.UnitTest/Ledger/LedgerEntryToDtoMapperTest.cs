@@ -14,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerEntry TestData
         {
-            get { return LedgerBookTestData.TestData1().DatedEntries.First().Entries.First(); }
+            get { return LedgerBookTestData.TestData1().Reconciliations.First().Entries.First(); }
         }
 
         [TestMethod]

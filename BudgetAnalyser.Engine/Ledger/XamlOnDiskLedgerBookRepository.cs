@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
-                return dataEntity.DatedEntries.Sum(l =>
+                return dataEntity.Reconciliations.Sum(l =>
                     (double)l.LedgerBalance
                     + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
                     + l.Entries.Sum(e => (double)e.Balance));

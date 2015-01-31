@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Ledger
     public class LedgerBook : IModelValidate
     {
         private readonly ILogger logger;
-        private List<LedgerEntryLine> datedEntries;
+        private List<LedgerEntryLine> reconciliations;
         private List<LedgerColumn> ledgersColumns = new List<LedgerColumn>();
 
         public LedgerBook()
@@ -25,13 +25,13 @@ namespace BudgetAnalyser.Engine.Ledger
         public LedgerBook(ILogger logger)
         {
             this.logger = logger ?? new NullLogger();
-            this.datedEntries = new List<LedgerEntryLine>();
+            this.reconciliations = new List<LedgerEntryLine>();
         }
 
-        public IEnumerable<LedgerEntryLine> DatedEntries
+        public IEnumerable<LedgerEntryLine> Reconciliations
         {
-            get { return this.datedEntries; }
-            [UsedImplicitly] private set { this.datedEntries = value.ToList(); }
+            get { return this.reconciliations; }
+            [UsedImplicitly] private set { this.reconciliations = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             DateTime last = DateTime.MaxValue;
-            foreach (LedgerEntryLine line in this.datedEntries)
+            foreach (LedgerEntryLine line in this.reconciliations)
             {
                 DateTime thisDate = line.Date;
                 if (thisDate >= last)
@@ -131,21 +131,21 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
             }
 
-            decimal consistencyCheck1 = DatedEntries.Sum(e => e.CalculatedSurplus);
+            decimal consistencyCheck1 = Reconciliations.Sum(e => e.CalculatedSurplus);
             var newLine = new LedgerEntryLine(date, bankBalances, this.logger);
             newLine.AddNew(this, budget, statement, CalculateDateForReconcile(date));
-            decimal consistencyCheck2 = DatedEntries.Sum(e => e.CalculatedSurplus);
+            decimal consistencyCheck2 = Reconciliations.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {
                 throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
             }
 
-            this.datedEntries.Insert(0, newLine);
+            this.reconciliations.Insert(0, newLine);
             return newLine;
         }
 
         /// <summary>
-        ///     Deletes the most recent <see cref="LedgerEntryLine" /> from the <see cref="DatedEntries" /> collection. Only the
+        ///     Deletes the most recent <see cref="LedgerEntryLine" /> from the <see cref="Reconciliations" /> collection. Only the
         ///     most recent one can be deleted and
         ///     only if it is unlocked (generally means just created and not yet saved).
         /// </summary>
@@ -161,17 +161,17 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("You cannot delete a Ledger Entry Line that is not unlocked or a newly created line.");
             }
 
-            if (line != DatedEntries.FirstOrDefault())
+            if (line != Reconciliations.FirstOrDefault())
             {
                 throw new InvalidOperationException("You cannot delete this line, it is not the first and most recent line.");
             }
 
-            this.datedEntries.Remove(line);
+            this.reconciliations.Remove(line);
         }
 
-        internal void SetDatedEntries(List<LedgerEntryLine> lines)
+        internal void SetReconciliations(List<LedgerEntryLine> lines)
         {
-            this.datedEntries = lines.OrderByDescending(l => l.Date).ToList();
+            this.reconciliations = lines.OrderByDescending(l => l.Date).ToList();
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal LedgerEntryLine UnlockMostRecentLine()
         {
-            LedgerEntryLine line = DatedEntries.FirstOrDefault();
+            LedgerEntryLine line = Reconciliations.FirstOrDefault();
             if (line != null)
             {
                 line.Unlock();
@@ -220,9 +220,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="date">The chosen startDate from the user</param>
         private DateTime CalculateDateForReconcile(DateTime date)
         {
-            if (DatedEntries.Any())
+            if (Reconciliations.Any())
             {
-                return DatedEntries.First().Date;
+                return Reconciliations.First().Date;
             }
             DateTime startDateIncl = date.AddMonths(-1);
             return startDateIncl;
@@ -250,7 +250,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private void ValidateAgainstOrphanedAutoMatchingTransactions(StatementModel statement)
         {
-            LedgerEntryLine lastLine = DatedEntries.FirstOrDefault();
+            LedgerEntryLine lastLine = Reconciliations.FirstOrDefault();
             if (lastLine == null)
             {
                 return;
@@ -308,7 +308,7 @@ namespace BudgetAnalyser.Engine.Ledger
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private void ValidateDate(DateTime date, StatementModel statement)
         {
-            LedgerEntryLine recentEntry = DatedEntries.FirstOrDefault();
+            LedgerEntryLine recentEntry = Reconciliations.FirstOrDefault();
             if (recentEntry != null)
             {
                 if (date <= recentEntry.Date)

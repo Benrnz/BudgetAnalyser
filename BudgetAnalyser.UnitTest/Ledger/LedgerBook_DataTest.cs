@@ -16,14 +16,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_FirstLineHasNoAdjustments()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(0, result.DatedEntries.First().BankBalanceAdjustments.Count());
+            Assert.AreEqual(0, result.Reconciliations.First().BankBalanceAdjustments.Count());
         }
 
         [TestMethod]
         public void UsingTestData1_FirstLineBankBalanceEqualsLedgerBalance()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(subject.LedgerBalance, subject.TotalBankBalance);
         }
 
@@ -59,14 +59,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_ShouldHave3Lines()
         {
             var result = ArrangeAndAct();
-            Assert.AreEqual(3, result.DatedEntries.Count());
+            Assert.AreEqual(3, result.Reconciliations.Count());
         }
 
         [TestMethod]
         public void UsingTestData1_FirstLineShouldHaveBankBalance2950()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(2950, subject.TotalBankBalance);
         }
 
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_FirstLineShouldHaveDate20130815()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(new DateTime(2013, 08, 15), subject.Date);
         }
 
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_FirstLineShouldHaveSurplusOf2712()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(2712.97M, subject.CalculatedSurplus);
         }
 
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_FirstLineShouldHave3Entries()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First();
+            var subject = result.Reconciliations.First();
             Assert.AreEqual(3, subject.Entries.Count());
         }
 
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_FirstLineHairEntryShouldHaveBalance120()
         {
             var result = ArrangeAndAct();
-            var subject = result.DatedEntries.First().Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            var subject = result.Reconciliations.First().Entries.First(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
             Assert.AreEqual(120, subject.Balance);
         }
 

@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             bool ledgersMapWasEmpty = book.Ledgers.None();
 
             // Default to CHEQUE when StoredInAccount is null.
-            foreach (LedgerEntryLine line in book.DatedEntries)
+            foreach (LedgerEntryLine line in book.Reconciliations)
             {
                 foreach (LedgerEntry entry in line.Entries)
                 {
@@ -54,9 +54,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             }
 
             // If ledger column map at the book level was empty, default it to the last used ledger columns in the Dated Entries.
-            if (ledgersMapWasEmpty && book.DatedEntries.Any())
+            if (ledgersMapWasEmpty && book.Reconciliations.Any())
             {
-                book.Ledgers = book.DatedEntries.First().Entries.Select(e => e.LedgerColumn);
+                book.Ledgers = book.Reconciliations.First().Entries.Select(e => e.LedgerColumn);
             }
 
             return book;

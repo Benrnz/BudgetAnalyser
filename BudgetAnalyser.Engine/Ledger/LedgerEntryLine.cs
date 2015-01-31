@@ -353,7 +353,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
         {
             var ledgersAndBalances = new List<LedgerEntry>();
-            LedgerEntryLine previousLine = parentLedgerBook.DatedEntries.FirstOrDefault();
+            LedgerEntryLine previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
             if (previousLine == null)
             {
                 return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerColumn = ledger });

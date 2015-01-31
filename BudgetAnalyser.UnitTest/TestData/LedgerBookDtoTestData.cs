@@ -192,7 +192,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             UpdateLineBalances(line1, null, 1999.25M);
             UpdateLineBalances(line2, line1, 2001.15M);
             UpdateLineBalances(line3, line2, 1801.45M);
-            book.DatedEntries = lines.OrderByDescending(e => e.Date).ToList();
+            book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -371,7 +371,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             UpdateLineBalances(line1, null, 1999.25M);
             UpdateLineBalances(line2, line1, 2001.15M);
             UpdateLineBalances(line3, line2, 1801.45M);
-            book.DatedEntries = lines.OrderByDescending(e => e.Date).ToList();
+            book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
@@ -574,7 +574,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.DatedEntries = lines.OrderByDescending(e => e.Date).ToList();
+            book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
             return book;
         }
 

@@ -18,9 +18,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldMapDatedEntries()
+        public void ShouldMapReconciliations()
         {
-            Assert.AreEqual(3, Result.DatedEntries.Count);
+            Assert.AreEqual(3, Result.Reconciliations.Count);
         }
 
         [TestMethod]

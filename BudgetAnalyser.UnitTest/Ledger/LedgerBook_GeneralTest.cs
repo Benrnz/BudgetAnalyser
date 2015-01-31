@@ -34,7 +34,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             LedgerBook subject = ArrangeAndAct();
             LedgerEntryLine result = subject.UnlockMostRecentLine();
-            LedgerEntryLine expectedLine = subject.DatedEntries.OrderByDescending(e => e.Date).First();
+            LedgerEntryLine expectedLine = subject.Reconciliations.OrderByDescending(e => e.Date).First();
 
             Assert.AreSame(expectedLine, result);
         }

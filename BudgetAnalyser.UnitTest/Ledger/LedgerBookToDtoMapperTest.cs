@@ -12,10 +12,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private LedgerBook TestData { get; set; }
 
         [TestMethod]
-        public void DatedEntriesShouldHaveSameCount()
+        public void ReconciliationsShouldHaveSameCount()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.Count(), result.DatedEntries.Count());
+            Assert.AreEqual(TestData.Reconciliations.Count(), result.Reconciliations.Count());
         }
 
         [TestMethod]
@@ -29,108 +29,108 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryShouldHaveSameBankBalance()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().TotalBankBalance, result.DatedEntries.First().BankBalance);
+            Assert.AreEqual(TestData.Reconciliations.First().TotalBankBalance, result.Reconciliations.First().BankBalance);
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameDate()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Date, result.DatedEntries.First().Date);
+            Assert.AreEqual(TestData.Reconciliations.First().Date, result.Reconciliations.First().Date);
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameNumberOfBalanceAdjustments()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.Count(), result.DatedEntries.First().BankBalanceAdjustments.Count());
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.Count(), result.Reconciliations.First().BankBalanceAdjustments.Count());
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameNumberOfEntries()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.Count(),
-                result.DatedEntries.First().Entries.Count());
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.Count(),
+                result.Reconciliations.First().Entries.Count());
         }
 
         [TestMethod]
         public void FirstDatedEntryShouldHaveSameRemarks()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Remarks, result.DatedEntries.First().Remarks);
+            Assert.AreEqual(TestData.Reconciliations.First().Remarks, result.Reconciliations.First().Remarks);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameCredit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Amount,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Amount);
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
+                result.Reconciliations.First().BankBalanceAdjustments.First().Amount);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameDebit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Amount,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Amount);
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
+                result.Reconciliations.First().BankBalanceAdjustments.First().Amount);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameId()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Id,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Id);
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Id,
+                result.Reconciliations.First().BankBalanceAdjustments.First().Id);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameNarrative()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().BankBalanceAdjustments.First().Narrative,
-                result.DatedEntries.First().BankBalanceAdjustments.First().Narrative);
+            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Narrative,
+                result.Reconciliations.First().BankBalanceAdjustments.First().Narrative);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBalance()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Balance,
-                result.DatedEntries.First().Entries.First().Balance);
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Balance,
+                result.Reconciliations.First().Entries.First().Balance);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBucketCode()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().LedgerColumn.BudgetBucket.Code,
-                result.DatedEntries.First().Entries.First().BucketCode);
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().LedgerColumn.BudgetBucket.Code,
+                result.Reconciliations.First().Entries.First().BucketCode);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstEntryShouldHaveSameNumberOfTransactions()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.Count(),
-                result.DatedEntries.First().Entries.First().Transactions.Count());
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count(),
+                result.Reconciliations.First().Entries.First().Transactions.Count());
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameAmount()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Amount,
-                result.DatedEntries.First().Entries.First().Transactions.First().Amount);
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Amount,
+                result.Reconciliations.First().Entries.First().Transactions.First().Amount);
         }
 
         [TestMethod]
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameNarrative()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.DatedEntries.First().Entries.First().Transactions.First().Narrative,
-                result.DatedEntries.First().Entries.First().Transactions.First().Narrative);
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Narrative,
+                result.Reconciliations.First().Entries.First().Transactions.First().Narrative);
         }
 
         [TestMethod]
@@ -173,10 +173,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the LedgerTransactionDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataLedgerTransactionPropertiesShouldBe6()
+        public void NumberOfDataLedgerTransactionPropertiesShouldBe7()
         {
             int dataProperties = typeof(LedgerTransactionDto).CountProperties();
-            Assert.AreEqual(6, dataProperties);
+            Assert.AreEqual(7, dataProperties);
         }
 
         [TestInitialize]
