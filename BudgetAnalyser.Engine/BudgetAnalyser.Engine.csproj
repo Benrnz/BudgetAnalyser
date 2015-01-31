@@ -139,7 +139,7 @@
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
-    <Compile Include="Ledger\Data\LedgerColumnDto.cs" />
+    <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
@@ -267,7 +267,7 @@
     <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
-    <Compile Include="Ledger\LedgerColumn.cs" />
+    <Compile Include="Ledger\LedgerBucket.cs" />
     <Compile Include="Ledger\LedgerBook.cs" />
     <Compile Include="Ledger\LedgerEntry.cs" />
     <Compile Include="Ledger\LedgerEntryLine.cs" />

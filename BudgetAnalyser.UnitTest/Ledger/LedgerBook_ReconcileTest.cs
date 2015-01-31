@@ -109,7 +109,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
 
-            Assert.IsTrue(result.Entries.Any(e => e.LedgerColumn.BudgetBucket.Code == "FOO"));
+            Assert.IsTrue(result.Entries.Any(e => e.LedgerBucket.BudgetBucket.Code == "FOO"));
         }
 
         [TestMethod]
@@ -186,8 +186,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             book.Output(true);
 
-            Assert.AreEqual(0, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
-            Assert.IsTrue(result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode).NetAmount < 0);
+            Assert.AreEqual(0, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
+            Assert.IsTrue(result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).NetAmount < 0);
         }
 
         [TestMethod]
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             book.Output();
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            Assert.AreEqual(2, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode).Transactions.Count());
+            Assert.AreEqual(2, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Transactions.Count());
         }
 
         [TestMethod]
@@ -209,7 +209,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             book.Output();
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
-            Assert.AreEqual(3, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
+            Assert.AreEqual(3, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
         }
 
         [TestMethod]
@@ -233,7 +233,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             book.Output(true);
 
-            Assert.AreEqual(64.71M, result.Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
+            Assert.AreEqual(64.71M, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
         }
 
         [TestMethod]
@@ -274,7 +274,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData5_Reconcile_ShouldAutoMatchTransactionsAndResultInInsHomeBalance1200()
         {
             var book = ActOnTestData5();
-            Assert.AreEqual(1200M, book.Reconciliations.First().Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket).Balance);
+            Assert.AreEqual(1200M, book.Reconciliations.First().Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket).Balance);
         }
 
         [TestMethod]
@@ -283,7 +283,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             // Two transactions should be removed as they are automatched to the previous month.
             var book = ActOnTestData5();
 
-            Assert.AreEqual(1, book.Reconciliations.First().Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket).Transactions.Count());
+            Assert.AreEqual(1, book.Reconciliations.First().Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket).Transactions.Count());
             // Assert last month's ledger transaction has been linked to the credit 16/8/13
         }
 
@@ -292,7 +292,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             // Two transactions should be removed as they are automatched to the previous month.
             var book = ActOnTestData5();
-            var previousMonthLine = book.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket);
+            var previousMonthLine = book.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
             var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
             Console.WriteLine(previousLedgerTxn.AutoMatchingReference);
@@ -308,7 +308,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Debug.Assert(statementTransactions.Count() == 2);
 
             var book = ActOnTestData5(statementModelTestData);
-            var previousMonthLine = book.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerColumn.BudgetBucket == StatementModelTestData.InsHomeBucket);
+            var previousMonthLine = book.Reconciliations.Single(line => line.Date == new DateTime(2013, 08, 15)).Entries.Single(e => e.LedgerBucket.BudgetBucket == StatementModelTestData.InsHomeBucket);
             var previousLedgerTxn = previousMonthLine.Transactions.OfType<BudgetCreditLedgerTransaction>().Single();
 
             // Assert last month's ledger transaction has been linked to the credit 16/8/13

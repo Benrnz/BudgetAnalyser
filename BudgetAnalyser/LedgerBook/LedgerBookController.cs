@@ -113,7 +113,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand ShowLedgerColumnDetailsCommand
         {
-            get { return new RelayCommand<LedgerColumn>(OnShowLedgerColumnDetailsCommand, param => param != null); }
+            get { return new RelayCommand<LedgerBucket>(OnShowLedgerColumnDetailsCommand, param => param != null); }
         }
 
         public ICommand ShowRemarksCommand
@@ -350,10 +350,10 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
-        private void OnShowLedgerColumnDetailsCommand(LedgerColumn ledgerColumn)
+        private void OnShowLedgerColumnDetailsCommand(LedgerBucket ledgerBucket)
         {
             this.uiContext.LedgerColumnViewController.Updated += OnLedgerColumnUpdated;
-            this.uiContext.LedgerColumnViewController.ShowDialog(ViewModel.LedgerBook, ledgerColumn, ViewModel.CurrentBudget.Model);
+            this.uiContext.LedgerColumnViewController.ShowDialog(ViewModel.LedgerBook, ledgerBucket, ViewModel.CurrentBudget.Model);
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

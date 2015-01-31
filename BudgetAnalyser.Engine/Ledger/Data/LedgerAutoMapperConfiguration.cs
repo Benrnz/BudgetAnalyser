@@ -76,21 +76,21 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(balance => balance.Account,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
-            Mapper.CreateMap<LedgerColumn, LedgerColumnDto>()
+            Mapper.CreateMap<LedgerBucket, LedgerBucketDto>()
                 .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledger => ledger.BudgetBucket.Code))
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledger => ledger.StoredInAccount.Name));
 
-            Mapper.CreateMap<LedgerColumnDto, LedgerColumn>()
+            Mapper.CreateMap<LedgerBucketDto, LedgerBucket>()
                 .ForMember(ledger => ledger.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BucketCode)))
                 .ForMember(ledger => ledger.StoredInAccount, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.StoredInAccount)));
 
             Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
-                .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code))
-                .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerColumn.StoredInAccount.Name));
+                .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code))
+                .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
-                .ForMember(entry => entry.LedgerColumn,
-                    m => m.MapFrom(dto => new LedgerColumn { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
+                .ForMember(entry => entry.LedgerBucket,
+                    m => m.MapFrom(dto => new LedgerBucket { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
                 .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()

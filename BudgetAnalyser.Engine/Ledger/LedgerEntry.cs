@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Note that this may be different to the master mapping in <see cref="LedgerBook.Ledgers" />. This is because this
         ///     instance shows which account stored the funds at the date in the parent <see cref="LedgerEntryLine" />.
         /// </summary>
-        public LedgerColumn LedgerColumn { get; internal set; }
+        public LedgerBucket LedgerBucket { get; internal set; }
 
         /// <summary>
         ///     The total net affect of all transactions in this entry.  Debits will be negative.
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
             {
-                balanceAdjustmentTransaction.BankAccount = LedgerColumn.StoredInAccount;
+                balanceAdjustmentTransaction.BankAccount = LedgerBucket.StoredInAccount;
             }
         }
 
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             this.transactions = newTransactions;
             LedgerTransaction zeroingTransaction = null;
-            if (LedgerColumn.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
+            if (LedgerBucket.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
             {
                 // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
                 // The balance does not need to be updated, it will always remain the same as the previous closing balance.
@@ -199,12 +199,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal bool Validate()
         {
-            if (LedgerColumn == null)
+            if (LedgerBucket == null)
             {
                 return false;
             }
 
-            if (LedgerColumn.BudgetBucket == null)
+            if (LedgerBucket.BudgetBucket == null)
             {
                 return false;
             }

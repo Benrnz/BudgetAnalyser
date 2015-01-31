@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private readonly ILogger logger;
         private List<LedgerEntryLine> reconciliations;
-        private List<LedgerColumn> ledgersColumns = new List<LedgerColumn>();
+        private List<LedgerBucket> ledgersColumns = new List<LedgerBucket>();
 
         public LedgerBook()
             : this(null)
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     class
         ///     during the next reconciliation. Changing these values will only effect the next reconciliation, not current data.
         /// </summary>
-        public IEnumerable<LedgerColumn> Ledgers
+        public IEnumerable<LedgerBucket> Ledgers
         {
             get { return this.ledgersColumns; }
             internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        internal LedgerColumn AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
+        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return null;
             }
 
-            var newLedger = new LedgerColumn { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount };
+            var newLedger = new LedgerBucket { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount };
             this.ledgersColumns.Add(newLedger);
             return newLedger;
         }
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <param name="ledger"></param>
         /// <param name="storedInAccount"></param>
-        internal void SetLedgerAccount(LedgerColumn ledger, AccountType storedInAccount)
+        internal void SetLedgerAccount(LedgerBucket ledger, AccountType storedInAccount)
         {
             if (Ledgers.Any(l => l == ledger))
             {

@@ -118,10 +118,10 @@
     </scg:List>
   </LedgerBookDto.Reconciliations>
   <LedgerBookDto.Ledgers>
-    <scg:List x:TypeArguments="LedgerColumnDto" Capacity="4">
-      <LedgerColumnDto BucketCode="HAIRCUT" StoredInAccount="CHEQUE" />
-      <LedgerColumnDto BucketCode="POWER" StoredInAccount="CHEQUE" />
-      <LedgerColumnDto BucketCode="PHNET" StoredInAccount="CHEQUE" />
+    <scg:List x:TypeArguments="LedgerBucketDto" Capacity="4">
+      <LedgerBucketDto BucketCode="HAIRCUT" StoredInAccount="CHEQUE" />
+      <LedgerBucketDto BucketCode="POWER" StoredInAccount="CHEQUE" />
+      <LedgerBucketDto BucketCode="PHNET" StoredInAccount="CHEQUE" />
     </scg:List>
   </LedgerBookDto.Ledgers>
 </LedgerBookDto>

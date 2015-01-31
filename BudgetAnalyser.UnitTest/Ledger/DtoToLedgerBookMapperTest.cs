@@ -123,7 +123,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLineEntryBucketCode()
         {
             LedgerBook result = ArrangeAndAct();
-            string subject = result.Reconciliations.First().Entries.First().LedgerColumn.BudgetBucket.Code;
+            string subject = result.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code;
             Assert.AreEqual(TestData.Reconciliations.First().Entries.First().BucketCode, subject);
             Assert.IsNotNull(subject);
         }
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapLedgerColumnsOnLedgerEntriesWithAccountNotNull()
         {
             var result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
         }
 
         [TestMethod]
@@ -210,7 +210,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var result = ArrangeAndAct();
             var ledgerColumns = result.Reconciliations
                 .SelectMany(e => e.Entries)
-                .Select(e => e.LedgerColumn)
+                .Select(e => e.LedgerBucket)
                 .Union(result.Ledgers)
                 .Distinct();
 
@@ -235,7 +235,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             TestData.Ledgers.Clear();
             var result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerColumn == null));
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
         }
 
         [TestInitialize]

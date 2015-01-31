@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerColumn" />s
+    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerBucket" />s
     ///     for a date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 IEnumerable<BankBalance> adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
                 IEnumerable<BankBalance> results = Entries.GroupBy(
-                    e => e.LedgerColumn.StoredInAccount,
+                    e => e.LedgerBucket.StoredInAccount,
                     (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
                 return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
             }
@@ -186,7 +186,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="parentLedgerBook">
         ///     The parent Ledger Book.  Used to extract information from previous <see cref="LedgerEntry" />s to construct the
         ///     running
-        ///     balance for the entries this line contains. Also used to get the LedgerColumn instance for the new Ledger Entries.
+        ///     balance for the entries this line contains. Also used to get the LedgerBucket instance for the new Ledger Entries.
         ///     This is intentionally not necessarily the same as the previous Ledger Entry from last month, to allow the ledger to
         ///     be
         ///     transfered to a different bank account.
@@ -217,10 +217,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
             foreach (LedgerEntry previousLedgerEntry in previousLedgerBalances)
             {
-                LedgerColumn ledgerColumn = previousLedgerEntry.LedgerColumn;
+                LedgerBucket ledgerBucket = previousLedgerEntry.LedgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
-                var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerColumn = ledgerColumn };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerColumn, finishDate);
+                var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
                 AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
                 newEntry.SetTransactionsForReconciliation(transactions);
@@ -302,7 +302,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         l.Format(
                             "Ledger Reconciliation - AutoMatching - Found {0} {1} ledger transaction that require matching.",
                             ledgerAutoMatchTransactions.Count(),
-                            previousLedgerEntry.LedgerColumn.BudgetBucket.Code));
+                            previousLedgerEntry.LedgerBucket.BudgetBucket.Code));
                 LedgerTransaction ledgerTxn = lastMonthLedgerTransaction;
                 foreach (Transaction matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
                 {
@@ -356,20 +356,20 @@ namespace BudgetAnalyser.Engine.Ledger
             LedgerEntryLine previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
             if (previousLine == null)
             {
-                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerColumn = ledger });
+                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
             }
 
-            foreach (LedgerColumn ledger in parentLedgerBook.Ledgers)
+            foreach (LedgerBucket ledger in parentLedgerBook.Ledgers)
             {
                 // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
-                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
+                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
 
                 // Its important to use the ledger column value from the book level map, not from the previous entry. The user
                 // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
                 if (previousEntry == null)
                 {
                     // Indicates a new ledger column has been added to the book starting this month.
-                    ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerColumn = ledger });
+                    ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerBucket = ledger });
                 }
                 else
                 {
@@ -395,14 +395,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Empty;
         }
 
-        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerColumn ledgerColumn, DateTime reconciliationDate)
+        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
         {
-            Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerColumn.BudgetBucket.Code);
+            Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
             if (expenseBudget != null)
             {
                 BudgetCreditLedgerTransaction budgetedAmount;
-                if (ledgerColumn.StoredInAccount.IsSalaryAccount)
+                if (ledgerBucket.StoredInAccount.IsSalaryAccount)
                 {
                     budgetedAmount = new BudgetCreditLedgerTransaction { Amount = expenseBudget.Amount, Narrative = "Budgeted Amount" };
                 }
@@ -430,7 +430,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return new List<LedgerTransaction>();
             }
 
-            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerColumn.BudgetBucket).ToList();
+            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
             if (transactions.Any())
             {
                 IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(

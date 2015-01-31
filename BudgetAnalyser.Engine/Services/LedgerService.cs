@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Services
             return this.book.Reconcile(reconciliationDate, balances, budgetContext.Model, statement, ignoreWarnings);
         }
 
-        public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerColumn ledger, AccountType storedInAccount)
+        public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerBucket ledger, AccountType storedInAccount)
         {
             if (ledgerBook == null)
             {
@@ -258,7 +258,7 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        public LedgerColumn TrackNewBudgetBucket(ExpenseBucket bucket, AccountType storeInThisAccount)
+        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, AccountType storeInThisAccount)
         {
             if (bucket == null)
             {

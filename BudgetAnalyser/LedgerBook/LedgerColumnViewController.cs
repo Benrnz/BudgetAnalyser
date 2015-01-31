@@ -19,7 +19,7 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IAccountTypeRepository accountRepo;
         private readonly ILedgerService ledgerService;
         private Guid correlationId;
-        private LedgerColumn ledger;
+        private LedgerBucket ledger;
         private Engine.Ledger.LedgerBook ledgerBook;
 
         public event EventHandler Updated;
@@ -54,16 +54,16 @@ namespace BudgetAnalyser.LedgerBook
         public decimal MonthlyBudgetAmount { get; private set; }
         public AccountType StoredInAccount { get; set; }
 
-        public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerColumn ledgerColumn, [NotNull] BudgetModel budgetModel)
+        public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerBucket ledgerBucket, [NotNull] BudgetModel budgetModel)
         {
             if (parentLedgerBook == null)
             {
                 throw new ArgumentNullException("parentLedgerBook");
             }
 
-            if (ledgerColumn == null)
+            if (ledgerBucket == null)
             {
-                throw new ArgumentNullException("ledgerColumn");
+                throw new ArgumentNullException("ledgerBucket");
             }
 
             if (budgetModel == null)
@@ -71,11 +71,11 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("budgetModel");
             }
 
-            this.ledger = ledgerColumn;
+            this.ledger = ledgerBucket;
             this.ledgerBook = parentLedgerBook;
             BankAccounts = new ObservableCollection<AccountType>(this.accountRepo.ListCurrentlyUsedAccountTypes());
-            BucketBeingTracked = ledgerColumn.BudgetBucket;
-            StoredInAccount = ledgerColumn.StoredInAccount;
+            BucketBeingTracked = ledgerBucket.BudgetBucket;
+            StoredInAccount = ledgerBucket.StoredInAccount;
             MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;
             this.correlationId = Guid.NewGuid();
 

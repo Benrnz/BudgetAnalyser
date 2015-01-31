@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class DtoToLedgerBookMapper : MagicMapper<LedgerBookDto, LedgerBook>
     {
         private readonly IAccountTypeRepository accountRepo;
-        private readonly Dictionary<LedgerColumn, LedgerColumn> cachedLedgers = new Dictionary<LedgerColumn, LedgerColumn>();
+        private readonly Dictionary<LedgerBucket, LedgerBucket> cachedLedgers = new Dictionary<LedgerBucket, LedgerBucket>();
 
         public DtoToLedgerBookMapper([NotNull] IAccountTypeRepository accountRepo)
         {
@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             LedgerBook book = base.Map(source);
 
             this.cachedLedgers.Clear();
-            foreach (LedgerColumn ledgerColumn in book.Ledgers)
+            foreach (LedgerBucket ledgerColumn in book.Ledgers)
             {
                 if (ledgerColumn.StoredInAccount == null)
                 {
@@ -46,9 +46,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 foreach (LedgerEntry entry in line.Entries)
                 {
-                    if (entry.LedgerColumn.StoredInAccount == null)
+                    if (entry.LedgerBucket.StoredInAccount == null)
                     {
-                        entry.LedgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
+                        entry.LedgerBucket.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                     }
                 }
             }
@@ -56,13 +56,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             // If ledger column map at the book level was empty, default it to the last used ledger columns in the Dated Entries.
             if (ledgersMapWasEmpty && book.Reconciliations.Any())
             {
-                book.Ledgers = book.Reconciliations.First().Entries.Select(e => e.LedgerColumn);
+                book.Ledgers = book.Reconciliations.First().Entries.Select(e => e.LedgerBucket);
             }
 
             return book;
         }
 
-        private void GetOrAddFromCache(LedgerColumn key)
+        private void GetOrAddFromCache(LedgerBucket key)
         {
             if (this.cachedLedgers.ContainsKey(key))
             {

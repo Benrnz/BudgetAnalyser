@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Console.Write("Entries: x{0} (", Subject.Entries.Count());
             foreach (var entry in Subject.Entries)
             {
-                Console.Write("{0}, ", entry.LedgerColumn.BudgetBucket.Code);
+                Console.Write("{0}, ", entry.LedgerBucket.BudgetBucket.Code);
             }
             Console.WriteLine(")");
 

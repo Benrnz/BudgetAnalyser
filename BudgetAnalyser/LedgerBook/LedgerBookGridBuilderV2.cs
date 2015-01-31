@@ -47,7 +47,7 @@ namespace BudgetAnalyser.LedgerBook
         private ContentPresenter contentPresenter;
         private Engine.Ledger.LedgerBook ledgerBook;
         private ResourceDictionary localResources;
-        private List<LedgerColumn> sortedLedgers;
+        private List<LedgerBucket> sortedLedgers;
 
         public LedgerBookGridBuilderV2(
             ICommand showTransactionsCommand,
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.LedgerBook
             DynamicallyCreateLedgerBookGrid(numberOfMonthsToShow);
         }
 
-        private static Brush StripColour(LedgerColumn ledger)
+        private static Brush StripColour(LedgerBucket ledger)
         {
             if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
             {
@@ -250,7 +250,7 @@ namespace BudgetAnalyser.LedgerBook
             gridRow = 5;
             AccountType currentBankAccount = null;
 
-            foreach (LedgerColumn ledger in this.sortedLedgers)
+            foreach (LedgerBucket ledger in this.sortedLedgers)
             {
                 if (currentBankAccount != ledger.StoredInAccount)
                 {
@@ -374,7 +374,7 @@ namespace BudgetAnalyser.LedgerBook
 
                 // Ledgers
                 AccountType currentBankAccount = null;
-                foreach (LedgerColumn ledger in this.sortedLedgers)
+                foreach (LedgerBucket ledger in this.sortedLedgers)
                 {
                     if (currentBankAccount != ledger.StoredInAccount)
                     {
@@ -382,7 +382,7 @@ namespace BudgetAnalyser.LedgerBook
                         currentBankAccount = ledger.StoredInAccount;
                     }
 
-                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerColumn.BudgetBucket == ledger.BudgetBucket);
+                    LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
                     decimal balance, netAmount;
 
                     bool movedBankAccounts = false;
@@ -392,7 +392,7 @@ namespace BudgetAnalyser.LedgerBook
                         balance = 0;
                         netAmount = 0;
                     }
-                    else if (entry.LedgerColumn != ledger)
+                    else if (entry.LedgerBucket != ledger)
                     {
                         // This means the ledger has change bank accounts and should not be included in this bank account's group. Leave blank cells in this case.
                         movedBankAccounts = true;
@@ -478,7 +478,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddLedgerRows(Grid grid)
         {
-            foreach (LedgerColumn ledger in this.sortedLedgers)
+            foreach (LedgerBucket ledger in this.sortedLedgers)
             {
                 if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                 {
@@ -537,7 +537,7 @@ namespace BudgetAnalyser.LedgerBook
 
             // Sort ledgers so that the ledgers in the same bank account are grouped together
             // this.sortedLedgers = this.ledgerBook.Ledgers.OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code).ToList();
-            this.sortedLedgers = this.ledgerBook.Reconciliations.SelectMany(line => line.Entries).Select(e => e.LedgerColumn)
+            this.sortedLedgers = this.ledgerBook.Reconciliations.SelectMany(line => line.Entries).Select(e => e.LedgerBucket)
                 .OrderBy(l => l.StoredInAccount.Name).ThenBy(l => l.BudgetBucket.Code)
                 .Distinct()
                 .ToList();

@@ -175,7 +175,7 @@ namespace BudgetAnalyser.LedgerBook
             LedgerEntry = ledgerEntry;
             this.entryLine = null;
             ShownTransactions = new ObservableCollection<LedgerTransaction>(LedgerEntry.Transactions);
-            Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerColumn.BudgetBucket.Code);
+            Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerBucket.BudgetBucket.Code);
             ShowDialogCommon(isNew);
         }
 

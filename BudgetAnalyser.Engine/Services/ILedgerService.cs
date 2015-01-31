@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="ledgerBook">The ledger book.</param>
         /// <param name="ledger">The ledger column to move.</param>
         /// <param name="storedInAccount">The new account to store the ledger in.</param>
-        void MoveLedgerToAccount([NotNull] LedgerBook ledgerBook, [NotNull] LedgerColumn ledger, [NotNull] AccountType storedInAccount);
+        void MoveLedgerToAccount([NotNull] LedgerBook ledgerBook, [NotNull] LedgerBucket ledger, [NotNull] AccountType storedInAccount);
 
         /// <summary>
         ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
@@ -99,13 +99,13 @@ namespace BudgetAnalyser.Engine.Services
         void Save([NotNull] LedgerBook ledgerBook, string storageKey = null);
 
         /// <summary>
-        ///     Tracks a new budget bucket by creating a new <see cref="LedgerColumn" /> for the given <see cref="BudgetBucket" />
+        ///     Tracks a new budget bucket by creating a new <see cref="LedgerBucket" /> for the given <see cref="BudgetBucket" />
         ///     and adds the ledger to the ledger book.
         /// </summary>
         /// <param name="bucket">The bucket to track.</param>
         /// <param name="storeInThisAccount">The account to store the ledger's funds.</param>
         /// <returns></returns>
-        LedgerColumn TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] AccountType storeInThisAccount);
+        LedgerBucket TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] AccountType storeInThisAccount);
 
         /// <summary>
         ///     Unlocks the current month after it has been saved and locked.

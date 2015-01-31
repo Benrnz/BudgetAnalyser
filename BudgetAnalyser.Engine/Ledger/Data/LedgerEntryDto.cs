@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         /// <summary>
         /// The Budget Bucket being tracked.  
-        /// The LedgerColumnDto type was intentionally not used here, to prevent the same instance being used between ledger lines and the "next reconciliation" mapping at the LedgerBookDto level.
+        /// The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger lines and the "next reconciliation" mapping at the LedgerBookDto level.
         /// </summary>
         public string BucketCode { get; set; }
 

@@ -196,11 +196,11 @@ It is used in conjunction with that C# test class for unit testing.
     </scg:List>
   </LedgerBookDto.Reconciliations>
   <LedgerBookDto.Ledgers>
-    <scg:List x:TypeArguments="LedgerColumnDto" Capacity="4">
-      <LedgerColumnDto BucketCode="WATER" StoredInAccount="CHEQUE" />
-      <LedgerColumnDto BucketCode="INSHOME" StoredInAccount="CHEQUE" />
-      <LedgerColumnDto BucketCode="DOC" StoredInAccount="CHEQUE" />
-      <LedgerColumnDto BucketCode="RENT" StoredInAccount="CHEQUE" />
+    <scg:List x:TypeArguments="LedgerBucketDto" Capacity="4">
+      <LedgerBucketDto BucketCode="WATER" StoredInAccount="CHEQUE" />
+      <LedgerBucketDto BucketCode="INSHOME" StoredInAccount="CHEQUE" />
+      <LedgerBucketDto BucketCode="DOC" StoredInAccount="CHEQUE" />
+      <LedgerBucketDto BucketCode="RENT" StoredInAccount="CHEQUE" />
     </scg:List>
   </LedgerBookDto.Ledgers>
 </LedgerBookDto>

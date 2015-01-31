@@ -15,9 +15,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData1()
         {
-            var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
             var book = new LedgerBook(new FakeLogger())
             {
@@ -49,9 +49,9 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var list = new List<LedgerEntryLine> { line };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List<LedgerEntry>
@@ -72,9 +72,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     })
                 }));
 
-            previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
@@ -109,9 +109,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData2()
         {
-            var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
             var book = new LedgerBook(new FakeLogger())
             {
@@ -143,9 +143,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }),
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List
@@ -167,9 +167,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     })
                 }));
 
-            previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             LedgerEntryLine line = CreateLine(new DateTime(2013, 08, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2950) },
                 "The quick brown fox jumped over the lazy dog").SetEntries(new List<LedgerEntry>
@@ -203,18 +203,18 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData3()
         {
-            var ratesLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
-            var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-            var waterLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
-            var houseInsLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
-            var carInsLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
-            var lifeInsLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
-            var carMtcLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
-            var regoLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
-            var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var clothesLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
-            var docLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
+            var ratesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
+            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var waterLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
+            var houseInsLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
+            var carInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
+            var lifeInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
+            var carMtcLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
+            var regoLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
+            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var clothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
+            var docLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
 
             var book = new LedgerBook(new FakeLogger())
             {
@@ -291,9 +291,9 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData4()
         {
-            var hairLedger = new LedgerColumn { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerColumn { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
             var book = new LedgerBook(new FakeLogger())
             {
@@ -325,9 +325,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }),
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             list.Add(
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntries(new List
@@ -349,9 +349,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                     })
                 }));
 
-            previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
 
             LedgerEntryLine line = CreateLine(new DateTime(2013, 08, 15),
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2750), new BankBalance(StatementModelTestData.SavingsAccount, 200) },
@@ -390,22 +390,22 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var chequeAccount = StatementModelTestData.ChequeAccount;
             var savingsAccount = StatementModelTestData.SavingsAccount;
-            var hairLedger = new LedgerColumn
+            var hairLedger = new LedgerBucket
             {
                 BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."),
                 StoredInAccount = chequeAccount,
             };
-            var powerLedger = new LedgerColumn
+            var powerLedger = new LedgerBucket
             {
                 BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power "),
                 StoredInAccount = chequeAccount,
             };
-            var phoneLedger = new LedgerColumn
+            var phoneLedger = new LedgerBucket
             {
                 BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"),
                 StoredInAccount = chequeAccount,
             };
-            var insLedger = new LedgerColumn
+            var insLedger = new LedgerBucket
             {
                 BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
                 StoredInAccount = savingsAccount,
@@ -448,10 +448,10 @@ namespace BudgetAnalyser.UnitTest.TestData
                 }),
             };
 
-            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
-            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+            LedgerEntry previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            LedgerEntry previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            LedgerEntry previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            LedgerEntry previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
             list.Add(
                 CreateLine(
@@ -479,10 +479,10 @@ namespace BudgetAnalyser.UnitTest.TestData
                     })
                 }));
 
-            previousHairEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.HairBucketCode);
-            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
-            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
-            previousInsEntry = list.Last().Entries.Single(e => e.LedgerColumn.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
+            previousHairEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode);
+            previousPowerEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
+            previousPhoneEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode);
+            previousInsEntry = list.Last().Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.InsuranceHomeBucketCode);
 
             LedgerEntryLine line = CreateLine(
                 new DateTime(2013, 08, 15),
@@ -516,9 +516,9 @@ namespace BudgetAnalyser.UnitTest.TestData
             return Finalise(book);
         }
 
-        private static LedgerEntry CreateLedgerEntry(LedgerColumn ledger, decimal balance = 0)
+        private static LedgerEntry CreateLedgerEntry(LedgerBucket ledger, decimal balance = 0)
         {
-            return new LedgerEntry { LedgerColumn = ledger, Balance = balance };
+            return new LedgerEntry { LedgerBucket = ledger, Balance = balance };
         }
 
         private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
@@ -533,15 +533,15 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         private static LedgerBook Finalise(LedgerBook book)
         {
-            var ledgers = new Dictionary<BudgetBucket, LedgerColumn>();
+            var ledgers = new Dictionary<BudgetBucket, LedgerBucket>();
             foreach (LedgerEntryLine line in book.Reconciliations)
             {
                 PrivateAccessor.SetProperty(line, "IsNew", false);
                 foreach (LedgerEntry entry in line.Entries)
                 {
                     PrivateAccessor.SetField(entry, "isNew", false);
-                    if (entry.LedgerColumn.StoredInAccount == null) entry.LedgerColumn.StoredInAccount = StatementModelTestData.ChequeAccount;
-                    if (!ledgers.ContainsKey(entry.LedgerColumn.BudgetBucket)) ledgers.Add(entry.LedgerColumn.BudgetBucket, entry.LedgerColumn);
+                    if (entry.LedgerBucket.StoredInAccount == null) entry.LedgerBucket.StoredInAccount = StatementModelTestData.ChequeAccount;
+                    if (!ledgers.ContainsKey(entry.LedgerBucket.BudgetBucket)) ledgers.Add(entry.LedgerBucket.BudgetBucket, entry.LedgerBucket);
                 }
             }
 

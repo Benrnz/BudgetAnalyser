@@ -105,7 +105,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBucketCode()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().LedgerColumn.BudgetBucket.Code,
+            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code,
                 result.Reconciliations.First().Entries.First().BucketCode);
         }
 

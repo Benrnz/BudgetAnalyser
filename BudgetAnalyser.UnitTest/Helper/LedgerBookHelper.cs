@@ -31,9 +31,9 @@ namespace BudgetAnalyser.UnitTest.Helper
             foreach (var line in book.Reconciliations)
             {
                 Console.Write("{0:d}  ", line.Date);
-                foreach (var entry in line.Entries.OrderBy(e => e.LedgerColumn.BudgetBucket))
+                foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
                 {
-                    Console.Write("{0} {1} {2}", entry.NetAmount.ToString("N").PadRight(8), entry.LedgerColumn.StoredInAccount.Name.Truncate(1), entry.Balance.ToString("N").PadRight(9));
+                    Console.Write("{0} {1} {2}", entry.NetAmount.ToString("N").PadRight(8), entry.LedgerBucket.StoredInAccount.Name.Truncate(1), entry.Balance.ToString("N").PadRight(9));
                 }
 
                 Console.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
@@ -51,14 +51,14 @@ namespace BudgetAnalyser.UnitTest.Helper
 
                 if (outputTransactions)
                 {
-                    foreach (var entry in line.Entries.OrderBy(e => e.LedgerColumn.BudgetBucket))
+                    foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
                     {
-                        var tab = new string(' ', 11 + 18 * ledgerOrder[entry.LedgerColumn.BudgetBucket]);
+                        var tab = new string(' ', 11 + 18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]);
                         foreach (var transaction in entry.Transactions)
                         {
                             Console.WriteLine("{0} {1} {2} {3} {4} {5}", 
                                 tab,
-                                entry.LedgerColumn.BudgetBucket.Code.PadRight(6), 
+                                entry.LedgerBucket.BudgetBucket.Code.PadRight(6), 
                                 transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16), 
                                 transaction.Narrative.Truncate(15),
                                 transaction.Id,

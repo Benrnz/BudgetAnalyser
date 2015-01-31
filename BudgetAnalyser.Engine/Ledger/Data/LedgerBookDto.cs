@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         public LedgerBookDto()
         {
             Reconciliations = new List<LedgerEntryLineDto>();
-            Ledgers = new List<LedgerColumnDto>();
+            Ledgers = new List<LedgerBucketDto>();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member", Target = "BudgetAnalyser.Engine.Ledger.Data.LedgerBookDto.#Ledgers", Justification = "Required for serialisation")]
-        public List<LedgerColumnDto> Ledgers { get; set; }
+        public List<LedgerBucketDto> Ledgers { get; set; }
 
         public DateTime Modified { get; set; }
         public string Name { get; set; }

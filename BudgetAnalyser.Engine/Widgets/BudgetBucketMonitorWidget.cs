@@ -143,12 +143,12 @@ namespace BudgetAnalyser.Engine.Widgets
             decimal totalBudgetedAmount = monthlyBudget;
             LedgerEntryLine ledgerLine = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
 
-            if (this.ledgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerColumn.BudgetBucket.Code != BucketCode))
+            if (this.ledgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
             {
                 return totalBudgetedAmount;
             }
 
-            return ledgerLine.Entries.First(e => e.LedgerColumn.BudgetBucket.Code == BucketCode).Balance;
+            return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
         }
     }
 }

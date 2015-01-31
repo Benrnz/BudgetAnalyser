@@ -136,8 +136,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             DateTime endDate = beginDate.AddMonths(1);
             DateTime currentDate = beginDate;
-            Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => entry.Balance);
-            Dictionary<BudgetBucket, decimal> previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerColumn.BudgetBucket, entry => 0M);
+            Dictionary<BudgetBucket, decimal> runningBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, entry => entry.Balance);
+            Dictionary<BudgetBucket, decimal> previousBalances = ledgerLine.Entries.ToDictionary(entry => entry.LedgerBucket.BudgetBucket, entry => 0M);
 
             do
             {
@@ -183,7 +183,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return line.Entries
-                .Where(ledgerEntry => ledgerEntry.LedgerColumn.BudgetBucket.Code == bucketCode)
+                .Where(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code == bucketCode)
                 .Select(ledgerEntry => ledgerEntry.Balance)
                 .FirstOrDefault();
         }
@@ -256,8 +256,8 @@ namespace BudgetAnalyser.Engine.Ledger
             var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
             foreach (LedgerEntry entry in currentLegderLine.Entries)
             {
-                decimal balance = entry.Balance + transactions.Where(t => t.BudgetBucket == entry.LedgerColumn.BudgetBucket).Sum(t => t.Amount);
-                ledgersSummary.Add(entry.LedgerColumn.BudgetBucket, balance);
+                decimal balance = entry.Balance + transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket).Sum(t => t.Amount);
+                ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, balance);
             }
 
             return ledgersSummary;

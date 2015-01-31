@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         /// Gets or sets the Bank Account for this transaction.  
         /// It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
-        /// In the case of <see cref="LedgerEntry"/> transactions it is set by the <see cref="LedgerEntry.LedgerColumn"/>.
+        /// In the case of <see cref="LedgerEntry"/> transactions it is set by the <see cref="LedgerEntry.LedgerBucket"/>.
         /// </summary>
         public AccountType BankAccount { get; internal set; }
 

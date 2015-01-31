@@ -193,9 +193,9 @@ namespace BudgetAnalyser.UnitTest.TestData
             UpdateLineBalances(line2, line1, 2001.15M);
             UpdateLineBalances(line3, line2, 1801.45M);
             book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             return book;
         }
 
@@ -372,9 +372,9 @@ namespace BudgetAnalyser.UnitTest.TestData
             UpdateLineBalances(line2, line1, 2001.15M);
             UpdateLineBalances(line3, line2, 1801.45M);
             book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             return book;
         }
 
@@ -571,9 +571,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                 });
             line3.BankBalance += 201M;
 
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
-            book.Ledgers.Add(new LedgerColumnDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RegoBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.CarMtcBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
+            book.Ledgers.Add(new LedgerBucketDto { BucketCode = TestDataConstants.RatesBucketCode, StoredInAccount = TestDataConstants.ChequeAccountName });
             book.Reconciliations = lines.OrderByDescending(e => e.Date).ToList();
             return book;
         }

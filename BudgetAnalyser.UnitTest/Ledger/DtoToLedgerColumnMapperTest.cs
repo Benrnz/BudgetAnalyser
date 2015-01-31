@@ -9,13 +9,13 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class DtoToLedgerColumnMapperTest
     {
-        private LedgerColumn Result { get; set; }
+        private LedgerBucket Result { get; set; }
 
-        private LedgerColumnDto TestData
+        private LedgerBucketDto TestData
         {
             get
             {
-                return new LedgerColumnDto
+                return new LedgerBucketDto
                 {
                     BucketCode = TestDataConstants.RegoBucketCode,
                     StoredInAccount = TestDataConstants.ChequeAccountName,
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerColumn>(TestData);
+            Result = Mapper.Map<LedgerBucket>(TestData);
         }
     }
 }
