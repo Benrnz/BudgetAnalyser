@@ -32,6 +32,8 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
+        private bool doNotUseOrChecked;
+        private bool doNotUseAndChecked;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -74,6 +76,30 @@ namespace BudgetAnalyser.Matching
         }
 
         public BudgetBucket Bucket { get; set; }
+
+        public bool AndChecked
+        {
+            get { return this.doNotUseAndChecked; }
+            set
+            {
+                this.doNotUseAndChecked = value;
+                RaisePropertyChanged();
+                this.doNotUseOrChecked = !AndChecked;
+                RaisePropertyChanged(() => OrChecked);
+            }
+        }
+
+        public bool OrChecked
+        {
+            get { return this.doNotUseOrChecked; }
+            set
+            {
+                this.doNotUseOrChecked = value;
+                RaisePropertyChanged();
+                this.doNotUseAndChecked = !OrChecked;
+                RaisePropertyChanged(() => AndChecked);
+            }
+        }
 
         public bool CanExecuteCancelButton
         {
@@ -234,6 +260,7 @@ namespace BudgetAnalyser.Matching
             Reference2 = null;
             Reference3 = null;
             SimilarRules = null;
+            AndChecked = true;
 
             NewRule = null;
         }
@@ -274,7 +301,9 @@ namespace BudgetAnalyser.Matching
                     UseReference2 ? Reference2 : null,
                     UseReference3 ? Reference3 : null
                 },
-                UseTransactionType ? TransactionType : null);
+                UseTransactionType ? TransactionType : null,
+                Amount,
+                OrChecked);
 
             EventHandler handler = RuleCreated;
             if (handler != null)

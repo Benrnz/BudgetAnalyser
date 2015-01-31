@@ -45,8 +45,18 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="description">The description to match. If null, it will not be used to match.</param>
         /// <param name="references">The references to match. If null, it will not be used to match.</param>
         /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
+        /// <param name="amount">The exact amount to match.</param>
+        /// <param name="andMatching">
+        /// If true, they are matched using an AND operator and all elements must be matched for the rule to match the transaction. Otherwise chosen elements are matched using an OR operator.
+        /// </param>
         /// <returns>The new matching rule.</returns>
-        MatchingRule CreateNewRule([NotNull] BudgetBucket bucket, [CanBeNull] string description, [NotNull] string[] references, [CanBeNull] string transactionTypeName);
+        MatchingRule CreateNewRule(
+            [NotNull] BudgetBucket bucket, 
+            [CanBeNull] string description, 
+            [NotNull] string[] references, 
+            [CanBeNull] string transactionTypeName, 
+            [CanBeNull] decimal? amount,
+            bool andMatching);
 
         /// <summary>
         /// Determines whether a rule similar to the input values.

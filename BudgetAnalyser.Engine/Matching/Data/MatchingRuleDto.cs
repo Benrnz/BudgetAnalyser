@@ -9,6 +9,8 @@ namespace BudgetAnalyser.Engine.Matching.Data
             RuleId = Guid.NewGuid();
         }
 
+        public bool And { get; set; }
+
         public decimal? Amount { get; set; }
 
         public string BucketCode { get; set; }

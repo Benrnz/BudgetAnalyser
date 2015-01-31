@@ -28,6 +28,22 @@ namespace BudgetAnalyser.Matching
             get { return (RulesController)DataContext; }
         }
 
+        private void OnCheckedAndSelectedRule(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null)
+            {
+                return;
+            }
+
+            if (radioButton.IsChecked != null && radioButton.IsChecked.Value)
+            {
+                return;
+            }
+
+            this.OrButton.IsChecked = true;
+        }
+
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue != null)
@@ -170,6 +186,11 @@ namespace BudgetAnalyser.Matching
                     view.Refresh();
                 }
             }
+        }
+
+        private void OnVisibilityChangedAndButton(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            OnCheckedAndSelectedRule(sender, new RoutedEventArgs());
         }
     }
 }

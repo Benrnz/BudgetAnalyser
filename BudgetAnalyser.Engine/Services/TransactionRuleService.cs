@@ -19,9 +19,9 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IMatchingRuleRepository ruleRepository;
 
         public TransactionRuleService(
-            [NotNull] IMatchingRuleRepository ruleRepository, 
-            [NotNull] ILogger logger, 
-            [NotNull] IMatchmaker matchmaker, 
+            [NotNull] IMatchingRuleRepository ruleRepository,
+            [NotNull] ILogger logger,
+            [NotNull] IMatchmaker matchmaker,
             [NotNull] IMatchingRuleFactory ruleFactory)
         {
             if (ruleRepository == null)
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("matchmaker");
             }
-            
+
             if (ruleFactory == null)
             {
                 throw new ArgumentNullException("ruleFactory");
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName)
+        public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
             if (bucket == null)
             {
@@ -118,26 +118,13 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             MatchingRule newRule = this.ruleFactory.CreateRule(bucket.Code);
-            if (description != null)
-            {
-                newRule.Description = description;
-            }
-
-            if (references[0] != null)
-            {
-                newRule.Reference1 = references[0];
-            }
-
-            if (references[1] != null)
-            {
-                newRule.Reference2 = references[1];
-            }
-
-            if (references[2] != null)
-            {
-                newRule.Reference3 = references[2];
-            }
-
+            newRule.Description = description;
+            newRule.Reference1 = references[0];
+            newRule.Reference2 = references[1];
+            newRule.Reference3 = references[2];
+            newRule.Amount = amount;
+            newRule.TransactionType = transactionTypeName;
+            newRule.And = andMatching;
             return newRule;
         }
 

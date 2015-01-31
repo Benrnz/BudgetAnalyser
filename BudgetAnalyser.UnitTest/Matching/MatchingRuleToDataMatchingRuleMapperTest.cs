@@ -13,10 +13,10 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         [TestMethod]
         [Description("A test designed to break when new propperties are added to the MatchingRuleDto. This is a trigger to update the mappers.")]
-        public void NumberOfDataMatchingRulePropertiesShouldBe11()
+        public void NumberOfDataMatchingRulePropertiesShouldBe12()
         {
             int dataProperties = typeof(MatchingRuleDto).CountProperties();
-            Assert.AreEqual(11, dataProperties);
+            Assert.AreEqual(12, dataProperties);
         }
 
         [TestMethod]

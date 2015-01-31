@@ -68,6 +68,11 @@ namespace BudgetAnalyser.Matching
 
         public event EventHandler SortChanged;
 
+        public string AndOrText
+        {
+            get { return SelectedRule.And ? "AND" : "OR"; }
+        }
+
         public ICommand CloseCommand
         {
             get { return new RelayCommand(() => Shown = false); }
@@ -132,6 +137,7 @@ namespace BudgetAnalyser.Matching
                 this.doNotUseSelectedRule = value;
                 RaisePropertyChanged(() => SelectedRule);
                 RaisePropertyChanged(() => ShowReadOnlyRuleDetails);
+                RaisePropertyChanged(() => AndOrText);
             }
         }
 
@@ -218,6 +224,7 @@ namespace BudgetAnalyser.Matching
             NewRuleController.Reference3 = transaction.Reference3;
             NewRuleController.TransactionType = transaction.TransactionType.Name;
             NewRuleController.Amount = transaction.Amount;
+            NewRuleController.AndChecked = true;
             NewRuleController.ShowDialog(Rules);
 
             NewRuleController.RuleCreated += OnNewRuleCreated;
@@ -324,6 +331,7 @@ namespace BudgetAnalyser.Matching
         {
             EditingRule = false;
             SaveRules();
+            RaisePropertyChanged(() => AndOrText);
         }
 
         private void OnSortCommandExecute(string sortBy)

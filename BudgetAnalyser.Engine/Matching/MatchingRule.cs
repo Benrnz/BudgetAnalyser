@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using AutoMapper.Internal;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -21,6 +24,7 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference2;
         private string doNotUseReference3;
         private string doNotUseTransactionType;
+        private bool doNotUseAnd;
 
         /// <summary>
         ///     Used any other time.
@@ -36,6 +40,7 @@ namespace BudgetAnalyser.Engine.Matching
             this.bucketRepository = bucketRepository;
             RuleId = Guid.NewGuid();
             Created = DateTime.Now;
+            And = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -101,6 +106,16 @@ namespace BudgetAnalyser.Engine.Matching
             internal set
             {
                 this.doNotUseMatchCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool And
+        {
+            get { return this.doNotUseAnd; }
+            set
+            {
+                this.doNotUseAnd = value;
                 OnPropertyChanged();
             }
         }
@@ -211,32 +226,45 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("transaction");
             }
 
-            bool matched = false;
+            int matchesMade = 0;
+            int maxMatches = 0;
             if (!string.IsNullOrWhiteSpace(Description))
             {
-                matched = transaction.Description == Description;
+                if (transaction.Description == Description) matchesMade++;
+                maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference1))
             {
-                matched = transaction.Reference1 == Reference1;
+                if (transaction.Reference1 == Reference1) matchesMade++;
+                maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference2))
             {
-                matched = transaction.Reference2 == Reference2;
+                if (transaction.Reference2 == Reference2) matchesMade++;
+                maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference3))
             {
-                matched = transaction.Reference3 == Reference3;
+                if (transaction.Reference3 == Reference3) matchesMade++;
+                maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(TransactionType))
             {
-                matched = transaction.TransactionType.Name == TransactionType;
+                if (transaction.TransactionType.Name == TransactionType) matchesMade++;
+                maxMatches++;
             }
 
+            if (Amount != null)
+            {
+                if (transaction.Amount == Amount.Value) matchesMade++;
+                maxMatches++;
+            }
+
+            bool matched = And ? matchesMade == maxMatches : matchesMade >= 1;
             if (matched)
             {
                 LastMatch = DateTime.Now;
