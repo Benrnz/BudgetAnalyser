@@ -6,7 +6,6 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -16,7 +15,6 @@ using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -50,9 +48,7 @@ namespace BudgetAnalyser
         }
 
         public AddLedgerReconciliationController AddLedgerReconciliationController { get; set; }
-
         public AppliedRulesController AppliedRulesController { get; set; }
-
         public BudgetController BudgetController { get; set; }
         public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
@@ -63,10 +59,8 @@ namespace BudgetAnalyser
         }
 
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
-
         public DashboardController DashboardController { get; set; }
         public EditingTransactionController EditingTransactionController { get; set; }
-
         public GlobalFilterController GlobalFilterController { get; set; }
         public LedgerBookController LedgerBookController { get; set; }
         public LedgerColumnViewController LedgerColumnViewController { get; set; }
@@ -76,19 +70,19 @@ namespace BudgetAnalyser
         public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
         public MainMenuController MainMenuController { get; set; }
         public IMessenger Messenger { get; private set; }
+        public NewBudgetModelController NewBudgetModelController { get; set; }
         public NewRuleController NewRuleController { get; set; }
         public OverallPerformanceController OverallPerformanceController { get; set; }
         public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
-        public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
 
         public IEnumerable<IShowableController> ShowableControllers
         {
             get { return Controllers.OfType<IShowableController>(); }
         }
 
+        public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
         public SplitTransactionController SplitTransactionController { get; set; }
-
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
         public UserPrompts UserPrompts { get; private set; }

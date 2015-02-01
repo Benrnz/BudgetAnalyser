@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -66,6 +68,56 @@ namespace BudgetAnalyser.Engine.Services
             var budget = new BudgetModel();
             this.budgetsCollection = new BudgetCollection(new[] { budget });
             return new BudgetCurrencyContext(this.budgetsCollection, budget);
+        }
+
+        /// <summary>
+        /// Clones the given <see cref="BudgetModel"/> to create a new budget with a future effective date.
+        /// </summary>
+        /// <param name="sourceBudget">The source budget to clone from.</param>
+        /// <param name="newBudgetEffectiveFrom">This date will be used as the new budget's effective date.</param>
+        /// <returns>The newly created budget.</returns>
+        /// <exception cref="ArgumentNullException">Will be thrown if source budget is null.</exception>
+        /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
+        /// <exception cref="ArgumentException">Will be thrown if the effective date of the new budget is not after the provided budget.</exception>
+        /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
+        public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
+        {
+            if (sourceBudget == null)
+            {
+                throw new ArgumentNullException("sourceBudget");
+            }
+
+            if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
+            {
+                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", "newBudgetEffectiveFrom");
+            }
+
+            if (newBudgetEffectiveFrom <= DateTime.Today)
+            {
+                throw new ArgumentException("The effective date of the new budget must be a future date.", "newBudgetEffectiveFrom");
+            }
+
+            var validationMessages = new StringBuilder();
+            if (!sourceBudget.Validate(validationMessages))
+            {
+                throw new ValidationWarningException(string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}", validationMessages));
+            }
+
+            var newBudget = new BudgetModel
+            {
+                EffectiveFrom = newBudgetEffectiveFrom,
+                Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name),
+            };
+            newBudget.Update(CloneBudgetIncomes(sourceBudget), CloneBudgetExpenses(sourceBudget));
+
+            if (!newBudget.Validate(validationMessages))
+            {
+                throw new InvalidOperationException("New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
+            }
+
+            this.budgetsCollection.Add(newBudget);
+            this.budgetRepository.Save();
+            return newBudget;
         }
 
         /// <summary>
@@ -166,6 +218,23 @@ namespace BudgetAnalyser.Engine.Services
                 validationMessages.AppendLine(ex.Message);
                 return false;
             }
+        }
+
+        private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
+        {
+            return source.Expenses.Select(sourceExpense => new Expense
+            {
+                Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket,
+            }).ToList();
+        }
+
+        private static IEnumerable<Income> CloneBudgetIncomes(BudgetModel source)
+        {
+            return source.Incomes.Select(sourceExpense => new Income
+            {
+                Amount = sourceExpense.Amount,
+                Bucket = sourceExpense.Bucket,
+            }).ToList();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace BudgetAnalyser.Engine.Matching
         ///     Used any other time.
         /// </summary>
         /// <param name="bucketRepository"></param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)

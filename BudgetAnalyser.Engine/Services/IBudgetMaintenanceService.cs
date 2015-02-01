@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Services
@@ -19,6 +21,18 @@ namespace BudgetAnalyser.Engine.Services
         /// Creates a new budget collection with one new empty budget model.
         /// </summary>
         BudgetCurrencyContext CreateNewBudgetCollection();
+
+        /// <summary>
+        /// Clones the given <see cref="BudgetModel"/> to create a new budget with a future effective date.
+        /// </summary>
+        /// <param name="sourceBudget">The source budget to clone from.</param>
+        /// <param name="newBudgetEffectiveFrom">This date will be used as the new budget's effective date.</param>
+        /// <returns>The newly created budget.</returns>
+        /// <exception cref="ArgumentNullException">Will be thrown if source budget is null.</exception>
+        /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
+        /// <exception cref="ArgumentException">Will be thrown if the effective date of the new budget is not after the provided budget.</exception>
+        /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
+        BudgetModel CloneBudgetModel([NotNull] BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom);
 
         /// <summary>
         /// Loads the collection of budgets from persistent storage.

@@ -82,6 +82,10 @@
         <budget:CreateNewFixedBudgetProjectUserControl />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type budget:NewBudgetModelController}">
+        <budget:CreateNewBudgetModelUserControl />
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type dashboard:CreateNewSurprisePaymentMonitorController}">
         <dashboard:CreateNewSurprisePaymentMonitorUserControl />
     </DataTemplate>

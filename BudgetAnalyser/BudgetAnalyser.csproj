@@ -166,6 +166,10 @@
       <DependentUpon>BudgetSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Budget\BudgetSelectionViewModel.cs" />
+    <Compile Include="Budget\CreateNewBudgetModelUserControl.xaml.cs">
+      <DependentUpon>CreateNewBudgetModelUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Budget\NewBudgetModelController.cs" />
     <Compile Include="Budget\CreateNewFixedBudgetController.cs" />
     <Compile Include="Budget\ChooseBudgetBucketController.cs" />
     <Compile Include="Budget\CreateNewFixedBudgetProjectUserControl.xaml.cs">
@@ -367,6 +371,10 @@
     <Page Include="Budget\BudgetSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Budget\CreateNewBudgetModelUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Budget\CreateNewFixedBudgetProjectUserControl.xaml">
       <SubType>Designer</SubType>

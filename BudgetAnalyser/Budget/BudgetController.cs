@@ -70,6 +70,8 @@ namespace BudgetAnalyser.Budget
             this.fileSaveDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.inputBox = uiContext.UserPrompts.InputBox;
             BudgetPieController = uiContext.BudgetPieController;
+            NewBudgetController = uiContext.NewBudgetModelController;
+            NewBudgetController.Ready += OnAddNewBudgetReady;
             Shown = false;
 
             MessengerInstance = uiContext.Messenger;
@@ -102,6 +104,9 @@ namespace BudgetAnalyser.Budget
         }
 
         public BudgetPieController BudgetPieController { get; private set; }
+
+        public NewBudgetModelController NewBudgetController { get; private set; }
+
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -190,6 +195,11 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand(OnLoadBudgetCommandExecute); }
         }
 
+        public ICommand NewBudgetCommand
+        {
+            get { return new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null); }
+        }
+
         public ICommand SaveAsCommand
         {
             get { return new RelayCommand(OnSaveAsCommandExecute); }
@@ -248,20 +258,20 @@ namespace BudgetAnalyser.Budget
 
         protected virtual string BuildDefaultFileName()
         {
-            var path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             return Path.Combine(path, "BudgetModel.xml");
         }
 
         protected virtual bool SaveBudgetCollection()
         {
-            var comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
             if (comment == null)
             {
                 return false;
             }
 
             this.newBuckets.Clear();
-            var valid = this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
+            bool valid = this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
             if (!valid)
             {
                 return SaveBudgetModel();
@@ -282,10 +292,10 @@ namespace BudgetAnalyser.Budget
 
         private string GetFileNameFromUserForOpen()
         {
-            var fileOpenDialog = this.fileOpenDialogFactory();
+            IUserPromptOpenFile fileOpenDialog = this.fileOpenDialogFactory();
             fileOpenDialog.CheckFileExists = true;
             fileOpenDialog.CheckPathExists = true;
-            var result = fileOpenDialog.ShowDialog();
+            bool? result = fileOpenDialog.ShowDialog();
             if (result == null || result == false)
             {
                 return null;
@@ -296,11 +306,11 @@ namespace BudgetAnalyser.Budget
 
         private string GetFileNameFromUserForSave()
         {
-            var fileSaveDialog = this.fileSaveDialogFactory();
+            IUserPromptSaveFile fileSaveDialog = this.fileSaveDialogFactory();
             fileSaveDialog.CheckPathExists = true;
             fileSaveDialog.AddExtension = true;
             fileSaveDialog.DefaultExt = ".xml";
-            var result = fileSaveDialog.ShowDialog();
+            bool? result = fileSaveDialog.ShowDialog();
             if (result == null || result == false)
             {
                 return null;
@@ -311,7 +321,7 @@ namespace BudgetAnalyser.Budget
 
         private void HandleBudgetFileExceptions(string message)
         {
-            var defaultFileName = BuildDefaultFileName();
+            string defaultFileName = BuildDefaultFileName();
             this.messageBox.Show("Budget File", "{0}\n{1}", message, defaultFileName);
             LoadBudget(defaultFileName);
         }
@@ -345,10 +355,37 @@ namespace BudgetAnalyser.Budget
             LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
 
+        private void OnAddNewBudgetCommandExecuted()
+        {
+            DateTime proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
+            while (proposedDate < DateTime.Today)
+            {
+                proposedDate = proposedDate.AddMonths(1);
+            } 
+            NewBudgetController.ShowDialog(proposedDate);
+        }
+
+        private void OnAddNewBudgetReady(object sender, EventArgs e)
+        {
+            try
+            {
+                BudgetModel budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom);
+                ShowOtherBudget(budget);
+            }
+            catch (ArgumentException ex)
+            {
+                this.messageBox.Show(ex.Message, "Unable to create new budget");
+            }
+            catch (ValidationWarningException ex)
+            {
+                this.messageBox.Show(ex.Message, "Unable to create new budget");
+            }
+       }
+
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             this.dirty = true;
-            var newExpense = Expenses.AddNew();
+            Expense newExpense = Expenses.AddNew();
             newExpense.Amount = 0;
 
             // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
@@ -424,7 +461,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)
         {
-            var response = this.questionBox.Show(
+            bool? response = this.questionBox.Show(
                 "Are you sure you want to delete this budget bucket?\nAnalysis may not work correctly if transactions are allocated to this bucket.",
                 "Delete Budget Bucket");
             if (response == null || response.Value == false)
@@ -494,14 +531,14 @@ namespace BudgetAnalyser.Budget
 
         private void OnLoadBudgetCommandExecute()
         {
-            var valid = ValidateAndSaveIfRequired();
+            bool valid = ValidateAndSaveIfRequired();
             if (!valid)
             {
                 return;
             }
 
             this.dirty = false;
-            var fileName = GetFileNameFromUserForOpen();
+            string fileName = GetFileNameFromUserForOpen();
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return;
@@ -528,7 +565,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnSaveAsCommandExecute()
         {
-            var fileName = GetFileNameFromUserForSave();
+            string fileName = GetFileNameFromUserForSave();
             if (fileName == null)
             {
                 return;
@@ -563,7 +600,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            foreach (var item in items)
+            foreach (BudgetItem item in items)
             {
                 item.PropertyChanged -= OnIncomeAmountPropertyChanged;
                 item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
@@ -575,7 +612,7 @@ namespace BudgetAnalyser.Budget
         private bool SaveBudgetModel()
         {
             var validationMessages = new StringBuilder();
-            var valid = this.maintenanceService.UpdateAndValidateBudget(CurrentBudget.Model, Incomes, Expenses, validationMessages);
+            bool valid = this.maintenanceService.UpdateAndValidateBudget(CurrentBudget.Model, Incomes, Expenses, validationMessages);
             if (!valid)
             {
                 this.messageBox.Show(validationMessages.ToString(), "Unable to save, some data is invalid");
@@ -637,7 +674,7 @@ namespace BudgetAnalyser.Budget
             // If no changes made to the budget model data return straight away.
             if (this.dirty)
             {
-                var decision = this.questionBox.Show("Save changes to the budget?", "Edit Budget");
+                bool? decision = this.questionBox.Show("Save changes to the budget?", "Edit Budget");
                 if (decision != null && decision == true)
                 {
                     // Yes, please save the changes.
