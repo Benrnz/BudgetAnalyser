@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerColumnView"
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerBucketView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -54,7 +54,7 @@
                         Grid.Row="0"
                         Margin="5,5,5,20"
                         Orientation="Horizontal">
-                <TextBlock Text="Budget Bucket: " />
+                <TextBlock Text="Bucket: " />
                 <TextBlock Text="{Binding BucketBeingTracked}" />
             </StackPanel>
             <StackPanel Background="{StaticResource Brush.ControlBorder}"
@@ -108,8 +108,8 @@
                    Style="{StaticResource TextBlock.Paragraph}"
                    TextWrapping="Wrap">
             <Run>
-                Ledgers within the LedgerBook track the actual bank balance over time of a single Budget Bucket.  This is especially useful for budget items that you need to save up for.
-                For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Budget Buckets. Even though they are always spent down to zero
+                Ledgers within the LedgerBook track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for.
+                For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero
                 each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.
             </Run>
         </TextBlock>

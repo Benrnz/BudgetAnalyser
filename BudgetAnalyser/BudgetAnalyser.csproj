@@ -212,10 +212,10 @@
     <Compile Include="Filtering\RequestFilterChangeMessage.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="LedgerBook\LedgerColumnView.xaml.cs">
-      <DependentUpon>LedgerColumnView.xaml</DependentUpon>
+    <Compile Include="LedgerBook\LedgerBucketView.xaml.cs">
+      <DependentUpon>LedgerBucketView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LedgerBook\LedgerColumnViewController.cs" />
+    <Compile Include="LedgerBook\LedgerBucketViewController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
@@ -392,7 +392,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LedgerBook\LedgerColumnView.xaml">
+    <Page Include="LedgerBook\LedgerBucketView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -63,7 +63,7 @@ namespace BudgetAnalyser
         public EditingTransactionController EditingTransactionController { get; set; }
         public GlobalFilterController GlobalFilterController { get; set; }
         public LedgerBookController LedgerBookController { get; set; }
-        public LedgerColumnViewController LedgerColumnViewController { get; set; }
+        public LedgerBucketViewController LedgerBucketViewController { get; set; }
         public LedgerRemarksController LedgerRemarksController { get; set; }
         public LedgerTransactionsController LedgerTransactionsController { get; set; }
         public ILogger Logger { get; set; }

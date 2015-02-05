@@ -176,8 +176,8 @@
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
-    <Compile Include="Ledger\LedgerColumnToDtoMapperTest.cs" />
-    <Compile Include="Ledger\DtoToLedgerColumnMapperTest.cs" />
+    <Compile Include="Ledger\LedgerBucketToDtoMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerBucketMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerBookMapperAutoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBookToDtoMapperAutoMapperTest.cs" />
     <Compile Include="Ledger\LedgerEntryLineTest.cs" />
@@ -198,7 +198,7 @@
     <Compile Include="Ledger\DtoToLedgerBookMapperTest.cs" />
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
-    <Compile Include="Ledger\LedgerColumnTest.cs" />
+    <Compile Include="Ledger\LedgerBucketTest.cs" />
     <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
     <Compile Include="Matching\DtoToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleTest.cs" />

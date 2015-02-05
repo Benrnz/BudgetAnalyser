@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,8 +8,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Xaml;
 using BudgetAnalyser.Converters;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
@@ -29,7 +26,6 @@ namespace BudgetAnalyser.LedgerBook
         private const string LessButtonStyle = "Button.Round.Minus";
         private const string LightBorderBrush = "Brush.BorderLight";
         private const string MoreButtonStyle = "Button.Round.Add";
-
         private const string NormalHighlightBackground = "Brush.TileBackground";
         private const string NormalStyle = "LedgerBookTextBlockOther";
         private const string NumberStyle = "LedgerBookTextBlockNumber";
@@ -40,9 +36,9 @@ namespace BudgetAnalyser.LedgerBook
         private readonly ICommand removeLedgerEntryLineCommand;
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showHideMonthsCommand;
+        private readonly ICommand showLedgerBucketDetailsCommand;
         private readonly ICommand showRemarksCommand;
         private readonly ICommand showSurplusBalancesCommand;
-        private readonly ICommand showLedgerColumnDetailsCommand;
         private readonly ICommand showTransactionsCommand;
         private ContentPresenter contentPresenter;
         private Engine.Ledger.LedgerBook ledgerBook;
@@ -56,7 +52,7 @@ namespace BudgetAnalyser.LedgerBook
             ICommand removeLedgerEntryLineCommand,
             ICommand showHideMonthsCommand,
             ICommand showSurplusBalancesCommand,
-            ICommand showLedgerColumnDetailsCommand)
+            ICommand showLedgerBucketDetailsCommand)
         {
             this.showTransactionsCommand = showTransactionsCommand;
             this.showBankBalancesCommand = showBankBalancesCommand;
@@ -64,7 +60,7 @@ namespace BudgetAnalyser.LedgerBook
             this.removeLedgerEntryLineCommand = removeLedgerEntryLineCommand;
             this.showHideMonthsCommand = showHideMonthsCommand;
             this.showSurplusBalancesCommand = showSurplusBalancesCommand;
-            this.showLedgerColumnDetailsCommand = showLedgerColumnDetailsCommand;
+            this.showLedgerBucketDetailsCommand = showLedgerBucketDetailsCommand;
         }
 
         /// <summary>
@@ -92,26 +88,6 @@ namespace BudgetAnalyser.LedgerBook
             this.localResources = viewResources;
             this.contentPresenter = contentPanel;
             DynamicallyCreateLedgerBookGrid(numberOfMonthsToShow);
-        }
-
-        private static Brush StripColour(LedgerBucket ledger)
-        {
-            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
-            {
-                return ConverterHelper.SpentMonthlyBucketBrush;
-            }
-
-            if (ledger.BudgetBucket is SavedUpForExpenseBucket)
-            {
-                return ConverterHelper.AccumulatedBucketBrush;
-            }
-
-            if (ledger.BudgetBucket is SavingsCommitmentBucket)
-            {
-                return ConverterHelper.SavingsCommitmentBucketBrush;
-            }
-
-            return ConverterHelper.TileBackgroundBrush;
         }
 
         private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int gridRow, int gridColumn)
@@ -148,7 +124,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 Style = (Style)FindResource(style),
                 Text = content,
-                ToolTip = tooltip ?? content,
+                ToolTip = tooltip ?? content
             };
             Grid.SetColumn(textBlock, gridColumn);
             Grid.SetRow(textBlock, gridRow++);
@@ -178,12 +154,12 @@ namespace BudgetAnalyser.LedgerBook
                 Style = Application.Current.Resources["Button.Round.SmallCross"] as Style,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Command = this.removeLedgerEntryLineCommand,
-                CommandParameter = line,
+                CommandParameter = line
             };
             var visibilityBinding = new Binding("IsEnabled")
             {
                 Converter = (IValueConverter)Application.Current.Resources["Converter.BoolToVis"],
-                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+                RelativeSource = new RelativeSource(RelativeSourceMode.Self)
             };
             button.SetBinding(UIElement.VisibilityProperty, visibilityBinding);
 
@@ -205,7 +181,7 @@ namespace BudgetAnalyser.LedgerBook
                 numberOfMonthsToShow = this.ledgerBook.Reconciliations.Count();
             }
 
-            for (int index = 0; index < numberOfMonthsToShow + 2; index++)
+            for (var index = 0; index < numberOfMonthsToShow + 2; index++)
             {
                 // + 2 because we need 2 columns for the headings
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -215,8 +191,8 @@ namespace BudgetAnalyser.LedgerBook
         private void AddHeadingColumnContent(Grid grid)
         {
             // Date
-            int gridRow = 0;
-            int gridColumn = 0;
+            var gridRow = 0;
+            var gridColumn = 0;
             Border dateBorder = AddBorderToGridCell(grid, true, true, gridRow, gridColumn);
             Grid.SetColumnSpan(dateBorder, 2);
             AddContentToGrid(dateBorder, "Date", ref gridRow, gridColumn, DateColumnStyle);
@@ -273,21 +249,21 @@ namespace BudgetAnalyser.LedgerBook
                     BorderThickness = new Thickness(6, 0, 0, 0),
                     BorderBrush = StripColour(ledger),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
                 };
                 border.Child = stripe;
 
                 string tooltip = string.Format(CultureInfo.CurrentCulture, "{0}: {1} - {2}", ledger.BudgetBucket.TypeDescription, ledger.BudgetBucket.Code, ledger.BudgetBucket.Description);
                 var hyperlink = new Hyperlink(new Run(ledger.BudgetBucket.Code))
                 {
-                    Command = this.showLedgerColumnDetailsCommand,
-                    CommandParameter = this.ledgerBook.Ledgers.Single(l => l.BudgetBucket == ledger.BudgetBucket),  // Must be Main Ledger Map from book
+                    Command = this.showLedgerBucketDetailsCommand,
+                    CommandParameter = this.ledgerBook.Ledgers.Single(l => l.BudgetBucket == ledger.BudgetBucket) // Must be Main Ledger Map from book
                 };
                 var textBlock = new TextBlock(hyperlink)
                 {
                     Style = (Style)FindResource(HeadingStyle),
                     ToolTip = tooltip,
-                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center
                 };
                 stripe.Child = textBlock;
 
@@ -311,12 +287,12 @@ namespace BudgetAnalyser.LedgerBook
             var hyperlink = new Hyperlink(new Run(hyperlinkText))
             {
                 Command = this.showTransactionsCommand,
-                CommandParameter = parameter,
+                CommandParameter = parameter
             };
             var textBlock = new TextBlock(hyperlink)
             {
                 Style = (Style)FindResource(style),
-                ToolTip = tooltip ?? hyperlinkText,
+                ToolTip = tooltip ?? hyperlinkText
             };
             Grid.SetColumn(textBlock, gridColumn);
             Grid.SetRow(textBlock, gridRow++);
@@ -326,13 +302,13 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddLedgerEntryLinesVertically(Grid grid, int numberOfMonthsToShow)
         {
-            int gridColumn = 2; //because the first two columns are headings
-            int monthNumber = 0;
+            var gridColumn = 2; //because the first two columns are headings
+            var monthNumber = 0;
 
             // Loop thru all Reconciliations from most recent to oldest adding cells to the grid vertically. 
             foreach (LedgerEntryLine line in this.ledgerBook.Reconciliations)
             {
-                int gridRow = 0;
+                var gridRow = 0;
                 if (++monthNumber > numberOfMonthsToShow)
                 {
                     break;
@@ -385,7 +361,7 @@ namespace BudgetAnalyser.LedgerBook
                     LedgerEntry entry = line.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
                     decimal balance, netAmount;
 
-                    bool movedBankAccounts = false;
+                    var movedBankAccounts = false;
                     if (entry == null)
                     {
                         // New ledger added that older entries do not have.
@@ -407,7 +383,7 @@ namespace BudgetAnalyser.LedgerBook
 
                     if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
                     {
-                        var border = AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
+                        Border border = AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
                         border.ToolTip = "This ledger has moved to another bank account.";
                         if (movedBankAccounts)
                         {
@@ -420,8 +396,8 @@ namespace BudgetAnalyser.LedgerBook
                     }
                     else
                     {
-                        var border1 = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
-                        var border2 = AddBorderToGridCell(grid, false, true, gridRow+1, gridColumn);
+                        Border border1 = AddBorderToGridCell(grid, true, false, gridRow, gridColumn);
+                        Border border2 = AddBorderToGridCell(grid, false, true, gridRow + 1, gridColumn);
                         if (movedBankAccounts)
                         {
                             border1.ToolTip = "This ledger has moved to another bank account.";
@@ -429,7 +405,7 @@ namespace BudgetAnalyser.LedgerBook
                             gridRow += 2;
                             continue;
                         }
-                        
+
                         AddHyperlinkToGrid(grid, netAmount.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
                         AddHyperlinkToGrid(grid, balance.ToString("N", CultureInfo.CurrentCulture), ref gridRow, gridColumn, NumberStyle, parameter: entry);
                     }
@@ -437,43 +413,6 @@ namespace BudgetAnalyser.LedgerBook
 
                 gridColumn++;
             }
-        }
-
-        private int AddSurplusCell(Grid grid, int gridRow, int gridColumn, LedgerEntryLine line)
-        {
-            AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
- 
-            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-            grid.Children.Add(stackPanel);
-            Grid.SetRow(stackPanel, gridRow);
-            Grid.SetColumn(stackPanel, gridColumn);
-
-            if (line.SurplusBalances.Any(b => b.Balance < 0))
-            {
-                var warningImage = new ContentControl
-                {
-                    Template = (ControlTemplate)FindResource("WarningImage"),
-                    Width = 20,
-                    Height = 20,
-                    Margin = new Thickness(5),
-                    ToolTip = "There are one or more negative surplus balances!"
-                };
-                stackPanel.Children.Add(warningImage);
-            }
-
-            var hyperlink = new Hyperlink(new Run(line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture)))
-            {
-                Command = this.showSurplusBalancesCommand,
-                CommandParameter = line,
-            };
-            var textBlock = new TextBlock(hyperlink)
-            {
-                Style = (Style)FindResource(ImportantNumberStyle),
-                ToolTip = string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus),
-                Foreground = (Brush)FindResource(SurplusTextBrush),
-            };
-            stackPanel.Children.Add(textBlock);
-            return ++gridRow;
         }
 
         private void AddLedgerRows(Grid grid)
@@ -503,7 +442,7 @@ namespace BudgetAnalyser.LedgerBook
                 RenderTransform = new ScaleTransform(0.5, 0.5),
                 ToolTip = "Show column",
                 CommandParameter = 1,
-                Command = this.showHideMonthsCommand,
+                Command = this.showHideMonthsCommand
             };
 
             var lessButton = new Button
@@ -512,19 +451,56 @@ namespace BudgetAnalyser.LedgerBook
                 RenderTransform = new ScaleTransform(0.5, 0.5),
                 ToolTip = "Hide column",
                 CommandParameter = -1,
-                Command = this.showHideMonthsCommand,
+                Command = this.showHideMonthsCommand
             };
 
             var panel = new StackPanel
             {
                 Margin = new Thickness(5, 15, 5, 5),
                 Orientation = Orientation.Horizontal,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
             };
             panel.Children.Add(lessButton);
             panel.Children.Add(moreButton);
             grid.Children.Add(panel);
             Grid.SetColumn(panel, numberOfMonthsToShow + 3);
+        }
+
+        private int AddSurplusCell(Grid grid, int gridRow, int gridColumn, LedgerEntryLine line)
+        {
+            AddBorderToGridCell(grid, SurplusBackground, false, gridRow, gridColumn);
+
+            var stackPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            grid.Children.Add(stackPanel);
+            Grid.SetRow(stackPanel, gridRow);
+            Grid.SetColumn(stackPanel, gridColumn);
+
+            if (line.SurplusBalances.Any(b => b.Balance < 0))
+            {
+                var warningImage = new ContentControl
+                {
+                    Template = (ControlTemplate)FindResource("WarningImage"),
+                    Width = 20,
+                    Height = 20,
+                    Margin = new Thickness(5),
+                    ToolTip = "There are one or more negative surplus balances!"
+                };
+                stackPanel.Children.Add(warningImage);
+            }
+
+            var hyperlink = new Hyperlink(new Run(line.CalculatedSurplus.ToString("N", CultureInfo.CurrentCulture)))
+            {
+                Command = this.showSurplusBalancesCommand,
+                CommandParameter = line
+            };
+            var textBlock = new TextBlock(hyperlink)
+            {
+                Style = (Style)FindResource(ImportantNumberStyle),
+                ToolTip = string.Format(CultureInfo.CurrentCulture, "Total Surplus: {0:N}. Click for more detail...", line.CalculatedSurplus),
+                Foreground = (Brush)FindResource(SurplusTextBrush)
+            };
+            stackPanel.Children.Add(textBlock);
+            return ++gridRow;
         }
 
         private void DynamicallyCreateLedgerBookGrid(int numberOfMonthsToShow)
@@ -568,7 +544,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         private object FindResource(string resourceName)
-        {            
+        {
             object localResource = this.localResources[resourceName];
             if (localResource != null)
             {
@@ -576,6 +552,26 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             return Application.Current.FindResource(resourceName);
+        }
+
+        private static Brush StripColour(LedgerBucket ledger)
+        {
+            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+            {
+                return ConverterHelper.SpentMonthlyBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavedUpForExpenseBucket)
+            {
+                return ConverterHelper.AccumulatedBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavingsCommitmentBucket)
+            {
+                return ConverterHelper.SavingsCommitmentBucketBrush;
+            }
+
+            return ConverterHelper.TileBackgroundBrush;
         }
     }
 }

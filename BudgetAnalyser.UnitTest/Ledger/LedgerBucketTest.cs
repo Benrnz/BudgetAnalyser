@@ -1,32 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class LedgerColumnTest
+    public class LedgerBucketTest
     {
         [TestMethod]
-        public void TwoInstancesWithSameBucketAndAccountAreEqual()
+        public void DictionaryTest()
         {
             var instance1 = new LedgerBucket
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                BudgetBucket = StatementModelTestData.HairBucket,
+                StoredInAccount = new ChequeAccount("Foo1")
             };
+
+            var dictionary = new Dictionary<LedgerBucket, LedgerBucket>
+            {
+                { instance1, instance1 }
+            };
+
             var instance2 = new LedgerBucket
             {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = StatementModelTestData.SavingsAccount
+                BudgetBucket = StatementModelTestData.HairBucket,
+                StoredInAccount = new ChequeAccount("Foo1")
             };
-            Assert.AreEqual(instance1, instance2);
-            Assert.IsTrue(instance1 == instance2);
+
+            Assert.IsTrue(dictionary.ContainsKey(instance2));
+
+            var instance3 = new LedgerBucket
+            {
+                BudgetBucket = new SpentMonthlyExpenseBucket("HAIRCUT", "Foo bar"),
+                StoredInAccount = new ChequeAccount("Foo1")
+            };
+
+            Assert.IsTrue(dictionary.ContainsKey(instance3));
         }
 
         [TestMethod]
@@ -43,6 +55,23 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var instance2 = new LedgerBucket
             {
                 BudgetBucket = bucket2,
+                StoredInAccount = StatementModelTestData.SavingsAccount
+            };
+            Assert.AreEqual(instance1, instance2);
+            Assert.IsTrue(instance1 == instance2);
+        }
+
+        [TestMethod]
+        public void TwoInstancesWithSameBucketAndAccountAreEqual()
+        {
+            var instance1 = new LedgerBucket
+            {
+                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                StoredInAccount = StatementModelTestData.SavingsAccount
+            };
+            var instance2 = new LedgerBucket
+            {
+                BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = StatementModelTestData.SavingsAccount
             };
             Assert.AreEqual(instance1, instance2);
@@ -70,22 +99,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void TwoInstancesWithSameBucketAndNullAccountHaveTheSameHashCode()
-        {
-            var instance1 = new LedgerBucket
-            {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = null
-            };
-            var instance2 = new LedgerBucket
-            {
-                BudgetBucket = StatementModelTestData.CarMtcBucket,
-                StoredInAccount = null
-            };
-            Assert.AreEqual(instance1.GetHashCode(), instance2.GetHashCode());
-        }
-
-        [TestMethod]
         public void TwoInstancesWithSameBucketAndNullAccountAreEqual()
         {
             var instance1 = new LedgerBucket
@@ -103,34 +116,19 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void DictionaryTest()
+        public void TwoInstancesWithSameBucketAndNullAccountHaveTheSameHashCode()
         {
             var instance1 = new LedgerBucket
             {
-                BudgetBucket = StatementModelTestData.HairBucket,
-                StoredInAccount = new ChequeAccount("Foo1"),
+                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                StoredInAccount = null
             };
-
-            var dictionary = new Dictionary<LedgerBucket, LedgerBucket>()
-            {
-                { instance1, instance1 }
-            };
-
             var instance2 = new LedgerBucket
             {
-                BudgetBucket = StatementModelTestData.HairBucket,
-                StoredInAccount = new ChequeAccount("Foo1"),
+                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                StoredInAccount = null
             };
-
-            Assert.IsTrue(dictionary.ContainsKey(instance2));
-
-            var instance3 = new LedgerBucket
-            {
-                BudgetBucket = new SpentMonthlyExpenseBucket("HAIRCUT", "Foo bar"),
-                StoredInAccount = new ChequeAccount("Foo1"),
-            };
-
-            Assert.IsTrue(dictionary.ContainsKey(instance3));
+            Assert.AreEqual(instance1.GetHashCode(), instance2.GetHashCode());
         }
     }
 }

@@ -98,8 +98,8 @@
         <ledgerBook:ShowSurplusBalancesUserControl />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type ledgerBook:LedgerColumnViewController}">
-        <ledgerBook:LedgerColumnView />
+    <DataTemplate DataType="{x:Type ledgerBook:LedgerBucketViewController}">
+        <ledgerBook:LedgerBucketView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:LedgerTransactionsController}">

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class LedgerColumnToDtoMapperTest
+    public class LedgerBucketToDtoMapperTest
     {
         private LedgerBucketDto Result { get; set; }
 
@@ -18,21 +18,21 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 return new LedgerBucket
                 {
                     BudgetBucket = StatementModelTestData.RegoBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount,
+                    StoredInAccount = StatementModelTestData.ChequeAccount
                 };
             }
-        }
-
-        [TestMethod]
-        public void ShouldMapBudgetBucketCode()
-        {
-            Assert.AreEqual(TestDataConstants.RegoBucketCode, Result.BucketCode);
         }
 
         [TestMethod]
         public void ShouldMapBankAccount()
         {
             Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.StoredInAccount);
+        }
+
+        [TestMethod]
+        public void ShouldMapBudgetBucketCode()
+        {
+            Assert.AreEqual(TestDataConstants.RegoBucketCode, Result.BucketCode);
         }
 
         [TestInitialize]

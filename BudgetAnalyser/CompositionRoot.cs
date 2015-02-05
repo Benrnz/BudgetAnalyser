@@ -139,7 +139,7 @@ namespace BudgetAnalyser
         {
             var uiContext = container.Resolve<UiContext>();
             uiContext.Logger = Logger;
-            uiContext.LedgerColumnViewController = container.Resolve<LedgerColumnViewController>();
+            uiContext.LedgerBucketViewController = container.Resolve<LedgerBucketViewController>();
             uiContext.ShowSurplusBalancesController = container.Resolve<ShowSurplusBalancesController>();
             uiContext.AddLedgerReconciliationController = container.Resolve<AddLedgerReconciliationController>();
             uiContext.BudgetPieController = container.Resolve<BudgetPieController>();

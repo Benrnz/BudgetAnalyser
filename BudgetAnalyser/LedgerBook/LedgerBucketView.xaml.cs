@@ -3,11 +3,11 @@
 namespace BudgetAnalyser.LedgerBook
 {
     /// <summary>
-    ///     Interaction logic for LedgerColumnView.xaml
+    ///     Interaction logic for LedgerBucketView.xaml
     /// </summary>
-    public partial class LedgerColumnView : UserControl
+    public partial class LedgerBucketView : UserControl
     {
-        public LedgerColumnView()
+        public LedgerBucketView()
         {
             InitializeComponent();
         }

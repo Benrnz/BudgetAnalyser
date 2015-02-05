@@ -14,7 +14,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerColumnViewController : ControllerBase
+    public class LedgerBucketViewController : ControllerBase
     {
         private readonly IAccountTypeRepository accountRepo;
         private readonly ILedgerService ledgerService;
@@ -24,7 +24,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler Updated;
 
-        public LedgerColumnViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IMessenger messenger, [NotNull] ILedgerService ledgerService)
+        public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IMessenger messenger, [NotNull] ILedgerService ledgerService)
         {
             if (accountRepo == null)
             {

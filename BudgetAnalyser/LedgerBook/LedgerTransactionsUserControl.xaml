@@ -14,13 +14,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Stripe -->
-        <Border BorderBrush="{Binding LedgerEntry.LedgerColumn.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
+        <Border BorderBrush="{Binding LedgerEntry.LedgerBucket.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
                 BorderThickness="24,0,0,0"
                 Grid.Column="0"
                 Grid.RowSpan="3"
                 HorizontalAlignment="Left"
                 Margin="-6,0,12,0"
-                ToolTip="{Binding LedgerEntry.LedgerColumn.BudgetBucket.TypeDescription}"
+                ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
                 VerticalAlignment="Stretch" />
         <Grid Grid.Column="1"
               Grid.Row="0">
@@ -50,7 +50,7 @@
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Bank Account: "
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
-                <ContentPresenter Content="{Binding LedgerEntry.LedgerColumn.StoredInAccount}"
+                <ContentPresenter Content="{Binding LedgerEntry.LedgerBucket.StoredInAccount}"
                                   Grid.Column="0"
                                   Grid.Row="1"
                                   Margin="0,5,50,5"

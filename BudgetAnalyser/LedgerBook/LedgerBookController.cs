@@ -25,7 +25,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly LedgerBookGridBuilderFactory uiBuilder;
         private readonly UiContext uiContext;
-
         private int doNotUseNumberOfMonthsToShow;
         private bool doNotUseShown;
 
@@ -111,24 +110,9 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand<int>(OnShowHideMonthsCommandExecuted); }
         }
 
-        public ICommand ShowLedgerColumnDetailsCommand
+        public ICommand ShowLedgerBucketDetailsCommand
         {
-            get { return new RelayCommand<LedgerBucket>(OnShowLedgerColumnDetailsCommand, param => param != null); }
-        }
-
-        public ICommand ShowRemarksCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand); }
-        }
-
-        public ICommand ShowSurplusBalancesCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null); }
-        }
-
-        public ICommand ShowTransactionsCommand
-        {
-            get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
+            get { return new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null); }
         }
 
         public bool Shown
@@ -144,6 +128,21 @@ namespace BudgetAnalyser.LedgerBook
                 this.doNotUseShown = value;
                 RaisePropertyChanged(() => Shown);
             }
+        }
+
+        public ICommand ShowRemarksCommand
+        {
+            get { return new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand); }
+        }
+
+        public ICommand ShowSurplusBalancesCommand
+        {
+            get { return new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null); }
+        }
+
+        public ICommand ShowTransactionsCommand
+        {
+            get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
         }
 
         public ICommand UnlockLedgerLineCommand
@@ -316,9 +315,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private void OnLedgerColumnUpdated(object sender, EventArgs e)
+        private void OnLedgerBucketUpdated(object sender, EventArgs e)
         {
-            this.uiContext.LedgerColumnViewController.Updated -= OnLedgerColumnUpdated;
+            this.uiContext.LedgerBucketViewController.Updated -= OnLedgerBucketUpdated;
             RaiseLedgerBookUpdated();
             FileOperations.Dirty = true;
         }
@@ -350,10 +349,10 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
-        private void OnShowLedgerColumnDetailsCommand(LedgerBucket ledgerBucket)
+        private void OnShowLedgerBucketDetailsCommand(LedgerBucket ledgerBucket)
         {
-            this.uiContext.LedgerColumnViewController.Updated += OnLedgerColumnUpdated;
-            this.uiContext.LedgerColumnViewController.ShowDialog(ViewModel.LedgerBook, ledgerBucket, ViewModel.CurrentBudget.Model);
+            this.uiContext.LedgerBucketViewController.Updated += OnLedgerBucketUpdated;
+            this.uiContext.LedgerBucketViewController.ShowDialog(ViewModel.LedgerBook, ledgerBucket, ViewModel.CurrentBudget.Model);
         }
 
         private void OnShowRemarksCommandExecuted(LedgerEntryLine parameter)

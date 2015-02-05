@@ -21,7 +21,7 @@ namespace BudgetAnalyser.LedgerBook
                 ledgerBookController.RemoveLedgerEntryLineCommand,
                 ledgerBookController.ShowHideMonthsCommand,
                 ledgerBookController.ShowSurplusBalancesCommand,
-                ledgerBookController.ShowLedgerColumnDetailsCommand);
+                ledgerBookController.ShowLedgerBucketDetailsCommand);
         }
     }
 }

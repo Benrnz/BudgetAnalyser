@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine;
@@ -62,6 +63,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void ShouldMapCorrectNumberOfLedgers()
+        {
+            LedgerBook result = ArrangeAndAct();
+
+            Assert.AreEqual(3, result.Ledgers.Count());
+        }
+
+        [TestMethod]
         public void ShouldMapCorrectNumberOfLineEntries()
         {
             LedgerBook result = ArrangeAndAct();
@@ -88,6 +97,47 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook result = ArrangeAndAct();
             Assert.AreEqual(TestData.FileName, result.FileName);
             Assert.IsNotNull(result.FileName);
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerBucketAndDefaultToChequeIfNull()
+        {
+            TestData.Ledgers.Clear();
+            LedgerBook result = ArrangeAndAct();
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerBucketsAutoPopulateLedgersCollection()
+        {
+            TestData.Ledgers.Clear();
+            LedgerBook result = ArrangeAndAct();
+            foreach (LedgerBucket ledger in result.Ledgers)
+            {
+                Console.WriteLine("Ledger Column: {0} {1} {2}", ledger.BudgetBucket.Code, ledger.StoredInAccount.Name, ledger.GetHashCode());
+            }
+
+            Assert.AreEqual(3, result.Ledgers.Count());
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerBucketsOnLedgerEntriesWithAccountNotNull()
+        {
+            LedgerBook result = ArrangeAndAct();
+            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
+        }
+
+        [TestMethod]
+        public void ShouldMapLedgerBucketsWithNoDuplicateInstances()
+        {
+            LedgerBook result = ArrangeAndAct();
+            IEnumerable<LedgerBucket> ledgerBuckets = result.Reconciliations
+                .SelectMany(e => e.Entries)
+                .Select(e => e.LedgerBucket)
+                .Union(result.Ledgers)
+                .Distinct();
+
+            Assert.AreEqual(3, ledgerBuckets.Count());
         }
 
         [TestMethod]
@@ -187,55 +237,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook result = ArrangeAndAct();
             Assert.AreEqual(TestData.Name, result.Name);
             Assert.IsNotNull(result.Name);
-        }
-
-        [TestMethod]
-        public void ShouldMapCorrectNumberOfLedgers()
-        {
-            var result = ArrangeAndAct();
-
-            Assert.AreEqual(3, result.Ledgers.Count());
-        }
-
-        [TestMethod]
-        public void ShouldMapLedgerColumnsOnLedgerEntriesWithAccountNotNull()
-        {
-            var result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
-        }
-
-        [TestMethod]
-        public void ShouldMapLedgerColumnsWithNoDuplicateInstances()
-        {
-            var result = ArrangeAndAct();
-            var ledgerColumns = result.Reconciliations
-                .SelectMany(e => e.Entries)
-                .Select(e => e.LedgerBucket)
-                .Union(result.Ledgers)
-                .Distinct();
-
-            Assert.AreEqual(3, ledgerColumns.Count());
-        }
-
-        [TestMethod]
-        public void ShouldMapLedgerColumnsAutoPopulateLedgersCollection()
-        {
-            TestData.Ledgers.Clear();
-            var result = ArrangeAndAct();
-            foreach (var ledger in result.Ledgers)
-            {
-                Console.WriteLine("Ledger Column: {0} {1} {2}", ledger.BudgetBucket.Code, ledger.StoredInAccount.Name, ledger.GetHashCode());
-            }
-
-            Assert.AreEqual(3, result.Ledgers.Count());
-        }
-
-        [TestMethod]
-        public void ShouldMapLedgerColumnAndDefaultToChequeIfNull()
-        {
-            TestData.Ledgers.Clear();
-            var result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
         }
 
         [TestInitialize]

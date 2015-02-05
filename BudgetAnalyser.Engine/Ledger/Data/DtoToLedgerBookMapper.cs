@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -28,15 +27,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             LedgerBook book = base.Map(source);
 
             this.cachedLedgers.Clear();
-            foreach (LedgerBucket ledgerColumn in book.Ledgers)
+            foreach (LedgerBucket ledgerBucket in book.Ledgers)
             {
-                if (ledgerColumn.StoredInAccount == null)
+                if (ledgerBucket.StoredInAccount == null)
                 {
                     // Defaults to Cheque Account if unspecified.
-                    ledgerColumn.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
+                    ledgerBucket.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
                 }
 
-                GetOrAddFromCache(ledgerColumn);
+                GetOrAddFromCache(ledgerBucket);
             }
 
             bool ledgersMapWasEmpty = book.Ledgers.None();
