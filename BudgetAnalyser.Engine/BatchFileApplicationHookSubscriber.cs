@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine
 
                     var processInfo = new ProcessStartInfo("cmd.exe", "/c " + commandLine)
                     {
-                        CreateNoWindow = false,
+                        CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardError = false,
                         RedirectStandardOutput = false,

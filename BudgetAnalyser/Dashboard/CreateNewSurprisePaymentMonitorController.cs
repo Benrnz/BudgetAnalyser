@@ -8,6 +8,7 @@ using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Dashboard
@@ -20,6 +21,7 @@ namespace BudgetAnalyser.Dashboard
         private DateTime doNotUsePaymentStartDate;
         private BudgetBucket doNotUseSelected;
         private WeeklyOrFortnightly doNotUseFrequency;
+        private IUserMessageBox messageBox;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
@@ -39,6 +41,7 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             PaymentStartDate = DateTime.Today;
             Frequency = WeeklyOrFortnightly.Weekly;
+            this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
         public event EventHandler<DialogResponseEventArgs> Complete;
@@ -119,7 +122,8 @@ namespace BudgetAnalyser.Dashboard
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Create new surprise regular payment monitor"
+                Title = "Create new surprise regular payment monitor",
+                HelpAvailable = true,
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -128,6 +132,12 @@ namespace BudgetAnalyser.Dashboard
         {
             if (!message.IsItForMe(this.dialogCorrelationId))
             {
+                return;
+            }
+
+            if (message.Response == ShellDialogButton.Help)
+            {
+                this.messageBox.Show("Using this feature you can create a widget to show upcoming months where that require more than usual weekly or fortnightly payments. This is because there is an uneven number of weeks per month, so occasionally there will be 5 weekly payments in one month and 3 fortnightly payments. This widget will show the months where this will occur for the given Budget Bucket.");
                 return;
             }
 

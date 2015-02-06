@@ -4,6 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.Budget
@@ -16,6 +17,7 @@ namespace BudgetAnalyser.Budget
         private decimal doNotUseAmount;
         private string doNotUseCode;
         private string doNotUseDescription;
+        private IUserMessageBox messageBox;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public CreateNewFixedBudgetController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
@@ -33,6 +35,7 @@ namespace BudgetAnalyser.Budget
             this.bucketRepository = bucketRepository;
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
         public event EventHandler<DialogResponseEventArgs> Complete;
@@ -111,7 +114,8 @@ namespace BudgetAnalyser.Budget
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Create new fixed budget project"
+                Title = "Create new fixed budget project",
+                HelpAvailable = true,
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -120,6 +124,12 @@ namespace BudgetAnalyser.Budget
         {
             if (!message.IsItForMe(this.dialogCorrelationId))
             {
+                return;
+            }
+
+            if (message.Response == ShellDialogButton.Help)
+            {
+                this.messageBox.Show("Using this feature you can create a special temporary budget bucket with a fixed total budget amount.  There is no monthly budget contribution, just a fixed total. This allows tracking of a specific project against a budget, and will show a bar chart as the budget gets lower.  Transactions must be tagged with the bucket code using the bucket code in the Transactions view.  All tagged transactions are still considered as surplus (in fact this new bucket will inherit from the Surplus bucket).");
                 return;
             }
 

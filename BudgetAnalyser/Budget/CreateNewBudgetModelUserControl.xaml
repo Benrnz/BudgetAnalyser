@@ -10,18 +10,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.ColumnSpan="2"
-                   Style="{StaticResource TextBlock.Paragraph}"
-                   TextWrapping="Wrap">
-            <Run>
-                This will clone an exisitng budget, the currently shown budget, to a new budget that is future dated.  The budget must have an effective date in the future.
-            </Run>
-        </TextBlock>
         <StackPanel Grid.Column="0"
-                    Grid.Row="1">
+                    Grid.Row="0">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Effective From Date (inclusive):" />
             <DatePicker SelectedDate="{Binding EffectiveFrom}" />
