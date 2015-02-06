@@ -212,6 +212,9 @@
     <Compile Include="Filtering\RequestFilterChangeMessage.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="LedgerBook\LedgerBucketHistoryUserControl.xaml.cs">
+      <DependentUpon>LedgerBucketHistoryUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LedgerBook\LedgerBucketView.xaml.cs">
       <DependentUpon>LedgerBucketView.xaml</DependentUpon>
     </Compile>
@@ -389,6 +392,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Filtering\GlobalDateFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\LedgerBucketHistoryUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,30 +1,24 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerBucketView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Grid.Row="0"
-                   Height="20"
-                   Margin="5,5,5,20"
-                   Style="{StaticResource TextBlock.LabelStyle}"
-                   Text="This Ledger is tracking:" />
-        <Grid Grid.Column="0"
-              Grid.Row="1">
+        
+ 
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="50" />
@@ -73,15 +67,18 @@
                        Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding BucketBeingTracked.TypeDescription}" />
         </Grid>
+        
         <Viewbox Grid.Column="1"
-                 Grid.Row="1"
+                 Grid.Row="0"
                  Margin="20"
+                 VerticalAlignment="Top"
                  Width="40">
             <Path Data="M 512.00,256.00L 256.00,0.00L 256.00,160.00L 0.001,160.00L0.00,352.00L 256.00,352.00L 256.00,512.00 z"
                   Fill="{StaticResource Brush.Text.Default}" />
         </Viewbox>
+        
         <StackPanel Grid.Column="2"
-                    Grid.Row="1">
+                    Grid.Row="0">
             <TextBlock Margin="5,20,5,5"
                        Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Stored in bank account:" />
@@ -100,19 +97,12 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <TextBlock Grid.Column="0"
-                   Grid.ColumnSpan="4"
-                   Grid.Row="3"
-                   Margin="5,20,0,5"
-                   MaxWidth="800"
-                   Style="{StaticResource TextBlock.Paragraph}"
-                   TextWrapping="Wrap">
-            <Run>
-                Ledgers within the LedgerBook track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for.
-                For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero
-                each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.
-            </Run>
-        </TextBlock>
+        
+        <ledgerBook:LedgerBucketHistoryUserControl 
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Grid.Row="1" 
+            DataContext="{Binding LedgerBucketHistoryAnalysis}"/>
     </Grid>
 
 </UserControl>

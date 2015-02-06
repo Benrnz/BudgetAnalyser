@@ -15,6 +15,7 @@ namespace BudgetAnalyser.ShellDialog
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
+        private bool doNotUseHelpButtonVisible;
 
         public string ActionToolTip
         {
@@ -111,6 +112,16 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
+        public bool HelpButtonVisible
+        {
+            get { return this.doNotUseHelpButtonVisible; }
+            set
+            {
+                this.doNotUseHelpButtonVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public string Title
         {
             get { return this.doNotUseTitle; }
@@ -166,6 +177,11 @@ namespace BudgetAnalyser.ShellDialog
                         case ShellDialogButton.Cancel:
                             MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
                             break;
+
+                        case ShellDialogButton.Help:
+                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Help) { CorrelationId = CorrelationId });
+                            // Don't close the dialog after this button click is processed.
+                            return;
 
                         default:
                             throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);

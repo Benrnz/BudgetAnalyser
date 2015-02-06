@@ -26,6 +26,8 @@ namespace BudgetAnalyser.ShellDialog
         public ShellDialogType DialogType { get; private set; }
         public BudgetAnalyserFeature Location { get; private set; }
 
+        public bool HelpAvailable { get; set; }
+
         public string Title { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Reports
         public string Description { get; set; }
 
         /// <summary>
-        /// The smallest value in the data series.
+        /// Calculates the smallest value in the data series.
         /// </summary>
         public decimal MinimumValue
         {

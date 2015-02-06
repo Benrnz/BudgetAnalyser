@@ -205,37 +205,38 @@ namespace BudgetAnalyser
 
         private void OnDialogRequested(ShellDialogRequestMessage message)
         {
-            ShellDialogController appropriateController;
+            ShellDialogController dialogController;
             switch (message.Location)
             {
                 case BudgetAnalyserFeature.LedgerBook:
-                    appropriateController = LedgerBookDialog;
+                    dialogController = LedgerBookDialog;
                     break;
 
                 case BudgetAnalyserFeature.Dashboard:
-                    appropriateController = DashboardDialog;
+                    dialogController = DashboardDialog;
                     break;
 
                 case BudgetAnalyserFeature.Budget:
-                    appropriateController = BudgetDialog;
+                    dialogController = BudgetDialog;
                     break;
 
                 case BudgetAnalyserFeature.Transactions:
-                    appropriateController = TransactionsDialog;
+                    dialogController = TransactionsDialog;
                     break;
 
                 case BudgetAnalyserFeature.Reports:
-                    appropriateController = ReportsDialog;
+                    dialogController = ReportsDialog;
                     break;
 
                 default:
                     throw new NotSupportedException("The requested shell dialog location is not supported: " + message.Location);
             }
 
-            appropriateController.Title = message.Title;
-            appropriateController.Content = message.Content;
-            appropriateController.DialogType = message.DialogType;
-            appropriateController.CorrelationId = message.CorrelationId;
+            dialogController.Title = message.Title;
+            dialogController.Content = message.Content;
+            dialogController.DialogType = message.DialogType;
+            dialogController.CorrelationId = message.CorrelationId;
+            dialogController.HelpButtonVisible = message.HelpAvailable;
         }
 
         private void OnShutdownRequested(ShutdownMessage message)

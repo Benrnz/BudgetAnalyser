@@ -37,6 +37,14 @@
                             Margin="10"
                             Orientation="Horizontal">
                     <Button Command="{Binding DialogCommand}"
+                            ToolTip="Help"
+                            Style="{StaticResource Button.Round.Info}"
+                            Visibility="{Binding HelpButtonVisible, Converter={StaticResource Converter.BoolToVis}}">
+                        <Button.CommandParameter>
+                            <shellDialog:ShellDialogButton>Help</shellDialog:ShellDialogButton>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Command="{Binding DialogCommand}"
                             ToolTip="{Binding ActionToolTip}"
                             Style="{StaticResource Button.Round.Save}"
                             Visibility="{Binding SaveButtonVisible, Converter={StaticResource Converter.BoolToVis}}">

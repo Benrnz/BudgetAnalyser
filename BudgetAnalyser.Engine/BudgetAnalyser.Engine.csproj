@@ -214,6 +214,7 @@
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\IBurnDownChartAnalyser.cs" />
+    <Compile Include="Reports\LedgerBucketHistoryAnalyser.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
     <Compile Include="Reports\OverallPerformanceBudgetResult.cs" />
     <Compile Include="Reports\ReportTransaction.cs" />

@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.LedgerBucketHistoryUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:visualizationToolkit="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+
+    <!-- DataContext = LedgerBucketHistoryAnalyser -->
+
+    <UserControl.Resources>
+        <Style x:Key="MainLineDataPointStyle"
+               TargetType="{x:Type chartingToolkit:DataPoint}">
+            <Setter Property="Background"
+                    Value="{StaticResource Brush.Text.Default}" />
+            <Setter Property="Template"
+                    Value="{x:Null}" />
+        </Style>
+
+        <Style x:Key="AxesLabelStyle"
+               TargetType="{x:Type chartingToolkit:NumericAxisLabel}">
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="{x:Type chartingToolkit:NumericAxisLabel}">
+                        <TextBlock FontSize="10"
+                                   Text="{TemplateBinding FormattedContent}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DateTimeAxesLabelStyle"
+               TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}">
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="{x:Type chartingToolkit:DateTimeAxisLabel}">
+                        <TextBlock FontSize="10"
+                                   Text="{TemplateBinding DataContext, Converter={StaticResource Converter.ToString}, ConverterParameter='MMMyy'}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LegendStyle"
+               TargetType="{x:Type visualizationToolkit:Legend}">
+            <Setter Property="Template"
+                    Value="{x:Null}" />
+        </Style>
+
+        <Style x:Key="TitleStyle"
+               TargetType="visualizationToolkit:Title">
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="visualizationToolkit:Title">
+                        <TextBlock Text="{TemplateBinding Content}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PlotAreaStyle"
+               TargetType="Grid">
+            <Setter Property="Background"
+                    Value="Transparent" />
+        </Style>
+
+        <ControlTemplate x:Key="ChartTemplate" 
+                         TargetType="chartingToolkit:Chart">
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="{TemplateBinding Padding}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <visualizationToolkit:Title Content="{TemplateBinding Title}"
+                                   Style="{TemplateBinding TitleStyle}" />
+                    
+                    <primitives:EdgePanel x:Name="ChartArea"
+                                          Grid.Row="1"
+                                          Style="{TemplateBinding ChartAreaStyle}">
+                        <Grid Canvas.ZIndex="-1"
+                              Style="{TemplateBinding PlotAreaStyle}" />
+                        <Border Canvas.ZIndex="10"
+                                BorderThickness="0" />
+                    </primitives:EdgePanel>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <chartingToolkit:Chart BorderThickness="0"
+                               HorizontalAlignment="Stretch"
+                               PlotAreaStyle="{StaticResource PlotAreaStyle}"
+                               LegendStyle="{StaticResource LegendStyle}"
+                               Template="{StaticResource ChartTemplate}"
+                               Title="{Binding GraphData.GraphName}"
+                               TitleStyle="{StaticResource TitleStyle}"
+                               VerticalAlignment="Stretch">
+            <chartingToolkit:LineSeries DataPointStyle="{StaticResource MainLineDataPointStyle}"
+                                        DependentValuePath="Amount"
+                                        IsSelectionEnabled="False"
+                                        ItemsSource="{Binding BalanceLine.Plots}"
+                                        Title="{Binding BalanceLine.SeriesName}"
+                                        ToolTip="{Binding BalanceLine.Description}"
+                                        IndependentValueBinding="{Binding Date}">
+                
+                <chartingToolkit:LineSeries.DependentRangeAxis>
+                    <chartingToolkit:LinearAxis AxisLabelStyle="{StaticResource AxesLabelStyle}"
+                                                Minimum="{Binding BalanceLine.MinimumValue}"
+                                                Orientation="Y"
+                                                Title="$" />
+                </chartingToolkit:LineSeries.DependentRangeAxis>
+
+                <chartingToolkit:LineSeries.IndependentAxis>
+                    <chartingToolkit:DateTimeAxis AxisLabelStyle="{StaticResource DateTimeAxesLabelStyle}"
+                                                  Orientation="X" />
+                </chartingToolkit:LineSeries.IndependentAxis>
+                
+            </chartingToolkit:LineSeries>
+        </chartingToolkit:Chart>
+
+    </Grid>
+</UserControl>

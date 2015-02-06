@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         /// <summary>
-        /// The smallest value from all the series stored in <see cref="Series"/>.
+        /// Calculates the smallest value from all the series stored in <see cref="Series"/>.
         /// </summary>
         public decimal GraphMinimumValue
         {
