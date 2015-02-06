@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
@@ -26,6 +27,7 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseEditable;
         private AccountType doNotUseSelectedBankAccount;
         private Engine.Ledger.LedgerBook parentBook;
+        private IUserMessageBox messageBox;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -44,6 +46,7 @@ namespace BudgetAnalyser.LedgerBook
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+            this.messageBox = uiContext.UserPrompts.MessageBox;
         }
 
         public event EventHandler<EditBankBalancesEventArgs> Complete;
@@ -291,6 +294,11 @@ namespace BudgetAnalyser.LedgerBook
 
             try
             {
+                if (message.Response == ShellDialogButton.Help)
+                {
+                    this.messageBox.Show("Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month. The date used will also be used to select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
+                    return;
+                }
                 if (message.Response == ShellDialogButton.Cancel)
                 {
                     Canceled = true;
@@ -343,6 +351,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = title,
+                HelpAvailable = CreateMode,
             };
 
             MessengerInstance.Send(dialogRequest);
