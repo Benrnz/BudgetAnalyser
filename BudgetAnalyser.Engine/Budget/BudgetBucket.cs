@@ -11,14 +11,16 @@ namespace BudgetAnalyser.Engine.Budget
     [DebuggerDisplay("{TypeDescription} {Code} {Description}")]
     public abstract class BudgetBucket : IModelValidate, INotifyPropertyChanged, IComparable
     {
+        private bool doNotUseActive;
         private string doNotUseCode;
         private string doNotUseDescription;
 
         protected BudgetBucket()
         {
+            Active = true;
         }
 
-        protected BudgetBucket(string code, string name)
+        protected BudgetBucket(string code, string name) : this()
         {
             if (code == null)
             {
@@ -35,6 +37,23 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether this <see cref="BudgetBucket" /> is active.
+        ///     If Inactive the Bucket will not be used in auto-matching nor available for manual transation matching.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if active; otherwise, <c>false</c>.
+        /// </value>
+        public bool Active
+        {
+            get { return this.doNotUseActive; }
+            set
+            {
+                this.doNotUseActive = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Code
         {

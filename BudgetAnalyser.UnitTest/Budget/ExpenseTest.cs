@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -7,76 +8,114 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class ExpenseTest
     {
+        public StringBuilder Logs { get; private set; }
+
         [TestMethod]
-        public void OneCentIsValidAmount()
+        public void BucketMustHaveADescription()
         {
-            var subject = CreateSubject();
+            Expense subject = CreateSubject();
+            subject.Bucket.Description = null;
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
-            Assert.IsTrue(result);
-            Assert.IsTrue(this.Logs.Length == 0);
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
         }
 
         [TestMethod]
         public void MaxDeciamlIsValidAmount()
         {
-            var subject = CreateSubject();
+            Expense subject = CreateSubject();
             subject.Amount = decimal.MaxValue;
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
             Assert.IsTrue(result);
-            Assert.IsTrue(this.Logs.Length == 0);
-        }
-
-        [TestMethod]
-        public void NegativeAmountIsNotValid()
-        {
-            var subject = CreateSubject();
-            subject.Amount = -5;
-
-            var result = subject.Validate(this.Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
-        }
-
-        [TestMethod]
-        public void BucketMustHaveADescription()
-        {
-            var subject = CreateSubject();
-            subject.Bucket.Description = null;
-
-            var result = subject.Validate(this.Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
+            Assert.IsTrue(Logs.Length == 0);
         }
 
         [TestMethod]
         public void MustBeAnExpenseBucket()
         {
-            var subject = CreateSubject();
+            Expense subject = CreateSubject();
             subject.Bucket = new IncomeBudgetBucket("Foo", "Bar");
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
+            Assert.IsTrue(Logs.Length > 0);
         }
 
-        public StringBuilder Logs { get; private set; }
+        [TestMethod]
+        public void ZeroAmountIsNotValidWhenActive()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = 0;
+            subject.Bucket.Active = true;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void ZeroAmountIsValidWhenInActive()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = 0;
+            subject.Bucket.Active = false;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void NegativeAmountIsNotValid()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = -5;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void NegativeAmountIsNotValidEvenWhenInactive()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = -5;
+            subject.Bucket.Active = false;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void OneCentIsValidAmount()
+        {
+            Expense subject = CreateSubject();
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
+            Assert.IsTrue(Logs.Length == 0);
+        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.Logs = new StringBuilder();
+            Logs = new StringBuilder();
         }
 
         private Expense CreateSubject()
         {
-            return new Expense { Amount = 0.01M, Bucket = new SpentMonthlyExpenseBucket(TestData.TestDataConstants.CarMtcBucketCode, "Foo Bar") };
+            return new Expense { Amount = 0.01M, Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.CarMtcBucketCode, "Foo Bar") };
         }
     }
 }

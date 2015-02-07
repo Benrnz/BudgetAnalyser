@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -63,6 +64,17 @@ namespace BudgetAnalyser.UnitTest.Matching
             subject.Description = "Testing Description";
 
             bool success = subject.Match(new Transaction { Description = "xxxTesting Description" });
+            Assert.IsFalse(success);
+        }
+
+        [TestMethod]
+        public void AndMatchShouldFailWhenBucketIsInactive()
+        {
+            MatchingRule subject = Arrange();
+            subject.Description = "Testing Description";
+            subject.Bucket.Active = false;
+
+            bool success = subject.Match(new Transaction { Description = "Testing Description" });
             Assert.IsFalse(success);
         }
 
@@ -267,7 +279,10 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         private MatchingRule Arrange()
         {
-            return new MatchingRule(BucketRepo);
+            return new MatchingRule(BucketRepo)
+            {
+                BucketCode = StatementModelTestData.PowerBucket.Code,
+            };
         }
     }
 }

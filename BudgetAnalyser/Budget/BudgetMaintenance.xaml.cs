@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BudgetAnalyser.Budget
 {
@@ -69,6 +71,14 @@ namespace BudgetAnalyser.Budget
                     Controller.Incomes.ListChanged += OnIncomesListChanged;
                 }
             }
+        }
+
+        private void OnMouseWheelForBudgetItems(object sender, MouseWheelEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (listBox == null) return;
+
+            
         }
     }
 }

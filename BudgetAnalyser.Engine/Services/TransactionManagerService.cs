@@ -167,6 +167,7 @@ namespace BudgetAnalyser.Engine.Services
         public IEnumerable<string> FilterableBuckets()
         {
             return this.bucketRepository.Buckets
+                .Where(b => b.Active)
                 .Select(b => b.Code)
                 .Union(new[] { string.Empty, UncategorisedFilter })
                 .OrderBy(b => b);

@@ -227,6 +227,8 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("transaction");
             }
 
+            if (!Bucket.Active) return false;
+
             int matchesMade = 0;
             int maxMatches = 0;
             if (!string.IsNullOrWhiteSpace(Description))

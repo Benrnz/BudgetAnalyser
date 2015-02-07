@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,10 +14,10 @@ namespace BudgetAnalyser.UnitTest.Budget
         private const string NotSpecified = "NotSpecified";
 
         [TestMethod]
-        public void BucdgetBucketPropertiesShouldBeMapped()
+        public void BudgetBucketPropertiesShouldBeMapped()
         {
             var properties = typeof(BudgetBucket).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
-            Assert.AreEqual(2, properties.Count());
+            Assert.AreEqual(3, properties.Count());
         }
 
         [TestMethod]

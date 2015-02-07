@@ -14,7 +14,11 @@ namespace BudgetAnalyser.Engine.Budget
 
         public decimal Amount
         {
-            get { return this.doNotUseAmount; }
+            get
+            {
+                return this.doNotUseAmount;
+            }
+
             set
             {
                 if (value == this.doNotUseAmount)

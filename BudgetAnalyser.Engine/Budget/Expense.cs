@@ -15,9 +15,15 @@ namespace BudgetAnalyser.Engine.Budget
 
             bool retval = Bucket.Validate(validationMessages);
 
-            if (retval && Amount <= 0)
+            if (retval && Amount < 0)
             {
-                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, amount can not be zero or less.", Bucket.Description, Amount);
+                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, amount can't be less than zero.", Bucket.Description, Amount);
+                retval = false;
+            }
+
+            if (retval && Amount == 0 && Bucket.Active)
+            {
+                validationMessages.AppendFormat("Expense {0} with amount {1:C} is invalid, amount can't be zero.", Bucket.Description, Amount);
                 retval = false;
             }
 

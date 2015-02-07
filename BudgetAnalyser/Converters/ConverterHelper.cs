@@ -24,6 +24,7 @@ namespace BudgetAnalyser.Converters
         private const string SlightDebit = "Brush.SlightDebit";
         private const string SpentMonthlyBucket = "Brush.BudgetBucket.SpentMonthly";
         private const string TileBackground = "Brush.TileBackground";
+        private const string TileBackgroundAlternate = "Brush.TileBackgroundAlternate";
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] 
         public static readonly Brush AccumulatedBucketBrush =
@@ -75,6 +76,10 @@ namespace BudgetAnalyser.Converters
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] 
         public static readonly Brush TileBackgroundBrush =
             Application.Current.Resources[TileBackground] as Brush;
+
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly Brush TileBackgroundAlternateBrush =
+            Application.Current.Resources[TileBackgroundAlternate] as Brush;
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] 
         public static readonly Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);

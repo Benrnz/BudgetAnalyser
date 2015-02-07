@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -29,7 +29,6 @@ namespace BudgetAnalyser.Budget
         private readonly IUserInputBox inputBox;
         private readonly IBudgetMaintenanceService maintenanceService;
         private readonly IUserMessageBox messageBox;
-        private readonly List<BudgetBucket> newBuckets = new List<BudgetBucket>();
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
         private Guid dialogCorrelationId;
@@ -104,9 +103,6 @@ namespace BudgetAnalyser.Budget
         }
 
         public BudgetPieController BudgetPieController { get; private set; }
-
-        public NewBudgetModelController NewBudgetController { get; private set; }
-
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -116,8 +112,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseModel = value;
-                ReleaseListBindingEvents(Incomes);
-                ReleaseListBindingEvents(Expenses);
+                ReleaseListBindingEvents();
                 if (this.doNotUseModel == null)
                 {
                     Incomes = null;
@@ -125,20 +120,7 @@ namespace BudgetAnalyser.Budget
                 }
                 else
                 {
-                    Incomes = new BindingList<Income>(this.doNotUseModel.Model.Incomes.ToList());
-                    Incomes.ToList().ForEach(
-                        i =>
-                        {
-                            i.PropertyChanged += OnIncomeAmountPropertyChanged;
-                            i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
-                        });
-                    Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses.ToList());
-                    Expenses.ToList().ForEach(
-                        e =>
-                        {
-                            e.PropertyChanged += OnExpenseAmountPropertyChanged;
-                            e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
-                        });
+                    SubscribeListBindingEvents();
                 }
 
                 RaisePropertyChanged(() => Incomes);
@@ -199,6 +181,8 @@ namespace BudgetAnalyser.Budget
         {
             get { return new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null); }
         }
+
+        public NewBudgetModelController NewBudgetController { get; private set; }
 
         public ICommand SaveAsCommand
         {
@@ -270,7 +254,6 @@ namespace BudgetAnalyser.Budget
                 return false;
             }
 
-            this.newBuckets.Clear();
             bool valid = this.maintenanceService.SaveBudget(CurrentBudget.Model, comment);
             if (!valid)
             {
@@ -361,7 +344,7 @@ namespace BudgetAnalyser.Budget
             while (proposedDate < DateTime.Today)
             {
                 proposedDate = proposedDate.AddMonths(1);
-            } 
+            }
             NewBudgetController.ShowDialog(proposedDate);
         }
 
@@ -380,12 +363,13 @@ namespace BudgetAnalyser.Budget
             {
                 this.messageBox.Show(ex.Message, "Unable to create new budget");
             }
-       }
+        }
 
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             this.dirty = true;
             Expense newExpense = Expenses.AddNew();
+            Debug.Assert(newExpense != null);
             newExpense.Amount = 0;
 
             // New buckets must be created because the one passed in, is a single command parameter instance to be used as a type indicator only.
@@ -407,9 +391,6 @@ namespace BudgetAnalyser.Budget
                 throw new InvalidCastException("Invalid type passed to Add New Expense: " + expense);
             }
 
-            // With every new expense created we need to create a new bucket.
-            this.newBuckets.Add(newExpense.Bucket);
-
             Expenses.RaiseListChangedEvents = true;
             newExpense.PropertyChanged += OnExpenseAmountPropertyChanged;
         }
@@ -418,7 +399,6 @@ namespace BudgetAnalyser.Budget
         {
             this.dirty = true;
             var newIncome = new Income { Bucket = new IncomeBudgetBucket(string.Empty, string.Empty), Amount = 0 };
-            this.newBuckets.Add(newIncome.Bucket);
             Incomes.Add(newIncome);
             newIncome.PropertyChanged += OnIncomeAmountPropertyChanged;
         }
@@ -593,19 +573,24 @@ namespace BudgetAnalyser.Budget
             BudgetPieController.Load(CurrentBudget.Model);
         }
 
-        private void ReleaseListBindingEvents(IEnumerable<BudgetItem> items)
+        private void ReleaseListBindingEvents()
         {
-            if (items == null)
+            if (Incomes != null)
             {
-                return;
+                foreach (Income item in Incomes)
+                {
+                    item.PropertyChanged -= OnIncomeAmountPropertyChanged;
+                    item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
+                }
             }
 
-            foreach (BudgetItem item in items)
+            if (Expenses != null)
             {
-                item.PropertyChanged -= OnIncomeAmountPropertyChanged;
-                item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
-                item.PropertyChanged -= OnExpenseAmountPropertyChanged;
-                item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+                foreach (Expense item in Expenses)
+                {
+                    item.PropertyChanged -= OnExpenseAmountPropertyChanged;
+                    item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
+                }
             }
         }
 
@@ -625,7 +610,6 @@ namespace BudgetAnalyser.Budget
                 return true;
             }
 
-            this.newBuckets.Clear();
             return false;
         }
 
@@ -644,6 +628,24 @@ namespace BudgetAnalyser.Budget
             CurrentBudget = new BudgetCurrencyContext(Budgets, budgetToShow);
             Shown = true;
             this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
+        }
+
+        private void SubscribeListBindingEvents()
+        {
+            Incomes = new BindingList<Income>(this.doNotUseModel.Model.Incomes.ToList());
+            Incomes.ToList().ForEach(
+                i =>
+                {
+                    i.PropertyChanged += OnIncomeAmountPropertyChanged;
+                    i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
+                });
+            Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses.ToList());
+            Expenses.ToList().ForEach(
+                e =>
+                {
+                    e.PropertyChanged += OnExpenseAmountPropertyChanged;
+                    e.Bucket.PropertyChanged += OnExpenseAmountPropertyChanged;
+                });
         }
 
         private void ValidateAndClose()

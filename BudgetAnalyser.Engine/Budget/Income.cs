@@ -21,9 +21,9 @@ namespace BudgetAnalyser.Engine.Budget
                 retval = false;
             }
 
-            if (retval && Amount <= 0)
+            if (retval && Amount < 0)
             {
-                validationMessages.AppendFormat("Income {0} with Amount {1:C} is invalid, it can not be zero or less.", Bucket.Description, Amount);
+                validationMessages.AppendFormat("Income {0} with Amount {1:C} is invalid, it can't be less than zero.", Bucket.Description, Amount);
                 retval = false;
             }
 

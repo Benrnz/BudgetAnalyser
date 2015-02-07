@@ -3,6 +3,8 @@
              xmlns:budget="clr-namespace:BudgetAnalyser.Engine.Budget;assembly=BudgetAnalyser.Engine"
              xmlns:views1="clr-namespace:BudgetAnalyser.Budget"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:wpf="clr-namespace:Rees.Wpf;assembly=Rees.Wpf"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -25,11 +27,14 @@
 
         <DataTemplate x:Key="ExpenseTemplate"
                       DataType="{x:Type budget:Expense}">
-            <Grid FocusManager.FocusedElement="{Binding ElementName=ExpenseCode}"
+            <Grid x:Name="LayoutGrid"
+                  Background="{StaticResource Brush.TileBackground}"
+                  FocusManager.FocusedElement="{Binding ElementName=ExpenseCode}"
                   Height="35"
                   Margin="1"
                   ToolTip="{Binding Summary}">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -37,25 +42,39 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
+                <CheckBox IsChecked="{Binding Bucket.Active}"
+                          ToolTip="This is an active expense. Only Active expenses participate in auto-matching or are available for manual matching to transactions. When inactive no amounts are credited to the ledger book during reconciliation."
+                          Visibility="{Binding ElementName=LayoutGrid, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
+
                 <TextBox x:Name="ExpenseCode"
+                         Grid.Column="1"
+                         Grid.Row="0"
+                         IsEnabled="{Binding Bucket.Active}"
                          FontSize="12"
                          HorizontalAlignment="Left"
                          Margin="2"
                          Style="{StaticResource BudgetItemTextBox}"
                          Text="{Binding Bucket.Code}"
                          Width="70" />
+
                 <TextBox FontSize="10"
+                         IsEnabled="{Binding Bucket.Active}"
+                         Grid.Column="1"
                          Grid.Row="1"
                          Margin="2,0,0,0"
                          Style="{StaticResource BudgetItemTextBox}"
                          Text="{Binding Bucket.Description}" />
-                <StackPanel Grid.Column="1"
+
+                <StackPanel Grid.Column="2"
+                            Grid.Row="0"
                             Grid.RowSpan="2"
                             Orientation="Horizontal">
                     <TextBox FontSize="16"
                              Margin="2"
                              Style="{StaticResource BudgetItemTextBox}"
-                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" />
+                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}"
+                             Visibility="{Binding Bucket.Active, Converter={StaticResource Converter.BoolToVis}}" />
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
@@ -68,10 +87,10 @@
                                 <StackPanel x:Name="ContentContainer"
                                             Background="{Binding Bucket, Converter={StaticResource Converter.BucketToColour}}">
                                     <TextBlock Foreground="{StaticResource Brush.MainBackground}"
+                                               HorizontalAlignment="Center"
                                                Margin="1"
                                                Text="x"
                                                VerticalAlignment="Center"
-                                               HorizontalAlignment="Center"
                                                Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
                             </ControlTemplate>
@@ -83,11 +102,14 @@
 
         <DataTemplate x:Key="IncomeTemplate"
                       DataType="{x:Type budget:Income}">
-            <Grid FocusManager.FocusedElement="{Binding ElementName=IncomeCode}"
+            <Grid x:Name="LayoutGrid"
+                  Background="{StaticResource Brush.TileBackground}"
+                  FocusManager.FocusedElement="{Binding ElementName=IncomeCode}"
                   Height="35"
                   Margin="1"
                   ToolTip="{Binding Summary}">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -95,24 +117,37 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+                <CheckBox IsChecked="{Binding Bucket.Active}"
+                          ToolTip="This is an active income. Only Active incomes participate in auto-matching or are available for manual matching to transactions."
+                          Visibility="{Binding ElementName=LayoutGrid, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
+                
                 <TextBox x:Name="IncomeCode"
+                         Grid.Row="0"
+                         Grid.Column="1"
                          FontSize="12"
                          HorizontalAlignment="Left"
+                         IsEnabled="{Binding Bucket.Active}"
                          Margin="2"
                          Style="{StaticResource BudgetItemTextBox}"
                          Text="{Binding Bucket.Code}"
                          Width="70" />
+                
                 <TextBox FontSize="10"
+                         Grid.Column="1"
                          Grid.Row="1"
+                         IsEnabled="{Binding Bucket.Active}"
                          Margin="2,0,0,0"
                          Style="{StaticResource BudgetItemTextBox}"
                          Text="{Binding Bucket.Description}" />
-                <StackPanel Grid.Column="1"
+                
+                <StackPanel Grid.Column="2"
+                            Grid.Row="0"
                             Grid.RowSpan="2"
                             Orientation="Horizontal">
                     <TextBox FontSize="16"
                              Style="{StaticResource BudgetItemTextBox}"
-                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" />
+                             Text="{Binding Amount, StringFormat=C, UpdateSourceTrigger=PropertyChanged}" 
+                             Visibility="{Binding Bucket.Active, Converter={StaticResource Converter.BoolToVis}}"/>
                     <Button Background="Transparent"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views1:BudgetMaintenance}}, Path=DataContext.DeleteBudgetItemCommand}"
                             CommandParameter="{Binding .}"
@@ -124,9 +159,9 @@
                             <ControlTemplate>
                                 <StackPanel x:Name="ContentContainer"
                                             Background="{Binding Bucket, Converter={StaticResource Converter.BucketToColour}}">
-                                    <TextBlock Margin="1"
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Margin="1"
                                                Text="x"
-                                               HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                Visibility="{Binding ElementName=ContentContainer, Path=IsMouseOver, Converter={StaticResource Converter.BoolToVis2}}" />
                                 </StackPanel>
@@ -186,6 +221,8 @@
         <views1:BudgetModelNameUserControl DataContext="{Binding CurrentBudget}"
                                            Grid.ColumnSpan="2" />
         <StackPanel Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Grid.Row="0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button Command="{Binding ShowPieCommand}"
@@ -203,13 +240,15 @@
             <Button Command="{Binding SaveCommand}"
                     Style="{StaticResource Button.Round.Save}" />
             <Button Command="{Binding NewBudgetCommand}"
-                    Style="{StaticResource Button.Round.Add}" 
-                    ToolTip="Clone the current budget and create a new one based on it."/>
+                    Style="{StaticResource Button.Round.Add}"
+                    ToolTip="Clone the current budget and create a new one based on it." />
             <Button Command="{Binding DemoBudgetCommand}"
                     Style="{StaticResource Button.Round.Smiley}" />
         </StackPanel>
+
         <!-- Incomes List -->
         <ScrollViewer x:Name="IncomesListScrollViewer"
+                      Grid.Column="0"
                       Grid.Row="1"
                       HorizontalScrollBarVisibility="Hidden"
                       Margin="2">
@@ -223,11 +262,16 @@
                          ItemContainerStyle="{StaticResource ListBox.BudgetContainerStyle}"
                          ItemsSource="{Binding Incomes}"
                          ItemTemplate="{StaticResource IncomeTemplate}"
-                         SelectionMode="Single" />
+                         SelectionMode="Single">
+                    <i:Interaction.Behaviors>
+                        <wpf:BubbleScrollEventBehaviour />
+                    </i:Interaction.Behaviors>
+                </ListBox>
             </StackPanel>
         </ScrollViewer>
         <Button Background="{StaticResource Brush.BudgetBucket.Income}"
                 Command="{Binding AddNewIncomeCommand}"
+                Grid.Column="0"
                 Grid.Row="2"
                 Style="{StaticResource BudgetButton}">
             <Button.Content>
@@ -235,6 +279,7 @@
                            Text="Add New Income" />
             </Button.Content>
         </Button>
+
         <!-- Expenses List -->
         <ScrollViewer x:Name="ExpensesListScrollViewer"
                       Grid.Column="1"
@@ -251,7 +296,12 @@
                          ItemContainerStyle="{StaticResource ListBox.BudgetContainerStyle}"
                          ItemsSource="{Binding Expenses}"
                          ItemTemplate="{StaticResource ExpenseTemplate}"
-                         SelectionMode="Single" />
+                         MouseWheel="OnMouseWheelForBudgetItems"
+                         SelectionMode="Single">
+                    <i:Interaction.Behaviors>
+                        <wpf:BubbleScrollEventBehaviour />
+                    </i:Interaction.Behaviors>
+                </ListBox>
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Column="1"
@@ -280,7 +330,6 @@
                     <budget:SavedUpForExpenseBucket />
                 </Button.CommandParameter>
             </Button>
-
             <Button Background="{StaticResource Brush.BudgetBucket.SavingsCommittment}"
                     Command="{Binding AddNewExpenseCommand}"
                     Style="{StaticResource BudgetButton}">
@@ -295,6 +344,7 @@
         </StackPanel>
         <!-- Totals Row 1 -->
         <StackPanel Grid.Row="3"
+                    Grid.Column="0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <TextBlock Style="{StaticResource TotalStyle}"
@@ -323,6 +373,8 @@
                        Text="{Binding Surplus, StringFormat=C}" />
         </StackPanel>
         <Grid Background="{StaticResource Brush.MainBackground}"
+              Grid.Column="0"
+              Grid.Row="0"
               Grid.ColumnSpan="2"
               Grid.RowSpan="5"
               Visibility="{Binding BudgetPieController.Shown, Converter={StaticResource Converter.BoolToVis}}">

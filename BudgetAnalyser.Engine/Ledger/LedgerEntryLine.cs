@@ -404,14 +404,18 @@ namespace BudgetAnalyser.Engine.Ledger
                 BudgetCreditLedgerTransaction budgetedAmount;
                 if (ledgerBucket.StoredInAccount.IsSalaryAccount)
                 {
-                    budgetedAmount = new BudgetCreditLedgerTransaction { Amount = expenseBudget.Amount, Narrative = "Budgeted Amount" };
+                    budgetedAmount = new BudgetCreditLedgerTransaction
+                    {
+                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0, 
+                        Narrative = expenseBudget.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled.",
+                    };
                 }
                 else
                 {
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
-                        Amount = expenseBudget.Amount,
-                        Narrative = "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer.",
+                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0,
+                        Narrative = expenseBudget.Bucket.Active ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer." : "Warning! Bucket has been disabled.",
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
                 }

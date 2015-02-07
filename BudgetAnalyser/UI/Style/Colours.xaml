@@ -171,6 +171,10 @@
         White
     </Color>
 
+    <Color x:Key="Colour.Text.Disabled">
+        #FF888888
+    </Color>
+
     <Color x:Key="Colour.Text.Reverse">
         Black
     </Color>
@@ -236,6 +240,9 @@
 
     <SolidColorBrush x:Key="Brush.Text.Default"
                      Color="{StaticResource Colour.Text.Default}" />
+
+    <SolidColorBrush x:Key="Brush.Text.Disabled"
+                     Color="{StaticResource Colour.Text.Disabled}" />
 
     <SolidColorBrush x:Key="Brush.SlightDebit"
                      Color="{StaticResource Colour.SlightDebit}" />

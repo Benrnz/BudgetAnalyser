@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -7,76 +8,100 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class IncomeTest
     {
+        public StringBuilder Logs { get; private set; }
+
         [TestMethod]
-        public void OneCentIsValidIncome()
+        public void BucketMustHaveADescription()
         {
-            var subject = CreateSubject();
+            Income subject = CreateSubject();
+            subject.Bucket.Description = null;
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
-            Assert.IsTrue(result);
-            Assert.IsTrue(this.Logs.Length == 0);
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
         }
 
         [TestMethod]
         public void MaxDeciamlIsValidIncome()
         {
-            var subject = CreateSubject();
+            Income subject = CreateSubject();
             subject.Amount = decimal.MaxValue;
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
             Assert.IsTrue(result);
-            Assert.IsTrue(this.Logs.Length == 0);
-        }
-
-        [TestMethod]
-        public void NegativeAmountIsNotValid()
-        {
-            var subject = CreateSubject();
-            subject.Amount = -5;
-
-            var result = subject.Validate(this.Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
-        }
-
-        [TestMethod]
-        public void BucketMustHaveADescription()
-        {
-            var subject = CreateSubject();
-            subject.Bucket.Description = null;
-
-            var result = subject.Validate(this.Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
+            Assert.IsTrue(Logs.Length == 0);
         }
 
         [TestMethod]
         public void MustBeAnIncomeBucket()
         {
-            var subject = CreateSubject();
+            Income subject = CreateSubject();
             subject.Bucket = new SavedUpForExpenseBucket("Foo", "Bar");
 
-            var result = subject.Validate(this.Logs);
+            bool result = subject.Validate(Logs);
 
             Assert.IsFalse(result);
-            Assert.IsTrue(this.Logs.Length > 0);
+            Assert.IsTrue(Logs.Length > 0);
         }
 
-        public StringBuilder Logs { get; private set; }
+        [TestMethod]
+        public void ZeroAmountIsValid()
+        {
+            Income subject = CreateSubject();
+            subject.Amount = 0;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void NegativeAmountIsNotValid()
+        {
+            Income subject = CreateSubject();
+            subject.Amount = -5;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void NegativeAmountIsNotValidEvenWhenInActive()
+        {
+            Income subject = CreateSubject();
+            subject.Amount = -5;
+            subject.Bucket.Active = false;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void OneCentIsValidIncome()
+        {
+            Income subject = CreateSubject();
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
+            Assert.IsTrue(Logs.Length == 0);
+        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.Logs = new StringBuilder();
+            Logs = new StringBuilder();
         }
 
         private Income CreateSubject()
         {
-            return new Income { Amount = 0.01M, Bucket = new IncomeBudgetBucket(TestData.TestDataConstants.IncomeBucketCode, "Foo Bar") };
+            return new Income { Amount = 0.01M, Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Foo Bar") };
         }
     }
 }
