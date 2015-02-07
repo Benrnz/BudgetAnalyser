@@ -196,6 +196,7 @@
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
+    <Compile Include="MainApplicationStateModel.cs" />
     <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
@@ -206,6 +207,13 @@
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
     <Compile Include="NullLogger.cs" />
+    <Compile Include="Persistence\ApplicationAutoMapperConfiguration.cs" />
+    <Compile Include="Persistence\ApplicationDatabase.cs" />
+    <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
+    <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
+    <Compile Include="Persistence\StorageBranch.cs" />
+    <Compile Include="Persistence\StorageRootToApplicationDatabaseMapper.cs" />
+    <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="NewZealandPublicHolidays.cs" />
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />

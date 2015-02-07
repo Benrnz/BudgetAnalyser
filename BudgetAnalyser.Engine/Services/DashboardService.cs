@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 
@@ -26,8 +27,10 @@ namespace BudgetAnalyser.Engine.Services
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
+        private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
+        private ApplicationDatabase budgetAnalyserDatabase;
 
         public DashboardService(
             [NotNull] IWidgetService widgetService,
@@ -37,7 +40,8 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ITransactionManagerService transactionManagerService,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] IApplicationDatabaseRepository applicationRepository)
         {
             if (widgetService == null)
             {
@@ -68,6 +72,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("accountTypeRepository");
             }
+
             if (transactionManagerService == null)
             {
                 throw new ArgumentNullException("transactionManagerService");
@@ -76,6 +81,10 @@ namespace BudgetAnalyser.Engine.Services
             if (logger == null)
             {
                 throw new ArgumentNullException("logger");
+            }
+            if (applicationRepository == null)
+            {
+                throw new ArgumentNullException("applicationRepository");
             }
 
             this.widgetService = widgetService;
@@ -86,6 +95,7 @@ namespace BudgetAnalyser.Engine.Services
             this.accountTypeRepository = accountTypeRepository;
             this.transactionManagerService = transactionManagerService;
             this.logger = logger;
+            this.applicationRepository = applicationRepository;
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
@@ -166,14 +176,14 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(IEnumerable<WidgetPersistentState> storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(MainApplicationStateModel storedState)
         {
             if (this.availableDependencies == null)
             {
                 this.availableDependencies = InitialiseSupportedDependenciesArray();
             }
 
-            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState));
+            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
             foreach (var group in WidgetGroups)
             {
@@ -182,6 +192,8 @@ namespace BudgetAnalyser.Engine.Services
                     ScheduledWidgetUpdate(widget);
                 }
             }
+
+            this.budgetAnalyserDatabase = this.applicationRepository.Load(storedState);
 
             return WidgetGroups;
         }
@@ -200,9 +212,13 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public IEnumerable<WidgetPersistentState> PreparePersistentStateData()
+        public MainApplicationStateModel PreparePersistentStateData()
         {
-            return WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState);
+            return new MainApplicationStateModel
+            {
+                WidgetStates = WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList(),
+                BudgetAnalyserDataStorage = this.budgetAnalyserDatabase.FileName,
+            };
         }
 
         public void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove)

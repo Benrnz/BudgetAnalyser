@@ -50,13 +50,16 @@ namespace BudgetAnalyser
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "All exceptions are already logged, any further exceptions attempting to gracefully shutdown can be ignored.")]
         private void LogUnhandledException(string origin, object ex)
         {
-            var builder = new StringBuilder();
-            builder.AppendLine(string.Empty);
-            builder.AppendLine("=====================================================================================");
-            builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
-            builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
-            builder.AppendLine(ex.ToString());
-            this.logger.LogError(_ => builder.ToString());
+            if (this.logger != null)
+            {
+                var builder = new StringBuilder();
+                builder.AppendLine(string.Empty);
+                builder.AppendLine("=====================================================================================");
+                builder.AppendLine(DateTime.Now.ToString(CultureInfo.CurrentCulture));
+                builder.AppendLine("Unhandled exception was thrown from orgin: " + origin);
+                builder.AppendLine(ex.ToString());
+                this.logger.LogError(_ => builder.ToString());
+            }
 
             // If you get a NullReference Exception with no inner exception here its most likely because a class takes an interface in its constructor that Autofac doesn't have a registration for.
             // Most likely you forgot to annotate an implementation of an interface with [AutoRegisterWithIoc]

@@ -192,7 +192,6 @@
       <DependentUpon>CreateNewSurprisePaymentMonitorUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\CreateNewSurprisePaymentMonitorController.cs" />
-    <Compile Include="Dashboard\DashboardApplicationStateModel.cs" />
     <Compile Include="Dashboard\DashboardCommands.cs" />
     <Compile Include="Dashboard\DashboardController.cs" />
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">

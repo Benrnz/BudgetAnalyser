@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
@@ -129,25 +128,21 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            var storedState = message.RehydratedModels[typeof(DashboardApplicationStateV1)].AdaptModel<DashboardApplicationStateModel>();
+            var storedState = message.RehydratedModels[typeof(DashboardApplicationStateV1)].AdaptModel<MainApplicationStateModel>();
             if (storedState == null)
             {
                 return;
             }
 
             // Now that we have the previously persisted state data we can properly intialise the service.
-            WidgetGroups = this.dashboardService.LoadPersistedStateData(storedState.WidgetStates);
+            WidgetGroups = this.dashboardService.LoadPersistedStateData(storedState);
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             var widgetStates = this.dashboardService.PreparePersistentStateData();
 
-            message.PersistThisModel(
-                new DashboardApplicationStateV1
-                {
-                    Model = new DashboardApplicationStateModel { WidgetStates = widgetStates.ToList() }
-                });
+            message.PersistThisModel(new DashboardApplicationStateV1 { Model = widgetStates });
         }
 
         private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
