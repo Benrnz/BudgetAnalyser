@@ -27,10 +27,8 @@ namespace BudgetAnalyser.Engine.Services
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
-        private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
-        private ApplicationDatabase budgetAnalyserDatabase;
 
         public DashboardService(
             [NotNull] IWidgetService widgetService,
@@ -40,8 +38,7 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ITransactionManagerService transactionManagerService,
-            [NotNull] ILogger logger,
-            [NotNull] IApplicationDatabaseRepository applicationRepository)
+            [NotNull] ILogger logger)
         {
             if (widgetService == null)
             {
@@ -82,10 +79,6 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("logger");
             }
-            if (applicationRepository == null)
-            {
-                throw new ArgumentNullException("applicationRepository");
-            }
 
             this.widgetService = widgetService;
             this.widgetRepository = widgetRepository;
@@ -95,7 +88,6 @@ namespace BudgetAnalyser.Engine.Services
             this.accountTypeRepository = accountTypeRepository;
             this.transactionManagerService = transactionManagerService;
             this.logger = logger;
-            this.applicationRepository = applicationRepository;
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
@@ -176,7 +168,7 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(MainApplicationStateModel storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsStateModel storedState)
         {
             if (this.availableDependencies == null)
             {
@@ -192,8 +184,6 @@ namespace BudgetAnalyser.Engine.Services
                     ScheduledWidgetUpdate(widget);
                 }
             }
-
-            this.budgetAnalyserDatabase = this.applicationRepository.Load(storedState);
 
             return WidgetGroups;
         }
@@ -212,12 +202,11 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public MainApplicationStateModel PreparePersistentStateData()
+        public WidgetsStateModel PreparePersistentStateData()
         {
-            return new MainApplicationStateModel
+            return new WidgetsStateModel
             {
                 WidgetStates = WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList(),
-                BudgetAnalyserDataStorage = this.budgetAnalyserDatabase.FileName,
             };
         }
 

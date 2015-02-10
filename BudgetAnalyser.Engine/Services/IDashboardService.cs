@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     This must be called first before other methods of this service can be used.
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
-        ObservableCollection<WidgetGroup> LoadPersistedStateData(MainApplicationStateModel storedState);
+        ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsStateModel storedState);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
@@ -72,7 +72,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.
         /// </summary>
-        MainApplicationStateModel PreparePersistentStateData();
+        WidgetsStateModel PreparePersistentStateData();
 
         /// <summary>
         ///     Removes a multi-instance widget from the widget groups.

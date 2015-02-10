@@ -188,6 +188,7 @@
     <Compile Include="Converters\NumberSignToBrushConverter.cs" />
     <Compile Include="Converters\NumberToBoldConverter.cs" />
     <Compile Include="Converters\PercentToColourConverter.cs" />
+    <Compile Include="MainApplicationStateV1.cs" />
     <Compile Include="Dashboard\CreateNewSurprisePaymentMonitorUserControl.xaml.cs">
       <DependentUpon>CreateNewSurprisePaymentMonitorUserControl.xaml</DependentUpon>
     </Compile>

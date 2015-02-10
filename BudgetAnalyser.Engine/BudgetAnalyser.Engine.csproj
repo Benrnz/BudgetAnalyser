@@ -228,6 +228,7 @@
     <Compile Include="Reports\ReportTransaction.cs" />
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />
     <Compile Include="Reports\SeriesData.cs" />
+    <Compile Include="Services\ApplicationDatabaseService.cs" />
     <Compile Include="Services\BudgetMaintenanceService.cs" />
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IBurnDownChartsService.cs" />
+    <Compile Include="Services\IApplicationDatabaseService.cs" />
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\ILongTermSpendingChartService.cs" />
@@ -308,6 +310,7 @@
     <Compile Include="Widgets\CurrentFilesWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
     <Compile Include="Widgets\IUserDefinedWidget.cs" />
+    <Compile Include="Widgets\WidgetsStateModel.cs" />
     <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
     <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />

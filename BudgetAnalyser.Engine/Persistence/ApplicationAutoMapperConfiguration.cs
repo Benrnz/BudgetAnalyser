@@ -11,10 +11,10 @@ namespace BudgetAnalyser.Engine.Persistence
         public void RegisterMappings()
         {
             Mapper.CreateMap<BudgetAnalyserStorageRoot, ApplicationDatabase>()
-                .ForMember(db => db.BudgetCollection, m => m.MapFrom(dto => dto.BudgetCollectionRootDto.Source))
-                .ForMember(db => db.LedgerBook, m => m.MapFrom(dto => dto.LedgerBookRootDto.Source))
-                .ForMember(db => db.MatchingRulesCollection, m => m.MapFrom(dto => dto.MatchingRulesCollectionRootDto.Source))
-                .ForMember(db => db.StatementModel, m => m.MapFrom(dto => dto.StatementModelRootDto.Source));
+                .ForMember(db => db.BudgetCollectionStorageKey, m => m.MapFrom(dto => dto.BudgetCollectionRootDto.Source))
+                .ForMember(db => db.LedgerBookStorageKey, m => m.MapFrom(dto => dto.LedgerBookRootDto.Source))
+                .ForMember(db => db.MatchingRulesCollectionStorageKey, m => m.MapFrom(dto => dto.MatchingRulesCollectionRootDto.Source))
+                .ForMember(db => db.StatementModelStorageKey, m => m.MapFrom(dto => dto.StatementModelRootDto.Source));
         }
     }
 }
