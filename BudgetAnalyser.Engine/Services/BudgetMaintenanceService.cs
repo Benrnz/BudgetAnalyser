@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="System.ArgumentNullException">budgetRepository</exception>
         public BudgetMaintenanceService(
             [NotNull] IBudgetRepository budgetRepository,
-            [NotNull] IBudgetBucketRepository bucketRepo, 
+            [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger)
         {
             if (budgetRepository == null)
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("bucketRepo");
             }
-            
+
             if (logger == null)
             {
                 throw new ArgumentNullException("logger");
@@ -58,27 +58,17 @@ namespace BudgetAnalyser.Engine.Services
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
         /// <summary>
-        ///     Creates a new budget collection with one new empty budget model.
-        /// </summary>
-        /// <returns>
-        ///     An object that contains a collection of one new budget.
-        /// </returns>
-        public BudgetCurrencyContext CreateNewBudgetCollection()
-        {
-            var budget = new BudgetModel();
-            this.budgetsCollection = new BudgetCollection(new[] { budget });
-            return new BudgetCurrencyContext(this.budgetsCollection, budget);
-        }
-
-        /// <summary>
-        /// Clones the given <see cref="BudgetModel"/> to create a new budget with a future effective date.
+        ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.
         /// </summary>
         /// <param name="sourceBudget">The source budget to clone from.</param>
         /// <param name="newBudgetEffectiveFrom">This date will be used as the new budget's effective date.</param>
         /// <returns>The newly created budget.</returns>
         /// <exception cref="ArgumentNullException">Will be thrown if source budget is null.</exception>
         /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
-        /// <exception cref="ArgumentException">Will be thrown if the effective date of the new budget is not after the provided budget.</exception>
+        /// <exception cref="ArgumentException">
+        ///     Will be thrown if the effective date of the new budget is not after the provided
+        ///     budget.
+        /// </exception>
         /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {
@@ -100,13 +90,14 @@ namespace BudgetAnalyser.Engine.Services
             var validationMessages = new StringBuilder();
             if (!sourceBudget.Validate(validationMessages))
             {
-                throw new ValidationWarningException(string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}", validationMessages));
+                throw new ValidationWarningException(
+                    string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}", validationMessages));
             }
 
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = newBudgetEffectiveFrom,
-                Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name),
+                Name = string.Format(CultureInfo.CurrentCulture, "Copy of {0}", sourceBudget.Name)
             };
             newBudget.Update(CloneBudgetIncomes(sourceBudget), CloneBudgetExpenses(sourceBudget));
 
@@ -121,6 +112,19 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
+        ///     Creates a new budget collection with one new empty budget model.
+        /// </summary>
+        /// <returns>
+        ///     An object that contains a collection of one new budget.
+        /// </returns>
+        public BudgetCurrencyContext CreateNewBudgetCollection()
+        {
+            var budget = new BudgetModel();
+            this.budgetsCollection = new BudgetCollection(new[] { budget });
+            return new BudgetCurrencyContext(this.budgetsCollection, budget);
+        }
+
+        /// <summary>
         ///     Loads the collection of budgets from persistent storage.
         /// </summary>
         /// <param name="storageKey">The storage key to identify the budget collection.</param>
@@ -132,6 +136,11 @@ namespace BudgetAnalyser.Engine.Services
         {
             this.budgetsCollection = this.budgetRepository.Load(storageKey);
             return new BudgetCurrencyContext(this.budgetsCollection, this.budgetsCollection.CurrentActiveBudget);
+        }
+
+        public LastBudgetLoadedV1 PreparePersistentStateData()
+        {
+            return new LastBudgetLoadedV1 { BudgetCollectionStorageKey = this.budgetsCollection.FileName };
         }
 
         /// <summary>
@@ -175,7 +184,7 @@ namespace BudgetAnalyser.Engine.Services
                 this.budgetRepository.Save(this.budgetsCollection);
                 return true;
             }
-            
+
             this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
             return false;
         }
@@ -222,19 +231,22 @@ namespace BudgetAnalyser.Engine.Services
 
         private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
         {
-            return source.Expenses.Select(sourceExpense => new Expense
-            {
-                Amount = sourceExpense.Amount, Bucket = sourceExpense.Bucket,
-            }).ToList();
+            return source.Expenses.Select(
+                sourceExpense => new Expense
+                {
+                    Amount = sourceExpense.Amount,
+                    Bucket = sourceExpense.Bucket
+                }).ToList();
         }
 
         private static IEnumerable<Income> CloneBudgetIncomes(BudgetModel source)
         {
-            return source.Incomes.Select(sourceExpense => new Income
-            {
-                Amount = sourceExpense.Amount,
-                Bucket = sourceExpense.Bucket,
-            }).ToList();
+            return source.Incomes.Select(
+                sourceExpense => new Income
+                {
+                    Amount = sourceExpense.Amount,
+                    Bucket = sourceExpense.Bucket
+                }).ToList();
         }
     }
 }

@@ -8,6 +8,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -195,17 +196,17 @@ namespace BudgetAnalyser.Filtering
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof(PersistentFiltersV1)))
+            var filterState = message.ElementOfType<PersistentFiltersV1>();
+            if (filterState == null)
             {
                 return;
             }
 
-            var rehydratedFilters = message.RehydratedModels[typeof(PersistentFiltersV1)].AdaptModel<FilterStateV1>();
             Criteria = new GlobalFilterCriteria
             {
-                AccountType = rehydratedFilters.AccountType,
-                BeginDate = rehydratedFilters.BeginDate,
-                EndDate = rehydratedFilters.EndDate
+                AccountType = filterState.AccountType,
+                BeginDate = filterState.BeginDate,
+                EndDate = filterState.EndDate
             };
 
             SendFilterAppliedMessage();
@@ -221,15 +222,12 @@ namespace BudgetAnalyser.Filtering
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var noCriteria = Criteria == null;
+            bool noCriteria = Criteria == null;
             var filterState = new PersistentFiltersV1
             {
-                Model = new FilterStateV1
-                {
-                    BeginDate = noCriteria ? null : Criteria.BeginDate,
-                    EndDate = noCriteria ? null : Criteria.EndDate,
-                    AccountType = noCriteria ? null : Criteria.AccountType
-                }
+                BeginDate = noCriteria ? null : Criteria.BeginDate,
+                EndDate = noCriteria ? null : Criteria.EndDate,
+                AccountType = noCriteria ? null : Criteria.AccountType
             };
 
             message.PersistThisModel(filterState);

@@ -20,17 +20,25 @@ namespace BudgetAnalyser.Engine.Services
             this.applicationRepository = applicationRepository;
         }
 
-        public ApplicationDatabase LoadPersistedStateData(MainApplicationStateModel storedState)
+        public ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState)
         {
+            // TODO Reconsider this when creating a new ApplicationDatabase is available from the repository.
+            if (string.IsNullOrWhiteSpace(storedState.BudgetAnalyserDataStorageKey)) return null;
+
             this.budgetAnalyserDatabase = this.applicationRepository.Load(storedState);
             return this.budgetAnalyserDatabase;
         }
 
-        public MainApplicationStateModel PreparePersistentStateData()
+        public MainApplicationStateModelV1 PreparePersistentStateData()
         {
-            return new MainApplicationStateModel
+            if (this.budgetAnalyserDatabase == null)
             {
-                BudgetAnalyserDataStorage = this.budgetAnalyserDatabase.FileName,
+                return new MainApplicationStateModelV1();
+            }
+
+            return new MainApplicationStateModelV1
+            {
+                BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
             };
         }
     }

@@ -149,10 +149,10 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
             List<BudgetBucket> buckets = this.addUserDefinedBurnDownController.SelectedBuckets.ToList();
             BurnDownChartAnalyserResult result = this.chartsService.CreateNewCustomAggregateChart(
-                this.statement, 
-                this.budget, 
-                buckets, 
-                this.ledgerBook, 
+                this.statement,
+                this.budget,
+                buckets,
+                this.ledgerBook,
                 this.beginDate,
                 this.addUserDefinedBurnDownController.ChartTitle);
             BucketBurnDownController newChart = BuildBucketBurnDownController(result);
@@ -161,15 +161,16 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (message.RehydratedModels.ContainsKey(typeof(CustomBurnDownChartsV1)))
+            var customChartState = message.ElementOfType<CustomBurnDownChartsV1>();
+            if (customChartState != null)
             {
-                this.chartsService.LoadPersistedStateData(message.RehydratedModels[typeof(CustomBurnDownChartsV1)].Model);
+                this.chartsService.LoadPersistedStateData(customChartState);
             }
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            message.PersistThisModel(new CustomBurnDownChartsV1 { Model = this.chartsService.PreparePersistentStateData() });
+            message.PersistThisModel(this.chartsService.PreparePersistentStateData());
         }
 
         private void OnRemoveChartCommandExecuted()

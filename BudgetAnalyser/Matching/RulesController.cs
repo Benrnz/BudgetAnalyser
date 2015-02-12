@@ -278,12 +278,13 @@ namespace BudgetAnalyser.Matching
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof(LastMatchingRulesLoadedV1)))
+            var rulesState = message.ElementOfType<LastMatchingRulesLoadedV1>();
+            if (rulesState == null)
             {
                 return;
             }
 
-            var rulesFileName = message.RehydratedModels[typeof(LastMatchingRulesLoadedV1)].AdaptModel<string>();
+            string rulesFileName = rulesState.MatchingRulesCollectionStorageKey;
             LoadRules(rulesFileName);
         }
 
@@ -291,7 +292,7 @@ namespace BudgetAnalyser.Matching
         {
             var lastRuleSet = new LastMatchingRulesLoadedV1
             {
-                Model = this.ruleService.RulesStorageKey
+                MatchingRulesCollectionStorageKey = this.ruleService.RulesStorageKey
             };
             message.PersistThisModel(lastRuleSet);
         }

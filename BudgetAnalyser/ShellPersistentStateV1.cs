@@ -1,19 +1,16 @@
-using Rees.Wpf;
+using System.Windows;
+using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser
 {
     public class ShellPersistentStateV1 : IPersistent
     {
-        public object Model { get; set; }
-
-        public int Sequence
+        public int LoadSequence
         {
-            get { return 0; }
+            get { return 1; }
         }
 
-        public T AdaptModel<T>()
-        {
-            return (T)Model;
-        }
+        public Point Size { get; set; }
+        public Point TopLeft { get; set; }
     }
 }

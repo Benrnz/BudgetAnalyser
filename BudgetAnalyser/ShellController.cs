@@ -7,11 +7,13 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 
@@ -98,6 +100,7 @@ namespace BudgetAnalyser
         }
 
         public ShellDialogController TransactionsDialog { get; private set; }
+        internal Point WindowSize { get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
         public string WindowTitle
@@ -105,7 +108,6 @@ namespace BudgetAnalyser
             get { return "Budget Analyser"; }
         }
 
-        internal Point WindowSize { get; private set; }
         internal Point WindowTopLeft { get; private set; }
 
         public void Initialize()
@@ -125,7 +127,7 @@ namespace BudgetAnalyser
             }
 
             // Create a distinct list of sequences.
-            IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.Sequence).OrderBy(s => s).Distinct();
+            IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
 
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
@@ -133,7 +135,7 @@ namespace BudgetAnalyser
             foreach (int sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                IEnumerable<IPersistent> models = rehydratedModels.Where(persistentModel => persistentModel.Sequence == sequenceCopy);
+                IEnumerable<IPersistent> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -167,12 +169,12 @@ namespace BudgetAnalyser
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof(ShellPersistentStateV1)))
+            var shellState = message.ElementOfType<ShellPersistentStateV1>();
+            if (shellState == null)
             {
                 return;
             }
 
-            var shellState = message.RehydratedModels[typeof(ShellPersistentStateV1)].AdaptModel<ShellStateModel>();
             // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
             if (shellState.Size.X > 0 || shellState.Size.Y > 0)
             {
@@ -194,11 +196,8 @@ namespace BudgetAnalyser
         {
             var shellPersistentStateV1 = new ShellPersistentStateV1
             {
-                Model = new ShellStateModel
-                {
-                    Size = WindowSize,
-                    TopLeft = WindowTopLeft,
-                }
+                Size = WindowSize,
+                TopLeft = WindowTopLeft
             };
             message.PersistThisModel(shellPersistentStateV1);
         }

@@ -132,33 +132,27 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            if (message.RehydratedModels.ContainsKey(typeof(DashboardApplicationStateV1)))
+            var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
+            if (storedWidgetsState != null)
             {
-                var storedState = message.RehydratedModels[typeof(DashboardApplicationStateV1)].AdaptModel<WidgetsStateModel>();
-                if (storedState != null)
-                {
-                    // Now that we have the previously persisted state data we can properly intialise the service.
-                    WidgetGroups = this.dashboardService.LoadPersistedStateData(storedState);
-                }
-
+                // Now that we have the previously persisted state data we can properly intialise the service.
+                WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState);
                 return;
             }
 
-            if (message.RehydratedModels.ContainsKey(typeof(MainApplicationStateV1)))
+            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
+            if (storedMainAppState != null)
             {
-                var storedState = message.RehydratedModels[typeof(MainApplicationStateV1)].AdaptModel<MainApplicationStateModel>();
-                if (storedState != null)
-                {
-                    this.applicationDatabaseService.LoadPersistedStateData(storedState);
-                }
+                this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
             }
         }
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            WidgetsStateModel widgetStates = this.dashboardService.PreparePersistentStateData();
-
-            message.PersistThisModel(new DashboardApplicationStateV1 { Model = widgetStates });
+            WidgetsApplicationStateV1 widgetStates = this.dashboardService.PreparePersistentStateData();
+            message.PersistThisModel(widgetStates);
+            var dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
+            message.PersistThisModel(dataFileState);
         }
 
         private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)

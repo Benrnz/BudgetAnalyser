@@ -7,6 +7,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ShellDialog;
@@ -210,19 +211,20 @@ namespace BudgetAnalyser.Statement
 
         private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            if (!message.RehydratedModels.ContainsKey(typeof(StatementApplicationStateV1)))
+            var statementMetadata = message.ElementOfType<StatementApplicationStateV1>();
+            if (statementMetadata == null)
             {
                 return;
             }
 
-            var statementMetadata = this.transactionService.LoadPersistedStateData(message.RehydratedModels[typeof(StatementApplicationStateV1)].Model);
-            if (string.IsNullOrWhiteSpace(statementMetadata.StorageKey))
+            this.transactionService.Initialise(statementMetadata);
+            if (string.IsNullOrWhiteSpace(statementMetadata.StatementModelStorageKey))
             {
                 // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
                 return;
             }
 
-            await FileOperations.LoadFileAsync(statementMetadata.StorageKey);
+            await FileOperations.LoadFileAsync(statementMetadata.StatementModelStorageKey);
 
             ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
             OnSortCommandExecute();
@@ -231,10 +233,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var statementMetadata = new StatementApplicationStateV1
-            {
-                Model = this.transactionService.PreparePersistentStateData()
-            };
+            StatementApplicationStateV1 statementMetadata = this.transactionService.PreparePersistentStateData();
             message.PersistThisModel(statementMetadata);
         }
 
@@ -264,7 +263,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            var confirm = this.uiContext.UserPrompts.YesNoBox.Show(
+            bool? confirm = this.uiContext.UserPrompts.YesNoBox.Show(
                 "Are you sure you want to delete this transaction?",
                 "Delete Transaction");
             if (confirm != null && confirm.Value)

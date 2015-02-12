@@ -13,8 +13,8 @@ namespace BudgetAnalyser.Engine.Services
     public class BurnDownChartsService : IBurnDownChartsService
     {
         private readonly IBudgetBucketRepository bucketRepository;
-        private readonly BurnDownChartsBuilder chartsBuilder;
         private readonly IBurnDownChartAnalyser chartAnalyser;
+        private readonly BurnDownChartsBuilder chartsBuilder;
 
         public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] BurnDownChartsBuilder chartsBuilder, [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
@@ -49,36 +49,38 @@ namespace BudgetAnalyser.Engine.Services
             return this.chartsBuilder.Results;
         }
 
-        public BurnDownChartAnalyserResult CreateNewCustomAggregateChart( 
-            StatementModel statementModel, 
-            BudgetModel budgetModel, 
+        public BurnDownChartAnalyserResult CreateNewCustomAggregateChart(
+            StatementModel statementModel,
+            BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
             LedgerBook ledgerBookModel,
-            DateTime beginDate, 
+            DateTime beginDate,
             string chartTitle)
         {
-            var bucketsList = buckets.ToList();
-            var result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
+            List<BudgetBucket> bucketsList = buckets.ToList();
+            BurnDownChartAnalyserResult result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
             result.ChartTitle = chartTitle;
             var persistChart = new CustomAggregateBurnDownGraph
             {
                 BucketIds = bucketsList.Select(b => b.Code).ToList(),
-                Name = chartTitle,
+                Name = chartTitle
             };
 
             this.chartsBuilder.CustomCharts = this.chartsBuilder.CustomCharts.Union(new[] { persistChart }).ToList();
             return result;
         }
 
-        public void LoadPersistedStateData(object persistedStateData)
+        public void LoadPersistedStateData(CustomBurnDownChartsV1 persistedStateData)
         {
-            var stateData = (List<CustomAggregateBurnDownGraph>)persistedStateData;
-            this.chartsBuilder.CustomCharts = stateData;
+            this.chartsBuilder.CustomCharts = persistedStateData.Charts;
         }
 
-        public object PreparePersistentStateData()
+        public CustomBurnDownChartsV1 PreparePersistentStateData()
         {
-            return this.chartsBuilder.CustomCharts.ToList();
+            return new CustomBurnDownChartsV1
+            {
+                Charts = this.chartsBuilder.CustomCharts.ToList()
+            };
         }
 
         public void RemoveCustomChart(string chartName)

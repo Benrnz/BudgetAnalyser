@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Input;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -16,7 +18,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
-
         private string ledgerBookFileName;
 
         public LedgerBookControllerFileOperations(
@@ -24,9 +25,18 @@ namespace BudgetAnalyser.LedgerBook
             [NotNull] IMessenger messenger,
             [NotNull] DemoFileHelper demoFileHelper)
         {
-            if (uiContext == null) throw new ArgumentNullException("uiContext");
-            if (messenger == null) throw new ArgumentNullException("messenger");
-            if (demoFileHelper == null) throw new ArgumentNullException("demoFileHelper");
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+            if (messenger == null)
+            {
+                throw new ArgumentNullException("messenger");
+            }
+            if (demoFileHelper == null)
+            {
+                throw new ArgumentNullException("demoFileHelper");
+            }
 
             this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
             this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
@@ -49,6 +59,13 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnDemoLedgerBookCommandExecute); }
         }
 
+        internal bool Dirty { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController" /> during its initialisation.
+        /// </summary>
+        internal ILedgerService LedgerService { get; set; }
+
         public ICommand LoadLedgerBookCommand
         {
             get { return new RelayCommand(OnLoadLedgerBookCommandExecute); }
@@ -66,14 +83,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
         }
 
-        internal bool Dirty { get; set; }
-
         internal LedgerBookViewModel ViewModel { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController"/> during its initialisation.
-        /// </summary>
-        internal ILedgerService LedgerService { get; set; }
 
         internal void CheckIfSaveRequired()
         {
@@ -89,8 +99,7 @@ namespace BudgetAnalyser.LedgerBook
 
         internal void ExtractDataFromApplicationState(LastLedgerBookLoadedV1 ledgerBookPersistedStateData)
         {
-            this.ledgerBookFileName = ledgerBookPersistedStateData.AdaptModel<string>();
-
+            this.ledgerBookFileName = ledgerBookPersistedStateData.LedgerBookStorageKey;
             if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
             {
                 LoadLedgerBookFromFile(this.ledgerBookFileName);
@@ -114,10 +123,7 @@ namespace BudgetAnalyser.LedgerBook
 
         internal LastLedgerBookLoadedV1 StateDataForPersistence()
         {
-            var ledgerBookStateData = new LastLedgerBookLoadedV1
-            {
-                Model = ViewModel.LedgerBook == null ? this.ledgerBookFileName : ViewModel.LedgerBook.FileName,
-            };
+            LastLedgerBookLoadedV1 ledgerBookStateData = LedgerService.PreparePersistentStateData();
             return ledgerBookStateData;
         }
 
@@ -148,7 +154,7 @@ namespace BudgetAnalyser.LedgerBook
                 ViewModel.LedgerBook = LedgerService.DisplayLedgerBook(fileName);
                 MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
             }
-            catch (Engine.DataFormatException ex)
+            catch (DataFormatException ex)
             {
                 this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
             }

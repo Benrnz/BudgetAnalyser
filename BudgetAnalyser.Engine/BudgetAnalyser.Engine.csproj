@@ -90,20 +90,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper.Net4, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.Net4.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.0.13\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.0.25\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -133,6 +133,7 @@
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
+    <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="IDataChangeDetection.cs" />
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\LastLedgerBookLoadedV1.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
@@ -196,13 +198,14 @@
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="LoggingApplicationHookSubscriber.cs" />
-    <Compile Include="MainApplicationStateModel.cs" />
+    <Compile Include="MainApplicationStateModelV1.cs" />
     <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\IMatchingRuleFactory.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
+    <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
@@ -219,6 +222,7 @@
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />
     <Compile Include="Reports\BurnDownCharts.cs" />
     <Compile Include="Reports\BurnDownChartsBuilder.cs" />
+    <Compile Include="Reports\CustomBurnDownChartsV1.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\IBurnDownChartAnalyser.cs" />
@@ -262,7 +266,8 @@
     <Compile Include="Statement\IStatementRepository.cs" />
     <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
-    <Compile Include="Statement\StatementApplicationState.cs" />
+    <Compile Include="Statement\PersistentFiltersV1.cs" />
+    <Compile Include="Statement\StatementApplicationStateV1.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\StatementRepository.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />
@@ -306,11 +311,11 @@
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="Widgets\AccountFilterWidget.cs" />
+    <Compile Include="Widgets\WidgetsApplicationStateV1.cs" />
     <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
     <Compile Include="Widgets\CurrentFilesWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
     <Compile Include="Widgets\IUserDefinedWidget.cs" />
-    <Compile Include="Widgets\WidgetsStateModel.cs" />
     <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
     <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
@@ -345,7 +350,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

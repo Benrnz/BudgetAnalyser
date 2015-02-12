@@ -407,12 +407,13 @@ namespace BudgetAnalyser.Budget
         {
             try
             {
-                if (!message.RehydratedModels.ContainsKey(typeof(LastBudgetLoadedV1)))
+                var budgetState = message.ElementOfType<LastBudgetLoadedV1>();
+                if (budgetState == null)
                 {
                     return;
                 }
 
-                var budgetFileName = message.RehydratedModels[typeof(LastBudgetLoadedV1)].AdaptModel<string>();
+                string budgetFileName = budgetState.BudgetCollectionStorageKey;
                 if (string.IsNullOrWhiteSpace(budgetFileName))
                 {
                     LoadDemoBudget();
@@ -433,9 +434,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            // Only the filename of the current budget is saved using the ApplicationState mechanism.  The budget itself is saved on demand when it has changed.
-            // Save the filename of the last budget used by the application.
-            var persistentModel = new LastBudgetLoadedV1 { Model = Budgets.FileName };
+            LastBudgetLoadedV1 persistentModel = this.maintenanceService.PreparePersistentStateData();
             message.PersistThisModel(persistentModel);
         }
 

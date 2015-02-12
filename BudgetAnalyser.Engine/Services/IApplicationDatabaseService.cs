@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A service class to access and manage the main Budget Analyser Data File.
+    ///     A service class to access and manage the main Budget Analyser Data File.
     /// </summary>
     public interface IApplicationDatabaseService : IServiceFoundation
     {
@@ -12,11 +12,11 @@ namespace BudgetAnalyser.Engine.Services
         ///     for all other Budget Analyser datum.
         ///     This must be called first before other methods of this service can be used.
         /// </summary>
-        ApplicationDatabase LoadPersistedStateData(MainApplicationStateModel storedState);
+        ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState);
 
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.
         /// </summary>
-        MainApplicationStateModel PreparePersistentStateData();
+        MainApplicationStateModelV1 PreparePersistentStateData();
     }
 }

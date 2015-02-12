@@ -158,7 +158,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            var duplicates = this.statementModel.ValidateAgainstDuplicates().ToList();
+            List<IGrouping<int, Transaction>> duplicates = this.statementModel.ValidateAgainstDuplicates().ToList();
             return duplicates.Any()
                 ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!", duplicates.Sum(group => group.Count()))
                 : null;
@@ -201,23 +201,21 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("storageKey");
             }
-            
+
             if (account == null)
             {
                 throw new ArgumentNullException("account");
             }
-            
+
             // TODO should be async
-            var additionalModel = this.statementRepository.ImportAndMergeBankStatement(storageKey, account);
+            StatementModel additionalModel = this.statementRepository.ImportAndMergeBankStatement(storageKey, account);
             this.statementModel.Merge(additionalModel);
         }
 
-        public StatementApplicationState LoadPersistedStateData(object stateData)
+        public void Initialise(StatementApplicationStateV1 stateData)
         {
             this.budgetHash = 0;
-            var state = (StatementApplicationState)stateData;
-            this.sortedByBucket = state.SortByBucket ?? false;
-            return state;
+            this.sortedByBucket = stateData.SortByBucket ?? false;
         }
 
         public async Task<StatementModel> LoadStatementModelAsync(string storageKey)
@@ -243,7 +241,7 @@ namespace BudgetAnalyser.Engine.Services
             if (this.sortedByBucket)
             {
                 // SortByBucket == true so group and sort by bucket.
-                var query = this.statementModel.Transactions
+                IEnumerable<TransactionGroupedByBucket> query = this.statementModel.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucket(group, group.Key));
@@ -254,11 +252,11 @@ namespace BudgetAnalyser.Engine.Services
             return new TransactionGroupedByBucket[] { };
         }
 
-        public object PreparePersistentStateData()
+        public StatementApplicationStateV1 PreparePersistentStateData()
         {
-            return new StatementApplicationState
+            return new StatementApplicationStateV1
             {
-                StorageKey = this.statementModel == null ? null : this.statementModel.StorageKey,
+                StatementModelStorageKey = this.statementModel == null ? null : this.statementModel.StorageKey,
                 SortByBucket = this.sortedByBucket
             };
         }
@@ -336,7 +334,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var allBuckets = new List<BudgetBucket>(this.bucketRepository.Buckets.OrderBy(b => b.Code));
-            var allTransactionHaveABucket = await Task.Run(
+            bool allTransactionHaveABucket = await Task.Run(
                 () =>
                 {
                     return this.statementModel.AllTransactions
@@ -345,7 +343,7 @@ namespace BudgetAnalyser.Engine.Services
                         .All(
                             t =>
                             {
-                                var bucketExists = allBuckets.Contains(t.BudgetBucket);
+                                bool bucketExists = allBuckets.Contains(t.BudgetBucket);
                                 if (!bucketExists)
                                 {
                                     t.BudgetBucket = null;

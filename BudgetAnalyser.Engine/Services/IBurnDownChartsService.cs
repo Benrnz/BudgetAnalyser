@@ -8,18 +8,18 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A service class to manage the Burn Down charts.
-    /// This service is stateful.
+    ///     A service class to manage the Burn Down charts.
+    ///     This service is stateful.
     /// </summary>
     public interface IBurnDownChartsService : IServiceFoundation
     {
         /// <summary>
-        /// Returns a list of available buckets for custom burn down charts.
+        ///     Returns a list of available buckets for custom burn down charts.
         /// </summary>
         IEnumerable<BudgetBucket> AvailableBucketsForBurnDownCharts();
 
         /// <summary>
-        /// Builds all the charts.
+        ///     Builds all the charts.
         /// </summary>
         /// <param name="statementModel">The current statement model.</param>
         /// <param name="budgetModel">The current budget model.</param>
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Services
         BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, GlobalFilterCriteria criteria);
 
         /// <summary>
-        /// Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.
+        ///     Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.
         /// </summary>
         /// <param name="statementModel">The current statement model.</param>
         /// <param name="budgetModel">The current budget model.</param>
@@ -39,27 +39,27 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="chartTitle">The chart title.</param>
         /// <returns>An object that contains data for a single chart, the new one just created.</returns>
         BurnDownChartAnalyserResult CreateNewCustomAggregateChart(
-            StatementModel statementModel, 
-            BudgetModel budgetModel, 
+            StatementModel statementModel,
+            BudgetModel budgetModel,
             IEnumerable<BudgetBucket> buckets,
             LedgerBook ledgerBookModel,
-            DateTime beginDate, 
+            DateTime beginDate,
             string chartTitle);
 
         /// <summary>
-        /// Loads the persisted state data.
+        ///     Loads the persisted state data.
         /// </summary>
         /// <param name="persistedStateData">The persisted state data.</param>
-        void LoadPersistedStateData(object persistedStateData);
+        void LoadPersistedStateData(CustomBurnDownChartsV1 persistedStateData);
 
         /// <summary>
-        /// Prepares the persistent state data.
+        ///     Prepares the persistent state data.
         /// </summary>
         /// <returns></returns>
-        object PreparePersistentStateData();
+        CustomBurnDownChartsV1 PreparePersistentStateData();
 
         /// <summary>
-        /// Removes a custom chart from the charts.
+        ///     Removes a custom chart from the charts.
         /// </summary>
         /// <param name="chartName">Name of the chart to remove.</param>
         void RemoveCustomChart(string chartName);

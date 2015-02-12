@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
@@ -62,6 +63,7 @@ namespace BudgetAnalyser.Statement
             this.loadFileController = loadFileController;
             this.recentFileCommands = new List<ICommand> { null, null, null, null, null };
             ViewModel = new StatementViewModel(uiContext);
+            this.recentFileManager.StateDataRestored += OnRecentFileManagerStateRestored;
         }
 
         public ICommand CloseStatementCommand
@@ -271,6 +273,11 @@ namespace BudgetAnalyser.Statement
             return !LoadingData;
         }
 
+        private bool CanExecuteRecentFileOpenCommand(string parameter)
+        {
+            return CanExecuteOpenStatementCommand() && !string.IsNullOrWhiteSpace(parameter);
+        }
+
         private void FileCannotBeLoaded(Exception ex)
         {
             this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
@@ -329,7 +336,7 @@ namespace BudgetAnalyser.Statement
             await SaveAsync(false);
             ViewModel.BucketFilter = null;
 
-            var fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
+            string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 // User cancelled
@@ -338,7 +345,7 @@ namespace BudgetAnalyser.Statement
 
             try
             {
-                var account = this.loadFileController.SelectedExistingAccountName;
+                AccountType account = this.loadFileController.SelectedExistingAccountName;
                 this.transactionService.ImportAndMergeBankStatement(fileName, account);
 
                 RaisePropertyChanged(() => ViewModel);
@@ -371,7 +378,7 @@ namespace BudgetAnalyser.Statement
             // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
             try
             {
-                var result = await LoadFileAsync(fullFileName);
+                bool result = await LoadFileAsync(fullFileName);
 
                 // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
                 if (result)
@@ -390,6 +397,11 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        private void OnRecentFileManagerStateRestored(object sender, EventArgs e)
+        {
+            UpdateRecentFiles();
+        }
+
         private async void OnSaveStatementExecute()
         {
             // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
@@ -401,7 +413,7 @@ namespace BudgetAnalyser.Statement
         {
             if (ViewModel.Statement != null && ViewModel.Dirty)
             {
-                var result = this.yesNoBox.Show(
+                bool? result = this.yesNoBox.Show(
                     "Statement has been modified, save changes?",
                     "Budget Analyser");
                 if (result != null && result.Value)
@@ -423,7 +435,12 @@ namespace BudgetAnalyser.Statement
         private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
         {
             this.recentFileCommands =
-                files.Select(f => (ICommand)new RecentFileRelayCommand(f.Value, f.Key, OnOpenStatementExecuteAsync, x => CanExecuteOpenStatementCommand()))
+                files.Select(
+                    f => (ICommand)new RecentFileRelayCommand(
+                        f.Value,
+                        f.Key,
+                        OnOpenStatementExecuteAsync,
+                        CanExecuteRecentFileOpenCommand))
                     .ToList();
             RaisePropertyChanged(() => RecentFile1Command);
             RaisePropertyChanged(() => RecentFile2Command);

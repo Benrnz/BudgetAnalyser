@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Parses and loads the persisted state data from the provided object.
         /// </summary>
         /// <param name="stateData">The state data loaded from persistent storage.</param>
-        StatementApplicationState LoadPersistedStateData(object stateData);
+        void Initialise(StatementApplicationStateV1 stateData);
 
         /// <summary>
         ///     Loads an existing Budget Analyser <see cref="StatementModel" />.
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent state data to save to storage.
         /// </summary>
-        object PreparePersistentStateData();
+        StatementApplicationStateV1 PreparePersistentStateData();
 
         /// <summary>
         ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
