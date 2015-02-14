@@ -1,6 +1,5 @@
 <UserControl x:Class="BudgetAnalyser.Statement.StatementUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DataContextChanged="OnDataContextChanged">
@@ -123,81 +122,6 @@
                         </MenuItem>
                     </MenuItem>
                 </Menu>
-                <Menu Style="{StaticResource RoundMenuButton}">
-                    <Menu.Resources>
-
-                        <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
-                               TargetType="{x:Type TextBlock}" />
-                    </Menu.Resources>
-                    <MenuItem Style="{StaticResource RoundMenuItemButton}">
-                        <MenuItem.Header>
-                            <TextBlock FontSize="14"
-                                       Foreground="{StaticResource Brush.Button.Glyph}"
-                                       Text="Recent..." />
-                        </MenuItem.Header>
-                        <MenuItem Command="{Binding FileOperations.RecentFile1Command}"
-                                  CommandParameter="{Binding FileOperations.RecentFile1Command.FullFileName}"
-                                  ToolTip="{Binding FileOperations.RecentFile1Command.FullFileName}">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="-15,0,2,0"
-                                               Text="1" />
-                                    <TextBlock Text="{Binding FileOperations.RecentFile1Command.Name}" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding FileOperations.RecentFile2Command}"
-                                  CommandParameter="{Binding FileOperations.RecentFile2Command.FullFileName}"
-                                  ToolTip="{Binding FileOperations.RecentFile2Command.FullFileName}">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="-15,0,2,0"
-                                               Text="2" />
-                                    <TextBlock Text="{Binding FileOperations.RecentFile2Command.Name}" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding FileOperations.RecentFile3Command}"
-                                  CommandParameter="{Binding FileOperations.RecentFile3Command.FullFileName}"
-                                  ToolTip="{Binding FileOperations.RecentFile3Command.FullFileName}">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="-15,0,2,0"
-                                               Text="3" />
-                                    <TextBlock Text="{Binding FileOperations.RecentFile3Command.Name}" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding FileOperations.RecentFile4Command}"
-                                  CommandParameter="{Binding FileOperations.RecentFile4Command.FullFileName}"
-                                  ToolTip="{Binding FileOperations.RecentFile4Command.FullFileName}">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="-15,0,2,0"
-                                               Text="4" />
-                                    <TextBlock Text="{Binding FileOperations.RecentFile4Command.Name}" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                        <MenuItem Command="{Binding FileOperations.RecentFile5Command}"
-                                  CommandParameter="{Binding FileOperations.RecentFile5Command.FullFileName}"
-                                  ToolTip="{Binding FileOperations.RecentFile5Command.FullFileName}">
-                            <MenuItem.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="-15,0,2,0"
-                                               Text="5" />
-                                    <TextBlock Text="{Binding FileOperations.RecentFile5Command.Name}" />
-                                </StackPanel>
-                            </MenuItem.Header>
-                        </MenuItem>
-                    </MenuItem>
-                </Menu>
-                <Button Command="{Binding FileOperations.OpenStatementCommand}"
-                        Style="{StaticResource Button.Round.Load}"
-                        ToolTip="Load Transactions (Ctrl+O)" />
-                <Button Command="{Binding FileOperations.CloseStatementCommand}"
-                        Style="{StaticResource Button.Round.Clear}"
-                        ToolTip="Close Transactions (Ctrl+X)" />
                 <Button Command="{Binding FileOperations.SaveStatementCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />

@@ -9,9 +9,10 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is BudgetBucket)) return null;
+            var bucketValue = value as BudgetBucket;
+            if (bucketValue == null) return null;
 
-            if (!((BudgetBucket)value).Active)
+            if (!bucketValue.Active)
             {
                 return ConverterHelper.TileBackgroundAlternateBrush;
             }

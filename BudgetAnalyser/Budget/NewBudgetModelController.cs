@@ -1,5 +1,6 @@
 using System;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.ShellDialog;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -12,8 +13,13 @@ namespace BudgetAnalyser.Budget
         private Guid dialogCorrelationId;
         private IUserMessageBox messageBox;
 
-        public NewBudgetModelController(IUiContext uiContext)
+        public NewBudgetModelController([NotNull] IUiContext uiContext)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             this.messageBox = uiContext.UserPrompts.MessageBox;
@@ -70,7 +76,7 @@ namespace BudgetAnalyser.Budget
 
             if (message.Response == ShellDialogButton.Help)
             {
-                this.messageBox.Show("This will clone an exisitng budget, the currently shown budget, to a new budget that is future dated.  The budget must have an effective date in the future.");
+                this.messageBox.Show("This will clone an existing budget, the currently shown budget, to a new budget that is future dated.  The budget must have an effective date in the future.");
                 return;
             }
 

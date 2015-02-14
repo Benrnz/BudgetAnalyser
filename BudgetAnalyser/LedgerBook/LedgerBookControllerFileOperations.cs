@@ -49,16 +49,6 @@ namespace BudgetAnalyser.LedgerBook
             ViewModel = new LedgerBookViewModel();
         }
 
-        public ICommand CloseLedgerBookCommand
-        {
-            get { return new RelayCommand(OnCloseLedgerBookCommandExecuted, CanExecuteCloseLedgerBookCommand); }
-        }
-
-        public ICommand DemoLedgerBookCommand
-        {
-            get { return new RelayCommand(OnDemoLedgerBookCommandExecute); }
-        }
-
         internal bool Dirty { get; set; }
 
         /// <summary>
@@ -66,17 +56,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         internal ILedgerService LedgerService { get; set; }
 
-        public ICommand LoadLedgerBookCommand
-        {
-            get { return new RelayCommand(OnLoadLedgerBookCommandExecute); }
-        }
-
         public IMessenger MessengerInstance { get; set; }
-
-        public ICommand NewLedgerBookCommand
-        {
-            get { return new RelayCommand(OnNewLedgerBookCommandExecuted, CanExecuteNewLedgerBookCommand); }
-        }
 
         public ICommand SaveLedgerBookCommand
         {
@@ -129,16 +109,19 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteCloseLedgerBookCommand()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             return ViewModel.LedgerBook != null || !string.IsNullOrWhiteSpace(this.ledgerBookFileName);
         }
 
         private bool CanExecuteNewLedgerBookCommand()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             return ViewModel.LedgerBook == null && string.IsNullOrWhiteSpace(this.ledgerBookFileName);
         }
 
         private bool CanExecuteSaveCommand()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             return ViewModel.LedgerBook != null && Dirty;
         }
 
@@ -174,6 +157,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnDemoLedgerBookCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             try
             {
                 LoadLedgerBookFromFile(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
@@ -186,6 +170,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnLoadLedgerBookCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
             openFileDialog.AddExtension = true;
             openFileDialog.CheckPathExists = true;
@@ -204,6 +189,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnNewLedgerBookCommandExecuted()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
             saveFileDialog.AddExtension = true;
             saveFileDialog.CheckPathExists = true;
@@ -231,6 +217,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnSaveLedgerBookCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             SaveLedgerBook();
         }
     }

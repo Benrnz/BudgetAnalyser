@@ -232,18 +232,11 @@
                     ToolTip="Show all budgets within the loaded budget file, and select one to view." />
             <Button Command="{Binding DetailsCommand}"
                     Style="{StaticResource Button.Round.Info}" />
-            <Button Command="{Binding LoadBudgetCommand}"
-                    Margin="2,3,2,1"
-                    Style="{StaticResource Button.Round.Load}" />
-            <Button Command="{Binding SaveAsCommand}"
-                    Style="{StaticResource Button.Round.SaveAs}" />
-            <Button Command="{Binding SaveCommand}"
-                    Style="{StaticResource Button.Round.Save}" />
             <Button Command="{Binding NewBudgetCommand}"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Clone the current budget and create a new one based on it." />
-            <Button Command="{Binding DemoBudgetCommand}"
-                    Style="{StaticResource Button.Round.Smiley}" />
+            <Button Command="{Binding SaveCommand}"
+                    Style="{StaticResource Button.Round.Save}" />
         </StackPanel>
 
         <!-- Incomes List -->

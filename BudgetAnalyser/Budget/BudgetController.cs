@@ -136,11 +136,6 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand<object>(OnDeleteBudgetItemCommandExecute); }
         }
 
-        public ICommand DemoBudgetCommand
-        {
-            get { return new RelayCommand(OnDemoBudgetCommandExecuted); }
-        }
-
         public ICommand DetailsCommand
         {
             get { return new RelayCommand(OnDetailsCommandExecute); }
@@ -172,22 +167,12 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public ICommand LoadBudgetCommand
-        {
-            get { return new RelayCommand(OnLoadBudgetCommandExecute); }
-        }
-
         public ICommand NewBudgetCommand
         {
             get { return new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null); }
         }
 
         public NewBudgetModelController NewBudgetController { get; private set; }
-
-        public ICommand SaveAsCommand
-        {
-            get { return new RelayCommand(OnSaveAsCommandExecute); }
-        }
 
         public ICommand SaveCommand
         {
@@ -335,6 +320,7 @@ namespace BudgetAnalyser.Budget
 
         private void LoadDemoBudget()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             LoadBudget(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
         }
 
@@ -467,11 +453,6 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        private void OnDemoBudgetCommandExecuted()
-        {
-            LoadDemoBudget();
-        }
-
         private void OnDetailsCommandExecute()
         {
             var popUpRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Budget, CurrentBudget, ShellDialogType.Ok);
@@ -510,6 +491,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnLoadBudgetCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             bool valid = ValidateAndSaveIfRequired();
             if (!valid)
             {
@@ -544,6 +526,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnSaveAsCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             string fileName = GetFileNameFromUserForSave();
             if (fileName == null)
             {
@@ -558,6 +541,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnSaveCommandExecute()
         {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
             SaveBudgetModel();
             RaisePropertyChanged(() => TruncatedFileName);
         }
