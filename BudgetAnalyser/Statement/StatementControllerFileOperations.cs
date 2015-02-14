@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -15,7 +14,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.RecentFiles;
 
 namespace BudgetAnalyser.Statement
 {
@@ -76,11 +74,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public ICommand MergeStatementCommand
-        {
-            get { return new RelayCommand(OnMergeStatementCommandExecute, CanExecuteCloseStatementCommand); }
-        }
-
         public ICommand SaveStatementCommand
         {
             get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
@@ -94,6 +87,11 @@ namespace BudgetAnalyser.Statement
             {
                 await SaveAsync(true);
             }
+        }
+
+        internal bool CanExecuteCloseStatementCommand()
+        {
+            return ViewModel.Statement != null;
         }
 
         internal void Initialise(ITransactionManagerService transactionManagerService)
@@ -146,14 +144,11 @@ namespace BudgetAnalyser.Statement
 
             LoadingData = true;
 
-            // TODO check the UI actually does behave as expected here. See below.
-            // Ideally I'd like the UI to update and show the loading data indicator before executing the below code.  It will start drawing the List Box containing all the transactions and sort it.
             await Dispatcher.CurrentDispatcher.BeginInvoke(
                 DispatcherPriority.Normal,
                 () =>
                 {
                     // Update all UI bound properties.
-                    ViewModel.Statement = statementModel;
                     var requestCurrentFilterMessage = new RequestFilterMessage(this);
                     MessengerInstance.Send(requestCurrentFilterMessage);
                     if (requestCurrentFilterMessage.Criteria != null)
@@ -161,6 +156,7 @@ namespace BudgetAnalyser.Statement
                         this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
                     }
 
+                    ViewModel.Statement = statementModel;
                     NotifyOfReset();
                     ViewModel.TriggerRefreshTotalsRow();
 
@@ -172,6 +168,42 @@ namespace BudgetAnalyser.Statement
             return true;
         }
 
+        internal async Task MergeInNewTransactions()
+        {
+            await SaveAsync(false);
+
+            string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                // User cancelled
+                return;
+            }
+
+            try
+            {
+                AccountType account = this.loadFileController.SelectedExistingAccountName;
+                this.transactionService.ImportAndMergeBankStatement(fileName, account);
+
+                RaisePropertyChanged(() => ViewModel);
+                MessengerInstance.Send(new TransactionsChangedMessage());
+                NotifyOfEdit();
+                ViewModel.TriggerRefreshTotalsRow();
+                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+            }
+            catch (NotSupportedException ex)
+            {
+                FileCannotBeLoaded(ex);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                FileCannotBeLoaded(ex);
+            }
+            finally
+            {
+                this.loadFileController.Reset();
+            }
+        }
+
         internal void NotifyOfEdit()
         {
             ViewModel.Dirty = true;
@@ -181,11 +213,6 @@ namespace BudgetAnalyser.Statement
         internal void UpdateRecentFiles()
         {
             UpdateRecentFiles(this.recentFileManager.Files());
-        }
-
-        private bool CanExecuteCloseStatementCommand()
-        {
-            return ViewModel.Statement != null;
         }
 
         private bool CanExecuteOpenStatementCommand()
@@ -252,43 +279,6 @@ namespace BudgetAnalyser.Statement
         {
             // TODO Temporarily disabled while introducing ApplicationDatabaseService
             OnOpenStatementExecuteAsync(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
-        }
-
-        private async void OnMergeStatementCommandExecute()
-        {
-            await SaveAsync(false);
-            ViewModel.BucketFilter = null;
-
-            string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                // User cancelled
-                return;
-            }
-
-            try
-            {
-                AccountType account = this.loadFileController.SelectedExistingAccountName;
-                this.transactionService.ImportAndMergeBankStatement(fileName, account);
-
-                RaisePropertyChanged(() => ViewModel);
-                MessengerInstance.Send(new TransactionsChangedMessage());
-                NotifyOfEdit();
-                ViewModel.TriggerRefreshTotalsRow();
-                MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-            }
-            catch (NotSupportedException ex)
-            {
-                FileCannotBeLoaded(ex);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                FileCannotBeLoaded(ex);
-            }
-            finally
-            {
-                this.loadFileController.Reset();
-            }
         }
 
         private async void OnOpenStatementExecuteAsync(string fullFileName)

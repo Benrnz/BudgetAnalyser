@@ -12,7 +12,6 @@ namespace BudgetAnalyser.UnitTest.Services
         }
 
         public int FilterByCriteriaWasCalled { get; set; }
-        public int FilterByTextWasCalled { get; set; }
         public int MergeWasCalled { get; set; }
         public int RemoveTransactionWasCalled { get; set; }
         public int SplitTransactionWasCalled { get; set; }
@@ -20,11 +19,6 @@ namespace BudgetAnalyser.UnitTest.Services
         internal override void Filter(GlobalFilterCriteria criteria)
         {
             FilterByCriteriaWasCalled++;
-        }
-
-        internal override void FilterByText(string textFilter)
-        {
-            FilterByTextWasCalled++;
         }
 
         internal override void Merge(StatementModel additionalModel)

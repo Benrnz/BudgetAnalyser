@@ -78,7 +78,7 @@
                               ItemsSource="{Binding ViewModel.FilterBudgetBuckets}"
                               Margin="4"
                               MinWidth="37"
-                              SelectedItem="{Binding ViewModel.BucketFilter}"
+                              SelectedItem="{Binding BucketFilter}"
                               Width="37" />
                     <ContentControl Grid.Column="2"
                            Height="17"
@@ -87,7 +87,7 @@
                            Margin="0,0,20,0"
                            Template="{StaticResource Filter2Image}"
                            ToolTip="Budget Bucket Filter"
-                           Visibility="{Binding ViewModel.BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
+                           Visibility="{Binding BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
                            Width="17" />
                 </Grid>
                 <Menu Style="{StaticResource RoundMenuButton}">
@@ -260,7 +260,7 @@
                      Grid.Row="1"
                      IsTextSearchEnabled="False"
                      ItemContainerStyle="{StaticResource ListBox.TransactionContainer}"
-                     ItemsSource="{Binding ViewModel.Statement.Transactions}"
+                     ItemsSource="{Binding ViewModel.Transactions}"
                      ItemTemplate="{StaticResource TransactionTemplate1}"
                      KeyUp="OnTransactionListBoxKeyUp"
                      MinHeight="95"

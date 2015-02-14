@@ -184,17 +184,6 @@ namespace BudgetAnalyser.Engine.Services
             this.statementModel.Filter(criteria);
         }
 
-        public void FilterTransactions(string searchText)
-        {
-            if (string.IsNullOrWhiteSpace(searchText))
-            {
-                throw new ArgumentNullException("searchText");
-            }
-
-            this.currentTextFilter = searchText;
-            this.statementModel.FilterByText(searchText);
-        }
-
         public void ImportAndMergeBankStatement(string storageKey, AccountType account)
         {
             if (string.IsNullOrWhiteSpace(storageKey))

@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.Statement
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
@@ -120,31 +120,12 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            var query = BaseFilterQuery(criteria);
+            IEnumerable<Transaction> query = BaseFilterQuery(criteria);
 
             Transactions = query.ToList();
             DurationInMonths = CalculateDuration(criteria, Transactions);
             this.duplicates = null;
             Filtered = true;
-        }
-
-        internal virtual void FilterByText([NotNull] string textFilter)
-        {
-            if (string.IsNullOrWhiteSpace(textFilter))
-            {
-                throw new ArgumentNullException("textFilter");
-            }
-
-            if (textFilter.Length < 3)
-            {
-                return;
-            }
-
-            // Do not modify the changeHash, this filter is not global, its only localised for a quick search of the data. It should not affect reports etc.
-            Filtered = true;
-            Transactions = BaseFilterQuery(this.currentFilter).Where(t => MatchTransactionText(textFilter, t))
-                .AsParallel()
-                .ToList();
         }
 
         /// <summary>
@@ -156,7 +137,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            var listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
+            List<Transaction> listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
             Transactions = listOfTransactions;
             AllTransactions = Transactions;
             if (listOfTransactions.Any())
@@ -195,7 +176,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("reassignmentBucket");
             }
 
-            foreach (var transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
+            foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
             {
                 transaction.BudgetBucket = reassignmentBucket;
             }
@@ -263,12 +244,12 @@ namespace BudgetAnalyser.Engine.Statement
                 return this.duplicates;
             }
 
-            var query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
+            List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
             this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
             query.ForEach(
                 duplicate =>
                 {
-                    foreach (var txn in duplicate)
+                    foreach (Transaction txn in duplicate)
                     {
                         txn.IsSuspectedDuplicate = true;
                     }
@@ -284,7 +265,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return AllTransactions.ToList();
             }
 
-            var query = AllTransactions;
+            IEnumerable<Transaction> query = AllTransactions;
             if (criteria.BeginDate != null)
             {
                 query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
@@ -306,7 +287,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            var mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
             AllTransactions = mergedTransactions;
             this.duplicates = null;
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
@@ -357,7 +338,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <param name="transactions">The list of transactions to use to determine duration.</param>
         public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            var list = transactions.ToList();
+            List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
             if (criteria != null && !criteria.Cleared)
@@ -376,43 +357,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             return minDate.DurationInMonths(maxDate);
-        }
-
-        private static bool MatchTransactionText(string textFilter, Transaction t)
-        {
-            if (!string.IsNullOrWhiteSpace(t.Description))
-            {
-                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference1))
-            {
-                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference2))
-            {
-                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(t.Reference3))
-            {
-                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

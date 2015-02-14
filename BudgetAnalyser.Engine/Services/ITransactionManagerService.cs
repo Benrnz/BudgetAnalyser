@@ -42,12 +42,6 @@ namespace BudgetAnalyser.Engine.Services
         void FilterTransactions([NotNull] GlobalFilterCriteria criteria);
 
         /// <summary>
-        ///     Filters the transactions using the search text provided against any text field in <see cref="Transaction" />.
-        /// </summary>
-        /// <param name="searchText">The search text.</param>
-        void FilterTransactions([NotNull] string searchText);
-
-        /// <summary>
         ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
         ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>

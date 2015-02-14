@@ -52,11 +52,11 @@ namespace BudgetAnalyser.Statement
         private void ApplyBucketFilter()
         {
             ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.ViewModel.Statement.Transactions);
-            if (string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
+            if (string.IsNullOrWhiteSpace(Controller.BucketFilter))
             {
                 defaultView.Filter = null;
             }
-            else if (Controller.ViewModel.BucketFilter == TransactionManagerService.UncategorisedFilter)
+            else if (Controller.BucketFilter == TransactionManagerService.UncategorisedFilter)
             {
                 defaultView.Filter = t =>
                 {
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Statement
                 defaultView.Filter = t =>
                 {
                     var txn = (Transaction)t;
-                    return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.ViewModel.BucketFilter;
+                    return txn.BudgetBucket != null && txn.BudgetBucket.Code == Controller.BucketFilter;
                 };
             }
         }
@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnBucketFilterComboBoxDropDownClosed(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
+            if (!string.IsNullOrWhiteSpace(Controller.BucketFilter))
             {
                 return;
             }
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnBucketFilterComboBoxDropDownOpened(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Controller.ViewModel.BucketFilter))
+            if (!string.IsNullOrWhiteSpace(Controller.BucketFilter))
             {
                 return;
             }

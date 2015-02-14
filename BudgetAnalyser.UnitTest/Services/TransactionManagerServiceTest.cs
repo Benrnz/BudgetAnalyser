@@ -119,30 +119,6 @@ namespace BudgetAnalyser.UnitTest.Services
         }
 
         [TestMethod]
-        public void FilterTransactions_ShouldCallStatementModel_GivenSearchText()
-        {
-            this.testData = new StatementModelTestHarness();
-
-            Arrange();
-
-            this.subject.FilterTransactions("Fooey");
-
-            Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).FilterByTextWasCalled);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void FilterTransactions_ShouldThrow_GivenNullSearchText()
-        {
-            this.testData = new StatementModelTestHarness();
-
-            Arrange();
-
-            this.subject.FilterTransactions(string.Empty);
-            Assert.Fail();
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
         {

@@ -13,13 +13,13 @@ namespace BudgetAnalyser.Statement
     public class StatementViewModel : ViewModelBase
     {
         private readonly IUiContext uiContext;
-        private string doNotUseBucketFilter;
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
         private ObservableCollection<TransactionGroupedByBucketViewModel> doNotUseGroupedByBucket;
         private Transaction doNotUseSelectedRow;
         private bool doNotUseSortByDate;
         private StatementModel doNotUseStatement;
+        private ObservableCollection<Transaction> doNotUseTransactions;
         private ITransactionManagerService transactionService;
 
         public StatementViewModel(IUiContext uiContext)
@@ -31,25 +31,6 @@ namespace BudgetAnalyser.Statement
         public decimal AverageDebit
         {
             get { return this.transactionService.AverageDebit; }
-        }
-
-        /// <summary>
-        ///     Gets or sets the bucket filter.
-        ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a
-        ///     bucket.
-        ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
-        ///     mode.
-        /// </summary>
-        public string BucketFilter
-        {
-            get { return this.doNotUseBucketFilter; }
-
-            set
-            {
-                this.doNotUseBucketFilter = value;
-                RaisePropertyChanged(() => BucketFilter);
-                TriggerRefreshTotalsRow();
-            }
         }
 
         public bool Dirty
@@ -93,16 +74,6 @@ namespace BudgetAnalyser.Statement
         {
             get { return Statement != null && Statement.Transactions.Any(); }
         }
-
-        // TODO Is this really reqd?
-        //public DateTime MaxTransactionDate
-        //{
-        //    get { return Statement.Transactions.Max(t => t.Date); }
-        //}
-        //public DateTime MinTransactionDate
-        //{
-        //    get { return Statement.Transactions.Min(t => t.Date); }
-        //}
 
         public Transaction SelectedRow
         {
@@ -160,6 +131,7 @@ namespace BudgetAnalyser.Statement
                 }
 
                 RaisePropertyChanged(() => Statement);
+                Transactions = new ObservableCollection<Transaction>(Statement.Transactions);
                 UpdateGroupedByBucket();
             }
         }
@@ -197,6 +169,16 @@ namespace BudgetAnalyser.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
+        public ObservableCollection<Transaction> Transactions
+        {
+            get { return this.doNotUseTransactions; }
+            internal set
+            {
+                this.doNotUseTransactions = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public bool HasSelectedRow()
         {
             return SelectedRow != null;
@@ -206,11 +188,6 @@ namespace BudgetAnalyser.Statement
         {
             this.transactionService = transactionManagerService;
             return this;
-        }
-
-        public void TriggerRefreshBucketFilter()
-        {
-            RaisePropertyChanged(() => BucketFilter);
         }
 
         public void TriggerRefreshBucketFilterList()
@@ -227,7 +204,7 @@ namespace BudgetAnalyser.Statement
             RaisePropertyChanged(() => TotalCount);
             RaisePropertyChanged(() => HasTransactions);
             RaisePropertyChanged(() => StatementName);
-            
+
             if (Statement == null)
             {
                 DuplicateSummary = null;
@@ -240,7 +217,6 @@ namespace BudgetAnalyser.Statement
 
         public void UpdateGroupedByBucket()
         {
-            BucketFilter = string.Empty;
             GroupedByBucket = new ObservableCollection<TransactionGroupedByBucketViewModel>(
                 this.transactionService.PopulateGroupByBucketCollection(SortByBucket)
                     .Select(x => new TransactionGroupedByBucketViewModel(x, this.uiContext)));
