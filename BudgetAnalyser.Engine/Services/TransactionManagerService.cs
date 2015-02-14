@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +20,9 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IStatementRepository statementRepository;
         private BudgetCollection budgetCollection;
         private int budgetHash;
-        private string currentTextFilter;
         private bool sortedByBucket;
         private StatementModel statementModel;
+        private ObservableCollection<Transaction> transactions;
 
         public TransactionManagerService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IStatementRepository statementRepository, [NotNull] ILogger logger)
         {
@@ -49,30 +50,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.statementModel == null || this.statementModel.Transactions == null)
+                if (this.transactions == null)
                 {
                     return 0;
                 }
 
-                if (string.IsNullOrWhiteSpace(this.currentTextFilter))
-                {
-                    IEnumerable<Transaction> query = this.statementModel.Transactions.Where(t => t.Amount < 0).ToList();
-                    if (query.Any())
-                    {
-                        return query.Average(t => t.Amount);
-                    }
-                }
-
-                if (this.currentTextFilter == UncategorisedFilter)
-                {
-                    return this.statementModel.Transactions
-                        .Where(t => t.BudgetBucket == null && t.Amount < 0)
-                        .Average(t => t.Amount);
-                }
-
-                return this.statementModel.Transactions
-                    .Where(t => t.Amount < 0 && t.BudgetBucket != null && t.BudgetBucket.Code == this.currentTextFilter)
-                    .Average(t => t.Amount);
+                return this.transactions.Where(t => t.Amount < 0).Average(t => t.Amount);
             }
         }
 
@@ -80,22 +63,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.statementModel == null || this.statementModel.Transactions == null)
+                if (this.transactions == null)
                 {
                     return 0;
                 }
 
-                if (string.IsNullOrWhiteSpace(this.currentTextFilter))
-                {
-                    return this.statementModel.Transactions.Count();
-                }
-
-                if (this.currentTextFilter == UncategorisedFilter)
-                {
-                    return this.statementModel.Transactions.Count(t => t.BudgetBucket == null);
-                }
-
-                return this.statementModel.Transactions.Count(t => t.BudgetBucket != null && t.BudgetBucket.Code == this.currentTextFilter);
+                return this.transactions.Count();
             }
         }
 
@@ -103,24 +76,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.statementModel == null || this.statementModel.Transactions == null)
+                if (this.transactions == null)
                 {
                     return 0;
                 }
 
-                if (string.IsNullOrWhiteSpace(this.currentTextFilter))
-                {
-                    return this.statementModel.Transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-                }
-
-                if (this.currentTextFilter == UncategorisedFilter)
-                {
-                    return this.statementModel.Transactions.Where(t => t.BudgetBucket == null && t.Amount > 0).Sum(t => t.Amount);
-                }
-
-                return this.statementModel.Transactions
-                    .Where(t => t.Amount > 0 && t.BudgetBucket != null && t.BudgetBucket.Code == this.currentTextFilter)
-                    .Sum(t => t.Amount);
+                return this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
             }
         }
 
@@ -128,27 +89,19 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.statementModel == null || this.statementModel.Transactions == null)
+                if (this.transactions == null)
                 {
                     return 0;
                 }
 
-                if (string.IsNullOrWhiteSpace(this.currentTextFilter))
-                {
-                    return this.statementModel.Transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
-                }
-
-                if (this.currentTextFilter == UncategorisedFilter)
-                {
-                    return this.statementModel.Transactions
-                        .Where(t => t.BudgetBucket == null && t.Amount < 0)
-                        .Sum(t => t.Amount);
-                }
-
-                return this.statementModel.Transactions
-                    .Where(t => t.Amount < 0 && t.BudgetBucket != null && t.BudgetBucket.Code == this.currentTextFilter)
-                    .Sum(t => t.Amount);
+                return this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
             }
+        }
+
+        public ObservableCollection<Transaction> ClearBucketAndTextFilters()
+        {
+            ResetTransactionsCollection();
+            return this.transactions;
         }
 
         public string DetectDuplicateTransactions()
@@ -173,6 +126,33 @@ namespace BudgetAnalyser.Engine.Services
                 .OrderBy(b => b);
         }
 
+        public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
+        {
+            this.transactions = new ObservableCollection<Transaction>(
+                this.statementModel.Transactions
+                    .Where(t => MatchTransactionBucket(t, bucketCode)));
+            return this.transactions;
+        }
+
+        public ObservableCollection<Transaction> FilterBySearchText(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                return ClearBucketAndTextFilters();
+            }
+
+            if (searchText.Length < 3)
+            {
+                return ClearBucketAndTextFilters();
+            }
+
+            this.transactions = new ObservableCollection<Transaction>(
+                this.statementModel.Transactions.Where(t => MatchTransactionText(t, searchText))
+                    .AsParallel()
+                    .ToList());
+            return this.transactions;
+        }
+
         public void FilterTransactions(GlobalFilterCriteria criteria)
         {
             if (criteria == null)
@@ -180,7 +160,6 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("criteria");
             }
 
-            this.currentTextFilter = null;
             this.statementModel.Filter(criteria);
         }
 
@@ -215,6 +194,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.statementModel = await this.statementRepository.LoadStatementModelAsync(storageKey);
+            ResetTransactionsCollection();
             return this.statementModel;
         }
 
@@ -344,6 +324,63 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetHash = this.budgetCollection.GetHashCode();
             return allTransactionHaveABucket;
+        }
+
+        private void ResetTransactionsCollection()
+        {
+            this.transactions = new ObservableCollection<Transaction>(this.statementModel.Transactions);
+        }
+
+        private static bool MatchTransactionBucket(Transaction t, string bucketCode)
+        {
+            if (string.IsNullOrWhiteSpace(bucketCode))
+            {
+                return true;
+            }
+
+            if (bucketCode == UncategorisedFilter)
+            {
+                return t.BudgetBucket == null;
+            }
+
+            return t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode;
+        }
+
+        private static bool MatchTransactionText(Transaction t, string textFilter)
+        {
+            if (!String.IsNullOrWhiteSpace(t.Description))
+            {
+                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(t.Reference1))
+            {
+                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(t.Reference2))
+            {
+                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(t.Reference3))
+            {
+                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

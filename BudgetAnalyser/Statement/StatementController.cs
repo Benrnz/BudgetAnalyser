@@ -28,7 +28,6 @@ namespace BudgetAnalyser.Statement
         private string doNotUseBucketFilter;
         private bool doNotUseShown;
         private string doNotUseTextFilter;
-        private bool filterByTextActive;
         private bool initialised;
         private Guid shellDialogCorrelationId;
 
@@ -84,14 +83,20 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseBucketFilter = value;
                 RaisePropertyChanged(() => BucketFilter);
-                FilterByBucket();
+                ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
         }
 
         public ICommand ClearTextFilterCommand
         {
-            get { return new RelayCommand(OnClearTextFilterCommandExecute, () => !String.IsNullOrWhiteSpace(TextFilter)); }
+            get { return new RelayCommand(
+                () =>
+                {
+                    TextFilter = null;
+                    ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
+                }, 
+                () => !String.IsNullOrWhiteSpace(TextFilter)); }
         }
 
         public ICommand DeleteTransactionCommand
@@ -160,7 +165,8 @@ namespace BudgetAnalyser.Statement
                 }
 
                 RaisePropertyChanged(() => TextFilter);
-                PerformTextSearch();
+                ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
+                ViewModel.TriggerRefreshTotalsRow();
             }
         }
 
@@ -201,19 +207,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void ClearTextFilter()
-        {
-            ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement.Transactions);
-        }
-
-        private void FilterByBucket()
-        {
-            ViewModel.Transactions = new ObservableCollection<Transaction>(
-                ViewModel.Statement.Transactions
-                    .Where(MatchTransactionBucket));
-            ViewModel.TriggerRefreshTotalsRow();
-        }
-
         private void FinaliseEditTransaction(ShellDialogResponseMessage message)
         {
             if (message.Response == ShellDialogButton.Save)
@@ -240,21 +233,6 @@ namespace BudgetAnalyser.Statement
                 ViewModel.TriggerRefreshTotalsRow();
                 FileOperations.NotifyOfEdit();
             }
-        }
-
-        private bool MatchTransactionBucket(Transaction t)
-        {
-            if (string.IsNullOrWhiteSpace(BucketFilter))
-            {
-                return true;
-            }
-
-            if (BucketFilter == TransactionManagerService.UncategorisedFilter)
-            {
-                return t.BudgetBucket == null;
-            }
-
-            return t.BudgetBucket != null && t.BudgetBucket.Code == BucketFilter;
         }
 
         private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
@@ -296,12 +274,6 @@ namespace BudgetAnalyser.Statement
 
             await CheckBudgetContainsAllUsedBucketsInStatement(message.Budgets);
             ViewModel.TriggerRefreshBucketFilterList();
-        }
-
-        private void OnClearTextFilterCommandExecute()
-        {
-            TextFilter = null;
-            ClearTextFilter();
         }
 
         private void OnDeleteTransactionCommandExecute()
@@ -389,68 +361,6 @@ namespace BudgetAnalyser.Statement
         {
             this.shellDialogCorrelationId = Guid.NewGuid();
             SplitTransactionController.ShowDialog(ViewModel.SelectedRow, this.shellDialogCorrelationId);
-        }
-
-        private void PerformTextSearch()
-        {
-            if (String.IsNullOrWhiteSpace(TextFilter))
-            {
-                if (this.filterByTextActive && ViewModel.Statement.Filtered)
-                {
-                    ClearTextFilter();
-                }
-
-                this.filterByTextActive = false;
-                return;
-            }
-
-            if (TextFilter.Length < 3)
-            {
-                return;
-            }
-
-            ViewModel.Transactions = new ObservableCollection<Transaction>(
-                ViewModel.Statement.Transactions.Where(t => MatchTransactionText(TextFilter, t))
-                    .AsParallel()
-                    .ToList());
-            this.filterByTextActive = true;
-        }
-
-        private static bool MatchTransactionText(string textFilter, Transaction t)
-        {
-            if (!String.IsNullOrWhiteSpace(t.Description))
-            {
-                if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!String.IsNullOrWhiteSpace(t.Reference1))
-            {
-                if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!String.IsNullOrWhiteSpace(t.Reference2))
-            {
-                if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            if (!String.IsNullOrWhiteSpace(t.Reference3))
-            {
-                if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -19,6 +20,11 @@ namespace BudgetAnalyser.Engine.Services
         decimal TotalDebits { get; }
 
         /// <summary>
+        /// Clears the bucket and text filters.
+        /// </summary>
+        ObservableCollection<Transaction> ClearBucketAndTextFilters();
+
+        /// <summary>
         ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for
         ///     displaying in the UI.
         ///     Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" />
@@ -35,6 +41,23 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <returns>A string list of bucket codes.</returns>
         IEnumerable<string> FilterableBuckets();
+
+        /// <summary>
+        ///     Returns a filtered list of <see cref="Transaction" />s by bucket code.
+        /// </summary>
+        /// <param name="bucketCode">
+        ///     The bucket code as text. This can be null or return all, and
+        ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
+        ///     only return transactions without a bucket classification.
+        /// </param>
+        ObservableCollection<Transaction> FilterByBucket(string bucketCode);
+
+        /// <summary>
+        ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
+        ///     fields are searched: Description, Reference1, Reference2, Reference3.
+        /// </summary>
+        /// <param name="searchText">The search text. Minimum 3 characters.</param>
+        ObservableCollection<Transaction> FilterBySearchText(string searchText);
 
         /// <summary>
         ///     Filters the transactions using the filter object provided.

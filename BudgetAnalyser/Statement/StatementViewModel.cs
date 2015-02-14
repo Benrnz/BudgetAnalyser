@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Statement
                 }
 
                 RaisePropertyChanged(() => Statement);
-                Transactions = new ObservableCollection<Transaction>(Statement.Transactions);
+                Transactions = this.transactionService.ClearBucketAndTextFilters();
                 UpdateGroupedByBucket();
             }
         }
