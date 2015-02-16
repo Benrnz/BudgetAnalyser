@@ -1,3 +1,4 @@
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services
@@ -12,7 +13,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     for all other Budget Analyser datum.
         ///     This must be called first before other methods of this service can be used.
         /// </summary>
-        ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState);
+        ApplicationDatabase LoadPersistedStateData([NotNull] MainApplicationStateModelV1 storedState);
 
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.

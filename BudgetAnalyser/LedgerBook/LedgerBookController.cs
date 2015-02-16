@@ -65,8 +65,6 @@ namespace BudgetAnalyser.LedgerBook
             this.doNotUseNumberOfMonthsToShow = 2;
 
             MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
         }
@@ -175,6 +173,11 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerService.RenameLedgerBook(ViewModel.LedgerBook, result);
             FileOperations.Dirty = true;
+        }
+
+        public void LoadLastLedgerBook(string fullPath)
+        {
+            FileOperations.LoadLedgerBookFromFile(fullPath);
         }
 
         public void NotifyOfClosing()
@@ -290,21 +293,6 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             FinaliseAddingReconciliation();
-        }
-
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-        {
-            if (!message.RehydratedModels.ContainsKey(typeof(LastLedgerBookLoadedV1)))
-            {
-                return;
-            }
-
-            FileOperations.ExtractDataFromApplicationState((LastLedgerBookLoadedV1)message.RehydratedModels[typeof(LastLedgerBookLoadedV1)]);
-        }
-
-        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-        {
-            message.PersistThisModel(FileOperations.StateDataForPersistence());
         }
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)

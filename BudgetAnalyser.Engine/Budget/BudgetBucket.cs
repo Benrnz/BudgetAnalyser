@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         protected BudgetBucket()
         {
-            Active = true;
+            this.doNotUseActive = true;
         }
 
         protected BudgetBucket(string code, string name) : this()

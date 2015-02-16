@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
@@ -50,7 +51,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Loads the persisted state data.
         /// </summary>
         /// <param name="persistedStateData">The persisted state data.</param>
-        void LoadPersistedStateData(CustomBurnDownChartsV1 persistedStateData);
+        void LoadPersistedStateData([NotNull] CustomBurnDownChartsV1 persistedStateData);
 
         /// <summary>
         ///     Prepares the persistent state data.

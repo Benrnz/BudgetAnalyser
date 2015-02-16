@@ -74,11 +74,6 @@ namespace BudgetAnalyser.Engine.Services
         void MoveLedgerToAccount([NotNull] LedgerBook ledgerBook, [NotNull] LedgerBucket ledger, [NotNull] AccountType storedInAccount);
 
         /// <summary>
-        ///     Prepares the persistent state data for this ledger service.
-        /// </summary>
-        LastLedgerBookLoadedV1 PreparePersistentStateData();
-
-        /// <summary>
         ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
         /// </summary>
         /// <param name="line">The line.</param>

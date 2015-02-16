@@ -74,8 +74,6 @@ namespace BudgetAnalyser.Budget
             Shown = false;
 
             MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
 
             CurrentBudget = this.maintenanceService.CreateNewBudgetCollection();
@@ -294,7 +292,7 @@ namespace BudgetAnalyser.Budget
             LoadBudget(defaultFileName);
         }
 
-        private void LoadBudget(string fileName)
+        private void LoadBudget(string fileName, bool systemTriggered = false)
         {
             try
             {
@@ -310,6 +308,7 @@ namespace BudgetAnalyser.Budget
             }
             catch (DataFormatException)
             {
+                if (systemTriggered) throw;
                 this.messageBox.Show("That is not a valid Budget-Analyser Budget file.");
             }
             finally
@@ -387,41 +386,6 @@ namespace BudgetAnalyser.Budget
             var newIncome = new Income { Bucket = new IncomeBudgetBucket(string.Empty, string.Empty), Amount = 0 };
             Incomes.Add(newIncome);
             newIncome.PropertyChanged += OnIncomeAmountPropertyChanged;
-        }
-
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
-        {
-            try
-            {
-                var budgetState = message.ElementOfType<LastBudgetLoadedV1>();
-                if (budgetState == null)
-                {
-                    return;
-                }
-
-                string budgetFileName = budgetState.BudgetCollectionStorageKey;
-                if (string.IsNullOrWhiteSpace(budgetFileName))
-                {
-                    LoadDemoBudget();
-                    return;
-                }
-
-                LoadBudget(budgetFileName);
-            }
-            catch (DataFormatException)
-            {
-                HandleBudgetFileExceptions("The last Budget file is an invalid file format. A empty default file will use the default file instead.");
-            }
-            catch (FileNotFoundException)
-            {
-                HandleBudgetFileExceptions("The last Budget file used cannot be found. A empty default file will use the default file instead.");
-            }
-        }
-
-        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-        {
-            LastBudgetLoadedV1 persistentModel = this.maintenanceService.PreparePersistentStateData();
-            message.PersistThisModel(persistentModel);
         }
 
         private void OnDeleteBudgetItemCommandExecute(object budgetItem)
@@ -673,6 +637,28 @@ namespace BudgetAnalyser.Budget
             }
 
             return valid;
+        }
+
+        public void LoadLastBudgetCollection(string budgetCollectionStorageKey)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(budgetCollectionStorageKey))
+                {
+                    LoadDemoBudget();
+                    return;
+                }
+
+                LoadBudget(budgetCollectionStorageKey, true);
+            }
+            catch (DataFormatException)
+            {
+                HandleBudgetFileExceptions("The last Budget file is an invalid file format. A empty default file will use the default file instead.");
+            }
+            catch (FileNotFoundException)
+            {
+                HandleBudgetFileExceptions("The last Budget file used cannot be found. A empty default file will use the default file instead.");
+            }
         }
     }
 }

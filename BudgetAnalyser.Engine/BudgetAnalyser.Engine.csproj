@@ -133,7 +133,6 @@
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
-    <Compile Include="Budget\LastBudgetLoadedV1.cs" />
     <Compile Include="IDataChangeDetection.cs" />
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
@@ -142,7 +141,6 @@
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
-    <Compile Include="Ledger\LastLedgerBookLoadedV1.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />

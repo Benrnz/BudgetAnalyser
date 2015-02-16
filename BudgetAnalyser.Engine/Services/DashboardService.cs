@@ -169,6 +169,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState)
         {
+            if (storedState == null)
+            {
+                throw new ArgumentNullException("storedState");
+            }
+
             if (this.availableDependencies == null)
             {
                 this.availableDependencies = InitialiseSupportedDependenciesArray();

@@ -72,6 +72,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public void LoadPersistedStateData(CustomBurnDownChartsV1 persistedStateData)
         {
+            if (persistedStateData == null)
+            {
+                throw new ArgumentNullException("persistedStateData");
+            }
+
             this.chartsBuilder.CustomCharts = persistedStateData.Charts;
         }
 

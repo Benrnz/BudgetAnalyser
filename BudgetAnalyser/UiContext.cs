@@ -52,6 +52,8 @@ namespace BudgetAnalyser
         public BudgetController BudgetController { get; set; }
         public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
+        public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
+        public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
 
         public IEnumerable<ControllerBase> Controllers
         {

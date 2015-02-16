@@ -1,3 +1,7 @@
+using BudgetAnalyser.Budget;
+using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Filtering;
+using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
@@ -14,8 +18,14 @@ namespace BudgetAnalyser
     /// </summary>
     public interface IUiContext
     {
-        AppliedRulesController AppliedRulesController { get; set; }
+        AppliedRulesController AppliedRulesController { get; }
+        BudgetController BudgetController { get; }
+        ChooseBudgetBucketController ChooseBudgetBucketController { get; }
+        CreateNewFixedBudgetController CreateNewFixedBudgetController { get; }
+        CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; }
         EditingTransactionController EditingTransactionController { get; }
+        GlobalFilterController GlobalFilterController { get; }
+        LedgerBookController LedgerBookController { get; }
         IMessenger Messenger { get; }
         NewRuleController NewRuleController { get; }
         RulesController RulesController { get; }

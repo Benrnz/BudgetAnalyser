@@ -22,6 +22,11 @@ namespace BudgetAnalyser.Engine.Persistence
 
         public ApplicationDatabase Load(MainApplicationStateModelV1 stateModel)
         {
+            if (stateModel == null)
+            {
+                throw new ArgumentNullException("stateModel");
+            }
+
             string fileName = stateModel.BudgetAnalyserDataStorageKey;
             if (!FileExists(fileName))
             {

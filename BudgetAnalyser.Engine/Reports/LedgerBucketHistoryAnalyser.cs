@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -14,8 +15,18 @@ namespace BudgetAnalyser.Engine.Reports
             get { return GraphData.Series.FirstOrDefault(); }
         }
 
-        public void Analyse(LedgerBucket ledger, LedgerBook book)
+        public void Analyse([NotNull] LedgerBucket ledger, [NotNull] LedgerBook book)
         {
+            if (ledger == null)
+            {
+                throw new ArgumentNullException("ledger");
+            }
+
+            if (book == null)
+            {
+                throw new ArgumentNullException("book");
+            }
+
             GraphData = new GraphData
             {
                 GraphName = "Bucket Balance History",

@@ -22,6 +22,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState)
         {
+            if (storedState == null)
+            {
+                throw new ArgumentNullException("storedState");
+            }
+
             // TODO Reconsider this when creating a new ApplicationDatabase is available from the repository.
             if (string.IsNullOrWhiteSpace(storedState.BudgetAnalyserDataStorageKey)) return null;
 

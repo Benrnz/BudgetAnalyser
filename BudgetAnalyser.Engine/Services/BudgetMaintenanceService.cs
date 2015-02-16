@@ -138,11 +138,6 @@ namespace BudgetAnalyser.Engine.Services
             return new BudgetCurrencyContext(this.budgetsCollection, this.budgetsCollection.CurrentActiveBudget);
         }
 
-        public LastBudgetLoadedV1 PreparePersistentStateData()
-        {
-            return new LastBudgetLoadedV1 { BudgetCollectionStorageKey = this.budgetsCollection.FileName };
-        }
-
         /// <summary>
         ///     Saves the budget collection after modifications in the UI.
         /// </summary>

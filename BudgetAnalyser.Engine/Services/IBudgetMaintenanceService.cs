@@ -48,11 +48,6 @@ namespace BudgetAnalyser.Engine.Services
         BudgetCurrencyContext LoadBudgetsCollection(string storageKey);
 
         /// <summary>
-        ///     Prepares the persistent state data for the budget maintenance service.
-        /// </summary>
-        LastBudgetLoadedV1 PreparePersistentStateData();
-
-        /// <summary>
         ///     Saves the budget provided to persistent storage.
         /// </summary>
         /// <param name="modifiedBudget">The modified budget.</param>

@@ -182,6 +182,10 @@ namespace BudgetAnalyser.Engine.Services
 
         public void Initialise(StatementApplicationStateV1 stateData)
         {
+            if (stateData == null)
+            {
+                throw new ArgumentNullException("stateData");
+            }
             this.budgetHash = 0;
             this.sortedByBucket = stateData.SortByBucket ?? false;
         }
@@ -225,7 +229,6 @@ namespace BudgetAnalyser.Engine.Services
         {
             return new StatementApplicationStateV1
             {
-                StatementModelStorageKey = this.statementModel == null ? null : this.statementModel.StorageKey,
                 SortByBucket = this.sortedByBucket
             };
         }

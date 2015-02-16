@@ -200,14 +200,6 @@ namespace BudgetAnalyser.Engine.Services
             ledgerBook.SetLedgerAccount(ledger, storedInAccount);
         }
 
-        public LastLedgerBookLoadedV1 PreparePersistentStateData()
-        {
-            return new LastLedgerBookLoadedV1
-            {
-                LedgerBookStorageKey = this.book == null ? null : this.book.FileName
-            };
-        }
-
         public void RemoveReconciliation(LedgerEntryLine line)
         {
             if (line == null)

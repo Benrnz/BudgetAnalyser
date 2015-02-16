@@ -1,5 +1,4 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -90,13 +89,16 @@ namespace BudgetAnalyser.Statement
 
         public ICommand ClearTextFilterCommand
         {
-            get { return new RelayCommand(
-                () =>
-                {
-                    TextFilter = null;
-                    ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
-                }, 
-                () => !String.IsNullOrWhiteSpace(TextFilter)); }
+            get
+            {
+                return new RelayCommand(
+                    () =>
+                    {
+                        TextFilter = null;
+                        ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
+                    },
+                    () => !String.IsNullOrWhiteSpace(TextFilter));
+            }
         }
 
         public ICommand DeleteTransactionCommand
@@ -187,6 +189,18 @@ namespace BudgetAnalyser.Statement
             FileOperations.UpdateRecentFiles();
         }
 
+        public async Task LoadLastTransactionsCollection(string statementModelStorageKey)
+        {
+            if (string.IsNullOrWhiteSpace(statementModelStorageKey))
+            {
+                // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
+                return;
+            }
+
+            await FileOperations.LoadFileAsync(statementModelStorageKey);
+            await CheckBudgetContainsAllUsedBucketsInStatement();
+        }
+
         public void RegisterListener<T>(object listener, Action<T> handler)
         {
             MessengerInstance.Register(listener, handler);
@@ -235,7 +249,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private async void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
             var statementMetadata = message.ElementOfType<StatementApplicationStateV1>();
             if (statementMetadata == null)
@@ -244,18 +258,13 @@ namespace BudgetAnalyser.Statement
             }
 
             this.transactionService.Initialise(statementMetadata);
-            if (String.IsNullOrWhiteSpace(statementMetadata.StatementModelStorageKey))
-            {
-                // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
-                return;
-            }
-
-            await FileOperations.LoadFileAsync(statementMetadata.StatementModelStorageKey);
-
             ViewModel.SortByBucket = statementMetadata.SortByBucket ?? false;
-            OnSortCommandExecute();
-            await CheckBudgetContainsAllUsedBucketsInStatement();
+            if (ViewModel.Statement != null)
+            {
+                OnSortCommandExecute();
+            }
         }
+
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {

@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -18,7 +17,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
-        private string ledgerBookFileName;
 
         public LedgerBookControllerFileOperations(
             [NotNull] UiContext uiContext,
@@ -77,56 +75,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        internal void ExtractDataFromApplicationState(LastLedgerBookLoadedV1 ledgerBookPersistedStateData)
+        internal void LoadLedgerBookFromFile(string fileName)
         {
-            this.ledgerBookFileName = ledgerBookPersistedStateData.LedgerBookStorageKey;
-            if (!string.IsNullOrWhiteSpace(this.ledgerBookFileName))
-            {
-                LoadLedgerBookFromFile(this.ledgerBookFileName);
-                this.ledgerBookFileName = null;
-            }
-        }
-
-        internal void ReloadCurrentLedgerBook()
-        {
-            string fileName = ViewModel.LedgerBook.FileName;
-            OnCloseLedgerBookCommandExecuted();
-            LoadLedgerBookFromFile(fileName);
-        }
-
-        internal void SaveLedgerBook()
-        {
-            LedgerService.Save(ViewModel.LedgerBook);
-            Dirty = false;
-            ViewModel.NewLedgerLine = null;
-        }
-
-        internal LastLedgerBookLoadedV1 StateDataForPersistence()
-        {
-            LastLedgerBookLoadedV1 ledgerBookStateData = LedgerService.PreparePersistentStateData();
-            return ledgerBookStateData;
-        }
-
-        private bool CanExecuteCloseLedgerBookCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook != null || !string.IsNullOrWhiteSpace(this.ledgerBookFileName);
-        }
-
-        private bool CanExecuteNewLedgerBookCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook == null && string.IsNullOrWhiteSpace(this.ledgerBookFileName);
-        }
-
-        private bool CanExecuteSaveCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook != null && Dirty;
-        }
-
-        private void LoadLedgerBookFromFile(string fileName)
-        {
+            // TODO should be async
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return;
@@ -147,11 +98,42 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        internal void ReloadCurrentLedgerBook()
+        {
+            string fileName = ViewModel.LedgerBook.FileName;
+            OnCloseLedgerBookCommandExecuted();
+            LoadLedgerBookFromFile(fileName);
+        }
+
+        internal void SaveLedgerBook()
+        {
+            LedgerService.Save(ViewModel.LedgerBook);
+            Dirty = false;
+            ViewModel.NewLedgerLine = null;
+        }
+
+        private bool CanExecuteCloseLedgerBookCommand()
+        {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
+            return ViewModel.LedgerBook != null;
+        }
+
+        private bool CanExecuteNewLedgerBookCommand()
+        {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
+            return ViewModel.LedgerBook == null;
+        }
+
+        private bool CanExecuteSaveCommand()
+        {
+            // TODO Temporarily disabled while introducing ApplicationDatabaseService
+            return ViewModel.LedgerBook != null && Dirty;
+        }
+
         private void OnCloseLedgerBookCommandExecuted()
         {
             CheckIfSaveRequired();
             ViewModel.LedgerBook = null;
-            this.ledgerBookFileName = null;
             MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 

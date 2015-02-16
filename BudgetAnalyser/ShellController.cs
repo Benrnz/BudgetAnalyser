@@ -6,8 +6,6 @@ using System.Windows;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
-using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
@@ -120,11 +118,6 @@ namespace BudgetAnalyser
             this.initialised = true;
 
             IList<IPersistent> rehydratedModels = this.statePersistence.Load().ToList();
-            if (rehydratedModels.OfType<LastBudgetLoadedV1>().None())
-            {
-                // Mandatory budget file.
-                rehydratedModels.Add(new LastBudgetLoadedV1());
-            }
 
             // Create a distinct list of sequences.
             IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();

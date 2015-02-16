@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
@@ -13,6 +15,7 @@ using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
@@ -28,32 +31,20 @@ namespace BudgetAnalyser.Dashboard
         private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
         private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
         private readonly IDashboardService dashboardService;
-        private readonly IUserMessageBox messageBox;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
+        private readonly IUiContext uiContext;
+        private ApplicationDatabase applicationDatabase;
         // TODO Support for image changes when widget updates
 
         public DashboardController(
-            [NotNull] UiContext uiContext,
-            [NotNull] ChooseBudgetBucketController chooseBudgetBucketController,
-            [NotNull] CreateNewFixedBudgetController createNewFixedBudgetController,
-            [NotNull] CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController,
+            [NotNull] IUiContext uiContext,
             [NotNull] IDashboardService dashboardService,
             [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
-            }
-
-            if (chooseBudgetBucketController == null)
-            {
-                throw new ArgumentNullException("chooseBudgetBucketController");
-            }
-
-            if (createNewFixedBudgetController == null)
-            {
-                throw new ArgumentNullException("createNewFixedBudgetController");
             }
 
             if (dashboardService == null)
@@ -66,10 +57,12 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("applicationDatabaseService");
             }
 
-            this.chooseBudgetBucketController = chooseBudgetBucketController;
-            this.createNewFixedBudgetController = createNewFixedBudgetController;
-            this.createNewSurprisePaymentMonitorController = createNewSurprisePaymentMonitorController;
-            this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
+            this.createNewFixedBudgetController = uiContext.CreateNewFixedBudgetController;
+            this.createNewSurprisePaymentMonitorController = uiContext.CreateNewSurprisePaymentMonitorController;
+            GlobalFilterController = uiContext.GlobalFilterController;
+
+            this.uiContext = uiContext;
             this.dashboardService = dashboardService;
             this.applicationDatabaseService = applicationDatabaseService;
 
@@ -77,10 +70,9 @@ namespace BudgetAnalyser.Dashboard
             this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
             this.createNewSurprisePaymentMonitorController.Complete += OnCreateNewSurprisePaymentMonitorComplete;
 
-            GlobalFilterController = uiContext.GlobalFilterController;
             CorrelationId = Guid.NewGuid();
 
-            RegisterForMessengerNotifications(uiContext);
+            RegisterForMessengerNotifications(uiContext.Messenger);
         }
 
         public Guid CorrelationId
@@ -125,7 +117,7 @@ namespace BudgetAnalyser.Dashboard
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
-        private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
+        private async void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
             {
@@ -143,7 +135,10 @@ namespace BudgetAnalyser.Dashboard
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
             if (storedMainAppState != null)
             {
-                this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
+                this.applicationDatabase = this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
+                this.uiContext.BudgetController.LoadLastBudgetCollection(this.applicationDatabase.FullPath(this.applicationDatabase.BudgetCollectionStorageKey));
+                await this.uiContext.StatementController.LoadLastTransactionsCollection(this.applicationDatabase.FullPath(this.applicationDatabase.StatementModelStorageKey));
+                this.uiContext.LedgerBookController.LoadLastLedgerBook(this.applicationDatabase.FullPath(this.applicationDatabase.LedgerBookStorageKey));
             }
         }
 
@@ -173,7 +168,7 @@ namespace BudgetAnalyser.Dashboard
             Widget widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
             if (widget == null)
             {
-                this.messageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
+                this.uiContext.UserPrompts.MessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
             }
         }
 
@@ -210,7 +205,7 @@ namespace BudgetAnalyser.Dashboard
             }
             catch (ArgumentException ex)
             {
-                this.messageBox.Show(ex.Message, "Unable to create new fixed budget project");
+                this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new fixed budget project");
             }
         }
 
@@ -231,7 +226,7 @@ namespace BudgetAnalyser.Dashboard
             }
             catch (ArgumentException ex)
             {
-                this.messageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
+                this.uiContext.UserPrompts.MessageBox.Show(ex.Message, "Unable to create new surprise payment monitor widget.");
             }
         }
 
@@ -305,10 +300,10 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
 
-        private void RegisterForMessengerNotifications(UiContext uiContext)
+        private void RegisterForMessengerNotifications(IMessenger messenger)
         {
             // Register for all dependent objects change messages.
-            MessengerInstance = uiContext.Messenger;
+            MessengerInstance = messenger;
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
             MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
