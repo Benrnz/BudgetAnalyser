@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -249,11 +250,10 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("ledgerBook");
             }
 
-            var latestRecon = ledgerBook.Reconciliations.First();
-            decimal totalLedgers = latestRecon.Entries.Sum(e => e.Balance);
-            if (totalLedgers + latestRecon.CalculatedSurplus - latestRecon.LedgerBalance != 0)
+            var messages = new StringBuilder();
+            if (!ledgerBook.Validate(messages))
             {
-                throw new ValidationWarningException("Ledger book data is invalid! All ledgers + surplus + balance adjustments does not equal balance.");
+                throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
             }
 
             if (string.IsNullOrWhiteSpace(storageKey))

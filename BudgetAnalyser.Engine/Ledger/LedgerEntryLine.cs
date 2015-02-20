@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
     ///     for a date.
     ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
     /// </summary>
-    public class LedgerEntryLine : IModelValidate
+    public class LedgerEntryLine
     {
         public const string MatchedPrefix = "Matched ";
         private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=" };
@@ -70,8 +70,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalanceAdjustmentTransaction> BankBalanceAdjustments
         {
             get { return this.bankBalanceAdjustments; }
-            [UsedImplicitly]
-            private set { this.bankBalanceAdjustments = value.ToList(); }
+            [UsedImplicitly] private set { this.bankBalanceAdjustments = value.ToList(); }
         }
 
         /// <summary>
@@ -80,8 +79,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<BankBalance> BankBalances
         {
             get { return this.bankBalancesList; }
-            [UsedImplicitly]
-            private set { this.bankBalancesList = value.ToList(); }
+            [UsedImplicitly] private set { this.bankBalancesList = value.ToList(); }
         }
 
         /// <summary>
@@ -106,8 +104,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
-            [UsedImplicitly]
-            private set { this.entries = value.ToList(); }
+            [UsedImplicitly] private set { this.entries = value.ToList(); }
         }
 
         /// <summary>
@@ -120,7 +117,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal bool IsNew { get; private set; }
 
         /// <summary>
-        /// Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
+        ///     Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
         /// </summary>
         public decimal LedgerBalance
         {
@@ -151,38 +148,11 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets the total bank balance across all accounts. Does not include balance adjustments.
+        ///     Gets the total bank balance across all accounts. Does not include balance adjustments.
         /// </summary>
         public decimal TotalBankBalance
         {
             get { return this.bankBalancesList.Sum(b => b.Balance); }
-        }
-
-        public bool Validate([NotNull] StringBuilder validationMessages)
-        {
-            if (validationMessages == null)
-            {
-                throw new ArgumentNullException("validationMessages");
-            }
-
-            var result = true;
-
-            if (Entries.None())
-            {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
-                result = false;
-            }
-
-            foreach (LedgerEntry ledgerEntry in Entries)
-            {
-                if (!ledgerEntry.Validate())
-                {
-                    validationMessages.AppendFormat("Ledger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
-                    result = false;
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -199,7 +169,10 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </param>
         /// <param name="currentBudget">The current applicable budget</param>
         /// <param name="statement">The current period statement.</param>
-        /// <param name="startDateIncl">The date of the previous ledger line. This is used to include transactions from the Statement up to but excluding the date of this reconciliation.</param>
+        /// <param name="startDateIncl">
+        ///     The date of the previous ledger line. This is used to include transactions from the
+        ///     Statement up to but excluding the date of this reconciliation.
+        /// </param>
         internal void AddNew(
             LedgerBook parentLedgerBook,
             BudgetModel currentBudget,
@@ -217,7 +190,7 @@ namespace BudgetAnalyser.Engine.Ledger
             // 20/Jan (inclusive) and 19/Feb (inclusive).
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDate).ToList(); 
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDate).ToList();
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
@@ -295,6 +268,40 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return false;
+        }
+
+        internal bool Validate([NotNull] StringBuilder validationMessages, [CanBeNull] LedgerEntryLine previousLine)
+        {
+            if (validationMessages == null)
+            {
+                throw new ArgumentNullException("validationMessages");
+            }
+
+            var result = true;
+
+            if (Entries.None())
+            {
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
+                result = false;
+            }
+
+            decimal totalLedgers = Entries.Sum(e => e.Balance);
+            if (totalLedgers + CalculatedSurplus - LedgerBalance != 0)
+            {
+                result = false;
+                validationMessages.Append("All ledgers + surplus + balance adjustments does not equal balance.");
+            }
+
+            foreach (LedgerEntry ledgerEntry in Entries)
+            {
+                if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
+                {
+                    validationMessages.AppendFormat("Ledger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    result = false;
+                }
+            }
+
+            return result;
         }
 
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(List<Transaction> transactions, LedgerEntry previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
@@ -401,6 +408,21 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Empty;
         }
 
+        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
+        {
+            if (ledgerBucket == null)
+            {
+                throw new ArgumentNullException("ledgerBucket");
+            }
+
+            if (previousLine == null)
+            {
+                return 0;
+            }
+            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket == ledgerBucket);
+            return previousEntry == null ? 0 : previousEntry.Balance;
+        }
+
         private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
         {
             Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
@@ -412,8 +434,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
-                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0, 
-                        Narrative = expenseBudget.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled.",
+                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0,
+                        Narrative = expenseBudget.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
                     };
                 }
                 else
@@ -421,7 +443,10 @@ namespace BudgetAnalyser.Engine.Ledger
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
                         Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0,
-                        Narrative = expenseBudget.Bucket.Active ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer." : "Warning! Bucket has been disabled.",
+                        Narrative =
+                            expenseBudget.Bucket.Active
+                                ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
+                                : "Warning! Bucket has been disabled.",
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
                 }
@@ -452,7 +477,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             {
                                 Amount = t.Amount,
                                 Narrative = ExtractNarrative(t),
-                                Date = t.Date,
+                                Date = t.Date
                             };
                         }
 
@@ -460,7 +485,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             Amount = t.Amount,
                             Narrative = ExtractNarrative(t),
-                            Date = t.Date,
+                            Date = t.Date
                         };
                     });
 

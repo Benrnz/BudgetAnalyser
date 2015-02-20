@@ -63,18 +63,17 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
 
-            DateTime last = DateTime.MaxValue;
-            foreach (LedgerEntryLine line in this.reconciliations)
+            var line = Reconciliations.FirstOrDefault();
+            if (line != null)
             {
-                DateTime thisDate = line.Date;
-                if (thisDate >= last)
+                var previous = Reconciliations.Skip(1).FirstOrDefault();
+                if (previous != null && line.Date <= previous.Date)
                 {
-                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the dated entries for this Ledger Book.");
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the reconciliations for this Ledger Book.");
                     return false;
                 }
 
-                last = thisDate;
-                if (!line.Validate(validationMessages))
+                if (!line.Validate(validationMessages, previous))
                 {
                     return false;
                 }

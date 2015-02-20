@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -73,6 +75,17 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             get { return this.transactions; }
             [UsedImplicitly] private set { this.transactions = value.ToList(); }
+        }
+
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
         }
 
         internal void AddTransaction([NotNull] LedgerTransaction newTransaction)
@@ -199,19 +212,28 @@ namespace BudgetAnalyser.Engine.Ledger
             this.isNew = true;
         }
 
-        internal bool Validate()
+        internal bool Validate(StringBuilder validationMessages, decimal openingBalance)
         {
+            var result = true;
             if (LedgerBucket == null)
             {
+                validationMessages.AppendLine("Ledger Bucket cannot be null on " + this);
                 return false;
             }
 
             if (LedgerBucket.BudgetBucket == null)
             {
-                return false;
+                validationMessages.AppendFormat("Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                result = false;
             }
 
-            return true;
+            if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
+            {
+                validationMessages.AppendFormat("Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                result = false;
+            }
+
+            return result;
         }
 
         /// <summary>
