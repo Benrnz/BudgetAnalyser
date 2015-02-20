@@ -107,7 +107,16 @@ namespace BudgetAnalyser.LedgerBook
 
         internal void SaveLedgerBook()
         {
-            LedgerService.Save(ViewModel.LedgerBook);
+            try
+            {
+                LedgerService.Save(ViewModel.LedgerBook);
+            }
+            catch (ValidationWarningException ex)
+            {
+                this.messageBox.Show("Unable to save Ledger Book, some data is invalid\n" + ex.Message, "Ledger Book Validation");
+                return;
+            }
+
             Dirty = false;
             ViewModel.NewLedgerLine = null;
         }
