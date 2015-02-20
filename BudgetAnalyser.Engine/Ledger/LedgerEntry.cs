@@ -175,6 +175,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         Amount = budgetedAmount.Amount - newBalance,
                         Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount"
                     };
+                    Balance += zeroingTransaction.Amount;
                 }
                 else if (newBalance < 0)
                 {
@@ -183,6 +184,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         Amount = -newBalance,
                         Narrative = supplementOverdrawnText
                     };
+                    Balance += zeroingTransaction.Amount;
                 }
             }
 

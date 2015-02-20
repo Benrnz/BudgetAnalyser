@@ -119,6 +119,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal bool IsNew { get; private set; }
 
+        /// <summary>
+        /// Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
+        /// </summary>
         public decimal LedgerBalance
         {
             get { return TotalBankBalance + TotalBalanceAdjustments; }
@@ -147,6 +150,9 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return BankBalanceAdjustments.Sum(a => a.Amount); }
         }
 
+        /// <summary>
+        /// Gets the total bank balance across all accounts. Does not include balance adjustments.
+        /// </summary>
         public decimal TotalBankBalance
         {
             get { return this.bankBalancesList.Sum(b => b.Balance); }

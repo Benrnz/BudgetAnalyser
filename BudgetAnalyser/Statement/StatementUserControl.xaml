@@ -125,7 +125,7 @@
                 <Button Command="{Binding FileOperations.SaveStatementCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
-                <Button Command="{Binding FileOperations.MergeStatementCommand}"
+                <Button Command="{Binding MergeStatementCommand}"
                         Style="{StaticResource Button.Round.Add}"
                         ToolTip="Merge in new Transactions" />
             </StackPanel>

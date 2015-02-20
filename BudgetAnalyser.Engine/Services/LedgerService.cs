@@ -248,6 +248,14 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("ledgerBook");
             }
+
+            var latestRecon = ledgerBook.Reconciliations.First();
+            decimal totalLedgers = latestRecon.Entries.Sum(e => e.Balance);
+            if (totalLedgers + latestRecon.CalculatedSurplus - latestRecon.LedgerBalance != 0)
+            {
+                throw new ValidationWarningException("Ledger book data is invalid! All ledgers + surplus + balance adjustments does not equal balance.");
+            }
+
             if (string.IsNullOrWhiteSpace(storageKey))
             {
                 this.ledgerRepository.Save(ledgerBook);
