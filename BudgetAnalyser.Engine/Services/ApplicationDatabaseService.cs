@@ -54,7 +54,11 @@ namespace BudgetAnalyser.Engine.Services
                 service.Close();
             }
 
-            InitialiseDirtyDataTable();
+            foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
+            {
+                var enumValue = (ApplicationDataType)value;
+                this.dirtyData[enumValue] = false;
+            }
         }
 
         public ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState)

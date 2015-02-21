@@ -345,7 +345,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ResetTransactionsCollection()
         {
-            this.transactions = new ObservableCollection<Transaction>(this.statementModel.Transactions);
+            this.transactions = this.statementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(this.statementModel.Transactions);
         }
 
         private static bool MatchTransactionBucket(Transaction t, string bucketCode)
