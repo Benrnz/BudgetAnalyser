@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
@@ -16,7 +15,6 @@ using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
 
@@ -31,10 +29,16 @@ namespace BudgetAnalyser.Dashboard
         private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
         private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
         private readonly IDashboardService dashboardService;
+        private readonly IUiContext uiContext;
+
+        /// <summary>
+        ///     This needs to be a field because the state load messages arrived in different calls for Loading
+        ///     MainApplicationState and WidgetState.
+        /// </summary>
+        private ApplicationDatabase applicationDatabase;
+
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
-        private readonly IUiContext uiContext;
-        private ApplicationDatabase applicationDatabase;
         // TODO Support for image changes when widget updates
 
         public DashboardController(
@@ -124,21 +128,22 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
+            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
+            if (storedMainAppState != null)
+            {
+                var appDb = this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
+                this.applicationDatabase = appDb;
+                this.uiContext.BudgetController.LoadLastBudgetCollection(appDb.FullPath(appDb.BudgetCollectionStorageKey));
+                await this.uiContext.StatementController.LoadLastTransactionsCollection(appDb.FullPath(appDb.StatementModelStorageKey));
+                this.uiContext.LedgerBookController.LoadLastLedgerBook(appDb.FullPath(appDb.LedgerBookStorageKey));
+            }
+
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
-                WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState);
-                return;
-            }
-
-            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
-            if (storedMainAppState != null)
-            {
-                this.applicationDatabase = this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
-                this.uiContext.BudgetController.LoadLastBudgetCollection(this.applicationDatabase.FullPath(this.applicationDatabase.BudgetCollectionStorageKey));
-                await this.uiContext.StatementController.LoadLastTransactionsCollection(this.applicationDatabase.FullPath(this.applicationDatabase.StatementModelStorageKey));
-                this.uiContext.LedgerBookController.LoadLastLedgerBook(this.applicationDatabase.FullPath(this.applicationDatabase.LedgerBookStorageKey));
+                WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState, this.applicationDatabase);
+                this.applicationDatabase = null; // Finished with this field from here on, just need it to pass to the initial DashboardService load.
             }
         }
 
@@ -146,7 +151,7 @@ namespace BudgetAnalyser.Dashboard
         {
             WidgetsApplicationStateV1 widgetStates = this.dashboardService.PreparePersistentStateData();
             message.PersistThisModel(widgetStates);
-            var dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
+            MainApplicationStateModelV1 dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 

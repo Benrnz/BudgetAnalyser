@@ -104,6 +104,19 @@ namespace BudgetAnalyser.Engine.Services
             return this.transactions;
         }
 
+        /// <summary>
+        ///     Closes the currently loaded transaction file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            this.transactions = new ObservableCollection<Transaction>();
+            this.statementModel = null;
+            this.budgetCollection = null;
+            this.budgetHash = 0;
+            var handler = Closed;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
         public string DetectDuplicateTransactions()
         {
             if (this.statementModel == null)
@@ -186,6 +199,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("stateData");
             }
+
             this.budgetHash = 0;
             this.sortedByBucket = stateData.SortByBucket ?? false;
         }
@@ -385,5 +399,7 @@ namespace BudgetAnalyser.Engine.Services
 
             return false;
         }
+
+        public event EventHandler Closed;
     }
 }

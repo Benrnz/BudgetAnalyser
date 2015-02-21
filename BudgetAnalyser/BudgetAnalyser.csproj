@@ -472,6 +472,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Assets\FolderOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Assets\DateFilterImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

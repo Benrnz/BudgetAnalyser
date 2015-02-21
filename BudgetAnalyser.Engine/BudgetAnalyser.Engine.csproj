@@ -126,6 +126,7 @@
     <Compile Include="Account\MiscellaneousAccountType.cs" />
     <Compile Include="Account\SavingsAccount.cs" />
     <Compile Include="Account\VisaAccount.cs" />
+    <Compile Include="ApplicationDataType.cs" />
     <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="ApplicationHookEventType.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
     <Compile Include="Services\DashboardService.cs" />
+    <Compile Include="Services\IApplicationDatabaseDependant.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IBurnDownChartsService.cs" />
@@ -242,6 +244,7 @@
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\ILongTermSpendingChartService.cs" />
+    <Compile Include="Services\INotifyDatabaseChanges.cs" />
     <Compile Include="Services\IOverallPerformanceChartService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Services\ITransactionManagerService.cs" />

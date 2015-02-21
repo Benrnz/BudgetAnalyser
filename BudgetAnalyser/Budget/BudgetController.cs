@@ -28,23 +28,37 @@ namespace BudgetAnalyser.Budget
         private readonly Func<IUserPromptSaveFile> fileSaveDialogFactory;
         private readonly IUserInputBox inputBox;
         private readonly IBudgetMaintenanceService maintenanceService;
+        private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
         private string budgetMenuItemName;
         private Guid dialogCorrelationId;
-        private bool dirty;
+
+        private bool Dirty
+        {
+            get { return this.doNotUseDirty; }
+            set
+            {
+                this.doNotUseDirty = value;
+                RaisePropertyChanged();
+                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Budget);
+            }
+        }
+
         private BudgetCurrencyContext doNotUseModel;
         private bool doNotUseShownBudget;
         private decimal expenseTotal;
         private decimal incomeTotal;
         private bool loading;
         private decimal surplus;
+        private bool doNotUseDirty;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
             [NotNull] UiContext uiContext,
             [NotNull] DemoFileHelper demoFileHelper,
-            [NotNull] IBudgetMaintenanceService maintenanceService)
+            [NotNull] IBudgetMaintenanceService maintenanceService,
+            [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
             if (uiContext == null)
             {
@@ -60,9 +74,15 @@ namespace BudgetAnalyser.Budget
             {
                 throw new ArgumentNullException("maintenanceService");
             }
+            
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
 
             this.demoFileHelper = demoFileHelper;
             this.maintenanceService = maintenanceService;
+            this.applicationDatabaseService = applicationDatabaseService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.fileOpenDialogFactory = uiContext.UserPrompts.OpenFileFactory;
@@ -174,7 +194,7 @@ namespace BudgetAnalyser.Budget
 
         public ICommand SaveCommand
         {
-            get { return new RelayCommand(OnSaveCommandExecute, () => this.dirty); }
+            get { return new RelayCommand(OnSaveCommandExecute, () => this.Dirty); }
         }
 
         public ICommand ShowAllCommand
@@ -352,7 +372,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
-            this.dirty = true;
+            this.Dirty = true;
             Expense newExpense = Expenses.AddNew();
             Debug.Assert(newExpense != null);
             newExpense.Amount = 0;
@@ -382,7 +402,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnAddNewIncomeExecute()
         {
-            this.dirty = true;
+            this.Dirty = true;
             var newIncome = new Income { Bucket = new IncomeBudgetBucket(string.Empty, string.Empty), Amount = 0 };
             Incomes.Add(newIncome);
             newIncome.PropertyChanged += OnIncomeAmountPropertyChanged;
@@ -398,7 +418,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            this.dirty = true;
+            this.Dirty = true;
             var expenseItem = budgetItem as Expense;
             if (expenseItem != null)
             {
@@ -430,7 +450,7 @@ namespace BudgetAnalyser.Budget
                 // Let the first property change event through, because it is the initial set of the value.
                 if (ExpenseTotal != 0)
                 {
-                    this.dirty = true;
+                    this.Dirty = true;
                 }
             }
 
@@ -445,7 +465,7 @@ namespace BudgetAnalyser.Budget
                 // Let the first property change event through, because it is the initial set of the value.
                 if (IncomeTotal != 0)
                 {
-                    this.dirty = true;
+                    this.Dirty = true;
                 }
             }
 
@@ -462,7 +482,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            this.dirty = false;
+            this.Dirty = false;
             string fileName = GetFileNameFromUserForOpen();
             if (string.IsNullOrWhiteSpace(fileName))
             {
@@ -497,7 +517,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            this.dirty = true;
+            this.Dirty = true;
             Budgets.FileName = fileName;
             SaveBudgetModel();
             RaisePropertyChanged(() => TruncatedFileName);
@@ -553,7 +573,7 @@ namespace BudgetAnalyser.Budget
 
             if (SaveBudgetCollection())
             {
-                this.dirty = false;
+                this.Dirty = false;
                 return true;
             }
 
@@ -574,7 +594,7 @@ namespace BudgetAnalyser.Budget
         {
             CurrentBudget = new BudgetCurrencyContext(Budgets, budgetToShow);
             Shown = true;
-            this.dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
+            this.Dirty = false; // Need to reset this because events fire needlessly (in this case) as a result of setting the CurrentBudget.
         }
 
         private void SubscribeListBindingEvents()
@@ -609,7 +629,7 @@ namespace BudgetAnalyser.Budget
                 {
                     // Were viewing a different budget other than the current active budget for today's date.  Reset back to active budget.
                     CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
-                    this.dirty = false;
+                    this.Dirty = false;
                 }
 
                 MessengerInstance.Send(new BudgetReadyMessage(CurrentBudget, Budgets));
@@ -621,7 +641,7 @@ namespace BudgetAnalyser.Budget
             var valid = true;
 
             // If no changes made to the budget model data return straight away.
-            if (this.dirty)
+            if (this.Dirty)
             {
                 bool? decision = this.questionBox.Show("Save changes to the budget?", "Edit Budget");
                 if (decision != null && decision == true)

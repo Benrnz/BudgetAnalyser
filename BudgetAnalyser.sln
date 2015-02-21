@@ -13,8 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{845726B9-86B6-4BAD-92AD-E330EF09D971}"
 	ProjectSection(SolutionItems) = preProject
+		TestData\BudgetAnalyserDemo.bax = TestData\BudgetAnalyserDemo.bax
 		TestData\DemoBudget.xml = TestData\DemoBudget.xml
 		TestData\DemoLedgerBook.xml = TestData\DemoLedgerBook.xml
+		TestData\DemoMatchingRules.xml = TestData\DemoMatchingRules.xml
 		TestData\DemoTransactions.csv = TestData\DemoTransactions.csv
 		TestData\DuplicateTxnTest.csv = TestData\DuplicateTxnTest.csv
 	EndProjectSection

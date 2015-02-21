@@ -15,8 +15,8 @@ namespace BudgetAnalyser.Engine.Services
     {
         private static readonly Dictionary<string, int> GroupSequence = new Dictionary<string, int>
         {
-            { WidgetGroup.GlobalFilterSectionName, 1 },
-            { WidgetGroup.OverviewSectionName, 2 },
+            { WidgetGroup.OverviewSectionName, 1 },
+            { WidgetGroup.GlobalFilterSectionName, 2 },
             { WidgetGroup.MonthlyTrackingSectionName, 3 },
             { WidgetGroup.ProjectsSectionName, 4 }
         };

@@ -168,6 +168,14 @@ namespace BudgetAnalyser.Statement
             return true;
         }
 
+        internal void Close()
+        {
+            ViewModel.Statement = null;
+            NotifyOfReset();
+            ViewModel.TriggerRefreshTotalsRow();
+            MessengerInstance.Send(new StatementReadyMessage(null));
+        }
+
         internal async Task MergeInNewTransactions()
         {
             await SaveAsync(false);
@@ -259,20 +267,6 @@ namespace BudgetAnalyser.Statement
         {
             ViewModel.Dirty = false;
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
-        }
-
-        private async void OnCloseStatementExecute()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            if (PromptToSaveIfDirty())
-            {
-                await SaveAsync(true);
-            }
-
-            ViewModel.Statement = null;
-            NotifyOfReset();
-            ViewModel.TriggerRefreshTotalsRow();
-            MessengerInstance.Send(new StatementReadyMessage(null));
         }
 
         private void OnDemoStatementCommandExecuted()

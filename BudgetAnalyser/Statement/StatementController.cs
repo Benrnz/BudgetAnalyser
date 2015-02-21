@@ -60,6 +60,8 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
+
+            this.transactionService.Closed += OnClosedNotificationReceived;
         }
 
         public AppliedRulesController AppliedRulesController
@@ -265,7 +267,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             StatementApplicationStateV1 statementMetadata = this.transactionService.PreparePersistentStateData();
@@ -283,6 +284,11 @@ namespace BudgetAnalyser.Statement
 
             await CheckBudgetContainsAllUsedBucketsInStatement(message.Budgets);
             ViewModel.TriggerRefreshBucketFilterList();
+        }
+
+        private void OnClosedNotificationReceived(object sender, EventArgs e)
+        {
+            FileOperations.Close();
         }
 
         private void OnDeleteTransactionCommandExecute()

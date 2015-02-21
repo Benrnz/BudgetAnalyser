@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BudgetAnalyserStorageRoot xmlns="clr-namespace:BudgetAnalyser.Engine.Persistence;assembly=BudgetAnalyser.Engine"
+                           xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+						               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <BudgetAnalyserStorageRoot.MatchingRulesCollectionRootDto>
+    <StorageBranch Source="DemoMatchingRules.xml" />
+  </BudgetAnalyserStorageRoot.MatchingRulesCollectionRootDto>
+
+  <BudgetAnalyserStorageRoot.LedgerBookRootDto>
+    <StorageBranch Source="DemoLedgerBook.xml" />
+  </BudgetAnalyserStorageRoot.LedgerBookRootDto>
+
+  <BudgetAnalyserStorageRoot.StatementModelRootDto>
+    <StorageBranch Source="DemoTransactions.csv" />
+  </BudgetAnalyserStorageRoot.StatementModelRootDto>
+
+  <BudgetAnalyserStorageRoot.BudgetCollectionRootDto>
+    <StorageBranch Source="DemoBudget.xml" />
+  </BudgetAnalyserStorageRoot.BudgetCollectionRootDto>
+</BudgetAnalyserStorageRoot>

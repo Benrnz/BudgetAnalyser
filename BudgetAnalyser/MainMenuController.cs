@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Threading;
+using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -15,20 +17,34 @@ namespace BudgetAnalyser
     public class MainMenuController : ControllerBase, IInitializableController
     {
         private readonly UiContext uiContext;
+        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IDashboardService dashboardService;
         private bool doNotUseBudgetToggle;
         private bool doNotUseDashboardToggle;
         private bool doNotUseLedgerBookToggle;
         private bool doNotUseReportsToggle;
         private bool doNotUseTransactionsToggle;
 
-        public MainMenuController([NotNull] UiContext uiContext)
+        public MainMenuController([NotNull] UiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService, [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
+
+            if (dashboardService == null)
+            {
+                throw new ArgumentNullException("dashboardService");
+            }
+
             this.uiContext = uiContext;
+            this.applicationDatabaseService = applicationDatabaseService;
+            this.dashboardService = dashboardService;
             uiContext.Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
@@ -217,22 +233,24 @@ namespace BudgetAnalyser
             }
 
             message.Handled = true;
-            if (!widget.HasStatement)
+            bool? response;
+            if (this.applicationDatabaseService.HasUnsavedChanges)
             {
-                OnTransactionExecuted();
-                return;
+                response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", "Open Budget Analyser File");
+                if (response != null && response.Value) this.applicationDatabaseService.Save();
             }
 
-            if (!widget.HasBudget)
-            {
-                OnBudgetExecuted();
-                return;
-            }
+            this.applicationDatabaseService.Close();
+            var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
+            openDialog.CheckFileExists = true;
+            openDialog.AddExtension = true;
+            openDialog.DefaultExt = "*.bax";
+            openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
+            openDialog.Title = "Select Budget Analyser file to open";
+            response = openDialog.ShowDialog();
+            if (response == null || response.Value == false) return;
 
-            if (!widget.HasLedgerBook)
-            {
-                OnLedgerBookExecuted();
-            }
+            throw new NotImplementedException();
         }
     }
 }

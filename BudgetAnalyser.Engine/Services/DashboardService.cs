@@ -10,6 +10,7 @@ using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 
@@ -167,7 +168,7 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState, ApplicationDatabase applicationDatabase)
         {
             if (storedState == null)
             {
@@ -179,6 +180,7 @@ namespace BudgetAnalyser.Engine.Services
                 this.availableDependencies = InitialiseSupportedDependenciesArray();
             }
 
+            this.availableDependencies[typeof(ApplicationDatabase)] = applicationDatabase;
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
             foreach (WidgetGroup group in WidgetGroups)
@@ -288,6 +290,7 @@ namespace BudgetAnalyser.Engine.Services
             this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
             this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
             this.availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
+            this.availableDependencies[typeof(ApplicationDatabase)] = null;
             return this.availableDependencies;
         }
 

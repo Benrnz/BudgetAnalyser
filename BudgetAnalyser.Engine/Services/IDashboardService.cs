@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Widgets;
 
 namespace BudgetAnalyser.Engine.Services
@@ -56,7 +57,9 @@ namespace BudgetAnalyser.Engine.Services
         ///     This must be called first before other methods of this service can be used.
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
-        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationStateV1 storedState);
+        /// <param name="storedState">The persisted widget application state data object.</param>
+        /// <param name="applicationDatabase">The application database object used to provided access to it for widgets.</param>
+        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationStateV1 storedState, [CanBeNull] ApplicationDatabase applicationDatabase);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.

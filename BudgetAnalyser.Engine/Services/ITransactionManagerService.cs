@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     ///     An interface for managing, viewing, and storing transactions
     /// </summary>
-    public interface ITransactionManagerService : IServiceFoundation
+    public interface ITransactionManagerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
     {
         decimal AverageDebit { get; }
         decimal TotalCount { get; }
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Services
         decimal TotalDebits { get; }
 
         /// <summary>
-        /// Clears the bucket and text filters.
+        ///     Clears the bucket and text filters.
         /// </summary>
         ObservableCollection<Transaction> ClearBucketAndTextFilters();
 
