@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -63,11 +64,6 @@ namespace BudgetAnalyser.Statement
 
             this.transactionService.Closed += OnClosedNotificationReceived;
             this.transactionService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
-        }
-
-        private async void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
-        {
-            await FileOperations.SyncWithServiceAsync();
         }
 
         public AppliedRulesController AppliedRulesController
@@ -339,6 +335,8 @@ namespace BudgetAnalyser.Statement
             }
 
             this.transactionService.FilterTransactions(message.Criteria);
+            ViewModel.Statement = this.transactionService.StatementModel;
+            ViewModel.Transactions = new ObservableCollection<Transaction>(ViewModel.Statement.Transactions);
             ViewModel.TriggerRefreshTotalsRow();
             RaisePropertyChanged(() => BucketFilter);
         }
@@ -348,6 +346,11 @@ namespace BudgetAnalyser.Statement
             TextFilter = null;
             BucketFilter = null;
             await FileOperations.MergeInNewTransactions();
+        }
+
+        private async void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
+        {
+            await FileOperations.SyncWithServiceAsync();
         }
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
