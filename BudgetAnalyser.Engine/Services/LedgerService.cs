@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
-            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.LedgerBookStorageKey);
+            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
             EventHandler handler = NewDatasourceAvailable;
             if (handler != null)
             {

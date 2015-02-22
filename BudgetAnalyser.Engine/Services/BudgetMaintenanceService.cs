@@ -19,18 +19,17 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
+        private readonly IDashboardService dashboardService;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
         /// </summary>
-        /// <param name="budgetRepository">The budget repository.</param>
-        /// <param name="bucketRepo">The budget bucket repository.</param>
-        /// <param name="logger">The diagnostic logger</param>
         /// <exception cref="System.ArgumentNullException">budgetRepository</exception>
         public BudgetMaintenanceService(
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepo,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] IDashboardService dashboardService)
         {
             if (budgetRepository == null)
             {
@@ -47,8 +46,14 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("logger");
             }
 
+            if (dashboardService == null)
+            {
+                throw new ArgumentNullException("dashboardService");
+            }
+
             this.budgetRepository = budgetRepository;
             this.logger = logger;
+            this.dashboardService = dashboardService;
             BudgetBucketRepository = bucketRepo;
         }
 
@@ -161,12 +166,14 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
-            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.BudgetCollectionStorageKey);
+            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
             EventHandler handler = NewDatasourceAvailable;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
             }
+
+            this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
         /// <summary>

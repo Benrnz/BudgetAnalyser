@@ -136,7 +136,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ClearDirtyDataFlags()
         {
-            foreach (ApplicationDataType key in this.dirtyData.Keys)
+            foreach (ApplicationDataType key in this.dirtyData.Keys.ToList())
             {
                 this.dirtyData[key] = false;
             }

@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             MatchingRules.Clear();
             MatchingRulesGroupedByBucket.Clear();
-            this.rulesStorageKey = applicationDatabase.MatchingRulesCollectionStorageKey;
+            this.rulesStorageKey = applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey);
             List<MatchingRule> repoRules;
             try
             {

@@ -234,7 +234,7 @@ namespace BudgetAnalyser.Engine.Services
 
             try
             {
-                StatementModel = await this.statementRepository.LoadStatementModelAsync(applicationDatabase.StatementModelStorageKey);
+                StatementModel = await this.statementRepository.LoadStatementModelAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
             }
             catch (StatementModelChecksumException ex)
             {

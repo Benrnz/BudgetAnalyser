@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Net.Mime;
 using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
@@ -132,6 +133,7 @@ namespace BudgetAnalyser.Dashboard
             if (storedMainAppState != null)
             {
                 this.applicationDatabase = await this.applicationDatabaseService.Load(storedMainAppState.BudgetAnalyserDataStorageKey);
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(this.applicationDatabase);
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
