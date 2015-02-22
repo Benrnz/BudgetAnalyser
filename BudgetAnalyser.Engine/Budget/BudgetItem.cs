@@ -9,15 +9,12 @@ namespace BudgetAnalyser.Engine.Budget
     public abstract class BudgetItem : INotifyPropertyChanged
     {
         private decimal doNotUseAmount;
-
+        private BudgetBucket doNotUseBucket;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public decimal Amount
         {
-            get
-            {
-                return this.doNotUseAmount;
-            }
+            get { return this.doNotUseAmount; }
 
             set
             {
@@ -30,7 +27,25 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public BudgetBucket Bucket { get; set; }
+        public BudgetBucket Bucket
+        {
+            get { return this.doNotUseBucket; }
+            set
+            {
+                if (this.doNotUseBucket != null)
+                {
+                    this.doNotUseBucket.PropertyChanged -= OnBucketPropertyChanged;
+                }
+
+                this.doNotUseBucket = value;
+                if (this.doNotUseBucket != null)
+                {
+                    this.doNotUseBucket.PropertyChanged += OnBucketPropertyChanged;
+                }
+
+                OnPropertyChanged();
+            }
+        }
 
         public string Summary
         {
@@ -43,16 +58,6 @@ namespace BudgetAnalyser.Engine.Budget
                     EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
                     Bucket.Description);
             }
-        }
-
-        public static bool operator ==(BudgetItem left, BudgetItem right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(BudgetItem left, BudgetItem right)
-        {
-            return !Equals(left, right);
         }
 
         public override bool Equals(object obj)
@@ -99,6 +104,16 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // This is to trigger updates dependent on Bucket, but isn't updated when Active is toggled. For example binding to bucket
+            // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
+            if (e.PropertyName == "Active")
+            {
+                OnPropertyChanged("Bucket");
+            }
+        }
+
         private static string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
         {
             if (string.IsNullOrWhiteSpace(sentence1) || string.IsNullOrWhiteSpace(sentence2))
@@ -138,6 +153,16 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
+        }
+
+        public static bool operator ==(BudgetItem left, BudgetItem right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BudgetItem left, BudgetItem right)
+        {
+            return !Equals(left, right);
         }
     }
 }

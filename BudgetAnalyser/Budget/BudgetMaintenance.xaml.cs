@@ -72,13 +72,5 @@ namespace BudgetAnalyser.Budget
                 }
             }
         }
-
-        private void OnMouseWheelForBudgetItems(object sender, MouseWheelEventArgs e)
-        {
-            var listBox = sender as ListBox;
-            if (listBox == null) return;
-
-            
-        }
     }
 }

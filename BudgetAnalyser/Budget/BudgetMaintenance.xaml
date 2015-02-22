@@ -289,7 +289,6 @@
                          ItemContainerStyle="{StaticResource ListBox.BudgetContainerStyle}"
                          ItemsSource="{Binding Expenses}"
                          ItemTemplate="{StaticResource ExpenseTemplate}"
-                         MouseWheel="OnMouseWheelForBudgetItems"
                          SelectionMode="Single">
                     <i:Interaction.Behaviors>
                         <wpf:BubbleScrollEventBehaviour />
