@@ -296,7 +296,8 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestInitialize]
         public void TestInit()
         {
-            PrivateAccessor.SetProperty(this.testAppDb, "StatementModelStorageKey", @"C:\Foo.csv");
+            PrivateAccessor.SetProperty(this.testAppDb, "StatementModelStorageKey", @"Foo.csv");
+            PrivateAccessor.SetProperty(this.testAppDb, "FileName", @"C:\AppDb.bax");
             this.testData = StatementModelTestData.TestData2();
 
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
