@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null)
+                if (this.transactions == null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null)
+                if (this.transactions == null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null)
+                if (this.transactions == null || this.transactions.None())
                 {
                     return 0;
                 }
@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             get
             {
-                if (this.transactions == null)
+                if (this.transactions == null || this.transactions.None())
                 {
                     return 0;
                 }

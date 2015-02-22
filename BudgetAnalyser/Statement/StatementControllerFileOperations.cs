@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
@@ -19,35 +17,19 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementControllerFileOperations : ViewModelBase
     {
-        private readonly DemoFileHelper demoFileHelper;
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
-        private readonly IRecentFileManager recentFileManager;
         private readonly IUserQuestionBoxYesNo yesNoBox;
         private bool doNotUseLoadingData;
-        // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //private List<ICommand> recentFileCommands;
         private ITransactionManagerService transactionService;
 
         public StatementControllerFileOperations(
             [NotNull] IUiContext uiContext,
-            [NotNull] IRecentFileManager recentFileManager,
-            [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] LoadFileController loadFileController)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
-            }
-
-            if (recentFileManager == null)
-            {
-                throw new ArgumentNullException("recentFileManager");
-            }
-
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException("demoFileHelper");
             }
 
             if (loadFileController == null)
@@ -57,11 +39,8 @@ namespace BudgetAnalyser.Statement
 
             this.yesNoBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.recentFileManager = recentFileManager;
-            this.demoFileHelper = demoFileHelper;
             this.loadFileController = loadFileController;
             ViewModel = new StatementViewModel(uiContext);
-            this.recentFileManager.StateDataRestored += OnRecentFileManagerStateRestored;
         }
 
         public bool LoadingData
@@ -94,46 +73,18 @@ namespace BudgetAnalyser.Statement
             return ViewModel.Statement != null;
         }
 
-        internal void Initialise(ITransactionManagerService transactionManagerService)
-        {
-            this.transactionService = transactionManagerService;
-            ViewModel.Initialise(this.transactionService);
-        }
-
-        internal async Task<bool> SyncWithServiceAsync()
-        {
-            StatementModel statementModel = this.transactionService.StatementModel;
-            LoadingData = true;
-            await Dispatcher.CurrentDispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                () =>
-                {
-                    // Update all UI bound properties.
-                    var requestCurrentFilterMessage = new RequestFilterMessage(this);
-                    MessengerInstance.Send(requestCurrentFilterMessage);
-                    if (requestCurrentFilterMessage.Criteria != null)
-                    {
-                        this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
-                    }
-
-                    ViewModel.Statement = statementModel;
-                    NotifyOfReset();
-                    ViewModel.TriggerRefreshTotalsRow();
-
-                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
-
-                    LoadingData = false;
-                });
-
-            return true;
-        }
-
         internal void Close()
         {
             ViewModel.Statement = null;
             NotifyOfReset();
             ViewModel.TriggerRefreshTotalsRow();
             MessengerInstance.Send(new StatementReadyMessage(null));
+        }
+
+        internal void Initialise(ITransactionManagerService transactionManagerService)
+        {
+            this.transactionService = transactionManagerService;
+            ViewModel.Initialise(this.transactionService);
         }
 
         internal async Task MergeInNewTransactions()
@@ -178,20 +129,32 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(ViewModel.Dirty, ViewModel.Statement));
         }
 
-        internal void UpdateRecentFiles()
+        internal async Task<bool> SyncWithServiceAsync()
         {
-            UpdateRecentFiles(this.recentFileManager.Files());
-        }
+            StatementModel statementModel = this.transactionService.StatementModel;
+            LoadingData = true;
+            await Dispatcher.CurrentDispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                () =>
+                {
+                    // Update all UI bound properties.
+                    var requestCurrentFilterMessage = new RequestFilterMessage(this);
+                    MessengerInstance.Send(requestCurrentFilterMessage);
+                    if (requestCurrentFilterMessage.Criteria != null)
+                    {
+                        this.transactionService.FilterTransactions(requestCurrentFilterMessage.Criteria);
+                    }
 
-        private bool CanExecuteOpenStatementCommand()
-        {
-            return !LoadingData;
-        }
+                    ViewModel.Statement = statementModel;
+                    NotifyOfReset();
+                    ViewModel.TriggerRefreshTotalsRow();
 
-        private bool CanExecuteRecentFileOpenCommand(string parameter)
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return CanExecuteOpenStatementCommand() && !string.IsNullOrWhiteSpace(parameter);
+                    MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
+
+                    LoadingData = false;
+                });
+
+            return true;
         }
 
         private void FileCannotBeLoaded(Exception ex)
@@ -229,51 +192,10 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
         }
 
-        //private void OnDemoStatementCommandExecuted()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    OnOpenStatementExecuteAsync(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
-        //}
-
-        //private async void OnOpenStatementExecuteAsync(string fullFileName)
-        //{
-        //    if (PromptToSaveIfDirty())
-        //    {
-        //        await SaveAsync(true);
-        //    }
-
-        //    // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
-        //    try
-        //    {
-        //        bool result = await SyncWithServiceAsync(fullFileName);
-
-        //        // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
-        //        if (result)
-        //        {
-        //            // Update RecentFile list for successfully loaded files only. 
-        //            UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.StorageKey));
-        //        }
-        //    }
-        //    catch (FileNotFoundException ex)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(ex.FileName))
-        //        {
-        //            // Remove the bad file that caused the exception from the RecentFiles list.
-        //            UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
-        //        }
-        //    }
-        //}
-
-        private void OnRecentFileManagerStateRestored(object sender, EventArgs e)
-        {
-            UpdateRecentFiles();
-        }
-
         private async void OnSaveStatementExecute()
         {
             // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
             await SaveAsync(false);
-            UpdateRecentFiles(this.recentFileManager.UpdateFile(ViewModel.Statement.StorageKey));
         }
 
         private bool PromptToSaveIfDirty()
@@ -297,24 +219,6 @@ namespace BudgetAnalyser.Statement
             await this.transactionService.SaveAsync(close);
             ViewModel.TriggerRefreshTotalsRow();
             NotifyOfReset();
-        }
-
-        private void UpdateRecentFiles(IEnumerable<KeyValuePair<string, string>> files)
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            //this.recentFileCommands =
-            //    files.Select(
-            //        f => (ICommand)new RecentFileRelayCommand(
-            //            f.Value,
-            //            f.Key,
-            //            OnOpenStatementExecuteAsync,
-            //            CanExecuteRecentFileOpenCommand))
-            //        .ToList();
-            //RaisePropertyChanged(() => RecentFile1Command);
-            //RaisePropertyChanged(() => RecentFile2Command);
-            //RaisePropertyChanged(() => RecentFile3Command);
-            //RaisePropertyChanged(() => RecentFile4Command);
-            //RaisePropertyChanged(() => RecentFile5Command);
         }
     }
 }

@@ -5,14 +5,8 @@
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.InputBindings>
-        <KeyBinding Key="O"
-                    Command="{Binding FileOperations.OpenStatementCommand}"
-                    Modifiers="Control" />
         <KeyBinding Key="S"
                     Command="{Binding FileOperations.SaveStatementCommand}"
-                    Modifiers="Control" />
-        <KeyBinding Key="X"
-                    Command="{Binding FileOperations.CloseStatementCommand}"
                     Modifiers="Control" />
     </UserControl.InputBindings>
 
@@ -245,14 +239,6 @@
                                Text="No transactions file loaded."
                                ToolTip="Load a transactions csv file." />
                 </Border>
-                <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding ViewModel.Statement, Converter={StaticResource Converter.NotNullToVis}}">
-                    <Button Command="{Binding FileOperations.DemoStatementCommand}"
-                            Margin="20,20,4,20"
-                            Style="{StaticResource Button.Round.Smiley}"
-                            ToolTip="Load a demo set of transactions" />
-                    <TextBlock Text="Load a demonstration set of transactions." />
-                </StackPanel>
             </StackPanel>
             <ListBox x:Name="TransactionListBox"
                      AlternationCount="2"

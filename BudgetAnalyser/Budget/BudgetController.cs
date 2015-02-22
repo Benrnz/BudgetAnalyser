@@ -38,18 +38,12 @@ namespace BudgetAnalyser.Budget
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public BudgetController(
             [NotNull] UiContext uiContext,
-            [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] IBudgetMaintenanceService maintenanceService,
             [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
-            }
-
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException("demoFileHelper");
             }
 
             if (maintenanceService == null)
@@ -269,12 +263,6 @@ namespace BudgetAnalyser.Budget
             return Expenses.Any() || Incomes.Any();
         }
 
-        //private async Task LoadDemoBudget()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    await SyncWithBudgetService(this.demoFileHelper.FindDemoFile("DemoBudget.xml"));
-        //}
-
         private void OnAddNewBudgetCommandExecuted()
         {
             DateTime proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
@@ -405,25 +393,6 @@ namespace BudgetAnalyser.Budget
             IncomeTotal = Incomes.Sum(x => x.Amount);
             Surplus = IncomeTotal - ExpenseTotal;
         }
-
-        //private async void OnLoadBudgetCommandExecute()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    bool valid = await ValidateAndSaveIfRequired();
-        //    if (!valid)
-        //    {
-        //        return;
-        //    }
-
-        //    Dirty = false;
-        //    string fileName = GetFileNameFromUserForOpen();
-        //    if (string.IsNullOrWhiteSpace(fileName))
-        //    {
-        //        return;
-        //    }
-
-        //    await SyncWithBudgetService(fileName);
-        //}
 
         private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
         {

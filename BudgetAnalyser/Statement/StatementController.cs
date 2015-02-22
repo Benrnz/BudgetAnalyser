@@ -91,6 +91,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public ICommand ClearTextFilterCommand
         {
             get
@@ -122,6 +123,7 @@ namespace BudgetAnalyser.Statement
 
         public StatementControllerFileOperations FileOperations { get; private set; }
 
+        [Engine.Annotations.UsedImplicitly]
         public ICommand MergeStatementCommand
         {
             get { return new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand); }
@@ -141,11 +143,13 @@ namespace BudgetAnalyser.Statement
             }
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public ICommand SortCommand
         {
             get { return new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand); }
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public ICommand SplitTransactionCommand
         {
             get { return new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow); }
@@ -190,20 +194,7 @@ namespace BudgetAnalyser.Statement
 
             this.initialised = true;
             FileOperations.Initialise(this.transactionService);
-            FileOperations.UpdateRecentFiles();
         }
-
-        //public async Task LoadLastTransactionsCollection(string statementModelStorageKey)
-        //{
-        //    if (string.IsNullOrWhiteSpace(statementModelStorageKey))
-        //    {
-        //        // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
-        //        return;
-        //    }
-
-        //    await FileOperations.SyncWithServiceAsync(statementModelStorageKey);
-        //    await CheckBudgetContainsAllUsedBucketsFromStatement();
-        //}
 
         public void RegisterListener<T>(object listener, Action<T> handler)
         {

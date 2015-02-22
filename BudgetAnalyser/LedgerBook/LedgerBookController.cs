@@ -73,11 +73,13 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler LedgerBookUpdated;
 
+        [UsedImplicitly]
         public ICommand AddNewLedgerCommand
         {
             get { return new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand); }
         }
 
+        [UsedImplicitly]
         public ICommand AddNewReconciliationCommand
         {
             get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
@@ -145,6 +147,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
         }
 
+        [UsedImplicitly]
         public ICommand UnlockLedgerLineCommand
         {
             get { return new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand); }
@@ -176,11 +179,6 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerService.RenameLedgerBook(ViewModel.LedgerBook, result);
             FileOperations.Dirty = true;
         }
-
-        //public void LoadLastLedgerBook(string fullPath)
-        //{
-        //    FileOperations.SyncWithService(fullPath);
-        //}
 
         public void NotifyOfClosing()
         {

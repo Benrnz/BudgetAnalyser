@@ -12,7 +12,6 @@ namespace BudgetAnalyser.LedgerBook
 {
     public class LedgerBookControllerFileOperations
     {
-        private readonly DemoFileHelper demoFileHelper;
         private readonly IUserMessageBox messageBox;
         private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -20,20 +19,16 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerBookControllerFileOperations(
             [NotNull] UiContext uiContext,
-            [NotNull] IMessenger messenger,
-            [NotNull] DemoFileHelper demoFileHelper)
+            [NotNull] IMessenger messenger)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
+
             if (messenger == null)
             {
                 throw new ArgumentNullException("messenger");
-            }
-            if (demoFileHelper == null)
-            {
-                throw new ArgumentNullException("demoFileHelper");
             }
 
             this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
@@ -41,7 +36,6 @@ namespace BudgetAnalyser.LedgerBook
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
 
-            this.demoFileHelper = demoFileHelper;
             MessengerInstance = messenger;
 
             ViewModel = new LedgerBookViewModel();
@@ -103,12 +97,6 @@ namespace BudgetAnalyser.LedgerBook
             ViewModel.NewLedgerLine = null;
         }
 
-        private bool CanExecuteCloseLedgerBookCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook != null;
-        }
-
         private bool CanExecuteNewLedgerBookCommand()
         {
             // TODO Temporarily disabled while introducing ApplicationDatabaseService
@@ -120,38 +108,6 @@ namespace BudgetAnalyser.LedgerBook
             // TODO Temporarily disabled while introducing ApplicationDatabaseService
             return ViewModel.LedgerBook != null && Dirty;
         }
-
-        //private void OnDemoLedgerBookCommandExecute()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    try
-        //    {
-        //        SyncWithService(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
-        //    }
-        //    catch (IOException)
-        //    {
-        //        this.messageBox.Show("Unable to find the demo Ledger-Book file.");
-        //    }
-        //}
-
-        //private void OnLoadLedgerBookCommandExecute()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
-        //    openFileDialog.AddExtension = true;
-        //    openFileDialog.CheckPathExists = true;
-        //    openFileDialog.DefaultExt = ".xml";
-        //    openFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-        //    openFileDialog.Title = "Choose a LedgerBook xml file to load.";
-        //    bool? result = openFileDialog.ShowDialog();
-        //    if (result == null || !result.Value)
-        //    {
-        //        return;
-        //    }
-        //    string fileName = openFileDialog.FileName;
-
-        //    SyncWithService(fileName);
-        //}
 
         //private void OnNewLedgerBookCommandExecuted()
         //{
