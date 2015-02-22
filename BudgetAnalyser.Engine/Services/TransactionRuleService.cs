@@ -12,7 +12,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class TransactionRuleService : ITransactionRuleService
     {
         private readonly ILogger logger;

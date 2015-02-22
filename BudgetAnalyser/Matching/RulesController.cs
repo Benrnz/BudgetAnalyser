@@ -294,6 +294,8 @@ namespace BudgetAnalyser.Matching
             Rules = this.ruleService.MatchingRules;
             RulesGroupedByBucket = this.ruleService.MatchingRulesGroupedByBucket;
             SelectedRule = null;
+            RaisePropertyChanged(() => Rules);
+            RaisePropertyChanged(() => RulesGroupedByBucket);
         }
 
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
