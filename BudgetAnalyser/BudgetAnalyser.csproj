@@ -199,6 +199,7 @@
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">
       <DependentUpon>DashboardUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dashboard\LoadDemoWidget.cs" />
     <Compile Include="Dashboard\WidgetActivatedMessage.cs" />
     <Compile Include="DemoFileHelper.cs" />
     <Compile Include="Filtering\FilterAppliedMessage.cs" />
@@ -471,6 +472,10 @@
     <Page Include="UI\Assets\AmexLogoImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Assets\SmileyImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Assets\FolderOpen.xaml">
       <Generator>MSBuild:Compile</Generator>

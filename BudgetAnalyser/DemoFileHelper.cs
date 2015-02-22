@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using BudgetAnalyser.Engine;
 
@@ -7,18 +8,21 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class DemoFileHelper
     {
-        public string FindDemoFile(string demoFileName)
+        private const string DemoFileName = "BudgetAnalyserDemo.bax";
+
+        public string FindDemoFile()
         {
             string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            Debug.Assert(folder != null);
             for (int failsafe = 0; failsafe < 10; failsafe++)
             {
-                string path = Path.Combine(folder, demoFileName);
+                string path = Path.Combine(folder, DemoFileName);
                 if (FileExists(path))
                 {
                     return path;
                 }
 
-                path = Path.Combine(folder, "TestData", demoFileName);
+                path = Path.Combine(folder, "TestData", DemoFileName);
                 if (FileExists(path))
                 {
                     return path;

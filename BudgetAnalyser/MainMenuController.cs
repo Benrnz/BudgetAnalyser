@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
-using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -11,6 +10,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
+using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -18,16 +18,21 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MainMenuController : ControllerBase, IInitializableController
     {
-        private readonly UiContext uiContext;
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IDashboardService dashboardService;
+        private readonly DemoFileHelper demoFileHelper;
+        private readonly UiContext uiContext;
         private bool doNotUseBudgetToggle;
         private bool doNotUseDashboardToggle;
         private bool doNotUseLedgerBookToggle;
         private bool doNotUseReportsToggle;
         private bool doNotUseTransactionsToggle;
 
-        public MainMenuController([NotNull] UiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService, [NotNull] IDashboardService dashboardService)
+        public MainMenuController(
+            [NotNull] UiContext uiContext,
+            [NotNull] IApplicationDatabaseService applicationDatabaseService,
+            [NotNull] IDashboardService dashboardService,
+            [NotNull] DemoFileHelper demoFileHelper)
         {
             if (uiContext == null)
             {
@@ -44,9 +49,15 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("dashboardService");
             }
 
+            if (demoFileHelper == null)
+            {
+                throw new ArgumentNullException("demoFileHelper");
+            }
+
             this.uiContext = uiContext;
             this.applicationDatabaseService = applicationDatabaseService;
             this.dashboardService = dashboardService;
+            this.demoFileHelper = demoFileHelper;
             uiContext.Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
@@ -183,13 +194,14 @@ namespace BudgetAnalyser
 
         private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
         {
-            message.WhenReadyToNavigate.ContinueWith(t =>
-            {
-                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+            message.WhenReadyToNavigate.ContinueWith(
+                t =>
                 {
-                    Dispatcher.BeginInvoke(DispatcherPriority.Normal, OnTransactionExecuted);
-                }
-            });
+                    if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+                    {
+                        Dispatcher.BeginInvoke(DispatcherPriority.Normal, OnTransactionExecuted);
+                    }
+                });
         }
 
         private void OnReportsExecuted()
@@ -221,35 +233,41 @@ namespace BudgetAnalyser
             if (message.Widget is DaysSinceLastImport)
             {
                 OnTransactionExecuted();
+                return;
             }
 
-            await ProcessCurrentFileWidgetActivated(message);
+            if (message.Widget is CurrentFileWidget)
+            {
+                await ProcessCurrentFileWidgetActivated(message);
+                return;
+            }
+
+            if (message.Widget is LoadDemoWidget)
+            {
+                await ProcessLoadDemoWidgetActivated(message);
+            }
         }
 
         private async Task ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
         {
-            var widget = message.Widget as CurrentFilesWidget;
+            var widget = message.Widget as CurrentFileWidget;
             if (widget == null)
             {
                 return;
             }
 
             message.Handled = true;
-            bool? response;
-            if (this.applicationDatabaseService.HasUnsavedChanges)
-            {
-                response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", "Open Budget Analyser File");
-                if (response != null && response.Value) this.applicationDatabaseService.Save();
-            }
 
-            var appDb = this.applicationDatabaseService.Close();
-            var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
+            PromptToSaveIfNecessary();
+            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
+
+            IUserPromptOpenFile openDialog = this.uiContext.UserPrompts.OpenFileFactory();
             openDialog.CheckFileExists = true;
             openDialog.AddExtension = true;
             openDialog.DefaultExt = "*.bax";
             openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
             openDialog.Title = "Select Budget Analyser file to open";
-            response = openDialog.ShowDialog();
+            bool? response = openDialog.ShowDialog();
             if (response == null || response.Value == false)
             {
                 this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
@@ -258,6 +276,35 @@ namespace BudgetAnalyser
 
             appDb = await this.applicationDatabaseService.Load(openDialog.FileName);
             this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+        }
+
+        private async Task ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
+        {
+            var widget = message.Widget as LoadDemoWidget;
+            if (widget == null)
+            {
+                return;
+            }
+
+            message.Handled = true;
+
+            string fileName = this.demoFileHelper.FindDemoFile();
+            PromptToSaveIfNecessary();
+            this.applicationDatabaseService.Close();
+            ApplicationDatabase appDb = await this.applicationDatabaseService.Load(fileName);
+            this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+        }
+
+        private void PromptToSaveIfNecessary()
+        {
+            if (this.applicationDatabaseService.HasUnsavedChanges)
+            {
+                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", "Open Budget Analyser File");
+                if (response != null && response.Value)
+                {
+                    this.applicationDatabaseService.Save();
+                }
+            }
         }
     }
 }

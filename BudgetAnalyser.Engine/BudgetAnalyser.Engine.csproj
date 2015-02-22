@@ -313,7 +313,7 @@
     <Compile Include="Widgets\AccountFilterWidget.cs" />
     <Compile Include="Widgets\WidgetsApplicationStateV1.cs" />
     <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
-    <Compile Include="Widgets\CurrentFilesWidget.cs" />
+    <Compile Include="Widgets\CurrentFileWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
     <Compile Include="Widgets\IUserDefinedWidget.cs" />
     <Compile Include="Widgets\MultiInstanceWidgetState.cs" />

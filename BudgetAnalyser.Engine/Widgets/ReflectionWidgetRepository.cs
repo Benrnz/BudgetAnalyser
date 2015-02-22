@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -48,8 +49,17 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (this.cachedWidgets.None())
             {
-                IEnumerable<Type> widgetTypes = GetType().Assembly.GetExportedTypes()
-                    .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract);
+                List<Type> widgetTypes = GetType().Assembly.GetExportedTypes()
+                    .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract)
+                    .ToList();
+
+                var specialisedUiWidgets = Assembly.GetEntryAssembly().GetExportedTypes()
+                    .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract)
+                    .ToList();
+                if (specialisedUiWidgets.Any())
+                {
+                    widgetTypes.AddRange(specialisedUiWidgets);
+                }
 
                 foreach (Widget widget in widgetTypes
                     .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
