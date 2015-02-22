@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     ///     A service to provide access to manipulate ledger books.
     /// </summary>
-    public interface ILedgerService : IServiceFoundation
+    public interface ILedgerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
     {
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.

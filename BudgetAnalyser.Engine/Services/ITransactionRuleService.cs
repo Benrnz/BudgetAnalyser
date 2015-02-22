@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     An interface describing how to maintain <see cref="MatchingRule" />s.
     ///     The collections are owned by the consumer and passed into this service to be manipulated.
     /// </summary>
-    public interface ITransactionRuleService : IServiceFoundation
+    public interface ITransactionRuleService : INotifyDatabaseChanges, IApplicationDatabaseDependant, IServiceFoundation
     {
         /// <summary>
         ///     Gets the unique identifer of the currently loaded Matching Rules set.

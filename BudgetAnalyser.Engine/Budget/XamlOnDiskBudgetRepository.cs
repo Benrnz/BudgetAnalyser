@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -11,8 +12,12 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
     {
-        private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
+        //private const string EmptyBudgetFileName = ":::EmptyBudget";
+        //private const string EmptyBudgetXaml =
+        //    @"<?xml version=""1.0"" encoding=""utf-8"" ?><BudgetCollectionDto FileName="":::EmptyBudget""xmlns=""clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine""xmlns:scg=""clr-namespace:System.Collections.Generic;assembly=mscorlib""xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""><BudgetCollectionDto.Buckets><scg:List x:TypeArguments=""BudgetBucketDto"" Capacity=""1""/>    </BudgetCollectionDto.Buckets><BudgetCollectionDto.Budgets><scg:List x:TypeArguments=""BudgetModelDto"" Capacity=""4""><BudgetModelDto LastModifiedComment=""{x:Null}"" EffectiveFrom=""2014-01-19T00:00+13:00"" LastModified=""2014-01-19T11:49:07.7350234+13:00"" Name=""Default Budget""><BudgetModelDto.Expenses><scg:List x:TypeArguments=""ExpenseDto"" Capacity=""1""/></BudgetModelDto.Expenses><BudgetModelDto.Incomes><scg:List x:TypeArguments=""IncomeDto"" Capacity=""1""/></BudgetModelDto.Incomes></BudgetModelDto></scg:List></BudgetCollectionDto.Budgets></BudgetCollectionDto>";
+
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
+        private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
         private BudgetCollection currentBudgetCollection;
 
         public XamlOnDiskBudgetRepository(
@@ -41,8 +46,15 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
-
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
+
+        public BudgetCollection CreateNew()
+        {
+            var budget = new BudgetModel();
+            this.currentBudgetCollection = new BudgetCollection(new[] { budget });
+            BudgetBucketRepository.Initialise(new List<BudgetBucketDto>());
+            return this.currentBudgetCollection;
+        }
 
         public BudgetCollection CreateNew([NotNull] string fileName)
         {
@@ -54,7 +66,7 @@ namespace BudgetAnalyser.Engine.Budget
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = DateTime.Today,
-                Name = "Default Budget",
+                Name = "Default Budget"
             };
 
             var newCollection = new BudgetCollection(new[] { newBudget })
@@ -69,7 +81,7 @@ namespace BudgetAnalyser.Engine.Budget
             return newCollection;
         }
 
-        public BudgetCollection Load(string fileName)
+        public async Task<BudgetCollection> LoadAsync(string fileName)
         {
             if (!FileExists(fileName))
             {
@@ -79,12 +91,13 @@ namespace BudgetAnalyser.Engine.Budget
             object serialised;
             try
             {
-                serialised = LoadFromDisk(fileName); // May return null for some errors.
+                serialised = await LoadFromDisk(fileName); // May return null for some errors.
             }
             catch (XamlObjectWriterException ex)
             {
                 throw new DataFormatException(
-                    string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName), ex);
+                    string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName),
+                    ex);
             }
             catch (Exception ex)
             {
@@ -141,9 +154,11 @@ namespace BudgetAnalyser.Engine.Budget
             return File.Exists(fileName);
         }
 
-        protected virtual object LoadFromDisk(string fileName)
+        protected async virtual Task<object> LoadFromDisk(string fileName)
         {
-            return XamlServices.Load(fileName);
+            object result = null;
+            await Task.Run(() => result = XamlServices.Load(fileName));
+            return result;
         }
 
         protected virtual string Serialise(BudgetCollectionDto budgetData)

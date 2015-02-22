@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
@@ -204,7 +206,7 @@ namespace BudgetAnalyser
             AfterTabExecutedCommon();
         }
 
-        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+        private async void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
         {
             if (message == null)
             {
@@ -221,10 +223,10 @@ namespace BudgetAnalyser
                 OnTransactionExecuted();
             }
 
-            ProcessCurrentFileWidgetActivated(message);
+            await ProcessCurrentFileWidgetActivated(message);
         }
 
-        private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+        private async Task ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as CurrentFilesWidget;
             if (widget == null)
@@ -240,7 +242,7 @@ namespace BudgetAnalyser
                 if (response != null && response.Value) this.applicationDatabaseService.Save();
             }
 
-            this.applicationDatabaseService.Close();
+            var appDb = this.applicationDatabaseService.Close();
             var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
             openDialog.CheckFileExists = true;
             openDialog.AddExtension = true;
@@ -248,9 +250,14 @@ namespace BudgetAnalyser
             openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
             openDialog.Title = "Select Budget Analyser file to open";
             response = openDialog.ShowDialog();
-            if (response == null || response.Value == false) return;
+            if (response == null || response.Value == false)
+            {
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+                return;
+            }
 
-            throw new NotImplementedException();
+            appDb = await this.applicationDatabaseService.Load(openDialog.FileName);
+            this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
         }
     }
 }

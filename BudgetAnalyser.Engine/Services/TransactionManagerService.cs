@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
@@ -105,6 +106,15 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
+        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        /// Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 10; }
+        }
+
+        /// <summary>
         ///     Closes the currently loaded transaction file.  No warnings will be raised if there is unsaved data.
         /// </summary>
         public void Close()
@@ -115,6 +125,14 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetHash = 0;
             var handler = Closed;
             if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            throw new NotImplementedException();
         }
 
         public string DetectDuplicateTransactions()
@@ -401,5 +419,6 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public event EventHandler Closed;
+        public event EventHandler NewDatasourceAvailable;
     }
 }

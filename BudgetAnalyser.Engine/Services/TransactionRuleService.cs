@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
@@ -50,6 +51,8 @@ namespace BudgetAnalyser.Engine.Services
             this.ruleFactory = ruleFactory;
         }
 
+        public event EventHandler Closed;
+        public event EventHandler NewDatasourceAvailable;
         public string RulesStorageKey { get; private set; }
 
         public bool AddRule(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket, MatchingRule ruleToAdd)
@@ -98,6 +101,36 @@ namespace BudgetAnalyser.Engine.Services
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        /// Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 50; }
+        }
+
+        /// <summary>
+        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            RulesStorageKey = null;
+            EventHandler handler = Closed;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            throw new NotImplementedException();
         }
 
         public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)

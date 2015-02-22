@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -17,7 +19,6 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
-        private BudgetCollection budgetsCollection;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
@@ -51,11 +52,16 @@ namespace BudgetAnalyser.Engine.Services
             BudgetBucketRepository = bucketRepo;
         }
 
+        public event EventHandler Closed;
+        public event EventHandler NewDatasourceAvailable;
+
         /// <summary>
         ///     Gets the budget bucket repository.
         ///     Allows the UI to set up a static reference to the Bucket repository for binding, converters and templates.
         /// </summary>
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
+
+        public BudgetCollection Budgets { get; private set; }
 
         /// <summary>
         ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.
@@ -106,9 +112,31 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
             }
 
-            this.budgetsCollection.Add(newBudget);
+            Budgets.Add(newBudget);
             this.budgetRepository.Save();
             return newBudget;
+        }
+
+        /// <summary>
+        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        /// Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 5; }
+        }
+
+        /// <summary>
+        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            CreateNewBudgetCollection();
+            EventHandler handler = Closed;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -119,23 +147,21 @@ namespace BudgetAnalyser.Engine.Services
         /// </returns>
         public BudgetCurrencyContext CreateNewBudgetCollection()
         {
-            var budget = new BudgetModel();
-            this.budgetsCollection = new BudgetCollection(new[] { budget });
-            return new BudgetCurrencyContext(this.budgetsCollection, budget);
+            Budgets = this.budgetRepository.CreateNew();
+            return new BudgetCurrencyContext(Budgets, Budgets.First());
         }
 
         /// <summary>
-        ///     Loads the collection of budgets from persistent storage.
+        ///     Loads a data source with the provided database reference data asynchronously.
         /// </summary>
-        /// <param name="storageKey">The storage key to identify the budget collection.</param>
-        /// <returns>
-        ///     An object that contains the full collection of available budgets as well as the most recent selected as the
-        ///     currently selected budget.
-        /// </returns>
-        public BudgetCurrencyContext LoadBudgetsCollection(string storageKey)
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            this.budgetsCollection = this.budgetRepository.Load(storageKey);
-            return new BudgetCurrencyContext(this.budgetsCollection, this.budgetsCollection.CurrentActiveBudget);
+            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.BudgetCollectionStorageKey);
+            EventHandler handler = NewDatasourceAvailable;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -152,7 +178,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("modifiedBudget");
             }
-            if (this.budgetsCollection == null)
+            if (Budgets == null)
             {
                 throw new InvalidOperationException("You haven't loaded a Budget Collection to save yet.");
             }
@@ -176,7 +202,7 @@ namespace BudgetAnalyser.Engine.Services
             var messages = new StringBuilder();
             if (modifiedBudget.Validate(messages))
             {
-                this.budgetRepository.Save(this.budgetsCollection);
+                this.budgetRepository.Save(Budgets);
                 return true;
             }
 
@@ -215,7 +241,7 @@ namespace BudgetAnalyser.Engine.Services
             try
             {
                 model.Update(allIncomes, allExpenses);
-                return this.budgetsCollection.Validate(validationMessages);
+                return Budgets.Validate(validationMessages);
             }
             catch (ValidationWarningException ex)
             {

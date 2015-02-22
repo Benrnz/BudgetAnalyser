@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 
@@ -18,14 +19,15 @@ namespace BudgetAnalyser.Engine.Services
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
         /// </summary>
-        void Close();
+        ApplicationDatabase Close();
 
         /// <summary>
-        ///     Initialises the top level Application Database object that contains all information to retrieve data
-        ///     for all other Budget Analyser datum.
-        ///     This must be called first before other methods of this service can be used.
+        ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate
+        ///     data contained within and referenced by the top level application database.
+        ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
         /// </summary>
-        ApplicationDatabase LoadPersistedStateData([NotNull] MainApplicationStateModelV1 storedState);
+        /// <param name="storageKey">Name and path to the file.</param>
+        Task<ApplicationDatabase> Load([NotNull] string storageKey);
 
         /// <summary>
         ///     Notifies the service that data has changed and will need to be saved.

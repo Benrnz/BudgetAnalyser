@@ -53,5 +53,15 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             return Path.Combine(StoragePath, fileName);
         }
+
+        public void Close()
+        {
+            BudgetCollectionStorageKey = null;
+            FileName = null;
+            LedgerBookStorageKey = null;
+            MatchingRulesCollectionStorageKey = null;
+            MatchingRulesCollectionStorageKey = null;
+            StatementModelStorageKey = null;
+        }
     }
 }

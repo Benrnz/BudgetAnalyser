@@ -131,11 +131,7 @@ namespace BudgetAnalyser.Dashboard
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
             if (storedMainAppState != null)
             {
-                var appDb = this.applicationDatabaseService.LoadPersistedStateData(storedMainAppState);
-                this.applicationDatabase = appDb;
-                this.uiContext.BudgetController.LoadLastBudgetCollection(appDb.FullPath(appDb.BudgetCollectionStorageKey));
-                await this.uiContext.StatementController.LoadLastTransactionsCollection(appDb.FullPath(appDb.StatementModelStorageKey));
-                this.uiContext.LedgerBookController.LoadLastLedgerBook(appDb.FullPath(appDb.LedgerBookStorageKey));
+                this.applicationDatabase = await this.applicationDatabaseService.Load(storedMainAppState.BudgetAnalyserDataStorageKey);
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();

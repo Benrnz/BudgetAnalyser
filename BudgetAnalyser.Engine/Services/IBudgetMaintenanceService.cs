@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -8,14 +9,20 @@ namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     A service to maintain the full collection of budgets.
+    ///     This is designed as a stateful service.
     /// </summary>
-    public interface IBudgetMaintenanceService : IServiceFoundation
+    public interface IBudgetMaintenanceService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
     {
         /// <summary>
         ///     Gets the budget bucket repository.
         ///     Allows the UI to set up a static reference to the Bucket repository for converters and templates.
         /// </summary>
         IBudgetBucketRepository BudgetBucketRepository { get; }
+
+        /// <summary>
+        ///     Gets the curently loaded budgets collection.
+        /// </summary>
+        BudgetCollection Budgets { get; }
 
         /// <summary>
         ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.
@@ -36,16 +43,6 @@ namespace BudgetAnalyser.Engine.Services
         ///     Creates a new budget collection with one new empty budget model.
         /// </summary>
         BudgetCurrencyContext CreateNewBudgetCollection();
-
-        /// <summary>
-        ///     Loads the collection of budgets from persistent storage.
-        /// </summary>
-        /// <param name="storageKey">The storage key to identify the budget collection.</param>
-        /// <returns>
-        ///     An object that contains the full collection of available budgets as well as the most recent selected as the
-        ///     currently selected budget.
-        /// </returns>
-        BudgetCurrencyContext LoadBudgetsCollection(string storageKey);
 
         /// <summary>
         ///     Saves the budget provided to persistent storage.

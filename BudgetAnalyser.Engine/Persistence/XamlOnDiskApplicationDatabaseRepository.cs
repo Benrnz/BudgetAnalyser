@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -20,14 +21,14 @@ namespace BudgetAnalyser.Engine.Persistence
             this.loadingMapper = loadingMapper;
         }
 
-        public ApplicationDatabase Load(MainApplicationStateModelV1 stateModel)
+        public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
-            if (stateModel == null)
+            if (string.IsNullOrWhiteSpace(storageKey))
             {
-                throw new ArgumentNullException("stateModel");
+                throw new ArgumentNullException("storageKey");
             }
 
-            string fileName = stateModel.BudgetAnalyserDataStorageKey;
+            string fileName = storageKey;
             if (!FileExists(fileName))
             {
                 throw new NotImplementedException("TODO Creating new Application Database still to come.");
@@ -36,7 +37,7 @@ namespace BudgetAnalyser.Engine.Persistence
             BudgetAnalyserStorageRoot storageRoot;
             try
             {
-                storageRoot = LoadXmlFromDisk(fileName);
+                storageRoot = await LoadXmlFromDiskAsync(fileName);
             }
             catch (Exception ex)
             {
@@ -58,9 +59,11 @@ namespace BudgetAnalyser.Engine.Persistence
             return File.ReadAllText(fileName);
         }
 
-        protected virtual BudgetAnalyserStorageRoot LoadXmlFromDisk(string fileName)
+        protected async virtual Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
         {
-            return XamlServices.Parse(LoadXamlAsString(fileName)) as BudgetAnalyserStorageRoot;
+            object result = null;
+            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+            return result as BudgetAnalyserStorageRoot;
         }
     }
 }

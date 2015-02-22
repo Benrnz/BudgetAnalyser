@@ -67,6 +67,13 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
+
+            this.ledgerService.Closed += OnClosedNotificationReceived;
+        }
+
+        private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
+        {
+            FileOperations.Close();
         }
 
         public event EventHandler LedgerBookUpdated;
@@ -297,6 +304,12 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnBudgetReadyMessageReceived(BudgetReadyMessage message)
         {
+            if (message.ActiveBudget == null)
+            {
+                ViewModel.CurrentBudget = null;
+                return;
+            }
+
             if (message.ActiveBudget.BudgetActive)
             {
                 ViewModel.CurrentBudget = message.ActiveBudget;

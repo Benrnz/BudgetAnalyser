@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 
@@ -30,7 +32,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.applicationRepository = applicationRepository;
-            this.databaseDependendants = databaseDependendants;
+            this.databaseDependendants = databaseDependendants.OrderBy(d => d.Sequence).ToList();
             InitialiseDirtyDataTable();
         }
 
@@ -47,34 +49,52 @@ namespace BudgetAnalyser.Engine.Services
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
         /// </summary>
-        public void Close()
+        public ApplicationDatabase Close()
         {
-            foreach (IApplicationDatabaseDependant service in this.databaseDependendants)
+            foreach (IApplicationDatabaseDependant service in this.databaseDependendants.OrderByDescending(d => d.Sequence))
             {
                 service.Close();
             }
 
-            foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
-            {
-                var enumValue = (ApplicationDataType)value;
-                this.dirtyData[enumValue] = false;
-            }
+            ClearDirtyDataFlags();
+
+            this.budgetAnalyserDatabase.Close();
+            return this.budgetAnalyserDatabase;
         }
 
-        public ApplicationDatabase LoadPersistedStateData(MainApplicationStateModelV1 storedState)
+        /// <summary>
+        ///     Loads the specified Budget Analyser file by file name.
+        ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
+        /// </summary>
+        /// <param name="storageKey">Name and path to the file.</param>
+        public async Task<ApplicationDatabase> Load(string storageKey)
         {
-            if (storedState == null)
+            if (string.IsNullOrWhiteSpace(storageKey))
             {
-                throw new ArgumentNullException("storedState");
+                throw new ArgumentNullException("storageKey");
             }
 
-            // TODO Reconsider this when creating a new ApplicationDatabase is available from the repository.
-            if (string.IsNullOrWhiteSpace(storedState.BudgetAnalyserDataStorageKey))
+            ClearDirtyDataFlags();
+
+            this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
+            try
             {
-                return null;
+                foreach (IApplicationDatabaseDependant service in this.databaseDependendants) // Already sorted ascending by sequence number.
+                {
+                    await service.LoadAsync(this.budgetAnalyserDatabase);
+                }
+            }
+            catch (DataFormatException ex)
+            {
+                Close();
+                throw new DataFormatException("A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
+            }
+            catch (FileNotFoundException ex)
+            {
+                Close();
+                throw new FileNotFoundException("A subordinate data file cannot be found: " + ex.FileName, ex);
             }
 
-            this.budgetAnalyserDatabase = this.applicationRepository.Load(storedState);
             return this.budgetAnalyserDatabase;
         }
 
@@ -104,7 +124,14 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public void Save()
         {
-            // TODO
+            // TODO Validate before save
+            // TODO Save data only when valid
+
+            ClearDirtyDataFlags();
+        }
+
+        private void ClearDirtyDataFlags()
+        {
             foreach (ApplicationDataType key in this.dirtyData.Keys)
             {
                 this.dirtyData[key] = false;

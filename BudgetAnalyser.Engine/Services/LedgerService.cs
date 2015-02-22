@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
@@ -34,6 +36,9 @@ namespace BudgetAnalyser.Engine.Services
             this.accountTypeRepository = accountTypeRepository;
         }
 
+        public event EventHandler Closed;
+        public event EventHandler NewDatasourceAvailable;
+
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
         /// </summary>
@@ -50,6 +55,36 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             entryLine.CancelBalanceAdjustment(transactionId);
+        }
+
+        /// <summary>
+        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        /// Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 50; }
+        }
+
+        /// <summary>
+        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            this.book = null;
+            EventHandler handler = Closed;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

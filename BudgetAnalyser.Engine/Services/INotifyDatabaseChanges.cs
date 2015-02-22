@@ -13,5 +13,10 @@ namespace BudgetAnalyser.Engine.Services
         ///     Opening and closing files is controlled centrally, not by this service.
         /// </summary>
         event EventHandler Closed;
+
+        /// <summary>
+        ///     Occurs when a new datasource has been loaded and is now available for use.
+        /// </summary>
+        event EventHandler NewDatasourceAvailable;
     }
 }

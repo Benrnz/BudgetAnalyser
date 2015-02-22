@@ -1,12 +1,13 @@
-﻿using BudgetAnalyser.Engine.Annotations;
+﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
     /// <summary>
-    ///     This is the unified single master repository that returns a database model that contains all models.
+    ///     This is the unified single master repository that returns a database model that contains references to all other models.
     /// </summary>
     public interface IApplicationDatabaseRepository
     {
-        ApplicationDatabase Load([NotNull] MainApplicationStateModelV1 stateModel);
+        Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
     }
 }

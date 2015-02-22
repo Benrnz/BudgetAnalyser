@@ -63,6 +63,12 @@ namespace BudgetAnalyser.LedgerBook
 
         internal LedgerBookViewModel ViewModel { get; set; }
 
+        public void Close()
+        {
+            ViewModel.LedgerBook = null;
+            MessengerInstance.Send(new LedgerBookReadyMessage(null));
+        }
+
         internal void CheckIfSaveRequired()
         {
             if (Dirty)
@@ -101,7 +107,7 @@ namespace BudgetAnalyser.LedgerBook
         internal void ReloadCurrentLedgerBook()
         {
             string fileName = ViewModel.LedgerBook.FileName;
-            OnCloseLedgerBookCommandExecuted();
+            Close();
             LoadLedgerBookFromFile(fileName);
         }
 
@@ -137,13 +143,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             // TODO Temporarily disabled while introducing ApplicationDatabaseService
             return ViewModel.LedgerBook != null && Dirty;
-        }
-
-        private void OnCloseLedgerBookCommandExecuted()
-        {
-            CheckIfSaveRequired();
-            ViewModel.LedgerBook = null;
-            MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
         private void OnDemoLedgerBookCommandExecute()
@@ -199,7 +198,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            OnCloseLedgerBookCommandExecuted();
+            Close();
 
             ViewModel.LedgerBook = LedgerService.CreateNew(fileName);
             Dirty = true;

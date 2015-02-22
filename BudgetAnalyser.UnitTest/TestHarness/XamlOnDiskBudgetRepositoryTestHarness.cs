@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -34,12 +35,13 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return FileExistsMock(fileName);
         }
 
-        protected override object LoadFromDisk(string fileName)
+        protected async override Task<object> LoadFromDisk(string fileName)
         {
             if (LoadFromDiskMock == null)
             {
-                return base.LoadFromDisk(fileName);
+                return await base.LoadFromDisk(fileName);
             }
+
             return LoadFromDiskMock(fileName);
         }
 

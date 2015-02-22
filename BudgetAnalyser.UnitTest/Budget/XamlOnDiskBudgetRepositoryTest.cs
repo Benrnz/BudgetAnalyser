@@ -129,7 +129,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.FileExistsMock = f => true;
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            subject.Load(FileName1);
+            subject.LoadAsync(FileName1);
 
             mockBucketRepository.Verify();
         }
@@ -140,7 +140,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            var collection = subject.Load(FileName1);
+            var collection = subject.LoadAsync(FileName1);
 
             Assert.AreEqual(FileName1, collection.FileName);
         }
@@ -152,7 +152,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => { throw new Exception(); };
-            subject.Load("SmellyPoo.xml");
+            subject.LoadAsync("SmellyPoo.xml");
 
             Assert.Fail();
         }
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => new object();
-            subject.Load("SmellyPoo.xml");
+            subject.LoadAsync("SmellyPoo.xml");
 
             Assert.Fail();
         }
@@ -175,7 +175,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             var subject = Arrange();
             subject.FileExistsMock = f => false;
-            subject.Load("SmellyPoo.xml");
+            subject.LoadAsync("SmellyPoo.xml");
 
             Assert.Fail();
         }
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = f => { throw new XamlObjectWriterException(); };
-            subject.Load("SmellyPoo.xml");
+            subject.LoadAsync("SmellyPoo.xml");
 
             Assert.Fail();
         }
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            var collection = subject.Load(DemoBudgetFileName);
+            var collection = subject.LoadAsync(DemoBudgetFileName);
 
             Assert.AreEqual(DemoBudgetFileName, collection.FileName);
             Assert.AreEqual(1, collection.Count);
@@ -210,7 +210,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            var collection = subject.Load(EmptyBudgetFileName);
+            var collection = subject.LoadAsync(EmptyBudgetFileName);
 
             Assert.AreEqual(EmptyBudgetFileName, collection.FileName);
             Assert.AreEqual(1, collection.Count);
