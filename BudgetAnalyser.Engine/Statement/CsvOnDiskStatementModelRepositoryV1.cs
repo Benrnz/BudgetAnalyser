@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<bool> IsStatementModelAsync(string storageKey)
         {
-            this.importUtilities.AbortIfFileDoesntExist(storageKey, this.userMessageBox);
+            this.importUtilities.AbortIfFileDoesntExist(storageKey);
             List<string> allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
             if (!VersionCheck(allLines))
             {
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             try
             {
-                this.importUtilities.AbortIfFileDoesntExist(storageKey, this.userMessageBox);
+                this.importUtilities.AbortIfFileDoesntExist(storageKey);
             }
             catch (FileNotFoundException ex)
             {

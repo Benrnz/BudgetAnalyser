@@ -197,17 +197,17 @@ namespace BudgetAnalyser.Statement
             FileOperations.UpdateRecentFiles();
         }
 
-        public async Task LoadLastTransactionsCollection(string statementModelStorageKey)
-        {
-            if (string.IsNullOrWhiteSpace(statementModelStorageKey))
-            {
-                // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
-                return;
-            }
+        //public async Task LoadLastTransactionsCollection(string statementModelStorageKey)
+        //{
+        //    if (string.IsNullOrWhiteSpace(statementModelStorageKey))
+        //    {
+        //        // If no file name has been specified in Application State this is ok, user can manually load a file later. This feature is simply to remember the last file used.
+        //        return;
+        //    }
 
-            await FileOperations.SyncWithServiceAsync(statementModelStorageKey);
-            await CheckBudgetContainsAllUsedBucketsInStatement();
-        }
+        //    await FileOperations.SyncWithServiceAsync(statementModelStorageKey);
+        //    await CheckBudgetContainsAllUsedBucketsFromStatement();
+        //}
 
         public void RegisterListener<T>(object listener, Action<T> handler)
         {
@@ -219,7 +219,7 @@ namespace BudgetAnalyser.Statement
             return ViewModel.Statement != null && ViewModel.Statement.Transactions.Any();
         }
 
-        private async Task CheckBudgetContainsAllUsedBucketsInStatement(BudgetCollection budgets = null)
+        private async Task CheckBudgetContainsAllUsedBucketsFromStatement(BudgetCollection budgets = null)
         {
             if (!await this.transactionService.ValidateWithCurrentBudgetsAsync(budgets))
             {
@@ -288,7 +288,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            await CheckBudgetContainsAllUsedBucketsInStatement(message.Budgets);
+            await CheckBudgetContainsAllUsedBucketsFromStatement(message.Budgets);
             ViewModel.TriggerRefreshBucketFilterList();
         }
 

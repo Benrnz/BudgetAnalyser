@@ -204,7 +204,6 @@
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
     <Compile Include="Matching\IMatchingRuleFactory.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
-    <Compile Include="Matching\LastMatchingRulesLoadedV1.cs" />
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />

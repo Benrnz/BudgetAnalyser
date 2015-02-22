@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private const string LoadFileName = @"BudgetAnalyser.UnitTest.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
 
         [TestMethod]
-        public void DemoBookFileChecksumShouldNotChangeWhenLoadAndSave()
+        public async Task DemoBookFileChecksumShouldNotChangeWhenLoadAndSave()
         {
             double fileChecksum = 0;
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
@@ -33,7 +33,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             };
             LedgerBookDto reserialisedDto = null;
             subject.SaveDtoToDiskOverride = bookDto => reserialisedDto = bookDto;
-            LedgerBook book = subject.LoadAsync(DemoLedgerBookFileName);
+            LedgerBook book = await subject.LoadAsync(DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
             subject.Save(book);
@@ -61,10 +61,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Load_Output()
+        public async Task Load_Output()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
 
             // Visual compare these two - should be the same
             LedgerBookTestData.TestData2().Output();
@@ -73,19 +73,19 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookThatIsValid()
+        public async Task Load_ShouldCreateBookThatIsValid()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             var builder = new StringBuilder();
             Assert.IsTrue(book.Validate(builder), builder.ToString());
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithFirstLineEqualBankBalances()
+        public async Task Load_ShouldCreateBookWithFirstLineEqualBankBalances()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
             LedgerEntryLine line = book.Reconciliations.First();
 
@@ -93,10 +93,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithFirstLineEqualSurplus()
+        public async Task Load_ShouldCreateBookWithFirstLineEqualSurplus()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             book.Output();
 
             LedgerBook testData2 = LedgerBookTestData.TestData2();
@@ -108,60 +108,60 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithSameModifiedDate()
+        public async Task Load_ShouldCreateBookWithSameModifiedDate()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Modified, book.Modified);
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithSameName()
+        public async Task Load_ShouldCreateBookWithSameName()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Name, book.Name);
         }
 
         [TestMethod]
-        public void Load_ShouldCreateBookWithSameNumberOfReconciliations()
+        public async Task Load_ShouldCreateBookWithSameNumberOfLedgers()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
-            LedgerBook testData2 = LedgerBookTestData.TestData2();
-
-            Assert.AreEqual(testData2.Reconciliations.Count(), book.Reconciliations.Count());
-        }
-
-        [TestMethod]
-        public void Load_ShouldCreateBookWithSameNumberOfLedgers()
-        {
-            XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Ledgers.Count(), book.Ledgers.Count());
         }
 
         [TestMethod]
-        public void Load_ShouldLoadTheXmlFile()
+        public async Task Load_ShouldCreateBookWithSameNumberOfReconciliations()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.LoadAsync(LoadFileName);
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
+            LedgerBook testData2 = LedgerBookTestData.TestData2();
+
+            Assert.AreEqual(testData2.Reconciliations.Count(), book.Reconciliations.Count());
+        }
+
+        [TestMethod]
+        public async Task Load_ShouldLoadTheXmlFile()
+        {
+            XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
+            LedgerBook book = await subject.LoadAsync(LoadFileName);
 
             Assert.IsNotNull(book);
         }
 
         [TestMethod]
-        public void MustBeAbleToLoadDemoLedgerBookFile()
+        public async Task MustBeAbleToLoadDemoLedgerBookFile()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
 
-            LedgerBook book = subject.LoadAsync(DemoLedgerBookFileName);
+            LedgerBook book = await subject.LoadAsync(DemoLedgerBookFileName);
             book.Output(true);
             Assert.IsNotNull(book);
         }
@@ -169,10 +169,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void Save_ShouldSaveTheXmlFile()
         {
-            string fileName = @"CompleteSmellyFoo.xml";
+            var fileName = @"CompleteSmellyFoo.xml";
 
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            bool saved = false;
+            var saved = false;
             subject.WriteToDiskOverride = (f, d) => { saved = true; };
             LedgerBook testData = LedgerBookTestData.TestData2();
             subject.Save(testData, fileName);
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void SavingAndLoadingShouldProduceTheSameCheckSum()
+        public async Task SavingAndLoadingShouldProduceTheSameCheckSum()
         {
             string serialisedData = string.Empty;
             {
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 subject.FileExistsOverride = f => true;
                 subject.LoadXamlAsStringOverride = f => serialisedData;
                 subject.LoadXamlFromDiskFromEmbeddedResources = false;
-                subject.LoadAsync("foo");
+                await subject.LoadAsync("foo");
                 bookDto = subject.LedgerBookDto;
             }
 
@@ -225,7 +225,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            
         }
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()

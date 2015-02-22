@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_Reconcile_ShouldResultIn1383()
+        public void UsingTestData1_Reconcile_ShouldResultIn1558()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
@@ -168,12 +168,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_Reconcile_WithStatementSavedUpForLedgerShouldHave0Balance()
+        [Description("This test overdraws the Hair ledger and tests to make sure the reconciliation process compensates and leaves it with a balance equal to the monthly payment amount.")]
+        public void UsingTestData1_Reconcile_WithStatementSavedUpForHairLedgerShouldHaveBalance55()
         {
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
             List<Transaction> additionalTransactions = statement.AllTransactions.ToList();
+
             additionalTransactions.Add(new Transaction
             {
                 AccountType = additionalTransactions.First().AccountType,
@@ -186,7 +188,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
             book.Output(true);
 
-            Assert.AreEqual(0, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
+            Assert.AreEqual(55M, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
             Assert.IsTrue(result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).NetAmount < 0);
         }
 
@@ -209,6 +211,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             StatementModel statement = StatementModelTestData.TestData1();
             book.Output();
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement);
+            book.Output(true);
             Assert.AreEqual(3, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
         }
 

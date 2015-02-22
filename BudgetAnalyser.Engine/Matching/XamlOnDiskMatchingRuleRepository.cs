@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching.Data;
@@ -39,7 +40,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
-        public IEnumerable<MatchingRule> LoadRules([NotNull] string storageKey)
+        public async Task<IEnumerable<MatchingRule>> LoadRulesAsync([NotNull] string storageKey)
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {
@@ -54,7 +55,7 @@ namespace BudgetAnalyser.Engine.Matching
             List<MatchingRuleDto> dataEntities;
             try
             {
-                dataEntities = LoadFromDisk(storageKey);
+                dataEntities = await LoadFromDiskAsync(storageKey);
             }
             catch (Exception ex)
             {
@@ -97,9 +98,11 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
-        protected virtual List<MatchingRuleDto> LoadFromDisk(string fileName)
+        protected async virtual Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
         {
-            return XamlServices.Load(fileName) as List<MatchingRuleDto>;
+            object result = null;
+            await Task.Run(() => result = XamlServices.Load(fileName));
+            return result as List<MatchingRuleDto>;
         }
     }
 }

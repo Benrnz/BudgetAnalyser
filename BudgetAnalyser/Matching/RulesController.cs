@@ -10,7 +10,6 @@ using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.Matching
 {
@@ -50,8 +49,9 @@ namespace BudgetAnalyser.Matching
             NewRuleController = uiContext.NewRuleController;
 
             MessengerInstance = uiContext.Messenger;
-            uiContext.Messenger.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            uiContext.Messenger.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+
+            this.ruleService.Closed += OnClosedNotificationReceived;
+            this.ruleService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
         }
 
         /// <summary>
@@ -236,30 +236,16 @@ namespace BudgetAnalyser.Matching
             this.initialised = true;
             Rules = new ObservableCollection<MatchingRule>();
             RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
-            LoadRules();
         }
 
         public void SaveRules()
         {
-            this.ruleService.SaveRules(Rules);
-        }
-
-        protected void LoadRules(string rulesFileName = "")
-        {
-            SortBy = BucketSortKey; // Defaults to Bucket sort order.
-            if (string.IsNullOrWhiteSpace(rulesFileName))
-            {
-                this.ruleService.PopulateRules(Rules, RulesGroupedByBucket);
-            }
-            else
-            {
-                this.ruleService.PopulateRules(rulesFileName, Rules, RulesGroupedByBucket);
-            }
+            this.ruleService.SaveRules();
         }
 
         private void AddToList(MatchingRule rule)
         {
-            if (!this.ruleService.AddRule(Rules, RulesGroupedByBucket, rule))
+            if (!this.ruleService.AddRule(rule))
             {
                 return;
             }
@@ -276,25 +262,11 @@ namespace BudgetAnalyser.Matching
             return SelectedRule != null;
         }
 
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
         {
-            var rulesState = message.ElementOfType<LastMatchingRulesLoadedV1>();
-            if (rulesState == null)
-            {
-                return;
-            }
-
-            string rulesFileName = rulesState.MatchingRulesCollectionStorageKey;
-            LoadRules(rulesFileName);
-        }
-
-        private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
-        {
-            var lastRuleSet = new LastMatchingRulesLoadedV1
-            {
-                MatchingRulesCollectionStorageKey = this.ruleService.RulesStorageKey
-            };
-            message.PersistThisModel(lastRuleSet);
+            Rules.Clear();
+            RulesGroupedByBucket.Clear();
+            SelectedRule = null;
         }
 
         private void OnDeleteRuleCommandExecute()
@@ -314,6 +286,14 @@ namespace BudgetAnalyser.Matching
         private void OnEditRuleCommandExecute()
         {
             EditingRule = true;
+        }
+
+        private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
+        {
+            SortBy = BucketSortKey; // Defaults to Bucket sort order.
+            Rules = this.ruleService.MatchingRules;
+            RulesGroupedByBucket = this.ruleService.MatchingRulesGroupedByBucket;
+            SelectedRule = null;
         }
 
         private void OnNewRuleCreated(object sender, EventArgs eventArgs)
@@ -345,7 +325,7 @@ namespace BudgetAnalyser.Matching
             }
 
             MatchingRule selectedRule = SelectedRule;
-            if (!this.ruleService.RemoveRule(Rules, RulesGroupedByBucket, SelectedRule))
+            if (!this.ruleService.RemoveRule(SelectedRule))
             {
                 return;
             }

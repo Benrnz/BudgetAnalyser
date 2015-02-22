@@ -172,12 +172,16 @@ namespace BudgetAnalyser.Engine.Ledger
                         Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder"
                     };
                 }
+
+                if (zeroingTransaction != null)
+                {
+                    this.transactions.Add(zeroingTransaction);
+                }
             }
             else
             {
                 // All other ledgers can accumulate a balance but cannot be negative.
                 decimal newBalance = Balance + NetAmount;
-                Balance = newBalance < 0 ? 0 : newBalance;
                 LedgerTransaction budgetedAmount = this.transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
                 if (budgetedAmount != null && newBalance < budgetedAmount.Amount)
                 {
@@ -188,7 +192,8 @@ namespace BudgetAnalyser.Engine.Ledger
                         Amount = budgetedAmount.Amount - newBalance,
                         Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount"
                     };
-                    Balance += zeroingTransaction.Amount;
+                    this.transactions.Add(zeroingTransaction);
+                    Balance += NetAmount;
                 }
                 else if (newBalance < 0)
                 {
@@ -197,13 +202,13 @@ namespace BudgetAnalyser.Engine.Ledger
                         Amount = -newBalance,
                         Narrative = supplementOverdrawnText
                     };
-                    Balance += zeroingTransaction.Amount;
+                    this.transactions.Add(zeroingTransaction);
+                    Balance = 0;
                 }
-            }
-
-            if (zeroingTransaction != null)
-            {
-                this.transactions.Add(zeroingTransaction);
+                else
+                {
+                    Balance = newBalance;
+                }
             }
         }
 

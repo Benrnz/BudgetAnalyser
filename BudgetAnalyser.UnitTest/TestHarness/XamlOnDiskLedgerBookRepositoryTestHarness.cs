@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
@@ -13,7 +14,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public XamlOnDiskLedgerBookRepositoryTestHarness(
             [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
             [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper
-            ) : base(dataToDomainMapper, domainToDataMapper, new FakeLogger())
+            ) : base(dataToDomainMapper, domainToDataMapper, new FakeLogger(), new BankImportUtilitiesTestHarness())
         {
             LoadXamlFromDiskFromEmbeddedResources = true;
         }
@@ -47,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadXamlAsStringOverride(fileName);
         }
 
-        protected override LedgerBookDto LoadXamlFromDiskAsync(string fileName)
+        protected async override Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
@@ -61,7 +62,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
                 return LedgerBookDto;
             }
 
-            LedgerBookDto = base.LoadXamlFromDiskAsync(fileName);
+            LedgerBookDto = await base.LoadXamlFromDiskAsync(fileName);
             return LedgerBookDto;
         }
 

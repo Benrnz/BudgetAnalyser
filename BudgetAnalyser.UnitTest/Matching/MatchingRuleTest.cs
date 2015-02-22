@@ -273,7 +273,9 @@ namespace BudgetAnalyser.UnitTest.Matching
             MatchingRule subject = Arrange();
             object subject2 = subject;
             Assert.IsTrue(subject.Equals(subject2));
+#pragma warning disable 252,253
             Assert.IsTrue(subject == subject2);
+#pragma warning restore 252,253
             Assert.IsTrue(subject.GetHashCode() == subject2.GetHashCode());
         }
 

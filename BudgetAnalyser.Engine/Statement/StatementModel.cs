@@ -137,7 +137,16 @@ namespace BudgetAnalyser.Engine.Statement
         {
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
-            List<Transaction> listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
+            List<Transaction> listOfTransactions;
+            if (transactions == null)
+            {
+                listOfTransactions = new List<Transaction>();
+            }
+            else
+            {
+                listOfTransactions = transactions.OrderBy(t => t.Date).ToList();
+            }
+
             Transactions = listOfTransactions;
             AllTransactions = Transactions;
             if (listOfTransactions.Any())

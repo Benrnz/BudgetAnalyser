@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
@@ -29,11 +30,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return ExistsOveride(storageKey);
         }
 
-        protected override List<MatchingRuleDto> LoadFromDisk(string fileName)
+        protected async override Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
         {
             if (LoadFromDiskOveride == null)
             {
-                return base.LoadFromDisk(fileName);
+                return await base.LoadFromDiskAsync(fileName);
             }
 
             return LoadFromDiskOveride(fileName);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
@@ -31,11 +32,11 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
-        public void LoadShouldReturnMatchingRules()
+        public async Task LoadShouldReturnMatchingRules()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => MatchingRulesTestData.RawTestData1().ToList();
-            IEnumerable<MatchingRule> results = subject.LoadRules("foo.bar");
+            IEnumerable<MatchingRule> results = await subject.LoadRulesAsync("foo.bar");
 
             Assert.IsNotNull(results);
             Assert.IsTrue(results.Any());
@@ -43,40 +44,40 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         [TestMethod]
         [ExpectedException(typeof(DataFormatException))]
-        public void LoadShouldThrowGivenBadFileFormat()
+        public async Task LoadShouldThrowGivenBadFileFormat()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => { throw new Exception(); };
-            subject.LoadRules("foo.bar");
+            await subject.LoadRulesAsync("foo.bar");
             Assert.Fail();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void LoadShouldThrowGivenNullFileName()
+        [ExpectedException(typeof(KeyNotFoundException))]
+        public async Task LoadShouldThrowGivenNullFileName()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
-            subject.LoadRules(null);
+            await subject.LoadRulesAsync(null);
             Assert.Fail();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
-        public void LoadShouldThrowIfFileNotFound()
+        [ExpectedException(typeof(KeyNotFoundException))]
+        public async Task LoadShouldThrowIfFileNotFound()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.ExistsOveride = filename => false;
-            subject.LoadRules("Foo.bar");
+            await subject.LoadRulesAsync("Foo.bar");
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(DataFormatException))]
-        public void LoadShouldThrowIfLoadedNullFile()
+        public async Task LoadShouldThrowIfLoadedNullFile()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => null;
-            subject.LoadRules("foo.bar");
+            await subject.LoadRulesAsync("foo.bar");
             Assert.Fail();
         }
 

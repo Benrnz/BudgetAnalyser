@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Matching
 
         private void OnApplyRulesCommandExecute()
         {
-            if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions, RulesController.Rules))
+            if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions))
             {
                 RulesController.SaveRules();
             }

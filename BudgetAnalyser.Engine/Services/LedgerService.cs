@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,8 +36,16 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler Closed;
         public event EventHandler NewDatasourceAvailable;
-
         public LedgerBook LedgerBook { get; private set; }
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 50; }
+        }
 
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
@@ -59,15 +66,6 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        /// Defaults to 50.
-        /// </summary>
-        public int Sequence
-        {
-            get { return 50; }
-        }
-
-        /// <summary>
         ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
         /// </summary>
         public void Close()
@@ -78,19 +76,6 @@ namespace BudgetAnalyser.Engine.Services
             {
                 handler(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
-        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase == null)
-            {
-                throw new ArgumentNullException("applicationDatabase");
-            }
-
-            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.LedgerBookStorageKey);
         }
 
         /// <summary>
@@ -159,6 +144,24 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", storageKey);
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
+            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.LedgerBookStorageKey);
+            EventHandler handler = NewDatasourceAvailable;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

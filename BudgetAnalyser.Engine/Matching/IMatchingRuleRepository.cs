@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -6,7 +7,7 @@ namespace BudgetAnalyser.Engine.Matching
     {
         bool Exists(string storageKey);
 
-        IEnumerable<MatchingRule> LoadRules(string storageKey);
+        Task<IEnumerable<MatchingRule>> LoadRulesAsync(string storageKey);
 
         void SaveRules(IEnumerable<MatchingRule> rules, string storageKey);
     }

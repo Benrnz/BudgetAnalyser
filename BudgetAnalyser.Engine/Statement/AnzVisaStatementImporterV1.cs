@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             try
             {
-                this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+                this.importUtilities.AbortIfFileDoesntExist(fileName);
             }
             catch (FileNotFoundException ex)
             {
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public bool TasteTest(string fileName)
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+            this.importUtilities.AbortIfFileDoesntExist(fileName);
             string line = ReadFirstLine(fileName);
             if (string.IsNullOrWhiteSpace(line))
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IMatchmaker matchmaker;
         private readonly IMatchingRuleFactory ruleFactory;
         private readonly IMatchingRuleRepository ruleRepository;
+        private string rulesStorageKey;
 
         public TransactionRuleService(
             [NotNull] IMatchingRuleRepository ruleRepository,
@@ -49,37 +51,41 @@ namespace BudgetAnalyser.Engine.Services
             this.logger = logger;
             this.matchmaker = matchmaker;
             this.ruleFactory = ruleFactory;
+            MatchingRules = new ObservableCollection<MatchingRule>();
+            MatchingRulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
         }
 
         public event EventHandler Closed;
         public event EventHandler NewDatasourceAvailable;
-        public string RulesStorageKey { get; private set; }
+        public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
+        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
 
-        public bool AddRule(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket, MatchingRule ruleToAdd)
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int Sequence
         {
-            if (rules == null)
-            {
-                throw new ArgumentNullException("rules");
-            }
-            if (rulesGroupedByBucket == null)
-            {
-                throw new ArgumentNullException("rulesGroupedByBucket");
-            }
+            get { return 50; }
+        }
+
+        public bool AddRule(MatchingRule ruleToAdd)
+        {
             if (ruleToAdd == null)
             {
                 throw new ArgumentNullException("ruleToAdd");
             }
-            if (string.IsNullOrWhiteSpace(RulesStorageKey))
+            if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
                 throw new InvalidOperationException("Unable to add a matching rule at this time, the service has not yet loaded a matching rule set.");
             }
 
-            RulesGroupedByBucket existingGroup = rulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
+            RulesGroupedByBucket existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
             if (existingGroup == null)
             {
                 var addNewGroup = new RulesGroupedByBucket(ruleToAdd.Bucket, new[] { ruleToAdd });
-                rulesGroupedByBucket.Add(addNewGroup);
-                rules.Add(ruleToAdd);
+                MatchingRulesGroupedByBucket.Add(addNewGroup);
+                MatchingRules.Add(ruleToAdd);
             }
             else
             {
@@ -89,27 +95,19 @@ namespace BudgetAnalyser.Engine.Services
                     return false;
                 }
                 existingGroup.Rules.Add(ruleToAdd);
-                if (rules.Contains(ruleToAdd))
+                if (MatchingRules.Contains(ruleToAdd))
                 {
                     this.logger.LogWarning(l => "Attempt to add new rule failed. Rule already exists in main collection. " + ruleToAdd);
                     return false;
                 }
-                rules.Add(ruleToAdd);
+
+                MatchingRules.Add(ruleToAdd);
             }
 
-            SaveRules(rules);
+            SaveRules();
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
 
             return true;
-        }
-
-        /// <summary>
-        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        /// Defaults to 50.
-        /// </summary>
-        public int Sequence
-        {
-            get { return 50; }
         }
 
         /// <summary>
@@ -117,21 +115,14 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public void Close()
         {
-            RulesStorageKey = null;
+            this.rulesStorageKey = null;
+            MatchingRulesGroupedByBucket.Clear();
+            MatchingRules.Clear();
             EventHandler handler = Closed;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
-        public Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            throw new NotImplementedException();
-
         }
 
         public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
@@ -182,104 +173,81 @@ namespace BudgetAnalyser.Engine.Services
                    || IsEqualButNotBlank(transactionTypeName, rule.TransactionType);
         }
 
-        public bool Match(IEnumerable<Transaction> transactions, IEnumerable<MatchingRule> rules)
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            return this.matchmaker.Match(transactions, rules);
-        }
-
-        public void PopulateRules(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket)
-        {
-            if (rules == null)
-            {
-                throw new ArgumentNullException("rules");
-            }
-            
-            if (rulesGroupedByBucket == null)
-            {
-                throw new ArgumentNullException("rulesGroupedByBucket");
-            }
-
-            PopulateRules(BuildDefaultFileName(), rules, rulesGroupedByBucket);
-        }
-
-        public void PopulateRules(string storageKey, ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket)
-        {
-            if (storageKey == null)
-            {
-                throw new ArgumentNullException("storageKey");
-            }
-            if (rules == null)
-            {
-                throw new ArgumentNullException("rules");
-            }
-            if (rulesGroupedByBucket == null)
-            {
-                throw new ArgumentNullException("rulesGroupedByBucket");
-            }
-            rules.Clear();
-            rulesGroupedByBucket.Clear();
-            RulesStorageKey = storageKey;
+            MatchingRules.Clear();
+            MatchingRulesGroupedByBucket.Clear();
+            this.rulesStorageKey = applicationDatabase.MatchingRulesCollectionStorageKey;
+            List<MatchingRule> repoRules;
             try
             {
-                List<MatchingRule> repoRules = this.ruleRepository.LoadRules(RulesStorageKey)
+                repoRules = (await this.ruleRepository.LoadRulesAsync(this.rulesStorageKey))
                     .OrderBy(r => r.Description)
                     .ToList();
-
-                foreach (MatchingRule rule in repoRules)
-                {
-                    rules.Add(rule);
-                }
-
-                IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
-                    .Where(group => group.Key != null)
-                    // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
-                    .Select(group => new RulesGroupedByBucket(group.Key, group))
-                    .OrderBy(group => group.Bucket.Code);
-
-                foreach (RulesGroupedByBucket groupedByBucket in grouped)
-                {
-                    rulesGroupedByBucket.Add(groupedByBucket);
-                }
             }
             catch (FileNotFoundException)
             {
                 // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                RulesStorageKey = BuildDefaultFileName();
-                this.ruleRepository.SaveRules(new List<MatchingRule>(), RulesStorageKey);
-                PopulateRules(RulesStorageKey, rules, rulesGroupedByBucket);
+                // TODO Reassess how the new matching rule file gets created.
+                this.rulesStorageKey = BuildDefaultFileName();
+                repoRules = new List<MatchingRule>();
+                this.ruleRepository.SaveRules(repoRules, this.rulesStorageKey);
+            }
+
+            foreach (MatchingRule rule in repoRules)
+            {
+                MatchingRules.Add(rule);
+            }
+
+            IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
+                .Where(group => group.Key != null)
+                // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
+                .Select(group => new RulesGroupedByBucket(group.Key, group))
+                .OrderBy(group => group.Bucket.Code);
+
+            foreach (RulesGroupedByBucket groupedByBucket in grouped)
+            {
+                MatchingRulesGroupedByBucket.Add(groupedByBucket);
+            }
+
+            EventHandler handler = NewDatasourceAvailable;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
             }
         }
 
-        public bool RemoveRule(ICollection<MatchingRule> rules, ICollection<RulesGroupedByBucket> rulesGroupedByBucket, MatchingRule ruleToRemove)
+        public bool Match(IEnumerable<Transaction> transactions)
         {
-            if (rules == null)
-            {
-                throw new ArgumentNullException("rules");
-            }
-            if (rulesGroupedByBucket == null)
-            {
-                throw new ArgumentNullException("rulesGroupedByBucket");
-            }
+            return this.matchmaker.Match(transactions, MatchingRules);
+        }
+
+        public bool RemoveRule(MatchingRule ruleToRemove)
+        {
             if (ruleToRemove == null)
             {
                 throw new ArgumentNullException("ruleToRemove");
             }
-            if (string.IsNullOrWhiteSpace(RulesStorageKey))
+
+            if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
                 throw new InvalidOperationException("Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
             }
 
-            RulesGroupedByBucket existingGroup = rulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
+            RulesGroupedByBucket existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
             if (existingGroup == null)
             {
                 return false;
             }
 
             bool success1 = existingGroup.Rules.Remove(ruleToRemove);
-            bool success2 = rules.Remove(ruleToRemove);
+            bool success2 = MatchingRules.Remove(ruleToRemove);
             MatchingRule removedRule = ruleToRemove;
 
-            SaveRules(rules);
+            SaveRules();
 
             this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
             if (!success1)
@@ -295,13 +263,9 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        public void SaveRules(IEnumerable<MatchingRule> rules)
+        public void SaveRules()
         {
-            if (rules == null)
-            {
-                throw new ArgumentNullException("rules");
-            }
-            this.ruleRepository.SaveRules(rules, RulesStorageKey);
+            this.ruleRepository.SaveRules(MatchingRules, this.rulesStorageKey);
         }
 
         protected virtual string BuildDefaultFileName()

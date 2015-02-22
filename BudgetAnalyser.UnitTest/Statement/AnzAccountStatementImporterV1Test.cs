@@ -75,7 +75,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         public void LoadShouldThrowIfFileNotFound()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            BankImportUtilities.AbortIfFileDoesntExistOverride = (s, m) => { throw new FileNotFoundException(); };
+            BankImportUtilities.AbortIfFileDoesntExistOverride = s => { throw new FileNotFoundException(); };
             subject.Load("foo.bar", StatementModelTestData.ChequeAccount);
             Assert.Fail();
         }
