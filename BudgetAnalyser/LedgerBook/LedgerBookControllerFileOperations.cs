@@ -81,34 +81,10 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        internal void LoadLedgerBookFromFile(string fileName)
+        internal void SyncWithService()
         {
-            // TODO should be async
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return;
-            }
-
-            try
-            {
-                ViewModel.LedgerBook = LedgerService.DisplayLedgerBook(fileName);
-                MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
-            }
-            catch (DataFormatException ex)
-            {
-                this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file, most likely due to the budget file not containing all required Budget Buckets for this Ledger-Book.");
-            }
-            catch (FileNotFoundException ex)
-            {
-                this.messageBox.Show(ex, "Unable to load the requested Ledger-Book file");
-            }
-        }
-
-        internal void ReloadCurrentLedgerBook()
-        {
-            string fileName = ViewModel.LedgerBook.FileName;
-            Close();
-            LoadLedgerBookFromFile(fileName);
+            ViewModel.LedgerBook = LedgerService.LedgerBook;
+            MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
         internal void SaveLedgerBook()
@@ -145,65 +121,65 @@ namespace BudgetAnalyser.LedgerBook
             return ViewModel.LedgerBook != null && Dirty;
         }
 
-        private void OnDemoLedgerBookCommandExecute()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            try
-            {
-                LoadLedgerBookFromFile(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
-            }
-            catch (IOException)
-            {
-                this.messageBox.Show("Unable to find the demo Ledger-Book file.");
-            }
-        }
+        //private void OnDemoLedgerBookCommandExecute()
+        //{
+        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
+        //    try
+        //    {
+        //        SyncWithService(this.demoFileHelper.FindDemoFile(@"DemoLedgerBook.xml"));
+        //    }
+        //    catch (IOException)
+        //    {
+        //        this.messageBox.Show("Unable to find the demo Ledger-Book file.");
+        //    }
+        //}
 
-        private void OnLoadLedgerBookCommandExecute()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
-            openFileDialog.AddExtension = true;
-            openFileDialog.CheckPathExists = true;
-            openFileDialog.DefaultExt = ".xml";
-            openFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-            openFileDialog.Title = "Choose a LedgerBook xml file to load.";
-            bool? result = openFileDialog.ShowDialog();
-            if (result == null || !result.Value)
-            {
-                return;
-            }
-            string fileName = openFileDialog.FileName;
+        //private void OnLoadLedgerBookCommandExecute()
+        //{
+        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
+        //    IUserPromptOpenFile openFileDialog = this.openFileDialogFactory();
+        //    openFileDialog.AddExtension = true;
+        //    openFileDialog.CheckPathExists = true;
+        //    openFileDialog.DefaultExt = ".xml";
+        //    openFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
+        //    openFileDialog.Title = "Choose a LedgerBook xml file to load.";
+        //    bool? result = openFileDialog.ShowDialog();
+        //    if (result == null || !result.Value)
+        //    {
+        //        return;
+        //    }
+        //    string fileName = openFileDialog.FileName;
 
-            LoadLedgerBookFromFile(fileName);
-        }
+        //    SyncWithService(fileName);
+        //}
 
-        private void OnNewLedgerBookCommandExecuted()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.CheckPathExists = true;
-            saveFileDialog.DefaultExt = ".xml";
-            saveFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-            saveFileDialog.Title = "Choose a LedgerBook xml file name.";
-            bool? result = saveFileDialog.ShowDialog();
-            if (result == null || !result.Value)
-            {
-                return;
-            }
+        //private void OnNewLedgerBookCommandExecuted()
+        //{
+        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
+        //    IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
+        //    saveFileDialog.AddExtension = true;
+        //    saveFileDialog.CheckPathExists = true;
+        //    saveFileDialog.DefaultExt = ".xml";
+        //    saveFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
+        //    saveFileDialog.Title = "Choose a LedgerBook xml file name.";
+        //    bool? result = saveFileDialog.ShowDialog();
+        //    if (result == null || !result.Value)
+        //    {
+        //        return;
+        //    }
 
-            string fileName = saveFileDialog.FileName;
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return;
-            }
+        //    string fileName = saveFileDialog.FileName;
+        //    if (string.IsNullOrWhiteSpace(fileName))
+        //    {
+        //        return;
+        //    }
 
-            Close();
+        //    Close();
 
-            ViewModel.LedgerBook = LedgerService.CreateNew(fileName);
-            Dirty = true;
-            MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
-        }
+        //    ViewModel.LedgerBook = LedgerService.CreateNew(fileName);
+        //    Dirty = true;
+        //    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
+        //}
 
         private void OnSaveLedgerBookCommandExecute()
         {

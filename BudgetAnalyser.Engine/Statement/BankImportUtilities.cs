@@ -31,12 +31,10 @@ namespace BudgetAnalyser.Engine.Statement
             this.locale = culture;
         }
 
-        internal virtual void AbortIfFileDoesntExist(string fileName, IUserMessageBox messageBox)
+        internal virtual void AbortIfFileDoesntExist(string fileName)
         {
             if (!File.Exists(fileName))
             {
-                // TODO shouldnt be using message boxes in the engine.
-                messageBox.Show("The file name provided no longer exists at its location.", "File Not Found");
                 throw new FileNotFoundException("File not found.", fileName);
             }
         }

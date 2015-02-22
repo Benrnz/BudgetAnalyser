@@ -10,9 +10,12 @@ namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     A service to provide access to manipulate ledger books.
+    ///     This service is designed to be stateful.
     /// </summary>
     public interface ILedgerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
     {
+        LedgerBook LedgerBook { get; }
+
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
         ///     The Ledger Entry Line must exist in the current Ledger Book.
@@ -35,12 +38,6 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="storageKey">A new unique identifier for a ledger book. Will be overwritten if it exists.</param>
         LedgerBook CreateNew([NotNull] string storageKey);
-
-        /// <summary>
-        ///     Retrieves and returns the ledger book from the specified file to display in the UI.
-        /// </summary>
-        /// <param name="storageKey">The unique identifier of the Ledger Book.</param>
-        LedgerBook DisplayLedgerBook([NotNull] string storageKey);
 
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services
@@ -23,6 +24,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Loads a data source with the provided database reference data asynchronously.
         /// </summary>
-        Task LoadAsync(ApplicationDatabase applicationDatabase);
+        Task LoadAsync([NotNull] ApplicationDatabase applicationDatabase);
     }
 }

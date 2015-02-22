@@ -18,7 +18,6 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBookRepository ledgerRepository;
-        private LedgerBook book;
 
         public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository)
         {
@@ -39,6 +38,8 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Closed;
         public event EventHandler NewDatasourceAvailable;
 
+        public LedgerBook LedgerBook { get; private set; }
+
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
         /// </summary>
@@ -49,7 +50,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("entryLine");
             }
 
-            if (this.book.Reconciliations.All(l => l != entryLine))
+            if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
@@ -71,7 +72,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public void Close()
         {
-            this.book = null;
+            LedgerBook = null;
             EventHandler handler = Closed;
             if (handler != null)
             {
@@ -82,9 +83,14 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Loads a data source with the provided database reference data asynchronously.
         /// </summary>
-        public Task LoadAsync(ApplicationDatabase applicationDatabase)
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            throw new NotImplementedException();
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
+            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.LedgerBookStorageKey);
         }
 
         /// <summary>
@@ -108,7 +114,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("account");
             }
 
-            if (this.book.Reconciliations.All(l => l != entryLine))
+            if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }
@@ -133,14 +139,14 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("narrative");
             }
 
-            if (this.book.Reconciliations.First().Entries.All(e => e != ledgerEntry))
+            if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
             {
                 throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
             }
 
             LedgerTransaction newTransaction = new CreditLedgerTransaction();
             newTransaction.WithAmount(amount).WithNarrative(narrative);
-            newTransaction.Date = this.book.Reconciliations.First().Date;
+            newTransaction.Date = LedgerBook.Reconciliations.First().Date;
             ledgerEntry.AddTransaction(newTransaction);
             return newTransaction;
         }
@@ -153,22 +159,6 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", storageKey);
-        }
-
-        public LedgerBook DisplayLedgerBook(string storageKey)
-        {
-            if (storageKey == null)
-            {
-                throw new ArgumentNullException("storageKey");
-            }
-
-            if (!this.ledgerRepository.Exists(storageKey))
-            {
-                throw new FileNotFoundException("The requested file, or the previously loaded file, cannot be located.\n" + storageKey, storageKey);
-            }
-
-            this.book = this.ledgerRepository.Load(storageKey);
-            return this.book;
         }
 
         /// <summary>
@@ -215,7 +205,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            return this.book.Reconcile(reconciliationDate, balances, budgetContext.Model, statement, ignoreWarnings);
+            return LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, statement, ignoreWarnings);
         }
 
         public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerBucket ledger, AccountType storedInAccount)
@@ -243,7 +233,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("line");
             }
 
-            this.book.RemoveLine(line);
+            LedgerBook.RemoveLine(line);
         }
 
         /// <summary>
@@ -256,7 +246,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("ledgerEntry");
             }
 
-            if (this.book.Reconciliations.First().Entries.Any(e => e == ledgerEntry))
+            if (LedgerBook.Reconciliations.First().Entries.Any(e => e == ledgerEntry))
             {
                 throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
             }
@@ -312,12 +302,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("storeInThisAccount");
             }
 
-            return this.book.AddLedger(bucket, storeInThisAccount);
+            return LedgerBook.AddLedger(bucket, storeInThisAccount);
         }
 
         public LedgerEntryLine UnlockCurrentMonth()
         {
-            return this.book.UnlockMostRecentLine();
+            return LedgerBook.UnlockMostRecentLine();
         }
 
         /// <summary>
@@ -335,7 +325,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("remarks");
             }
 
-            if (this.book.Reconciliations.All(l => l != entryLine))
+            if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
             }

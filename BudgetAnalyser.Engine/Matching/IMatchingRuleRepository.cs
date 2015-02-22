@@ -4,10 +4,10 @@ namespace BudgetAnalyser.Engine.Matching
 {
     public interface IMatchingRuleRepository
     {
-        bool Exists(string fileName);
+        bool Exists(string storageKey);
 
-        IEnumerable<MatchingRule> LoadRules(string fileName);
+        IEnumerable<MatchingRule> LoadRules(string storageKey);
 
-        void SaveRules(IEnumerable<MatchingRule> rules, string fileName);
+        void SaveRules(IEnumerable<MatchingRule> rules, string storageKey);
     }
 }

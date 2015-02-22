@@ -62,6 +62,12 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
             this.transactionService.Closed += OnClosedNotificationReceived;
+            this.transactionService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
+        }
+
+        private async void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
+        {
+            await FileOperations.SyncWithServiceAsync();
         }
 
         public AppliedRulesController AppliedRulesController
@@ -199,7 +205,7 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            await FileOperations.LoadFileAsync(statementModelStorageKey);
+            await FileOperations.SyncWithServiceAsync(statementModelStorageKey);
             await CheckBudgetContainsAllUsedBucketsInStatement();
         }
 

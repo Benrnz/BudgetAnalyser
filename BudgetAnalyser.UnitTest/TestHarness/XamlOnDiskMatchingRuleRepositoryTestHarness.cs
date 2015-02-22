@@ -19,14 +19,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public Func<string, List<MatchingRuleDto>> LoadFromDiskOveride { get; set; }
         public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
 
-        public override bool Exists(string fileName)
+        public override bool Exists(string storageKey)
         {
             if (ExistsOveride == null)
             {
                 return true;
             }
 
-            return ExistsOveride(fileName);
+            return ExistsOveride(storageKey);
         }
 
         protected override List<MatchingRuleDto> LoadFromDisk(string fileName)

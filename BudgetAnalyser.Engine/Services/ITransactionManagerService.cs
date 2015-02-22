@@ -11,6 +11,7 @@ namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
     ///     An interface for managing, viewing, and storing transactions
+    ///     This service is designed to be stateful.
     /// </summary>
     public interface ITransactionManagerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
     {
@@ -18,6 +19,7 @@ namespace BudgetAnalyser.Engine.Services
         decimal TotalCount { get; }
         decimal TotalCredits { get; }
         decimal TotalDebits { get; }
+        StatementModel StatementModel { get; }
 
         /// <summary>
         ///     Clears the bucket and text filters.
@@ -82,23 +84,6 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="stateData">The state data loaded from persistent storage.</param>
         void Initialise([NotNull] StatementApplicationStateV1 stateData);
-
-        /// <summary>
-        ///     Loads an existing Budget Analyser <see cref="StatementModel" />.
-        /// </summary>
-        /// <param name="storageKey">Pass a known storage key (database identifier or filename) to load.</param>
-        /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
-        /// <exception cref="KeyNotFoundException">
-        ///     Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" />
-        /// </exception>
-        /// <exception cref="StatementModelChecksumException">
-        ///     Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.
-        /// </exception>
-        /// <exception cref="DataFormatException">
-        ///     Will be thrown if the format of the bank extract contains unexpected data
-        ///     indicating it is corrupt or an old unsupported file.
-        /// </exception>
-        Task<StatementModel> LoadStatementModelAsync([NotNull] string storageKey);
 
         /// <summary>
         ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.

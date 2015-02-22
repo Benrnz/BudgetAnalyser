@@ -100,50 +100,10 @@ namespace BudgetAnalyser.Statement
             ViewModel.Initialise(this.transactionService);
         }
 
-        internal async Task<bool> LoadFileAsync(string fullFileName)
+        internal async Task<bool> SyncWithServiceAsync()
         {
-            if (string.IsNullOrWhiteSpace(fullFileName))
-            {
-                fullFileName = await GetFileNameFromUser(StatementOpenMode.Open);
-                if (string.IsNullOrWhiteSpace(fullFileName))
-                {
-                    // User cancelled
-                    return false;
-                }
-            }
-
-            StatementModel statementModel;
-            try
-            {
-                statementModel = await this.transactionService.LoadStatementModelAsync(fullFileName);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                FileCannotBeLoaded(ex);
-                return false;
-            }
-            catch (StatementModelChecksumException ex)
-            {
-                this.messageBox.Show("The file being loaded is corrupt. The internal checksum does not match the transactions.\nFile Checksum:" + ex.FileChecksum);
-                return false;
-            }
-            catch (DataFormatException ex)
-            {
-                FileCannotBeLoaded(ex);
-                return false;
-            }
-            catch (NotSupportedException ex)
-            {
-                FileCannotBeLoaded(ex);
-                return false;
-            }
-            finally
-            {
-                this.loadFileController.Reset();
-            }
-
+            StatementModel statementModel = this.transactionService.StatementModel;
             LoadingData = true;
-
             await Dispatcher.CurrentDispatcher.BeginInvoke(
                 DispatcherPriority.Normal,
                 () =>
@@ -269,40 +229,40 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
         }
 
-        private void OnDemoStatementCommandExecuted()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            OnOpenStatementExecuteAsync(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
-        }
+        //private void OnDemoStatementCommandExecuted()
+        //{
+        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
+        //    OnOpenStatementExecuteAsync(this.demoFileHelper.FindDemoFile("DemoTransactions.csv"));
+        //}
 
-        private async void OnOpenStatementExecuteAsync(string fullFileName)
-        {
-            if (PromptToSaveIfDirty())
-            {
-                await SaveAsync(true);
-            }
+        //private async void OnOpenStatementExecuteAsync(string fullFileName)
+        //{
+        //    if (PromptToSaveIfDirty())
+        //    {
+        //        await SaveAsync(true);
+        //    }
 
-            // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
-            try
-            {
-                bool result = await LoadFileAsync(fullFileName);
+        //    // Will prompt for file name if its null, which it will be for clicking the Load button, but RecentFilesButtons also use this method which will have a filename.
+        //    try
+        //    {
+        //        bool result = await SyncWithServiceAsync(fullFileName);
 
-                // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
-                if (result)
-                {
-                    // Update RecentFile list for successfully loaded files only. 
-                    UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.StorageKey));
-                }
-            }
-            catch (FileNotFoundException ex)
-            {
-                if (!string.IsNullOrWhiteSpace(ex.FileName))
-                {
-                    // Remove the bad file that caused the exception from the RecentFiles list.
-                    UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
-                }
-            }
-        }
+        //        // When this task is complete the statement will be loaded successfully, or it will have failed. The Task<bool> Result contains this indicator.
+        //        if (result)
+        //        {
+        //            // Update RecentFile list for successfully loaded files only. 
+        //            UpdateRecentFiles(this.recentFileManager.AddFile(ViewModel.Statement.StorageKey));
+        //        }
+        //    }
+        //    catch (FileNotFoundException ex)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(ex.FileName))
+        //        {
+        //            // Remove the bad file that caused the exception from the RecentFiles list.
+        //            UpdateRecentFiles(this.recentFileManager.Remove(ex.FileName));
+        //        }
+        //    }
+        //}
 
         private void OnRecentFileManagerStateRestored(object sender, EventArgs e)
         {

@@ -47,7 +47,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadXamlAsStringOverride(fileName);
         }
 
-        protected override LedgerBookDto LoadXamlFromDisk(string fileName)
+        protected override LedgerBookDto LoadXamlFromDiskAsync(string fileName)
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
                 return LedgerBookDto;
             }
 
-            LedgerBookDto = base.LoadXamlFromDisk(fileName);
+            LedgerBookDto = base.LoadXamlFromDiskAsync(fileName);
             return LedgerBookDto;
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -22,7 +23,6 @@ namespace BudgetAnalyser.Engine.Services
         private BudgetCollection budgetCollection;
         private int budgetHash;
         private bool sortedByBucket;
-        private StatementModel statementModel;
         private ObservableCollection<Transaction> transactions;
 
         public TransactionManagerService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IStatementRepository statementRepository, [NotNull] ILogger logger)
@@ -47,6 +47,9 @@ namespace BudgetAnalyser.Engine.Services
             this.logger = logger;
         }
 
+        public event EventHandler Closed;
+        public event EventHandler NewDatasourceAvailable;
+
         public decimal AverageDebit
         {
             get
@@ -58,6 +61,15 @@ namespace BudgetAnalyser.Engine.Services
 
                 return this.transactions.Where(t => t.Amount < 0).Average(t => t.Amount);
             }
+        }
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int Sequence
+        {
+            get { return 10; }
         }
 
         public decimal TotalCount
@@ -99,19 +111,12 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
+        public StatementModel StatementModel { get; private set; }
+
         public ObservableCollection<Transaction> ClearBucketAndTextFilters()
         {
             ResetTransactionsCollection();
             return this.transactions;
-        }
-
-        /// <summary>
-        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        /// Defaults to 50.
-        /// </summary>
-        public int Sequence
-        {
-            get { return 10; }
         }
 
         /// <summary>
@@ -120,29 +125,24 @@ namespace BudgetAnalyser.Engine.Services
         public void Close()
         {
             this.transactions = new ObservableCollection<Transaction>();
-            this.statementModel = null;
+            StatementModel = null;
             this.budgetCollection = null;
             this.budgetHash = 0;
-            var handler = Closed;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
-        public Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            throw new NotImplementedException();
+            EventHandler handler = Closed;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         public string DetectDuplicateTransactions()
         {
-            if (this.statementModel == null)
+            if (StatementModel == null)
             {
                 return null;
             }
 
-            List<IGrouping<int, Transaction>> duplicates = this.statementModel.ValidateAgainstDuplicates().ToList();
+            List<IGrouping<int, Transaction>> duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
             return duplicates.Any()
                 ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!", duplicates.Sum(group => group.Count()))
                 : null;
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Services
         public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
         {
             this.transactions = new ObservableCollection<Transaction>(
-                this.statementModel.Transactions
+                StatementModel.Transactions
                     .Where(t => MatchTransactionBucket(t, bucketCode)));
             return this.transactions;
         }
@@ -178,7 +178,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.transactions = new ObservableCollection<Transaction>(
-                this.statementModel.Transactions.Where(t => MatchTransactionText(t, searchText))
+                StatementModel.Transactions.Where(t => MatchTransactionText(t, searchText))
                     .AsParallel()
                     .ToList());
             return this.transactions;
@@ -191,7 +191,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("criteria");
             }
 
-            this.statementModel.Filter(criteria);
+            StatementModel.Filter(criteria);
         }
 
         public void ImportAndMergeBankStatement(string storageKey, AccountType account)
@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Services
 
             // TODO should be async
             StatementModel additionalModel = this.statementRepository.ImportAndMergeBankStatement(storageKey, account);
-            this.statementModel.Merge(additionalModel);
+            StatementModel.Merge(additionalModel);
         }
 
         public void Initialise(StatementApplicationStateV1 stateData)
@@ -222,22 +222,38 @@ namespace BudgetAnalyser.Engine.Services
             this.sortedByBucket = stateData.SortByBucket ?? false;
         }
 
-        public async Task<StatementModel> LoadStatementModelAsync(string storageKey)
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            if (string.IsNullOrWhiteSpace(storageKey))
+            if (applicationDatabase == null)
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException("applicationDatabase");
             }
 
-            this.statementModel = await this.statementRepository.LoadStatementModelAsync(storageKey);
+            try
+            {
+                StatementModel = await this.statementRepository.LoadStatementModelAsync(applicationDatabase.StatementModelStorageKey);
+            }
+            catch (StatementModelChecksumException ex)
+            {
+                throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
+            }
+
             ResetTransactionsCollection();
-            return this.statementModel;
+
+            EventHandler handler = NewDatasourceAvailable;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
         {
             this.sortedByBucket = groupByBucket;
-            if (this.statementModel == null)
+            if (StatementModel == null)
             {
                 // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
                 return new TransactionGroupedByBucket[] { };
@@ -246,7 +262,7 @@ namespace BudgetAnalyser.Engine.Services
             if (this.sortedByBucket)
             {
                 // SortByBucket == true so group and sort by bucket.
-                IEnumerable<TransactionGroupedByBucket> query = this.statementModel.Transactions
+                IEnumerable<TransactionGroupedByBucket> query = StatementModel.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucket(group, group.Key));
@@ -272,20 +288,20 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("transactionToRemove");
             }
 
-            this.statementModel.RemoveTransaction(transactionToRemove);
+            StatementModel.RemoveTransaction(transactionToRemove);
         }
 
         public async Task SaveAsync(bool close)
         {
-            if (this.statementModel == null)
+            if (StatementModel == null)
             {
                 return;
             }
 
-            await this.statementRepository.SaveAsync(this.statementModel);
+            await this.statementRepository.SaveAsync(StatementModel);
             if (close)
             {
-                this.statementModel = null;
+                StatementModel = null;
             }
         }
 
@@ -306,7 +322,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("splinterBucket2");
             }
 
-            this.statementModel.SplitTransaction(
+            StatementModel.SplitTransaction(
                 originalTransaction,
                 splinterAmount1,
                 splinterAmount2,
@@ -324,7 +340,7 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetCollection = budgets ?? this.budgetCollection;
 
-            if (this.statementModel == null)
+            if (StatementModel == null)
             {
                 // Can't check yet, statement hasn't been loaded yet. Everything is ok for now.
                 return true;
@@ -341,7 +357,7 @@ namespace BudgetAnalyser.Engine.Services
             bool allTransactionHaveABucket = await Task.Run(
                 () =>
                 {
-                    return this.statementModel.AllTransactions
+                    return StatementModel.AllTransactions
                         .Where(t => t.BudgetBucket != null)
                         .AsParallel()
                         .All(
@@ -363,7 +379,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ResetTransactionsCollection()
         {
-            this.transactions = this.statementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(this.statementModel.Transactions);
+            this.transactions = StatementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
         }
 
         private static bool MatchTransactionBucket(Transaction t, string bucketCode)
@@ -417,8 +433,5 @@ namespace BudgetAnalyser.Engine.Services
 
             return false;
         }
-
-        public event EventHandler Closed;
-        public event EventHandler NewDatasourceAvailable;
     }
 }

@@ -156,6 +156,11 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.BudgetCollectionStorageKey);
             EventHandler handler = NewDatasourceAvailable;
             if (handler != null)

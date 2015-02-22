@@ -65,10 +65,10 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public async Task<bool> IsStatementModelAsync(string fileName)
+        public async Task<bool> IsStatementModelAsync(string storageKey)
         {
-            this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
-            List<string> allLines = (await ReadLinesAsync(fileName, 2)).ToList();
+            this.importUtilities.AbortIfFileDoesntExist(storageKey, this.userMessageBox);
+            List<string> allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
             if (!VersionCheck(allLines))
             {
                 return false;
@@ -77,31 +77,31 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        public async Task<StatementModel> LoadAsync(string fileName)
+        public async Task<StatementModel> LoadAsync(string storageKey)
         {
             try
             {
-                this.importUtilities.AbortIfFileDoesntExist(fileName, this.userMessageBox);
+                this.importUtilities.AbortIfFileDoesntExist(storageKey, this.userMessageBox);
             }
             catch (FileNotFoundException ex)
             {
                 throw new KeyNotFoundException(ex.Message, ex);
             }
 
-            if (!(await IsStatementModelAsync(fileName)))
+            if (!(await IsStatementModelAsync(storageKey)))
             {
                 throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
-            List<string> allLines = (await ReadLinesAsync(fileName)).ToList();
+            List<string> allLines = (await ReadLinesAsync(storageKey)).ToList();
             long totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
-                return new StatementModel(this.logger) { StorageKey = fileName }.LoadTransactions(new List<Transaction>());
+                return new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
             }
 
             List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
-            TransactionSetDto transactionSet = CreateTransactionSet(fileName, allLines, transactions);
+            TransactionSetDto transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
 
             ValidateChecksumIntegrity(transactionSet);
 
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public async Task SaveAsync([NotNull] StatementModel model, string fileName)
+        public async Task SaveAsync([NotNull] StatementModel model, string storageKey)
         {
             if (model == null)
             {
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             var transactionSet = this.domainToDtoMapper.Map(model);
             transactionSet.VersionHash = VersionHash;
-            transactionSet.StorageKey = fileName;
+            transactionSet.StorageKey = storageKey;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
             if (model.AllTransactions.Count() != transactionSet.Transactions.Count())
             {
@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous))
+            using (var stream = new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous))
             {
                 using (var writer = new StreamWriter(stream))
                 {

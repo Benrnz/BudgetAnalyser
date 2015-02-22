@@ -12,7 +12,6 @@ using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -69,11 +68,7 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
 
             this.ledgerService.Closed += OnClosedNotificationReceived;
-        }
-
-        private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
-        {
-            FileOperations.Close();
+            this.ledgerService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
         }
 
         public event EventHandler LedgerBookUpdated;
@@ -102,7 +97,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ICommand RemoveLedgerEntryLineCommand
         {
-            get { return new RelayCommand<LedgerEntryLine>(OnRemoveLedgerEntryLineCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
+            get { return new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
         }
 
         public ICommand ShowBankBalancesCommand
@@ -182,10 +177,10 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.Dirty = true;
         }
 
-        public void LoadLastLedgerBook(string fullPath)
-        {
-            FileOperations.LoadLedgerBookFromFile(fullPath);
-        }
+        //public void LoadLastLedgerBook(string fullPath)
+        //{
+        //    FileOperations.SyncWithService(fullPath);
+        //}
 
         public void NotifyOfClosing()
         {
@@ -316,6 +311,11 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
+        {
+            FileOperations.Close();
+        }
+
         private void OnLedgerBucketUpdated(object sender, EventArgs e)
         {
             this.uiContext.LedgerBucketViewController.Updated -= OnLedgerBucketUpdated;
@@ -323,7 +323,12 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.Dirty = true;
         }
 
-        private void OnRemoveLedgerEntryLineCommandExecuted(LedgerEntryLine line)
+        private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
+        {
+            FileOperations.SyncWithService();
+        }
+
+        private void OnRemoveReconciliationCommandExecuted(LedgerEntryLine line)
         {
             bool? result = this.questionBox.Show(
                 string.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete this Reconciliation for {0:d}?", line.Date),
@@ -336,7 +341,11 @@ namespace BudgetAnalyser.LedgerBook
             NumberOfMonthsToShow--;
             this.ledgerService.RemoveReconciliation(line);
             FileOperations.SaveLedgerBook();
-            FileOperations.ReloadCurrentLedgerBook();
+            EventHandler handler = LedgerBookUpdated;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)

@@ -33,28 +33,28 @@ namespace BudgetAnalyser.Engine.Matching
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public virtual bool Exists(string fileName)
+        public virtual bool Exists(string storageKey)
         {
-            return File.Exists(fileName);
+            return File.Exists(storageKey);
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
-        public IEnumerable<MatchingRule> LoadRules([NotNull] string fileName)
+        public IEnumerable<MatchingRule> LoadRules([NotNull] string storageKey)
         {
-            if (fileName == null)
+            if (string.IsNullOrWhiteSpace(storageKey))
             {
-                throw new ArgumentNullException("fileName");
+                throw new KeyNotFoundException("storageKey is blank");
             }
 
-            if (!Exists(fileName))
+            if (!Exists(storageKey))
             {
-                throw new FileNotFoundException(fileName);
+                throw new KeyNotFoundException("Storage key can not be found: " + storageKey);
             }
 
             List<MatchingRuleDto> dataEntities;
             try
             {
-                dataEntities = LoadFromDisk(fileName);
+                dataEntities = LoadFromDisk(storageKey);
             }
             catch (Exception ex)
             {
@@ -69,20 +69,20 @@ namespace BudgetAnalyser.Engine.Matching
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
         }
 
-        public void SaveRules([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string fileName)
+        public void SaveRules([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
         {
             if (rules == null)
             {
                 throw new ArgumentNullException("rules");
             }
 
-            if (fileName == null)
+            if (storageKey == null)
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("storageKey");
             }
 
             IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
-            SaveToDisk(fileName, dataEntities);
+            SaveToDisk(storageKey, dataEntities);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)

@@ -1,6 +1,5 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Statement;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
@@ -10,16 +9,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
         }
 
-        public Action<string, IUserMessageBox> AbortIfFileDoesntExistOverride { get; set; }
+        public Action<string> AbortIfFileDoesntExistOverride { get; set; }
 
-        internal override void AbortIfFileDoesntExist(string fileName, IUserMessageBox messageBox)
+        internal override void AbortIfFileDoesntExist(string fileName)
         {
             if (AbortIfFileDoesntExistOverride == null)
             {
                 return;
             }
 
-            AbortIfFileDoesntExistOverride(fileName, messageBox);
+            AbortIfFileDoesntExistOverride(fileName);
         }
     }
 }

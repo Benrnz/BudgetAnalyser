@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (!FileExists(fileName))
             {
-                throw new FileNotFoundException("File not found.", fileName);
+                throw new KeyNotFoundException("File not found. " + fileName);
             }
 
             object serialised;

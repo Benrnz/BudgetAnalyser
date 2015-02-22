@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
@@ -89,10 +88,15 @@ namespace BudgetAnalyser.Engine.Services
                 Close();
                 throw new DataFormatException("A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
             }
-            catch (FileNotFoundException ex)
+            catch (KeyNotFoundException ex)
             {
                 Close();
-                throw new FileNotFoundException("A subordinate data file cannot be found: " + ex.FileName, ex);
+                throw new KeyNotFoundException("A subordinate data file cannot be found: " + ex.Message, ex);
+            }
+            catch (NotSupportedException ex)
+            {
+                Close();
+                throw new DataFormatException("A subordinate data file contains unsupported data.", ex);
             }
 
             return this.budgetAnalyserDatabase;

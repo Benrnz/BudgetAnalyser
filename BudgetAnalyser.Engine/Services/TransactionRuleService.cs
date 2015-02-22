@@ -131,6 +131,7 @@ namespace BudgetAnalyser.Engine.Services
         public Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             throw new NotImplementedException();
+
         }
 
         public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
@@ -192,10 +193,12 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("rules");
             }
+            
             if (rulesGroupedByBucket == null)
             {
                 throw new ArgumentNullException("rulesGroupedByBucket");
             }
+
             PopulateRules(BuildDefaultFileName(), rules, rulesGroupedByBucket);
         }
 

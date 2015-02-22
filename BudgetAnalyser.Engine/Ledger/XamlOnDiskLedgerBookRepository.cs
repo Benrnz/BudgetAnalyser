@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -15,11 +18,13 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper;
         private readonly BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper;
         private readonly ILogger logger;
+        private readonly BankImportUtilities importUtilities;
 
         public XamlOnDiskLedgerBookRepository(
             [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
             [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] BankImportUtilities importUtilities)
         {
             if (dataToDomainMapper == null)
             {
@@ -36,34 +41,45 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException("logger");
             }
 
+            if (importUtilities == null)
+            {
+                throw new ArgumentNullException("importUtilities");
+            }
+
             this.dataToDomainMapper = dataToDomainMapper;
             this.domainToDataMapper = domainToDataMapper;
             this.logger = logger;
+            this.importUtilities = importUtilities;
         }
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        public LedgerBook CreateNew(string name, string fileName)
+        public LedgerBook CreateNew(string name, string storageKey)
         {
             return new LedgerBook(this.logger)
             {
                 Name = name,
-                FileName = fileName,
+                FileName = storageKey,
                 Modified = DateTime.Now,
             };
         }
 
-        public bool Exists(string fileName)
+        public bool Exists(string storageKey)
         {
-            return FileExistsOnDisk(fileName);
+            return FileExistsOnDisk(storageKey);
         }
 
-        public LedgerBook Load(string fileName)
+        public async Task<LedgerBook> LoadAsync(string storageKey)
         {
             LedgerBookDto dataEntity;
             try
             {
-                dataEntity = LoadXamlFromDisk(fileName);
+                this.importUtilities.AbortIfFileDoesntExist(storageKey);
+                dataEntity = await LoadXamlFromDiskAsync(storageKey);
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new KeyNotFoundException("Data file can not be found: " + storageKey, ex);
             }
             catch (Exception ex)
             {
@@ -72,10 +88,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (dataEntity == null)
             {
-                throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", fileName));
+                throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", storageKey));
             }
 
-            dataEntity.FileName = fileName;
+            dataEntity.FileName = storageKey;
             LedgerBook book = this.dataToDomainMapper.Map(dataEntity);
 
             var messages = new StringBuilder();
@@ -108,10 +124,10 @@ namespace BudgetAnalyser.Engine.Ledger
             Save(book, book.FileName);
         }
 
-        public void Save(LedgerBook book, string fileName)
+        public void Save(LedgerBook book, string storageKey)
         {
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
-            dataEntity.FileName = fileName;
+            dataEntity.FileName = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
 
             SaveDtoToDisk(dataEntity);
@@ -133,9 +149,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return File.ReadAllText(fileName);
         }
 
-        protected virtual LedgerBookDto LoadXamlFromDisk(string fileName)
+        protected async virtual Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
         {
-            return XamlServices.Parse(LoadXamlAsString(fileName)) as LedgerBookDto;
+            object result = null;
+            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+            return result as LedgerBookDto;
         }
 
         protected virtual void SaveDtoToDisk([NotNull] LedgerBookDto dataEntity)

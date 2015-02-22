@@ -33,7 +33,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             };
             LedgerBookDto reserialisedDto = null;
             subject.SaveDtoToDiskOverride = bookDto => reserialisedDto = bookDto;
-            LedgerBook book = subject.Load(DemoLedgerBookFileName);
+            LedgerBook book = subject.LoadAsync(DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
             subject.Save(book);
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_Output()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
 
             // Visual compare these two - should be the same
             LedgerBookTestData.TestData2().Output();
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookThatIsValid()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             var builder = new StringBuilder();
             Assert.IsTrue(book.Validate(builder), builder.ToString());
         }
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithFirstLineEqualBankBalances()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
             LedgerEntryLine line = book.Reconciliations.First();
 
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithFirstLineEqualSurplus()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             book.Output();
 
             LedgerBook testData2 = LedgerBookTestData.TestData2();
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithSameModifiedDate()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Modified, book.Modified);
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithSameName()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Name, book.Name);
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithSameNumberOfReconciliations()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Reconciliations.Count(), book.Reconciliations.Count());
@@ -141,7 +141,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldCreateBookWithSameNumberOfLedgers()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
             LedgerBook testData2 = LedgerBookTestData.TestData2();
 
             Assert.AreEqual(testData2.Ledgers.Count(), book.Ledgers.Count());
@@ -151,7 +151,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Load_ShouldLoadTheXmlFile()
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
-            LedgerBook book = subject.Load(LoadFileName);
+            LedgerBook book = subject.LoadAsync(LoadFileName);
 
             Assert.IsNotNull(book);
         }
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
 
-            LedgerBook book = subject.Load(DemoLedgerBookFileName);
+            LedgerBook book = subject.LoadAsync(DemoLedgerBookFileName);
             book.Output(true);
             Assert.IsNotNull(book);
         }
@@ -198,7 +198,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 subject.FileExistsOverride = f => true;
                 subject.LoadXamlAsStringOverride = f => serialisedData;
                 subject.LoadXamlFromDiskFromEmbeddedResources = false;
-                subject.Load("foo");
+                subject.LoadAsync("foo");
                 bookDto = subject.LedgerBookDto;
             }
 

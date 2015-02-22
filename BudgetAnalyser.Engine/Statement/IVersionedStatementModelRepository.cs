@@ -4,10 +4,10 @@ namespace BudgetAnalyser.Engine.Statement
 {
     public interface IVersionedStatementModelRepository
     {
-        Task<bool> IsStatementModelAsync(string fileName);
+        Task<bool> IsStatementModelAsync(string storageKey);
 
-        Task<StatementModel> LoadAsync(string fileName);
+        Task<StatementModel> LoadAsync(string storageKey);
 
-        Task SaveAsync(StatementModel model, string fileName);
+        Task SaveAsync(StatementModel model, string storageKey);
     }
 }
