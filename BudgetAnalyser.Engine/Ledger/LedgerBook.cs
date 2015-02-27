@@ -277,7 +277,11 @@ namespace BudgetAnalyser.Engine.Ledger
                                 "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
                                 ledgerTransaction));
                     throw new ValidationWarningException(
-                        "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.");
+                        string.Format(
+                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransactionID:{0} Ref:{1} Amount:{2:C}",
+                            ledgerTransaction.Id,
+                            ledgerTransaction.AutoMatchingReference,
+                            ledgerTransaction.Amount));
                 }
             }
         }

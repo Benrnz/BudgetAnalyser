@@ -1,6 +1,7 @@
 ﻿using System;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using Rees.Wpf;
@@ -24,8 +25,14 @@ namespace BudgetAnalyser.Statement
 
         public bool HasChanged
         {
-            get { return OriginalHash != Transaction.GetEqualityHashCode(); }
+            get
+            {
+                return OriginalHash != Transaction.GetEqualityHashCode()
+                       || this.originalBucket != Transaction.BudgetBucket;
+            }
         }
+
+        private BudgetBucket originalBucket;
 
         public int OriginalHash { get; private set; }
 
@@ -50,6 +57,8 @@ namespace BudgetAnalyser.Statement
         public void ShowDialog(Transaction transaction, Guid correlationId)
         {
             Transaction = transaction;
+            this.originalBucket = Transaction.BudgetBucket;
+
             MessengerInstance.Send(
                 new ShellDialogRequestMessage(
                     BudgetAnalyserFeature.Transactions,

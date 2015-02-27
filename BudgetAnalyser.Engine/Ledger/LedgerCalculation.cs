@@ -256,7 +256,8 @@ namespace BudgetAnalyser.Engine.Ledger
             var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
             foreach (LedgerEntry entry in currentLegderLine.Entries)
             {
-                decimal balance = entry.Balance + transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket).Sum(t => t.Amount);
+                var transactionsSubset = transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket);
+                decimal balance = entry.Balance + transactionsSubset.Sum(t => t.Amount);
                 ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, balance);
             }
 

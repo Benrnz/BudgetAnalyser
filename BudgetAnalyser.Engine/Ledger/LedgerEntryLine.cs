@@ -249,15 +249,15 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        internal void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
-        {
-            if (!IsNew)
-            {
-                throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
-            }
+        //internal void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
+        //{
+        //    if (!IsNew)
+        //    {
+        //        throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
+        //    }
 
-            this.bankBalancesList = updatedBankBalances.ToList();
-        }
+        //    this.bankBalancesList = updatedBankBalances.ToList();
+        //}
 
         internal bool UpdateRemarks(string remarks)
         {

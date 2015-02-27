@@ -166,13 +166,13 @@ namespace BudgetAnalyser.Engine.Statement
         /// <summary>
         ///     Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction" />.
         ///     <see cref="Object.GetHashCode" /> cannot be used because it is intended to show instance reference equivalence. It
-        ///     will
-        ///     give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with
+        ///     will give a different value (and it should) for every instance. If overriden changing hashcodes will cause problems with
         ///     UI controls such as ListBox.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Following GetHashCode")]
         public int GetEqualityHashCode()
         {
+            // WARNING: Do not add Bucket to this change detection.  It will interfer with finding transactions and duplicate detection.
             unchecked
             {
                 var result = 37; // prime
