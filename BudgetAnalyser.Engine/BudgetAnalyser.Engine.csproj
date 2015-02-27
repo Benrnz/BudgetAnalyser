@@ -142,6 +142,8 @@
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\TodoList.cs" />
+    <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />

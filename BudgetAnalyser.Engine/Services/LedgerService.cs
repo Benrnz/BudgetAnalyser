@@ -164,27 +164,8 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        /// <summary>
-        ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
-        /// </summary>
-        /// <param name="reconciliationDate">
-        ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
-        ///     <see cref="statement" />. This date ideally is your payday of the month, and should be the same date
-        ///     every month. Transactions are searched for up to but not including this date.
-        /// </param>
-        /// <param name="balances">
-        ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
-        ///     ledger book.
-        /// </param>
-        /// <param name="budgetContext">The current budget context.</param>
-        /// <param name="statement">The currently loaded statement.</param>
-        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
-        /// <exception cref="System.ArgumentNullException">
-        ///     balances or budgetContext or statement
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">Reconciling against an inactive budget is invalid.</exception>
         public LedgerEntryLine MonthEndReconciliation(
-            DateTime reconciliationDate,
+            DateTime reconciliationDateIfFirstEver,
             IEnumerable<BankBalance> balances,
             IBudgetCurrencyContext budgetContext,
             StatementModel statement,
@@ -208,7 +189,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            return LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, statement, ignoreWarnings);
+            return LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, statement, ignoreWarnings);
         }
 
         public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerBucket ledger, AccountType storedInAccount)

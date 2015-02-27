@@ -98,12 +98,11 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
-        /// <param name="date">
-        ///     The startDate for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
-        ///     <see cref="statement" />.
+        /// <param name="dateIfFirstEver">
+        ///     The startDate for the <see cref="LedgerEntryLine" />. If its the first ever reconciliation, otherwise this date is ignored.
         /// </param>
         /// <param name="bankBalances">
-        ///     The bank balances as at the <see cref="date" /> to include in this new single line of the
+        ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <param name="budget">The current budget.</param>
@@ -111,16 +110,15 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         internal LedgerEntryLine Reconcile(
-            DateTime date,
+            DateTime dateIfFirstEver,
             IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,
             StatementModel statement = null,
             bool ignoreWarnings = false)
         {
-            // TODO this is misleading, the startDate passed in, and is not used, except in the case of a new LedgerBook.
             try
             {
-                PreReconciliationValidation(date, statement);
+                PreReconciliationValidation(dateIfFirstEver, statement);
             }
             catch (ValidationWarningException)
             {
@@ -131,8 +129,8 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal consistencyCheck1 = Reconciliations.Sum(e => e.CalculatedSurplus);
-            var newLine = new LedgerEntryLine(date, bankBalances, this.logger);
-            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(date));
+            var newLine = new LedgerEntryLine(dateIfFirstEver, bankBalances, this.logger);
+            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(dateIfFirstEver));
             decimal consistencyCheck2 = Reconciliations.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {
