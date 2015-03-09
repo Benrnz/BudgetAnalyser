@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
         /// </summary>
-        public ApplicationDatabase Close()
+        public void Close()
         {
             foreach (IApplicationDatabaseDependent service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
@@ -58,7 +58,6 @@ namespace BudgetAnalyser.Engine.Services
             ClearDirtyDataFlags();
 
             this.budgetAnalyserDatabase.Close();
-            return this.budgetAnalyserDatabase;
         }
 
         /// <summary>

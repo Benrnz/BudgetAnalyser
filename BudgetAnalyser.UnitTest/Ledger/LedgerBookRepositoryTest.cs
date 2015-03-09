@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
-            await subject.SaveAsync(book);
+            await subject.SaveAsync(book, book.FileName);
 
             reserialisedDto.Output(true);
 
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-                subject.SaveAsync(LedgerBookTestData.TestData2());
+                subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.xml");
             }
 
             int checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-                await subject.SaveAsync(LedgerBookTestData.TestData2());
+                await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo2.xml");
             }
 
             Debug.WriteLine("Saved / Serialised Xml:");
@@ -214,7 +214,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
             string serialisedData = string.Empty;
             subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-            await subject.SaveAsync(LedgerBookTestData.TestData2());
+            await subject.SaveAsync(LedgerBookTestData.TestData2(), "Leonard Nimoy.xml");
 
             Console.WriteLine(serialisedData);
 
