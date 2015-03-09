@@ -331,6 +331,8 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
+            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
             if (handler != null)
             {
