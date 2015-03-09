@@ -204,6 +204,12 @@ namespace BudgetAnalyser.Engine.Services
                 args.ModificationComment = "[No comment]";
             }
 
+            var budgetModel = args.Context as BudgetModel;
+            if (budgetModel != null)
+            {
+                budgetModel.LastModifiedComment = args.ModificationComment;
+            }
+
             EnsureAllBucketsUsedAreInBucketRepo();
 
             var messages = new StringBuilder();

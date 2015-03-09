@@ -411,6 +411,7 @@ namespace BudgetAnalyser.Budget
         {
             SyncDataToBudgetService();
             args.ModificationComment = PromptUserForLastModifiedComment();
+            args.Context = CurrentBudget.Model;
             Dirty = false;
         }
 
