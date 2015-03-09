@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
@@ -18,7 +19,6 @@ namespace BudgetAnalyser.Engine.Services
         public ApplicationDatabaseService(
             [NotNull] IApplicationDatabaseRepository applicationRepository,
             [NotNull] IEnumerable<IApplicationDatabaseDependent> databaseDependents)
-
         {
             if (applicationRepository == null)
             {
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
         /// </summary>
         /// <param name="storageKey">Name and path to the file.</param>
-        public async Task<ApplicationDatabase> Load(string storageKey)
+        public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Saves all Budget Analyser application data.
         /// </summary>
-        public void Save()
+        public async Task SaveAsync()
         {
             if (this.budgetAnalyserDatabase == null)
             {
@@ -138,13 +138,43 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            // TODO Validate before save
-            // TODO Save data only when valid
+            var messages = new StringBuilder();
+            if (!ValidateAll(messages))
+            {
+                throw new ValidationWarningException(messages.ToString());
+            }
 
             this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
-            this.applicationRepository.Save(this.budgetAnalyserDatabase);
+            await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
+            // TODO parallelise saving the other files.
+            foreach (IApplicationDatabaseDependent service in this.databaseDependents)
+            {
+                if (this.dirtyData[service.DataType])
+                {
+                    await service.SaveAsync();
+                }
+            }
 
             ClearDirtyDataFlags();
+        }
+
+        public bool ValidateAll(StringBuilder messages)
+        {
+            var valid = true;
+            foreach (IApplicationDatabaseDependent service in this.databaseDependents) // Already sorted ascending by sequence number.
+            {
+                try
+                {
+                    valid = service.ValidateModel(messages);
+                }
+                catch (ValidationWarningException ex)
+                {
+                    messages.AppendLine(ex.Message);
+                    valid = false;
+                }
+            }
+
+            return valid;
         }
 
         private void ClearDirtyDataFlags()

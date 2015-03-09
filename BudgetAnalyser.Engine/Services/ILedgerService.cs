@@ -94,13 +94,6 @@ namespace BudgetAnalyser.Engine.Services
         void RenameLedgerBook([NotNull] LedgerBook ledgerBook, [NotNull] string newName);
 
         /// <summary>
-        ///     Saves the specified ledger book.
-        /// </summary>
-        /// <param name="ledgerBook">The ledger book.</param>
-        /// <param name="storageKey">The unique identifier of the Ledger Book.</param>
-        void Save([NotNull] LedgerBook ledgerBook, string storageKey = null);
-
-        /// <summary>
         ///     Tracks a new budget bucket by creating a new <see cref="LedgerBucket" /> for the given <see cref="BudgetBucket" />
         ///     and adds the ledger to the ledger book.
         /// </summary>

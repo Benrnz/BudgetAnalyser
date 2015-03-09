@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Persistence
             return db;
         }
 
-        public void Save(ApplicationDatabase budgetAnalyserDatabase)
+        public async Task SaveAsync(ApplicationDatabase budgetAnalyserDatabase)
         {
             if (budgetAnalyserDatabase == null)
             {
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Persistence
             }
 
             string serialised = Serialise(this.savingMapper.Map(budgetAnalyserDatabase));
-            WriteToDisk(budgetAnalyserDatabase.FileName, serialised);
+            await WriteToDiskAsync(budgetAnalyserDatabase.FileName, serialised);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
@@ -104,9 +104,12 @@ namespace BudgetAnalyser.Engine.Persistence
             return XamlServices.Save(budgetAnalyserDatabase);
         }
 
-        protected virtual void WriteToDisk(string fileName, string data)
+        protected async virtual Task WriteToDiskAsync(string fileName, string data)
         {
-            File.WriteAllText(fileName, data);
+            using (var file = new StreamWriter(fileName, false))
+            {
+                await file.WriteAsync(data);
+            }
         }
     }
 }

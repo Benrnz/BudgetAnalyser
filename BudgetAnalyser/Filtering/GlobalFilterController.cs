@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Filtering
             private set
             {
                 this.doNotUseAccountTypeSummary = value;
-                RaisePropertyChanged(() => AccountTypeSummary);
+                RaisePropertyChanged();
             }
         }
 
@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Filtering
             set
             {
                 this.doNotUseCriteria = value;
-                RaisePropertyChanged(() => Criteria);
+                RaisePropertyChanged();
                 UpdateSummaries();
             }
         }
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Filtering
             private set
             {
                 this.doNotUseDateSummaryLine1 = value;
-                RaisePropertyChanged(() => DateSummaryLine1);
+                RaisePropertyChanged();
             }
         }
 
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Filtering
             private set
             {
                 this.doNotUseDateSummaryLine2 = value;
-                RaisePropertyChanged(() => DateSummaryLine2);
+                RaisePropertyChanged();
             }
         }
 
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Filtering
             set
             {
                 this.doNotUseSelectedAccountType = value;
-                RaisePropertyChanged(() => SelectedAccountType);
+                RaisePropertyChanged();
             }
         }
 

@@ -62,7 +62,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseAddBalanceVisibility = value;
-                RaisePropertyChanged(() => AddBalanceVisibility);
+                RaisePropertyChanged();
             }
         }
 
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseBankAccounts = value;
-                RaisePropertyChanged(() => BankAccounts);
+                RaisePropertyChanged();
             }
         }
 
@@ -87,7 +87,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseBankBalance = value;
-                RaisePropertyChanged(() => BankBalance);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => BankBalanceTotal);
             }
         }
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseDate = value;
-                RaisePropertyChanged(() => Date);
+                RaisePropertyChanged();
             }
         }
 
@@ -147,7 +147,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseEditable = value;
-                RaisePropertyChanged(() => Editable);
+                RaisePropertyChanged();
             }
         }
 
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseSelectedBankAccount = value;
-                RaisePropertyChanged(() => SelectedBankAccount);
+                RaisePropertyChanged();
             }
         }
 

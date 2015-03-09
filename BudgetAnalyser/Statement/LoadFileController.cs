@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseFileName = value;
-                RaisePropertyChanged(() => FileName);
+                RaisePropertyChanged();
                 if (!string.IsNullOrWhiteSpace(FileName))
                 {
                     CheckFileName();
@@ -139,7 +139,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseFileTypeSelectionReady = value;
-                RaisePropertyChanged(() => FileTypeSelectionReady);
+                RaisePropertyChanged();
             }
         }
 
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseSelectedExistingAccountName = value;
-                RaisePropertyChanged(() => SelectedExistingAccountName);
+                RaisePropertyChanged();
                 CheckAccountName();
                 CheckFileName();
             }
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseTitle = value;
-                RaisePropertyChanged(() => Title);
+                RaisePropertyChanged();
             }
         }
 

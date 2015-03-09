@@ -236,6 +236,7 @@
     <Compile Include="Reports\ReportTransaction.cs" />
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />
     <Compile Include="Reports\SeriesData.cs" />
+    <Compile Include="Services\AdditionalInformationRequestedEventArgs.cs" />
     <Compile Include="Services\ApplicationDatabaseService.cs" />
     <Compile Include="Services\BudgetMaintenanceService.cs" />
     <Compile Include="Services\BudgetPieGraphService.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Services\OverallPerformanceChartService.cs" />
     <Compile Include="Services\TransactionManagerService.cs" />
     <Compile Include="Services\TransactionRuleService.cs" />
+    <Compile Include="Services\ValidatingEventArgs.cs" />
     <Compile Include="Services\WidgetService.cs" />
     <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />

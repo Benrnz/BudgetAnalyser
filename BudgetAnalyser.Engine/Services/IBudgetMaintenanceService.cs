@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -45,24 +44,12 @@ namespace BudgetAnalyser.Engine.Services
         BudgetCurrencyContext CreateNewBudgetCollection();
 
         /// <summary>
-        ///     Saves the budget provided to persistent storage.
-        /// </summary>
-        /// <param name="modifiedBudget">The modified budget.</param>
-        /// <param name="comment">The optional comment.</param>
-        /// <returns>true if the budget was saved successfully, otherwise false - this indicates there are validation errors.</returns>
-        bool SaveBudget(BudgetModel modifiedBudget, string comment = "");
-
-        /// <summary>
-        ///     Updates the budget with the full collection of incomes and expenses and then validates the budget.
+        ///     Updates the budget with the full collection of incomes and expenses.
+        ///     This method does not call validate on the model.
         /// </summary>
         /// <param name="model">The Budget model.</param>
         /// <param name="allIncomes">All income objects that may have changed in the UI.</param>
         /// <param name="allExpenses">All expense objects that may have changed in the UI.</param>
-        /// <param name="validationMessages">The validation messages. Will be blank if no issues are found.</param>
-        /// <returns>
-        ///     True if valid, otherwise false.  If false is returned there will be addition information in the
-        ///     <paramref name="validationMessages" /> string builder.
-        /// </returns>
-        bool UpdateAndValidateBudget(BudgetModel model, IEnumerable<Income> allIncomes, IEnumerable<Expense> allExpenses, StringBuilder validationMessages);
+        void UpdateIncomesAndExpenses(BudgetModel model, IEnumerable<Income> allIncomes, IEnumerable<Expense> allExpenses);
     }
 }

@@ -117,21 +117,16 @@ namespace BudgetAnalyser.Engine.Ledger
             return book;
         }
 
-        public void Save([NotNull] LedgerBook book)
-        {
-            if (book == null) throw new ArgumentNullException("book");
-
-            Save(book, book.FileName);
-        }
-
-        public void Save(LedgerBook book, string storageKey)
+        public async Task SaveAsync(LedgerBook book, string storageKey)
         {
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
+            book.FileName = storageKey;
             dataEntity.FileName = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
 
-            SaveDtoToDisk(dataEntity);
+            await SaveDtoToDiskAsync(dataEntity);
 
+            // TODO Reassess these application events.  Probably dont need a repo level event anymore.
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
             {
@@ -156,14 +151,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return result as LedgerBookDto;
         }
 
-        protected virtual void SaveDtoToDisk([NotNull] LedgerBookDto dataEntity)
+        protected async virtual Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
             {
                 throw new ArgumentNullException("dataEntity");
             }
 
-            WriteToDisk(dataEntity.FileName, Serialise(dataEntity));
+            await WriteToDiskAsync(dataEntity.FileName, Serialise(dataEntity));
         }
 
         protected virtual string Serialise(LedgerBookDto dataEntity)
@@ -176,9 +171,12 @@ namespace BudgetAnalyser.Engine.Ledger
             return XamlServices.Save(dataEntity);
         }
 
-        protected virtual void WriteToDisk(string fileName, string data)
+        protected async virtual Task WriteToDiskAsync(string fileName, string data)
         {
-            File.WriteAllText(fileName, data);
+            using (var file = new StreamWriter(fileName, false))
+            {
+                await file.WriteAsync(data);
+            }
         }
 
         private static double CalculateChecksum(LedgerBook dataEntity)

@@ -51,14 +51,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadFromDiskOveride(fileName);
         }
 
-        protected override void SaveToDisk(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
+        protected override Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
             if (SaveToDiskOveride == null)
             {
-                return;
+                return Task.Delay(1);
             }
 
-            SaveToDiskOveride(fileName, dataEntities);
+            return Task.Run(() => SaveToDiskOveride(fileName, dataEntities));
         }
     }
 }

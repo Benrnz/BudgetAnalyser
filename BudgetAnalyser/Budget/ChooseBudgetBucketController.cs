@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseBudgetBuckets = value;
-                RaisePropertyChanged(() => BudgetBuckets);
+                RaisePropertyChanged();
             }
         }
 
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Budget
             set
             {
                 this.doNotUseFilterDescription = value;
-                RaisePropertyChanged(() => FilterDescription);
+                RaisePropertyChanged();
             }
         }
 

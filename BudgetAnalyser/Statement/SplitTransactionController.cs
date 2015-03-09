@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseInvalidMessage = value;
-                RaisePropertyChanged(() => InvalidMessage);
+                RaisePropertyChanged();
             }
         }
 
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseSplinterAmount1 = value;
                 this.doNotUseSplinterAmount2 = OriginalTransaction.Amount - value;
-                RaisePropertyChanged(() => SplinterAmount1);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => SplinterAmount2);
                 RaisePropertyChanged(() => TotalAmount);
                 RaisePropertyChanged(() => Valid);
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Statement
                 this.doNotUseSplinterAmount2 = value;
                 this.doNotUseSplinterAmount1 = OriginalTransaction.Amount - value;
                 RaisePropertyChanged(() => SplinterAmount1);
-                RaisePropertyChanged(() => SplinterAmount2);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => TotalAmount);
                 RaisePropertyChanged(() => Valid);
             }

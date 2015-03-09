@@ -64,6 +64,7 @@ namespace BudgetAnalyser.Statement
 
             this.transactionService.Closed += OnClosedNotificationReceived;
             this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
+            this.transactionService.Saved += OnSavedNotificationReceived;
         }
 
         public AppliedRulesController AppliedRulesController
@@ -85,7 +86,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseBucketFilter = value;
-                RaisePropertyChanged(() => BucketFilter);
+                RaisePropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterByBucket(BucketFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -139,7 +140,7 @@ namespace BudgetAnalyser.Statement
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
+                RaisePropertyChanged();
             }
         }
 
@@ -174,7 +175,7 @@ namespace BudgetAnalyser.Statement
                     this.doNotUseTextFilter = value;
                 }
 
-                RaisePropertyChanged(() => TextFilter);
+                RaisePropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
                 ViewModel.TriggerRefreshTotalsRow();
             }
@@ -342,6 +343,11 @@ namespace BudgetAnalyser.Statement
         private async void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
         {
             await FileOperations.SyncWithServiceAsync();
+        }
+
+        private void OnSavedNotificationReceived(object sender, EventArgs e)
+        {
+            FileOperations.ViewModel.Dirty = false;
         }
 
         private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)

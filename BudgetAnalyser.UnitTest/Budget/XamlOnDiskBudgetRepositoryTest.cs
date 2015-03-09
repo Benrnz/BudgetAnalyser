@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine;
@@ -170,7 +169,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         [TestMethod]
         [ExpectedException(typeof(DataFormatException))]
-        public async Task  LoadShouldThrowIfFileFormatIsInvalid()
+        public async Task LoadShouldThrowIfFileFormatIsInvalid()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
@@ -206,10 +205,10 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void SaveShouldThrowIfLoadHasntBeenCalled()
+        public async Task SaveShouldThrowIfLoadHasntBeenCalled()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
-            subject.Save();
+            await subject.SaveAsync();
             Assert.Fail();
         }
 
@@ -221,7 +220,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.WriteToDiskMock = (filename, data) => { writeToDiskCalled = true; };
             SetPrivateBudgetCollection(subject);
 
-            subject.Save(BudgetModelTestData.CreateCollectionWith1And2());
+            subject.SaveAsync(BudgetModelTestData.CreateCollectionWith1And2());
 
             Assert.IsTrue(writeToDiskCalled);
         }

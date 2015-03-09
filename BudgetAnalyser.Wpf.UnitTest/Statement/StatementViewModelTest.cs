@@ -151,7 +151,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
 
         private StatementViewModel CreateSubject()
         {
-            return new StatementViewModel(this.mockUiContext.Object);
+            return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseService>().Object);
         }
 
         private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)

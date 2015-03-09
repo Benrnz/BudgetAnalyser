@@ -18,5 +18,21 @@ namespace BudgetAnalyser.Engine.Services
         ///     Occurs when a new data source has been loaded and is now available for use.
         /// </summary>
         event EventHandler NewDataSourceAvailable;
+
+        /// <summary>
+        ///     Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
+        /// </summary>
+        event EventHandler Saved;
+
+        /// <summary>
+        ///     Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
+        /// </summary>
+        event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+
+        /// <summary>
+        ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
+        ///     information with its service.
+        /// </summary>
+        event EventHandler<ValidatingEventArgs> Validating;
     }
 }

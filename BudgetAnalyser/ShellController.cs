@@ -54,6 +54,7 @@ namespace BudgetAnalyser
             ReportsDialog = new ShellDialogController();
         }
 
+        // TODO reassess if all these controller properties are required.
         public BudgetController BudgetController
         {
             get { return this.uiContext.BudgetController; }

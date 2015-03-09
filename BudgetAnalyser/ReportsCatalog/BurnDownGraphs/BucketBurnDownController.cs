@@ -24,7 +24,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseBalanceLine = value;
-                RaisePropertyChanged(() => BalanceLine);
+                RaisePropertyChanged();
             }
         }
 
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseTrendLine = value;
-                RaisePropertyChanged(() => BudgetLine);
+                RaisePropertyChanged();
             }
         }
 

@@ -37,7 +37,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseCancelButtonVisible = value;
-                RaisePropertyChanged(() => CancelButtonVisible);
+                RaisePropertyChanged();
             }
         }
 
@@ -61,7 +61,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseContent = value;
-                RaisePropertyChanged(() => Content);
+                RaisePropertyChanged();
             }
         }
 
@@ -83,6 +83,7 @@ namespace BudgetAnalyser.ShellDialog
                 CancelButtonVisible = DialogType != ShellDialogType.Ok;
                 RaisePropertyChanged(() => ActionToolTip);
                 RaisePropertyChanged(() => CloseToolTip);
+                RaisePropertyChanged();
             }
         }
 
@@ -92,7 +93,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseOkButtonVisible = value;
-                RaisePropertyChanged(() => OkButtonVisible);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => OkIsCancel);
             }
         }
@@ -108,7 +109,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseSaveButtonVisible = value;
-                RaisePropertyChanged(() => SaveButtonVisible);
+                RaisePropertyChanged();
             }
         }
 
@@ -128,7 +129,7 @@ namespace BudgetAnalyser.ShellDialog
             set
             {
                 this.doNotUseTitle = value;
-                RaisePropertyChanged(() => Title);
+                RaisePropertyChanged();
             }
         }
 

@@ -83,7 +83,7 @@ namespace BudgetAnalyser.ReportsCatalog
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
+                RaisePropertyChanged();
             }
         }
 

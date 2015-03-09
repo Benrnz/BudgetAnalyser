@@ -69,7 +69,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             private set
             {
                 this.doNotUseDateRangeDescription = value;
-                RaisePropertyChanged(() => DateRangeDescription);
+                RaisePropertyChanged();
             }
         }
 

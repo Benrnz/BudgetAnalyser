@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight;
@@ -12,6 +14,7 @@ namespace BudgetAnalyser.Statement
 {
     public class StatementViewModel : ViewModelBase
     {
+        private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IUiContext uiContext;
         private bool doNotUseDirty;
         private string doNotUseDuplicateSummary;
@@ -22,10 +25,21 @@ namespace BudgetAnalyser.Statement
         private ObservableCollection<Transaction> doNotUseTransactions;
         private ITransactionManagerService transactionService;
 
-        public StatementViewModel(IUiContext uiContext)
+        public StatementViewModel([NotNull] IUiContext uiContext, [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
+            if (uiContext == null)
+            {
+                throw new ArgumentNullException("uiContext");
+            }
+
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
+
             this.doNotUseSortByDate = true;
             this.uiContext = uiContext;
+            this.applicationDatabaseService = applicationDatabaseService;
         }
 
         public decimal AverageDebit
@@ -40,7 +54,11 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseDirty = value;
-                RaisePropertyChanged(() => Dirty);
+                RaisePropertyChanged();
+                if (Dirty)
+                {
+                    this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
+                }
             }
         }
 
@@ -51,7 +69,7 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseDuplicateSummary = value;
-                RaisePropertyChanged(() => DuplicateSummary);
+                RaisePropertyChanged();
             }
         }
 
@@ -66,7 +84,7 @@ namespace BudgetAnalyser.Statement
             internal set
             {
                 this.doNotUseGroupedByBucket = value;
-                RaisePropertyChanged(() => GroupedByBucket);
+                RaisePropertyChanged();
             }
         }
 
@@ -81,7 +99,7 @@ namespace BudgetAnalyser.Statement
             set
             {
                 this.doNotUseSelectedRow = value;
-                RaisePropertyChanged(() => SelectedRow);
+                RaisePropertyChanged();
             }
         }
 
@@ -92,7 +110,7 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseSortByDate = !value;
                 RaisePropertyChanged(() => SortByDate);
-                RaisePropertyChanged(() => SortByBucket);
+                RaisePropertyChanged();
             }
         }
 
@@ -103,7 +121,7 @@ namespace BudgetAnalyser.Statement
             {
                 this.doNotUseSortByDate = value;
                 RaisePropertyChanged(() => SortByBucket);
-                RaisePropertyChanged(() => SortByDate);
+                RaisePropertyChanged();
             }
         }
 

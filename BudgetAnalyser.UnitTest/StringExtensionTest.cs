@@ -7,6 +7,48 @@ namespace BudgetAnalyser.UnitTest
     public class StringExtensionTest
     {
         [TestMethod]
+        public void IsSomethingShouldReturnFalseGivenNull()
+        {
+            string subject = null;
+            Assert.IsFalse(subject.IsSomething());
+        }
+
+        [TestMethod]
+        public void IsSomethingShouldReturnFalseGivenEmpty()
+        {
+            string subject = string.Empty;
+            Assert.IsFalse(subject.IsSomething());
+        }
+
+        [TestMethod]
+        public void IsSomethingShouldReturnTrueGivenAnyText()
+        {
+            string subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
+            Assert.IsTrue(subject.IsSomething());
+        }
+
+        [TestMethod]
+        public void IsNothingShouldReturnFalseGivenNull()
+        {
+            string subject = null;
+            Assert.IsTrue(subject.IsNothing());
+        }
+
+        [TestMethod]
+        public void IsNothingShouldReturnFalseGivenEmpty()
+        {
+            string subject = string.Empty;
+            Assert.IsTrue(subject.IsNothing());
+        }
+
+        [TestMethod]
+        public void IsNothingShouldReturnTrueGivenAnyText()
+        {
+            string subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
+            Assert.IsFalse(subject.IsNothing());
+        }
+
+        [TestMethod]
         public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithUpperVowel()
         {
             var result = "Apple or banana".AnOrA(true);

@@ -20,7 +20,10 @@ namespace BudgetAnalyser.Engine.Services
         private readonly ILedgerBookRepository ledgerRepository;
         private readonly ILogger logger;
 
-        public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository, [NotNull] ILogger logger)
+        public LedgerService(
+            [NotNull] ILedgerBookRepository ledgerRepository, 
+            [NotNull] IAccountTypeRepository accountTypeRepository, 
+            [NotNull] ILogger logger)
         {
             if (ledgerRepository == null)
             {
@@ -44,7 +47,19 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler Closed;
         public event EventHandler NewDataSourceAvailable;
+        public event EventHandler Saved;
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+        public event EventHandler<ValidatingEventArgs> Validating;
+
         public LedgerBook LedgerBook { get; private set; }
+
+        /// <summary>
+        /// Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType
+        {
+            get { return ApplicationDataType.Ledger; }
+        }
 
         /// <summary>
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
@@ -280,27 +295,34 @@ namespace BudgetAnalyser.Engine.Services
             ledgerBook.Name = newName;
         }
 
-        public void Save(LedgerBook ledgerBook, string storageKey = null)
+        /// <summary>
+        ///     Saves the application database asynchronously.
+        /// </summary>
+        public async Task SaveAsync()
         {
-            if (ledgerBook == null)
-            {
-                throw new ArgumentNullException("ledgerBook");
-            }
+            var savingHandler = Saving;
+            if (savingHandler != null) savingHandler(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
-            if (!ledgerBook.Validate(messages))
+            if (!LedgerBook.Validate(messages))
             {
                 throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
             }
 
-            if (string.IsNullOrWhiteSpace(storageKey))
-            {
-                this.ledgerRepository.Save(ledgerBook);
-            }
-            else
-            {
-                this.ledgerRepository.Save(ledgerBook, storageKey);
-            }
+            await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.FileName);
+            var handler = Saved;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Validates the model owned by the service.
+        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            var handler = Validating;
+            if (handler != null) handler(this, new ValidatingEventArgs());
+
+            return LedgerBook.Validate(messages);
         }
 
         public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, AccountType storeInThisAccount)

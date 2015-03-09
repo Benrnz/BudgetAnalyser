@@ -7,17 +7,20 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
+using Rees.Wpf;
 
 namespace BudgetAnalyser.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class AppliedRulesController
+    public class AppliedRulesController : ControllerBase
     {
+        private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IUserMessageBox messageBox;
         private readonly ITransactionRuleService ruleService;
         private readonly StatementController statementController;
+        private bool doNotUseDirty;
 
-        public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService)
+        public AppliedRulesController([NotNull] IUiContext uiContext, [NotNull] ITransactionRuleService ruleService, [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
             if (uiContext == null)
             {
@@ -29,10 +32,17 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException("ruleService");
             }
 
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
+
             RulesController = uiContext.RulesController;
             this.ruleService = ruleService;
+            this.applicationDatabaseService = applicationDatabaseService;
             this.statementController = uiContext.StatementController;
             this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.ruleService.Saved += OnSavedNotificationReceived;
         }
 
         public ICommand ApplyRulesCommand
@@ -43,6 +53,21 @@ namespace BudgetAnalyser.Matching
         public ICommand CreateRuleCommand
         {
             get { return new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand); }
+        }
+
+        public bool Dirty
+        {
+            get { return this.doNotUseDirty; }
+
+            set
+            {
+                this.doNotUseDirty = value;
+                if (Dirty)
+                {
+                    this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+                }
+                RaisePropertyChanged();
+            }
         }
 
         public RulesController RulesController { get; private set; }
@@ -66,7 +91,7 @@ namespace BudgetAnalyser.Matching
         {
             if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions))
             {
-                RulesController.SaveRules();
+                Dirty = true;
             }
         }
 
@@ -79,6 +104,11 @@ namespace BudgetAnalyser.Matching
             }
 
             RulesController.CreateNewRuleFromTransaction(this.statementController.ViewModel.SelectedRow);
+        }
+
+        private void OnSavedNotificationReceived(object sender, EventArgs eventArgs)
+        {
+            Dirty = false;
         }
 
         private void OnShowRulesCommandExecute()

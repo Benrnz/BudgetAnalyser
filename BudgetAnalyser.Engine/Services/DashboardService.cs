@@ -25,7 +25,6 @@ namespace BudgetAnalyser.Engine.Services
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
-        private readonly ITransactionManagerService transactionManagerService;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
         private IDictionary<Type, object> availableDependencies;
@@ -37,7 +36,6 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ITransactionManagerService transactionManagerService,
             [NotNull] ILogger logger)
         {
             if (widgetService == null)
@@ -70,11 +68,6 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("accountTypeRepository");
             }
 
-            if (transactionManagerService == null)
-            {
-                throw new ArgumentNullException("transactionManagerService");
-            }
-
             if (logger == null)
             {
                 throw new ArgumentNullException("logger");
@@ -86,7 +79,6 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetRepository = budgetRepository;
             this.ledgerCalculator = ledgerCalculator;
             this.accountTypeRepository = accountTypeRepository;
-            this.transactionManagerService = transactionManagerService;
             this.logger = logger;
         }
 
@@ -131,7 +123,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             FixedBudgetProjectBucket bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
-            this.budgetRepository.Save();
+            this.budgetRepository.SaveAsync();
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
             return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
@@ -229,12 +221,11 @@ namespace BudgetAnalyser.Engine.Services
                 }
 
                 fixedProjectWidget.Statement.ReassignFixedProjectTransactions(projectBucket, this.bucketRepository.SurplusBucket);
-                this.transactionManagerService.SaveAsync(false);
 
                 // No need to remove it from the Budget, the Budget is actually not aware of these fixed project buckets in any way.
                 // Remove from Bucket Repo
                 this.bucketRepository.RemoveFixedBudgetProject(projectBucket);
-                this.budgetRepository.Save(); // Bucket Repo data is stored in the budget repo however.
+                this.budgetRepository.SaveAsync(); // Bucket Repo data is stored in the budget repo however.
             }
 
             this.widgetRepository.Remove(widgetToRemove);

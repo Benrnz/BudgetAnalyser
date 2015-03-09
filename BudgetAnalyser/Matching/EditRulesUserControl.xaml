@@ -4,6 +4,7 @@
              xmlns:matching1="clr-namespace:BudgetAnalyser.Matching"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -172,7 +173,7 @@
                     ToolTip="Edit Rule"
                     Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Style="{StaticResource Button.Round.Save}"
-                    Command="{Binding SaveRuleCommand}"
+                    Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
                     ToolTip="Save Rule"
                     Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>

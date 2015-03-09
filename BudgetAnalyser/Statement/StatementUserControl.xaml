@@ -1,14 +1,9 @@
 <UserControl x:Class="BudgetAnalyser.Statement.StatementUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
+             xmlns:root="clr-namespace:BudgetAnalyser"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DataContextChanged="OnDataContextChanged">
-
-    <UserControl.InputBindings>
-        <KeyBinding Key="S"
-                    Command="{Binding FileOperations.SaveStatementCommand}"
-                    Modifiers="Control" />
-    </UserControl.InputBindings>
 
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.RowDefinitions>
@@ -116,7 +111,7 @@
                         </MenuItem>
                     </MenuItem>
                 </Menu>
-                <Button Command="{Binding FileOperations.SaveStatementCommand}"
+                <Button Command="{x:Static root:PersistenceOperationCommands.SaveDatabaseCommand}"
                         Style="{StaticResource Button.Round.Save}"
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeStatementCommand}"

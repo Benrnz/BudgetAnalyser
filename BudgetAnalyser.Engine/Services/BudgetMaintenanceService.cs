@@ -18,8 +18,8 @@ namespace BudgetAnalyser.Engine.Services
     public class BudgetMaintenanceService : IBudgetMaintenanceService
     {
         private readonly IBudgetRepository budgetRepository;
-        private readonly ILogger logger;
         private readonly IDashboardService dashboardService;
+        private readonly ILogger logger;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
@@ -59,6 +59,9 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler Closed;
         public event EventHandler NewDataSourceAvailable;
+        public event EventHandler Saved;
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+        public event EventHandler<ValidatingEventArgs> Validating;
 
         /// <summary>
         ///     Gets the budget bucket repository.
@@ -67,6 +70,23 @@ namespace BudgetAnalyser.Engine.Services
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
         public BudgetCollection Budgets { get; private set; }
+
+        /// <summary>
+        /// Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType
+        {
+            get { return ApplicationDataType.Budget; }
+        }
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int LoadSequence
+        {
+            get { return 5; }
+        }
 
         /// <summary>
         ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.
@@ -118,17 +138,8 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             Budgets.Add(newBudget);
-            this.budgetRepository.Save();
+            this.budgetRepository.SaveAsync();
             return newBudget;
-        }
-
-        /// <summary>
-        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        /// Defaults to 50.
-        /// </summary>
-        public int LoadSequence
-        {
-            get { return 5; }
         }
 
         /// <summary>
@@ -177,88 +188,77 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        ///     Saves the budget collection after modifications in the UI.
+        ///     Saves the application database asynchronously.
         /// </summary>
-        /// <param name="modifiedBudget">The modified budget.</param>
-        /// <param name="comment">The optional comment, explaining what was changed.</param>
-        /// <exception cref="System.InvalidOperationException">
-        ///     Will be thrown when you haven't loaded a Budget Collection to save yet.
-        /// </exception>
-        public bool SaveBudget([NotNull] BudgetModel modifiedBudget, string comment = "")
+        public async Task SaveAsync()
         {
-            if (modifiedBudget == null)
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            var args = new AdditionalInformationRequestedEventArgs();
+            if (handler != null)
             {
-                throw new ArgumentNullException("modifiedBudget");
-            }
-            if (Budgets == null)
-            {
-                throw new InvalidOperationException("You haven't loaded a Budget Collection to save yet.");
+                handler(this, args);
             }
 
-            modifiedBudget.LastModifiedComment = comment;
-            modifiedBudget.LastModified = DateTime.Now;
-
-            // Make sure all buckets are in the bucket repo.
-            foreach (Income income in modifiedBudget.Incomes)
+            if (args.ModificationComment.IsNothing())
             {
-                Income incomeCopy = income;
-                BudgetBucketRepository.GetOrCreateNew(incomeCopy.Bucket.Code, () => incomeCopy.Bucket);
+                args.ModificationComment = "[No comment]";
             }
 
-            foreach (Expense expense in modifiedBudget.Expenses)
-            {
-                Expense expenseCopy = expense;
-                BudgetBucketRepository.GetOrCreateNew(expenseCopy.Bucket.Code, () => expenseCopy.Bucket);
-            }
+            EnsureAllBucketsUsedAreInBucketRepo();
 
             var messages = new StringBuilder();
-            if (modifiedBudget.Validate(messages))
+            if (Budgets.Validate(messages))
             {
-                this.budgetRepository.Save(Budgets);
-                return true;
+                await this.budgetRepository.SaveAsync(Budgets);
+                var savedHandler = Saved;
+                if (savedHandler != null) savedHandler(this, EventArgs.Empty);
+                return;
             }
 
             this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
-            return false;
+            throw new ValidationWarningException("Unable to save Budget:\n" + messages);
         }
 
-        /// <summary>
-        ///     Updates the budget with the full collection of incomes and expenses and then validates the budget.
-        /// </summary>
-        /// <param name="model">The Budget model.</param>
-        /// <param name="allIncomes">All income objects that may have changed in the UI.</param>
-        /// <param name="allExpenses">All expense objects that may have changed in the UI.</param>
-        /// <param name="validationMessages">The validation messages. Will be blank if no issues are found.</param>
-        /// <returns>
-        ///     True if valid, otherwise false.  If false is returned there will be addition information in the
-        ///     <paramref name="validationMessages" /> string builder.
-        /// </returns>
-        public bool UpdateAndValidateBudget(
+        public void UpdateIncomesAndExpenses(
             [NotNull] BudgetModel model,
             IEnumerable<Income> allIncomes,
-            IEnumerable<Expense> allExpenses,
-            [NotNull] StringBuilder validationMessages)
+            IEnumerable<Expense> allExpenses)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            if (validationMessages == null)
+            // Copy view model bound data back into model.
+            model.Update(allIncomes, allExpenses);
+        }
+
+        /// <summary>
+        ///     Validates the model owned by the service.
+        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            EventHandler<ValidatingEventArgs> handler = Validating;
+            var args = new ValidatingEventArgs();
+            if (handler != null)
             {
-                throw new ArgumentNullException("validationMessages");
+                handler(this, args);
             }
 
-            // Copy view model bound data back into model.
-            try
+            return Budgets.Validate(messages);
+        }
+
+        private void EnsureAllBucketsUsedAreInBucketRepo()
+        {
+            // Make sure all buckets are in the bucket repo.
+            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+                .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
+                .Distinct();
+
+            foreach (BudgetBucket budgetBucket in buckets)
             {
-                model.Update(allIncomes, allExpenses);
-                return Budgets.Validate(validationMessages);
-            }
-            catch (ValidationWarningException ex)
-            {
-                validationMessages.AppendLine(ex.Message);
-                return false;
+                BudgetBucket copyOfBucket = budgetBucket;
+                BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
             }
         }
 

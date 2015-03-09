@@ -35,7 +35,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedSeriesData = value;
-                RaisePropertyChanged(() => SelectedSeriesData);
+                RaisePropertyChanged();
             }
         }
 
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseSelectedPlotPoint = value;
-                RaisePropertyChanged(() => SelectedPlotPoint);
+                RaisePropertyChanged();
             }
         }
 
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMaximumValue = value;
-                RaisePropertyChanged(() => GraphMaximumValue);
+                RaisePropertyChanged();
             }
         }
 
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseGraphMinimumValue = value;
-                RaisePropertyChanged(() => GraphMinimumValue);
+                RaisePropertyChanged();
             }
         }
 
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             set
             {
                 this.doNotUseToggleAll = value;
-                RaisePropertyChanged(() => ToggleAll);
+                RaisePropertyChanged();
                 ToggleAllLinesVisibility();
             }
         }

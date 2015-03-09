@@ -84,7 +84,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseIsReadOnly = value;
-                RaisePropertyChanged(() => IsReadOnly);
+                RaisePropertyChanged();
             }
         }
 
@@ -94,7 +94,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseLedgerEntry = value;
-                RaisePropertyChanged(() => LedgerEntry);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => InBalanceAdjustmentMode);
                 RaisePropertyChanged(() => InLedgerEntryMode);
             }
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionAccountType = value;
-                RaisePropertyChanged(() => NewTransactionAccountType);
+                RaisePropertyChanged();
             }
         }
 
@@ -116,7 +116,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionAmount = value;
-                RaisePropertyChanged(() => NewTransactionAmount);
+                RaisePropertyChanged();
             }
         }
 
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTransactionNarrative = value;
-                RaisePropertyChanged(() => NewTransactionNarrative);
+                RaisePropertyChanged();
             }
         }
 
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseShowAddingNewTransactionPanel = value;
-                RaisePropertyChanged(() => ShowAddingNewTransactionPanel);
+                RaisePropertyChanged();
             }
         }
 
@@ -148,7 +148,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseTitle = value;
-                RaisePropertyChanged(() => Title);
+                RaisePropertyChanged();
             }
         }
 

@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseAmount = value;
-                RaisePropertyChanged(() => Amount);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseDescription = value;
-                RaisePropertyChanged(() => Description);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference1 = value;
-                RaisePropertyChanged(() => Reference1);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -154,7 +154,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference2 = value;
-                RaisePropertyChanged(() => Reference2);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseReference3 = value;
-                RaisePropertyChanged(() => Reference3);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseTransactionType = value;
-                RaisePropertyChanged(() => TransactionType);
+                RaisePropertyChanged();
                 UpdateSimilarRules();
             }
         }
@@ -199,7 +199,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseAmount = value;
-                RaisePropertyChanged(() => UseAmount);
+                RaisePropertyChanged();
             }
         }
 
@@ -212,7 +212,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference1 = value;
-                RaisePropertyChanged(() => UseReference1);
+                RaisePropertyChanged();
             }
         }
 
@@ -223,7 +223,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference2 = value;
-                RaisePropertyChanged(() => UseReference2);
+                RaisePropertyChanged();
             }
         }
 
@@ -234,7 +234,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseReference3 = value;
-                RaisePropertyChanged(() => UseReference3);
+                RaisePropertyChanged();
             }
         }
 
@@ -245,7 +245,7 @@ namespace BudgetAnalyser.Matching
             set
             {
                 this.doNotUseUseTransactionType = value;
-                RaisePropertyChanged(() => UseTransactionType);
+                RaisePropertyChanged();
             }
         }
 

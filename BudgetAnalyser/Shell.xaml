@@ -13,6 +13,13 @@
         SizeToContent="Manual"
         SnapsToDevicePixels="True"
         Title="{Binding WindowTitle}">
+
+    <Window.InputBindings>
+        <KeyBinding Key="S"
+                    Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
+                    Modifiers="Control" />
+    </Window.InputBindings>
+
     <DockPanel>
         <Grid DockPanel.Dock="Top">
             <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />

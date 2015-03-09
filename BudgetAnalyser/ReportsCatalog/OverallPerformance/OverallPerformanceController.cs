@@ -37,7 +37,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseExpenseFilter = value;
-                RaisePropertyChanged(() => ExpenseFilter);
+                RaisePropertyChanged();
                 RefreshCollection();
             }
         }
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             set
             {
                 this.doNotUseIncomeFilter = value;
-                RaisePropertyChanged(() => IncomeFilter);
+                RaisePropertyChanged();
                 RefreshCollection();
             }
         }

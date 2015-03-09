@@ -24,6 +24,7 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC(SingleInstance = true)]
     public sealed class DashboardController : ControllerBase, IShowableController
     {
+        // TODO consider moving this to ShellController.
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly ChooseBudgetBucketController chooseBudgetBucketController;
         private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
@@ -85,7 +86,7 @@ namespace BudgetAnalyser.Dashboard
             private set
             {
                 this.doNotUseCorrelationId = value;
-                RaisePropertyChanged(() => CorrelationId);
+                RaisePropertyChanged();
             }
         }
 
@@ -101,7 +102,7 @@ namespace BudgetAnalyser.Dashboard
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
+                RaisePropertyChanged();
             }
         }
 
@@ -131,7 +132,7 @@ namespace BudgetAnalyser.Dashboard
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
             if (storedMainAppState != null)
             {
-                this.applicationDatabase = await this.applicationDatabaseService.Load(storedMainAppState.BudgetAnalyserDataStorageKey);
+                this.applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
                 this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(this.applicationDatabase);
             }
 
@@ -264,9 +265,10 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void OnShutdownRequested(ShutdownMessage obj)
+        private async void OnShutdownRequested(ShutdownMessage obj)
         {
-            this.applicationDatabaseService.Save();
+            // TODO Improve this, perhaps move to shell controller and prompt user for confirmation
+            await this.applicationDatabaseService.SaveAsync();
         }
 
         private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
@@ -319,6 +321,10 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
             MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
+
+            // TODO receive a message here to trigger save for everything that has data to save.
+            // no such thing as just saving data for statement, ledger, budget, rules etc
+            // one save to rule them all.
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

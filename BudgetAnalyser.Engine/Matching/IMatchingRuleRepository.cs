@@ -9,6 +9,6 @@ namespace BudgetAnalyser.Engine.Matching
 
         Task<IEnumerable<MatchingRule>> LoadRulesAsync(string storageKey);
 
-        void SaveRules(IEnumerable<MatchingRule> rules, string storageKey);
+        Task SaveRulesAsync(IEnumerable<MatchingRule> rules, string storageKey);
     }
 }

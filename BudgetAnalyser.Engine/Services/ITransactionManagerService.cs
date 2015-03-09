@@ -105,13 +105,6 @@ namespace BudgetAnalyser.Engine.Services
         void RemoveTransaction([NotNull] Transaction transactionToRemove);
 
         /// <summary>
-        ///     Save the currently loaded <see cref="StatementModel" /> into persistent storage.
-        ///     (Saving and preserving bank statement files is not supported.)
-        /// </summary>
-        /// <param name="close">If true, will close the currently loaded Budget Analyser statement, false to keep it open.</param>
-        Task SaveAsync(bool close);
-
-        /// <summary>
         ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are
         ///     created.
         ///     Both transactions must add up to the existing transaction amount.

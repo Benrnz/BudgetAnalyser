@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
-            subject.Save(book);
+            await subject.SaveAsync(book);
 
             reserialisedDto.Output(true);
 
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-                subject.Save(LedgerBookTestData.TestData2());
+                subject.SaveAsync(LedgerBookTestData.TestData2());
             }
 
             int checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Save_ShouldSaveTheXmlFile()
+        public async Task Save_ShouldSaveTheXmlFile()
         {
             var fileName = @"CompleteSmellyFoo.xml";
 
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var saved = false;
             subject.WriteToDiskOverride = (f, d) => { saved = true; };
             LedgerBook testData = LedgerBookTestData.TestData2();
-            subject.Save(testData, fileName);
+            await subject.SaveAsync(testData, fileName);
             Assert.IsTrue(saved);
         }
 
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-                subject.Save(LedgerBookTestData.TestData2());
+                await subject.SaveAsync(LedgerBookTestData.TestData2());
             }
 
             Debug.WriteLine("Saved / Serialised Xml:");
@@ -209,12 +209,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void SerialiseTestData2ToEnsureItMatches_Load_ShouldLoadTheXmlFile_xml()
+        public async Task SerialiseTestData2ToEnsureItMatches_Load_ShouldLoadTheXmlFile_xml()
         {
             var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
             string serialisedData = string.Empty;
             subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-            subject.Save(LedgerBookTestData.TestData2());
+            await subject.SaveAsync(LedgerBookTestData.TestData2());
 
             Console.WriteLine(serialisedData);
 

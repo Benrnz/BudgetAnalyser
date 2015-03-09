@@ -226,6 +226,8 @@
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PersistenceOperationCommands.cs" />
+    <Compile Include="PersistenceOperations.cs" />
     <Compile Include="ScratchPad.xaml.cs">
       <DependentUpon>ScratchPad.xaml</DependentUpon>
     </Compile>

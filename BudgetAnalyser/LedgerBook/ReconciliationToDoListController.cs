@@ -34,7 +34,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseAddingNewTask = value;
-                RaisePropertyChanged(() => AddingNewTask);
+                RaisePropertyChanged();
             }
         }
 
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNewTaskDescription = value;
-                RaisePropertyChanged(() => NewTaskDescription);
+                RaisePropertyChanged();
             }
         }
 
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseSelectedTask = value;
-                RaisePropertyChanged(() => SelectedTask);
+                RaisePropertyChanged();
             }
         }
 
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseTasks = value;
-                RaisePropertyChanged(() => Tasks);
+                RaisePropertyChanged();
             }
         }
 

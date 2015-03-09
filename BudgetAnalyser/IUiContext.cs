@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
+using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
@@ -23,12 +25,15 @@ namespace BudgetAnalyser
         ChooseBudgetBucketController ChooseBudgetBucketController { get; }
         CreateNewFixedBudgetController CreateNewFixedBudgetController { get; }
         CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; }
+        DashboardController DashboardController { get; }
         EditingTransactionController EditingTransactionController { get; }
         GlobalFilterController GlobalFilterController { get; }
         LedgerBookController LedgerBookController { get; }
         IMessenger Messenger { get; }
         NewRuleController NewRuleController { get; }
+        ReportsCatalogController ReportsCatalogController { get; }
         RulesController RulesController { get; }
+        IEnumerable<IShowableController> ShowableControllers { get; }
         SplitTransactionController SplitTransactionController { get; }
         StatementController StatementController { get; }
         UserPrompts UserPrompts { get; }

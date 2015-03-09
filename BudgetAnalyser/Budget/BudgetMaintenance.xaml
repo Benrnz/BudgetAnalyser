@@ -5,6 +5,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:wpf="clr-namespace:Rees.Wpf;assembly=Rees.Wpf"
+             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -235,7 +236,7 @@
             <Button Command="{Binding NewBudgetCommand}"
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Clone the current budget and create a new one based on it." />
-            <Button Command="{Binding SaveCommand}"
+            <Button Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
                     Style="{StaticResource Button.Round.Save}" />
         </StackPanel>
 

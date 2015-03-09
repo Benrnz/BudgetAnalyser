@@ -14,6 +14,9 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ITransactionRuleService : INotifyDatabaseChanges, IApplicationDatabaseDependent, IServiceFoundation
     {
+        ObservableCollection<MatchingRule> MatchingRules { get; }
+        ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
+
         /// <summary>
         ///     Adds a new rule to the currently loaded set. Will also immediately persist the matching rule set.
         /// </summary>
@@ -24,7 +27,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependent.LoadAsync"/>
+        ///     <see cref="IApplicationDatabaseDependent.LoadAsync" />
         /// </exception>
         bool AddRule([NotNull] MatchingRule ruleToAdd);
 
@@ -37,19 +40,20 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
         /// <param name="amount">The exact amount to match.</param>
         /// <param name="andMatching">
-        /// If true, they are matched using an AND operator and all elements must be matched for the rule to match the transaction. Otherwise chosen elements are matched using an OR operator.
+        ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the
+        ///     transaction. Otherwise chosen elements are matched using an OR operator.
         /// </param>
         /// <returns>The new matching rule.</returns>
         MatchingRule CreateNewRule(
-            [NotNull] BudgetBucket bucket, 
-            [CanBeNull] string description, 
-            [NotNull] string[] references, 
-            [CanBeNull] string transactionTypeName, 
+            [NotNull] BudgetBucket bucket,
+            [CanBeNull] string description,
+            [NotNull] string[] references,
+            [CanBeNull] string transactionTypeName,
             [CanBeNull] decimal? amount,
             bool andMatching);
 
         /// <summary>
-        /// Determines whether a rule similar to the input values.
+        ///     Determines whether a rule similar to the input values.
         /// </summary>
         /// <param name="rule">The existing rule to check if the data is similar to it.</param>
         /// <param name="amount">The amount.</param>
@@ -76,16 +80,8 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependent.LoadAsync"/>
+        ///     <see cref="IApplicationDatabaseDependent.LoadAsync" />
         /// </exception>
         bool RemoveRule([NotNull] MatchingRule ruleToRemove);
-
-        /// <summary>
-        ///     Saves the matching rules set to permenant storage.
-        /// </summary>
-        void SaveRules();
-
-        ObservableCollection<MatchingRule> MatchingRules { get; }
-        ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
     }
 }

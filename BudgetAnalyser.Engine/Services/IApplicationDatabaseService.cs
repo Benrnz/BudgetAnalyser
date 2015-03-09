@@ -1,3 +1,4 @@
+using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
@@ -19,7 +20,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
         /// </summary>
-        ApplicationDatabase Close();
+        void Close();
 
         /// <summary>
         ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
         /// </summary>
         /// <param name="storageKey">Name and path to the file.</param>
-        Task<ApplicationDatabase> Load([NotNull] string storageKey);
+        Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
 
         /// <summary>
         ///     Notifies the service that data has changed and will need to be saved.
@@ -42,6 +43,15 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Saves all Budget Analyser application data.
         /// </summary>
-        void Save();
+        /// <exception cref="ValidationWarningException">Will be thrown if there are any validation errors.</exception>
+        Task SaveAsync();
+
+        /// <summary>
+        ///     Validates all models in the application database.
+        ///     This method does not use <see cref="ValidationWarningException" /> to return any validation messages.
+        /// </summary>
+        /// <param name="messages">Will append any validation messages found.</param>
+        /// <returns>True if valid, otherwise false.</returns>
+        bool ValidateAll(StringBuilder messages);
     }
 }

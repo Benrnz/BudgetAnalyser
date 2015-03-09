@@ -66,20 +66,20 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LedgerBookDto;
         }
 
-        protected override void SaveDtoToDisk(LedgerBookDto dataEntity)
+        protected async override Task SaveDtoToDiskAsync(LedgerBookDto dataEntity)
         {
             if (SaveDtoToDiskOverride == null)
             {
-                base.SaveDtoToDisk(dataEntity);
+                await base.SaveDtoToDiskAsync(dataEntity);
                 return;
             }
 
             SaveDtoToDiskOverride(dataEntity);
         }
 
-        protected override void WriteToDisk(string filename, string data)
+        protected override Task WriteToDiskAsync(string filename, string data)
         {
-            WriteToDiskOverride(filename, data);
+            return Task.Run(() => WriteToDiskOverride(filename, data));
         }
     }
 }

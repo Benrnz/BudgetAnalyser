@@ -18,7 +18,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.ledgerBook = value;
-                RaisePropertyChanged(() => LedgerBook);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => NoLedgerBookLoaded);
             }
         }

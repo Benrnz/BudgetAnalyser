@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseCurrentExpense = value;
-                RaisePropertyChanged(() => CurrentExpense);
+                RaisePropertyChanged();
             }
         }
 
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Budget
             private set
             {
                 this.doNotUseCurrentIncome = value;
-                RaisePropertyChanged(() => CurrentIncome);
+                RaisePropertyChanged();
             }
         }
 
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Budget
                     CurrentExpense = this.budgetModel.Expenses.SingleOrDefault(x => x.Bucket.Code == this.doNotUseExpenseSelectedItem.Key);
                 }
 
-                RaisePropertyChanged(() => ExpenseSelectedItem);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => CurrentExpensePercent);
             }
         }
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Budget
             {
                 this.doNotUseIncomeSelectedItem = value;
                 CurrentIncome = this.budgetModel.Incomes.SingleOrDefault(x => x.Bucket.Code == this.doNotUseIncomeSelectedItem.Key);
-                RaisePropertyChanged(() => IncomeSelectedItem);
+                RaisePropertyChanged();
                 RaisePropertyChanged(() => CurrentIncomePercent);
             }
         }
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.Budget
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
+                RaisePropertyChanged();
             }
         }
 

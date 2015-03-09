@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Matching
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
         }
 
-        public void SaveRules([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
+        public async Task SaveRulesAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
         {
             if (rules == null)
             {
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
-            SaveToDisk(storageKey, dataEntities);
+            await SaveToDiskAsync(storageKey, dataEntities);
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
             if (handler != null)
@@ -97,9 +97,9 @@ namespace BudgetAnalyser.Engine.Matching
             return File.ReadAllText(fileName);
         }
 
-        protected virtual void SaveToDisk(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
+        protected async virtual Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
-            XamlServices.Save(fileName, dataEntities.ToList());
+            await Task.Run(() => XamlServices.Save(fileName, dataEntities.ToList()));
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]

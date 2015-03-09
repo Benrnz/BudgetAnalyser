@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -9,7 +8,6 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
@@ -19,13 +17,13 @@ namespace BudgetAnalyser.Statement
     {
         private readonly LoadFileController loadFileController;
         private readonly IUserMessageBox messageBox;
-        private readonly IUserQuestionBoxYesNo yesNoBox;
         private bool doNotUseLoadingData;
         private ITransactionManagerService transactionService;
 
         public StatementControllerFileOperations(
             [NotNull] IUiContext uiContext,
-            [NotNull] LoadFileController loadFileController)
+            [NotNull] LoadFileController loadFileController,
+            [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
             if (uiContext == null)
             {
@@ -37,10 +35,14 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException("loadFileController");
             }
 
-            this.yesNoBox = uiContext.UserPrompts.YesNoBox;
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
+
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.loadFileController = loadFileController;
-            ViewModel = new StatementViewModel(uiContext);
+            ViewModel = new StatementViewModel(uiContext, applicationDatabaseService);
         }
 
         public bool LoadingData
@@ -49,24 +51,11 @@ namespace BudgetAnalyser.Statement
             private set
             {
                 this.doNotUseLoadingData = value;
-                RaisePropertyChanged(() => LoadingData);
+                RaisePropertyChanged();
             }
-        }
-
-        public ICommand SaveStatementCommand
-        {
-            get { return new RelayCommand(OnSaveStatementExecute, CanExecuteCloseStatementCommand); }
         }
 
         internal StatementViewModel ViewModel { get; private set; }
-
-        public async void NotifyOfClosingAsync()
-        {
-            if (PromptToSaveIfDirty())
-            {
-                await SaveAsync(true);
-            }
-        }
 
         internal bool CanExecuteCloseStatementCommand()
         {
@@ -89,7 +78,8 @@ namespace BudgetAnalyser.Statement
 
         internal async Task MergeInNewTransactions()
         {
-            await SaveAsync(false);
+            // TODO Do we really need to force save here?
+            PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
 
             string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
             if (string.IsNullOrWhiteSpace(fileName))
@@ -190,35 +180,6 @@ namespace BudgetAnalyser.Statement
         {
             ViewModel.Dirty = false;
             MessengerInstance.Send(new StatementHasBeenModifiedMessage(false, ViewModel.Statement));
-        }
-
-        private async void OnSaveStatementExecute()
-        {
-            // TODO reassess this - because saving of data async while user edits are taking place will result in inconsistent results.
-            await SaveAsync(false);
-        }
-
-        private bool PromptToSaveIfDirty()
-        {
-            if (ViewModel.Statement != null && ViewModel.Dirty)
-            {
-                bool? result = this.yesNoBox.Show(
-                    "Statement has been modified, save changes?",
-                    "Budget Analyser");
-                if (result != null && result.Value)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private async Task SaveAsync(bool close)
-        {
-            await this.transactionService.SaveAsync(close);
-            ViewModel.TriggerRefreshTotalsRow();
-            NotifyOfReset();
         }
     }
 }

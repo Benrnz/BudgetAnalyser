@@ -101,7 +101,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseNumberOfMonthsToShow = value;
-                RaisePropertyChanged(() => NumberOfMonthsToShow);
+                RaisePropertyChanged();
             }
         }
 
@@ -136,7 +136,7 @@ namespace BudgetAnalyser.LedgerBook
                     return;
                 }
                 this.doNotUseShown = value;
-                RaisePropertyChanged(() => Shown);
+                RaisePropertyChanged();
             }
         }
 
@@ -191,11 +191,6 @@ namespace BudgetAnalyser.LedgerBook
 
             this.ledgerService.RenameLedgerBook(ViewModel.LedgerBook, result);
             FileOperations.Dirty = true;
-        }
-
-        public void NotifyOfClosing()
-        {
-            FileOperations.CheckIfSaveRequired();
         }
 
         public void RegisterListener<T>(object listener, Action<T> handler)
@@ -341,14 +336,14 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
         {
-            FileOperations.SyncWithService();
+            FileOperations.SyncDataFromLedgerService();
         }
 
         private void OnRemoveReconciliationCommandExecuted(LedgerEntryLine line)
         {
             bool? result = this.questionBox.Show(
-                string.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete this Reconciliation for {0:d}?", line.Date),
-                "Remove Ledger Book Line");
+                string.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete this Reconciliation for {0:d}?\nThis will also save the Ledger Book.", line.Date),
+                "Remove Ledger Book Reconciliation");
             if (result == null || !result.Value)
             {
                 return;
@@ -356,7 +351,7 @@ namespace BudgetAnalyser.LedgerBook
 
             NumberOfMonthsToShow--;
             this.ledgerService.RemoveReconciliation(line);
-            FileOperations.SaveLedgerBook();
+            FileOperations.SyncDataFromLedgerService();
             EventHandler handler = LedgerBookUpdated;
             if (handler != null)
             {

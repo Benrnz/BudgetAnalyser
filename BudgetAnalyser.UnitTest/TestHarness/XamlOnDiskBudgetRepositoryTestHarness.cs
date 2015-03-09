@@ -45,11 +45,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadFromDiskMock(fileName);
         }
 
-        protected override void WriteToDisk(string fileName, string data)
+        protected async override Task WriteToDisk(string fileName, string data)
         {
             if (WriteToDiskMock == null)
             {
-                base.WriteToDisk(fileName, data);
+                await base.WriteToDisk(fileName, data);
             }
             else
             {

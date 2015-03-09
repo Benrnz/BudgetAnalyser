@@ -1,43 +1,53 @@
 ﻿using System;
-using System.IO;
-using System.Windows.Input;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
-using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.LedgerBook
 {
-    public class LedgerBookControllerFileOperations
+    public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     {
-        private readonly IUserMessageBox messageBox;
-        private readonly IUserQuestionBoxYesNo questionBox;
+        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private bool doNotUseDirty;
 
         public LedgerBookControllerFileOperations(
-            [NotNull] UiContext uiContext,
-            [NotNull] IMessenger messenger)
+            [NotNull] IMessenger messenger,
+            [NotNull] IApplicationDatabaseService applicationDatabaseService)
         {
-            if (uiContext == null)
-            {
-                throw new ArgumentNullException("uiContext");
-            }
-
             if (messenger == null)
             {
                 throw new ArgumentNullException("messenger");
             }
 
-            this.questionBox = uiContext.UserPrompts.YesNoBox;
-            this.messageBox = uiContext.UserPrompts.MessageBox;
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
 
+            this.applicationDatabaseService = applicationDatabaseService;
             MessengerInstance = messenger;
 
             ViewModel = new LedgerBookViewModel();
         }
 
-        internal bool Dirty { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal bool Dirty
+        {
+            get { return this.doNotUseDirty; }
+            set
+            {
+                this.doNotUseDirty = value;
+                OnPropertyChanged();
+                if (Dirty)
+                {
+                    this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Ledger);
+                }
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the ledger service. Will be set by the <see cref="LedgerBookController" /> during its initialisation.
@@ -45,11 +55,6 @@ namespace BudgetAnalyser.LedgerBook
         internal ILedgerService LedgerService { get; set; }
 
         public IMessenger MessengerInstance { get; set; }
-
-        public ICommand SaveLedgerBookCommand
-        {
-            get { return new RelayCommand(OnSaveLedgerBookCommandExecute, CanExecuteSaveCommand); }
-        }
 
         internal LedgerBookViewModel ViewModel { get; set; }
 
@@ -59,51 +64,27 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
-        internal void CheckIfSaveRequired()
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (Dirty)
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
             {
-                bool? result = this.questionBox.Show("Save changes?", "Ledger Book");
-                if (result != null && result.Value)
-                {
-                    SaveLedgerBook();
-                }
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
-        internal void SyncWithService()
+        internal void SyncDataFromLedgerService()
         {
             ViewModel.LedgerBook = LedgerService.LedgerBook;
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
 
-        internal void SaveLedgerBook()
-        {
-            try
-            {
-                LedgerService.Save(ViewModel.LedgerBook);
-            }
-            catch (ValidationWarningException ex)
-            {
-                this.messageBox.Show("Unable to save Ledger Book, some data is invalid\n" + ex.Message, "Ledger Book Validation");
-                return;
-            }
-
-            Dirty = false;
-            ViewModel.NewLedgerLine = null;
-        }
-
-        private bool CanExecuteNewLedgerBookCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook == null;
-        }
-
-        private bool CanExecuteSaveCommand()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            return ViewModel.LedgerBook != null && Dirty;
-        }
+        //private bool CanExecuteNewLedgerBookCommand()
+        //{
+        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
+        //    return ViewModel.LedgerBook == null;
+        //}
 
         //private void OnNewLedgerBookCommandExecuted()
         //{
@@ -132,11 +113,5 @@ namespace BudgetAnalyser.LedgerBook
         //    Dirty = true;
         //    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
         //}
-
-        private void OnSaveLedgerBookCommandExecute()
-        {
-            // TODO Temporarily disabled while introducing ApplicationDatabaseService
-            SaveLedgerBook();
-        }
     }
 }

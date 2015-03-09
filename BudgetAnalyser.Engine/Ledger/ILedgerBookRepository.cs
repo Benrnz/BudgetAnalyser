@@ -11,7 +11,6 @@ namespace BudgetAnalyser.Engine.Ledger
         bool Exists(string storageKey);
         Task<LedgerBook> LoadAsync(string storageKey);
 
-        void Save(LedgerBook book);
-        void Save(LedgerBook book, string storageKey);
+        Task SaveAsync(LedgerBook book, string storageKey);
     }
 }

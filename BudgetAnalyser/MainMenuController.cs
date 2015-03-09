@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
 namespace BudgetAnalyser
@@ -18,10 +15,7 @@ namespace BudgetAnalyser
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MainMenuController : ControllerBase, IInitializableController
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
-        private readonly IDashboardService dashboardService;
-        private readonly DemoFileHelper demoFileHelper;
-        private readonly UiContext uiContext;
+        private readonly IUiContext uiContext;
         private bool doNotUseBudgetToggle;
         private bool doNotUseDashboardToggle;
         private bool doNotUseLedgerBookToggle;
@@ -29,7 +23,7 @@ namespace BudgetAnalyser
         private bool doNotUseTransactionsToggle;
 
         public MainMenuController(
-            [NotNull] UiContext uiContext,
+            [NotNull] IUiContext uiContext,
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
             [NotNull] IDashboardService dashboardService,
             [NotNull] DemoFileHelper demoFileHelper)
@@ -55,11 +49,8 @@ namespace BudgetAnalyser
             }
 
             this.uiContext = uiContext;
-            this.applicationDatabaseService = applicationDatabaseService;
-            this.dashboardService = dashboardService;
-            this.demoFileHelper = demoFileHelper;
-            uiContext.Messenger.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             MessengerInstance = uiContext.Messenger;
+            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
@@ -74,7 +65,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseBudgetToggle = value;
-                RaisePropertyChanged(() => BudgetToggle);
+                RaisePropertyChanged();
             }
         }
 
@@ -89,7 +80,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseDashboardToggle = value;
-                RaisePropertyChanged(() => DashboardToggle);
+                RaisePropertyChanged();
             }
         }
 
@@ -104,7 +95,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseLedgerBookToggle = value;
-                RaisePropertyChanged(() => LedgerBookToggle);
+                RaisePropertyChanged();
             }
         }
 
@@ -119,7 +110,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseReportsToggle = value;
-                RaisePropertyChanged(() => ReportsToggle);
+                RaisePropertyChanged();
             }
         }
 
@@ -134,7 +125,7 @@ namespace BudgetAnalyser
             set
             {
                 this.doNotUseTransactionsToggle = value;
-                RaisePropertyChanged(() => TransactionsToggle);
+                RaisePropertyChanged();
             }
         }
 
@@ -218,7 +209,7 @@ namespace BudgetAnalyser
             AfterTabExecutedCommon();
         }
 
-        private async void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
+        private void OnWidgetActivatedMessageReceived([NotNull] WidgetActivatedMessage message)
         {
             if (message == null)
             {
@@ -238,17 +229,17 @@ namespace BudgetAnalyser
 
             if (message.Widget is CurrentFileWidget)
             {
-                await ProcessCurrentFileWidgetActivated(message);
+                ProcessCurrentFileWidgetActivated(message);
                 return;
             }
 
             if (message.Widget is LoadDemoWidget)
             {
-                await ProcessLoadDemoWidgetActivated(message);
+                ProcessLoadDemoWidgetActivated(message);
             }
         }
 
-        private async Task ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
+        private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as CurrentFileWidget;
             if (widget == null)
@@ -258,27 +249,10 @@ namespace BudgetAnalyser
 
             message.Handled = true;
 
-            PromptToSaveIfNecessary();
-            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
-
-            IUserPromptOpenFile openDialog = this.uiContext.UserPrompts.OpenFileFactory();
-            openDialog.CheckFileExists = true;
-            openDialog.AddExtension = true;
-            openDialog.DefaultExt = "*.bax";
-            openDialog.Filter = "Budget Analyser files (*.bax)|*.bax|Xml files (*.xml, *.xaml)|*.xml;*.xaml";
-            openDialog.Title = "Select Budget Analyser file to open";
-            bool? response = openDialog.ShowDialog();
-            if (response == null || response.Value == false)
-            {
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
-                return;
-            }
-
-            appDb = await this.applicationDatabaseService.Load(openDialog.FileName);
-            this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+            PersistenceOperationCommands.LoadDatabaseCommand.Execute(this);
         }
 
-        private async Task ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
+        private void ProcessLoadDemoWidgetActivated(WidgetActivatedMessage message)
         {
             var widget = message.Widget as LoadDemoWidget;
             if (widget == null)
@@ -288,23 +262,8 @@ namespace BudgetAnalyser
 
             message.Handled = true;
 
-            string fileName = this.demoFileHelper.FindDemoFile();
-            PromptToSaveIfNecessary();
-            this.applicationDatabaseService.Close();
-            ApplicationDatabase appDb = await this.applicationDatabaseService.Load(fileName);
-            this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
-        }
-
-        private void PromptToSaveIfNecessary()
-        {
-            if (this.applicationDatabaseService.HasUnsavedChanges)
-            {
-                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", "Open Budget Analyser File");
-                if (response != null && response.Value)
-                {
-                    this.applicationDatabaseService.Save();
-                }
-            }
+            // Could possibily go direct to PersistenceOperation class here.
+            PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
         }
     }
 }

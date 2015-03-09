@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,7 +32,6 @@ namespace BudgetAnalyser.LedgerBook
             if (!this.subscribedToMainWindowClose)
             {
                 this.subscribedToMainWindowClose = true;
-                Application.Current.MainWindow.Closing += OnMainWindowClosing;
             }
 
             if (e.OldValue != null)
@@ -70,11 +68,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             ResetLedgerBookContent();
             DynamicallyCreateLedgerBookGrid();
-        }
-
-        private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
-        {
-            Controller.NotifyOfClosing();
         }
 
         private void ResetLedgerBookContent()

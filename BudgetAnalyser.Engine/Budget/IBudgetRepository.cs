@@ -8,7 +8,9 @@ namespace BudgetAnalyser.Engine.Budget
         BudgetCollection CreateNew(string fileName);
         BudgetCollection CreateNew();
         Task<BudgetCollection> LoadAsync(string fileName);
-        void Save(BudgetCollection budget);
-        void Save();
+
+        // TODO I dont think we need both of these save methods.
+        Task SaveAsync(BudgetCollection budget);
+        Task SaveAsync();
     }
 }

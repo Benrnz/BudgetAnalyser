@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -57,8 +58,17 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler Closed;
         public event EventHandler NewDataSourceAvailable;
-        public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
-        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
+        public event EventHandler Saved;
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+        public event EventHandler<ValidatingEventArgs> Validating;
+
+        /// <summary>
+        /// Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType
+        {
+            get { return ApplicationDataType.MatchingRules; }
+        }
 
         /// <summary>
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
@@ -68,6 +78,9 @@ namespace BudgetAnalyser.Engine.Services
         {
             get { return 50; }
         }
+
+        public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
+        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
 
         public bool AddRule(MatchingRule ruleToAdd)
         {
@@ -104,9 +117,7 @@ namespace BudgetAnalyser.Engine.Services
                 MatchingRules.Add(ruleToAdd);
             }
 
-            SaveRules();
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
-
             return true;
         }
 
@@ -194,7 +205,6 @@ namespace BudgetAnalyser.Engine.Services
                 // TODO Reassess how the new matching rule file gets created.
                 this.rulesStorageKey = BuildDefaultFileName();
                 repoRules = new List<MatchingRule>();
-                this.ruleRepository.SaveRules(repoRules, this.rulesStorageKey);
             }
 
             foreach (MatchingRule rule in repoRules)
@@ -247,8 +257,6 @@ namespace BudgetAnalyser.Engine.Services
             bool success2 = MatchingRules.Remove(ruleToRemove);
             MatchingRule removedRule = ruleToRemove;
 
-            SaveRules();
-
             this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
             if (!success1)
             {
@@ -263,9 +271,39 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        public void SaveRules()
+        /// <summary>
+        ///     Saves the application database asynchronously.
+        /// </summary>
+        public async Task SaveAsync()
         {
-            this.ruleRepository.SaveRules(MatchingRules, this.rulesStorageKey);
+            var handler = Saving;
+            if (handler != null) handler(this, new AdditionalInformationRequestedEventArgs());
+
+            var messages = new StringBuilder();
+            if (ValidateModel(messages))
+            {
+                await this.ruleRepository.SaveRulesAsync(MatchingRules, this.rulesStorageKey);
+            }
+            else
+            {
+                throw new ValidationWarningException("Unable to save matching rules at this time, some data is invalid.\n" + messages);
+            }
+
+            EventHandler savedHandler = Saved;
+            if (savedHandler != null)
+            {
+                savedHandler(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        ///     Validates the model owned by the service.
+        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            var handler = Validating;
+            if (handler != null) handler(this, new ValidatingEventArgs());
+            return true;
         }
 
         protected virtual string BuildDefaultFileName()

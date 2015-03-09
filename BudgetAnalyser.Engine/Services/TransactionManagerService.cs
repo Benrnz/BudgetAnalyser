@@ -1,9 +1,9 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -25,7 +25,10 @@ namespace BudgetAnalyser.Engine.Services
         private bool sortedByBucket;
         private ObservableCollection<Transaction> transactions;
 
-        public TransactionManagerService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IStatementRepository statementRepository, [NotNull] ILogger logger)
+        public TransactionManagerService(
+            [NotNull] IBudgetBucketRepository bucketRepository, 
+            [NotNull] IStatementRepository statementRepository, 
+            [NotNull] ILogger logger)
         {
             if (bucketRepository == null)
             {
@@ -49,6 +52,9 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler Closed;
         public event EventHandler NewDataSourceAvailable;
+        public event EventHandler Saved;
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+        public event EventHandler<ValidatingEventArgs> Validating;
 
         public decimal AverageDebit
         {
@@ -61,6 +67,14 @@ namespace BudgetAnalyser.Engine.Services
 
                 return this.transactions.Where(t => t.Amount < 0).Average(t => t.Amount);
             }
+        }
+
+        /// <summary>
+        /// Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType
+        {
+            get { return ApplicationDataType.Transactions; }
         }
 
         /// <summary>
@@ -250,6 +264,45 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
+        /// <summary>
+        ///     Saves the application database asynchronously.
+        /// </summary>
+        public async Task SaveAsync()
+        {
+            if (StatementModel == null)
+            {
+                return;
+            }
+
+            var handler = Saving;
+            if (handler != null) handler(this, new AdditionalInformationRequestedEventArgs());
+
+            var messages = new StringBuilder();
+            if (!ValidateModel(messages))
+            {
+                throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
+            }
+
+            await this.statementRepository.SaveAsync(StatementModel);
+            var savedHandler = Saved;
+            if (savedHandler != null)
+            {
+                savedHandler(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Validates the model owned by the service.
+        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            var handler = Validating;
+            if (handler != null) handler(this, new ValidatingEventArgs());
+
+            // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
+            return true;
+        }
+
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
         {
             this.sortedByBucket = groupByBucket;
@@ -289,20 +342,6 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             StatementModel.RemoveTransaction(transactionToRemove);
-        }
-
-        public async Task SaveAsync(bool close)
-        {
-            if (StatementModel == null)
-            {
-                return;
-            }
-
-            await this.statementRepository.SaveAsync(StatementModel);
-            if (close)
-            {
-                StatementModel = null;
-            }
         }
 
         public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)

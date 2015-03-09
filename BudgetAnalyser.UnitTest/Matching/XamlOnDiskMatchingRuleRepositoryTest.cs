@@ -94,29 +94,29 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void SaveShouldThrowGivenNullRulesList()
+        public async Task SaveShouldThrowGivenNullRulesList()
         {
             var subject = Arrange();
-            subject.SaveRules(null, "Foo.bar");
+            await subject.SaveRulesAsync(null, "Foo.bar");
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void SaveShouldThrowGivenNullFileName()
+        public async Task SaveShouldThrowGivenNullFileName()
         {
             var subject = Arrange();
-            subject.SaveRules(MatchingRulesTestDataGenerated.TestData1(), null);
+            await subject.SaveRulesAsync(MatchingRulesTestDataGenerated.TestData1(), null);
             Assert.Fail();
         }
 
         [TestMethod]
-        public void SaveShouldRaiseApplicationEvent()
+        public async Task SaveShouldRaiseApplicationEvent()
         {
             var subject = Arrange();
             bool eventRaised = false;
             subject.ApplicationEvent += (s, e) => eventRaised = true;
-            subject.SaveRules(MatchingRulesTestDataGenerated.TestData1(), "foo.bar");
+            await subject.SaveRulesAsync(MatchingRulesTestDataGenerated.TestData1(), "foo.bar");
 
             Assert.IsTrue(eventRaised);
         }

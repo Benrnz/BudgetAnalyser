@@ -42,7 +42,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseIsReadOnly = value;
-                RaisePropertyChanged(() => IsReadOnly);
+                RaisePropertyChanged();
             }
         }
 
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.LedgerBook
             private set
             {
                 this.doNotUseLedgerEntryLine = value;
-                RaisePropertyChanged(() => LedgerEntryLine);
+                RaisePropertyChanged();
             }
         }
 
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.LedgerBook
             set
             {
                 this.doNotUseRemarks = value;
-                RaisePropertyChanged(() => Remarks);
+                RaisePropertyChanged();
             }
         }
 

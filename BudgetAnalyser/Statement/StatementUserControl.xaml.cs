@@ -106,7 +106,6 @@ namespace BudgetAnalyser.Statement
             {
                 // Once only initialisation:
                 this.subscribedToMainWindowClose = true;
-                Application.Current.MainWindow.Closing += OnMainWindowClosing;
                 Controller.RegisterListener<TransactionsChangedMessage>(this, OnTransactionsChanged);
                 Controller.RegisterListener<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
                 Controller.RegisterListener<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
@@ -129,11 +128,6 @@ namespace BudgetAnalyser.Statement
             }
 
             ApplyBucketFilter();
-        }
-
-        private void OnMainWindowClosing(object sender, CancelEventArgs cancelEventArgs)
-        {
-            Controller.FileOperations.NotifyOfClosingAsync();
         }
 
         private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
