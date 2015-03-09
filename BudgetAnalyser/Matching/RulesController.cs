@@ -284,8 +284,16 @@ namespace BudgetAnalyser.Matching
 
         private void OnEditRuleCommandExecute()
         {
-            EditingRule = true;
-            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+            if (EditingRule)
+            {
+                // Finished editing, re-lock the editing form.
+                EditingRule = false;
+            }
+            else
+            {
+                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+                EditingRule = true;
+            }
         }
 
         private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)

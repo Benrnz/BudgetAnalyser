@@ -172,9 +172,9 @@
                     Command="{Binding EditRuleCommand}"
                     ToolTip="Edit Rule"
                     Visibility="{Binding ShowReadOnlyRuleDetails, Converter={StaticResource Converter.BoolToVis}}" />
-            <Button Style="{StaticResource Button.Round.Save}"
-                    Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
-                    ToolTip="Save Rule"
+            <Button Style="{StaticResource Button.Round.Lock}"
+                    Command="{Binding EditRuleCommand}"
+                    ToolTip="Apply"
                     Visibility="{Binding EditingRule, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
         <Border Background="{StaticResource Brush.TileBackground}"
