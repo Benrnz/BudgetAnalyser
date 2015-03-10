@@ -6,7 +6,6 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
@@ -29,7 +28,6 @@ namespace BudgetAnalyser.Dashboard
         private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
         private readonly IDashboardService dashboardService;
         private readonly IUiContext uiContext;
-
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
         // TODO Support for image changes when widget updates
@@ -124,7 +122,7 @@ namespace BudgetAnalyser.Dashboard
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
-                WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState, this.applicationDatabase);
+                WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState);
             }
         }
 
@@ -295,11 +293,6 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
-            MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
-
-            // TODO receive a message here to trigger save for everything that has data to save.
-            // no such thing as just saving data for statement, ledger, budget, rules etc
-            // one save to rule them all.
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

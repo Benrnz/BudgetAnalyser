@@ -212,8 +212,6 @@ namespace BudgetAnalyser
                     // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
                     this.originalWindowTopLeft = shellState.TopLeft;
                 }
-
-                return;
             }
 
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();

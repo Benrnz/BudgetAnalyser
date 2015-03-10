@@ -158,8 +158,13 @@ namespace BudgetAnalyser.Engine.Services
             ClearDirtyDataFlags();
         }
 
-        public bool ValidateAll(StringBuilder messages)
+        public bool ValidateAll([NotNull] StringBuilder messages)
         {
+            if (messages == null)
+            {
+                throw new ArgumentNullException("messages");
+            }
+
             var valid = true;
             foreach (IApplicationDatabaseDependent service in this.databaseDependents) // Already sorted ascending by sequence number.
             {
