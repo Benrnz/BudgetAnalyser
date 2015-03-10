@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState, ApplicationDatabase applicationDatabase)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState)
         {
             if (storedState == null)
             {
@@ -172,7 +172,6 @@ namespace BudgetAnalyser.Engine.Services
                 this.availableDependencies = InitialiseSupportedDependenciesArray();
             }
 
-            this.availableDependencies[typeof(ApplicationDatabase)] = applicationDatabase;
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
             foreach (WidgetGroup group in WidgetGroups)

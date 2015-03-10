@@ -6,6 +6,9 @@ using System.Windows;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
@@ -19,15 +22,19 @@ namespace BudgetAnalyser
 {
     public class ShellController : ControllerBase, IInitializableController
     {
+        private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IDashboardService dashboardService;
         private readonly IPersistApplicationState statePersistence;
-        private readonly UiContext uiContext;
+        private readonly IUiContext uiContext;
         private bool initialised;
         private Point originalWindowSize;
         private Point originalWindowTopLeft;
 
         public ShellController(
-            [NotNull] UiContext uiContext,
-            [NotNull] IPersistApplicationState statePersistence)
+            [NotNull] IUiContext uiContext,
+            [NotNull] IPersistApplicationState statePersistence,
+            [NotNull] IApplicationDatabaseService applicationDatabaseService,
+            [NotNull] IDashboardService dashboardService)
         {
             if (uiContext == null)
             {
@@ -39,12 +46,25 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException("statePersistence");
             }
 
+            if (applicationDatabaseService == null)
+            {
+                throw new ArgumentNullException("applicationDatabaseService");
+            }
+
+            if (dashboardService == null)
+            {
+                throw new ArgumentNullException("dashboardService");
+            }
+
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
             MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+
             this.statePersistence = statePersistence;
+            this.applicationDatabaseService = applicationDatabaseService;
+            this.dashboardService = dashboardService;
             this.uiContext = uiContext;
 
             LedgerBookDialog = new ShellDialogController();
@@ -54,7 +74,7 @@ namespace BudgetAnalyser
             ReportsDialog = new ShellDialogController();
         }
 
-        // TODO reassess if all these controller properties are required.
+        [Engine.Annotations.UsedImplicitly]
         public BudgetController BudgetController
         {
             get { return this.uiContext.BudgetController; }
@@ -69,6 +89,7 @@ namespace BudgetAnalyser
 
         public ShellDialogController DashboardDialog { get; private set; }
 
+        [Engine.Annotations.UsedImplicitly]
         public LedgerBookController LedgerBookController
         {
             get { return this.uiContext.LedgerBookController; }
@@ -76,11 +97,13 @@ namespace BudgetAnalyser
 
         public ShellDialogController LedgerBookDialog { get; private set; }
 
+        [Engine.Annotations.UsedImplicitly]
         public MainMenuController MainMenuController
         {
             get { return this.uiContext.MainMenuController; }
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public ReportsCatalogController ReportsCatalogController
         {
             get { return this.uiContext.ReportsCatalogController; }
@@ -88,11 +111,13 @@ namespace BudgetAnalyser
 
         public ShellDialogController ReportsDialog { get; private set; }
 
+        [Engine.Annotations.UsedImplicitly]
         public RulesController RulesController
         {
             get { return this.uiContext.RulesController; }
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public StatementController StatementController
         {
             get { return this.uiContext.StatementController; }
@@ -102,6 +127,7 @@ namespace BudgetAnalyser
         internal Point WindowSize { get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
+        [Engine.Annotations.UsedImplicitly]
         public string WindowTitle
         {
             get { return "Budget Analyser"; }
@@ -161,28 +187,41 @@ namespace BudgetAnalyser
             }
         }
 
-        private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
+        private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)
         {
-            var shellState = message.ElementOfType<ShellPersistentStateV1>();
-            if (shellState == null)
+            if (message == null)
             {
+                throw new ArgumentNullException("message");
+            }
+
+            var shellState = message.ElementOfType<ShellPersistentStateV1>();
+            if (shellState != null)
+            {
+                // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
+                if (shellState.Size.X > 0 || shellState.Size.Y > 0)
+                {
+                    this.originalWindowSize = shellState.Size;
+                }
+                else
+                {
+                    this.originalWindowSize = new Point(1250, 600);
+                }
+
+                if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
+                {
+                    // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
+                    this.originalWindowTopLeft = shellState.TopLeft;
+                }
+
                 return;
             }
 
-            // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
-            if (shellState.Size.X > 0 || shellState.Size.Y > 0)
+            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
+            if (storedMainAppState != null)
             {
-                this.originalWindowSize = shellState.Size;
-            }
-            else
-            {
-                this.originalWindowSize = new Point(1250, 600);
-            }
-
-            if (shellState.TopLeft.X > 0 || shellState.TopLeft.Y > 0)
-            {
-                // Setting Window Top & Left at this point has no effect, must happen after window is loaded. See OnViewReady()
-                this.originalWindowTopLeft = shellState.TopLeft;
+                ApplicationDatabase applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
+                MessengerInstance.Send(new ApplicationDatabaseReadyMessage(applicationDatabase));
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(applicationDatabase);
             }
         }
 
@@ -194,6 +233,9 @@ namespace BudgetAnalyser
                 TopLeft = WindowTopLeft
             };
             message.PersistThisModel(shellPersistentStateV1);
+
+            MainApplicationStateModelV1 dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
+            message.PersistThisModel(dataFileState);
         }
 
         private void OnDialogRequested(ShellDialogRequestMessage message)
@@ -232,11 +274,20 @@ namespace BudgetAnalyser
             dialogController.HelpButtonVisible = message.HelpAvailable;
         }
 
-        private void OnShutdownRequested(ShutdownMessage message)
+        private async void OnShutdownRequested(ShutdownMessage message)
         {
             var gatherDataMessage = new ApplicationStateRequestedMessage();
             MessengerInstance.Send(gatherDataMessage);
             this.statePersistence.Persist(gatherDataMessage.PersistentData);
+
+            if (this.applicationDatabaseService.HasUnsavedChanges)
+            {
+                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before exiting?");
+                if (response != null && response.Value)
+                {
+                    await this.applicationDatabaseService.SaveAsync();
+                }
+            }
         }
     }
 }

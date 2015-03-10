@@ -24,19 +24,11 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC(SingleInstance = true)]
     public sealed class DashboardController : ControllerBase, IShowableController
     {
-        // TODO consider moving this to ShellController.
-        private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly ChooseBudgetBucketController chooseBudgetBucketController;
         private readonly CreateNewFixedBudgetController createNewFixedBudgetController;
         private readonly CreateNewSurprisePaymentMonitorController createNewSurprisePaymentMonitorController;
         private readonly IDashboardService dashboardService;
         private readonly IUiContext uiContext;
-
-        /// <summary>
-        ///     This needs to be a field because the state load messages arrived in different calls for Loading
-        ///     MainApplicationState and WidgetState.
-        /// </summary>
-        private ApplicationDatabase applicationDatabase;
 
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
@@ -69,7 +61,6 @@ namespace BudgetAnalyser.Dashboard
 
             this.uiContext = uiContext;
             this.dashboardService = dashboardService;
-            this.applicationDatabaseService = applicationDatabaseService;
 
             this.chooseBudgetBucketController.Chosen += OnBudgetBucketChosenForNewBucketMonitor;
             this.createNewFixedBudgetController.Complete += OnCreateNewFixedProjectComplete;
@@ -122,18 +113,11 @@ namespace BudgetAnalyser.Dashboard
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
-        private async void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
+        private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
             {
                 throw new ArgumentNullException("message");
-            }
-
-            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
-            if (storedMainAppState != null)
-            {
-                this.applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(this.applicationDatabase);
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
@@ -141,7 +125,6 @@ namespace BudgetAnalyser.Dashboard
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
                 WidgetGroups = this.dashboardService.LoadPersistedStateData(storedWidgetsState, this.applicationDatabase);
-                this.applicationDatabase = null; // Finished with this field from here on, just need it to pass to the initial DashboardService load.
             }
         }
 
@@ -149,8 +132,6 @@ namespace BudgetAnalyser.Dashboard
         {
             WidgetsApplicationStateV1 widgetStates = this.dashboardService.PreparePersistentStateData();
             message.PersistThisModel(widgetStates);
-            MainApplicationStateModelV1 dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
-            message.PersistThisModel(dataFileState);
         }
 
         private void OnBudgetBucketChosenForNewBucketMonitor(object sender, BudgetBucketChosenEventArgs args)
@@ -263,12 +244,6 @@ namespace BudgetAnalyser.Dashboard
             {
                 this.dashboardService.NotifyOfDependencyChange(message.LedgerBook);
             }
-        }
-
-        private async void OnShutdownRequested(ShutdownMessage obj)
-        {
-            // TODO Improve this, perhaps move to shell controller and prompt user for confirmation
-            await this.applicationDatabaseService.SaveAsync();
         }
 
         private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)

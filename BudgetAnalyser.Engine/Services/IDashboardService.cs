@@ -58,8 +58,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
         /// <param name="storedState">The persisted widget application state data object.</param>
-        /// <param name="applicationDatabase">The application database object used to provided access to it for widgets.</param>
-        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationStateV1 storedState, [CanBeNull] ApplicationDatabase applicationDatabase);
+        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationStateV1 storedState);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.

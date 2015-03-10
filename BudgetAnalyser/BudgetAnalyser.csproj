@@ -153,6 +153,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationDatabaseReadyMessage.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetBucketChosenEventArgs.cs" />

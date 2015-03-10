@@ -37,5 +37,7 @@ namespace BudgetAnalyser
         SplitTransactionController SplitTransactionController { get; }
         StatementController StatementController { get; }
         UserPrompts UserPrompts { get; }
+        MainMenuController MainMenuController { get; }
+        IEnumerable<ControllerBase> Controllers { get; }
     }
 }
