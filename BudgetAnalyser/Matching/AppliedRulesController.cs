@@ -45,6 +45,7 @@ namespace BudgetAnalyser.Matching
             this.ruleService.Saved += OnSavedNotificationReceived;
         }
 
+        [Engine.Annotations.UsedImplicitly]
         public ICommand ApplyRulesCommand
         {
             get { return new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand); }
@@ -92,6 +93,7 @@ namespace BudgetAnalyser.Matching
             if (this.ruleService.Match(this.statementController.ViewModel.Statement.Transactions))
             {
                 Dirty = true;
+                this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Transactions);
             }
         }
 

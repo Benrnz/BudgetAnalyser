@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
@@ -73,6 +74,7 @@ namespace BudgetAnalyser
             }
 
             await SaveDatabase("Save Budget Analyser Data");
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void OnValidateModelsCommandExecute()
