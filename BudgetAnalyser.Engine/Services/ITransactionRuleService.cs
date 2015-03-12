@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     The collections are owned by the consumer and passed into this service to be manipulated.
     ///     This service is designed to be stateful.
     /// </summary>
-    public interface ITransactionRuleService : INotifyDatabaseChanges, IApplicationDatabaseDependent, IServiceFoundation
+    public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFoundation
     {
         ObservableCollection<MatchingRule> MatchingRules { get; }
         ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }

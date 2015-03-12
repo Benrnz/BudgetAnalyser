@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     This class is stateful and is intended to be used as a single instance.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class BudgetMaintenanceService : IBudgetMaintenanceService
+    public class BudgetMaintenanceService : IBudgetMaintenanceService, IApplicationDatabaseDependent
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly IDashboardService dashboardService;

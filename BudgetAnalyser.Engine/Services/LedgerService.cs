@@ -14,7 +14,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerService : ILedgerService
+    public class LedgerService : ILedgerService, IApplicationDatabaseDependent
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBookRepository ledgerRepository;

@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to provide access to manipulate ledger books.
     ///     This service is designed to be stateful.
     /// </summary>
-    public interface ILedgerService : IApplicationDatabaseDependent, INotifyDatabaseChanges, IServiceFoundation
+    public interface ILedgerService : INotifyDatabaseChanges, IServiceFoundation
     {
         LedgerBook LedgerBook { get; }
 

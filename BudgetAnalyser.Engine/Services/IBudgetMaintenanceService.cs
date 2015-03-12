@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -10,7 +9,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to maintain the full collection of budgets.
     ///     This is designed as a stateful service.
     /// </summary>
-    public interface IBudgetMaintenanceService : IApplicationDatabaseDependent, INotifyDatabaseChanges, IServiceFoundation
+    public interface IBudgetMaintenanceService : INotifyDatabaseChanges, IServiceFoundation
     {
         /// <summary>
         ///     Gets the budget bucket repository.
