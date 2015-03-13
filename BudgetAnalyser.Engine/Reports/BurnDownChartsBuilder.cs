@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             var listOfCharts = new List<BurnDownChartAnalyserResult>(this.budgetBucketRepository.Buckets.Count());
             foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
-                .Where(b => b is ExpenseBucket)
+                .Where(b => b is ExpenseBucket && b.Active)
                 .OrderBy(b => b.Code))
             {
                 BurnDownChartAnalyserResult analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, bucket, beginDate);
