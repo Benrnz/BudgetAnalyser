@@ -176,10 +176,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            // This will read the entire file then return the complete collection when done. 
-            // Given the file size is expected to be relatively small this is the fastest way to do this.  Excessive tasking actually results in poorer performance until file size 
-            // becomes large. 
-            return await Task.Run(() => File.ReadAllLines(fileName).ToList());
+            return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
         protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
     {
-        public AnzVisaStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
+        public AnzVisaStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities)
             : base(importUtilities, new FakeLogger())
         {
         }
@@ -18,14 +17,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, string> ReadTextChunkOverride { get; set; }
 
-        protected override IEnumerable<string> ReadLines(string fileName)
+        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             if (ReadLinesOverride == null)
             {
-                return new List<string>();
+                return Task.FromResult((IEnumerable<string>)new List<string>());
             }
 
-            return ReadLinesOverride(fileName);
+            return Task.FromResult(ReadLinesOverride(fileName));
         }
 
         protected override Task<string> ReadTextChunkAsync(string filePath)

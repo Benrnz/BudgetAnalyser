@@ -32,22 +32,22 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void LoadShouldParseAFileWithExtraColumns()
+        public async Task LoadShouldParseAFileWithExtraColumns()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData2();
-            StatementModel result = subject.Load("foo.bar", StatementModelTestData.VisaAccount);
+            StatementModel result = await subject.LoadAsync("foo.bar", StatementModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
             Assert.AreEqual(13, result.AllTransactions.Count());
         }
 
         [TestMethod]
-        public void LoadShouldParseAGoodFile()
+        public async Task LoadShouldParseAGoodFile()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = f => AnzVisaCsvTestData.TestData1();
-            StatementModel result = subject.Load("foo.bar", StatementModelTestData.VisaAccount);
+            StatementModel result = await subject.LoadAsync("foo.bar", StatementModelTestData.VisaAccount);
 
             Assert.AreEqual(1, result.DurationInMonths);
             Assert.AreEqual(13, result.AllTransactions.Count());
@@ -55,21 +55,21 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         [TestMethod]
         [ExpectedException(typeof(InvalidDataException))]
-        public void LoadShouldThrowGivenBadData()
+        public async Task LoadShouldThrowGivenBadData()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = filename => AnzChequeCsvTestData.BadTestData1();
-            subject.Load("foo.bar", StatementModelTestData.VisaAccount);
+            await subject.LoadAsync("foo.bar", StatementModelTestData.VisaAccount);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(KeyNotFoundException))]
-        public void LoadShouldThrowIfFileNotFound()
+        public async Task LoadShouldThrowIfFileNotFound()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
             BankImportUtilities.AbortIfFileDoesntExistOverride = s => { throw new FileNotFoundException(); };
-            subject.Load("foo.bar", StatementModelTestData.VisaAccount);
+            await subject.LoadAsync("foo.bar", StatementModelTestData.VisaAccount);
             Assert.Fail();
         }
 
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         private AnzVisaStatementImporterV1TestHarness Arrange()
         {
-            return new AnzVisaStatementImporterV1TestHarness(new FakeUserMessageBox(), BankImportUtilities);
+            return new AnzVisaStatementImporterV1TestHarness(BankImportUtilities);
         }
     }
 }

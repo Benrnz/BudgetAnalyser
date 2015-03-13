@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account type.
         /// </param>
-        StatementModel Load(string fileName, AccountType accountType);
+        Task<StatementModel> LoadAsync(string fileName, AccountType accountType);
 
         /// <summary>
         ///     Test the given file to see if this importer implementation can read and import it.

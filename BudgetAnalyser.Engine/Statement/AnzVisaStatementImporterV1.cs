@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account type.
         /// </param>
-        public StatementModel Load(string fileName, AccountType accountType)
+        public async Task<StatementModel> LoadAsync(string fileName, AccountType accountType)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
-            foreach (string line in ReadLines(fileName))
+            foreach (string line in await ReadLinesAsync(fileName))
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -126,9 +126,9 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        protected virtual IEnumerable<string> ReadLines(string fileName)
+        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            return File.ReadLines(fileName);
+            return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
         protected async virtual Task<string> ReadTextChunkAsync(string filePath)

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -26,17 +28,17 @@ namespace BudgetAnalyser.Engine.Statement
             this.locale = Thread.CurrentThread.CurrentCulture;
         }
 
-        internal void ConfigureLocale(CultureInfo culture)
-        {
-            this.locale = culture;
-        }
-
         internal virtual void AbortIfFileDoesntExist(string fileName)
         {
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException("File not found.", fileName);
             }
+        }
+
+        internal void ConfigureLocale(CultureInfo culture)
+        {
+            this.locale = culture;
         }
 
         internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index, [NotNull] IBudgetBucketRepository bucketRepository)
@@ -76,7 +78,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             string stringToParse = array[index];
             DateTime retval;
-            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None,  out retval))
+            if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse date: " + stringToParse);
                 throw new InvalidDataException("Expected date, but provided data is invalid. " + stringToParse);
@@ -169,6 +171,14 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             return array[index].Trim();
+        }
+
+        internal virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        {
+            // This will read the entire file then return the complete collection when done. 
+            // Given the file size is expected to be relatively small this is the fastest way to do this.  Excessive tasking actually results in poorer performance until file size 
+            // becomes large. 
+            return await Task.Run(() => File.ReadAllLines(fileName).ToList());
         }
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)

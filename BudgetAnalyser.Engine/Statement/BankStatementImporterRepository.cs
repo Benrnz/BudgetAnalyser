@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 if (await importer.TasteTestAsync(fullFileName))
                 {
-                    return importer.Load(fullFileName, accountType);
+                    return await importer.LoadAsync(fullFileName, accountType);
                 }
             }
 

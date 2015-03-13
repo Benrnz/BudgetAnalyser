@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account type.
         /// </param>
-        public StatementModel Load(string fileName, AccountType accountType)
+        public async Task<StatementModel> LoadAsync(string fileName, AccountType accountType)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
-            foreach (string line in ReadLines(fileName))
+            foreach (string line in await ReadLinesAsync(fileName))
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            string line = await ReadFirstLine(fileName);
+            string line = await ReadFirstLineAsync(fileName);
             if (line.IsNothing())
             {
                 return false;
@@ -144,12 +144,12 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        protected virtual IEnumerable<string> ReadLines(string fileName)
+        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            return File.ReadLines(fileName);
+            return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
-        protected async virtual Task<string> ReadTextChunk(string filePath)
+        protected async virtual Task<string> ReadTextChunkAsync(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {
@@ -188,9 +188,9 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private async Task<string> ReadFirstLine(string fileName)
+        private async Task<string> ReadFirstLineAsync(string fileName)
         {
-            string chunk = await ReadTextChunk(fileName);
+            string chunk = await ReadTextChunkAsync(fileName);
             if (chunk.IsNothing())
             {
                 return null;
