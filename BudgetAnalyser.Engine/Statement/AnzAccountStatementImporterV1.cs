@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -91,11 +92,11 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Test the given file to see if this importer implementation can read and import it.
         ///     This will open and read some of the contents of the file.
         /// </summary>
-        public bool TasteTest(string fileName)
+        public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            string line = ReadFirstLine(fileName);
-            if (string.IsNullOrWhiteSpace(line))
+            string line = await ReadFirstLine(fileName);
+            if (line.IsNothing())
             {
                 return false;
             }
@@ -148,14 +149,14 @@ namespace BudgetAnalyser.Engine.Statement
             return File.ReadLines(fileName);
         }
 
-        protected virtual string ReadTextChunk(string filePath)
+        protected async virtual Task<string> ReadTextChunk(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {
                 var sb = new StringBuilder();
                 var buffer = new byte[0x128];
                 int numRead;
-                while ((numRead = sourceStream.Read(buffer, 0, buffer.Length)) != 0)
+                while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
                     string text = Encoding.UTF8.GetString(buffer, 0, numRead);
                     sb.Append(text);
@@ -172,7 +173,7 @@ namespace BudgetAnalyser.Engine.Statement
         private TransactionType FetchTransactionType(string[] array, int index)
         {
             string stringType = this.importUtilities.FetchString(array, index);
-            if (string.IsNullOrWhiteSpace(stringType))
+            if (stringType.IsNothing())
             {
                 return null;
             }
@@ -187,10 +188,10 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private string ReadFirstLine(string fileName)
+        private async Task<string> ReadFirstLine(string fileName)
         {
-            string chunk = ReadTextChunk(fileName);
-            if (string.IsNullOrWhiteSpace(chunk))
+            string chunk = await ReadTextChunk(fileName);
+            if (chunk.IsNothing())
             {
                 return null;
             }

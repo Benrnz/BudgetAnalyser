@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Account;
+﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Account;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -26,6 +27,6 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Test the given file to see if this importer implementation can read and import it.
         ///     This will open and read some of the contents of the file.
         /// </summary>
-        bool TasteTest(string fileName);
+        Task<bool> TasteTestAsync(string fileName);
     }
 }

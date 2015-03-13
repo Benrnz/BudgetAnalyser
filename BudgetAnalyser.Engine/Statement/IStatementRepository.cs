@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
         /// <exception cref="KeyNotFoundException">Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey"/></exception>
-        StatementModel ImportAndMergeBankStatement(
+        Task<StatementModel> ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey, 
             [NotNull] AccountType account);
 

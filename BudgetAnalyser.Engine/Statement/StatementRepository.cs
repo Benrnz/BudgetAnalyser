@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Statement
             this.importerRepository = importerRepository;
         }
 
-        public StatementModel ImportAndMergeBankStatement(
+        public async Task<StatementModel> ImportAndMergeBankStatementAsync(
             string storageKey,
             AccountType account)
         {
@@ -56,8 +56,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             // TODO add generic UI to let user classify columns.
-            // TODO this should be async also
-            return this.importerRepository.Import(storageKey, account);
+            return await this.importerRepository.ImportAsync(storageKey, account);
         }
 
         public async Task<StatementModel> LoadStatementModelAsync(string storageKey)

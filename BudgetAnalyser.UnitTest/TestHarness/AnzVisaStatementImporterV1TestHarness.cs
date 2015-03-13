@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using Rees.UserInteraction.Contracts;
@@ -27,14 +28,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return ReadLinesOverride(fileName);
         }
 
-        protected override string ReadTextChunk(string filePath)
+        protected override Task<string> ReadTextChunkAsync(string filePath)
         {
             if (ReadTextChunkOverride == null)
             {
-                return "4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,";
+                return Task.FromResult("4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,");
             }
 
-            return ReadTextChunkOverride(filePath);
+            return Task.FromResult(ReadTextChunkOverride(filePath));
         }
     }
 }

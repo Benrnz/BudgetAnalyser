@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -13,12 +14,12 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Calling this method will open the file and read some of its contents.
         /// </summary>
         /// <returns>True if this file can be imported one of the importers in the repository.</returns>
-        bool CanImport(string fullFileName);
+        Task<bool> CanImportAsync(string fullFileName);
 
         /// <summary>
-        ///     Import the given file.  It is recommended to call <see cref="CanImport" /> first.  If the file cannot
+        ///     Import the given file.  It is recommended to call <see cref="CanImportAsync" /> first.  If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
-        StatementModel Import(string fullFileName, AccountType accountType);
+        Task<StatementModel> ImportAsync(string fullFileName, AccountType accountType);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -30,21 +31,29 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Calling this method will open the file and read some of its contents.
         /// </summary>
         /// <returns>True if this file can be imported one of the importers in the repository.</returns>
-        public bool CanImport(string fullFileName)
+        public async Task<bool> CanImportAsync(string fullFileName)
         {
-            return this.importers.Any(importer => importer.TasteTest(fullFileName));
+            foreach (var importer in this.importers)
+            {
+                if (await importer.TasteTestAsync(fullFileName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        ///     Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImport" /> first.
+        ///     Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImportAsync" /> first.
         ///     If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
-        public StatementModel Import(string fullFileName, AccountType accountType)
+        public async Task<StatementModel> ImportAsync(string fullFileName, AccountType accountType)
         {
             foreach (IBankStatementImporter importer in this.importers)
             {
-                if (importer.TasteTest(fullFileName))
+                if (await importer.TasteTestAsync(fullFileName))
                 {
                     return importer.Load(fullFileName, accountType);
                 }

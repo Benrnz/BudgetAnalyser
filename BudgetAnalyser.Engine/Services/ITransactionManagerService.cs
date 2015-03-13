@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Will be thrown if the bank extract cannot be located using the given
         ///     <paramref name="storageKey" />
         /// </exception>
-        void ImportAndMergeBankStatement(
+        Task ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey,
             [NotNull] AccountType account);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Statement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,16 +16,16 @@ namespace BudgetAnalyser.UnitTest.Statement
         private BankStatementImporterRepository Subject { get; set; }
 
         [TestMethod]
-        public void CanImportShouldReturnFalseGivenNoImportersCanImport()
+        public async Task CanImportShouldReturnFalseGivenNoImportersCanImport()
         {
-            Assert.IsFalse(Subject.CanImport("Foo.bar"));
+            Assert.IsFalse(await Subject.CanImportAsync("Foo.bar"));
         }
 
         [TestMethod]
-        public void CanImportShouldReturnTrueGivenOneImporterCanImport()
+        public async Task CanImportShouldReturnTrueGivenOneImporterCanImport()
         {
-            Importers[1].Setup(m => m.TasteTest("Foo.bar")).Returns(true);
-            Assert.IsTrue(Subject.CanImport("Foo.bar"));
+            Importers[1].Setup(m => m.TasteTestAsync("Foo.bar")).Returns(Task.FromResult(true));
+            Assert.IsTrue(await Subject.CanImportAsync("Foo.bar"));
         }
 
         [TestMethod]
@@ -52,9 +53,9 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public void ImportShouldThrowGivenNoImportersCanImport()
+        public async Task ImportShouldThrowGivenNoImportersCanImport()
         {
-            var model = Subject.Import("Foo.bar", new ChequeAccount("Cheque"));
+            var model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));
         }
 
         [TestInitialize]

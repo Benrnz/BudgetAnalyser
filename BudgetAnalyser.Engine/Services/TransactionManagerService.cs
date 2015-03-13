@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel.Filter(criteria);
         }
 
-        public void ImportAndMergeBankStatement(string storageKey, AccountType account)
+        public async Task ImportAndMergeBankStatementAsync(string storageKey, AccountType account)
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {
@@ -220,8 +220,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("account");
             }
 
-            // TODO should be async
-            StatementModel additionalModel = this.statementRepository.ImportAndMergeBankStatement(storageKey, account);
+            StatementModel additionalModel = await this.statementRepository.ImportAndMergeBankStatementAsync(storageKey, account);
             StatementModel.Merge(additionalModel);
         }
 

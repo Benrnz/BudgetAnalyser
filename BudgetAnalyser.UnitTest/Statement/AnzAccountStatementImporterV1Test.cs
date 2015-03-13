@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -73,46 +74,46 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnFalseGivenABadFile()
+        public async Task TatseTestShouldReturnFalseGivenABadFile()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
             subject.ReadTextChunkOverride = file => "lkjpoisjg809wutwuoipsahf98qyfg0w9ashgpiosxnhbvoiyxcu8o9ui9paso,spotiw93th98sh8,35345345,353453534521,lkhsldhlsk,shgjkshj,sgsjdgsd";
-            bool result = subject.TasteTest(@"transumm.CSV");
+            bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnFalseGivenAnEmptyTasteTestResponse()
+        public async Task TatseTestShouldReturnFalseGivenAnEmptyTasteTestResponse()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
             subject.ReadTextChunkOverride = file => string.Empty;
-            bool result = subject.TasteTest(@"transumm.CSV");
+            bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnFalseGivenNullTasteTestResponse()
+        public async Task TatseTestShouldReturnFalseGivenNullTasteTestResponse()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
             subject.ReadTextChunkOverride = file => null;
-            bool result = subject.TasteTest(@"transumm.CSV");
+            bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnFalseGivenTheVisaFormat()
+        public async Task TatseTestShouldReturnFalseGivenTheVisaFormat()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
             subject.ReadTextChunkOverride = file => "4367-****-****-1234,D,32.36,Z Quay Street          Auckland      Nz ,24/06/2014,25/06/2014,"; // Visa format given to Cheque parser
-            bool result = subject.TasteTest(@"transumm.CSV");
+            bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public void TatseTestShouldReturnTrueGivenAGoodFile()
+        public async Task TatseTestShouldReturnTrueGivenAGoodFile()
         {
             AnzAccountStatementImporterV1TestHarness subject = Arrange();
-            bool result = subject.TasteTest(@"transumm.CSV");
+            bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsTrue(result);
         }
 

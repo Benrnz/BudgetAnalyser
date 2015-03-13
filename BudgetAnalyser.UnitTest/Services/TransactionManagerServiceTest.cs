@@ -114,20 +114,20 @@ namespace BudgetAnalyser.UnitTest.Services
         }
 
         [TestMethod]
-        public void ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
+        public async Task ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
         {
             this.mockStatementRepo
-                .Setup(m => m.ImportAndMergeBankStatement(It.IsAny<string>(), It.IsAny<AccountType>()))
-                .Returns(StatementModelTestData.TestData2)
+                .Setup(m => m.ImportAndMergeBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
-            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+            await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
 
             this.mockStatementRepo.Verify();
         }
 
         [TestMethod]
-        public void ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
+        public async Task ImportAndMergeBankStatement_ShouldMergeTheModel_GivenStorageKeyAndAccount()
         {
             this.testData = new StatementModelTestHarness();
             this.testData.LoadTransactions(new List<Transaction>());
@@ -135,28 +135,28 @@ namespace BudgetAnalyser.UnitTest.Services
             Arrange();
 
             this.mockStatementRepo
-                .Setup(m => m.ImportAndMergeBankStatement(It.IsAny<string>(), It.IsAny<AccountType>()))
-                .Returns(StatementModelTestData.TestData2)
+                .Setup(m => m.ImportAndMergeBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
-            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+            await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
 
             Assert.AreEqual(1, ((StatementModelTestHarness)this.testData).MergeWasCalled);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
+        public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
         {
-            this.subject.ImportAndMergeBankStatement("Sticky Bag.csv", null);
+            await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", null);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
+        public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullStorageKey()
         {
-            this.subject.ImportAndMergeBankStatement(null, new ChequeAccount("Foo"));
+            await this.subject.ImportAndMergeBankStatementAsync(null, new ChequeAccount("Foo"));
             Assert.Fail();
         }
 
