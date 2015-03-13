@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
@@ -233,11 +234,11 @@ namespace BudgetAnalyser.Budget
             get { return Budgets.FileName.TruncateLeft(100, true); }
         }
 
-        protected virtual string PromptUserForLastModifiedComment()
-        {
-            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
-            return comment ?? string.Empty;
-        }
+        //protected virtual string PromptUserForLastModifiedComment()
+        //{
+        //    string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+        //    return comment ?? string.Empty;
+        //}
 
         private bool CanExecuteShowPieCommand()
         {
@@ -410,7 +411,7 @@ namespace BudgetAnalyser.Budget
         private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
         {
             SyncDataToBudgetService();
-            args.ModificationComment = PromptUserForLastModifiedComment();
+            // TODO cant use the budget last save comment anymore with parallel save. It requires a InputBox which must be on the UI thread.
             args.Context = CurrentBudget.Model;
             Dirty = false;
         }

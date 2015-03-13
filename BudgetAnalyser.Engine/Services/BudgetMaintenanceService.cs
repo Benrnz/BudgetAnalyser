@@ -215,7 +215,7 @@ namespace BudgetAnalyser.Engine.Services
             var messages = new StringBuilder();
             if (Budgets.Validate(messages))
             {
-                await this.budgetRepository.SaveAsync(Budgets);
+                await this.budgetRepository.SaveAsync();
                 var savedHandler = Saved;
                 if (savedHandler != null) savedHandler(this, EventArgs.Empty);
                 return;

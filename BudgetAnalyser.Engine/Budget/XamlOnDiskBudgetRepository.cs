@@ -65,16 +65,15 @@ namespace BudgetAnalyser.Engine.Budget
                 Name = "Default Budget"
             };
 
-            var newCollection = new BudgetCollection(new[] { newBudget })
+            this.currentBudgetCollection = new BudgetCollection(new[] { newBudget })
             {
                 FileName = fileName
             };
 
             BudgetBucketRepository.Initialise(new List<BudgetBucketDto>());
 
-            SaveAsync(newCollection).Wait();
-
-            return newCollection;
+            SaveAsync().Wait();
+            return this.currentBudgetCollection;
         }
 
         public async Task<BudgetCollection> LoadAsync(string fileName)
@@ -123,17 +122,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }
 
-            await SaveAsync(this.currentBudgetCollection);
-        }
-
-        public async Task SaveAsync(BudgetCollection budget)
-        {
-            if (this.currentBudgetCollection == null)
-            {
-                throw new InvalidOperationException("There is no current budget collection loaded.");
-            }
-
-            BudgetCollectionDto dataFormat = this.toDtoMapper.Map(budget);
+            BudgetCollectionDto dataFormat = this.toDtoMapper.Map(this.currentBudgetCollection);
 
             string serialised = Serialise(dataFormat);
             await WriteToDisk(dataFormat.FileName, serialised);

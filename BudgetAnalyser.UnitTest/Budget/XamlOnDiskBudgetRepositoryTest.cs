@@ -102,7 +102,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void LoadShouldCallInitialiseOnTheBucketRepository()
+        public async Task LoadShouldCallInitialiseOnTheBucketRepository()
         {
             var mockBucketRepository = new Mock<IBudgetBucketRepository>();
             mockBucketRepository.Setup(m => m.Initialise(null));
@@ -116,7 +116,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.FileExistsMock = f => true;
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName);
+            await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName);
 
             mockBucketRepository.Verify();
         }
@@ -213,14 +213,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void SaveShouldWriteToDisk()
+        public async Task SaveShouldWriteToDisk()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             var writeToDiskCalled = false;
             subject.WriteToDiskMock = (filename, data) => { writeToDiskCalled = true; };
             SetPrivateBudgetCollection(subject);
 
-            subject.SaveAsync(BudgetModelTestData.CreateCollectionWith1And2());
+            await subject.SaveAsync();
 
             Assert.IsTrue(writeToDiskCalled);
         }
