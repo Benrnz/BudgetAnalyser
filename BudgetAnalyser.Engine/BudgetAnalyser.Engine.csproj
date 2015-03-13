@@ -242,7 +242,7 @@
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
     <Compile Include="Services\DashboardService.cs" />
-    <Compile Include="Services\IApplicationDatabaseDependent.cs" />
+    <Compile Include="Services\ISupportsModelPersistence.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IBurnDownChartsService.cs" />

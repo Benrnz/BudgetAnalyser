@@ -14,7 +14,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class TransactionRuleService : ITransactionRuleService, IApplicationDatabaseDependent
+    public class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
     {
         private readonly ILogger logger;
         private readonly IMatchmaker matchmaker;

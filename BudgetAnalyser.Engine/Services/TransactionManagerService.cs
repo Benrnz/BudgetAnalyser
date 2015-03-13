@@ -14,7 +14,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class TransactionManagerService : ITransactionManagerService, IApplicationDatabaseDependent
+    public class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
     {
         public const string UncategorisedFilter = "[Uncategorised Only]";
         private readonly IBudgetBucketRepository bucketRepository;

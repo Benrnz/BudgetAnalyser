@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     An interface to allow the Application Database master service to communicate with subordinate database dependant
     ///     services. Only <see cref="IServiceFoundation"/> implementations should implement this.
     /// </summary>
-    public interface IApplicationDatabaseDependent
+    public interface ISupportsModelPersistence
     {
         /// <summary>
         /// Gets the type of the data the implementation deals with.

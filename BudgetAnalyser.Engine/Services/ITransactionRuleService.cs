@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependent.LoadAsync" />
+        ///     <see cref="ISupportsModelPersistence.LoadAsync" />
         /// </exception>
         bool AddRule([NotNull] MatchingRule ruleToAdd);
 
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependent.LoadAsync" />
+        ///     <see cref="ISupportsModelPersistence.LoadAsync" />
         /// </exception>
         bool RemoveRule([NotNull] MatchingRule ruleToRemove);
     }

@@ -12,13 +12,13 @@ namespace BudgetAnalyser.Engine.Services
     public class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
-        private readonly IEnumerable<IApplicationDatabaseDependent> databaseDependents;
+        private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
         private ApplicationDatabase budgetAnalyserDatabase;
 
         public ApplicationDatabaseService(
             [NotNull] IApplicationDatabaseRepository applicationRepository,
-            [NotNull] IEnumerable<IApplicationDatabaseDependent> databaseDependents)
+            [NotNull] IEnumerable<ISupportsModelPersistence> databaseDependents)
         {
             if (applicationRepository == null)
             {
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public void Close()
         {
-            foreach (IApplicationDatabaseDependent service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
+            foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
             }
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
             try
             {
-                foreach (IApplicationDatabaseDependent service in this.databaseDependents) // Already sorted ascending by sequence number.
+                foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
                 {
                     await service.LoadAsync(this.budgetAnalyserDatabase);
                 }
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var valid = true;
-            foreach (IApplicationDatabaseDependent service in this.databaseDependents) // Already sorted ascending by sequence number.
+            foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
             {
                 try
                 {
