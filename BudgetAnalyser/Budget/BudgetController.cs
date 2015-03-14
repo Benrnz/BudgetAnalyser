@@ -411,7 +411,8 @@ namespace BudgetAnalyser.Budget
         private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
         {
             SyncDataToBudgetService();
-            // TODO cant use the budget last save comment anymore with parallel save. It requires a InputBox which must be on the UI thread.
+            // TODO cant use the budget last save comment anymore with parallel save. It requires a InputBox which must be on the UI thread. 
+            // Possibly change this to a notepad sidebar instead.
             args.Context = CurrentBudget.Model;
             Dirty = false;
         }

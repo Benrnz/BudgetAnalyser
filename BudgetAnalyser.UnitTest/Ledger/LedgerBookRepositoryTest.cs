@@ -43,13 +43,13 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void LedgerBookTestData2ShouldHaveACheckSumOf8435()
+        public async Task LedgerBookTestData2ShouldHaveACheckSumOf8435()
         {
             string serialisedData = string.Empty;
             {
                 var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
-                subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.xml");
+                await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.xml");
             }
 
             int checksumPosition = serialisedData.IndexOf("CheckSum=\"", StringComparison.OrdinalIgnoreCase);

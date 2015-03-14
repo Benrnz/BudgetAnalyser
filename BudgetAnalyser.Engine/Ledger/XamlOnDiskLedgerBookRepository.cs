@@ -13,7 +13,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository, IApplicationHookEventPublisher
+    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
     {
         private readonly BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper;
         private readonly BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper;
@@ -51,8 +51,6 @@ namespace BudgetAnalyser.Engine.Ledger
             this.logger = logger;
             this.importUtilities = importUtilities;
         }
-
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public LedgerBook CreateNew(string name, string storageKey)
         {
@@ -125,13 +123,6 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.Checksum = CalculateChecksum(book);
 
             await SaveDtoToDiskAsync(dataEntity);
-
-            // TODO Reassess these application events.  Probably dont need a repo level event anymore.
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "LedgerBookRepository", ApplicationHookEventArgs.Save));
-            }
         }
 
         protected virtual bool FileExistsOnDisk(string fileName)

@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Budget.Data;
 namespace BudgetAnalyser.Engine.Budget
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskBudgetRepository : IBudgetRepository, IApplicationHookEventPublisher
+    public class XamlOnDiskBudgetRepository : IBudgetRepository
     {
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
         private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
@@ -41,7 +41,6 @@ namespace BudgetAnalyser.Engine.Budget
             this.toDomainMapper = toDomainMapper;
         }
 
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
         public BudgetCollection CreateNew()
@@ -126,12 +125,6 @@ namespace BudgetAnalyser.Engine.Budget
 
             string serialised = Serialise(dataFormat);
             await WriteToDisk(dataFormat.FileName, serialised);
-
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "BudgetRepository", ApplicationHookEventArgs.Save));
-            }
         }
 
         protected virtual bool FileExists(string fileName)

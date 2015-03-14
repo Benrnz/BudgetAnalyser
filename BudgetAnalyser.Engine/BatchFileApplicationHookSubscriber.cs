@@ -77,13 +77,12 @@ namespace BudgetAnalyser.Engine
 
                     string commandLine = string.Format(
                         CultureInfo.CurrentCulture,
-                        "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\" \"{5}\"",
+                        "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\"",
                         FileName,
-                        args.EventType,
-                        args.EventSubcategory,
+                        args.Category,
                         args.Origin,
                         Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        sender);
+                        GetType().Name);
                     this.logger.LogInfo(_ => "Executing batch file with commandline: " + commandLine);
 
                     var processInfo = new ProcessStartInfo("cmd.exe", "/c " + commandLine)

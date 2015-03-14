@@ -78,7 +78,7 @@ namespace BudgetAnalyser
             var handler = ApplicationEvent;
             if (handler != null)
             {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "App.xaml.cs", ApplicationHookEventArgs.Exit));
+                handler(this, new ApplicationHookEventArgs(GetType().Name, ApplicationHookEventArgs.Exit));
             }
 
             Current.Exit -= OnApplicationExit;

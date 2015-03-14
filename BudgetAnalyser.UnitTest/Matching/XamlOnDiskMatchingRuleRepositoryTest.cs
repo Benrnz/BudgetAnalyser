@@ -110,17 +110,6 @@ namespace BudgetAnalyser.UnitTest.Matching
             Assert.Fail();
         }
 
-        [TestMethod]
-        public async Task SaveShouldRaiseApplicationEvent()
-        {
-            var subject = Arrange();
-            bool eventRaised = false;
-            subject.ApplicationEvent += (s, e) => eventRaised = true;
-            await subject.SaveRulesAsync(MatchingRulesTestDataGenerated.TestData1(), "foo.bar");
-
-            Assert.IsTrue(eventRaised);
-        }
-
         private XamlOnDiskMatchingRuleRepositoryTestHarness Arrange()
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();

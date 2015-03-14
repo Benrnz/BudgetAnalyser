@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class ApplicationDatabaseService : IApplicationDatabaseService
+    public class ApplicationDatabaseService : IApplicationDatabaseService, IApplicationHookEventPublisher
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
@@ -34,6 +34,8 @@ namespace BudgetAnalyser.Engine.Services
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             InitialiseDirtyDataTable();
         }
+
+        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         /// <summary>
         ///     Gets or sets a value indicating whether there are unsaved changes across all application data.
@@ -149,13 +151,19 @@ namespace BudgetAnalyser.Engine.Services
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
             // Save all remaining service's data in parallel.
-            var savingTasks = this.databaseDependents
+            List<Task> savingTasks = this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
                 .Select(service => Task.Run(() => service.SaveAsync()))
                 .ToList();
 
             await Task.WhenAll(savingTasks);
             ClearDirtyDataFlags();
+
+            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
+            if (handler != null)
+            {
+                handler(this, new ApplicationHookEventArgs(GetType().Name, ApplicationHookEventArgs.Save));
+            }
         }
 
         public bool ValidateAll([NotNull] StringBuilder messages)

@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Ledger;
 namespace BudgetAnalyser.Engine.Persistence
 {
     [AutoRegisterWithIoC]
-    public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepository, IApplicationHookEventPublisher
+    public class XamlOnDiskApplicationDatabaseRepository : IApplicationDatabaseRepository
     {
         private readonly BasicMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> loadingMapper;
         private readonly BasicMapper<ApplicationDatabase, BudgetAnalyserStorageRoot> savingMapper;
@@ -30,8 +30,6 @@ namespace BudgetAnalyser.Engine.Persistence
             this.loadingMapper = loadingMapper;
             this.savingMapper = savingMapper;
         }
-
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
@@ -74,12 +72,6 @@ namespace BudgetAnalyser.Engine.Persistence
 
             string serialised = Serialise(this.savingMapper.Map(budgetAnalyserDatabase));
             await WriteToDiskAsync(budgetAnalyserDatabase.FileName, serialised);
-
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "ApplicationDatabaseRepository", ApplicationHookEventArgs.Save));
-            }
         }
 
         protected virtual bool FileExists(string budgetAnalyserDataStorage)

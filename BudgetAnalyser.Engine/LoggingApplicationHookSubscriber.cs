@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine
 
         protected virtual void PerformAction(object sender, ApplicationHookEventArgs args)
         {
-            this.logger.LogInfo(l => l.Format("Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.EventType, args.Origin));
+            this.logger.LogInfo(l => l.Format("Application Hook Event Occurred. Sender: [{0}], Type: {1}, Origin: {2}", sender, args.Category, args.Origin));
         }
 
         private void OnEventOccurred(object sender, ApplicationHookEventArgs args)

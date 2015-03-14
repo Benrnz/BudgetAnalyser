@@ -78,7 +78,7 @@ namespace BudgetAnalyser.UnitTest.ApplicationHooks
 
         private void RaisePublisherEvents()
         {
-            MockPublishers.ToList().ForEach(p => p.Raise(m => m.ApplicationEvent += null, new ApplicationHookEventArgs(ApplicationHookEventType.Application, "TestOrigin", "TestSubcategory")));
+            MockPublishers.ToList().ForEach(p => p.Raise(m => m.ApplicationEvent += null, new ApplicationHookEventArgs("TestOrigin", "TestSubcategory")));
         }
     }
 }

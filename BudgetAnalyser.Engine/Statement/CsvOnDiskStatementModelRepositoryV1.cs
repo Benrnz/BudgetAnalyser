@@ -12,7 +12,7 @@ using BudgetAnalyser.Engine.Statement.Data;
 namespace BudgetAnalyser.Engine.Statement
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository, IApplicationHookEventPublisher
+    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
         private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
@@ -52,8 +52,6 @@ namespace BudgetAnalyser.Engine.Statement
             this.dtoToDomainMapper = dtoToDomainMapper;
             this.domainToDtoMapper = domainToDtoMapper;
         }
-
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public async Task<bool> IsStatementModelAsync(string storageKey)
         {
@@ -165,12 +163,6 @@ namespace BudgetAnalyser.Engine.Statement
                     await writer.FlushAsync();
                     writer.Close();
                 }
-            }
-
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "StatementModelRepository", ApplicationHookEventArgs.Save));
             }
         }
 

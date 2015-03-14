@@ -10,22 +10,16 @@ namespace BudgetAnalyser.Engine
         public const string Exit = "Exit";
         public const string Save = "Save";
 
-        public ApplicationHookEventArgs(ApplicationHookEventType eventType, string origin, string subcategory)
+        public ApplicationHookEventArgs(string origin, string subcategory)
         {
-            EventType = eventType;
             Origin = origin;
-            EventSubcategory = subcategory;
+            Category = subcategory;
         }
 
         /// <summary>
         /// An optional sub-category that can be specified to help subscribers respond, or not to the event.
         /// </summary>
-        public string EventSubcategory { get; private set; }
-
-        /// <summary>
-        /// A major classification for the event.
-        /// </summary>
-        public ApplicationHookEventType EventType { get; private set; }
+        public string Category { get; private set; }
 
         /// <summary>
         /// A string identifier that describes the source of the event. 

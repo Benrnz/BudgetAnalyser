@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.Matching.Data;
 namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository, IApplicationHookEventPublisher
+    public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
     {
         private readonly BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper;
         private readonly BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper;
@@ -31,8 +31,6 @@ namespace BudgetAnalyser.Engine.Matching
             this.dataToDomainMapper = dataToDomainMapper;
             this.domainToDataMapper = domainToDataMapper;
         }
-
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public virtual bool Exists(string storageKey)
         {
@@ -84,12 +82,6 @@ namespace BudgetAnalyser.Engine.Matching
 
             IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
             await SaveToDiskAsync(storageKey, dataEntities);
-
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(ApplicationHookEventType.Repository, "MatchingRuleRepository", ApplicationHookEventArgs.Save));
-            }
         }
 
         protected virtual string LoadXamlFromDisk(string fileName)
