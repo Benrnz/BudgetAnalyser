@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
@@ -22,7 +21,6 @@ namespace BudgetAnalyser.Budget
         private const string CloseBudgetMenuName = "Close _Budget";
         private const string EditBudgetMenuName = "Edit Current _Budget";
         private readonly IApplicationDatabaseService applicationDatabaseService;
-        private readonly IUserInputBox inputBox;
         private readonly IBudgetMaintenanceService maintenanceService;
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -60,7 +58,6 @@ namespace BudgetAnalyser.Budget
             this.applicationDatabaseService = applicationDatabaseService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.inputBox = uiContext.UserPrompts.InputBox;
             BudgetPieController = uiContext.BudgetPieController;
             NewBudgetController = uiContext.NewBudgetModelController;
             NewBudgetController.Ready += OnAddNewBudgetReady;

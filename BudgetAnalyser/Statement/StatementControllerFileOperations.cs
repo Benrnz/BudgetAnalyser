@@ -78,7 +78,6 @@ namespace BudgetAnalyser.Statement
 
         internal async Task MergeInNewTransactions()
         {
-            // TODO Do we really need to force save here?
             PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
 
             string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);

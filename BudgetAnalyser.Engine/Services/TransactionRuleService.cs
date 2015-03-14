@@ -202,7 +202,6 @@ namespace BudgetAnalyser.Engine.Services
             catch (FileNotFoundException)
             {
                 // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                // TODO Reassess how the new matching rule file gets created.
                 this.rulesStorageKey = BuildDefaultFileName();
                 repoRules = new List<MatchingRule>();
             }

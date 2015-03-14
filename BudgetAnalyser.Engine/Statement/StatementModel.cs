@@ -44,7 +44,11 @@ namespace BudgetAnalyser.Engine.Statement
         {
             get { return this.doNotUseAllTransactions; }
 
-            private set { this.doNotUseAllTransactions = value.ToList(); }
+            private set
+            {
+                this.doNotUseAllTransactions = value.ToList();
+                OnPropertyChanged();
+            }
         }
 
         public int DurationInMonths
@@ -249,8 +253,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (this.duplicates != null)
             {
-                // TODO How to reset this ?! Not Good.
-                return this.duplicates;
+                return this.duplicates; // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
             }
 
             List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();

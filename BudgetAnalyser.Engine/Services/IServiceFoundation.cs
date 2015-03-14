@@ -10,6 +10,5 @@
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = "Useful to document the purpose of these service interfaces.")]
     public interface IServiceFoundation
     {
-        // TODO maybe standardise persistence?
     }
 }

@@ -251,7 +251,6 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException("message");
             }
 
-            // TODO Can this logic be moved to the Dashboard Service.
             if (message.StatementModel == null)
             {
                 return;

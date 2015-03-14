@@ -116,7 +116,7 @@
                         ToolTip="Save Transactions (Ctrl+S)" />
                 <Button Command="{Binding MergeStatementCommand}"
                         Style="{StaticResource Button.Round.Add}"
-                        ToolTip="Merge in new Transactions" />
+                        ToolTip="Merge in new Transactions. This will also save any unsaved changes before merging new transactions." />
             </StackPanel>
         </Grid>
 
