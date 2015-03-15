@@ -21,8 +21,8 @@ namespace BudgetAnalyser.Engine.Services
         private readonly ILogger logger;
 
         public LedgerService(
-            [NotNull] ILedgerBookRepository ledgerRepository, 
-            [NotNull] IAccountTypeRepository accountTypeRepository, 
+            [NotNull] ILedgerBookRepository ledgerRepository,
+            [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ILogger logger)
         {
             if (ledgerRepository == null)
@@ -51,33 +51,20 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
 
-        public LedgerBook LedgerBook { get; private set; }
-
-        /// <summary>
-        /// Gets the type of the data the implementation deals with.
-        /// </summary>
         public ApplicationDataType DataType
         {
             get { return ApplicationDataType.Ledger; }
         }
 
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
+        public LedgerBook LedgerBook { get; private set; }
+
         public int LoadSequence
         {
             get { return 50; }
         }
 
-        /// <summary>
-        ///     Gets the user reminder task list for reconciliation.
-        /// </summary>
         public ToDoCollection ReconciliationToDoList { get; private set; }
 
-        /// <summary>
-        ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
-        /// </summary>
         public void CancelBalanceAdjustment(LedgerEntryLine entryLine, Guid transactionId)
         {
             if (entryLine == null)
@@ -93,9 +80,6 @@ namespace BudgetAnalyser.Engine.Services
             entryLine.CancelBalanceAdjustment(transactionId);
         }
 
-        /// <summary>
-        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
         public void Close()
         {
             LedgerBook = null;
@@ -106,10 +90,6 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        /// <summary>
-        ///     Creates a new balance adjustment transaction for the given entry line.  The entry line must exist in the current
-        ///     Ledger Book.
-        /// </summary>
         public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, AccountType account)
         {
             if (entryLine == null)
@@ -137,9 +117,6 @@ namespace BudgetAnalyser.Engine.Services
             return adjustmentTransaction;
         }
 
-        /// <summary>
-        ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
-        /// </summary>
         public LedgerTransaction CreateLedgerTransaction(LedgerEntry ledgerEntry, decimal amount, string narrative)
         {
             if (ledgerEntry == null)
@@ -174,9 +151,6 @@ namespace BudgetAnalyser.Engine.Services
             return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", storageKey);
         }
 
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase == null)
@@ -263,9 +237,6 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook.RemoveLine(line);
         }
 
-        /// <summary>
-        ///     Removes the transaction from the specified Ledger Entry. The Ledger Entry must exist in the current Ledger Book.
-        /// </summary>
         public void RemoveTransaction(LedgerEntry ledgerEntry, Guid transactionId)
         {
             if (ledgerEntry == null)
@@ -295,13 +266,13 @@ namespace BudgetAnalyser.Engine.Services
             ledgerBook.Name = newName;
         }
 
-        /// <summary>
-        ///     Saves the application database asynchronously.
-        /// </summary>
-        public async Task SaveAsync()
+        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
         {
-            var savingHandler = Saving;
-            if (savingHandler != null) savingHandler(this, new AdditionalInformationRequestedEventArgs());
+            EventHandler<AdditionalInformationRequestedEventArgs> savingHandler = Saving;
+            if (savingHandler != null)
+            {
+                savingHandler(this, new AdditionalInformationRequestedEventArgs());
+            }
 
             var messages = new StringBuilder();
             if (!LedgerBook.Validate(messages))
@@ -310,19 +281,15 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.FileName);
-            var handler = Saved;
-            if (handler != null) handler(this, EventArgs.Empty);
+            EventHandler handler = Saved;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
-        /// <summary>
-        /// Validates the model owned by the service.
-        /// </summary>
-        public bool ValidateModel(StringBuilder messages)
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
         {
-            var handler = Validating;
-            if (handler != null) handler(this, new ValidatingEventArgs());
-
-            return LedgerBook.Validate(messages);
         }
 
         public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, AccountType storeInThisAccount)
@@ -344,9 +311,6 @@ namespace BudgetAnalyser.Engine.Services
             return LedgerBook.UnlockMostRecentLine();
         }
 
-        /// <summary>
-        ///     Updates the remarks for the given Ledger Entry Line. The Ledger Entry Line must exist in the current Ledger Book.
-        /// </summary>
         public void UpdateRemarks(LedgerEntryLine entryLine, string remarks)
         {
             if (entryLine == null)
@@ -367,9 +331,17 @@ namespace BudgetAnalyser.Engine.Services
             entryLine.UpdateRemarks(remarks);
         }
 
-        /// <summary>
-        ///     Returns a list of valid accounts for use with the Ledger Book.
-        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            EventHandler<ValidatingEventArgs> handler = Validating;
+            if (handler != null)
+            {
+                handler(this, new ValidatingEventArgs());
+            }
+
+            return LedgerBook.Validate(messages);
+        }
+
         public IEnumerable<AccountType> ValidLedgerAccounts()
         {
             return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();

@@ -21,6 +21,7 @@ namespace BudgetAnalyser.Budget
         private const string CloseBudgetMenuName = "Close _Budget";
         private const string EditBudgetMenuName = "Edit Current _Budget";
         private readonly IApplicationDatabaseService applicationDatabaseService;
+        private readonly IUserInputBox inputBox;
         private readonly IBudgetMaintenanceService maintenanceService;
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -58,6 +59,7 @@ namespace BudgetAnalyser.Budget
             this.applicationDatabaseService = applicationDatabaseService;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
+            this.inputBox = uiContext.UserPrompts.InputBox;
             BudgetPieController = uiContext.BudgetPieController;
             NewBudgetController = uiContext.NewBudgetModelController;
             NewBudgetController.Ready += OnAddNewBudgetReady;
@@ -231,11 +233,11 @@ namespace BudgetAnalyser.Budget
             get { return Budgets.FileName.TruncateLeft(100, true); }
         }
 
-        //protected virtual string PromptUserForLastModifiedComment()
-        //{
-        //    string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
-        //    return comment ?? string.Empty;
-        //}
+        protected virtual string PromptUserForLastModifiedComment()
+        {
+            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+            return comment ?? string.Empty;
+        }
 
         private bool CanExecuteShowPieCommand()
         {
@@ -408,10 +410,8 @@ namespace BudgetAnalyser.Budget
         private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
         {
             SyncDataToBudgetService();
-            // TODO cant use the budget last save comment anymore with parallel save. It requires a InputBox which must be on the UI thread. 
-            // Possibly change this to a notepad sidebar instead.
+            args.ModificationComment = PromptUserForLastModifiedComment();
             args.Context = CurrentBudget.Model;
-            Dirty = false;
         }
 
         private void OnShowAllCommandExecuted()

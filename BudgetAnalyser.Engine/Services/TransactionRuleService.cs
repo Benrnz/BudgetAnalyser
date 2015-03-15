@@ -62,18 +62,11 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
 
-        /// <summary>
-        /// Gets the type of the data the implementation deals with.
-        /// </summary>
         public ApplicationDataType DataType
         {
             get { return ApplicationDataType.MatchingRules; }
         }
 
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
         public int LoadSequence
         {
             get { return 50; }
@@ -121,9 +114,6 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        /// <summary>
-        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
         public void Close()
         {
             this.rulesStorageKey = null;
@@ -184,9 +174,6 @@ namespace BudgetAnalyser.Engine.Services
                    || IsEqualButNotBlank(transactionTypeName, rule.TransactionType);
         }
 
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             MatchingRules.Clear();
@@ -270,13 +257,13 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        /// <summary>
-        ///     Saves the application database asynchronously.
-        /// </summary>
-        public async Task SaveAsync()
+        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
         {
-            var handler = Saving;
-            if (handler != null) handler(this, new AdditionalInformationRequestedEventArgs());
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            if (handler != null)
+            {
+                handler(this, new AdditionalInformationRequestedEventArgs());
+            }
 
             var messages = new StringBuilder();
             if (ValidateModel(messages))
@@ -295,13 +282,17 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        /// <summary>
-        ///     Validates the model owned by the service.
-        /// </summary>
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        {
+        }
+
         public bool ValidateModel(StringBuilder messages)
         {
-            var handler = Validating;
-            if (handler != null) handler(this, new ValidatingEventArgs());
+            EventHandler<ValidatingEventArgs> handler = Validating;
+            if (handler != null)
+            {
+                handler(this, new ValidatingEventArgs());
+            }
             return true;
         }
 

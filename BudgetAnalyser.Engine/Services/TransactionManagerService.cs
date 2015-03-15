@@ -26,8 +26,8 @@ namespace BudgetAnalyser.Engine.Services
         private ObservableCollection<Transaction> transactions;
 
         public TransactionManagerService(
-            [NotNull] IBudgetBucketRepository bucketRepository, 
-            [NotNull] IStatementRepository statementRepository, 
+            [NotNull] IBudgetBucketRepository bucketRepository,
+            [NotNull] IStatementRepository statementRepository,
             [NotNull] ILogger logger)
         {
             if (bucketRepository == null)
@@ -69,22 +69,17 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        /// <summary>
-        /// Gets the type of the data the implementation deals with.
-        /// </summary>
         public ApplicationDataType DataType
         {
             get { return ApplicationDataType.Transactions; }
         }
 
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
         public int LoadSequence
         {
             get { return 10; }
         }
+
+        public StatementModel StatementModel { get; private set; }
 
         public decimal TotalCount
         {
@@ -125,17 +120,12 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        public StatementModel StatementModel { get; private set; }
-
         public ObservableCollection<Transaction> ClearBucketAndTextFilters()
         {
             ResetTransactionsCollection();
             return this.transactions;
         }
 
-        /// <summary>
-        ///     Closes the currently loaded transaction file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
         public void Close()
         {
             this.transactions = new ObservableCollection<Transaction>();
@@ -235,9 +225,6 @@ namespace BudgetAnalyser.Engine.Services
             this.sortedByBucket = stateData.SortByBucket ?? false;
         }
 
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase == null)
@@ -261,45 +248,6 @@ namespace BudgetAnalyser.Engine.Services
             {
                 handler(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        ///     Saves the application database asynchronously.
-        /// </summary>
-        public async Task SaveAsync()
-        {
-            if (StatementModel == null)
-            {
-                return;
-            }
-
-            var handler = Saving;
-            if (handler != null) handler(this, new AdditionalInformationRequestedEventArgs());
-
-            var messages = new StringBuilder();
-            if (!ValidateModel(messages))
-            {
-                throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
-            }
-
-            await this.statementRepository.SaveAsync(StatementModel);
-            var savedHandler = Saved;
-            if (savedHandler != null)
-            {
-                savedHandler(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// Validates the model owned by the service.
-        /// </summary>
-        public bool ValidateModel(StringBuilder messages)
-        {
-            var handler = Validating;
-            if (handler != null) handler(this, new ValidatingEventArgs());
-
-            // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
-            return true;
         }
 
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
@@ -343,6 +291,37 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel.RemoveTransaction(transactionToRemove);
         }
 
+        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        {
+            if (StatementModel == null)
+            {
+                return;
+            }
+
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            if (handler != null)
+            {
+                handler(this, new AdditionalInformationRequestedEventArgs());
+            }
+
+            var messages = new StringBuilder();
+            if (!ValidateModel(messages))
+            {
+                throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
+            }
+
+            await this.statementRepository.SaveAsync(StatementModel);
+            EventHandler savedHandler = Saved;
+            if (savedHandler != null)
+            {
+                savedHandler(this, EventArgs.Empty);
+            }
+        }
+
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        {
+        }
+
         public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
         {
             if (originalTransaction == null)
@@ -366,6 +345,18 @@ namespace BudgetAnalyser.Engine.Services
                 splinterAmount2,
                 splinterBucket1,
                 splinterBucket2);
+        }
+
+        public bool ValidateModel(StringBuilder messages)
+        {
+            EventHandler<ValidatingEventArgs> handler = Validating;
+            if (handler != null)
+            {
+                handler(this, new ValidatingEventArgs());
+            }
+
+            // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
+            return true;
         }
 
         public async Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection budgets = null)

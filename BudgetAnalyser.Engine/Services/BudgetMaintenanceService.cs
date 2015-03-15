@@ -63,44 +63,20 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
 
-        /// <summary>
-        ///     Gets the budget bucket repository.
-        ///     Allows the UI to set up a static reference to the Bucket repository for binding, converters and templates.
-        /// </summary>
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
         public BudgetCollection Budgets { get; private set; }
 
-        /// <summary>
-        /// Gets the type of the data the implementation deals with.
-        /// </summary>
         public ApplicationDataType DataType
         {
             get { return ApplicationDataType.Budget; }
         }
 
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
         public int LoadSequence
         {
             get { return 5; }
         }
 
-        /// <summary>
-        ///     Clones the given <see cref="BudgetModel" /> to create a new budget with a future effective date.
-        /// </summary>
-        /// <param name="sourceBudget">The source budget to clone from.</param>
-        /// <param name="newBudgetEffectiveFrom">This date will be used as the new budget's effective date.</param>
-        /// <returns>The newly created budget.</returns>
-        /// <exception cref="ArgumentNullException">Will be thrown if source budget is null.</exception>
-        /// <exception cref="ValidationWarningException">Will be thrown if the source budget is in an invalid state.</exception>
-        /// <exception cref="ArgumentException">
-        ///     Will be thrown if the effective date of the new budget is not after the provided
-        ///     budget.
-        /// </exception>
-        /// <exception cref="ArgumentException">Will be thrown if the effective date is not a future date.</exception>
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {
             if (sourceBudget == null)
@@ -142,9 +118,6 @@ namespace BudgetAnalyser.Engine.Services
             return newBudget;
         }
 
-        /// <summary>
-        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
         public void Close()
         {
             CreateNewBudgetCollection();
@@ -155,21 +128,12 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        /// <summary>
-        ///     Creates a new budget collection with one new empty budget model.
-        /// </summary>
-        /// <returns>
-        ///     An object that contains a collection of one new budget.
-        /// </returns>
         public BudgetCurrencyContext CreateNewBudgetCollection()
         {
             Budgets = this.budgetRepository.CreateNew();
             return new BudgetCurrencyContext(Budgets, Budgets.First());
         }
 
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase == null)
@@ -187,10 +151,27 @@ namespace BudgetAnalyser.Engine.Services
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
-        /// <summary>
-        ///     Saves the application database asynchronously.
-        /// </summary>
-        public async Task SaveAsync()
+        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        {
+            EnsureAllBucketsUsedAreInBucketRepo();
+
+            var messages = new StringBuilder();
+            if (Budgets.Validate(messages))
+            {
+                await this.budgetRepository.SaveAsync();
+                EventHandler savedHandler = Saved;
+                if (savedHandler != null)
+                {
+                    savedHandler(this, EventArgs.Empty);
+                }
+                return;
+            }
+
+            this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
+            throw new ValidationWarningException("Unable to save Budget:\n" + messages);
+        }
+
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
@@ -209,20 +190,6 @@ namespace BudgetAnalyser.Engine.Services
             {
                 budgetModel.LastModifiedComment = args.ModificationComment;
             }
-
-            EnsureAllBucketsUsedAreInBucketRepo();
-
-            var messages = new StringBuilder();
-            if (Budgets.Validate(messages))
-            {
-                await this.budgetRepository.SaveAsync();
-                var savedHandler = Saved;
-                if (savedHandler != null) savedHandler(this, EventArgs.Empty);
-                return;
-            }
-
-            this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
-            throw new ValidationWarningException("Unable to save Budget:\n" + messages);
         }
 
         public void UpdateIncomesAndExpenses(
@@ -239,9 +206,6 @@ namespace BudgetAnalyser.Engine.Services
             model.Update(allIncomes, allExpenses);
         }
 
-        /// <summary>
-        ///     Validates the model owned by the service.
-        /// </summary>
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;

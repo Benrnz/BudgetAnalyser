@@ -147,13 +147,19 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
 
+            var contexts = new Dictionary<ApplicationDataType, object>();
+            this.databaseDependents
+                .Where(service => this.dirtyData[service.DataType])
+                .ToList()
+                .ForEach(service => service.SavePreview(contexts));
+
             // Save the main application repository first.
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
             // Save all remaining service's data in parallel.
             List<Task> savingTasks = this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
-                .Select(service => Task.Run(() => service.SaveAsync()))
+                .Select(service => Task.Run(() => service.SaveAsync(contexts)))
                 .ToList();
 
             await Task.WhenAll(savingTasks);
