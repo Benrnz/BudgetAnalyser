@@ -173,11 +173,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date of the previous ledger line. This is used to include transactions from the
         ///     Statement up to but excluding the date of this reconciliation.
         /// </param>
+        /// <param name="todoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
         internal void AddNew(
             LedgerBook parentLedgerBook,
             BudgetModel currentBudget,
             StatementModel statement,
-            DateTime startDateIncl)
+            DateTime startDateIncl,
+            TodoList todoList)
         {
             if (!IsNew)
             {
@@ -199,9 +201,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 LedgerBucket ledgerBucket = previousLedgerEntry.LedgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate, todoList);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
+                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions, todoList);
                 newEntry.SetTransactionsForReconciliation(transactions);
 
                 this.entries.Add(newEntry);
@@ -304,9 +306,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return result;
         }
 
-        private void AutoMatchTransactionsAlreadyInPreviousPeriod(List<Transaction> transactions, LedgerEntry previousLedgerEntry, List<LedgerTransaction> newLedgerTransactions)
+        private void AutoMatchTransactionsAlreadyInPreviousPeriod(
+            List<Transaction> transactions, 
+            LedgerEntry previousLedgerEntry, 
+            List<LedgerTransaction> newLedgerTransactions, 
+            TodoList todoList)
         {
             List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
+            var checkMatchedTxns = new List<LedgerTransaction>();
             var checkMatchCount = 0;
             foreach (LedgerTransaction lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
             {
@@ -326,6 +333,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         // There will be two statement transactions but only one ledger transaction to match to.
                         checkMatchCount++;
                         ledgerTxn.AutoMatchingReference = string.Format(CultureInfo.InvariantCulture, "{0}{1}", MatchedPrefix, ledgerTxn.AutoMatchingReference);
+                        checkMatchedTxns.Add(ledgerTxn);
                     }
 
                     LedgerTransaction duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
@@ -345,6 +353,18 @@ namespace BudgetAnalyser.Engine.Ledger
                             "Ledger Reconciliation - WARNING {0} ledger transactions appear to be waiting to be automatched, but not statement transactions were found. {1}",
                             ledgerAutoMatchTransactions.Count(),
                             ledgerAutoMatchTransactions.First().AutoMatchingReference));
+                var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
+                foreach (var txn in unmatchedTxns)
+                {
+                    todoList.Add(new TodoTask(
+                        string.Format(
+                            "WARNING: Missing auto-match transaction. Transfer {0:C} with reference {1} Dated {2:d} to {3}. See log for more details.",
+                            txn.Amount,
+                            txn.AutoMatchingReference,
+                            Date.AddDays(-1),
+                            previousLedgerEntry.LedgerBucket.StoredInAccount), 
+                        true));
+                }
             }
         }
 
@@ -423,32 +443,40 @@ namespace BudgetAnalyser.Engine.Ledger
             return previousEntry == null ? 0 : previousEntry.Balance;
         }
 
-        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
+        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, TodoList todoList)
         {
-            Expense expenseBudget = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
+            Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
-            if (expenseBudget != null)
+            if (budgetedExpense != null)
             {
                 BudgetCreditLedgerTransaction budgetedAmount;
                 if (ledgerBucket.StoredInAccount.IsSalaryAccount)
                 {
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
-                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0,
-                        Narrative = expenseBudget.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
+                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                        Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
                     };
                 }
                 else
                 {
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
-                        Amount = expenseBudget.Bucket.Active ? expenseBudget.Amount : 0,
+                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
                         Narrative =
-                            expenseBudget.Bucket.Active
+                            budgetedExpense.Bucket.Active
                                 ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
                                 : "Warning! Bucket has been disabled.",
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
+                    todoList.Add(
+                        new TodoTask(
+                            string.Format(
+                                "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
+                                budgetedAmount.Amount, 
+                                ledgerBucket.StoredInAccount,
+                                budgetedAmount.AutoMatchingReference), 
+                            true));
                 }
 
                 budgetedAmount.Date = reconciliationDate;

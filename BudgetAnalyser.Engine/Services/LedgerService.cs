@@ -16,9 +16,10 @@ namespace BudgetAnalyser.Engine.Services
     public class LedgerService : ILedgerService
     {
         private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly ILogger logger;
         private readonly ILedgerBookRepository ledgerRepository;
 
-        public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository)
+        public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository, [NotNull] ILogger logger)
         {
             if (ledgerRepository == null)
             {
@@ -30,13 +31,20 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("accountTypeRepository");
             }
 
+            if (logger == null)
+            {
+                throw new ArgumentNullException("logger");
+            }
+
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
+            this.logger = logger;
         }
 
         public event EventHandler Closed;
         public event EventHandler NewDatasourceAvailable;
         public LedgerBook LedgerBook { get; private set; }
+        public TodoList TodoList { get; private set; }
 
         /// <summary>
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
@@ -175,10 +183,12 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("balances");
             }
+
             if (budgetContext == null)
             {
                 throw new ArgumentNullException("budgetContext");
             }
+
             if (statement == null)
             {
                 throw new ArgumentNullException("statement");
@@ -189,7 +199,18 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            return LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, statement, ignoreWarnings);
+            TodoList = new TodoList();
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
+            var recon = LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, TodoList, statement, ignoreWarnings);
+            foreach (var task in TodoList)
+            {
+                this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
+            }
+
+            stopWatch.Stop();
+            this.logger.LogInfo(l => l.Format("Finished Ledger Book reconciliation {0}. It took {1:F0}ms", DateTime.Now, stopWatch.ElapsedMilliseconds));
+            return recon;
         }
 
         public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerBucket ledger, AccountType storedInAccount)

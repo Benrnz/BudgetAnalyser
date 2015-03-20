@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     every month. Transactions are searched for up to but not including this date.
         /// </param>
         /// <param name="balances">
-        ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
+        ///     The bank balances as at the <see cref="reconciliationDateIfFirstEver" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <param name="budgetContext">The current budget context.</param>

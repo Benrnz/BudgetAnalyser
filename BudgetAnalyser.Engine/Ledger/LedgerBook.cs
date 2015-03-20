@@ -106,6 +106,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     ledger book.
         /// </param>
         /// <param name="budget">The current budget.</param>
+        /// <param name="todoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
@@ -113,6 +114,7 @@ namespace BudgetAnalyser.Engine.Ledger
             DateTime dateIfFirstEver,
             IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,
+            TodoList todoList = null,
             StatementModel statement = null,
             bool ignoreWarnings = false)
         {
@@ -128,9 +130,11 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
             }
 
+            if (todoList == null) todoList = new TodoList();
+
             decimal consistencyCheck1 = Reconciliations.Sum(e => e.CalculatedSurplus);
             var newLine = new LedgerEntryLine(dateIfFirstEver, bankBalances, this.logger);
-            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(dateIfFirstEver));
+            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(dateIfFirstEver), todoList);
             decimal consistencyCheck2 = Reconciliations.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {
@@ -138,6 +142,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.reconciliations.Insert(0, newLine);
+
+            foreach (var surplusBalance in newLine.SurplusBalances.Where(s => s.Balance < 0))
+            {
+                todoList.Add(new TodoTask(string.Format("{0} has a negative surplus balance {1}, there must be one or more transfers to action.", surplusBalance.Account, surplusBalance.Balance), true));
+            }
+
             return newLine;
         }
 

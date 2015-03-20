@@ -122,6 +122,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
+        ///     Also performs some automated actions:
+        ///     + Transfers to Surplus any remaining amount for Spent Monthly Buckets.
+        ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
         /// </summary>
         /// <param name="newTransactions">The list of new transactions for this entry. This includes the monthly budgeted amount.</param>
         internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions)
