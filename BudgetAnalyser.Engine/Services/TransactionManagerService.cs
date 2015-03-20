@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public event EventHandler Closed;
-        public event EventHandler NewDatasourceAvailable;
+        public event EventHandler NewDataSourceAvailable;
 
         public decimal AverageDebit
         {
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
         ///     Defaults to 50.
         /// </summary>
-        public int Sequence
+        public int LoadSequence
         {
             get { return 10; }
         }
@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.Services
 
             ResetTransactionsCollection();
 
-            EventHandler handler = NewDatasourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

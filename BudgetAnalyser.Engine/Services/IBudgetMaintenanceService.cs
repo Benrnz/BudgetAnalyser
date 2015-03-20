@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to maintain the full collection of budgets.
     ///     This is designed as a stateful service.
     /// </summary>
-    public interface IBudgetMaintenanceService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
+    public interface IBudgetMaintenanceService : IApplicationDatabaseDependent, INotifyDatabaseChanges, IServiceFoundation
     {
         /// <summary>
         ///     Gets the budget bucket repository.

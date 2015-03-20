@@ -11,13 +11,13 @@ namespace BudgetAnalyser.Engine.Services
     public class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
-        private readonly IEnumerable<IApplicationDatabaseDependant> databaseDependendants;
+        private readonly IEnumerable<IApplicationDatabaseDependent> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
         private ApplicationDatabase budgetAnalyserDatabase;
 
         public ApplicationDatabaseService(
             [NotNull] IApplicationDatabaseRepository applicationRepository,
-            [NotNull] IEnumerable<IApplicationDatabaseDependant> databaseDependendants)
+            [NotNull] IEnumerable<IApplicationDatabaseDependent> databaseDependents)
 
         {
             if (applicationRepository == null)
@@ -25,13 +25,13 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationRepository");
             }
 
-            if (databaseDependendants == null)
+            if (databaseDependents == null)
             {
-                throw new ArgumentNullException("databaseDependendants");
+                throw new ArgumentNullException("databaseDependents");
             }
 
             this.applicationRepository = applicationRepository;
-            this.databaseDependendants = databaseDependendants.OrderBy(d => d.Sequence).ToList();
+            this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             InitialiseDirtyDataTable();
         }
 
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public ApplicationDatabase Close()
         {
-            foreach (IApplicationDatabaseDependant service in this.databaseDependendants.OrderByDescending(d => d.Sequence))
+            foreach (IApplicationDatabaseDependent service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
             }
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
             try
             {
-                foreach (IApplicationDatabaseDependant service in this.databaseDependendants) // Already sorted ascending by sequence number.
+                foreach (IApplicationDatabaseDependent service in this.databaseDependents) // Already sorted ascending by sequence number.
                 {
                     await service.LoadAsync(this.budgetAnalyserDatabase);
                 }

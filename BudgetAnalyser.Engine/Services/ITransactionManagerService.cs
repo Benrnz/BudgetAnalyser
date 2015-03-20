@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     An interface for managing, viewing, and storing transactions
     ///     This service is designed to be stateful.
     /// </summary>
-    public interface ITransactionManagerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
+    public interface ITransactionManagerService : IApplicationDatabaseDependent, INotifyDatabaseChanges, IServiceFoundation
     {
         decimal AverageDebit { get; }
         decimal TotalCount { get; }

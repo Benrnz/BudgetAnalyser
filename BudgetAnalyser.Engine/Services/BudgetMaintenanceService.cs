@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public event EventHandler Closed;
-        public event EventHandler NewDatasourceAvailable;
+        public event EventHandler NewDataSourceAvailable;
 
         /// <summary>
         ///     Gets the budget bucket repository.
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Services
         /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
         /// Defaults to 50.
         /// </summary>
-        public int Sequence
+        public int LoadSequence
         {
             get { return 5; }
         }
@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
-            EventHandler handler = NewDatasourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

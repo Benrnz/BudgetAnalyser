@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Matching
             MessengerInstance = uiContext.Messenger;
 
             this.ruleService.Closed += OnClosedNotificationReceived;
-            this.ruleService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
+            this.ruleService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace BudgetAnalyser.Matching
             EditingRule = true;
         }
 
-        private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
+        private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
         {
             SortBy = BucketSortKey; // Defaults to Bucket sort order.
             Rules = this.ruleService.MatchingRules;

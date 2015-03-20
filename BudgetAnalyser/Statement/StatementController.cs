@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseMessageReceived);
 
             this.transactionService.Closed += OnClosedNotificationReceived;
-            this.transactionService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
+            this.transactionService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         }
 
         public AppliedRulesController AppliedRulesController
@@ -339,7 +339,7 @@ namespace BudgetAnalyser.Statement
             await FileOperations.MergeInNewTransactions();
         }
 
-        private async void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs e)
+        private async void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
         {
             await FileOperations.SyncWithServiceAsync();
         }

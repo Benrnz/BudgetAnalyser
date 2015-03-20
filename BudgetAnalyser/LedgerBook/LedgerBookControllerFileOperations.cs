@@ -13,9 +13,7 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerBookControllerFileOperations
     {
         private readonly IUserMessageBox messageBox;
-        private readonly Func<IUserPromptOpenFile> openFileDialogFactory;
         private readonly IUserQuestionBoxYesNo questionBox;
-        private readonly Func<IUserPromptSaveFile> saveFileDialogFactory;
 
         public LedgerBookControllerFileOperations(
             [NotNull] UiContext uiContext,
@@ -31,8 +29,6 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("messenger");
             }
 
-            this.saveFileDialogFactory = uiContext.UserPrompts.SaveFileFactory;
-            this.openFileDialogFactory = uiContext.UserPrompts.OpenFileFactory;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.messageBox = uiContext.UserPrompts.MessageBox;
 

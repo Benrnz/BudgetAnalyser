@@ -1,11 +1,11 @@
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    /// A task item for use with the <see cref="TodoList"/>.
+    /// A task item for use with the <see cref="ToDoCollection"/>.
     /// </summary>
-    public class TodoTask
+    public class ToDoTask
     {
-        public TodoTask(string description, bool systemGenerated = false)
+        public ToDoTask(string description, bool systemGenerated = false)
         {
             Description = description;
             SystemGenerated = systemGenerated;

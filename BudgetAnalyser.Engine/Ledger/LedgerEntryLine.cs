@@ -173,13 +173,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date of the previous ledger line. This is used to include transactions from the
         ///     Statement up to but excluding the date of this reconciliation.
         /// </param>
-        /// <param name="todoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
+        /// <param name="toDoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
         internal void AddNew(
             LedgerBook parentLedgerBook,
             BudgetModel currentBudget,
             StatementModel statement,
             DateTime startDateIncl,
-            TodoList todoList)
+            ToDoCollection toDoList)
         {
             if (!IsNew)
             {
@@ -201,9 +201,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 LedgerBucket ledgerBucket = previousLedgerEntry.LedgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate, todoList);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate, toDoList);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions, todoList);
+                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions, toDoList);
                 newEntry.SetTransactionsForReconciliation(transactions);
 
                 this.entries.Add(newEntry);
@@ -310,7 +310,7 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> transactions, 
             LedgerEntry previousLedgerEntry, 
             List<LedgerTransaction> newLedgerTransactions, 
-            TodoList todoList)
+            ToDoCollection toDoList)
         {
             List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
             var checkMatchedTxns = new List<LedgerTransaction>();
@@ -356,8 +356,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
                 foreach (var txn in unmatchedTxns)
                 {
-                    todoList.Add(new TodoTask(
+                    toDoList.Add(new ToDoTask(
                         string.Format(
+                            CultureInfo.CurrentCulture,
                             "WARNING: Missing auto-match transaction. Transfer {0:C} with reference {1} Dated {2:d} to {3}. See log for more details.",
                             txn.Amount,
                             txn.AutoMatchingReference,
@@ -443,7 +444,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return previousEntry == null ? 0 : previousEntry.Balance;
         }
 
-        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, TodoList todoList)
+        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, ToDoCollection toDoList)
         {
             Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
@@ -469,9 +470,10 @@ namespace BudgetAnalyser.Engine.Ledger
                                 : "Warning! Bucket has been disabled.",
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
-                    todoList.Add(
-                        new TodoTask(
+                    toDoList.Add(
+                        new ToDoTask(
                             string.Format(
+                                CultureInfo.CurrentCulture,
                                 "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
                                 budgetedAmount.Amount, 
                                 ledgerBucket.StoredInAccount,

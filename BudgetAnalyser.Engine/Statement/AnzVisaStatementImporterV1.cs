@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -18,15 +17,9 @@ namespace BudgetAnalyser.Engine.Statement
         private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>();
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
-        private readonly IUserMessageBox userMessageBox;
 
-        public AnzVisaStatementImporterV1([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
+        public AnzVisaStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
         {
-            if (userMessageBox == null)
-            {
-                throw new ArgumentNullException("userMessageBox");
-            }
-
             if (importUtilities == null)
             {
                 throw new ArgumentNullException("importUtilities");
@@ -37,7 +30,6 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("logger");
             }
 
-            this.userMessageBox = userMessageBox;
             this.importUtilities = importUtilities;
             this.importUtilities.ConfigureLocale(CultureInfo.CreateSpecificCulture("en-NZ")); // ANZ importers are NZ specific at this stage.
             this.logger = logger;

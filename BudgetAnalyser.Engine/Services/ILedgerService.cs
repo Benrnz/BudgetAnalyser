@@ -12,9 +12,14 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to provide access to manipulate ledger books.
     ///     This service is designed to be stateful.
     /// </summary>
-    public interface ILedgerService : IApplicationDatabaseDependant, INotifyDatabaseChanges, IServiceFoundation
+    public interface ILedgerService : IApplicationDatabaseDependent, INotifyDatabaseChanges, IServiceFoundation
     {
         LedgerBook LedgerBook { get; }
+
+        /// <summary>
+        ///     Gets the user reminder task list for reconciliation.
+        /// </summary>
+        ToDoCollection ReconciliationToDoList { get; }
 
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.

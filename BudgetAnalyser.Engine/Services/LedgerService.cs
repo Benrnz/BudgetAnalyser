@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace BudgetAnalyser.Engine.Services
     public class LedgerService : ILedgerService
     {
         private readonly IAccountTypeRepository accountTypeRepository;
-        private readonly ILogger logger;
         private readonly ILedgerBookRepository ledgerRepository;
+        private readonly ILogger logger;
 
         public LedgerService([NotNull] ILedgerBookRepository ledgerRepository, [NotNull] IAccountTypeRepository accountTypeRepository, [NotNull] ILogger logger)
         {
@@ -42,18 +43,22 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public event EventHandler Closed;
-        public event EventHandler NewDatasourceAvailable;
+        public event EventHandler NewDataSourceAvailable;
         public LedgerBook LedgerBook { get; private set; }
-        public TodoList TodoList { get; private set; }
 
         /// <summary>
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
         ///     Defaults to 50.
         /// </summary>
-        public int Sequence
+        public int LoadSequence
         {
             get { return 50; }
         }
+
+        /// <summary>
+        ///     Gets the user reminder task list for reconciliation.
+        /// </summary>
+        public ToDoCollection ReconciliationToDoList { get; private set; }
 
         /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
@@ -165,7 +170,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
-            EventHandler handler = NewDatasourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -199,11 +204,11 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            TodoList = new TodoList();
-            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            ReconciliationToDoList = new ToDoCollection();
+            Stopwatch stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
-            var recon = LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, TodoList, statement, ignoreWarnings);
-            foreach (var task in TodoList)
+            LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, ReconciliationToDoList, statement, ignoreWarnings);
+            foreach (ToDoTask task in ReconciliationToDoList)
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
             }

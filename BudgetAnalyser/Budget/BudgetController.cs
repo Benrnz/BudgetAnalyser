@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnPopUpResponseReceived);
             this.maintenanceService.Closed += OnClosedNotificationReceived;
-            this.maintenanceService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
+            this.maintenanceService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
 
             CurrentBudget = this.maintenanceService.CreateNewBudgetCollection();
         }
@@ -394,7 +394,7 @@ namespace BudgetAnalyser.Budget
             Surplus = IncomeTotal - ExpenseTotal;
         }
 
-        private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
+        private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
         {
             SyncWithBudgetService();
         }

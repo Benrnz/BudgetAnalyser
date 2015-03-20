@@ -15,8 +15,8 @@ namespace BudgetAnalyser.Engine.Services
         event EventHandler Closed;
 
         /// <summary>
-        ///     Occurs when a new datasource has been loaded and is now available for use.
+        ///     Occurs when a new data source has been loaded and is now available for use.
         /// </summary>
-        event EventHandler NewDatasourceAvailable;
+        event EventHandler NewDataSourceAvailable;
     }
 }

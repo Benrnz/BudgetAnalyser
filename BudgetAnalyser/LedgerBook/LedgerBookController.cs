@@ -68,7 +68,7 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
 
             this.ledgerService.Closed += OnClosedNotificationReceived;
-            this.ledgerService.NewDatasourceAvailable += OnNewDatasourceAvailableNotificationReceived;
+            this.ledgerService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         }
 
         public event EventHandler LedgerBookUpdated;
@@ -321,7 +321,7 @@ namespace BudgetAnalyser.LedgerBook
             FileOperations.Dirty = true;
         }
 
-        private void OnNewDatasourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
+        private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
         {
             FileOperations.SyncWithService();
         }

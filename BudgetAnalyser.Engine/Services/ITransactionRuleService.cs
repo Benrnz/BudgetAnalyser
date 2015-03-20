@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     The collections are owned by the consumer and passed into this service to be manipulated.
     ///     This service is designed to be stateful.
     /// </summary>
-    public interface ITransactionRuleService : INotifyDatabaseChanges, IApplicationDatabaseDependant, IServiceFoundation
+    public interface ITransactionRuleService : INotifyDatabaseChanges, IApplicationDatabaseDependent, IServiceFoundation
     {
         /// <summary>
         ///     Adds a new rule to the currently loaded set. Will also immediately persist the matching rule set.
@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependant.LoadAsync"/>
+        ///     <see cref="IApplicationDatabaseDependent.LoadAsync"/>
         /// </exception>
         bool AddRule([NotNull] MatchingRule ruleToAdd);
 
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="IApplicationDatabaseDependant.LoadAsync"/>
+        ///     <see cref="IApplicationDatabaseDependent.LoadAsync"/>
         /// </exception>
         bool RemoveRule([NotNull] MatchingRule ruleToRemove);
 

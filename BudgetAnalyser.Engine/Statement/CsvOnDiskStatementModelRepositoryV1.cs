@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -9,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement.Data;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -22,20 +20,13 @@ namespace BudgetAnalyser.Engine.Statement
 
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
-        private readonly IUserMessageBox userMessageBox;
 
         public CsvOnDiskStatementModelRepositoryV1(
-            [NotNull] IUserMessageBox userMessageBox,
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILogger logger,
             [NotNull] BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper,
             [NotNull] BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper)
         {
-            if (userMessageBox == null)
-            {
-                throw new ArgumentNullException("userMessageBox");
-            }
-
             if (importUtilities == null)
             {
                 throw new ArgumentNullException("importUtilities");
@@ -56,7 +47,6 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException("domainToDtoMapper");
             }
 
-            this.userMessageBox = userMessageBox;
             this.importUtilities = importUtilities;
             this.logger = logger;
             this.dtoToDomainMapper = dtoToDomainMapper;

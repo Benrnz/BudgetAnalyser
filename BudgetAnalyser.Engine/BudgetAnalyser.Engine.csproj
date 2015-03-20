@@ -142,7 +142,7 @@
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
-    <Compile Include="Ledger\TodoList.cs" />
+    <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
@@ -237,7 +237,7 @@
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
     <Compile Include="Services\DashboardService.cs" />
-    <Compile Include="Services\IApplicationDatabaseDependant.cs" />
+    <Compile Include="Services\IApplicationDatabaseDependent.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IBurnDownChartsService.cs" />

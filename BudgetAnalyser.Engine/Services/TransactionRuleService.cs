@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public event EventHandler Closed;
-        public event EventHandler NewDatasourceAvailable;
+        public event EventHandler NewDataSourceAvailable;
         public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
 
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
         ///     Defaults to 50.
         /// </summary>
-        public int Sequence
+        public int LoadSequence
         {
             get { return 50; }
         }
@@ -213,7 +213,7 @@ namespace BudgetAnalyser.Engine.Services
                 MatchingRulesGroupedByBucket.Add(groupedByBucket);
             }
 
-            EventHandler handler = NewDatasourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
