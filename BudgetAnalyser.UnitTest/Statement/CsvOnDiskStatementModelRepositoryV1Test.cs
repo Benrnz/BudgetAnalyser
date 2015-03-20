@@ -22,7 +22,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtils()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), null, new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(null, new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullDomainMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 null);
             Assert.Fail();
         }
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullDtoMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), new FakeLogger(), null,
+            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), new FakeLogger(), null,
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -49,16 +49,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), null, new BasicMapperFake<TransactionSetDto, StatementModel>(),
-                new BasicMapperFake<StatementModel, TransactionSetDto>());
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullMessageBox()
-        {
-            new CsvOnDiskStatementModelRepositoryV1(null, new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), null, new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -221,13 +212,13 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         private CsvOnDiskStatementModelRepositoryV1TestHarness Arrange()
         {
-            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new FakeUserMessageBox(), new BankImportUtilitiesTestHarness());
+            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness());
         }
 
         private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
             BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
         {
-            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new FakeUserMessageBox(), new BankImportUtilitiesTestHarness(), toDomainMapper, toDtoMapper);
+            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness(), toDomainMapper, toDtoMapper);
         }
     }
 }

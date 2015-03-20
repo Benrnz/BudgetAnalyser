@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -12,11 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         public static void GenerateCSharp(string fileName, DateTime beginDate, DateTime endDate)
         {
             var fakeLogger = new FakeLogger();
-            var bucketRepo = new BucketBucketRepoAlwaysFind();
-            var userMessageBox = new FakeUserMessageBox();
-            var accountTypeRepo = new InMemoryAccountTypeRepository();
             var importer = new CsvOnDiskStatementModelRepositoryV1(
-                userMessageBox, 
                 new BankImportUtilities(fakeLogger), 
                 fakeLogger,
                 new TransactionSetDtoToStatementModelMapper(),

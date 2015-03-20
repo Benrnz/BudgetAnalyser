@@ -31,14 +31,6 @@ namespace BudgetAnalyser.Engine.Account
         AccountType GetByKey(string key);
 
         /// <summary>
-        /// Retrieve the <see cref="AccountType"/> for the given key or creates a new one if it doesn't exist in the repository.
-        /// </summary>
-        /// <param name="key">The unique key.</param>
-        /// <param name="factory">The delegate to create a new <see cref="AccountType"/>. If not specified, the repository will "guess" which type to create.</param>
-        /// <returns>The found account type or a reference to the newly created one.</returns>
-        AccountType GetOrCreateNew(string key, Func<string, AccountType> factory = null);
-
-        /// <summary>
         /// Return a list of all <see cref="AccountType"/>s in the repository. These are the ones actively being used in the current data loaded.
         /// </summary>
         IEnumerable<AccountType> ListCurrentlyUsedAccountTypes();

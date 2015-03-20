@@ -11,9 +11,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {
-        public CsvOnDiskStatementModelRepositoryV1TestHarness(IUserMessageBox userMessageBox, BankImportUtilities importUtilities)
-            : base(userMessageBox, 
-                    importUtilities, 
+        public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities)
+            : base(importUtilities, 
                     new FakeLogger(), 
                     new TransactionSetDtoToStatementModelMapper(), 
                     new StatementModelToTransactionSetDtoMapper())
@@ -21,12 +20,10 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         }
 
         public CsvOnDiskStatementModelRepositoryV1TestHarness(
-            IUserMessageBox userMessageBox, 
             BankImportUtilities importUtilities, 
             BasicMapper<TransactionSetDto, StatementModel> toDomainMapper, 
             BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
-            : base(userMessageBox,
-                    importUtilities,
+            : base(importUtilities,
                     new FakeLogger(),
                     toDomainMapper,
                     toDtoMapper)

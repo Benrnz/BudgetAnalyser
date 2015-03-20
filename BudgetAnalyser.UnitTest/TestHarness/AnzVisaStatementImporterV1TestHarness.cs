@@ -9,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     public class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
     {
         public AnzVisaStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
-            : base(userMessageBox, importUtilities, new FakeLogger())
+            : base(importUtilities, new FakeLogger())
         {
         }
 

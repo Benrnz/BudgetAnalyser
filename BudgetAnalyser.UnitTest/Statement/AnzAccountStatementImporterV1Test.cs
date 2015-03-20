@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtilities()
         {
-            new AnzAccountStatementImporterV1(new FakeUserMessageBox(), null, new FakeLogger());
+            new AnzAccountStatementImporterV1(null, new FakeLogger());
             Assert.Fail();
         }
 
@@ -26,15 +26,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new AnzAccountStatementImporterV1(new FakeUserMessageBox(), new BankImportUtilities(new FakeLogger()), null);
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullMessageBox()
-        {
-            new AnzAccountStatementImporterV1(null, new BankImportUtilities(new FakeLogger()), new FakeLogger());
+            new AnzAccountStatementImporterV1(new BankImportUtilities(new FakeLogger()), null);
             Assert.Fail();
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using Rees.UserInteraction.Contracts;
@@ -10,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     public class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
     {
         public AnzAccountStatementImporterV1TestHarness([NotNull] IUserMessageBox userMessageBox, [NotNull] BankImportUtilities importUtilities)
-            : base(userMessageBox, importUtilities, new FakeLogger())
+            : base(importUtilities, new FakeLogger())
         {
         }
 

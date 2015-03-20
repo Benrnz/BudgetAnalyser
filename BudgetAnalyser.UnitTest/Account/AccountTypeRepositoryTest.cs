@@ -85,8 +85,8 @@ namespace BudgetAnalyser.UnitTest.Account
         public void GetOrCreateNewDuplicateEntryShouldNotThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            AccountType result1 = subject.GetOrCreateNew(Key1);
-            AccountType result2 = subject.GetOrCreateNew(Key1);
+            AccountType result1 = subject.GetByKey(Key1);
+            AccountType result2 = subject.GetByKey(Key1);
 
             Assert.AreSame(result1, result2);
         }
