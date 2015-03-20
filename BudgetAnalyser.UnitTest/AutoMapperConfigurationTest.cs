@@ -5,6 +5,7 @@ using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -33,6 +34,7 @@ namespace BudgetAnalyser.UnitTest
                             new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
                             new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())), 
                             new StatementAutoMapperConfiguration(new InMemoryTransactionTypeRepository(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()), 
+                            new ApplicationAutoMapperConfiguration(), 
                         }).Configure();
                     }
                 }

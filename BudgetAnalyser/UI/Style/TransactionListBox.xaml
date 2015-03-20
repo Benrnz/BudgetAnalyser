@@ -46,11 +46,8 @@
     <ContextMenu x:Key="TransactionContextMenu"
                  HasDropShadow="true">
         <ContextMenu.Resources>
-
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground"
-                        Value="Black" />
-            </Style>
+            <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
+                   TargetType="{x:Type TextBlock}" />
         </ContextMenu.Resources>
         <MenuItem Command="{Binding AppliedRulesController.ApplyRulesCommand}">
             <MenuItem.Header>

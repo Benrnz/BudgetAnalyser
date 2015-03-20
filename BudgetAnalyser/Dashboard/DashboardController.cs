@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Net.Mime;
 using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
@@ -265,6 +264,11 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
+        private void OnShutdownRequested(ShutdownMessage obj)
+        {
+            this.applicationDatabaseService.Save();
+        }
+
         private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
         {
             if (message == null)
@@ -314,6 +318,7 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+            MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

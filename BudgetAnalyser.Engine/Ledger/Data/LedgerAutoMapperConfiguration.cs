@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine.Account;
@@ -105,6 +106,10 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
             Mapper.CreateMap<LedgerBookDto, LedgerBook>()
                 .ConstructUsing(new Func<LedgerBookDto, LedgerBook>(dto => new LedgerBook(this.logger)));
+
+            Mapper.CreateMap<ToDoTask, ToDoTaskDto>();
+
+            Mapper.CreateMap<ToDoTaskDto, ToDoTask>();
 
             this.logger.LogInfo(_ => "Ledger AutoMapper Configuration Mappings Registered.");
         }

@@ -1,7 +1,8 @@
 ﻿<UserControl x:Class="BudgetAnalyser.ReportsCatalog.BurnDownGraphs.CurrentMonthBurnDownGraphsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs">
+             xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <UserControl.Resources>
 
         <DataTemplate DataType="{x:Type burnDownGraphs:BucketBurnDownController}">
@@ -15,29 +16,24 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <StackPanel Grid.Row="0"
                     Margin="2"
                     Orientation="Horizontal">
-            <TextBlock Text="{Binding DateRangeDescription}"
-                       Style="{StaticResource TextBlock.Paragraph}" />
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                       Text="{Binding DateRangeDescription}" />
         </StackPanel>
-
         <ScrollViewer Grid.Row="1"
                       Margin="2,20,2,2">
             <ItemsControl x:Name="ChartsList"
                           Background="{StaticResource Brush.MainBackground}"
                           ItemsSource="{Binding ChartControllers}"
                           ScrollViewer.CanContentScroll="False">
-
                 <ItemsControl.ContextMenu>
                     <ContextMenu>
                         <ContextMenu.Resources>
 
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Foreground"
-                                        Value="Black" />
-                            </Style>
+                            <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
+                                   TargetType="{x:Type TextBlock}" />
                         </ContextMenu.Resources>
                         <MenuItem Command="{Binding AddChartCommand}">
                             <MenuItem.Header>
@@ -55,4 +51,5 @@
             </ItemsControl>
         </ScrollViewer>
     </Grid>
+
 </UserControl>

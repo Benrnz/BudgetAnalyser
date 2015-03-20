@@ -214,6 +214,9 @@
     <SolidColorBrush x:Key="Brush.Text.Label"
                      Color="{StaticResource Colour.Text.Label}" />
 
+    <SolidColorBrush x:Key="Brush.Text.Reverse"
+                     Color="{StaticResource Colour.Text.Reverse}" />
+
     <SolidColorBrush x:Key="Brush.BorderLight"
                      Color="{StaticResource Colour.BorderLight}" />
 

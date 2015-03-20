@@ -138,10 +138,13 @@
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
+    <Compile Include="Ledger\Data\DtoToToDoCollectionMapper.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
+    <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="MagicMapper.cs" />
@@ -215,6 +218,7 @@
     <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
     <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
     <Compile Include="Persistence\StorageBranch.cs" />
+    <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.cs" />
     <Compile Include="Persistence\StorageRootToApplicationDatabaseMapper.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />

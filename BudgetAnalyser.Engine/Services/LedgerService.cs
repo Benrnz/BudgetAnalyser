@@ -169,7 +169,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
+            ReconciliationToDoList = applicationDatabase.LedgerReconciliationToDoCollection;
             LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
+
             EventHandler handler = NewDataSourceAvailable;
             if (handler != null)
             {
@@ -204,7 +206,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new InvalidOperationException("Reconciling against an inactive budget is invalid.");
             }
 
-            ReconciliationToDoList = new ToDoCollection();
+            ReconciliationToDoList.Clear();
             Stopwatch stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
             LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, ReconciliationToDoList, statement, ignoreWarnings);

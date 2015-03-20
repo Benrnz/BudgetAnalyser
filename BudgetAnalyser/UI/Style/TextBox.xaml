@@ -25,4 +25,14 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
+    <Style x:Key="TextBox.ReadOnly" 
+           TargetType="TextBox"
+           BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Background"
+                Value="{StaticResource Brush.MainBackground}" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
+        <Setter Property="IsReadOnly"
+                Value="True"/>
+    </Style>
 </ResourceDictionary>

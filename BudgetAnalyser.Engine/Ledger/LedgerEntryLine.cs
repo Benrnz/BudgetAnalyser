@@ -173,7 +173,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date of the previous ledger line. This is used to include transactions from the
         ///     Statement up to but excluding the date of this reconciliation.
         /// </param>
-        /// <param name="toDoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
+        /// <param name="toDoList">
+        ///     The task list that will have tasks added to it to remind the user to perform transfers and
+        ///     payments etc.
+        /// </param>
         internal void AddNew(
             LedgerBook parentLedgerBook,
             BudgetModel currentBudget,
@@ -307,9 +310,9 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(
-            List<Transaction> transactions, 
-            LedgerEntry previousLedgerEntry, 
-            List<LedgerTransaction> newLedgerTransactions, 
+            List<Transaction> transactions,
+            LedgerEntry previousLedgerEntry,
+            List<LedgerTransaction> newLedgerTransactions,
             ToDoCollection toDoList)
         {
             List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
@@ -353,18 +356,19 @@ namespace BudgetAnalyser.Engine.Ledger
                             "Ledger Reconciliation - WARNING {0} ledger transactions appear to be waiting to be automatched, but not statement transactions were found. {1}",
                             ledgerAutoMatchTransactions.Count(),
                             ledgerAutoMatchTransactions.First().AutoMatchingReference));
-                var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
-                foreach (var txn in unmatchedTxns)
+                IEnumerable<LedgerTransaction> unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
+                foreach (LedgerTransaction txn in unmatchedTxns)
                 {
-                    toDoList.Add(new ToDoTask(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            "WARNING: Missing auto-match transaction. Transfer {0:C} with reference {1} Dated {2:d} to {3}. See log for more details.",
-                            txn.Amount,
-                            txn.AutoMatchingReference,
-                            Date.AddDays(-1),
-                            previousLedgerEntry.LedgerBucket.StoredInAccount), 
-                        true));
+                    toDoList.Add(
+                        new ToDoTask(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                "WARNING: Missing auto-match transaction. Transfer {0:C} with reference {1} Dated {2:d} to {3}. See log for more details.",
+                                txn.Amount,
+                                txn.AutoMatchingReference,
+                                Date.AddDays(-1),
+                                previousLedgerEntry.LedgerBucket.StoredInAccount),
+                            true));
                 }
             }
         }
@@ -376,12 +380,13 @@ namespace BudgetAnalyser.Engine.Ledger
 
         internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
         {
-            return transactions.Where(
+            IOrderedEnumerable<Transaction> txns = transactions.Where(
                 t =>
                     t.Reference1.TrimEndSafely() == autoMatchingReference
                     || t.Reference2.TrimEndSafely() == autoMatchingReference
                     || t.Reference3.TrimEndSafely() == autoMatchingReference)
                 .OrderBy(t => t.Amount);
+            return txns;
         }
 
         private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
@@ -475,9 +480,9 @@ namespace BudgetAnalyser.Engine.Ledger
                             string.Format(
                                 CultureInfo.CurrentCulture,
                                 "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
-                                budgetedAmount.Amount, 
+                                budgetedAmount.Amount,
                                 ledgerBucket.StoredInAccount,
-                                budgetedAmount.AutoMatchingReference), 
+                                budgetedAmount.AutoMatchingReference),
                             true));
                 }
 

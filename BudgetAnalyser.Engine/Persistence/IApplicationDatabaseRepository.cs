@@ -9,5 +9,6 @@ namespace BudgetAnalyser.Engine.Persistence
     public interface IApplicationDatabaseRepository
     {
         Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
+        void Save([NotNull] ApplicationDatabase budgetAnalyserDatabase);
     }
 }

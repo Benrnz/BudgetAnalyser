@@ -205,6 +205,8 @@
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
     <Compile Include="MetaTest.cs" />
     <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
+    <Compile Include="Persistence\ApplicationDatabaseToDtoMapperTest.cs" />
+    <Compile Include="Persistence\DtoToApplicationDatabaseMapperTest.cs" />
     <Compile Include="PublicHolidays2014Test.cs" />
     <Compile Include="PublicHolidays2017Test.cs" />
     <Compile Include="PublicHolidays2016Test.cs" />

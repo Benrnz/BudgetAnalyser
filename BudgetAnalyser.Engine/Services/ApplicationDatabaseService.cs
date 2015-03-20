@@ -128,8 +128,21 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public void Save()
         {
+            if (this.budgetAnalyserDatabase == null)
+            {
+                throw new InvalidOperationException("Application Database cannot be null here. Code Bug.");
+            }
+
+            if (!HasUnsavedChanges)
+            {
+                return;
+            }
+
             // TODO Validate before save
             // TODO Save data only when valid
+
+            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
+            this.applicationRepository.Save(this.budgetAnalyserDatabase);
 
             ClearDirtyDataFlags();
         }

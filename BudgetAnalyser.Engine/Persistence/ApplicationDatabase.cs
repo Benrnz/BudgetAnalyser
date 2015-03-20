@@ -15,6 +15,11 @@ namespace BudgetAnalyser.Engine.Persistence
     /// </summary>
     public class ApplicationDatabase
     {
+        public ApplicationDatabase()
+        {
+            LedgerReconciliationToDoCollection = new ToDoCollection();
+        }
+
         /// <summary>
         ///     Gets the budget collection storage key.
         ///     This is used to locate and load the <see cref="BudgetCollection" />.
@@ -33,6 +38,13 @@ namespace BudgetAnalyser.Engine.Persistence
         public string LedgerBookStorageKey { get; [UsedImplicitly] private set; }
 
         /// <summary>
+        ///     Gets the ledger reconciliation to do collection.
+        ///     This contains persistent tasks that the user has created.
+        ///     System generated tasks are not persisted.
+        /// </summary>
+        public ToDoCollection LedgerReconciliationToDoCollection { get; [UsedImplicitly] internal set; }
+
+        /// <summary>
         ///     Gets the matching rules collection storage key.
         ///     This is used to locate and load a list of <see cref="MatchingRule" />s.
         /// </summary>
@@ -49,11 +61,6 @@ namespace BudgetAnalyser.Engine.Persistence
             get { return Path.GetDirectoryName(FileName); }
         }
 
-        public virtual string FullPath(string fileName)
-        {
-            return Path.Combine(StoragePath, fileName);
-        }
-
         public void Close()
         {
             BudgetCollectionStorageKey = null;
@@ -62,6 +69,11 @@ namespace BudgetAnalyser.Engine.Persistence
             MatchingRulesCollectionStorageKey = null;
             MatchingRulesCollectionStorageKey = null;
             StatementModelStorageKey = null;
+        }
+
+        public virtual string FullPath(string fileName)
+        {
+            return Path.Combine(StoragePath, fileName);
         }
     }
 }

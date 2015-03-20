@@ -12,10 +12,7 @@
                 <ContextMenu.Resources>
 
                     <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
-                           TargetType="{x:Type TextBlock}">
-                        <Setter Property="Foreground"
-                                Value="Black" />
-                    </Style>
+                           TargetType="{x:Type TextBlock}" />
                 </ContextMenu.Resources>
                 <MenuItem Command="{x:Static ledgerBook:LedgerTransactionCommands.NavigateToTransactionCommand}"
                           CommandParameter="{Binding Id}">

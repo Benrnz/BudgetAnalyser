@@ -17,39 +17,80 @@
                 <ContentControl Grid.Column="0"
                                 HorizontalAlignment="Left"
                                 Margin="3"
-                                Template="{StaticResource CogImage}"
-                                VerticalAlignment="Center"
-                                Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.BoolToVis}}"
                                 SnapsToDevicePixels="True"
-                                Width="15"
-                                ToolTip="This task was system generated." />
+                                Template="{StaticResource CogImage}"
+                                ToolTip="This task was system generated."
+                                VerticalAlignment="Center"
+                                Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.BoolToVis2}}"
+                                Width="15" />
                 <ContentControl Grid.Column="0"
                                 HorizontalAlignment="Left"
                                 Margin="3"
+                                SnapsToDevicePixels="True"
                                 Template="{StaticResource CoolImage}"
+                                ToolTip="This is a user created reminder task."
                                 VerticalAlignment="Center"
                                 Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.NotBoolToVis}}"
-                                Width="15"
-                                SnapsToDevicePixels="True"
-                                ToolTip="This is a user created reminder task." />
-                <Button Grid.Column="1"
+                                Width="15" />
+                <Button Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                        CommandParameter="{Binding .}"
+                        Grid.Column="1"
                         Style="{StaticResource Button.Round.SmallCross}"
-                        Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                        CommandParameter="{Binding .}" />
-                <TextBox   Grid.Column="2"
-                           Text="{Binding Description, Mode=OneWay}"
-                           IsReadOnly="True"
-                           ToolTip="{Binding Description}" />
+                        Visibility="{Binding CanDelete, Converter={StaticResource Converter.BoolToVis2}}" />
+                <TextBox Grid.Column="2"
+                         Style="{StaticResource TextBox.ReadOnly}"
+                         Text="{Binding Description, Mode=OneWay}"
+                         ToolTip="{Binding Description}" />
             </Grid>
         </DataTemplate>
-
     </UserControl.Resources>
 
     <Grid Background="{StaticResource Brush.MainBackground}">
+        <Grid.ContextMenu>
+            <ContextMenu HasDropShadow="True">
+                <ContextMenu.Resources>
+
+                    <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
+                           TargetType="{x:Type TextBlock}" />
+                </ContextMenu.Resources>
+                <MenuItem Command="{Binding BeginAddingReminderCommand}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Add Reminder Task" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding RemoveReminderCommand}"
+                          CommandParameter="{Binding SelectedTask}">
+                    <MenuItem.Header>
+                        <TextBlock Text="Delete Reminder Task" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <ListBox ItemsSource="{Binding Tasks}"
                  ItemTemplate="{StaticResource TaskTemplate}"
-                 SelectionMode ="Single" />
-
+                 SelectedItem="{Binding SelectedTask}"
+                 SelectionMode="Single" />
+        <GroupBox Grid.Row="1"
+                  Margin="5,30,5,5"
+                  Visibility="{Binding AddingNewTask, Converter={StaticResource Converter.BoolToVis}}">
+            <GroupBox.Header>
+                <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Add New Reminder Task" />
+            </GroupBox.Header>
+            <StackPanel Margin="5"
+                        Orientation="Horizontal">
+                <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Description:" />
+                <TextBox MinWidth="300"
+                         Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Command="{Binding AddReminderCommand}"
+                        Style="{StaticResource Button.Round.Save}" />
+            </StackPanel>
+        </GroupBox>
     </Grid>
 
 </UserControl>

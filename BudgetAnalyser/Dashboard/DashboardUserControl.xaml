@@ -4,20 +4,17 @@
              xmlns:dashboard="clr-namespace:BudgetAnalyser.Dashboard"
              xmlns:widget="clr-namespace:BudgetAnalyser.Engine.Widgets;assembly=BudgetAnalyser.Engine"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContextChanged="OnDataContextChanged"
              MinHeight="200"
-             MinWidth="200"
-             DataContextChanged="OnDataContextChanged">
+             MinWidth="200">
 
     <UserControl.Resources>
         <converters1:TextToStaticResourceConverter x:Key="Converter.TextToStaticResource" />
-
         <ContextMenu x:Key="WidgetContextMenu">
             <ContextMenu.Resources>
+
                 <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
-                       TargetType="{x:Type TextBlock}">
-                    <Setter Property="Foreground"
-                            Value="Black" />
-                </Style>
+                       TargetType="{x:Type TextBlock}" />
             </ContextMenu.Resources>
             <MenuItem Command="{x:Static dashboard:DashboardCommands.HideWidgetCommand}"
                       CommandParameter="{Binding .}">
@@ -70,8 +67,8 @@
                     </Grid.RowDefinitions>
                     <ProgressBar Background="Transparent"
                                  BorderBrush="{StaticResource Brush.Text.Default}"
-                                 Foreground="{StaticResource Brush.Text.Default}"
                                  BorderThickness="1"
+                                 Foreground="{StaticResource Brush.Text.Default}"
                                  Margin="12,4,12,4"
                                  Maximum="{Binding Maximum}"
                                  Minimum="{Binding Minimum}"
@@ -82,10 +79,10 @@
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource Converter.BoolToVis}}" />
                     <TextBlock Grid.Row="1"
                                Margin="4,0,4,4"
-                               VerticalAlignment="Bottom"
                                Style="{StaticResource TextBlock.Widget.Paragraph}"
                                Text="{Binding DetailedText}"
-                               TextWrapping="Wrap" />
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Bottom" />
                     <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
                             CommandParameter="{Binding .}"
                             Grid.ColumnSpan="2"
@@ -155,12 +152,13 @@
                    Text="{Binding VersionString}"
                    VerticalAlignment="Bottom" />
         <Border>
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          VerticalAlignment="Top"
+            <ScrollViewer VerticalAlignment="Top"
+                          VerticalScrollBarVisibility="Auto"
                           Width="{Binding ElementName=MainPanel, Path=ActualWidth}">
-                <ItemsControl Margin="20"
-                              ItemsSource="{Binding WidgetGroups}">
+                <ItemsControl ItemsSource="{Binding WidgetGroups}"
+                              Margin="20">
                     <ItemsControl.ItemTemplate>
+
                         <DataTemplate DataType="{x:Type widget:WidgetGroup}">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -172,16 +170,16 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Heading}" />
-                                <Border BorderThickness="1"
+                                <Border BorderBrush="{StaticResource Brush.TileBackground}"
+                                        BorderThickness="1"
                                         Grid.Column="1"
                                         Grid.Row="0"
-                                        BorderBrush="{StaticResource Brush.TileBackground}"
                                         Height="1"
+                                        HorizontalAlignment="Stretch"
                                         Margin="2,1,0,0"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Stretch" />
-                                <ItemsControl Grid.Row="1"
-                                              Grid.ColumnSpan="2"
+                                        VerticalAlignment="Center" />
+                                <ItemsControl Grid.ColumnSpan="2"
+                                              Grid.Row="1"
                                               ItemsSource="{Binding Widgets}"
                                               Margin="5,10,2,30">
                                     <ItemsControl.ItemsPanel>

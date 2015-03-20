@@ -8,6 +8,7 @@
         Budget,
         Ledger,
         Transactions,
-        MatchingRules
+        MatchingRules,
+        Tasks,
     }
 }

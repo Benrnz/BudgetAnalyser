@@ -20,8 +20,8 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IUserInputBox inputBox;
         private readonly ILedgerService ledgerService;
-        private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly IUserMessageBox messageBox;
+        private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly LedgerBookGridBuilderFactory uiBuilder;
         private readonly UiContext uiContext;
@@ -155,6 +155,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
         }
 
+        public ReconciliationToDoListController ToDoListController
+        {
+            get { return this.uiContext.ReconciliationToDoListController; }
+        }
+
         [UsedImplicitly]
         public ICommand UnlockLedgerLineCommand
         {
@@ -245,7 +250,7 @@ namespace BudgetAnalyser.LedgerBook
                 RaiseLedgerBookUpdated();
                 if (this.ledgerService.ReconciliationToDoList.Any())
                 {
-                    ToDoListController.Tasks = this.ledgerService.ReconciliationToDoList;
+                    ToDoListController.Load(this.ledgerService.ReconciliationToDoList);
                     this.newWindowViewLoader.Show(ToDoListController);
                 }
             }
@@ -263,11 +268,6 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
-        }
-
-        public ReconciliationToDoListController ToDoListController
-        {
-            get { return this.uiContext.ReconciliationToDoListController; }
         }
 
         private void OnAddNewLedgerCommandExecuted()
