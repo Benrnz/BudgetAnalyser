@@ -218,6 +218,10 @@
       <DependentUpon>LedgerBucketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="LedgerBook\LedgerBucketViewController.cs" />
+    <Compile Include="LedgerBook\ReconciliationToDoListUserControl.xaml.cs">
+      <DependentUpon>ReconciliationToDoListUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LedgerBook\ReconciliationToDoListController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesController.cs" />
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
@@ -397,6 +401,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LedgerBook\ReconciliationToDoListUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LedgerBook\ShowSurplusBalancesUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -470,6 +478,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Assets\AmexLogoImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Assets\CogImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Assets\CoolImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

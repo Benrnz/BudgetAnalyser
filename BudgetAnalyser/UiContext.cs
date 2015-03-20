@@ -52,14 +52,14 @@ namespace BudgetAnalyser
         public BudgetController BudgetController { get; set; }
         public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
-        public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
-        public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
 
         public IEnumerable<ControllerBase> Controllers
         {
             get { return this.controllers ?? (this.controllers = DiscoverAllControllers()); }
         }
 
+        public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
+        public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
         public DashboardController DashboardController { get; set; }
         public EditingTransactionController EditingTransactionController { get; set; }
@@ -75,6 +75,7 @@ namespace BudgetAnalyser
         public NewBudgetModelController NewBudgetModelController { get; set; }
         public NewRuleController NewRuleController { get; set; }
         public OverallPerformanceController OverallPerformanceController { get; set; }
+        public ReconciliationToDoListController ReconciliationToDoListController { get; set; }
         public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
 

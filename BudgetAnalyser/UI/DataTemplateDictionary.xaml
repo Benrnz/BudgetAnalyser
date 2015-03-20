@@ -38,6 +38,10 @@
         <budget:BudgetPie />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type ledgerBook:ReconciliationToDoListController}">
+        <ledgerBook:ReconciliationToDoListUserControl />
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type budget:BudgetSelectionViewModel}">
         <budget:BudgetSelectionView />
     </DataTemplate>

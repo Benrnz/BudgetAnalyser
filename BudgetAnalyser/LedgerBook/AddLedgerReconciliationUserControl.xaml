@@ -1,6 +1,5 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.AddLedgerReconciliationUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:statement="clr-namespace:BudgetAnalyser.Statement"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              IsVisibleChanged="OnIsVisibleChanged">
     <!-- DataContext AddLedgerReconciliationController -->

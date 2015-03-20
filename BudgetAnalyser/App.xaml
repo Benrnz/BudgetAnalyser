@@ -5,11 +5,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="UI/ConvertersDictionary.xaml"/>
-                
+                <ResourceDictionary Source="UI/ConvertersDictionary.xaml" />
+
                 <ResourceDictionary Source="UI/Style/Colours.xaml" />
-                
-                <ResourceDictionary Source="UI/Assets/PieChartImage.xaml"/>
+
+                <ResourceDictionary Source="UI/Assets/PieChartImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/SearchImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/Filter2Image.xaml" />
                 <ResourceDictionary Source="UI/Assets/DeltaImage.xaml" />
@@ -20,7 +20,9 @@
                 <ResourceDictionary Source="UI/Assets/AccountImages.xaml" />
                 <ResourceDictionary Source="UI/Assets/FolderOpen.xaml" />
                 <ResourceDictionary Source="UI/Assets/SmileyImage.xaml" />
-                
+                <ResourceDictionary Source="UI/Assets/CogImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/CoolImage.xaml" />
+
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 
                 <ResourceDictionary Source="UI/Style/ComboBox.xaml" />
@@ -41,7 +43,7 @@
                 <ResourceDictionary Source="UI/Assets/OctWarningImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/BooksImage.xaml" />
 
-                <ResourceDictionary Source="UI/DataTemplateDictionary.xaml"/>
+                <ResourceDictionary Source="UI/DataTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

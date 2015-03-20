@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.ReconciliationToDoListUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:ledger="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Unloaded="OnUnloaded">
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="TaskTemplate"
+                      DataType="{x:Type ledger:ToDoTask}">
+            <Grid Margin="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                Margin="3"
+                                Template="{StaticResource CogImage}"
+                                VerticalAlignment="Center"
+                                Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.BoolToVis}}"
+                                SnapsToDevicePixels="True"
+                                Width="15"
+                                ToolTip="This task was system generated." />
+                <ContentControl Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                Margin="3"
+                                Template="{StaticResource CoolImage}"
+                                VerticalAlignment="Center"
+                                Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.NotBoolToVis}}"
+                                Width="15"
+                                SnapsToDevicePixels="True"
+                                ToolTip="This is a user created reminder task." />
+                <Button Grid.Column="1"
+                        Style="{StaticResource Button.Round.SmallCross}"
+                        Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                        CommandParameter="{Binding .}" />
+                <TextBox   Grid.Column="2"
+                           Text="{Binding Description, Mode=OneWay}"
+                           IsReadOnly="True"
+                           ToolTip="{Binding Description}" />
+            </Grid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource Brush.MainBackground}">
+        <ListBox ItemsSource="{Binding Tasks}"
+                 ItemTemplate="{StaticResource TaskTemplate}"
+                 SelectionMode ="Single" />
+
+    </Grid>
+
+</UserControl>

@@ -20,6 +20,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IUserInputBox inputBox;
         private readonly ILedgerService ledgerService;
+        private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly IUserMessageBox messageBox;
         private readonly IUserQuestionBoxYesNo questionBox;
         private readonly LedgerBookGridBuilderFactory uiBuilder;
@@ -31,7 +32,8 @@ namespace BudgetAnalyser.LedgerBook
             [NotNull] UiContext uiContext,
             [NotNull] LedgerBookControllerFileOperations fileOperations,
             [NotNull] LedgerBookGridBuilderFactory uiBuilder,
-            [NotNull] ILedgerService ledgerService)
+            [NotNull] ILedgerService ledgerService,
+            [NotNull] NewWindowViewLoader newWindowViewLoader)
         {
             if (uiContext == null)
             {
@@ -53,8 +55,14 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException("ledgerService");
             }
 
+            if (newWindowViewLoader == null)
+            {
+                throw new ArgumentNullException("newWindowViewLoader");
+            }
+
             this.uiBuilder = uiBuilder;
             this.ledgerService = ledgerService;
+            this.newWindowViewLoader = newWindowViewLoader;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             this.inputBox = uiContext.UserPrompts.InputBox;
@@ -235,6 +243,11 @@ namespace BudgetAnalyser.LedgerBook
                 FileOperations.Dirty = true;
                 NumberOfMonthsToShow++;
                 RaiseLedgerBookUpdated();
+                if (this.ledgerService.ReconciliationToDoList.Any())
+                {
+                    ToDoListController.Tasks = this.ledgerService.ReconciliationToDoList;
+                    this.newWindowViewLoader.Show(ToDoListController);
+                }
             }
             catch (ValidationWarningException ex)
             {
@@ -250,6 +263,11 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
+        }
+
+        public ReconciliationToDoListController ToDoListController
+        {
+            get { return this.uiContext.ReconciliationToDoListController; }
         }
 
         private void OnAddNewLedgerCommandExecuted()
