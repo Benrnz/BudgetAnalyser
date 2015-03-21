@@ -18,10 +18,6 @@ namespace BudgetAnalyser.UnitTest.Budget
     [TestClass]
     public class XamlOnDiskBudgetRepositoryTest
     {
-        private const string DemoBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.DemoBudget.xml";
-        private const string EmptyBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetModel.xml";
-        private const string FileName1 = @"BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml";
-
         [TestMethod]
         public void CreateNewShouldPopulateFileName()
         {
@@ -121,7 +117,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.FileExistsMock = f => true;
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            subject.LoadAsync(FileName1);
+            subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName);
 
             mockBucketRepository.Verify();
         }
@@ -132,9 +128,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(FileName1);
+            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName);
 
-            Assert.AreEqual(FileName1, collection.FileName);
+            Assert.AreEqual(TestDataConstants.BudgetCollectionTestDataFileName, collection.FileName);
         }
 
         [TestMethod]
@@ -190,9 +186,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(DemoBudgetFileName);
+            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName);
 
-            Assert.AreEqual(DemoBudgetFileName, collection.FileName);
+            Assert.AreEqual(TestDataConstants.DemoBudgetFileName, collection.FileName);
             Assert.AreEqual(1, collection.Count);
         }
 
@@ -202,9 +198,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.FileExistsMock = f => true;
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(EmptyBudgetFileName);
+            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName);
 
-            Assert.AreEqual(EmptyBudgetFileName, collection.FileName);
+            Assert.AreEqual(TestDataConstants.EmptyBudgetFileName, collection.FileName);
             Assert.AreEqual(1, collection.Count);
         }
 

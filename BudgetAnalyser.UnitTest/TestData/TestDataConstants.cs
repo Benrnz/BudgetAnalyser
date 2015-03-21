@@ -1,6 +1,4 @@
-﻿using BudgetAnalyser.Engine.Budget;
-
-namespace BudgetAnalyser.UnitTest.TestData
+﻿namespace BudgetAnalyser.UnitTest.TestData
 {
     public static class TestDataConstants
     {
@@ -23,5 +21,13 @@ namespace BudgetAnalyser.UnitTest.TestData
         public const string ChequeAccountName = "CHEQUE";
         public const string SavingsAccountName = "SAVINGS";
         public const string VisaAccountName = "VISA";
+
+        public const string DemoBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.DemoBudget.xml";
+        public const string DemoLedgerBookFileName = @"BudgetAnalyser.UnitTest.TestData.DemoLedgerBook.xml";
+        public const string DemoRulesFileName = @"BudgetAnalyser.UnitTest.TestData.DemoMatchingRules.xml";
+        public const string DemoTransactionsFileName = @"BudgetAnalyser.UnitTest.TestData.DemoTransactions.csv";
+        public const string DemoBudgetAnalyserFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetAnalyserDemo.bax";
+        public const string EmptyBudgetFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetModel.xml";
+        public const string BudgetCollectionTestDataFileName = @"BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml";
     }
 }

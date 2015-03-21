@@ -92,16 +92,21 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        protected virtual string LoadXamlFromDisk(string fileName)
+        {
+            return File.ReadAllText(fileName);
+        }
+
         protected virtual void SaveToDisk(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
             XamlServices.Save(fileName, dataEntities.ToList());
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
-        protected async virtual Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
+        protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
         {
             object result = null;
-            await Task.Run(() => result = XamlServices.Load(fileName));
+            await Task.Run(() => result = XamlServices.Parse(LoadXamlFromDisk(fileName)));
             return result as List<MatchingRuleDto>;
         }
     }

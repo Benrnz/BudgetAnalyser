@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
@@ -16,8 +15,6 @@ namespace BudgetAnalyser.UnitTest.Statement
     [TestClass]
     public class CsvOnDiskStatementModelRepositoryV1Test
     {
-        private const string StatementDemoFile = "BudgetAnalyser.UnitTest.TestData.DemoTransactions.csv";
-
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtils()
@@ -182,11 +179,22 @@ namespace BudgetAnalyser.UnitTest.Statement
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
 
-            var model = await subject.LoadAsync(StatementDemoFile);
+            var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName);
 
             Assert.IsNotNull(model);
             Assert.AreEqual(33, model.AllTransactions.Count());
         }
+
+        [TestMethod]
+        public async Task MustBeAbleToLoadDemoStatementFile2()
+        {
+            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            subject.ReadLinesOverride = file => EmbeddedResourceHelper.ExtractLines(TestDataConstants.DemoTransactionsFileName, true);
+            var model = await subject.LoadAsync("Foo.foo");
+            Console.WriteLine(model.DurationInMonths);
+            Assert.AreEqual(1, model.DurationInMonths);
+        }
+
 
         [TestMethod]
         [ExpectedException(typeof(StatementModelChecksumException))]

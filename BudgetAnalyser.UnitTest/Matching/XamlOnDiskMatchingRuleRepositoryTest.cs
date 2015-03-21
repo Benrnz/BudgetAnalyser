@@ -32,6 +32,17 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
+        public async Task LoadFromDemoFileShouldReturnMatchingRules()
+        {
+            XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
+            subject.LoadXamlFromDiskOveride = fileName => Helper.EmbeddedResourceHelper.ExtractText(TestDataConstants.DemoRulesFileName);
+            IEnumerable<MatchingRule> results = await subject.LoadRulesAsync("foo.bar");
+
+            Assert.IsNotNull(results);
+            Assert.IsTrue(results.Any());
+        }
+
+        [TestMethod]
         public async Task LoadShouldReturnMatchingRules()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();

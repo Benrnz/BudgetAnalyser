@@ -207,6 +207,7 @@
     <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
     <Compile Include="Persistence\ApplicationDatabaseToDtoMapperTest.cs" />
     <Compile Include="Persistence\DtoToApplicationDatabaseMapperTest.cs" />
+    <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepositoryTest.cs" />
     <Compile Include="PublicHolidays2014Test.cs" />
     <Compile Include="PublicHolidays2017Test.cs" />
     <Compile Include="PublicHolidays2016Test.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\FakeUserMessageBox.cs" />
+    <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
@@ -282,6 +284,9 @@
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
       <Link>TestData\DemoTransactions.csv</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax">
+      <Link>TestData\BudgetAnalyserDemo.bax</Link>
     </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
@@ -324,7 +329,11 @@
       <Link>TestData\DemoLedgerBook.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml">
+      <Link>TestData\DemoMatchingRules.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,6 +10,21 @@ namespace BudgetAnalyser.UnitTest.Helper
 {
     public static class EmbeddedResourceHelper
     {
+        public static IEnumerable<string> ExtractLines(string resourceName, bool outputText = false)
+        {
+            string contents = ExtractText(resourceName, outputText);
+            var reader = new StringReader(contents);
+            string line = reader.ReadLine();
+            var lines = new List<string>();
+            while (line != null)
+            {
+                lines.Add(line);
+                line = reader.ReadLine();
+            }
+
+            return lines;
+        }
+
         public static IEnumerable<string> ExtractString(string resourceName)
         {
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
@@ -30,7 +44,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             }
         }
 
-        public static T ExtractXaml<T>(string resourceName, bool outputXaml = false)
+        public static string ExtractText(string resourceName, bool outputText = false)
         {
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
@@ -43,9 +57,18 @@ namespace BudgetAnalyser.UnitTest.Helper
 
                 var reader = new StreamReader(stream);
                 string stringData = reader.ReadToEnd();
-                if (outputXaml) Debug.WriteLine(stringData);
-                return (T)XamlServices.Parse(stringData);
+                if (outputText)
+                {
+                    Debug.WriteLine(stringData);
+                }
+                return stringData;
             }
+        }
+
+        public static T ExtractXaml<T>(string resourceName, bool outputXaml = false)
+        {
+            string stringData = ExtractText(resourceName, outputXaml);
+            return (T)XamlServices.Parse(stringData);
         }
 
         private static void ShowAllEmbeddedResources()

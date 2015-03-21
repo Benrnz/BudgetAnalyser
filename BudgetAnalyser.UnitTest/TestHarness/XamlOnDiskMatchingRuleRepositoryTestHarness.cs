@@ -19,6 +19,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<string, List<MatchingRuleDto>> LoadFromDiskOveride { get; set; }
         public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
+        public Func<string, string> LoadXamlFromDiskOveride { get; set; }
 
         public override bool Exists(string storageKey)
         {
@@ -28,6 +29,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             }
 
             return ExistsOveride(storageKey);
+        }
+
+        protected override string LoadXamlFromDisk(string fileName)
+        {
+            if (LoadXamlFromDiskOveride == null)
+            {
+                return base.LoadXamlFromDisk(fileName);
+            }
+
+            return LoadXamlFromDiskOveride(fileName);
         }
 
         protected async override Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)

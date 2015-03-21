@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Persistence
             return File.ReadAllText(fileName);
         }
 
-        protected virtual async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
+        private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
         {
             object result = null;
             await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));

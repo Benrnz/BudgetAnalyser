@@ -16,7 +16,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBookRepositoryTest
     {
-        private const string DemoLedgerBookFileName = @"BudgetAnalyser.UnitTest.TestData.DemoLedgerBook.xml";
         private const string LoadFileName = @"BudgetAnalyser.UnitTest.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
 
         [TestMethod]
@@ -33,7 +32,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             };
             LedgerBookDto reserialisedDto = null;
             subject.SaveDtoToDiskOverride = bookDto => reserialisedDto = bookDto;
-            LedgerBook book = await subject.LoadAsync(DemoLedgerBookFileName);
+            LedgerBook book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
             subject.Save(book);
@@ -161,7 +160,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             XamlOnDiskLedgerBookRepositoryTestHarness subject = ArrangeAndAct();
 
-            LedgerBook book = await subject.LoadAsync(DemoLedgerBookFileName);
+            LedgerBook book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName);
             book.Output(true);
             Assert.IsNotNull(book);
         }
