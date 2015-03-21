@@ -75,6 +75,7 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
 
+            this.ledgerService.Saved += OnSaveNotificationReceieved;
             this.ledgerService.Closed += OnClosedNotificationReceived;
             this.ledgerService.NewDataSourceAvailable += OnNewDataSourceAvailableNotificationReceived;
         }
@@ -357,6 +358,11 @@ namespace BudgetAnalyser.LedgerBook
             {
                 handler(this, EventArgs.Empty);
             }
+        }
+
+        private void OnSaveNotificationReceieved(object sender, EventArgs eventArgs)
+        {
+            ViewModel.NewLedgerLine = null;
         }
 
         private void OnShowBankBalancesCommandExecuted(LedgerEntryLine line)
