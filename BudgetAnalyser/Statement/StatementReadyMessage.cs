@@ -3,6 +3,10 @@ using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.Statement
 {
+    /// <summary>
+    /// A message to notify interested parties that the statement model is ready for use. 
+    /// Can be used to indicate a new statement model has been loaded.
+    /// </summary>
     public class StatementReadyMessage : MessageBase
     {
         public StatementReadyMessage(StatementModel statement)

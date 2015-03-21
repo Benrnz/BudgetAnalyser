@@ -94,6 +94,7 @@ namespace BudgetAnalyser.Statement
 
                 RaisePropertyChanged(() => ViewModel);
                 MessengerInstance.Send(new TransactionsChangedMessage());
+                await SyncWithServiceAsync();
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
                 MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));

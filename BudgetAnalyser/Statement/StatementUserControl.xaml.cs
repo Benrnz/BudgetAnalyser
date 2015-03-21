@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Statement
 
         private void ApplyBucketFilter()
         {
-            ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.ViewModel.Statement.Transactions);
+            ICollectionView defaultView = CollectionViewSource.GetDefaultView(Controller.ViewModel.Transactions);
             if (string.IsNullOrWhiteSpace(Controller.BucketFilter))
             {
                 defaultView.Filter = null;
