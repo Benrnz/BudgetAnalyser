@@ -393,7 +393,7 @@ namespace BudgetAnalyser.Statement
         {
             FileName = null;
             ExistingAccountNames = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
-            SelectedExistingAccountName = ExistingAccountNames.First();
+            SelectedExistingAccountName = ExistingAccountNames.First(a => a.IsSalaryAccount);
 
             this.dialogCorrelationId = Guid.NewGuid();
             var popRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.OkCancel)
