@@ -212,16 +212,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.entries.Add(newEntry);
             }
 
-            var transferTasks = toDoList.Where(task => task.TaskType == ToDoTaskType.TransferBudgetedAmount).ToList();
-            if (transferTasks.Any())
-            {
-                var balanceAdjustmentTask = new ToDoTask(
-                    string.Format(
-                        "Add new balance adjustments for the amount of {0:C} to both accounts affected.",
-                        transferTasks.Sum(t => t.Amount)),
-                        true);
-                toDoList.Add(balanceAdjustmentTask);
-            }
+            CreateBalanceAdjustmentTasksIfRequired(toDoList);
         }
 
         internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
@@ -374,6 +365,52 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, ToDoCollection toDoList)
+        {
+            Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
+            var transactions = new List<LedgerTransaction>();
+            if (budgetedExpense != null)
+            {
+                BudgetCreditLedgerTransaction budgetedAmount;
+                if (ledgerBucket.StoredInAccount.IsSalaryAccount)
+                {
+                    budgetedAmount = new BudgetCreditLedgerTransaction
+                    {
+                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                        Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
+                    };
+                }
+                else
+                {
+                    budgetedAmount = new BudgetCreditLedgerTransaction
+                    {
+                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
+                        Narrative =
+                            budgetedExpense.Bucket.Active
+                                ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
+                                : "Warning! Bucket has been disabled.",
+                        AutoMatchingReference = IssueTransactionReferenceNumber()
+                    };
+                    // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
+                    AccountType salaryAccount = BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
+                    toDoList.Add(
+                        new TransferTask(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
+                                budgetedAmount.Amount,
+                                ledgerBucket.StoredInAccount,
+                                budgetedAmount.AutoMatchingReference),
+                            true) { Amount = budgetedAmount.Amount, SourceAccount = salaryAccount, DestinationAccount = ledgerBucket.StoredInAccount });
+                }
+
+                budgetedAmount.Date = reconciliationDate;
+                transactions.Add(budgetedAmount);
+            }
+
+            return transactions;
+        }
+
         private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
@@ -420,6 +457,34 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledgersAndBalances;
         }
 
+        private static void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
+        {
+            List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
+            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            {
+                var balanceAdjustmentTask = new ToDoTask(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts from this account).",
+                        grouping.Key,
+                        -grouping.Sum(t => t.Amount)),
+                    true);
+                toDoList.Add(balanceAdjustmentTask);
+            }
+
+            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            {
+                var balanceAdjustmentTask = new ToDoTask(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts into this account).",
+                        grouping.Key,
+                        grouping.Sum(t => t.Amount)),
+                    true);
+                toDoList.Add(balanceAdjustmentTask);
+            }
+        }
+
         private static string ExtractNarrative(Transaction t)
         {
             if (!string.IsNullOrWhiteSpace(t.Description))
@@ -448,50 +513,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket == ledgerBucket);
             return previousEntry == null ? 0 : previousEntry.Balance;
-        }
-
-        private static List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, ToDoCollection toDoList)
-        {
-            Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
-            var transactions = new List<LedgerTransaction>();
-            if (budgetedExpense != null)
-            {
-                BudgetCreditLedgerTransaction budgetedAmount;
-                if (ledgerBucket.StoredInAccount.IsSalaryAccount)
-                {
-                    budgetedAmount = new BudgetCreditLedgerTransaction
-                    {
-                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
-                        Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
-                    };
-                }
-                else
-                {
-                    budgetedAmount = new BudgetCreditLedgerTransaction
-                    {
-                        Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
-                        Narrative =
-                            budgetedExpense.Bucket.Active
-                                ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
-                                : "Warning! Bucket has been disabled.",
-                        AutoMatchingReference = IssueTransactionReferenceNumber()
-                    };
-                    toDoList.Add(
-                        new ToDoTask(
-                            string.Format(
-                                CultureInfo.CurrentCulture,
-                                "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
-                                budgetedAmount.Amount,
-                                ledgerBucket.StoredInAccount,
-                                budgetedAmount.AutoMatchingReference),
-                            true) { Amount = budgetedAmount.Amount, TaskType = ToDoTaskType.TransferBudgetedAmount});
-                }
-
-                budgetedAmount.Date = reconciliationDate;
-                transactions.Add(budgetedAmount);
-            }
-
-            return transactions;
         }
 
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
