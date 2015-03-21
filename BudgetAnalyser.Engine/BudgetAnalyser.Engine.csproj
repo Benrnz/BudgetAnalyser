@@ -146,6 +146,7 @@
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
+    <Compile Include="Ledger\ToDoTaskType.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />

@@ -211,6 +211,17 @@ namespace BudgetAnalyser.Engine.Ledger
 
                 this.entries.Add(newEntry);
             }
+
+            var transferTasks = toDoList.Where(task => task.TaskType == ToDoTaskType.TransferBudgetedAmount).ToList();
+            if (transferTasks.Any())
+            {
+                var balanceAdjustmentTask = new ToDoTask(
+                    string.Format(
+                        "Add new balance adjustments for the amount of {0:C} to both accounts affected.",
+                        transferTasks.Sum(t => t.Amount)),
+                        true);
+                toDoList.Add(balanceAdjustmentTask);
+            }
         }
 
         internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
@@ -253,16 +264,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 entry.Unlock();
             }
         }
-
-        //internal void UpdateBankBalances(IEnumerable<BankBalance> updatedBankBalances)
-        //{
-        //    if (!IsNew)
-        //    {
-        //        throw new InvalidOperationException("You cannot update the bank balances for this ledger line.");
-        //    }
-
-        //    this.bankBalancesList = updatedBankBalances.ToList();
-        //}
 
         internal bool UpdateRemarks(string remarks)
         {
@@ -483,7 +484,7 @@ namespace BudgetAnalyser.Engine.Ledger
                                 budgetedAmount.Amount,
                                 ledgerBucket.StoredInAccount,
                                 budgetedAmount.AutoMatchingReference),
-                            true));
+                            true) { Amount = budgetedAmount.Amount, TaskType = ToDoTaskType.TransferBudgetedAmount});
                 }
 
                 budgetedAmount.Date = reconciliationDate;

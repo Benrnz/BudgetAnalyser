@@ -10,10 +10,13 @@ namespace BudgetAnalyser.Engine.Ledger
             Description = description;
             SystemGenerated = systemGenerated;
             CanDelete = canDelete;
+            TaskType = ToDoTaskType.Other;
         }
 
+        public decimal Amount { get; internal set; }
         public bool CanDelete { get; internal set; }
         public string Description { get; private set; }
         public bool SystemGenerated { get; private set; }
+        internal ToDoTaskType TaskType { get; set; }
     }
 }
