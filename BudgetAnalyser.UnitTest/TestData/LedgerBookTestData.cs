@@ -557,7 +557,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
         private static LedgerEntry SetTransactions(this LedgerEntry entry, List<LedgerTransaction> transactions)
         {
-            PrivateAccessor.SetProperty(entry, "Transactions", transactions);
+            PrivateAccessor.SetField(entry, "transactions", transactions);
             decimal newBalance = entry.Balance + entry.NetAmount;
             entry.Balance = newBalance < 0 ? 0 : newBalance;
             return entry;

@@ -74,7 +74,6 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> Transactions
         {
             get { return this.transactions; }
-            [UsedImplicitly] private set { this.transactions = value.ToList(); }
         }
 
         /// <summary>
@@ -132,7 +131,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             const string supplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
 
-            this.transactions = newTransactions;
+            this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
             LedgerTransaction zeroingTransaction = null;
             if (LedgerBucket.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
             {
@@ -248,32 +247,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return result;
-        }
-
-        /// <summary>
-        ///     Use this method to remove all funds from this ledger. This is commonly used periodically if overbudgeted and funds
-        ///     can be safely used elsewhere.
-        ///     By zeroing the balance the surplus will increase.
-        /// </summary>
-        internal void ZeroTheBalance(string narrative = null)
-        {
-            if (!this.isNew)
-            {
-                throw new InvalidOperationException("This is not a new entry and therefore cannot be altered. Only newly created entries from creating a new reconciliation can use this operation.");
-            }
-
-            if (Balance <= 0)
-            {
-                return;
-            }
-
-            var zeroTxn = new BudgetCreditLedgerTransaction
-            {
-                Amount = -Balance,
-                Narrative = narrative ?? "Zeroing balance - excess funds in this account."
-            };
-            this.transactions.Add(zeroTxn);
-            Balance = 0;
         }
     }
 }

@@ -42,30 +42,6 @@ namespace Rees.TestUtilities
             return GetFieldInfo(instance.GetType(), fieldName).GetValue(instance);
         }
 
-        private static FieldInfo GetFieldInfo(Type type, string fieldName)
-        {
-            var info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
-            if (info == null)
-            {
-                throw new ArgumentException("Field does not exist (is the field static?)", "fieldName");
-            }
-
-            return info;
-        }
-
-        private static object GetMethod(Type type, string name, object[] arguments, object instance)
-        {
-            var isStatic = instance == null;
-            var flags = isStatic ? BindingFlags.NonPublic | BindingFlags.Static : BindingFlags.Instance | BindingFlags.NonPublic;
-            var method = type.GetMethod(name, flags);
-            if (method == null)
-            {
-                throw new NotSupportedException("Type does not support this member name. " + name);
-            }
-
-            return method.Invoke(instance, arguments);
-        }
-
         /// <summary>
         ///     Gets a private property.
         /// </summary>
@@ -109,17 +85,6 @@ namespace Rees.TestUtilities
             return GetPropertyInfo(typeof(T), propertyName).GetValue(instance, new object[] { });
         }
 
-        private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
-        {
-            var info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (info == null)
-            {
-                throw new ArgumentException("Field does not exist", "propertyName");
-            }
-
-            return info;
-        }
-
         /// <summary>
         ///     Gets a static private field.
         /// </summary>
@@ -131,17 +96,6 @@ namespace Rees.TestUtilities
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(fieldName == null, "fieldName cannot be null");
             return GetStaticFieldInfo(type, fieldName).GetValue(null);
-        }
-
-        private static FieldInfo GetStaticFieldInfo(Type type, string fieldName)
-        {
-            var info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
-            if (info == null)
-            {
-                throw new ArgumentException("Static Field does not exist (is the field instance?)", "fieldName");
-            }
-
-            return info;
         }
 
         /// <summary>
@@ -158,8 +112,8 @@ namespace Rees.TestUtilities
             Guard.Against<ArgumentNullException>(instance == null, "instance cannot be null");
             Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
 
-            var returnType = typeof(T);
-            var result = GetMethod(instance.GetType(), name, arguments, instance);
+            Type returnType = typeof(T);
+            object result = GetMethod(instance.GetType(), name, arguments, instance);
             try
             {
                 return (T)result;
@@ -167,7 +121,12 @@ namespace Rees.TestUtilities
             catch (InvalidCastException ex)
             {
                 throw new InvalidCastException(
-                    string.Format(CultureInfo.InvariantCulture, "The return type was not the expected type. Expected {0}. But was {1}", returnType.Name, result.GetType().Name),
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Error invoking function '{0}'. The return type was not the expected type. Expected '{1}'. But was '{2}'",
+                        name,
+                        returnType.Name,
+                        result.GetType().Name),
                     ex);
             }
         }
@@ -189,7 +148,7 @@ namespace Rees.TestUtilities
             }
             catch (TargetInvocationException ex)
             {
-                var inner = ex.InnerException;
+                Exception inner = ex.InnerException;
                 if (inner == null)
                 {
                     throw;
@@ -213,8 +172,8 @@ namespace Rees.TestUtilities
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
 
-            var returnType = typeof(T);
-            var result = GetMethod(type, name, arguments, null);
+            Type returnType = typeof(T);
+            object result = GetMethod(type, name, arguments, null);
             try
             {
                 return (T)result;
@@ -222,7 +181,12 @@ namespace Rees.TestUtilities
             catch (InvalidCastException ex)
             {
                 throw new InvalidCastException(
-                    string.Format(CultureInfo.InvariantCulture, "The return type was not the expected type. Expected {0}. But was {1}", returnType.Name, result.GetType().Name),
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Error invoking function '{0}'. The return type was not the expected type. Expected '{1}'. But was '{2}'",
+                        name,
+                        returnType.Name,
+                        result.GetType().Name),
                     ex);
             }
         }
@@ -250,8 +214,8 @@ namespace Rees.TestUtilities
         /// <returns>A newly constructed object</returns>
         public static T PrivateConstructor<T>(Type[] argumentTypes, object[] parameters) where T : class
         {
-            var type = typeof(T);
-            var constructor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public, null, argumentTypes, null);
+            Type type = typeof(T);
+            ConstructorInfo constructor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public, null, argumentTypes, null);
             return constructor.Invoke(parameters) as T;
         }
 
@@ -327,7 +291,14 @@ namespace Rees.TestUtilities
                 throw new ArgumentNullException("propertyName");
             }
 
-            GetPropertyInfo(instance.GetType(), propertyName).SetValue(instance, value, new object[] { });
+            try
+            {
+                GetPropertyInfo(instance.GetType(), propertyName).SetValue(instance, value, new object[] { });
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Property {0} not found, unable to set it to value {1}", propertyName, value), ex);
+            }
         }
 
         /// <summary>
@@ -340,7 +311,60 @@ namespace Rees.TestUtilities
         {
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(fieldName == null, "fieldName cannot be null");
-            GetStaticFieldInfo(type, fieldName).SetValue(null, value);
+            try
+            {
+                GetStaticFieldInfo(type, fieldName).SetValue(null, value);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Field {0} not found, unable to set it to value {1}", fieldName, value), ex);
+            }
+        }
+
+        private static FieldInfo GetFieldInfo(Type type, string fieldName)
+        {
+            FieldInfo info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (info == null)
+            {
+                throw new ArgumentException(string.Format("Field '{0}' does not exist (is the field a static field?)", fieldName), "fieldName");
+            }
+
+            return info;
+        }
+
+        private static object GetMethod(Type type, string name, object[] arguments, object instance)
+        {
+            bool isStatic = instance == null;
+            BindingFlags flags = isStatic ? BindingFlags.NonPublic | BindingFlags.Static : BindingFlags.Instance | BindingFlags.NonPublic;
+            MethodInfo method = type.GetMethod(name, flags);
+            if (method == null)
+            {
+                throw new NotSupportedException("Type does not include a member by this name: " + name);
+            }
+
+            return method.Invoke(instance, arguments);
+        }
+
+        private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
+        {
+            PropertyInfo info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (info == null)
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Property '{0}' does not exist", propertyName), "propertyName");
+            }
+
+            return info;
+        }
+
+        private static FieldInfo GetStaticFieldInfo(Type type, string fieldName)
+        {
+            FieldInfo info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            if (info == null)
+            {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Static Field '{0}' does not exist (is the field an instance field?)", fieldName), "fieldName");
+            }
+
+            return info;
         }
     }
 }

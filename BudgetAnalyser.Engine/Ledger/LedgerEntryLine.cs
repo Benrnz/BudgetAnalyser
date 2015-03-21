@@ -11,9 +11,10 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents the horizontal row on the <see cref="LedgerBook" /> that crosses all <see cref="LedgerBucket" />s
-    ///     for a date.
-    ///     Each <see cref="LedgerEntry" /> must have a reference to an instance of this.
+    ///     This represents a reconciliation as at a date in the <see cref="LedgerBook" /> that crosses all <see cref="LedgerBucket" />s
+    ///     for the reconciliation date.  It shows the financial position at a point in time, the reconciliation date.
+    ///     An instance of this class contains many <see cref="LedgerEntry" />s show the financial position of that 
+    ///     <see cref="LedgerBucket"/> as at the reconciliation date.
     /// </summary>
     public class LedgerEntryLine
     {
