@@ -127,7 +127,8 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
         /// </summary>
         /// <param name="newTransactions">The list of new transactions for this entry. This includes the monthly budgeted amount.</param>
-        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions)
+        /// <param name="reconciliationDate">The reconciliation date - this is used to give automatically created transactions a date.</param>
+        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions, DateTime reconciliationDate)
         {
             const string supplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
 
@@ -145,6 +146,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         // This way the ledger closing balance will be equal to the previous ledger closing balance.
                         zeroingTransaction = new CreditLedgerTransaction
                         {
+                            Date = reconciliationDate,
                             Amount = -NetAmount,
                             Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
                         };
@@ -156,6 +158,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             // This ledger does not have a monthly budgeted amount, so if all funds are gone, it must be zeroed.
                             zeroingTransaction = new CreditLedgerTransaction
                             {
+                                Date = reconciliationDate,
                                 Amount = -(Balance + NetAmount),
                                 Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
                             };
@@ -171,6 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     zeroingTransaction = new CreditLedgerTransaction
                     {
+                        Date = reconciliationDate,
                         Amount = -NetAmount,
                         Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder"
                     };
@@ -192,6 +196,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     // While there is a monthly amount the balance should not drop below this amount.
                     zeroingTransaction = new CreditLedgerTransaction
                     {
+                        Date = reconciliationDate,
                         Amount = budgetedAmount.Amount - newBalance,
                         Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount"
                     };
@@ -202,6 +207,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     zeroingTransaction = new CreditLedgerTransaction
                     {
+                        Date = reconciliationDate,
                         Amount = -newBalance,
                         Narrative = supplementOverdrawnText
                     };

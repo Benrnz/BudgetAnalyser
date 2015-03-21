@@ -189,13 +189,13 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
 
-            DateTime finishDate = Date;
+            DateTime reconciliationDate = Date;
             // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
             // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
             // 20/Jan (inclusive) and 19/Feb (inclusive).
             List<Transaction> filteredStatementTransactions = statement == null
                 ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < finishDate).ToList();
+                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
@@ -204,10 +204,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 LedgerBucket ledgerBucket = previousLedgerEntry.LedgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, finishDate, toDoList);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, reconciliationDate, toDoList);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
                 AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions, toDoList);
-                newEntry.SetTransactionsForReconciliation(transactions);
+                newEntry.SetTransactionsForReconciliation(transactions, reconciliationDate);
 
                 this.entries.Add(newEntry);
             }
