@@ -320,6 +320,7 @@
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="Widgets\AccountFilterWidget.cs" />
+    <Compile Include="Widgets\NewFileWidget.cs" />
     <Compile Include="Widgets\WidgetsApplicationStateV1.cs" />
     <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
     <Compile Include="Widgets\CurrentFileWidget.cs" />

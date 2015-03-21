@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Dashboard
             DetailedText = "Load Demo";
             ImageResourceName = "SmileyImage";
             Clickable = true;
+            Sequence = 25;
         } 
 
         public override void Update([NotNull] params object[] input)

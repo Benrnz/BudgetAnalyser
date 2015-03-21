@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Engine.Services
                     group => new WidgetGroup
                     {
                         Heading = group.Key,
-                        Widgets = new ObservableCollection<Widget>(group),
+                        Widgets = new ObservableCollection<Widget>(group.OrderBy(w => w.Sequence)),
                         Sequence = GroupSequence[group.Key]
                     })
                 .OrderBy(g => g.Sequence).ThenBy(g => g.Heading);

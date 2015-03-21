@@ -236,7 +236,18 @@ namespace BudgetAnalyser
             if (message.Widget is LoadDemoWidget)
             {
                 ProcessLoadDemoWidgetActivated(message);
+                return;
             }
+
+            if (message.Widget is NewFileWidget)
+            {
+                ProcessCreateNewFileWidgetActivated(message);
+            }
+        }
+
+        private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
+        {
+            this.uiContext.UserPrompts.MessageBox.Show("Not yet implemented...\nUntil it is, copy paste an existing .BAX file and customise the xml.");
         }
 
         private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)

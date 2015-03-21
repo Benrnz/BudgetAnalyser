@@ -42,6 +42,7 @@ namespace BudgetAnalyser.Engine.Widgets
             WidgetStyle = "ModernTileSmallStyle1";
             Visibility = true;
             Enabled = true;
+            Sequence = 99;
         }
 
         public event EventHandler ColourStyleChanged;
@@ -182,6 +183,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 }
             }
         }
+
+        public int Sequence { get; protected set; }
 
         public abstract void Update(params object[] input);
 

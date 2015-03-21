@@ -17,6 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
             DetailedText = "Loading...";
             ColourStyleName = WidgetWarningStyle;
             ImageResourceName = "FolderOpenImage";
+            Sequence = 20;
         }
 
         public override void Update([NotNull] params object[] input)
