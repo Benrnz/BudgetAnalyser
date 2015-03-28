@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xaml;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Data;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
@@ -31,9 +33,32 @@ namespace BudgetAnalyser.Engine.Persistence
             this.savingMapper = savingMapper;
         }
 
+        public async Task<ApplicationDatabase> CreateNewAsync(string storageKey)
+        {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
+            string path = Path.Combine(Path.GetDirectoryName(storageKey), Path.GetFileNameWithoutExtension(storageKey));
+            var storageRoot = new BudgetAnalyserStorageRoot
+            {
+                BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.xml" },
+                LedgerBookRootDto = new StorageBranch { Source = path +".LedgerBook.xml" },
+                LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
+                MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.xml" },
+                StatementModelRootDto = new StorageBranch { Source = path +".Transactions.csv" }
+            };
+            string serialised = Serialise(storageRoot);
+            await WriteToDiskAsync(storageKey, serialised);
+            var appDb = this.loadingMapper.Map(storageRoot);
+            appDb.FileName = storageKey;
+            return appDb;
+        }
+
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
-            if (string.IsNullOrWhiteSpace(storageKey))
+            if (storageKey.IsNothing())
             {
                 throw new ArgumentNullException("storageKey");
             }
@@ -41,7 +66,7 @@ namespace BudgetAnalyser.Engine.Persistence
             string fileName = storageKey;
             if (!FileExists(fileName))
             {
-                throw new NotImplementedException("TODO Creating new Application Database still to come.");
+                throw new KeyNotFoundException("File does not exist.");
             }
 
             BudgetAnalyserStorageRoot storageRoot;
@@ -84,24 +109,24 @@ namespace BudgetAnalyser.Engine.Persistence
             return File.ReadAllText(fileName);
         }
 
-        private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
-        {
-            object result = null;
-            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
-            return result as BudgetAnalyserStorageRoot;
-        }
-
         protected virtual string Serialise(BudgetAnalyserStorageRoot budgetAnalyserDatabase)
         {
             return XamlServices.Save(budgetAnalyserDatabase);
         }
 
-        protected async virtual Task WriteToDiskAsync(string fileName, string data)
+        protected virtual async Task WriteToDiskAsync(string fileName, string data)
         {
             using (var file = new StreamWriter(fileName, false))
             {
                 await file.WriteAsync(data);
             }
+        }
+
+        private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
+        {
+            object result = null;
+            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+            return result as BudgetAnalyserStorageRoot;
         }
     }
 }

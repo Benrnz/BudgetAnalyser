@@ -39,12 +39,6 @@ namespace BudgetAnalyser.Engine.Services
         LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
 
         /// <summary>
-        ///     Creates a new empty <see cref="LedgerBook" />.
-        /// </summary>
-        /// <param name="storageKey">A new unique identifier for a ledger book. Will be overwritten if it exists.</param>
-        LedgerBook CreateNew([NotNull] string storageKey);
-
-        /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
         /// </summary>
         /// <param name="reconciliationDateIfFirstEver">

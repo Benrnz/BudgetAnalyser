@@ -126,6 +126,17 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.MatchingRulesCollectionStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
+            await this.ruleRepository.CreateNewAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
+            await LoadAsync(applicationDatabase);
+        }
+
         public MatchingRule CreateNewRule(BudgetBucket bucket, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
             if (bucket == null)

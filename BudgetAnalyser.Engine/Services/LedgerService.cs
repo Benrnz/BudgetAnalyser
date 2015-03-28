@@ -83,11 +83,23 @@ namespace BudgetAnalyser.Engine.Services
         public void Close()
         {
             LedgerBook = null;
+            ReconciliationToDoList = new ToDoCollection();
             EventHandler handler = Closed;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
             }
+        }
+
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.LedgerBookStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
+            await this.ledgerRepository.CreateNewAsync(applicationDatabase.LedgerBookStorageKey);
+            await LoadAsync(applicationDatabase);
         }
 
         public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, AccountType account)
@@ -139,16 +151,6 @@ namespace BudgetAnalyser.Engine.Services
             newTransaction.Date = LedgerBook.Reconciliations.First().Date;
             ledgerEntry.AddTransaction(newTransaction);
             return newTransaction;
-        }
-
-        public LedgerBook CreateNew(string storageKey)
-        {
-            if (storageKey == null)
-            {
-                throw new ArgumentNullException("storageKey");
-            }
-
-            return this.ledgerRepository.CreateNew("New LedgerBook, give me a proper name :-(", storageKey);
         }
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)

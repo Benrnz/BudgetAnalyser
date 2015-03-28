@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskBudgetRepository : IBudgetRepository
     {
+        private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
         private readonly BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
         private BudgetCollection currentBudgetCollection;
@@ -36,24 +37,22 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("toDomainMapper");
             }
 
-            BudgetBucketRepository = bucketRepository;
+            this.budgetBucketRepository = bucketRepository;
             this.toDtoMapper = toDtoMapper;
             this.toDomainMapper = toDomainMapper;
         }
-
-        public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
 
         public BudgetCollection CreateNew()
         {
             var budget = new BudgetModel();
             this.currentBudgetCollection = new BudgetCollection(new[] { budget });
-            BudgetBucketRepository.Initialise(new List<BudgetBucketDto>());
+            this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
             return this.currentBudgetCollection;
         }
 
-        public BudgetCollection CreateNew([NotNull] string fileName)
+        public async Task<BudgetCollection> CreateNewAsync(string fileName)
         {
-            if (string.IsNullOrWhiteSpace(fileName))
+            if (fileName.IsNothing())
             {
                 throw new ArgumentNullException("fileName");
             }
@@ -61,7 +60,7 @@ namespace BudgetAnalyser.Engine.Budget
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = DateTime.Today,
-                Name = "Default Budget"
+                Name = Path.GetFileNameWithoutExtension(fileName).Replace('.', ' ')
             };
 
             this.currentBudgetCollection = new BudgetCollection(new[] { newBudget })
@@ -69,14 +68,19 @@ namespace BudgetAnalyser.Engine.Budget
                 FileName = fileName
             };
 
-            BudgetBucketRepository.Initialise(new List<BudgetBucketDto>());
+            this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
 
-            SaveAsync().Wait();
+            await SaveAsync();
             return this.currentBudgetCollection;
         }
 
         public async Task<BudgetCollection> LoadAsync(string fileName)
         {
+            if (fileName.IsNothing())
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
             if (!FileExists(fileName))
             {
                 throw new KeyNotFoundException("File not found. " + fileName);
@@ -106,7 +110,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             // Bucket Repository must be initialised first, the budget model incomes/expenses are dependent on the bucket repository.
-            BudgetBucketRepository.Initialise(correctDataFormat.Buckets);
+            this.budgetBucketRepository.Initialise(correctDataFormat.Buckets);
 
             BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
             budgetCollection.FileName = fileName;
@@ -132,7 +136,7 @@ namespace BudgetAnalyser.Engine.Budget
             return File.Exists(fileName);
         }
 
-        protected async virtual Task<object> LoadFromDisk(string fileName)
+        protected virtual async Task<object> LoadFromDisk(string fileName)
         {
             object result = null;
             await Task.Run(() => result = XamlServices.Load(fileName));
@@ -144,7 +148,7 @@ namespace BudgetAnalyser.Engine.Budget
             return XamlServices.Save(budgetData);
         }
 
-        protected async virtual Task WriteToDisk(string fileName, string data)
+        protected virtual async Task WriteToDisk(string fileName, string data)
         {
             using (var file = new StreamWriter(fileName, false))
             {

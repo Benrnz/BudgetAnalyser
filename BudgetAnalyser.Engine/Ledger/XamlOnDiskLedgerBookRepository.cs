@@ -17,8 +17,8 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private readonly BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper;
         private readonly BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper;
-        private readonly ILogger logger;
         private readonly BankImportUtilities importUtilities;
+        private readonly ILogger logger;
 
         public XamlOnDiskLedgerBookRepository(
             [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
@@ -52,23 +52,31 @@ namespace BudgetAnalyser.Engine.Ledger
             this.importUtilities = importUtilities;
         }
 
-        public LedgerBook CreateNew(string name, string storageKey)
+        public async Task<LedgerBook> CreateNewAsync(string storageKey)
         {
-            return new LedgerBook(this.logger)
+            if (storageKey.IsNothing())
             {
-                Name = name,
-                FileName = storageKey,
-                Modified = DateTime.Now,
-            };
-        }
+                throw new ArgumentNullException("storageKey");
+            }
 
-        public bool Exists(string storageKey)
-        {
-            return FileExistsOnDisk(storageKey);
+            var book = new LedgerBook(this.logger)
+            {
+                Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' '),
+                FileName = storageKey,
+                Modified = DateTime.Now
+            };
+
+            await SaveAsync(book, storageKey);
+            return await LoadAsync(storageKey);
         }
 
         public async Task<LedgerBook> LoadAsync(string storageKey)
         {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
             LedgerBookDto dataEntity;
             try
             {
@@ -117,6 +125,16 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public async Task SaveAsync(LedgerBook book, string storageKey)
         {
+            if (book == null)
+            {
+                throw new ArgumentNullException("book");
+            }
+
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
             book.FileName = storageKey;
             dataEntity.FileName = storageKey;
@@ -135,14 +153,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return File.ReadAllText(fileName);
         }
 
-        protected async virtual Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
+        protected virtual async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
         {
             object result = null;
             await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
             return result as LedgerBookDto;
         }
 
-        protected async virtual Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity)
+        protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
             {
@@ -162,7 +180,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return XamlServices.Save(dataEntity);
         }
 
-        protected async virtual Task WriteToDiskAsync(string fileName, string data)
+        protected virtual async Task WriteToDiskAsync(string fileName, string data)
         {
             using (var file = new StreamWriter(fileName, false))
             {
@@ -174,10 +192,11 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
-                return dataEntity.Reconciliations.Sum(l =>
-                    (double)l.LedgerBalance
-                    + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
-                    + l.Entries.Sum(e => (double)e.Balance));
+                return dataEntity.Reconciliations.Sum(
+                    l =>
+                        (double)l.LedgerBalance
+                        + l.BankBalanceAdjustments.Sum(b => (double)b.Amount)
+                        + l.Entries.Sum(e => (double)e.Balance));
             }
         }
     }

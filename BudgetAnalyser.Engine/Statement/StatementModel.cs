@@ -36,6 +36,8 @@ namespace BudgetAnalyser.Engine.Statement
 
             this.logger = logger;
             this.changeHash = Guid.NewGuid();
+            AllTransactions = new List<Transaction>();
+            Transactions = new List<Transaction>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -7,10 +8,8 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public interface ILedgerBookRepository
     {
-        LedgerBook CreateNew(string name, string storageKey);
-        bool Exists(string storageKey);
-        Task<LedgerBook> LoadAsync(string storageKey);
-
-        Task SaveAsync(LedgerBook book, string storageKey);
+        Task<LedgerBook> CreateNewAsync([NotNull] string storageKey);
+        Task<LedgerBook> LoadAsync([NotNull] string storageKey);
+        Task SaveAsync([NotNull] LedgerBook book, [NotNull] string storageKey);
     }
 }

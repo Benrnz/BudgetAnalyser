@@ -20,7 +20,13 @@ namespace BudgetAnalyser.Engine.Services
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
         /// </summary>
-        void Close();
+        ApplicationDatabase Close();
+
+        /// <summary>
+        ///     Creates a new application database storage.
+        /// </summary>
+        /// <param name="storageKey">The storage key.</param>
+        Task<ApplicationDatabase> CreateNewDatabaseAsync([NotNull] string storageKey);
 
         /// <summary>
         ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate

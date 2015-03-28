@@ -53,8 +53,24 @@ namespace BudgetAnalyser.Engine.Statement
             this.domainToDtoMapper = domainToDtoMapper;
         }
 
+        public async Task CreateNewAsync(string storageKey)
+        {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
+            var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
+            await SaveAsync(newStatement, storageKey);
+        }
+
         public async Task<bool> IsStatementModelAsync(string storageKey)
         {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
             this.importUtilities.AbortIfFileDoesntExist(storageKey);
             List<string> allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
             if (!VersionCheck(allLines))
@@ -67,6 +83,11 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<StatementModel> LoadAsync(string storageKey)
         {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
             try
             {
                 this.importUtilities.AbortIfFileDoesntExist(storageKey);
@@ -102,6 +123,11 @@ namespace BudgetAnalyser.Engine.Statement
             if (model == null)
             {
                 throw new ArgumentNullException("model");
+            }
+
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
             }
 
             var transactionSet = this.domainToDtoMapper.Map(model);

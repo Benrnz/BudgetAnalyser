@@ -41,6 +41,11 @@ namespace BudgetAnalyser.Engine.Statement
             this.importerRepository = importerRepository;
         }
 
+        public async Task CreateNewAsync(string storageKey)
+        {
+            await this.statementModelRepository.CreateNewAsync(storageKey);
+        }
+
         public async Task<StatementModel> ImportAndMergeBankStatementAsync(
             string storageKey,
             AccountType account)

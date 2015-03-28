@@ -79,39 +79,5 @@ namespace BudgetAnalyser.LedgerBook
             ViewModel.LedgerBook = LedgerService.LedgerBook;
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
         }
-
-        //private bool CanExecuteNewLedgerBookCommand()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    return ViewModel.LedgerBook == null;
-        //}
-
-        //private void OnNewLedgerBookCommandExecuted()
-        //{
-        //    // TODO Temporarily disabled while introducing ApplicationDatabaseService
-        //    IUserPromptSaveFile saveFileDialog = this.saveFileDialogFactory();
-        //    saveFileDialog.AddExtension = true;
-        //    saveFileDialog.CheckPathExists = true;
-        //    saveFileDialog.DefaultExt = ".xml";
-        //    saveFileDialog.Filter = "LedgerBook files (*.xml, *.xaml)|*.xml;*.xaml|All files (*.*)|*.*";
-        //    saveFileDialog.Title = "Choose a LedgerBook xml file name.";
-        //    bool? result = saveFileDialog.ShowDialog();
-        //    if (result == null || !result.Value)
-        //    {
-        //        return;
-        //    }
-
-        //    string fileName = saveFileDialog.FileName;
-        //    if (string.IsNullOrWhiteSpace(fileName))
-        //    {
-        //        return;
-        //    }
-
-        //    Close();
-
-        //    ViewModel.LedgerBook = LedgerService.CreateNew(fileName);
-        //    Dirty = true;
-        //    MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook));
-        //}
     }
 }

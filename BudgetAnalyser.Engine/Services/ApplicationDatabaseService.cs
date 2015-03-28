@@ -37,20 +37,12 @@ namespace BudgetAnalyser.Engine.Services
 
         public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
-        /// <summary>
-        ///     Gets or sets a value indicating whether there are unsaved changes across all application data.
-        /// </summary>
         public bool HasUnsavedChanges
         {
             get { return this.dirtyData.Values.Any(v => v); }
         }
 
-        /// <summary>
-        ///     Closes the currently loaded Budget Analyser file, and therefore any other application data is also closed.
-        ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
-        ///     calling this method.
-        /// </summary>
-        public void Close()
+        public ApplicationDatabase Close()
         {
             foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
@@ -60,16 +52,29 @@ namespace BudgetAnalyser.Engine.Services
             ClearDirtyDataFlags();
 
             this.budgetAnalyserDatabase.Close();
+            return this.budgetAnalyserDatabase;
         }
 
-        /// <summary>
-        ///     Loads the specified Budget Analyser file by file name.
-        ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
-        /// </summary>
-        /// <param name="storageKey">Name and path to the file.</param>
+        public async Task<ApplicationDatabase> CreateNewDatabaseAsync(string storageKey)
+        {
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
+            ClearDirtyDataFlags();
+            this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
+            foreach (var service in this.databaseDependents)
+            {
+                await service.CreateAsync(this.budgetAnalyserDatabase);
+            }
+            
+            return this.budgetAnalyserDatabase;
+        }
+
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
-            if (string.IsNullOrWhiteSpace(storageKey))
+            if (storageKey.IsNothing())
             {
                 throw new ArgumentNullException("storageKey");
             }
@@ -103,9 +108,6 @@ namespace BudgetAnalyser.Engine.Services
             return this.budgetAnalyserDatabase;
         }
 
-        /// <summary>
-        ///     Notifies the service that data has changed and will need to be saved.
-        /// </summary>
         public void NotifyOfChange(ApplicationDataType dataType)
         {
             this.dirtyData[dataType] = true;
@@ -124,9 +126,6 @@ namespace BudgetAnalyser.Engine.Services
             };
         }
 
-        /// <summary>
-        ///     Saves all Budget Analyser application data.
-        /// </summary>
         public async Task SaveAsync()
         {
             if (this.budgetAnalyserDatabase == null)

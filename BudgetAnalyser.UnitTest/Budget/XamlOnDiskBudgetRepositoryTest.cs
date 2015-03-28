@@ -18,55 +18,55 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class XamlOnDiskBudgetRepositoryTest
     {
         [TestMethod]
-        public void CreateNewShouldPopulateFileName()
+        public async Task CreateNewShouldPopulateFileName()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.WriteToDiskMock = (f, d) => { };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = subject.CreateNew(filename);
+            BudgetCollection collection = await subject.CreateNewAsync(filename);
             Assert.AreEqual(filename, collection.FileName);
         }
 
         [TestMethod]
-        public void CreateNewShouldReturnCollectionWithOneBudgetInIt()
+        public async Task CreateNewShouldReturnCollectionWithOneBudgetInIt()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             subject.WriteToDiskMock = (f, d) => { };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = subject.CreateNew(filename);
+            BudgetCollection collection = await subject.CreateNewAsync(filename);
 
             Assert.IsTrue(collection.Count == 1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CreateNewShouldThrowGivenEmptyFileName()
+        public async Task CreateNewShouldThrowGivenEmptyFileName()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
-            subject.CreateNew(string.Empty);
+            await subject.CreateNewAsync(string.Empty);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CreateNewShouldThrowGivenNullFileName()
+        public async Task CreateNewShouldThrowGivenNullFileName()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
-            subject.CreateNew(null);
+            await subject.CreateNewAsync(null);
             Assert.Fail();
         }
 
         [TestMethod]
-        public void CreateNewShouldWriteToDisk()
+        public async Task CreateNewShouldWriteToDisk()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
             var writeToDiskCalled = false;
             subject.WriteToDiskMock = (f, d) => { writeToDiskCalled = true; };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            subject.CreateNew(filename);
+            await subject.CreateNewAsync(filename);
             Assert.IsTrue(writeToDiskCalled);
         }
 

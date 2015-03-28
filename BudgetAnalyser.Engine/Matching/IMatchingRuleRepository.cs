@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
     public interface IMatchingRuleRepository
     {
-        bool Exists(string storageKey);
-
-        Task<IEnumerable<MatchingRule>> LoadRulesAsync(string storageKey);
-
-        Task SaveRulesAsync(IEnumerable<MatchingRule> rules, string storageKey);
+        Task CreateNewAsync([NotNull] string storageKey);
+        Task<IEnumerable<MatchingRule>> LoadRulesAsync([NotNull] string storageKey);
+        Task SaveRulesAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey);
     }
 }

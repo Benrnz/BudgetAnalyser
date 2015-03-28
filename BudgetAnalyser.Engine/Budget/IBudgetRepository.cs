@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
     public interface IBudgetRepository
     {
-        IBudgetBucketRepository BudgetBucketRepository { get; }
-        BudgetCollection CreateNew(string fileName);
+        Task<BudgetCollection> CreateNewAsync([NotNull] string fileName);
+        // TODO do we really still need this CreateNew()?
         BudgetCollection CreateNew();
-        Task<BudgetCollection> LoadAsync(string fileName);
+        Task<BudgetCollection> LoadAsync([NotNull] string fileName);
 
         Task SaveAsync();
     }

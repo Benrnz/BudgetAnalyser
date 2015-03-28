@@ -32,15 +32,21 @@ namespace BudgetAnalyser.Engine.Matching
             this.domainToDataMapper = domainToDataMapper;
         }
 
-        public virtual bool Exists(string storageKey)
+        public async Task CreateNewAsync(string storageKey)
         {
-            return File.Exists(storageKey);
+            if (storageKey.IsNothing())
+            {
+                throw new ArgumentNullException("storageKey");
+            }
+
+            var newRules = new List<MatchingRule>();
+            await SaveRulesAsync(newRules, storageKey);
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
         public async Task<IEnumerable<MatchingRule>> LoadRulesAsync([NotNull] string storageKey)
         {
-            if (string.IsNullOrWhiteSpace(storageKey))
+            if (storageKey.IsNothing())
             {
                 throw new KeyNotFoundException("storageKey is blank");
             }
@@ -84,14 +90,9 @@ namespace BudgetAnalyser.Engine.Matching
             await SaveToDiskAsync(storageKey, dataEntities);
         }
 
-        protected virtual string LoadXamlFromDisk(string fileName)
+        protected virtual bool Exists(string storageKey)
         {
-            return File.ReadAllText(fileName);
-        }
-
-        protected async virtual Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
-        {
-            await Task.Run(() => XamlServices.Save(fileName, dataEntities.ToList()));
+            return File.Exists(storageKey);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
@@ -100,6 +101,16 @@ namespace BudgetAnalyser.Engine.Matching
             object result = null;
             await Task.Run(() => result = XamlServices.Parse(LoadXamlFromDisk(fileName)));
             return result as List<MatchingRuleDto>;
+        }
+
+        protected virtual string LoadXamlFromDisk(string fileName)
+        {
+            return File.ReadAllText(fileName);
+        }
+
+        protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
+        {
+            await Task.Run(() => XamlServices.Save(fileName, dataEntities.ToList()));
         }
     }
 }

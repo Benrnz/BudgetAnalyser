@@ -139,6 +139,17 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.StatementModelStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+
+            await this.statementRepository.CreateNewAsync(applicationDatabase.StatementModelStorageKey);
+            await LoadAsync(applicationDatabase);
+        }
+
         public string DetectDuplicateTransactions()
         {
             if (StatementModel == null)
@@ -171,7 +182,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<Transaction> FilterBySearchText(string searchText)
         {
-            if (string.IsNullOrWhiteSpace(searchText))
+            if (searchText.IsNothing())
             {
                 return ClearBucketAndTextFilters();
             }
@@ -200,7 +211,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task ImportAndMergeBankStatementAsync(string storageKey, AccountType account)
         {
-            if (string.IsNullOrWhiteSpace(storageKey))
+            if (storageKey.IsNothing())
             {
                 throw new ArgumentNullException("storageKey");
             }
@@ -413,7 +424,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private static bool MatchTransactionBucket(Transaction t, string bucketCode)
         {
-            if (string.IsNullOrWhiteSpace(bucketCode))
+            if (bucketCode.IsNothing())
             {
                 return true;
             }

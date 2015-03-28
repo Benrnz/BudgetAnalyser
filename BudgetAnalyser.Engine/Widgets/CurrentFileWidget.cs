@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             var appDb = input[0] as ApplicationDatabase;
-            if (appDb == null)
+            if (appDb == null || appDb.FileName.IsNothing())
             {
                 ColourStyleName = WidgetWarningStyle;
                 DetailedText = "Open";

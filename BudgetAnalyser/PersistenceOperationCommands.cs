@@ -11,7 +11,22 @@ namespace BudgetAnalyser
         private static readonly ICommand DoNotUseValidateModelsCommand = new RelayCommand(() => PersistenceOperations.OnValidateModelsCommandExecute());
         private static readonly ICommand DoNotUseLoadDatabaseCommand = new RelayCommand(() => PersistenceOperations.OnLoadDatabaseCommandExecute());
         private static readonly ICommand DoNotUseLoadDemoDatabaseCommand = new RelayCommand(() => PersistenceOperations.OnLoadDemoDatabaseCommandExecute());
-        
+        private static readonly ICommand DoNotUseCreateNewDatabaseCommand = new RelayCommand(() => PersistenceOperations.OnCreateNewDatabaseCommandExecute());
+
+        public static ICommand CreateNewDatabaseCommand
+        {
+            get { return DoNotUseCreateNewDatabaseCommand; }
+        }
+
+        public static ICommand LoadDatabaseCommand
+        {
+            get { return DoNotUseLoadDatabaseCommand; }
+        }
+
+        public static ICommand LoadDemoDatabaseCommand
+        {
+            get { return DoNotUseLoadDemoDatabaseCommand; }
+        }
 
         [PropertyInjection]
         public static PersistenceOperations PersistenceOperations { get; set; }
@@ -25,22 +40,6 @@ namespace BudgetAnalyser
         public static ICommand ValidateModelCommand
         {
             get { return DoNotUseValidateModelsCommand; }
-        }
-
-        public static ICommand LoadDatabaseCommand
-        {
-            get
-            {
-                return DoNotUseLoadDatabaseCommand;
-            }
-        }
-
-        public static ICommand LoadDemoDatabaseCommand
-        {
-            get
-            {
-                return DoNotUseLoadDemoDatabaseCommand;
-            }
         }
     }
 }

@@ -77,6 +77,35 @@ namespace BudgetAnalyser
             CommandManager.InvalidateRequerySuggested();
         }
 
+        public async void OnCreateNewDatabaseCommandExecute()
+        {
+            if (!await PromptToSaveIfNecessary())
+            {
+                // User cancelled or model is invalid and preventing save.
+                return;
+            }
+
+            var fileDialog = this.userPrompts.SaveFileFactory();
+            fileDialog.CheckPathExists = true;
+            fileDialog.DefaultExt = "*.bax";
+            fileDialog.AddExtension = true;
+            fileDialog.Filter = "Budget Analyser files (*.bax)|*.bax";
+            fileDialog.Title = "Select a folder and filename";
+            var response = fileDialog.ShowDialog();
+            if (response == null || response == false || fileDialog.FileName.IsNothing()) return;
+            var fileName = fileDialog.FileName;
+
+            var appDb = this.applicationDatabaseService.Close();
+            try
+            {
+                appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
+            }
+            finally
+            {
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+            }
+        }
+
         public void OnValidateModelsCommandExecute()
         {
             ValidateModel("Validate Budget Analyser Data");
@@ -97,9 +126,15 @@ namespace BudgetAnalyser
                 return;
             }
 
-            this.applicationDatabaseService.Close();
-            ApplicationDatabase appDb = await this.applicationDatabaseService.LoadAsync(fileName);
-            this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
+            try
+            {
+                appDb = await this.applicationDatabaseService.LoadAsync(fileName);
+            }
+            finally
+            {
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+            }
         }
 
         private async Task<bool> PromptToSaveIfNecessary()

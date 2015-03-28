@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 days = 0;
             }
 
-            LargeNumber = days.ToString(CultureInfo.CurrentCulture);
+            LargeNumber = days > 99 ? "99+" : days.ToString(CultureInfo.CurrentCulture);
             ToolTip = string.Format(CultureInfo.CurrentCulture, "It's been {0} days since new transactions have been imported.", LargeNumber);
             if (days >= 7)
             {

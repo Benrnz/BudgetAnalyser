@@ -24,18 +24,12 @@ namespace BudgetAnalyser
 
         public MainMenuController(
             [NotNull] IUiContext uiContext,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService,
             [NotNull] IDashboardService dashboardService,
             [NotNull] DemoFileHelper demoFileHelper)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException("applicationDatabaseService");
             }
 
             if (dashboardService == null)
@@ -157,11 +151,6 @@ namespace BudgetAnalyser
             ReportsToggle = false;
         }
 
-        private bool CanExecuteDashboardCommand()
-        {
-            return true;
-        }
-
         private void OnBudgetExecuted()
         {
             BeforeTabExecutedCommon();
@@ -247,7 +236,15 @@ namespace BudgetAnalyser
 
         private void ProcessCreateNewFileWidgetActivated(WidgetActivatedMessage message)
         {
-            this.uiContext.UserPrompts.MessageBox.Show("Not yet implemented...\nUntil it is, copy paste an existing .BAX file and customise the xml.");
+            var widget = message.Widget as NewFileWidget;
+            if (widget == null)
+            {
+                return;
+            }
+
+            message.Handled = true;
+
+            PersistenceOperationCommands.CreateNewDatabaseCommand.Execute(this);
         }
 
         private void ProcessCurrentFileWidgetActivated(WidgetActivatedMessage message)
@@ -275,6 +272,11 @@ namespace BudgetAnalyser
 
             // Could possibily go direct to PersistenceOperation class here.
             PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
+        }
+
+        private static bool CanExecuteDashboardCommand()
+        {
+            return true;
         }
     }
 }

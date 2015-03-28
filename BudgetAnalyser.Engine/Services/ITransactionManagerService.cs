@@ -16,10 +16,10 @@ namespace BudgetAnalyser.Engine.Services
     public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
     {
         decimal AverageDebit { get; }
+        StatementModel StatementModel { get; }
         decimal TotalCount { get; }
         decimal TotalCredits { get; }
         decimal TotalDebits { get; }
-        StatementModel StatementModel { get; }
 
         /// <summary>
         ///     Clears the bucket and text filters.

@@ -98,6 +98,9 @@ namespace BudgetAnalyser.Engine.Widgets
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
                 Enabled = false;
+                LargeNumber = string.Empty;
+                ToolTip = string.Empty;
+                DetailedText = string.Empty;
                 return;
             }
 

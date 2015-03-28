@@ -21,7 +21,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
         public Func<string, string> LoadXamlFromDiskOveride { get; set; }
 
-        public override bool Exists(string storageKey)
+        protected override bool Exists(string storageKey)
         {
             if (ExistsOveride == null)
             {

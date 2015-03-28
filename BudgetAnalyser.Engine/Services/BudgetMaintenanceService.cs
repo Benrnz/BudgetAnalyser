@@ -128,6 +128,17 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.BudgetCollectionStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException("applicationDatabase");
+            }
+            
+            await this.budgetRepository.CreateNewAsync(applicationDatabase.BudgetCollectionStorageKey);
+            await LoadAsync(applicationDatabase);
+        }
+
         public BudgetCurrencyContext CreateNewBudgetCollection()
         {
             Budgets = this.budgetRepository.CreateNew();

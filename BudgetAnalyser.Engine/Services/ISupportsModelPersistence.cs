@@ -29,6 +29,11 @@ namespace BudgetAnalyser.Engine.Services
         void Close();
 
         /// <summary>
+        ///     Create a new file specific for that service's data.
+        /// </summary>
+        Task CreateAsync([NotNull] ApplicationDatabase applicationDatabase);
+
+        /// <summary>
         ///     Loads a data source with the provided database reference data asynchronously.
         /// </summary>
         Task LoadAsync([NotNull] ApplicationDatabase applicationDatabase);
@@ -45,7 +50,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Called before Save is called. This will be called on the UI Thread.
         ///     Objects can optionally add some context data that will be passed to the <see cref="SaveAsync" /> method call.
-        ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment; this
+        ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
+        ///     this
         ///     can't be done during save as it may not be called using the UI Thread.
         /// </summary>
         /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
