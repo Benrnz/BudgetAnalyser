@@ -55,6 +55,7 @@ namespace BudgetAnalyser.Engine.Services
             this.logger = logger;
             this.dashboardService = dashboardService;
             BudgetBucketRepository = bucketRepo;
+            CreateNewBudgetCollection();
         }
 
         public event EventHandler Closed;
@@ -62,9 +63,7 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-
         public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
-
         public BudgetCollection Budgets { get; private set; }
 
         public ApplicationDataType DataType
@@ -134,15 +133,9 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException("applicationDatabase");
             }
-            
-            await this.budgetRepository.CreateNewAsync(applicationDatabase.BudgetCollectionStorageKey);
-            await LoadAsync(applicationDatabase);
-        }
 
-        public BudgetCurrencyContext CreateNewBudgetCollection()
-        {
-            Budgets = this.budgetRepository.CreateNew();
-            return new BudgetCurrencyContext(Budgets, Budgets.First());
+            await this.budgetRepository.CreateNewAndSaveAsync(applicationDatabase.BudgetCollectionStorageKey);
+            await LoadAsync(applicationDatabase);
         }
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
@@ -227,6 +220,11 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return Budgets.Validate(messages);
+        }
+
+        private void CreateNewBudgetCollection()
+        {
+            Budgets = this.budgetRepository.CreateNew();
         }
 
         private void EnsureAllBucketsUsedAreInBucketRepo()

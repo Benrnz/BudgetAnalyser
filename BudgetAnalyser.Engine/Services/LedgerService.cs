@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
-            await this.ledgerRepository.CreateNewAsync(applicationDatabase.LedgerBookStorageKey);
+            await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
             await LoadAsync(applicationDatabase);
         }
 

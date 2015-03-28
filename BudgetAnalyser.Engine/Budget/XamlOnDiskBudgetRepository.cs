@@ -50,22 +50,22 @@ namespace BudgetAnalyser.Engine.Budget
             return this.currentBudgetCollection;
         }
 
-        public async Task<BudgetCollection> CreateNewAsync(string fileName)
+        public async Task<BudgetCollection> CreateNewAndSaveAsync(string storageKey)
         {
-            if (fileName.IsNothing())
+            if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("storageKey");
             }
 
             var newBudget = new BudgetModel
             {
                 EffectiveFrom = DateTime.Today,
-                Name = Path.GetFileNameWithoutExtension(fileName).Replace('.', ' ')
+                Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ')
             };
 
             this.currentBudgetCollection = new BudgetCollection(new[] { newBudget })
             {
-                FileName = fileName
+                FileName = storageKey
             };
 
             this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
@@ -74,27 +74,27 @@ namespace BudgetAnalyser.Engine.Budget
             return this.currentBudgetCollection;
         }
 
-        public async Task<BudgetCollection> LoadAsync(string fileName)
+        public async Task<BudgetCollection> LoadAsync(string storageKey)
         {
-            if (fileName.IsNothing())
+            if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("storageKey");
             }
 
-            if (!FileExists(fileName))
+            if (!FileExists(storageKey))
             {
-                throw new KeyNotFoundException("File not found. " + fileName);
+                throw new KeyNotFoundException("File not found. " + storageKey);
             }
 
             object serialised;
             try
             {
-                serialised = await LoadFromDisk(fileName); // May return null for some errors.
+                serialised = await LoadFromDisk(storageKey); // May return null for some errors.
             }
             catch (XamlObjectWriterException ex)
             {
                 throw new DataFormatException(
-                    string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", fileName),
+                    string.Format(CultureInfo.CurrentCulture, "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", storageKey),
                     ex);
             }
             catch (Exception ex)
@@ -106,14 +106,14 @@ namespace BudgetAnalyser.Engine.Budget
             if (correctDataFormat == null)
             {
                 throw new DataFormatException(
-                    string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", fileName));
+                    string.Format(CultureInfo.InvariantCulture, "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.", storageKey));
             }
 
             // Bucket Repository must be initialised first, the budget model incomes/expenses are dependent on the bucket repository.
             this.budgetBucketRepository.Initialise(correctDataFormat.Buckets);
 
             BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
-            budgetCollection.FileName = fileName;
+            budgetCollection.FileName = storageKey;
             this.currentBudgetCollection = budgetCollection;
             return budgetCollection;
         }

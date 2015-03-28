@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
-            await this.statementRepository.CreateNewAsync(applicationDatabase.StatementModelStorageKey);
+            await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
             await LoadAsync(applicationDatabase);
         }
 
@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("account");
             }
 
-            StatementModel additionalModel = await this.statementRepository.ImportAndMergeBankStatementAsync(storageKey, account);
+            StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
             StatementModel.Merge(additionalModel);
         }
 
@@ -245,7 +245,7 @@ namespace BudgetAnalyser.Engine.Services
 
             try
             {
-                StatementModel = await this.statementRepository.LoadStatementModelAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
+                StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
             }
             catch (StatementModelChecksumException ex)
             {

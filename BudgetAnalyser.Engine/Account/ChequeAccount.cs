@@ -16,7 +16,7 @@
         {
             get
             {
-                // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this will need to be more robust.
+                // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this may need to be more robust.
                 return true;
             }
         }

@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
             if (logger == null)

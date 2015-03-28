@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Ledger
             this.importUtilities = importUtilities;
         }
 
-        public async Task<LedgerBook> CreateNewAsync(string storageKey)
+        public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -141,11 +141,6 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.Checksum = CalculateChecksum(book);
 
             await SaveDtoToDiskAsync(dataEntity);
-        }
-
-        protected virtual bool FileExistsOnDisk(string fileName)
-        {
-            return File.Exists(fileName);
         }
 
         protected virtual string LoadXamlAsString(string fileName)

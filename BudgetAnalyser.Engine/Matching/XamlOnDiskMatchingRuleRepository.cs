@@ -32,7 +32,12 @@ namespace BudgetAnalyser.Engine.Matching
             this.domainToDataMapper = domainToDataMapper;
         }
 
-        public async Task CreateNewAsync(string storageKey)
+        public IEnumerable<MatchingRule> CreateNew()
+        {
+            return new List<MatchingRule>();
+        }
+
+        public async Task CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -40,11 +45,11 @@ namespace BudgetAnalyser.Engine.Matching
             }
 
             var newRules = new List<MatchingRule>();
-            await SaveRulesAsync(newRules, storageKey);
+            await SaveAsync(newRules, storageKey);
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
-        public async Task<IEnumerable<MatchingRule>> LoadRulesAsync([NotNull] string storageKey)
+        public async Task<IEnumerable<MatchingRule>> LoadAsync([NotNull] string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -74,7 +79,7 @@ namespace BudgetAnalyser.Engine.Matching
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
         }
 
-        public async Task SaveRulesAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
+        public async Task SaveAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
         {
             if (rules == null)
             {

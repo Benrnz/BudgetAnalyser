@@ -24,7 +24,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.WriteToDiskMock = (f, d) => { };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = await subject.CreateNewAsync(filename);
+            BudgetCollection collection = await subject.CreateNewAndSaveAsync(filename);
             Assert.AreEqual(filename, collection.FileName);
         }
 
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.WriteToDiskMock = (f, d) => { };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = await subject.CreateNewAsync(filename);
+            BudgetCollection collection = await subject.CreateNewAndSaveAsync(filename);
 
             Assert.IsTrue(collection.Count == 1);
         }
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public async Task CreateNewShouldThrowGivenEmptyFileName()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
-            await subject.CreateNewAsync(string.Empty);
+            await subject.CreateNewAndSaveAsync(string.Empty);
             Assert.Fail();
         }
 
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public async Task CreateNewShouldThrowGivenNullFileName()
         {
             XamlOnDiskBudgetRepositoryTestHarness subject = Arrange();
-            await subject.CreateNewAsync(null);
+            await subject.CreateNewAndSaveAsync(null);
             Assert.Fail();
         }
 
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.WriteToDiskMock = (f, d) => { writeToDiskCalled = true; };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            await subject.CreateNewAsync(filename);
+            await subject.CreateNewAndSaveAsync(filename);
             Assert.IsTrue(writeToDiskCalled);
         }
 

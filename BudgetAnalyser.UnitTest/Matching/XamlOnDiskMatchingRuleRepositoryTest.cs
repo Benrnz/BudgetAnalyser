@@ -36,7 +36,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadXamlFromDiskOveride = fileName => Helper.EmbeddedResourceHelper.ExtractText(TestDataConstants.DemoRulesFileName);
-            IEnumerable<MatchingRule> results = await subject.LoadRulesAsync("foo.bar");
+            IEnumerable<MatchingRule> results = await subject.LoadAsync("foo.bar");
 
             Assert.IsNotNull(results);
             Assert.IsTrue(results.Any());
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => MatchingRulesTestData.RawTestData1().ToList();
-            IEnumerable<MatchingRule> results = await subject.LoadRulesAsync("foo.bar");
+            IEnumerable<MatchingRule> results = await subject.LoadAsync("foo.bar");
 
             Assert.IsNotNull(results);
             Assert.IsTrue(results.Any());
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => { throw new Exception(); };
-            await subject.LoadRulesAsync("foo.bar");
+            await subject.LoadAsync("foo.bar");
             Assert.Fail();
         }
 
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         public async Task LoadShouldThrowGivenNullFileName()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
-            await subject.LoadRulesAsync(null);
+            await subject.LoadAsync(null);
             Assert.Fail();
         }
 
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.ExistsOveride = filename => false;
-            await subject.LoadRulesAsync("Foo.bar");
+            await subject.LoadAsync("Foo.bar");
             Assert.Fail();
         }
 
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
             subject.LoadFromDiskOveride = fileName => null;
-            await subject.LoadRulesAsync("foo.bar");
+            await subject.LoadAsync("foo.bar");
             Assert.Fail();
         }
 
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         public async Task SaveShouldThrowGivenNullRulesList()
         {
             var subject = Arrange();
-            await subject.SaveRulesAsync(null, "Foo.bar");
+            await subject.SaveAsync(null, "Foo.bar");
             Assert.Fail();
         }
 
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         public async Task SaveShouldThrowGivenNullFileName()
         {
             var subject = Arrange();
-            await subject.SaveRulesAsync(MatchingRulesTestDataGenerated.TestData1(), null);
+            await subject.SaveAsync(MatchingRulesTestDataGenerated.TestData1(), null);
             Assert.Fail();
         }
 

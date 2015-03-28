@@ -41,12 +41,12 @@ namespace BudgetAnalyser.Engine.Statement
             this.importerRepository = importerRepository;
         }
 
-        public async Task CreateNewAsync(string storageKey)
+        public async Task CreateNewAndSaveAsync(string storageKey)
         {
-            await this.statementModelRepository.CreateNewAsync(storageKey);
+            await this.statementModelRepository.CreateNewAndSaveAsync(storageKey);
         }
 
-        public async Task<StatementModel> ImportAndMergeBankStatementAsync(
+        public async Task<StatementModel> ImportBankStatementAsync(
             string storageKey,
             AccountType account)
         {
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Statement
             return await this.importerRepository.ImportAsync(storageKey, account);
         }
 
-        public async Task<StatementModel> LoadStatementModelAsync(string storageKey)
+        public async Task<StatementModel> LoadAsync(string storageKey)
         {
             if (storageKey == null)
             {

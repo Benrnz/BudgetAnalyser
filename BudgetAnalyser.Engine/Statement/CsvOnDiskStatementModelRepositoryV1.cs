@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Statement
             this.domainToDtoMapper = domainToDtoMapper;
         }
 
-        public async Task CreateNewAsync(string storageKey)
+        public async Task CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {

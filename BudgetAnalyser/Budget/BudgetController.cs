@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Budget
             this.maintenanceService.Validating += OnValidatingNotificationReceived;
             this.maintenanceService.Saved += OnSavedNotificationReceived;
 
-            CurrentBudget = this.maintenanceService.CreateNewBudgetCollection();
+            CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, Budgets.CurrentActiveBudget);
         }
 
         [Engine.Annotations.UsedImplicitly]
@@ -316,7 +316,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnClosedNotificationReceived(object sender, EventArgs eventArgs)
         {
-            CurrentBudget = this.maintenanceService.CreateNewBudgetCollection();
+            CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, this.maintenanceService.Budgets.CurrentActiveBudget);
             Budgets = CurrentBudget.BudgetCollection;
             BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
             RaisePropertyChanged(() => TruncatedFileName);

@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("applicationDatabase");
             }
 
-            await this.ruleRepository.CreateNewAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
+            await this.ruleRepository.CreateNewAndSaveAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
             await LoadAsync(applicationDatabase);
         }
 
@@ -193,7 +193,7 @@ namespace BudgetAnalyser.Engine.Services
             List<MatchingRule> repoRules;
             try
             {
-                repoRules = (await this.ruleRepository.LoadRulesAsync(this.rulesStorageKey))
+                repoRules = (await this.ruleRepository.LoadAsync(this.rulesStorageKey))
                     .OrderBy(r => r.Description)
                     .ToList();
             }
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 // If file not found occurs here, assume this is the first time the app has run, and create a new one.
                 this.rulesStorageKey = BuildDefaultFileName();
-                repoRules = new List<MatchingRule>();
+                repoRules = this.ruleRepository.CreateNew().ToList();
             }
 
             foreach (MatchingRule rule in repoRules)
@@ -279,7 +279,7 @@ namespace BudgetAnalyser.Engine.Services
             var messages = new StringBuilder();
             if (ValidateModel(messages))
             {
-                await this.ruleRepository.SaveRulesAsync(MatchingRules, this.rulesStorageKey);
+                await this.ruleRepository.SaveAsync(MatchingRules, this.rulesStorageKey);
             }
             else
             {

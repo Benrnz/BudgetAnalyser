@@ -117,7 +117,7 @@ namespace BudgetAnalyser.UnitTest.Services
         public async Task ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
         {
             this.mockStatementRepo
-                .Setup(m => m.ImportAndMergeBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.Services
             Arrange();
 
             this.mockStatementRepo
-                .Setup(m => m.ImportAndMergeBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
@@ -173,7 +173,7 @@ namespace BudgetAnalyser.UnitTest.Services
             StatementModel testStatement = new StatementModelTestHarness();
             testStatement.LoadTransactions(new List<Transaction>());
 
-            this.mockStatementRepo.Setup(m => m.LoadStatementModelAsync(It.IsAny<string>())).Returns(Task.FromResult(testStatement));
+            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>())).Returns(Task.FromResult(testStatement));
 
             await this.subject.LoadAsync(this.testAppDb);
 
@@ -303,7 +303,7 @@ namespace BudgetAnalyser.UnitTest.Services
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockStatementRepo = new Mock<IStatementRepository>();
 
-            this.mockStatementRepo.Setup(m => m.LoadStatementModelAsync(It.IsAny<string>()))
+            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(this.testData))
                 .Verifiable();
 
@@ -341,7 +341,7 @@ namespace BudgetAnalyser.UnitTest.Services
         private void Arrange()
         {
             this.mockStatementRepo
-                .Setup(m => m.LoadStatementModelAsync(It.IsAny<string>()))
+                .Setup(m => m.LoadAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(this.testData));
             this.subject = CreateSubject();
             this.subject.LoadAsync(this.testAppDb).Wait();

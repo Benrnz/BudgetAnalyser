@@ -38,11 +38,6 @@ namespace BudgetAnalyser.Engine.Services
         BudgetModel CloneBudgetModel([NotNull] BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom);
 
         /// <summary>
-        ///     Creates a new budget collection with one new empty budget model.
-        /// </summary>
-        BudgetCurrencyContext CreateNewBudgetCollection();
-
-        /// <summary>
         ///     Updates the budget with the full collection of incomes and expenses.
         ///     This method does not call validate on the model.
         /// </summary>

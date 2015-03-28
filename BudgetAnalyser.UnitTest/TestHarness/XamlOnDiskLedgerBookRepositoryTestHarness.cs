@@ -31,11 +31,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         public Action<LedgerBookDto> SaveDtoToDiskOverride { get; set; }
         public Action<string, string> WriteToDiskOverride { get; set; }
 
-        protected override bool FileExistsOnDisk(string fileName)
-        {
-            return FileExistsOverride(fileName);
-        }
-
         protected override string LoadXamlAsString(string fileName)
         {
             if (LoadXamlAsStringOverride == null)
