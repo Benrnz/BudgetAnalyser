@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Dashboard
             {
                 var result = QuestionBoxService.Show(
                     "Remove Widget",
-                    "Are you sure you want to remove the Fixed Budget Project Widget '{0}'?\n\nOnce removed, it cannot be undone. All assigned transactions will be re-assigned to the general Surplus Budget Bucket and you will no longer be able to track spending for this project. Any unsaved edits will also be committed.",
+                    "Are you sure you want to remove the Fixed Budget Project Widget '{0}'?\n\nOnce removed, it cannot be undone. All assigned transactions will be remain in the project bucket. Any unsaved edits will also be committed.",
                     fixedProject.Id);
                 if (result == null || result == false) return;
             }
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Dashboard
 
         public static ICommand UnhideAllWidgetsCommand
         {
-            get { return new RelayCommand(UnhideAllWidgetsCommandExecute); }
+            get { return new RelayCommand(OnUnhideAllWidgetsCommandExecute); }
         }
 
         private static void OnAddNewBucketMonitorWidgetCommandExecute(Guid correlationId)
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Dashboard
             CreateNewSurprisePaymentMonitorController.ShowDialog(BudgetAnalyserFeature.Dashboard, correlationId);
         }
 
-        private static void UnhideAllWidgetsCommandExecute()
+        private static void OnUnhideAllWidgetsCommandExecute()
         {
             DashboardService.ShowAllWidgets();
         }

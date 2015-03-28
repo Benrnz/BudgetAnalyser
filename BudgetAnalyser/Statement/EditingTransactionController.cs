@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -11,16 +13,33 @@ namespace BudgetAnalyser.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class EditingTransactionController : ControllerBase
     {
+        private readonly IBudgetBucketRepository bucketRepo;
         private Transaction doNotUseTransaction;
 
-        public EditingTransactionController([NotNull] UiContext uiContext)
+        public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException("uiContext");
             }
 
+            if (bucketRepo == null)
+            {
+                throw new ArgumentNullException("bucketRepo");
+            }
+
+            this.bucketRepo = bucketRepo;
             MessengerInstance = uiContext.Messenger;
+        }
+
+        public IEnumerable<BudgetBucket> Buckets
+        {
+            get { return this.doNotUseBuckets; }
+            private set
+            {
+                this.doNotUseBuckets = value; 
+                RaisePropertyChanged();
+            }
         }
 
         public bool HasChanged
@@ -33,6 +52,7 @@ namespace BudgetAnalyser.Statement
         }
 
         private BudgetBucket originalBucket;
+        private IEnumerable<BudgetBucket> doNotUseBuckets;
 
         public int OriginalHash { get; private set; }
 
@@ -58,6 +78,7 @@ namespace BudgetAnalyser.Statement
         {
             Transaction = transaction;
             this.originalBucket = Transaction.BudgetBucket;
+            Buckets = this.bucketRepo.Buckets.Where(b => b.Active);
 
             MessengerInstance.Send(
                 new ShellDialogRequestMessage(

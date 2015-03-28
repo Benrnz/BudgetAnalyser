@@ -219,12 +219,15 @@ namespace BudgetAnalyser.Engine.Services
                     throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
                 }
 
-                fixedProjectWidget.Statement.ReassignFixedProjectTransactions(projectBucket, this.bucketRepository.SurplusBucket);
+                projectBucket.Active = false;
+                fixedProjectWidget.Visibility = false;
+                // Not sure I really want to do this. It will mean this data is gone forever.
+                // fixedProjectWidget.Statement.ReassignFixedProjectTransactions(projectBucket, this.bucketRepository.SurplusBucket);
 
                 // No need to remove it from the Budget, the Budget is actually not aware of these fixed project buckets in any way.
-                // Remove from Bucket Repo
-                this.bucketRepository.RemoveFixedBudgetProject(projectBucket);
+                // this.bucketRepository.RemoveFixedBudgetProject(projectBucket);
                 this.budgetRepository.SaveAsync(); // Bucket Repo data is stored in the budget repo however.
+                return;
             }
 
             this.widgetRepository.Remove(widgetToRemove);

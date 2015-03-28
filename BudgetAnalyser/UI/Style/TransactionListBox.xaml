@@ -234,7 +234,7 @@
                           Grid.Row="1"
                           HorizontalAlignment="Left"
                           ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
-                          ItemsSource="{Binding Source={x:Static budget:BudgetBucketBindingSource.BucketRepository}, Path=Buckets}"
+                          ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentPresenter}, Path=DataContext.Buckets}"
                           MinWidth="120"
                           SelectedItem="{Binding BudgetBucket, UpdateSourceTrigger=PropertyChanged}"
                           TabIndex="1"
