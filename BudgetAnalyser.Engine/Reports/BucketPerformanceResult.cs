@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 
@@ -21,7 +22,14 @@ namespace BudgetAnalyser.Engine.Reports
 
         public double Percent
         {
-            get { return (double)Math.Round(TotalSpent / BudgetTotal, 2); }
+            get
+            {
+                if (BudgetTotal < 0.01M)
+                {
+                    return (double)Math.Round(TotalSpent / 0.01M, 2);
+                }
+                return (double)Math.Round(TotalSpent / BudgetTotal, 2);
+            }
         }
 
         public string Summary

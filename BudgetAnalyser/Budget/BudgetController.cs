@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Budget
             this.maintenanceService.Validating += OnValidatingNotificationReceived;
             this.maintenanceService.Saved += OnSavedNotificationReceived;
 
-            CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, Budgets.CurrentActiveBudget);
+            CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, this.maintenanceService.Budgets.CurrentActiveBudget);
         }
 
         [Engine.Annotations.UsedImplicitly]
