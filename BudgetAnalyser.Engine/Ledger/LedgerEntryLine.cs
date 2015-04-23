@@ -202,8 +202,19 @@ namespace BudgetAnalyser.Engine.Ledger
 
             foreach (LedgerEntry previousLedgerEntry in previousLedgerBalances)
             {
-                LedgerBucket ledgerBucket = previousLedgerEntry.LedgerBucket;
+                LedgerBucket ledgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
+                var bookLedgerDefaults = parentLedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                if (previousLedgerEntry.LedgerBucket.StoredInAccount != bookLedgerDefaults.StoredInAccount)
+                {
+                    // Check to see if a ledger has been moved into a new default account since last reconciliation.
+                    ledgerBucket = bookLedgerDefaults;
+                }
+                else
+                {
+                    ledgerBucket = previousLedgerEntry.LedgerBucket;
+                }
+
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
                 List<LedgerTransaction> transactions = IncludeBudgetedAmount(currentBudget, ledgerBucket, reconciliationDate, toDoList);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
@@ -294,7 +305,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
-                    validationMessages.AppendFormat("Ledger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    validationMessages.AppendFormat("\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
                     result = false;
                 }
             }
@@ -512,7 +523,8 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 return 0;
             }
-            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket == ledgerBucket);
+
+            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
             return previousEntry == null ? 0 : previousEntry.Balance;
         }
 

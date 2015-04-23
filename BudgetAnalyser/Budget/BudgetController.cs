@@ -487,7 +487,6 @@ namespace BudgetAnalyser.Budget
 
         private void SyncDataFromBudgetService()
         {
-            // TODO Consider sending out a loading new data source preview event so loading indicators could be displayed on each tab.
             Budgets = this.maintenanceService.Budgets;
             CurrentBudget = new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget);
             BudgetBucketBindingSource.BucketRepository = this.maintenanceService.BudgetBucketRepository;
