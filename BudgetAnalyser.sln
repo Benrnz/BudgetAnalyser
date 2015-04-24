@@ -23,6 +23,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{84
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rees.TestUtilities", "Rees.TestUtilities\Rees.TestUtilities.csproj", "{6C5E0904-A517-4C31-9234-9686B38F1726}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Readme", "Readme", "{34F19A3C-D18C-450E-A32B-E4F1729C1FA6}"
+	ProjectSection(SolutionItems) = preProject
+		License.txt = License.txt
+		README.md = README.md
+		Screenshot1.png = Screenshot1.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

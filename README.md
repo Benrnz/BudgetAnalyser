@@ -24,11 +24,15 @@ Features
  
 Overview
 --------
-It't a 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create a Win-RT version as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online.
+It's a simple 2 tier application at the moment with all business logic residing in the engine assembly. The UI is currently WPF, but the intention is to create others as well. All data is saved only locally, no data is uploaded anywhere. This project has a fundamental goal not to upload any user's personal budgeting or bank statement data online.
 No databases are currently used, data is saved in XML format.  It is the user's responsibility to save their data in a secure location (ie: NTFS permissions or a PGP/TrueCrypt file or drive).
-
 
 
 Getting Started
 ---------------
 No binaries are currently uploaded, so you will need to build the solution yourself.
+
+
+The Dashboard
+-------------
+![Budget Monitoring Dashboard](https://github.com/Benrnz/BudgetAnalyser/blob/master/Screenshot1.png "The Budget Analyser Monitoring Dashboard")
