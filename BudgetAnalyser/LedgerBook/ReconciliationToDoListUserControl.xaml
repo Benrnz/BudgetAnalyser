@@ -73,7 +73,8 @@
         <ListBox ItemsSource="{Binding Tasks}"
                  ItemTemplate="{StaticResource TaskTemplate}"
                  SelectedItem="{Binding SelectedTask}"
-                 SelectionMode="Single" />
+                 SelectionMode="Single" 
+                 DataContextChanged="OnListDataContextChanged"/>
         <GroupBox Grid.Row="1"
                   Margin="5,30,5,5"
                   Visibility="{Binding AddingNewTask, Converter={StaticResource Converter.BoolToVis}}">
