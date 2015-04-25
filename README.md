@@ -48,28 +48,38 @@ The dashboard is used to show quick reference information and alerts.  Most func
 
 Overview Tiles
 * _Create New, Open, Load Demo Tiles_
+
 These tiles provide ability to load and create new budget analyser files.
 * _Days Since Last Import Tile_
+
 Shows the number of days since bank statement data was loaded into the analyser.
 * _Overspent Tile_
+
 Shows the number of buckets that have been overspent this month.
 * _Surprise Payment Warning Tile_
+
 This is a configurable tile that can monitor a single bucket that was weekly or fortnightly payments. Sometimes there will be three fortnightly payments or five weekly payments in one month. This tile will warn when the next "surprise" payment will be.
 
 Global Filter Tiles
 * _Account Filter Tile_
+
 Provides the ability to filter by single account.
 * _Date Filter Tile_
+
 Provides a date range filter.  This should usually be set to one month's worth of data, except when running reports looking for trends over long periods. This filter controls all date range filtering throughout the application, including reporting.
 
 Monthly Tracking
 * _Bucket Monitoring Tiles_
+
 These are configurable tiles that can be optionally added per bucket.  They show a bar graph indicating remaining funds left in the bucket for the month.
 * _Bank Surplus_
+
 This is a bar graph showing the remaining funds left in the Surplus bucket. This monitors the actual bank Surplus amount from the previous Ledger Book Reconciliation. Essentially this is the remaining funds available for general spending (ie spending that doesn't fall into any other Budgeted Bucket category).
 * _Budgeted Surplus_
+
 This is a bar graph showing the remaining funds for Surplus compared to the budgeted surplus amount.  This is sometimes different to the real surplus funds in the bank when incomes exceed expected budget amounts, or other budget buckets have exceeded their budgeted amounts. For comparison purposes only.
 
 Projects
 * _Fixed Amount Project Tiles_
+
 These are configurable tiles where you have an on-going project that you do not want to spend more than a certain amount on.  For example the MASTERBED project is a renovation project to repaint and decorate a master bedroom. The screen shot shows the spending to date has reached the budgeted amount. The PS3 Project hasn't had any spending allocated against it yet, so its bar graph is showing a full bucket.
