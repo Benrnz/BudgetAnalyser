@@ -36,6 +36,7 @@ No binaries are currently uploaded, so you will need to build the solution yours
 Terminology
 -----------
 * _Bucket_
+
 A Bucket is a metaphor used to describe a container that contains a set amount of funds ready to be spent.  When the bucket is empty, there is no more money to spend.  Buckets cannot have an overdrawn (negative) balance. Any overspending is automatically taken from the Surplus bucket, if there's no Surplus remaining, get ready to bounce.
 There are a few different kinds of buckets: A Spent-Monthly-Bucket is a bucket that will automatically empty any remaining funds into Surplus at the end of the month, if all funds are not spent. A Saved-Up-For-Bucket will not empty itself at the end of the month, so if all funds are not spent the bucket will get bigger over time. This is useful for expenses that are paid annually or ad-hoc, ie not paid on a regular date each month. 
 When setting up a Budget you create Buckets and set a monthly amount you wish to allocate from your salary.  
