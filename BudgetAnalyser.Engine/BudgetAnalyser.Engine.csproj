@@ -284,6 +284,7 @@
     <Compile Include="Statement\TransactionGroupedByBucket.cs" />
     <Compile Include="Statement\TransactionListExtension.cs" />
     <Compile Include="Statement\TransactionType.cs" />
+    <Compile Include="TaskExtension.cs" />
     <Compile Include="ValidationWarningException.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="GlobalSuppressions.cs" />

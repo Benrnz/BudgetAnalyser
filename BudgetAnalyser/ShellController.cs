@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
@@ -272,7 +273,7 @@ namespace BudgetAnalyser
             dialogController.HelpButtonVisible = message.HelpAvailable;
         }
 
-        private async void OnShutdownRequested(ShutdownMessage message)
+        private void OnShutdownRequested(ShutdownMessage message)
         {
             var gatherDataMessage = new ApplicationStateRequestedMessage();
             MessengerInstance.Send(gatherDataMessage);
@@ -283,7 +284,12 @@ namespace BudgetAnalyser
                 bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before exiting?");
                 if (response != null && response.Value)
                 {
-                    await this.applicationDatabaseService.SaveAsync();
+                    // Must be carefully run because the application is exiting.  If run using the task factory with defaults the task will stall, as its waiting to be marshalled back to main context
+                    // which is waiting here.  If run without a .Wait(), the task will be aborted by the shutdown and the file is cut short and partially saved; actually corrupted.
+                    var t = new Task(() => this.applicationDatabaseService.SaveAsync());
+                    t.ConfigureAwait(false);
+                    t.Start();
+                    t.Wait();
                 }
             }
         }

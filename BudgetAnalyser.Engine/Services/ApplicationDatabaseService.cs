@@ -44,6 +44,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public ApplicationDatabase Close()
         {
+            if (this.budgetAnalyserDatabase == null)
+            {
+                return null;
+            }
+
             foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
@@ -156,12 +161,11 @@ namespace BudgetAnalyser.Engine.Services
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
             // Save all remaining service's data in parallel.
-            List<Task> savingTasks = this.databaseDependents
+            await this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
                 .Select(service => Task.Run(() => service.SaveAsync(contexts)))
-                .ToList();
+                .ContinueWhenAllTasksComplete();
 
-            await Task.WhenAll(savingTasks);
             ClearDirtyDataFlags();
 
             EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
