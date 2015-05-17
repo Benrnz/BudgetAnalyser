@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class ApplicationDatabaseService : IApplicationDatabaseService, IApplicationHookEventPublisher
+    public class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
@@ -34,8 +34,6 @@ namespace BudgetAnalyser.Engine.Services
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             InitialiseDirtyDataTable();
         }
-
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
 
         public bool HasUnsavedChanges
         {
@@ -69,11 +67,11 @@ namespace BudgetAnalyser.Engine.Services
 
             ClearDirtyDataFlags();
             this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
-            foreach (var service in this.databaseDependents)
+            foreach (ISupportsModelPersistence service in this.databaseDependents)
             {
                 await service.CreateAsync(this.budgetAnalyserDatabase);
             }
-            
+
             return this.budgetAnalyserDatabase;
         }
 
@@ -163,16 +161,10 @@ namespace BudgetAnalyser.Engine.Services
             // Save all remaining service's data in parallel.
             await this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
-                .Select(service => Task.Run(() => service.SaveAsync(contexts)))
+                .Select(async service => await Task.Run(() => service.SaveAsync(contexts)))
                 .ContinueWhenAllTasksComplete();
 
             ClearDirtyDataFlags();
-
-            EventHandler<ApplicationHookEventArgs> handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(GetType().Name, ApplicationHookEventArgs.Save));
-            }
         }
 
         public bool ValidateAll([NotNull] StringBuilder messages)

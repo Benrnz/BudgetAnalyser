@@ -12,7 +12,8 @@
         MinWidth="800"
         SizeToContent="Manual"
         SnapsToDevicePixels="True"
-        Title="{Binding WindowTitle}">
+        Title="{Binding WindowTitle}"
+        Closing="ShellWindow_OnClosing">
 
     <Window.InputBindings>
         <KeyBinding Key="S"

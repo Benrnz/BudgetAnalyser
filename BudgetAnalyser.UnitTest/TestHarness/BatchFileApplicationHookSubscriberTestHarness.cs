@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
+﻿using BudgetAnalyser.Engine;
 using Rees.TestUtilities;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
@@ -18,18 +16,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             {
                 return (string)PrivateAccessor.GetProperty<BatchFileApplicationHookSubscriber>(this, "FileName");
             }
-        }
-
-        public Func<object, ApplicationHookEventArgs, Task> PerformActionOverride { get; set; }
-
-        protected override Task PerformAction(object sender, ApplicationHookEventArgs args)
-        {
-            if (PerformActionOverride == null)
-            {
-                return base.PerformAction(sender, args);
-            }
-
-            return PerformActionOverride(sender, args);
         }
     }
 }

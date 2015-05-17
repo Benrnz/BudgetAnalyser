@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 
 namespace BudgetAnalyser
@@ -8,6 +10,7 @@ namespace BudgetAnalyser
     /// </summary>
     public partial class ShellWindow
     {
+        private bool closeHandled;
         private bool sizeHasBeenSet;
 
         public ShellWindow()
@@ -34,6 +37,14 @@ namespace BudgetAnalyser
             this.sizeHasBeenSet = true;
         }
 
+        private void OnLocationChanged(object sender, EventArgs e)
+        {
+            if (this.sizeHasBeenSet)
+            {
+                Controller.NotifyOfWindowLocationChange(new Point(Left, Top));
+            }
+        }
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.sizeHasBeenSet)
@@ -42,11 +53,16 @@ namespace BudgetAnalyser
             }
         }
 
-        private void OnLocationChanged(object sender, EventArgs e)
+        private async void ShellWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            if (this.sizeHasBeenSet)
+            // While the application is closing using async tasks and the task factory is error prone.
+            // A better approach is to cancel the close, handle the save then re-trigger close.
+            if (!this.closeHandled)
             {
-                Controller.NotifyOfWindowLocationChange(new Point(Left, Top));
+                this.closeHandled = true;
+                e.Cancel = true;
+                await Controller.ShellClosing();
+                Close();
             }
         }
     }

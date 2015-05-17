@@ -25,6 +25,7 @@ namespace BudgetAnalyser
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IDashboardService dashboardService;
+        private readonly BatchFileApplicationHookSubscriber batchFileHook;
         private readonly IPersistApplicationState statePersistence;
         private readonly IUiContext uiContext;
         private bool initialised;
@@ -35,7 +36,9 @@ namespace BudgetAnalyser
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
-            [NotNull] IDashboardService dashboardService)
+            [NotNull] IDashboardService dashboardService,
+            [NotNull] BatchFileApplicationHookSubscriber batchFileHook
+            )
         {
             if (uiContext == null)
             {
@@ -58,7 +61,6 @@ namespace BudgetAnalyser
             }
 
             MessengerInstance = uiContext.Messenger;
-            MessengerInstance.Register<ShutdownMessage>(this, OnShutdownRequested);
             MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
@@ -66,6 +68,7 @@ namespace BudgetAnalyser
             this.statePersistence = statePersistence;
             this.applicationDatabaseService = applicationDatabaseService;
             this.dashboardService = dashboardService;
+            this.batchFileHook = batchFileHook;
             this.uiContext = uiContext;
 
             LedgerBookDialog = new ShellDialogController();
@@ -188,6 +191,30 @@ namespace BudgetAnalyser
             }
         }
 
+        /// <summary>
+        ///     Notify the ShellController the Shell is closing.
+        /// </summary>
+        public async Task ShellClosing()
+        {
+            // Always save application metadata.
+            var gatherDataMessage = new ApplicationStateRequestedMessage();
+            MessengerInstance.Send(gatherDataMessage);
+            this.statePersistence.Persist(gatherDataMessage.PersistentData);
+
+            if (this.applicationDatabaseService.HasUnsavedChanges)
+            {
+                bool? result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
+                if (result != null && result.Value)
+                {
+                    // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
+                    // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
+                    await this.applicationDatabaseService.SaveAsync();
+                }
+            }
+
+            this.batchFileHook.PerformAction();
+        }
+
         private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
@@ -271,27 +298,6 @@ namespace BudgetAnalyser
             dialogController.DialogType = message.DialogType;
             dialogController.CorrelationId = message.CorrelationId;
             dialogController.HelpButtonVisible = message.HelpAvailable;
-        }
-
-        private void OnShutdownRequested(ShutdownMessage message)
-        {
-            var gatherDataMessage = new ApplicationStateRequestedMessage();
-            MessengerInstance.Send(gatherDataMessage);
-            this.statePersistence.Persist(gatherDataMessage.PersistentData);
-
-            if (this.applicationDatabaseService.HasUnsavedChanges)
-            {
-                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before exiting?");
-                if (response != null && response.Value)
-                {
-                    // Must be carefully run because the application is exiting.  If run using the task factory with defaults the task will stall, as its waiting to be marshalled back to main context
-                    // which is waiting here.  If run without a .Wait(), the task will be aborted by the shutdown and the file is cut short and partially saved; actually corrupted.
-                    var t = new Task(() => this.applicationDatabaseService.SaveAsync());
-                    t.ConfigureAwait(false);
-                    t.Start();
-                    t.Wait();
-                }
-            }
         }
     }
 }

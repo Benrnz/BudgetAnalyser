@@ -84,7 +84,6 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
-            builder.RegisterInstance(app).As<IApplicationHookEventPublisher>();
         }
 
         private static void RegistrationsForReesWpf(ContainerBuilder builder)
@@ -115,11 +114,6 @@ namespace BudgetAnalyser
 
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
-
-            // Trigger instantiation of all Application hook subscribers. Unless we ask for these to be constructed, they won't be.
-            var appEventSubscribers = container.Resolve<IEnumerable<IApplicationHookSubscriber>>();
-            var appEventPublishers = container.Resolve<IEnumerable<IApplicationHookEventPublisher>>();
-            appEventSubscribers.ToList().ForEach(s => s.Subscribe(appEventPublishers));
 
             var autoMapperConfig = container.Resolve<AutoMapperConfiguration>();
             autoMapperConfig.Configure();

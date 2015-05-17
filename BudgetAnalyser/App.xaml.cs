@@ -5,18 +5,16 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
-using GalaSoft.MvvmLight.Messaging;
-using Rees.Wpf;
 
 namespace BudgetAnalyser
 {
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application, IApplicationHookEventPublisher
+    public partial class App : Application
     {
         private ILogger logger;
-        public event EventHandler<ApplicationHookEventArgs> ApplicationEvent;
+        private ShellController shellController;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -36,10 +34,10 @@ namespace BudgetAnalyser
 
             this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
             this.logger.LogAlways(_ => compositionRoot.ShellController.DashboardController.VersionString);
-            var initialisableShell = compositionRoot.ShellController as IInitializableController;
-            if (initialisableShell != null)
+            this.shellController = compositionRoot.ShellController;
+            if (this.shellController != null)
             {
-                initialisableShell.Initialize();
+                this.shellController.Initialize();
             }
 
             compositionRoot.ShellWindow.DataContext = compositionRoot.ShellController;
@@ -75,14 +73,7 @@ namespace BudgetAnalyser
 
         private void OnApplicationExit(object sender, ExitEventArgs e)
         {
-            var handler = ApplicationEvent;
-            if (handler != null)
-            {
-                handler(this, new ApplicationHookEventArgs(GetType().Name, ApplicationHookEventArgs.Exit));
-            }
-
             Current.Exit -= OnApplicationExit;
-            Messenger.Default.Send(new ShutdownMessage());
             this.logger.LogAlways(_ => "=========== Application Exiting ===========");
         }
 
@@ -95,5 +86,6 @@ namespace BudgetAnalyser
         {
             LogUnhandledException("App.OnDispatcherUnhandledException", e.Exception);
         }
+ 
     }
 }

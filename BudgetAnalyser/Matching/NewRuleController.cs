@@ -302,8 +302,8 @@ namespace BudgetAnalyser.Matching
                     UseReference3 ? Reference3 : null
                 },
                 UseTransactionType ? TransactionType : null,
-                Amount,
-                OrChecked);
+                UseAmount ? (decimal?)Amount : null,
+                AndChecked);
 
             EventHandler handler = RuleCreated;
             if (handler != null)

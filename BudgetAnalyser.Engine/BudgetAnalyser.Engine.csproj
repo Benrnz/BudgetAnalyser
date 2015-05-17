@@ -188,8 +188,6 @@
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="DefaultIoCRegistrations.cs" />
-    <Compile Include="IApplicationHookEventPublisher.cs" />
-    <Compile Include="IApplicationHookSubscriber.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Ledger\BankBalance.cs" />
     <Compile Include="Ledger\CorruptedLedgerBookException.cs" />
@@ -202,7 +200,6 @@
     <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="BatchFileApplicationHookSubscriber.cs" />
-    <Compile Include="LoggingApplicationHookSubscriber.cs" />
     <Compile Include="MainApplicationStateModelV1.cs" />
     <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />

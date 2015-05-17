@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xaml;
@@ -119,6 +120,7 @@ namespace BudgetAnalyser.Engine.Persistence
             using (var file = new StreamWriter(fileName, false))
             {
                 await file.WriteAsync(data);
+                await file.FlushAsync();
             }
         }
 

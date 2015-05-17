@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
@@ -17,12 +15,11 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     [AutoRegisterWithIoC]
     [UsedImplicitly]
-    public class BatchFileApplicationHookSubscriber : IApplicationHookSubscriber
+    public class BatchFileApplicationHookSubscriber
     {
         private const string BatchFileName = "BudgetAnalyserHooks.bat";
         private readonly ILogger logger;
         private string doNotUseFileName;
-        private IEnumerable<IApplicationHookEventPublisher> myPublishers;
 
         public BatchFileApplicationHookSubscriber([NotNull] ILogger logger)
         {
@@ -48,66 +45,43 @@ namespace BudgetAnalyser.Engine
             }
         }
 
-        public void Subscribe([NotNull] IEnumerable<IApplicationHookEventPublisher> publishers)
-        {
-            if (publishers == null)
-            {
-                throw new ArgumentNullException("publishers");
-            }
-
-            this.myPublishers = publishers.ToList();
-            foreach (IApplicationHookEventPublisher publisher in this.myPublishers)
-            {
-                publisher.ApplicationEvent += OnEventOccurred;
-            }
-        }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "reviewed ok here.")]
-        protected virtual Task PerformAction(object sender, ApplicationHookEventArgs args)
+        public void PerformAction()
         {
-            return Task.Factory.StartNew(
-                () =>
+            if (!File.Exists(FileName))
+            {
+                using (File.CreateText(FileName))
                 {
-                    if (!File.Exists(FileName))
-                    {
-                        using (File.CreateText(FileName))
-                        {
-                        }
-                    }
+                }
+            }
 
-                    string commandLine = string.Format(
-                        CultureInfo.CurrentCulture,
-                        "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\"",
-                        FileName,
-                        args.Category,
-                        args.Origin,
-                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        GetType().Name);
-                    this.logger.LogInfo(_ => "Executing batch file with commandline: " + commandLine);
+            string commandLine = string.Format(
+                CultureInfo.CurrentCulture,
+                "{0} \"{1}\" \"{2}\" \"{3}\" \"{4}\"",
+                FileName,
+                "Save",
+                "Exit",
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                GetType().Name);
+            this.logger.LogInfo(_ => "Executing batch file with commandline: " + commandLine);
 
-                    var processInfo = new ProcessStartInfo("cmd.exe", "/c " + commandLine)
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = false,
-                        RedirectStandardOutput = false,
-                    };
-                    try
-                    {
-                        Process process = Process.Start(processInfo);
-                        process.WaitForExit(5000);
-                        this.logger.LogInfo(_ => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
-                    }
-                    catch
-                    {
-                        // Ignore - Best efforts to log only and app is exiting.
-                    }
-                });
-        }
-
-        private void OnEventOccurred(object sender, ApplicationHookEventArgs args)
-        {
-            PerformAction(sender, args);
+            var processInfo = new ProcessStartInfo("cmd.exe", "/c " + commandLine)
+            {
+                CreateNoWindow = false,
+                UseShellExecute = false,
+                RedirectStandardError = false,
+                RedirectStandardOutput = false,
+            };
+            try
+            {
+                Process process = Process.Start(processInfo);
+                process.WaitForExit(5000);
+                this.logger.LogInfo(_ => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
+            }
+            catch
+            {
+                // Ignore - Best efforts to log only and app is exiting.
+            }
         }
     }
 }
