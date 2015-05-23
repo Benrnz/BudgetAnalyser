@@ -109,19 +109,19 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                return;
+            }
+
+            if (message.Response == ShellDialogButton.Help)
+            {
+                this.messageBox.Show("Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
+                return;
+            }
+
             try
             {
-                if (message.Response == ShellDialogButton.Cancel)
-                {
-                    return;
-                }
-
-                if (message.Response == ShellDialogButton.Help)
-                {
-                    this.messageBox.Show("Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
-                    return;
-                }
-
                 if (this.ledger.StoredInAccount == StoredInAccount)
                 {
                     return;
