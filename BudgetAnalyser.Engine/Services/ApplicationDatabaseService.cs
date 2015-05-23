@@ -47,6 +47,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
+            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
             foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
@@ -146,8 +147,6 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ValidationWarningException(messages.ToString());
             }
-
-            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
 
             var contexts = new Dictionary<ApplicationDataType, object>();
             this.databaseDependents
