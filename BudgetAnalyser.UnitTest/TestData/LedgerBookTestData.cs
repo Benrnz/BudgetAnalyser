@@ -508,7 +508,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones",  },
                     })
                 });
-            line.BalanceAdjustment(-550, "Credit card payment yet to go out.").WithAccountType(chequeAccount);
+            line.BalanceAdjustment(-550, "Credit card payment yet to go out.").WithAccount(chequeAccount);
             list.Add(line);
 
             book.SetReconciliations(list);

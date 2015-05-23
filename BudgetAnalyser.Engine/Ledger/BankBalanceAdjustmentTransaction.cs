@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public AccountType BankAccount { get; internal set; }
 
-        internal BankBalanceAdjustmentTransaction WithAccountType([NotNull] AccountType accountType)
+        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] AccountType accountType)
         {
             if (accountType == null)
             {

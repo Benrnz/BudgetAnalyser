@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -469,31 +470,41 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledgersAndBalances;
         }
 
-        private static void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
+        private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
         {
             List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
             foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
-                var balanceAdjustmentTask = new ToDoTask(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts from this account).",
-                        grouping.Key,
-                        -grouping.Sum(t => t.Amount)),
-                    true);
-                toDoList.Add(balanceAdjustmentTask);
+                // Rather than create a task, just do it
+                BalanceAdjustment(
+                    -grouping.Sum(t => t.Amount),
+                    "Adjustment for moving budgeted amounts from income account. ")
+                    .WithAccount(grouping.Key);
+                //var balanceAdjustmentTask = new ToDoTask(
+                //    string.Format(
+                //        CultureInfo.CurrentCulture,
+                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts from this account).",
+                //        grouping.Key,
+                //        -grouping.Sum(t => t.Amount)),
+                //    true);
+                //toDoList.Add(balanceAdjustmentTask);
             }
 
             foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             {
-                var balanceAdjustmentTask = new ToDoTask(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts into this account).",
-                        grouping.Key,
-                        grouping.Sum(t => t.Amount)),
-                    true);
-                toDoList.Add(balanceAdjustmentTask);
+                // Rather than create a task, just do it
+                BalanceAdjustment(
+                    -grouping.Sum(t => t.Amount),
+                    "Adjustment for moving budgeted amounts to destination account. ")
+                    .WithAccount(grouping.Key);
+                //var balanceAdjustmentTask = new ToDoTask(
+                //    string.Format(
+                //        CultureInfo.CurrentCulture,
+                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts into this account).",
+                //        grouping.Key,
+                //        grouping.Sum(t => t.Amount)),
+                //    true);
+                //toDoList.Add(balanceAdjustmentTask);
             }
         }
 
