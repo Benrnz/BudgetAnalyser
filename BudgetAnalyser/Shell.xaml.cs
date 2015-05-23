@@ -62,7 +62,14 @@ namespace BudgetAnalyser
                 this.closeHandled = true;
                 e.Cancel = true;
                 await Controller.ShellClosing();
-                Close();
+                try
+                {
+                    Close();
+                }
+                catch
+                {
+                    // Swallow - this may throw if the application is already closing.
+                }
             }
         }
     }
