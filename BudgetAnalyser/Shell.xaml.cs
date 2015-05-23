@@ -56,20 +56,11 @@ namespace BudgetAnalyser
         private async void ShellWindow_OnClosing(object sender, CancelEventArgs e)
         {
             // While the application is closing using async tasks and the task factory is error prone.
-            // A better approach is to cancel the close, handle the save then re-trigger close.
+            // Must wait for the ShellClosing method to complete before continueing to close.
             if (!this.closeHandled)
             {
                 this.closeHandled = true;
-                e.Cancel = true;
                 await Controller.ShellClosing();
-                try
-                {
-                    Close();
-                }
-                catch
-                {
-                    // Swallow - this may throw if the application is already closing.
-                }
             }
         }
     }
