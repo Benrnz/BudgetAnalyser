@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Filtering
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Global Filters - Account Type"
+                Title = "Global Filters - Account"
             };
             RaisePropertyChanged(() => IsAccountFilterView);
             RaisePropertyChanged(() => IsDateFilterView);

@@ -134,7 +134,7 @@
                            HorizontalAlignment="Right"
                            Margin="5,1,5,1"
                            Style="{StaticResource TextBlock.LabelStyle}"
-                           Text="Account Type:"
+                           Text="Account:"
                            Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}"
                            Width="100" />
                 <ComboBox Grid.Column="3"
@@ -144,7 +144,7 @@
                           Margin="5,1,5,1"
                           SelectedItem="{Binding NewTransactionAccountType}"
                           Style="{StaticResource ComboBox.AccountType}"
-                          ToolTip="Optionally set the account type for this transaction to a specific bank account."
+                          ToolTip="Optionally set the account for this transaction to a specific bank account."
                           Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}"
                           Width="100" />
                 <TextBlock Grid.Column="4"

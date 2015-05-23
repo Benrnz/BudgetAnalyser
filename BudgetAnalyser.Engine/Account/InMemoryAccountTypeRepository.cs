@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Account
 {
     /// <summary>
-    ///     A very simple in memory account type repository.  Only one of each type is supported at the moment.
+    ///     A very simple in memory account repository.  Only one of each type is supported at the moment.
     ///     You cannot have two Cheque accounts for example.
     ///     In future this should be enhanced to allow multiple instances of <see cref="AccountType" /> with different names.
     /// </summary>
@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Account
 
         public InMemoryAccountTypeRepository()
         {
-            // Populate the repository with the known list of account types I want for now.
+            // Populate the repository with the known list of account I want for now.
             // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using 
             // the AccountTypes actively used by it.
             this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque, new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Engine.Account
         ///     Search for an existing <see cref="AccountType" />.
         /// </summary>
         /// <param name="criteria">A predicate to determine a match.</param>
-        /// <returns>The found account type or null.</returns>
+        /// <returns>The found account or null.</returns>
         public AccountType Find(Predicate<AccountType> criteria)
         {
             KeyValuePair<string, AccountType>[] copy = this.repository.ToArray();
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Account
         ///     Retrieve the <see cref="AccountType" /> for the given key or null if it doesn't exist in the repository.
         /// </summary>
         /// <param name="key">The unique key.</param>
-        /// <returns>The found account type or null.</returns>
+        /// <returns>The found account or null.</returns>
         public AccountType GetByKey(string key)
         {
             if (string.IsNullOrWhiteSpace(key))

@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
         Widget CreateNewSurprisePaymentMonitorWidget([NotNull] string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
 
         /// <summary>
-        ///     Retrieves a list of filterable account types for use on the dashboard, (to select an account type to filter by).
+        ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).
         /// </summary>
         IEnumerable<AccountType> FilterableAccountTypes();
 

@@ -41,9 +41,8 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         /// <param name="fileName">The file to load.</param>
         /// <param name="accountType">
-        ///     The account type to classify these transactions. This is useful when merging one statement to another. For example,
-        ///     merging a cheque account
-        ///     export with visa account export, each can be classified using an account type.
+        ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
+        ///     merging a cheque account export with visa account export, each can be classified using an account.
         /// </param>
         public async Task<StatementModel> LoadAsync(string fileName, AccountType accountType)
         {

@@ -20,14 +20,14 @@ namespace BudgetAnalyser.Engine.Account
         /// Search for an existing <see cref="AccountType"/>.
         /// </summary>
         /// <param name="criteria">A predicate to determine a match.</param>
-        /// <returns>The found account type or null.</returns>
+        /// <returns>The found account or null.</returns>
         AccountType Find(Predicate<AccountType> criteria);
 
         /// <summary>
         /// Retrieve the <see cref="AccountType"/> for the given key or null if it doesn't exist in the repository.
         /// </summary>
         /// <param name="key">The unique key.</param>
-        /// <returns>The found account type or null.</returns>
+        /// <returns>The found account or null.</returns>
         AccountType GetByKey(string key);
 
         /// <summary>

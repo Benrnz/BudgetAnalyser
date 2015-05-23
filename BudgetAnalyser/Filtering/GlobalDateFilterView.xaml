@@ -84,7 +84,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock Grid.Column="0"
-                       Text="Account Type:" />
+                       Text="Account:" />
             <ComboBox Grid.Column="1"
                       ItemsSource="{Binding AccountTypes}"
                       Margin="3"

@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    /// A transaction type exclusively for Bank Balance adjustments.  This type has an account type to identify which bank account it applies to.
+    /// A transaction type exclusively for Bank Balance adjustments.  This type has an account to identify which bank account it applies to.
     /// </summary>
     public class BankBalanceAdjustmentTransaction : LedgerTransaction
     {
