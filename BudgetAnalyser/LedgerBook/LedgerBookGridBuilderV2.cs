@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -330,7 +332,7 @@ namespace BudgetAnalyser.LedgerBook
                     ref gridRow,
                     gridColumn,
                     ImportantNumberStyle,
-                    string.Format(CultureInfo.CurrentCulture, "Ledger Balance: {0:N} Bank Balance {1:N}", line.LedgerBalance, line.TotalBankBalance),
+                    BuildToolTipForBankBalance(line),
                     line);
                 hyperlink = (Hyperlink)bankBalanceText.Inlines.FirstInline;
                 hyperlink.Command = this.showBankBalancesCommand;
@@ -413,6 +415,25 @@ namespace BudgetAnalyser.LedgerBook
 
                 gridColumn++;
             }
+        }
+
+        private static string BuildToolTipForBankBalance(LedgerEntryLine line)
+        {
+            var individualLedgerBalances = new StringBuilder();
+            foreach (var bankBalance in line.BankBalances)
+            {
+                individualLedgerBalances.AppendFormat(
+                    "{0}: {1:N}; ",
+                    bankBalance.Account,
+                    bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));
+            }
+
+            return string.Format(
+                CultureInfo.CurrentCulture, 
+                "Total Ledger Balance: {0:N}; Total Bank Balance {1:N}; {2}", 
+                line.LedgerBalance, 
+                line.TotalBankBalance,
+                individualLedgerBalances);
         }
 
         private void AddLedgerRows(Grid grid)
