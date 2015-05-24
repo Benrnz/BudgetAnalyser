@@ -190,7 +190,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            this.ledgerService.RenameLedgerBook(ViewModel.LedgerBook, result);
+            this.ledgerService.RenameLedgerBook(result);
             FileOperations.Dirty = true;
         }
 
