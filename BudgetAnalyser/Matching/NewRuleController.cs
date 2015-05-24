@@ -286,6 +286,11 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                return;
+            }
+
             if (Bucket == null)
             {
                 this.messageBoxService.Show("Bucket cannot be null.");

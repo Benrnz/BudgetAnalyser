@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine
             try
             {
                 Process process = Process.Start(processInfo);
-                process.WaitForExit(15000);
+                // process.WaitForExit(15000);
                 this.logger.LogInfo(_ => "Output from commandline:\n" + process.StandardOutput.ReadToEnd());
             }
             catch
