@@ -64,10 +64,9 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Moves the specified ledger to the specified account.
         /// </summary>
-        /// <param name="ledgerBook">The ledger book.</param>
         /// <param name="ledger">The ledger column to move.</param>
         /// <param name="storedInAccount">The new account to store the ledger in.</param>
-        void MoveLedgerToAccount([NotNull] LedgerBook ledgerBook, [NotNull] LedgerBucket ledger, [NotNull] AccountType storedInAccount);
+        void MoveLedgerToAccount([NotNull] LedgerBucket ledger, [NotNull] AccountType storedInAccount);
 
         /// <summary>
         ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
@@ -83,9 +82,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Renames the ledger book.
         /// </summary>
-        /// <param name="ledgerBook">The ledger book.</param>
         /// <param name="newName">The new name.</param>
-        void RenameLedgerBook([NotNull] LedgerBook ledgerBook, [NotNull] string newName);
+        void RenameLedgerBook([NotNull] string newName);
 
         /// <summary>
         ///     Tracks a new budget bucket by creating a new <see cref="LedgerBucket" /> for the given <see cref="BudgetBucket" />

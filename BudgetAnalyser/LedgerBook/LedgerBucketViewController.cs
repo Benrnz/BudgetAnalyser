@@ -127,7 +127,7 @@ namespace BudgetAnalyser.LedgerBook
                     return;
                 }
 
-                this.ledgerService.MoveLedgerToAccount(this.ledgerBook, this.ledger, StoredInAccount);
+                this.ledgerService.MoveLedgerToAccount(this.ledger, StoredInAccount);
                 var handler = Updated;
                 if (handler != null) handler(this, EventArgs.Empty);
             }

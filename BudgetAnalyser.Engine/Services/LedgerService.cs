@@ -211,12 +211,8 @@ namespace BudgetAnalyser.Engine.Services
             return recon;
         }
 
-        public void MoveLedgerToAccount(LedgerBook ledgerBook, LedgerBucket ledger, AccountType storedInAccount)
+        public void MoveLedgerToAccount(LedgerBucket ledger, AccountType storedInAccount)
         {
-            if (ledgerBook == null)
-            {
-                throw new ArgumentNullException("ledgerBook");
-            }
             if (ledger == null)
             {
                 throw new ArgumentNullException("ledger");
@@ -226,7 +222,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("storedInAccount");
             }
 
-            ledgerBook.SetLedgerAccount(ledger, storedInAccount);
+            LedgerBook.SetLedgerAccount(ledger, storedInAccount);
         }
 
         public void RemoveReconciliation(LedgerEntryLine line)
@@ -254,18 +250,14 @@ namespace BudgetAnalyser.Engine.Services
             ledgerEntry.RemoveTransaction(transactionId);
         }
 
-        public void RenameLedgerBook(LedgerBook ledgerBook, string newName)
+        public void RenameLedgerBook(string newName)
         {
-            if (ledgerBook == null)
-            {
-                throw new ArgumentNullException("ledgerBook");
-            }
             if (newName == null)
             {
                 throw new ArgumentNullException("newName");
             }
 
-            ledgerBook.Name = newName;
+            LedgerBook.Name = newName;
         }
 
         public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
