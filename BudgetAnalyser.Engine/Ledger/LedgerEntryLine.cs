@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -12,10 +11,11 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     This represents a reconciliation as at a date in the <see cref="LedgerBook" /> that crosses all <see cref="LedgerBucket" />s
+    ///     This represents a reconciliation as at a date in the <see cref="LedgerBook" /> that crosses all
+    ///     <see cref="LedgerBucket" />s
     ///     for the reconciliation date.  It shows the financial position at a point in time, the reconciliation date.
-    ///     An instance of this class contains many <see cref="LedgerEntry" />s show the financial position of that 
-    ///     <see cref="LedgerBucket"/> as at the reconciliation date.
+    ///     An instance of this class contains many <see cref="LedgerEntry" />s show the financial position of that
+    ///     <see cref="LedgerBucket" /> as at the reconciliation date.
     /// </summary>
     public class LedgerEntryLine
     {
@@ -205,7 +205,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 LedgerBucket ledgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
-                var bookLedgerDefaults = parentLedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                LedgerBucket bookLedgerDefaults = parentLedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
                 if (previousLedgerEntry.LedgerBucket.StoredInAccount != bookLedgerDefaults.StoredInAccount)
                 {
                     // Check to see if a ledger has been moved into a new default account since last reconciliation.
@@ -226,6 +226,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             CreateBalanceAdjustmentTasksIfRequired(toDoList);
+            AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
         }
 
         internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
@@ -314,6 +315,22 @@ namespace BudgetAnalyser.Engine.Ledger
             return result;
         }
 
+        private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate, ToDoCollection toDoList)
+        {
+            var adjustmentsMade = false;
+            foreach (Transaction futureTransaction in statement.AllTransactions.Where(t => t.Date >= reconciliationDate && !(t.BudgetBucket is JournalBucket)))
+            {
+                adjustmentsMade = true;
+                BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
+                    .WithAccount(futureTransaction.AccountType);
+            }
+
+            if (adjustmentsMade)
+            {
+                toDoList.Add(new ToDoTask("Check auto-generated balance adjustments for future transactions.", true));
+            }
+        }
+
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(
             List<Transaction> transactions,
             LedgerEntry previousLedgerEntry,
@@ -375,6 +392,44 @@ namespace BudgetAnalyser.Engine.Ledger
                                 previousLedgerEntry.LedgerBucket.StoredInAccount),
                             true));
                 }
+            }
+        }
+
+        private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
+        {
+            List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
+            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            {
+                // Rather than create a task, just do it
+                BalanceAdjustment(
+                    -grouping.Sum(t => t.Amount),
+                    "Adjustment for moving budgeted amounts from income account. ")
+                    .WithAccount(grouping.Key);
+                //var balanceAdjustmentTask = new ToDoTask(
+                //    string.Format(
+                //        CultureInfo.CurrentCulture,
+                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts from this account).",
+                //        grouping.Key,
+                //        -grouping.Sum(t => t.Amount)),
+                //    true);
+                //toDoList.Add(balanceAdjustmentTask);
+            }
+
+            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            {
+                // Rather than create a task, just do it
+                BalanceAdjustment(
+                    -grouping.Sum(t => t.Amount),
+                    "Adjustment for moving budgeted amounts to destination account. ")
+                    .WithAccount(grouping.Key);
+                //var balanceAdjustmentTask = new ToDoTask(
+                //    string.Format(
+                //        CultureInfo.CurrentCulture,
+                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts into this account).",
+                //        grouping.Key,
+                //        grouping.Sum(t => t.Amount)),
+                //    true);
+                //toDoList.Add(balanceAdjustmentTask);
             }
         }
 
@@ -468,44 +523,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return ledgersAndBalances;
-        }
-
-        private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
-        {
-            List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
-            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
-            {
-                // Rather than create a task, just do it
-                BalanceAdjustment(
-                    -grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts from income account. ")
-                    .WithAccount(grouping.Key);
-                //var balanceAdjustmentTask = new ToDoTask(
-                //    string.Format(
-                //        CultureInfo.CurrentCulture,
-                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts from this account).",
-                //        grouping.Key,
-                //        -grouping.Sum(t => t.Amount)),
-                //    true);
-                //toDoList.Add(balanceAdjustmentTask);
-            }
-
-            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
-            {
-                // Rather than create a task, just do it
-                BalanceAdjustment(
-                    -grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts to destination account. ")
-                    .WithAccount(grouping.Key);
-                //var balanceAdjustmentTask = new ToDoTask(
-                //    string.Format(
-                //        CultureInfo.CurrentCulture,
-                //        "Add new balance adjustment for {0} Account with the amount of {1:C}. (This is the total transfers of budgeted amounts into this account).",
-                //        grouping.Key,
-                //        grouping.Sum(t => t.Amount)),
-                //    true);
-                //toDoList.Add(balanceAdjustmentTask);
-            }
         }
 
         private static string ExtractNarrative(Transaction t)
