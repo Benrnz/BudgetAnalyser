@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 
 namespace BudgetAnalyser
@@ -10,7 +9,6 @@ namespace BudgetAnalyser
     /// </summary>
     public partial class ShellWindow
     {
-        private bool closeHandled;
         private bool sizeHasBeenSet;
 
         public ShellWindow()
@@ -57,9 +55,8 @@ namespace BudgetAnalyser
         {
             // While the application is closing using async tasks and the task factory is error prone.
             // Must wait for the ShellClosing method to complete before continueing to close.
-            if (Controller.HasUnsavedChanges && !this.closeHandled)
+            if (Controller.HasUnsavedChanges)
             {
-                this.closeHandled = true;
                 e.Cancel = true;
                 if (await Controller.ShellClosing())
                 {
