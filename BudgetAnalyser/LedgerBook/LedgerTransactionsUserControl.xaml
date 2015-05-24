@@ -3,6 +3,9 @@
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Controller: LedgerTransactionsController -->
+    <!-- Used to show any kind of transaction list including balance adjustments -->
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

@@ -16,6 +16,9 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    /// <summary>
+    /// A controller for editing transactions and balance adjustments.
+    /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerTransactionsController : ControllerBase
     {

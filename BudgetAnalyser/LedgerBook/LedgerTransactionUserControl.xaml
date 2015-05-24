@@ -2,7 +2,9 @@
              x:Name="ControlRoot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:statement="clr-namespace:BudgetAnalyser.Statement">
+    
     <!-- Used to show (readonly) a transation in an items control -->
 
     <Grid Background="{StaticResource Brush.TileBackground}"
@@ -24,6 +26,7 @@
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="35" />
             <ColumnDefinition MinWidth="80"
                               Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -43,23 +46,27 @@
                        Width="60" />
             <TextBlock Text="{Binding Narrative}" />
         </StackPanel>
+        
+        <statement:AccountTypeUserControl Grid.Column="1" 
+                                          DataContext="{Binding BankAccount}"/>
+            
         <TextBlock x:Name="CreditAmount"
-                   Grid.Column="1"
+                   Grid.Column="2"
                    Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Amount, StringFormat=N}" />
         <TextBlock x:Name="CreditLabel"
-                   Grid.Column="2"
+                   Grid.Column="3"
                    Text="CR" />
         <TextBlock x:Name="DebitAmount"
-                   Grid.Column="3"
+                   Grid.Column="4"
                    Style="{StaticResource TextBlock.Number}"
                    Text="{Binding Amount, StringFormat=N}" />
         <TextBlock x:Name="DebitLabel"
-                   Grid.Column="4"
+                   Grid.Column="5"
                    Text="DR" />
         <Button Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
                 CommandParameter="{Binding .}"
-                Grid.Column="5"
+                Grid.Column="6"
                 Style="{StaticResource Button.Round.SmallCross}"
                 Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Converter.BoolToVis}}" />
     </Grid>
