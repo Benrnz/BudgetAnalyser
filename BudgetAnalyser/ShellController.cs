@@ -101,6 +101,11 @@ namespace BudgetAnalyser
 
         public ShellDialogController LedgerBookDialog { get; private set; }
 
+        public bool HasUnsavedChanges
+        {
+            get { return this.applicationDatabaseService.HasUnsavedChanges; }
+        }
+
         [Engine.Annotations.UsedImplicitly]
         public MainMenuController MainMenuController
         {
@@ -194,7 +199,7 @@ namespace BudgetAnalyser
         /// <summary>
         ///     Notify the ShellController the Shell is closing.
         /// </summary>
-        public async Task ShellClosing()
+        public async Task<bool> ShellClosing()
         {
             // Always save application metadata.
             var gatherDataMessage = new ApplicationStateRequestedMessage();
@@ -210,9 +215,12 @@ namespace BudgetAnalyser
                     // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
                     await this.applicationDatabaseService.SaveAsync();
                 }
+                this.batchFileHook.PerformAction();
+                return true;
             }
 
             this.batchFileHook.PerformAction();
+            return false;
         }
 
         private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)

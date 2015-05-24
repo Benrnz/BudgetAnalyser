@@ -57,10 +57,14 @@ namespace BudgetAnalyser
         {
             // While the application is closing using async tasks and the task factory is error prone.
             // Must wait for the ShellClosing method to complete before continueing to close.
-            if (!this.closeHandled)
+            if (Controller.HasUnsavedChanges && !this.closeHandled)
             {
                 this.closeHandled = true;
-                await Controller.ShellClosing();
+                e.Cancel = true;
+                if (await Controller.ShellClosing())
+                {
+                    Close();
+                }
             }
         }
     }
