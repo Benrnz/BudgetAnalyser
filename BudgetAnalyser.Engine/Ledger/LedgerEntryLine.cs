@@ -227,7 +227,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             CreateBalanceAdjustmentTasksIfRequired(toDoList);
-            AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
+            if (statement != null) AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
             CreateTasksToJournalFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
         }
 

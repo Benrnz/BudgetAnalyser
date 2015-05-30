@@ -118,6 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
             StatementModel statement = null,
             bool ignoreWarnings = false)
         {
+            // TODO Statement and ToDo list are not really optional.  Only unit tests do not pass in these values. 
             try
             {
                 PreReconciliationValidation(dateIfFirstEver, statement);
