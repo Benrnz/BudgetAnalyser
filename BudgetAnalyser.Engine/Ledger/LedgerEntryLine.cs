@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -227,6 +228,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             CreateBalanceAdjustmentTasksIfRequired(toDoList);
             AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
+            CreateTasksToJournalFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
         }
 
         internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
@@ -431,6 +433,37 @@ namespace BudgetAnalyser.Engine.Ledger
                 //    true);
                 //toDoList.Add(balanceAdjustmentTask);
             }
+        }
+
+        private void CreateTasksToJournalFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
+        {
+            var syncRoot = new object();
+            Dictionary<BudgetBucket, AccountType> ledgerBuckets = Entries.Select(e => e.LedgerBucket).Distinct().ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
+            Parallel.ForEach(
+                transactions,
+                t =>
+                {
+                    if (!ledgerBuckets.ContainsKey(t.BudgetBucket))
+                    {
+                        return;
+                    }
+                    AccountType ledgerAccount = ledgerBuckets[t.BudgetBucket];
+                    if (t.AccountType != ledgerAccount)
+                    {
+                        lock (syncRoot)
+                        {
+                            toDoList.Add(
+                                new TransferTask(
+                                    "A {0} payment for {1:C} has been made from {2}, but funds are stored in {3}.",
+                                    true)
+                                {
+                                    Amount = t.Amount,
+                                    SourceAccount = ledgerAccount,
+                                    DestinationAccount = t.AccountType
+                                });
+                        }
+                    }
+                });
         }
 
         private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, ToDoCollection toDoList)
