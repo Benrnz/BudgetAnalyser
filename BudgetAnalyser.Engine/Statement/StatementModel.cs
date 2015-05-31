@@ -291,9 +291,9 @@ namespace BudgetAnalyser.Engine.Statement
                 query = query.Where(t => t.Date <= criteria.EndDate.Value);
             }
 
-            if (criteria.AccountType != null)
+            if (criteria.Account != null)
             {
-                query = query.Where(t => t.AccountType == criteria.AccountType);
+                query = query.Where(t => t.Account == criteria.Account);
             }
             return query;
         }

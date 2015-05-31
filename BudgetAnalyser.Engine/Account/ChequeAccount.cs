@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Account
 {
-    public class ChequeAccount : AccountType
+    public class ChequeAccount : Account
     {
         public ChequeAccount(string name)
         {
@@ -26,7 +26,7 @@
             get { return new[] { "CHEQUE", "CHECK" }; }
         }
 
-        public override AccountType Clone(string name)
+        public override Account Clone(string name)
         {
             return new ChequeAccount(name);
         }

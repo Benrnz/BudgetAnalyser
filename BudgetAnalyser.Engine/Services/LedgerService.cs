@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.Services
             await LoadAsync(applicationDatabase);
         }
 
-        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, AccountType account)
+        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, Account.Account account)
         {
             if (entryLine == null)
             {
@@ -211,7 +211,7 @@ namespace BudgetAnalyser.Engine.Services
             return recon;
         }
 
-        public void MoveLedgerToAccount(LedgerBucket ledger, AccountType storedInAccount)
+        public void MoveLedgerToAccount(LedgerBucket ledger, Account.Account storedInAccount)
         {
             if (ledger == null)
             {
@@ -286,7 +286,7 @@ namespace BudgetAnalyser.Engine.Services
         {
         }
 
-        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, AccountType storeInThisAccount)
+        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account.Account storeInThisAccount)
         {
             if (bucket == null)
             {
@@ -336,7 +336,7 @@ namespace BudgetAnalyser.Engine.Services
             return LedgerBook.Validate(messages);
         }
 
-        public IEnumerable<AccountType> ValidLedgerAccounts()
+        public IEnumerable<Account.Account> ValidLedgerAccounts()
         {
             return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }

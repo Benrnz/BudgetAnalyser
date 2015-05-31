@@ -290,8 +290,8 @@
     <Compile Include="ShellDialog\ShellDialogView.xaml.cs">
       <DependentUpon>ShellDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Statement\AccountTypeUserControl.xaml.cs">
-      <DependentUpon>AccountTypeUserControl.xaml</DependentUpon>
+    <Compile Include="Statement\AccountUserControl.xaml.cs">
+      <DependentUpon>AccountUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Statement\EditingTransactionController.cs" />
     <Compile Include="Statement\LoadFileView.xaml.cs">
@@ -464,7 +464,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Statement\AccountTypeUserControl.xaml">
+    <Page Include="Statement\AccountUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

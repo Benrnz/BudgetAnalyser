@@ -209,7 +209,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel.Filter(criteria);
         }
 
-        public async Task ImportAndMergeBankStatementAsync(string storageKey, AccountType account)
+        public async Task ImportAndMergeBankStatementAsync(string storageKey, Account.Account account)
         {
             if (storageKey.IsNothing())
             {

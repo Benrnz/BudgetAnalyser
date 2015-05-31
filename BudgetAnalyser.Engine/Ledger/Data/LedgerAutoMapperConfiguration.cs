@@ -54,15 +54,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             Mapper.CreateMap<BankBalanceAdjustmentTransaction, LedgerTransactionDto>()
                 .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName))
-                .ForMember(dto => dto.AccountType, m => m.MapFrom(transaction => transaction.BankAccount.Name));
+                .ForMember(dto => dto.Account, m => m.MapFrom(transaction => transaction.BankAccount.Name));
 
             Mapper.CreateMap<LedgerTransactionDto, BankBalanceAdjustmentTransaction>()
                 .ForMember(transaction => transaction.BankAccount,
-                    m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.AccountType) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
+                    m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
             Mapper.CreateMap<LedgerTransaction, LedgerTransactionDto>()
                 .ForMember(dto => dto.TransactionType, m => m.MapFrom(transaction => transaction.GetType().FullName))
-                .ForMember(dto => dto.AccountType, m => m.Ignore());
+                .ForMember(dto => dto.Account, m => m.Ignore());
 
             Mapper.CreateMap<LedgerTransactionDto, LedgerTransaction>()
                 .ConstructUsing(dto => this.ledgerTransactionFactory.Build(dto.TransactionType, dto.Id));
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             Mapper.CreateMap<BankBalance, BankBalanceDto>()
                 .ForMember(dto => dto.Account, m => m.MapFrom(bankBalance => bankBalance.Account.Name));
 
-            Mapper.CreateMap<string, AccountType>()
+            Mapper.CreateMap<string, Account.Account>()
                 .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
 
             Mapper.CreateMap<BankBalanceDto, BankBalance>()

@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Statement
         public const string BucketPropertyName = "BudgetBucket";
         public const string DatePropertyName = "Date";
         private BudgetBucket budgetBucket;
-        private AccountType doNotUseAccountType;
+        private Account.Account doNotUseAccount;
         private decimal doNotUseAmount;
         private DateTime doNotUseDate;
         private string doNotUseDescription;
@@ -32,12 +32,12 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AccountType AccountType
+        public Account.Account Account
         {
-            get { return this.doNotUseAccountType; }
+            get { return this.doNotUseAccount; }
             set
             {
-                this.doNotUseAccountType = value;
+                this.doNotUseAccount = value;
                 OnPropertyChanged();
             }
         }
@@ -140,7 +140,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             return new Transaction
             {
-                AccountType = AccountType,
+                Account = Account,
                 Amount = Amount,
                 BudgetBucket = BudgetBucket,
                 Date = Date,
@@ -176,7 +176,7 @@ namespace BudgetAnalyser.Engine.Statement
             unchecked
             {
                 var result = 37; // prime
-                result += AccountType.GetType().GetHashCode();
+                result += Account.GetType().GetHashCode();
                 result *= 397; // also prime 
                 result += Amount.GetHashCode();
                 result *= 397;

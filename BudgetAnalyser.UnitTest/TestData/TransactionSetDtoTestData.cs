@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 {
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = -95.15M,
                         BudgetBucketCode = TestDataConstants.PowerBucketCode,
                         Date = new DateTime(2013, 7, 15),
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = -58.19M,
                         BudgetBucketCode = TestDataConstants.PhoneBucketCode,
                         Date = new DateTime(2013, 7, 16),
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
                         BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 7, 20),
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = -89.15M,
                         BudgetBucketCode = TestDataConstants.PowerBucketCode,
                         Date = new DateTime(2013, 8, 15),
@@ -70,7 +70,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.VisaAccountName,
+                        Account = TestDataConstants.VisaAccountName,
                         Amount = -91.00M,
                         BudgetBucketCode = TestDataConstants.CarMtcBucketCode,
                         Date = new DateTime(2013, 8, 15),
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = -68.29M,
                         BudgetBucketCode = TestDataConstants.PhoneBucketCode,
                         Date = new DateTime(2013, 8, 16),
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
                         BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 8, 20),
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.VisaAccountName,
+                        Account = TestDataConstants.VisaAccountName,
                         Amount = -55.00M,
                         BudgetBucketCode = TestDataConstants.HairBucketCode,
                         Date = new DateTime(2013, 8, 22),
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.VisaAccountName,
+                        Account = TestDataConstants.VisaAccountName,
                         Amount = -350.00M,
                         BudgetBucketCode = TestDataConstants.RegoBucketCode,
                         Date = new DateTime(2013, 9, 1),
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     },
                     new TransactionDto
                     {
-                        AccountType = TestDataConstants.ChequeAccountName,
+                        Account = TestDataConstants.ChequeAccountName,
                         Amount = 850.99M,
                         BudgetBucketCode = TestDataConstants.IncomeBucketCode,
                         Date = new DateTime(2013, 9, 20),

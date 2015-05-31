@@ -15,13 +15,13 @@ namespace BudgetAnalyser.Budget
             SelectedBucket = bucket;
         }
 
-        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket bucket, AccountType storeInThisAccount)
+        public BudgetBucketChosenEventArgs(Guid correlationId, BudgetBucket bucket, Account storeInThisAccount)
             : this(correlationId, bucket)
         {
             StoreInThisAccount = storeInThisAccount;
         }
 
         public BudgetBucket SelectedBucket { get; private set; }
-        public AccountType StoreInThisAccount { get; private set; }
+        public Account StoreInThisAccount { get; private set; }
     }
 }

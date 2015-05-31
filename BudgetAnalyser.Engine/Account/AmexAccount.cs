@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Account
 {
-    public class AmexAccount : AccountType
+    public class AmexAccount : Account
     {
         public AmexAccount(string name)
         {
@@ -17,7 +17,7 @@
             get { return new[] { "AMEX" }; }
         }
 
-        public override AccountType Clone(string name)
+        public override Account Clone(string name)
         {
             return new AmexAccount(name);
         }

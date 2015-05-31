@@ -117,7 +117,7 @@ namespace BudgetAnalyser.UnitTest.Services
         public async Task ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
         {
             this.mockStatementRepo
-                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.Account.Account>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.Services
             Arrange();
 
             this.mockStatementRepo
-                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<AccountType>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.Account.Account>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
@@ -283,7 +283,7 @@ namespace BudgetAnalyser.UnitTest.Services
 
             var transaction = new Transaction
             {
-                AccountType = StatementModelTestData.VisaAccount
+                Account = StatementModelTestData.VisaAccount
             };
 
             Arrange();

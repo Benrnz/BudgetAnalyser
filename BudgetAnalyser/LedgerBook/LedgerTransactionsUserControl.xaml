@@ -143,10 +143,10 @@
                 <ComboBox Grid.Column="3"
                           Grid.Row="0"
                           HorizontalAlignment="Left"
-                          ItemsSource="{Binding AccountTypes}"
+                          ItemsSource="{Binding Accounts}"
                           Margin="5,1,5,1"
-                          SelectedItem="{Binding NewTransactionAccountType}"
-                          Style="{StaticResource ComboBox.AccountType}"
+                          SelectedItem="{Binding NewTransactionAccount}"
+                          Style="{StaticResource ComboBox.Account}"
                           ToolTip="Optionally set the account for this transaction to a specific bank account."
                           Visibility="{Binding InBalanceAdjustmentMode, Converter={StaticResource Converter.BoolToVis}}"
                           Width="100" />

@@ -43,7 +43,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             };
             TestInitialise(); // Re-initialise to use different test data.
 
-            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.AccountType);
+            Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, Result.Account);
         }
 
         [TestMethod]
@@ -67,13 +67,13 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldNotMapBankAccountForCreditLedgerTransaction()
         {
-            Assert.IsNull(Result.AccountType);
+            Assert.IsNull(Result.Account);
         }
 
         [TestMethod]
         public void ShouldNotMapBankAccountForDebitLedgerTransaction()
         {
-            Assert.IsNull(Result.AccountType);
+            Assert.IsNull(Result.Account);
         }
 
         [TestInitialize]

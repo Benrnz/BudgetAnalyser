@@ -20,16 +20,16 @@ namespace BudgetAnalyser.Engine.Ledger
         /// It represents which bank account the transaction applied to. This is particularly relevant for Balance Adjustment Transactions.
         /// In the case of <see cref="LedgerEntry"/> transactions it is set by the <see cref="LedgerEntry.LedgerBucket"/>.
         /// </summary>
-        public AccountType BankAccount { get; internal set; }
+        public Account.Account BankAccount { get; internal set; }
 
-        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] AccountType accountType)
+        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] Account.Account account)
         {
-            if (accountType == null)
+            if (account == null)
             {
-                throw new ArgumentNullException("accountType");
+                throw new ArgumentNullException("account");
             }
 
-            BankAccount = accountType;
+            BankAccount = account;
             return this;
         }
     }

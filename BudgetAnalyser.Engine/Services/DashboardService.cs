@@ -153,9 +153,9 @@ namespace BudgetAnalyser.Engine.Services
             return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
-        public IEnumerable<AccountType> FilterableAccountTypes()
+        public IEnumerable<Account.Account> FilterableAccountTypes()
         {
-            List<AccountType> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            List<Account.Account> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             accountTypeList.Insert(0, null);
             return accountTypeList;
         }

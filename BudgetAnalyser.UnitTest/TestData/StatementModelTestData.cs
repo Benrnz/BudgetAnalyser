@@ -119,7 +119,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -95.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 07, 15),
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -58.19M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 07, 16),
@@ -139,7 +139,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -89.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -149,7 +149,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -68.29M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 08, 16),
@@ -159,7 +159,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -55.00M,
                     BudgetBucket = HairBucket,
                     Date = new DateTime(2013, 08, 22),
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -91.00M,
                     BudgetBucket = CarMtcBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -179,7 +179,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -350.00M,
                     BudgetBucket = RegoBucket,
                     Date = new DateTime(2013, 09, 01),
@@ -197,7 +197,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 07, 20),
@@ -207,7 +207,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -95.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 07, 15),
@@ -217,7 +217,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -58.19M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 07, 16),
@@ -227,7 +227,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -89.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -237,7 +237,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 08, 20),
@@ -247,7 +247,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -68.29M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 08, 16),
@@ -257,7 +257,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -55.00M,
                     BudgetBucket = HairBucket,
                     Date = new DateTime(2013, 08, 22),
@@ -267,7 +267,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -91.00M,
                     BudgetBucket = CarMtcBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -277,7 +277,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -350.00M,
                     BudgetBucket = RegoBucket,
                     Date = new DateTime(2013, 09, 01),
@@ -287,7 +287,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 09, 20),
@@ -305,7 +305,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 07, 20),
@@ -315,7 +315,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -95.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 07, 15),
@@ -325,7 +325,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -58.19M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 07, 16),
@@ -335,7 +335,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -52.32M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -345,7 +345,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 08, 20),
@@ -355,7 +355,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -64.71M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 08, 16),
@@ -365,7 +365,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -55.00M,
                     BudgetBucket = HairBucket,
                     Date = new DateTime(2013, 08, 22),
@@ -375,7 +375,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -91.00M,
                     BudgetBucket = CarMtcBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -385,7 +385,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -350.00M,
                     BudgetBucket = RegoBucket,
                     Date = new DateTime(2013, 09, 01),
@@ -395,7 +395,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 09, 20),
@@ -413,7 +413,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 07, 20),
@@ -423,7 +423,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -95.15M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 07, 15),
@@ -433,7 +433,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -58.19M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 07, 16),
@@ -443,7 +443,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -52.32M,
                     BudgetBucket = PowerBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -453,7 +453,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 08, 20),
@@ -463,7 +463,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -64.71M,
                     BudgetBucket = PhoneBucket,
                     Date = new DateTime(2013, 08, 16),
@@ -473,7 +473,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -55.00M,
                     BudgetBucket = HairBucket,
                     Date = new DateTime(2013, 08, 22),
@@ -483,7 +483,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -91.00M,
                     BudgetBucket = CarMtcBucket,
                     Date = new DateTime(2013, 08, 15),
@@ -493,7 +493,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = VisaAccount,
+                    Account = VisaAccount,
                     Amount = -350.00M,
                     BudgetBucket = RegoBucket,
                     Date = new DateTime(2013, 09, 01),
@@ -503,7 +503,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = 850.99M,
                     BudgetBucket = IncomeBucket,
                     Date = new DateTime(2013, 09, 20),
@@ -513,7 +513,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = ChequeAccount,
+                    Account = ChequeAccount,
                     Amount = -300M,
                     BudgetBucket = InsHomeBucket,
                     Date = new DateTime(2013, 08, 16),
@@ -523,7 +523,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 },
                 new Transaction
                 {
-                    AccountType = SavingsAccount,
+                    Account = SavingsAccount,
                     Amount = 300M,
                     BudgetBucket = InsHomeBucket,
                     Date = new DateTime(2013, 08, 16),

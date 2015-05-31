@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Filtering
         private GlobalFilterCriteria doNotUseCriteria;
         private string doNotUseDateSummaryLine1;
         private string doNotUseDateSummaryLine2;
-        private AccountType doNotUseSelectedAccountType;
+        private Account doNotUseSelectedAccount;
         private FilterMode filterMode;
 
         public GlobalFilterController(
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
-        public IEnumerable<AccountType> AccountTypes { get; private set; }
+        public IEnumerable<Account> Accounts { get; private set; }
 
         public string AccountTypeSummary
         {
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.Filtering
 
         public bool IsAccountFilterView
         {
-            get { return this.filterMode == FilterMode.AccountType; }
+            get { return this.filterMode == FilterMode.Account; }
         }
 
         public bool IsDateFilterView
@@ -137,13 +137,13 @@ namespace BudgetAnalyser.Filtering
             get { return this.filterMode == FilterMode.Dates; }
         }
 
-        public AccountType SelectedAccountType
+        public Account SelectedAccount
         {
-            get { return this.doNotUseSelectedAccountType; }
+            get { return this.doNotUseSelectedAccount; }
 
             set
             {
-                this.doNotUseSelectedAccountType = value;
+                this.doNotUseSelectedAccount = value;
                 RaisePropertyChanged();
             }
         }
@@ -151,11 +151,11 @@ namespace BudgetAnalyser.Filtering
         public void PromptUserForAccountType()
         {
             this.dialogCorrelationId = Guid.NewGuid();
-            this.filterMode = FilterMode.AccountType;
+            this.filterMode = FilterMode.Account;
 
-            AccountTypes = this.dashboardService.FilterableAccountTypes();
+            Accounts = this.dashboardService.FilterableAccountTypes();
 
-            SelectedAccountType = Criteria.AccountType;
+            SelectedAccount = Criteria.Account;
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
@@ -204,7 +204,7 @@ namespace BudgetAnalyser.Filtering
 
             Criteria = new GlobalFilterCriteria
             {
-                AccountType = filterState.AccountType,
+                Account = filterState.Account,
                 BeginDate = filterState.BeginDate,
                 EndDate = filterState.EndDate
             };
@@ -227,7 +227,7 @@ namespace BudgetAnalyser.Filtering
             {
                 BeginDate = noCriteria ? null : Criteria.BeginDate,
                 EndDate = noCriteria ? null : Criteria.EndDate,
-                AccountType = noCriteria ? null : Criteria.AccountType
+                Account = noCriteria ? null : Criteria.Account
             };
 
             message.PersistThisModel(filterState);
@@ -256,8 +256,8 @@ namespace BudgetAnalyser.Filtering
                     Criteria.EndDate = null;
                     break;
 
-                case FilterMode.AccountType:
-                    Criteria.AccountType = null;
+                case FilterMode.Account:
+                    Criteria.Account = null;
                     break;
             }
         }
@@ -280,9 +280,9 @@ namespace BudgetAnalyser.Filtering
                 return;
             }
 
-            if (this.filterMode == FilterMode.AccountType)
+            if (this.filterMode == FilterMode.Account)
             {
-                Criteria.AccountType = SelectedAccountType;
+                Criteria.Account = SelectedAccount;
             }
 
             var validationMessages = new StringBuilder();
@@ -341,9 +341,9 @@ namespace BudgetAnalyser.Filtering
                 DateSummaryLine2 = string.Format(CultureInfo.CurrentCulture, "up until: {0:d}", Criteria.EndDate.Value);
             }
 
-            if (Criteria.AccountType != null)
+            if (Criteria.Account != null)
             {
-                AccountTypeSummary = "Filtered by " + Criteria.AccountType.Name;
+                AccountTypeSummary = "Filtered by " + Criteria.Account.Name;
             }
         }
     }

@@ -48,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 //                builder.AppendFormat(@"
 //            new TransactionDto
 //            {{
-//                AccountType = ""{0}"",
+//                Account = ""{0}"",
 //                Amount = {1}M,
 //                BudgetBucketCode = ""{2}"",
 //                Date = new DateTime({3}, {4}, {5}),
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.UnitTest.Statement
 //                Reference3 = ""{10}"",
 //                TransactionType = ""{11}"",
 //            }},
-//", txn.AccountType, txn.Amount, txn.BudgetBucketCode, txn.Date.Year, txn.Date.Month, txn.Date.Day, txn.Description, txn.Id, txn.Reference1, txn.Reference2, txn.Reference3, txn.TransactionType);
+//", txn.Account, txn.Amount, txn.BudgetBucketCode, txn.Date.Year, txn.Date.Month, txn.Date.Day, txn.Description, txn.Id, txn.Reference1, txn.Reference2, txn.Reference3, txn.TransactionType);
 //            }
 
 //            return builder.ToString();

@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     /// </summary>
     public class LedgerTransactionDto
     {
-        public string AccountType { get; set; }
+        public string Account { get; set; }
         public decimal Amount { get; set; }
 
         [UsedImplicitly]

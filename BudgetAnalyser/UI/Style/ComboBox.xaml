@@ -324,13 +324,11 @@
                 Value="Left" />
         <Setter Property="ItemContainerStyle"
                 Value="{StaticResource BudgetBucketComboItemStyle}" />
-        <Setter Property="MinWidth"
-                Value="120" />
         <Setter Property="VerticalAlignment"
                 Value="Top" />
     </Style>
 
-    <Style x:Key="ComboBox.AccountType"
+    <Style x:Key="ComboBox.Account"
            BasedOn="{StaticResource {x:Type ComboBox}}"
            TargetType="ComboBox">
         <Setter Property="Width"
@@ -339,7 +337,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <Viewbox MaxHeight="35">
-                        <statement:AccountTypeUserControl Focusable="False"
+                        <statement:AccountUserControl Focusable="False"
                                                           IsHitTestVisible="False"
                                                           IsTabStop="False" />
                     </Viewbox>

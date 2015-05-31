@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        public IEnumerable<AccountType> BankAccounts
+        public IEnumerable<Account> BankAccounts
         {
             get { return this.accountRepo.ListCurrentlyUsedAccountTypes(); }
         }
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Budget
 
         public BudgetBucket Selected { get; set; }
         public bool ShowBankAccount { get; set; }
-        public AccountType StoreInThisAccount { get; set; }
+        public Account StoreInThisAccount { get; set; }
 
         public bool CanExecuteCancelButton
         {

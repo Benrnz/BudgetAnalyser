@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </exception>
         Task<StatementModel> ImportBankStatementAsync(
             [NotNull] string storageKey,
-            [NotNull] AccountType account);
+            [NotNull] Account.Account account);
 
         /// <summary>
         ///     Loads an existing Budget Analyser Transaction file.

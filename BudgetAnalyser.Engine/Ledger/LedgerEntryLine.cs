@@ -324,7 +324,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 adjustmentsMade = true;
                 BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
-                    .WithAccount(futureTransaction.AccountType);
+                    .WithAccount(futureTransaction.Account);
             }
 
             if (adjustmentsMade)
@@ -400,7 +400,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
         {
             List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
-            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            foreach (IGrouping<Account.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 BalanceAdjustment(
@@ -417,7 +417,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 //toDoList.Add(balanceAdjustmentTask);
             }
 
-            foreach (IGrouping<AccountType, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            foreach (IGrouping<Account.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 BalanceAdjustment(
@@ -438,17 +438,19 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateTasksToJournalFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
         {
             var syncRoot = new object();
-            Dictionary<BudgetBucket, AccountType> ledgerBuckets = Entries.Select(e => e.LedgerBucket).Distinct().ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
+            Dictionary<BudgetBucket, Account.Account> ledgerBuckets = Entries.Select(e => e.LedgerBucket).Distinct().ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
+
+            // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
             Parallel.ForEach(
-                transactions,
+                transactions.Where(t => t.Amount < 0).ToList(),
                 t =>
                 {
                     if (!ledgerBuckets.ContainsKey(t.BudgetBucket))
                     {
                         return;
                     }
-                    AccountType ledgerAccount = ledgerBuckets[t.BudgetBucket];
-                    if (t.AccountType != ledgerAccount)
+                    Account.Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
+                    if (t.Account != ledgerAccount)
                     {
                         lock (syncRoot)
                         {
@@ -459,7 +461,7 @@ namespace BudgetAnalyser.Engine.Ledger
                                 {
                                     Amount = t.Amount,
                                     SourceAccount = ledgerAccount,
-                                    DestinationAccount = t.AccountType
+                                    DestinationAccount = t.Account
                                 });
                         }
                     }
@@ -493,7 +495,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
-                    AccountType salaryAccount = BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
+                    Account.Account salaryAccount = BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
                     toDoList.Add(
                         new TransferTask(
                             string.Format(
@@ -512,7 +514,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return transactions;
         }
 
-        private decimal TotalBankBalanceAdjustmentForAccount(AccountType account)
+        private decimal TotalBankBalanceAdjustmentForAccount(Account.Account account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }

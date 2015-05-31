@@ -77,7 +77,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         Task ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey,
-            [NotNull] AccountType account);
+            [NotNull] Account.Account account);
 
         /// <summary>
         ///     Parses and loads the persisted state data from the provided object.

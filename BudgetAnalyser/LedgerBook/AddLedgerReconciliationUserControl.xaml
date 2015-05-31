@@ -33,7 +33,7 @@
             <ComboBox ItemsSource="{Binding BankAccounts}"
                       MaxWidth="300"
                       SelectedItem="{Binding SelectedBankAccount}"
-                      Style="{StaticResource ComboBox.AccountType}"
+                      Style="{StaticResource ComboBox.Account}"
                       Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
             <Button Command="{Binding AddBankBalanceCommand}"
                     Click="OnAddBankBalanceClick"

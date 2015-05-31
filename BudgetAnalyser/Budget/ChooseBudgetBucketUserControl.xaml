@@ -27,7 +27,7 @@
             <ComboBox HorizontalAlignment="Left"
                       ItemsSource="{Binding BankAccounts}"
                       SelectedItem="{Binding StoreInThisAccount}"
-                      Style="{StaticResource ComboBox.AccountType}"
+                      Style="{StaticResource ComboBox.Account}"
                       TabIndex="2"
                       ToolTip="{Binding StoreInThisAccount}"
                       VerticalAlignment="Top"

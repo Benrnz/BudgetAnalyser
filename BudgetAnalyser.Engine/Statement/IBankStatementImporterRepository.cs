@@ -20,6 +20,6 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Import the given file.  It is recommended to call <see cref="CanImportAsync" /> first.  If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
-        Task<StatementModel> ImportAsync(string fullFileName, AccountType accountType);
+        Task<StatementModel> ImportAsync(string fullFileName, Account.Account account);
     }
 }

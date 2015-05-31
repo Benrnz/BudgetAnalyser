@@ -21,7 +21,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                 return new TransactionDto
                 {
                     Id = TransactionId,
-                    AccountType = StatementModelTestData.ChequeAccount.Name,
+                    Account = StatementModelTestData.ChequeAccount.Name,
                     Amount = 123.99M,
                     BudgetBucketCode = TestDataConstants.PowerBucketCode,
                     Date = new DateTime(2014, 07, 31),
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ShouldMapAccountType()
         {
-            Assert.AreEqual(TestData.AccountType, Result.AccountType.Name);
+            Assert.AreEqual(TestData.Account, Result.Account.Name);
         }
 
         [TestMethod]

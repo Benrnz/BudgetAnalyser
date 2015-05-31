@@ -44,7 +44,7 @@ public static StatementModel TestDataGenerated()
         new Transaction 
         {");
                 Console.WriteLine(@"
-            AccountType = AccountTypeRepo.GetByKey(""{0}""),", transaction.AccountType.Name);
+            Account = AccountTypeRepo.GetByKey(""{0}""),", transaction.Account.Name);
                 Console.WriteLine(@"
             Amount = {0}M,", transaction.Amount);
                 Console.WriteLine(@"

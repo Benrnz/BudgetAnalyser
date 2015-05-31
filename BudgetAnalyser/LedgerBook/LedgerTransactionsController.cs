@@ -33,7 +33,7 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine entryLine;
         private bool isAddDirty;
         private bool wasChanged;
-        private AccountType doNotUseNewTransactionAccountType;
+        private Account doNotUseNewTransactionAccount;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler<LedgerTransactionEventArgs> Complete;
 
-        public IEnumerable<AccountType> AccountTypes
+        public IEnumerable<Account> Accounts
         {
             get { return this.ledgerService.ValidLedgerAccounts(); } 
         }
@@ -103,12 +103,12 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public AccountType NewTransactionAccountType
+        public Account NewTransactionAccount
         {
-            get { return this.doNotUseNewTransactionAccountType; }
+            get { return this.doNotUseNewTransactionAccount; }
             set
             {
-                this.doNotUseNewTransactionAccountType = value;
+                this.doNotUseNewTransactionAccount = value;
                 RaisePropertyChanged();
             }
         }
@@ -321,7 +321,7 @@ namespace BudgetAnalyser.LedgerBook
             // this.entryLine = null; // Dont reset this here.  If the user is adding multiple transactions this will prevent adding any more transactions.
             NewTransactionAmount = 0;
             NewTransactionNarrative = null;
-            NewTransactionAccountType = null;
+            NewTransactionAccount = null;
         }
 
         private void Save()
@@ -346,7 +346,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            var newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccountType);
+            var newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
             RaisePropertyChanged(() => TransactionsTotal);

@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Gets or sets the Account in which this ledger's funds are stored.
         /// </summary>
-        public AccountType StoredInAccount { get; internal set; }
+        public Account.Account StoredInAccount { get; internal set; }
 
         public override bool Equals(object obj)
         {

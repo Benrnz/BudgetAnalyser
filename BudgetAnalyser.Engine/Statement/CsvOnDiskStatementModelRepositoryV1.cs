@@ -177,7 +177,7 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.BudgetBucketCode);
                         line.Append(",");
 
-                        line.Append(transaction.AccountType);
+                        line.Append(transaction.Account);
                         line.Append(",");
 
                         line.Append(transaction.Id);
@@ -307,7 +307,7 @@ namespace BudgetAnalyser.Engine.Statement
                         Amount = this.importUtilities.FetchDecimal(split, 5),
                         Date = this.importUtilities.FetchDate(split, 6),
                         BudgetBucketCode = this.importUtilities.FetchString(split, 7),
-                        AccountType = this.importUtilities.FetchString(split, 8),
+                        Account = this.importUtilities.FetchString(split, 8),
                         Id = this.importUtilities.FetchGuid(split, 9),
                     };
                 }

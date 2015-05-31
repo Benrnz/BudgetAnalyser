@@ -51,12 +51,12 @@ namespace BudgetAnalyser.Engine.Statement.Data
         {
             Mapper.CreateMap<TransactionDto, Transaction>()
                 .ForMember(txn => txn.TransactionType, m => m.MapFrom(dto => this.transactionTypeRepo.GetOrCreateNew(dto.TransactionType)))
-                .ForMember(txn => txn.AccountType, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.AccountType)))
+                .ForMember(txn => txn.Account, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account)))
                 .ForMember(txn => txn.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BudgetBucketCode)))
                 .ForMember(txn => txn.IsSuspectedDuplicate, m => m.Ignore());
 
             Mapper.CreateMap<Transaction, TransactionDto>()
-                .ForMember(dto => dto.AccountType, m => m.MapFrom(txn => txn.AccountType == null ? null : txn.AccountType.Name))
+                .ForMember(dto => dto.Account, m => m.MapFrom(txn => txn.Account == null ? null : txn.Account.Name))
                 .ForMember(dto => dto.TransactionType, m => m.MapFrom(txn => txn.TransactionType == null ? null : txn.TransactionType.Name))
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(txn => txn.BudgetBucket == null ? null : txn.BudgetBucket.Code));
 

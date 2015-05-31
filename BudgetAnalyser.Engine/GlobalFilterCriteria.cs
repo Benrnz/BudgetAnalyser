@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine
 {
     public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
     {
-        private AccountType doNotUseAccountType;
+        private Account.Account doNotUseAccount;
         private DateTime? doNotUseBeginDate;
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
@@ -21,13 +21,13 @@ namespace BudgetAnalyser.Engine
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AccountType AccountType
+        public Account.Account Account
         {
-            get { return this.doNotUseAccountType; }
+            get { return this.doNotUseAccount; }
 
             set
             {
-                this.doNotUseAccountType = value;
+                this.doNotUseAccount = value;
                 OnPropertyChanged();
                 CheckConsistency();
             }
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine
         {
             unchecked
             {
-                int hashCode = (this.doNotUseAccountType != null ? this.doNotUseAccountType.GetHashCode() : 0);
+                int hashCode = (this.doNotUseAccount != null ? this.doNotUseAccount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ this.doNotUseBeginDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException("other");
             }
 
-            return Equals(this.doNotUseAccountType, other.doNotUseAccountType)
+            return Equals(this.doNotUseAccount, other.doNotUseAccount)
                    && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate)
                    && this.doNotUseCleared.Equals(other.doNotUseCleared)
                    && this.doNotUseEndDate.Equals(other.doNotUseEndDate);
@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Engine
 
             if (BeginDate == null
                 && EndDate == null
-                && AccountType == null)
+                && Account == null)
             {
                 Cleared = true;
             }

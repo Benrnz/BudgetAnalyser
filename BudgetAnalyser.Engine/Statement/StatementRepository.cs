@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<StatementModel> ImportBankStatementAsync(
             string storageKey,
-            AccountType account)
+            Account.Account account)
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {

@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
 {
     public class TransactionDto
     {
-        public string AccountType { get; set; }
+        public string Account { get; set; }
 
         public decimal Amount { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Account
 {
-    public class SavingsAccount : AccountType
+    public class SavingsAccount : Account
     {
         public SavingsAccount(string name)
         {
@@ -17,7 +17,7 @@
             get { return new[] { "SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL" }; }
         }
 
-        public override AccountType Clone(string name)
+        public override Account Clone(string name)
         {
             return new SavingsAccount(name);
         }

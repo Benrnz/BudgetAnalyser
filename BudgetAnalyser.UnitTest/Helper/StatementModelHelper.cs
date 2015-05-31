@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                     transaction.BudgetBucket.Code.PadRight(10),
                     transaction.Reference1.Truncate(15).PadRight(15),
                     transaction.Amount.ToString("N").PadLeft(10),
-                    transaction.AccountType.Name.PadRight(15),
+                    transaction.Account.Name.PadRight(15),
                     transaction.Id);
             }
 

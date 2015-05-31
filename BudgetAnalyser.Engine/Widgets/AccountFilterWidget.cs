@@ -33,12 +33,12 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 DetailedText = "No Account filter applied.";
             }
-            else if (criteria.AccountType != null)
+            else if (criteria.Account != null)
             {
                 DetailedText = string.Format(
                     CultureInfo.CurrentCulture,
                     "Filtered to show only {0} accounts",
-                    criteria.AccountType);
+                    criteria.Account);
             }
             else
             {

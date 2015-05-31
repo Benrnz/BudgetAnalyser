@@ -105,7 +105,7 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                AccountType = null,
+                Account = null,
                 BeginDate = new DateTime(2014, 1, 20),
                 EndDate = new DateTime(2014, 2, 19),
             };
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                AccountType = null,
+                Account = null,
                 BeginDate = null,
                 EndDate = null,
             };
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                AccountType = this.testVisaAccount,
+                Account = this.testVisaAccount,
                 BeginDate = new DateTime(2014, 1, 20),
                 EndDate = new DateTime(2014, 2, 19),
             };
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                AccountType = this.testVisaAccount,
+                Account = this.testVisaAccount,
                 BeginDate = null,
                 EndDate = null,
             };

@@ -126,8 +126,8 @@
         <ledgerBook:BankBalanceUserControl/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type account:AccountType}">
-        <statement:AccountTypeUserControl/>
+    <DataTemplate DataType="{x:Type account:Account}">
+        <statement:AccountUserControl/>
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type longTermSpendingLineGraph:LongTermSpendingGraphController}">

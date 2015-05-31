@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Account
 {
-    public class MastercardAccount : AccountType
+    public class MastercardAccount : Account
     {
         public MastercardAccount(string name)
         {
@@ -17,7 +17,7 @@
             get { return new[] { "MASTERCARD" }; }
         }
 
-        public override AccountType Clone(string name)
+        public override Account Clone(string name)
         {
             return new MastercardAccount(name);
         }

@@ -56,7 +56,7 @@
                   ItemsSource="{Binding ExistingAccountNames}"
                   IsEnabled="{Binding FileTypeSelectionReady}"
                   SelectedItem="{Binding SelectedExistingAccountName}"
-                  Style="{StaticResource ComboBox.AccountType}"
+                  Style="{StaticResource ComboBox.Account}"
                   ToolTip="{Binding AccountNameHelp}"
                   Visibility="{Binding MergeMode, Converter={StaticResource Converter.BoolToVis}}" />
 

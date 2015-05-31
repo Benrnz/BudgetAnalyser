@@ -13,12 +13,12 @@ namespace BudgetAnalyser.UnitTest.Statement
     [TestClass]
     public class StatementModelTest
     {
-        private readonly AccountType cheque = new ChequeAccount("Cheque");
+        private readonly Engine.Account.Account cheque = new ChequeAccount("Cheque");
         private readonly BudgetBucket expense1 = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, string.Empty);
         private readonly BudgetBucket income = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, string.Empty);
         private readonly BudgetBucket surplus = new SurplusBucket();
         private readonly TransactionType transactionType = new NamedTransaction("Something");
-        private readonly AccountType visa = new VisaAccount("Visa");
+        private readonly Engine.Account.Account visa = new VisaAccount("Visa");
 
         private Transaction Duplicate1
         {
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn1 = new Transaction
                 {
-                    AccountType = this.cheque,
+                    Account = this.cheque,
                     Amount = -10.01M,
                     BudgetBucket = this.surplus,
                     Date = new DateTime(2013, 1, 1),
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn2 = new Transaction
                 {
-                    AccountType = this.visa,
+                    Account = this.visa,
                     Amount = -99.11M,
                     BudgetBucket = this.expense1,
                     Date = new DateTime(2013, 1, 3),
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn3 = new Transaction
                 {
-                    AccountType = this.cheque,
+                    Account = this.cheque,
                     Amount = 1000.01M,
                     BudgetBucket = this.income,
                     Date = new DateTime(2013, 1, 1),
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn1 = new Transaction
                 {
-                    AccountType = this.cheque,
+                    Account = this.cheque,
                     Amount = -10.01M,
                     BudgetBucket = this.surplus,
                     Date = new DateTime(2013, 1, 1),
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn2 = new Transaction
                 {
-                    AccountType = this.visa,
+                    Account = this.visa,
                     Amount = -99.11M,
                     BudgetBucket = this.expense1,
                     Date = new DateTime(2013, 1, 3),
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             {
                 var txn3 = new Transaction
                 {
-                    AccountType = this.cheque,
+                    Account = this.cheque,
                     Amount = 1000.01M,
                     BudgetBucket = this.income,
                     Date = new DateTime(2013, 1, 1),

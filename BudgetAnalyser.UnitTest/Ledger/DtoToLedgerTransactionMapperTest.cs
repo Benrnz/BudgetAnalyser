@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                     Id = TransactionId,
                     Amount = -123.99M,
                     Narrative = "Foo bar.",
-                    AccountType = StatementModelTestData.ChequeAccount.Name,
+                    Account = StatementModelTestData.ChequeAccount.Name,
                     TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
                 };
             Result = Mapper.Map<BankBalanceAdjustmentTransaction>(TestData);

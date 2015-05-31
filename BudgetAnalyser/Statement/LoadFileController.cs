@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Statement
         private bool disposed;
         private string doNotUseFileName;
         private bool doNotUseFileTypeSelectionReady;
-        private AccountType doNotUseSelectedExistingAccountName;
+        private Account doNotUseSelectedExistingAccountName;
         private string doNotUseTitle;
         private Task fileSelectionTask;
         private bool showingDialog;
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Statement
             get { return "Cancel"; }
         }
 
-        public IEnumerable<AccountType> ExistingAccountNames { get; private set; }
+        public IEnumerable<Account> ExistingAccountNames { get; private set; }
 
         public string FileName
         {
@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Statement
         public bool? LastFileWasBudgetAnalyserStatementFile { get; private set; }
         public bool MergeMode { get; private set; }
 
-        public AccountType SelectedExistingAccountName
+        public Account SelectedExistingAccountName
         {
             get { return this.doNotUseSelectedExistingAccountName; }
 

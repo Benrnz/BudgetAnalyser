@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, AccountType storeInThisAccount)
+        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, Account.Account storeInThisAccount)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
@@ -194,7 +194,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <param name="ledger"></param>
         /// <param name="storedInAccount"></param>
-        internal void SetLedgerAccount(LedgerBucket ledger, AccountType storedInAccount)
+        internal void SetLedgerAccount(LedgerBucket ledger, Account.Account storedInAccount)
         {
             if (Ledgers.Any(l => l == ledger))
             {

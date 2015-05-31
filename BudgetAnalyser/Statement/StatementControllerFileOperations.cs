@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Statement
 
             try
             {
-                AccountType account = this.loadFileController.SelectedExistingAccountName;
+                Account account = this.loadFileController.SelectedExistingAccountName;
                 await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
 
                 RaisePropertyChanged(() => ViewModel);

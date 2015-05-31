@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         public decimal Amount { get; internal set; }
-        public AccountType SourceAccount { get; internal set; }
-        public AccountType DestinationAccount { get; internal set; }
+        public Account.Account SourceAccount { get; internal set; }
+        public Account.Account DestinationAccount { get; internal set; }
     }
 }

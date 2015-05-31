@@ -116,14 +116,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\AccountType.cs" />
+    <Compile Include="Account\Account.cs" />
     <Compile Include="Account\AccountTypeRepositoryConstants.cs" />
     <Compile Include="Account\InMemoryAccountTypeRepository.cs" />
     <Compile Include="Account\ChequeAccount.cs" />
     <Compile Include="Account\AmexAccount.cs" />
     <Compile Include="Account\IAccountTypeRepository.cs" />
     <Compile Include="Account\MastercardAccount.cs" />
-    <Compile Include="Account\MiscellaneousAccountType.cs" />
+    <Compile Include="Account\MiscellaneousAccount.cs" />
     <Compile Include="Account\SavingsAccount.cs" />
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationDataType.cs" />

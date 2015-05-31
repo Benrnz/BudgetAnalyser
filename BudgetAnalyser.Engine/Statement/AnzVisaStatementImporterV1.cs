@@ -40,12 +40,12 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Load the given file into a <see cref="StatementModel" />.
         /// </summary>
         /// <param name="fileName">The file to load.</param>
-        /// <param name="accountType">
+        /// <param name="account">
         ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account.
         /// </param>
-        public async Task<StatementModel> LoadAsync(string fileName, AccountType accountType)
+        public async Task<StatementModel> LoadAsync(string fileName, Account.Account account)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Statement
                 NamedTransaction transactionType = FetchTransactionType(split, 1, 2, out amount);
                 var transaction = new Transaction
                 {
-                    AccountType = accountType,
+                    Account = account,
                     Reference1 = this.importUtilities.FetchString(split, 0),
                     TransactionType = transactionType,
                     Amount = amount,

@@ -21,11 +21,11 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IAccountTypeRepository accountTypeRepository;
         private Guid dialogCorrelationId;
         private bool doNotUseAddBalanceVisibility;
-        private IEnumerable<AccountType> doNotUseBankAccounts;
+        private IEnumerable<Account> doNotUseBankAccounts;
         private decimal doNotUseBankBalance;
         private DateTime doNotUseDate;
         private bool doNotUseEditable;
-        private AccountType doNotUseSelectedBankAccount;
+        private Account doNotUseSelectedBankAccount;
         private Engine.Ledger.LedgerBook parentBook;
         private IUserMessageBox messageBox;
 
@@ -71,7 +71,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand); }
         }
 
-        public IEnumerable<AccountType> BankAccounts
+        public IEnumerable<Account> BankAccounts
         {
             get { return this.doNotUseBankAccounts; }
             private set
@@ -168,7 +168,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand<BankBalance>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
         }
 
-        public AccountType SelectedBankAccount
+        public Account SelectedBankAccount
         {
             get { return this.doNotUseSelectedBankAccount; }
             set
@@ -343,7 +343,7 @@ namespace BudgetAnalyser.LedgerBook
         private void ShowDialogCommon(string title)
         {
             Canceled = false;
-            List<AccountType> accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            List<Account> accountsToShow = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             BankAccounts = accountsToShow.OrderBy(a => a.Name);
             SelectedBankAccount = null;
             this.dialogCorrelationId = Guid.NewGuid();

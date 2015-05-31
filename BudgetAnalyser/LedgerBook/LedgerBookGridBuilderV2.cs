@@ -226,7 +226,7 @@ namespace BudgetAnalyser.LedgerBook
 
             // Ledgers
             gridRow = 5;
-            AccountType currentBankAccount = null;
+            Account currentBankAccount = null;
 
             foreach (LedgerBucket ledger in this.sortedLedgers)
             {
@@ -351,7 +351,7 @@ namespace BudgetAnalyser.LedgerBook
                 gridRow = AddSurplusCell(grid, gridRow, gridColumn, line);
 
                 // Ledgers
-                AccountType currentBankAccount = null;
+                Account currentBankAccount = null;
                 foreach (LedgerBucket ledger in this.sortedLedgers)
                 {
                     if (currentBankAccount != ledger.StoredInAccount)

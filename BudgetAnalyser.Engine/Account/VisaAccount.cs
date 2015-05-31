@@ -1,6 +1,6 @@
 ﻿namespace BudgetAnalyser.Engine.Account
 {
-    public class VisaAccount : AccountType
+    public class VisaAccount : Account
     {
         public VisaAccount(string name)
         {
@@ -17,7 +17,7 @@
             get { return new[] { "VISA" }; }
         }
 
-        public override AccountType Clone(string name)
+        public override Account Clone(string name)
         {
             return new VisaAccount(name);
         }

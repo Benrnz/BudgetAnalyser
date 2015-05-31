@@ -178,7 +178,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             additionalTransactions.Add(new Transaction
             {
-                AccountType = additionalTransactions.First().AccountType,
+                Account = additionalTransactions.First().Account,
                 Amount = -264M,
                 BudgetBucket = additionalTransactions.First(t => t.BudgetBucket.Code == TestDataConstants.HairBucketCode).BudgetBucket,
                 Date = new DateTime(2013, 09, 13),

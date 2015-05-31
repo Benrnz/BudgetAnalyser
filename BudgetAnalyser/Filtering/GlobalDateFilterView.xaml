@@ -86,10 +86,10 @@
             <TextBlock Grid.Column="0"
                        Text="Account:" />
             <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding AccountTypes}"
+                      ItemsSource="{Binding Accounts}"
                       Margin="3"
-                      SelectedItem="{Binding SelectedAccountType}"
-                      Style="{StaticResource ComboBox.AccountType}" />
+                      SelectedItem="{Binding SelectedAccount}"
+                      Style="{StaticResource ComboBox.Account}" />
             <StackPanel Grid.Column="2"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">

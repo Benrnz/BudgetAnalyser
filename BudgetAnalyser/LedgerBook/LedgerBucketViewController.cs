@@ -53,12 +53,12 @@ namespace BudgetAnalyser.LedgerBook
 
         public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
 
-        public ObservableCollection<AccountType> BankAccounts { get; private set; }
+        public ObservableCollection<Account> BankAccounts { get; private set; }
 
         public BudgetBucket BucketBeingTracked { get; private set; }
 
         public decimal MonthlyBudgetAmount { get; private set; }
-        public AccountType StoredInAccount { get; set; }
+        public Account StoredInAccount { get; set; }
 
         public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerBucket ledgerBucket, [NotNull] BudgetModel budgetModel)
         {
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.LedgerBook
             LedgerBucketHistoryAnalysis.Analyse(ledgerBucket, parentLedgerBook);
             this.ledger = ledgerBucket;
             this.ledgerBook = parentLedgerBook;
-            BankAccounts = new ObservableCollection<AccountType>(this.accountRepo.ListCurrentlyUsedAccountTypes());
+            BankAccounts = new ObservableCollection<Account>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerBucket.BudgetBucket;
             StoredInAccount = ledgerBucket.StoredInAccount;
             MonthlyBudgetAmount = budgetModel.Expenses.Single(e => e.Bucket == BucketBeingTracked).Amount;

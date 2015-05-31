@@ -47,7 +47,7 @@
             <TextBlock Text="{Binding Narrative}" />
         </StackPanel>
         
-        <statement:AccountTypeUserControl Grid.Column="1" 
+        <statement:AccountUserControl Grid.Column="1" 
                                           DataContext="{Binding BankAccount}"/>
             
         <TextBlock x:Name="CreditAmount"

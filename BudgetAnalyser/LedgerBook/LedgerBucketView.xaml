@@ -86,13 +86,13 @@
             <ComboBox ItemsSource="{Binding BankAccounts}"
                       MaxWidth="300"
                       SelectedItem="{Binding StoredInAccount}"
-                      Style="{StaticResource ComboBox.AccountType}">
+                      Style="{StaticResource ComboBox.Account}">
                 <ComboBox.ItemTemplate>
 
                     <DataTemplate>
                         <Viewbox MaxHeight="35"
                                  MaxWidth="280">
-                            <statement:AccountTypeUserControl />
+                            <statement:AccountUserControl />
                         </Viewbox>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>

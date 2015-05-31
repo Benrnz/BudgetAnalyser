@@ -553,7 +553,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             line3.BankBalanceAdjustments.Add(new LedgerTransactionDto
             {
-                AccountType = StatementModelTestData.ChequeAccount.Name,
+                Account = StatementModelTestData.ChequeAccount.Name,
                 Amount = -100.01M,
                 Narrative = "Visa payment yet to go out",
                 Id = new Guid("22927CF0-BAA2-4828-A669-C77396888BD6"),

@@ -16,12 +16,12 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Load the given file into a <see cref="StatementModel" />.
         /// </summary>
         /// <param name="fileName">The file to load.</param>
-        /// <param name="accountType">
+        /// <param name="account">
         ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account.
         /// </param>
-        Task<StatementModel> LoadAsync(string fileName, AccountType accountType);
+        Task<StatementModel> LoadAsync(string fileName, Account.Account account);
 
         /// <summary>
         ///     Test the given file to see if this importer implementation can read and import it.

@@ -144,7 +144,7 @@
                            ToolTip="{Binding TransactionType, Converter={StaticResource Converter.ToString}}" />
                 <ContentPresenter Grid.Column="8"
                                   Margin="5"
-                                  Content="{Binding AccountType}" />
+                                  Content="{Binding Account}" />
             </Grid>
         </Border>
         <DataTemplate.Triggers>
@@ -269,7 +269,7 @@
                 <ContentPresenter Grid.Column="8"
                                   Grid.Row="1"
                                   Margin="5"
-                                  Content="{Binding AccountType}" />
+                                  Content="{Binding Account}" />
             </Grid>
         </Border>
     </DataTemplate>
