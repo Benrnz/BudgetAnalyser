@@ -92,9 +92,9 @@ namespace BudgetAnalyser.Statement
                 Account account = this.loadFileController.SelectedExistingAccountName;
                 await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
 
-                RaisePropertyChanged(() => ViewModel);
-                MessengerInstance.Send(new TransactionsChangedMessage());
                 await SyncWithServiceAsync();
+                MessengerInstance.Send(new TransactionsChangedMessage());
+                RaisePropertyChanged(() => ViewModel);
                 NotifyOfEdit();
                 ViewModel.TriggerRefreshTotalsRow();
                 MessengerInstance.Send(new StatementReadyMessage(ViewModel.Statement));
