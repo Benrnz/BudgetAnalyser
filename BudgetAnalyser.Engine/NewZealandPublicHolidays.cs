@@ -58,14 +58,18 @@ namespace BudgetAnalyser.Engine
         private abstract class Holiday
         {
             public string Name { get; set; }
-            public bool PushOutIfOnWeekend { get; set; }
             public abstract DateTime CalculateDate(DateTime start, DateTime end);
         }
 
+        /// <summary>
+        /// A holiday that occurs every year on a specific date.  For example Christmas day, the 25th of December.
+        /// These holidays can still be optionally "Monday-ised" using the <see cref="PushOutIfOnWeekend"/> property.
+        /// </summary>
         private class FixedDateHoliday : Holiday
         {
             public int Day { get; set; }
             public int Month { get; set; }
+            public bool PushOutIfOnWeekend { get; set; }
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
@@ -82,6 +86,10 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        /// <summary>
+        /// A holiday that occurs on a certain day of the week and at a certain indexed week in the month.
+        /// For example: Queen's birthday is celebrated on the first Monday of June.
+        /// </summary>
         private class IndexDayHoliday : Holiday
         {
             public DayOfWeek Day { get; set; }
@@ -120,6 +128,10 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        /// <summary>
+        /// A holiday that is celebrated closest to an anniversary date.
+        /// For example: Auckland anniversary is celebrated on the closest Monday to the 29th of January.
+        /// </summary>
         private class DayClosestToHoliday : Holiday
         {
             public int CloseToDate { get; set; }
@@ -166,6 +178,9 @@ namespace BudgetAnalyser.Engine
             }
         }
 
+        /// <summary>
+        /// A custom calculator specifically to find the dates for Easter for any year.
+        /// </summary>
         private class EasterHoliday : Holiday
         {
             public DayOfWeek Day { get; set; }

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
@@ -111,19 +110,6 @@ namespace BudgetAnalyser.Engine
             }
 
             return valid;
-        }
-
-        protected bool Equals([NotNull] GlobalFilterCriteria other)
-        {
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
-            return Equals(this.doNotUseAccount, other.doNotUseAccount)
-                   && this.doNotUseBeginDate.Equals(other.doNotUseBeginDate)
-                   && this.doNotUseCleared.Equals(other.doNotUseCleared)
-                   && this.doNotUseEndDate.Equals(other.doNotUseEndDate);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

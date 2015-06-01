@@ -90,5 +90,23 @@ namespace BudgetAnalyser.UnitTest
         {
             Assert.AreEqual(1, new DateTime(2014, 1, 15).DurationInMonths(new DateTime(2014, 2, 14)));
         }
+
+        [TestMethod]
+        public void FindNextWeekDayShouldReturn1stJuneGiven31stMay()
+        {
+            Assert.AreEqual(new DateTime(2015, 6, 1), new DateTime(2015, 5, 31).FindNextWeekday());
+        }
+
+        [TestMethod]
+        public void FindNextWeekDayShouldReturn1stJuneGiven30thMay()
+        {
+            Assert.AreEqual(new DateTime(2015, 6, 1), new DateTime(2015, 5, 30).FindNextWeekday());
+        }
+
+        [TestMethod]
+        public void FindNextWeekDayShouldReturn29thMayGiven29thMay()
+        {
+            Assert.AreEqual(new DateTime(2015, 5, 29), new DateTime(2015, 5, 29).FindNextWeekday());
+        }
     }
 }
