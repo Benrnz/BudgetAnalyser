@@ -9,14 +9,14 @@ namespace BudgetAnalyser.Engine
     {
         private static readonly List<Holiday> HolidayTemplates = new List<Holiday>
         {
-            new FixedDateHoliday { Name = "New Years Day", Day = 1, Month = 1, PushOutIfOnWeekend = true },
-            new FixedDateHoliday { Name = "New Years Holiday", Day = 2, Month = 1, PushOutIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Waitangi Day", Day = 6, Month = 2, PushOutIfOnWeekend = true },
+            new FixedDateHoliday { Name = "New Years Day", Day = 1, Month = 1, MondayiseIfOnWeekend = true },
+            new FixedDateHoliday { Name = "New Years Holiday", Day = 2, Month = 1, MondayiseIfOnWeekend = true },
+            new FixedDateHoliday { Name = "Waitangi Day", Day = 6, Month = 2, MondayiseIfOnWeekend = true },
             new EasterHoliday { Name = "Good Friday", Day = DayOfWeek.Friday },
             new EasterHoliday { Name = "Easter Monday", Day = DayOfWeek.Monday },
-            new FixedDateHoliday { Name = "ANZAC Day", Day = 25, Month = 4, PushOutIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Christmas Day", Day = 25, Month = 12, PushOutIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, PushOutIfOnWeekend = true },
+            new FixedDateHoliday { Name = "ANZAC Day", Day = 25, Month = 4, MondayiseIfOnWeekend = true },
+            new FixedDateHoliday { Name = "Christmas Day", Day = 25, Month = 12, MondayiseIfOnWeekend = true },
+            new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true },
             new IndexDayHoliday { Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
             new IndexDayHoliday { Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3 },
             new DayClosestToHoliday { Name = "Auckland Anniversary", DesiredDay = DayOfWeek.Monday, Month = 1, CloseToDate = 29 }
@@ -28,14 +28,6 @@ namespace BudgetAnalyser.Engine
             foreach (var holidayTemplate in HolidayTemplates)
             {
                 var proposedDate = holidayTemplate.CalculateDate(start, end);
-
-                if (holidayTemplate.PushOutIfOnWeekend && (proposedDate.DayOfWeek == DayOfWeek.Saturday || proposedDate.DayOfWeek == DayOfWeek.Sunday))
-                {
-                    do
-                    {
-                        proposedDate = proposedDate.AddDays(1);
-                    } while (proposedDate.DayOfWeek != DayOfWeek.Monday);
-                }
 
                 if (holidays.ContainsKey(proposedDate))
                 {
@@ -63,26 +55,40 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         /// A holiday that occurs every year on a specific date.  For example Christmas day, the 25th of December.
-        /// These holidays can still be optionally "Monday-ised" using the <see cref="PushOutIfOnWeekend"/> property.
+        /// These holidays can still be optionally "Monday-ised" using the <see cref="MondayiseIfOnWeekend"/> property.
         /// </summary>
         private class FixedDateHoliday : Holiday
         {
             public int Day { get; set; }
             public int Month { get; set; }
-            public bool PushOutIfOnWeekend { get; set; }
+            public bool MondayiseIfOnWeekend { get; set; }
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
+                DateTime proposed = DateTime.MinValue;
                 for (var year = start.Year; year <= end.Year; year++)
                 {
-                    var proposed = new DateTime(year, Month, Day);
+                    proposed = new DateTime(year, Month, Day);
                     if (proposed >= start && proposed <= end)
                     {
-                        return proposed;
+                        break;
                     }
                 }
 
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                if (MondayiseIfOnWeekend && (proposed.DayOfWeek == DayOfWeek.Saturday || proposed.DayOfWeek == DayOfWeek.Sunday))
+                {
+                    do
+                    {
+                        proposed = proposed.AddDays(1);
+                    } while (proposed.DayOfWeek != DayOfWeek.Monday);
+                }
+
+                if (proposed < DateTime.MinValue.AddMonths(1))
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                }
+
+                return proposed;
             }
         }
 
