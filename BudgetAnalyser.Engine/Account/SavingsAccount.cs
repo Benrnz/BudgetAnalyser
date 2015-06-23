@@ -7,6 +7,11 @@
             Name = name;
         }
 
+        public override AccountType AccountType
+        {
+            get { return AccountType.Savings; }
+        }
+
         public override string ImagePath
         {
             get { return "SavingsLogoImage"; }

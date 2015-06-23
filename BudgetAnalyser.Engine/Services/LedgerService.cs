@@ -242,7 +242,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException("ledgerEntry");
             }
 
-            if (LedgerBook.Reconciliations.First().Entries.Any(e => e == ledgerEntry))
+            if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
             {
                 throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
             }

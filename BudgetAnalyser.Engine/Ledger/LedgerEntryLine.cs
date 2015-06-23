@@ -320,7 +320,8 @@ namespace BudgetAnalyser.Engine.Ledger
         private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate, ToDoCollection toDoList)
         {
             var adjustmentsMade = false;
-            foreach (Transaction futureTransaction in statement.AllTransactions.Where(t => t.Date >= reconciliationDate && !(t.BudgetBucket is JournalBucket)))
+            foreach (Transaction futureTransaction in statement.AllTransactions
+                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is JournalBucket)))
             {
                 adjustmentsMade = true;
                 BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
@@ -421,7 +422,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 // Rather than create a task, just do it
                 BalanceAdjustment(
-                    -grouping.Sum(t => t.Amount),
+                    grouping.Sum(t => t.Amount),
                     "Adjustment for moving budgeted amounts to destination account. ")
                     .WithAccount(grouping.Key);
                 //var balanceAdjustmentTask = new ToDoTask(
@@ -442,7 +443,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
             Parallel.ForEach(
-                transactions.Where(t => t.Amount < 0).ToList(),
+                transactions.Where(t => t.Amount < 0 && t.Account.AccountType != AccountType.CreditCard).ToList(),
                 t =>
                 {
                     if (!ledgerBuckets.ContainsKey(t.BudgetBucket))
@@ -456,7 +457,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             toDoList.Add(
                                 new TransferTask(
-                                    "A {0} payment for {1:C} has been made from {2}, but funds are stored in {3}.",
+                                    string.Format("A {0} payment for {1:C} has been made from {2}, but funds are stored in {3}.", t.BudgetBucket.Code, t.Amount, t.Account, ledgerAccount),
                                     true)
                                 {
                                     Amount = t.Amount,
@@ -500,7 +501,8 @@ namespace BudgetAnalyser.Engine.Ledger
                         new TransferTask(
                             string.Format(
                                 CultureInfo.CurrentCulture,
-                                "Transfer {0:C} from Salary Account to {1} with auto-matching reference: {2}",
+                                "For {0} transfer {1:C} from Salary Account to {2} with auto-matching reference: {3}",
+                                budgetedExpense.Bucket.Code,
                                 budgetedAmount.Amount,
                                 ledgerBucket.StoredInAccount,
                                 budgetedAmount.AutoMatchingReference),

@@ -13,6 +13,8 @@ namespace BudgetAnalyser.Engine.Account
 
         public string Name { get; protected set; }
 
+        public abstract AccountType AccountType { get; }
+
         internal abstract string[] KeyWords { get; }
 
         public virtual bool IsSalaryAccount
