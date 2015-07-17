@@ -128,7 +128,6 @@
     <Compile Include="Account\SavingsAccount.cs" />
     <Compile Include="Account\VisaAccount.cs" />
     <Compile Include="ApplicationDataType.cs" />
-    <Compile Include="ApplicationHookEventArgs.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
@@ -200,7 +199,6 @@
     <Compile Include="Ledger\Data\DtoToLedgerBookMapper.cs" />
     <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
-    <Compile Include="BatchFileApplicationHookSubscriber.cs" />
     <Compile Include="MainApplicationStateModelV1.cs" />
     <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />

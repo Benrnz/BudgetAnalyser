@@ -25,7 +25,6 @@ namespace BudgetAnalyser
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly IDashboardService dashboardService;
-        private readonly BatchFileApplicationHookSubscriber batchFileHook;
         private readonly IPersistApplicationState statePersistence;
         private readonly IUiContext uiContext;
         private bool initialised;
@@ -36,8 +35,7 @@ namespace BudgetAnalyser
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
-            [NotNull] IDashboardService dashboardService,
-            [NotNull] BatchFileApplicationHookSubscriber batchFileHook
+            [NotNull] IDashboardService dashboardService
             )
         {
             if (uiContext == null)
@@ -68,7 +66,6 @@ namespace BudgetAnalyser
             this.statePersistence = statePersistence;
             this.applicationDatabaseService = applicationDatabaseService;
             this.dashboardService = dashboardService;
-            this.batchFileHook = batchFileHook;
             this.uiContext = uiContext;
 
             LedgerBookDialog = new ShellDialogController();
@@ -152,7 +149,6 @@ namespace BudgetAnalyser
             }
 
             this.initialised = true;
-
             IList<IPersistent> rehydratedModels = this.statePersistence.Load().ToList();
 
             // Create a distinct list of sequences.
@@ -215,11 +211,9 @@ namespace BudgetAnalyser
                     // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
                     await this.applicationDatabaseService.SaveAsync();
                 }
-                this.batchFileHook.PerformAction();
                 return true;
             }
 
-            this.batchFileHook.PerformAction();
             return false;
         }
 
