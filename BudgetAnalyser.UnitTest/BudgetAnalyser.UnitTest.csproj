@@ -138,7 +138,6 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
-    <Compile Include="ApplicationHooks\BatchFileApplicationHookSubscriberTest.cs" />
     <Compile Include="Budget\DtoToFixedBudgetProjectBucketTest.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
     <Compile Include="Global.cs" />
@@ -255,7 +254,6 @@
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
     <Compile Include="TestHarness\LoggerTestHarness.cs" />
-    <Compile Include="TestHarness\BatchFileApplicationHookSubscriberTestHarness.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\FakeUserMessageBox.cs" />
