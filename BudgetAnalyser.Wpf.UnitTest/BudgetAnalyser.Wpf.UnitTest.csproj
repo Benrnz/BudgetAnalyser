@@ -97,13 +97,13 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.0.25\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.29\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Rees.Wpf, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Rees.Wpf, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.Wpf.1.0.25\lib\net451\Rees.Wpf.dll</HintPath>
+      <HintPath>..\packages\Rees.Wpf.1.2.29\lib\net451\Rees.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
