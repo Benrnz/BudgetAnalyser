@@ -19,6 +19,7 @@ namespace BudgetAnalyser.LedgerBook
     public class AddLedgerReconciliationController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
     {
         private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly IUserMessageBox messageBox;
         private Guid dialogCorrelationId;
         private bool doNotUseAddBalanceVisibility;
         private IEnumerable<Account> doNotUseBankAccounts;
@@ -27,7 +28,6 @@ namespace BudgetAnalyser.LedgerBook
         private bool doNotUseEditable;
         private Account doNotUseSelectedBankAccount;
         private Engine.Ledger.LedgerBook parentBook;
-        private IUserMessageBox messageBox;
 
         public AddLedgerReconciliationController(
             [NotNull] UiContext uiContext,
@@ -71,6 +71,11 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand); }
         }
 
+        public decimal AdjustedBankBalanceTotal
+        {
+            get { return BankBalances.Sum(b => b.AdjustedBalance); }
+        }
+
         public IEnumerable<Account> BankAccounts
         {
             get { return this.doNotUseBankAccounts; }
@@ -89,15 +94,18 @@ namespace BudgetAnalyser.LedgerBook
                 this.doNotUseBankBalance = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged(() => BankBalanceTotal);
+                RaisePropertyChanged(() => AdjustedBankBalanceTotal);
             }
         }
+
+        public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; }
 
         public decimal BankBalanceTotal
         {
             get { return BankBalances.Sum(b => b.Balance); }
         }
 
-        public ObservableCollection<BankBalance> BankBalances { get; private set; }
+        public bool Canceled { get; private set; }
 
         public bool CanExecuteCancelButton
         {
@@ -121,8 +129,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             get { return false; }
         }
-
-        public bool Canceled { get; private set; }
 
         public string CloseButtonToolTip
         {
@@ -157,15 +163,12 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         public bool HasRequiredBalances
         {
-            get
-            {
-                return this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
-            }
+            get { return this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount)); }
         }
 
         public ICommand RemoveBankBalanceCommand
         {
-            get { return new RelayCommand<BankBalance>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
+            get { return new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
         }
 
         public Account SelectedBankAccount
@@ -190,7 +193,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             this.parentBook = ledgerBook;
-            BankBalances = new ObservableCollection<BankBalance>();
+            BankBalances = new ObservableCollection<BankBalanceViewModel>();
             CreateMode = true;
             AddBalanceVisibility = true;
             Editable = true;
@@ -219,7 +222,7 @@ namespace BudgetAnalyser.LedgerBook
 
             this.parentBook = ledgerBook;
             Date = line.Date;
-            BankBalances = new ObservableCollection<BankBalance>(line.BankBalances);
+            BankBalances = new ObservableCollection<BankBalanceViewModel>(line.BankBalances.Select(b => new BankBalanceViewModel(line, b)));
             CreateMode = false;
             AddBalanceVisibility = false;
             Editable = false; // Bank balances are not editable after creating a new Ledger Line at this stage.
@@ -229,7 +232,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void AddNewBankBalance()
         {
-            BankBalances.Add(new BankBalance(SelectedBankAccount, BankBalance));
+            BankBalances.Add(new BankBalanceViewModel(null, SelectedBankAccount, BankBalance));
             SelectedBankAccount = null;
             BankBalance = 0;
             RaisePropertyChanged(() => HasRequiredBalances);
@@ -273,7 +276,7 @@ namespace BudgetAnalyser.LedgerBook
             AddNewBankBalance();
         }
 
-        private void OnRemoveBankBalanceCommandExecuted(BankBalance bankBalance)
+        private void OnRemoveBankBalanceCommandExecuted(BankBalanceViewModel bankBalance)
         {
             if (bankBalance == null)
             {
@@ -282,6 +285,7 @@ namespace BudgetAnalyser.LedgerBook
 
             BankBalances.Remove(bankBalance);
             RaisePropertyChanged(() => BankBalanceTotal);
+            RaisePropertyChanged(() => AdjustedBankBalanceTotal);
             RaisePropertyChanged(() => HasRequiredBalances);
         }
 
@@ -296,7 +300,8 @@ namespace BudgetAnalyser.LedgerBook
             {
                 if (message.Response == ShellDialogButton.Help)
                 {
-                    this.messageBox.Show("Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month. The date used will also be used to select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
+                    this.messageBox.Show(
+                        "Use your actual pay day as the date, this signifies the closing of the previous month, and opening a new month on your pay day showing available funds in each ledger for the new month. The date used will also be used to select transactions from the statement to calculate the ledger balance. The date is set from the current date range filter (on the dashboard page), using the day after the end date. Transactions will be found by searching one month prior to the given date, excluding the given date. The transactions are used to show how the current ledger balance is calculated. The bank balance is the balance as at the date given, after your pay has been credited.");
                     return;
                 }
                 if (message.Response == ShellDialogButton.Cancel)
@@ -351,7 +356,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = title,
-                HelpAvailable = CreateMode,
+                HelpAvailable = CreateMode
             };
 
             MessengerInstance.Send(dialogRequest);

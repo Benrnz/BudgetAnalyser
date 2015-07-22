@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
@@ -38,10 +38,10 @@
             <Button Command="{Binding AddBankBalanceCommand}"
                     Click="OnAddBankBalanceClick"
                     Style="{StaticResource Button.Round.Add}"
-                    ToolTip="Add Bank Balance" 
-                    Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}"/>
+                    ToolTip="Add Bank Balance"
+                    Visibility="{Binding AddBalanceVisibility, Converter={StaticResource Converter.BoolToVis}}" />
         </StackPanel>
-        
+
         <Border Background="{StaticResource Brush.MainBackground}"
                 BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
@@ -56,22 +56,31 @@
                               Margin="5" />
             </ScrollViewer>
         </Border>
-        
+
         <Border BorderBrush="{StaticResource Brush.Text.Default}"
                 BorderThickness="0,2,0,0"
                 Grid.Column="1"
                 Grid.Row="1"
                 HorizontalAlignment="Right"
                 Margin="0,0,5,0"
-                Width="120">
+                Width="300">
             <Border BorderBrush="{StaticResource Brush.Text.Default}"
                     BorderThickness="0,2,0,0"
                     Margin="0,2,0,0">
-                <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
-                           Text="{Binding BankBalanceTotal, StringFormat=N}" />
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
+                               TextAlignment="Right"
+                               Text="{Binding BankBalanceTotal, StringFormat=N}" 
+                               Width="150"/>
+                    <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
+                               Text="{Binding AdjustedBankBalanceTotal, StringFormat=N}"
+                               Width="150"
+                               TextAlignment="Right" />
+                </StackPanel>
             </Border>
         </Border>
-        
+
         <StackPanel Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Grid.Row="2"

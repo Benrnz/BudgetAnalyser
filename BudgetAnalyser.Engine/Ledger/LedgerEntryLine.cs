@@ -78,6 +78,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         /// <summary>
         ///     The bank balances of all the bank accounts being tracked by the ledger book.
+        ///     These balances do not include balance adjustments.
         /// </summary>
         public IEnumerable<BankBalance> BankBalances
         {

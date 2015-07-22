@@ -1,6 +1,4 @@
-﻿using BudgetAnalyser.Engine.Account;
-
-namespace BudgetAnalyser.Engine.Ledger
+﻿namespace BudgetAnalyser.Engine.Ledger
 {
     public class BankBalance
     {

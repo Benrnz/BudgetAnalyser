@@ -212,6 +212,7 @@
     <Compile Include="Filtering\RequestFilterChangeMessage.cs" />
     <Compile Include="Filtering\RequestFilterMessage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="LedgerBook\BankBalanceViewModel.cs" />
     <Compile Include="LedgerBook\LedgerBucketHistoryUserControl.xaml.cs">
       <DependentUpon>LedgerBucketHistoryUserControl.xaml</DependentUpon>
     </Compile>
