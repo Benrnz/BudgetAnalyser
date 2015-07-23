@@ -27,11 +27,6 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException("input");
             }
 
-            if (!ValidateUpdateInput(input))
-            {
-                return;
-            }
-
             var appDb = input[0] as ApplicationDatabase;
             if (appDb == null || appDb.FileName.IsNothing())
             {

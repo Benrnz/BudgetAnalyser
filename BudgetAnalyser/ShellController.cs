@@ -247,8 +247,18 @@ namespace BudgetAnalyser
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
             if (storedMainAppState != null)
             {
-                ApplicationDatabase applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
-                MessengerInstance.Send(new ApplicationDatabaseReadyMessage(applicationDatabase));
+                ApplicationDatabase applicationDatabase;
+                try
+                {
+                    applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
+                    MessengerInstance.Send(new ApplicationDatabaseReadyMessage(applicationDatabase));
+                }
+                catch (KeyNotFoundException)
+                {
+                    this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
+                    applicationDatabase = null;
+                }
+
                 this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(applicationDatabase);
             }
         }
