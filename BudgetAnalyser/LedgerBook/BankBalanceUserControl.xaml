@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <!-- A single Bank Balance line for a single account -->
+    <!-- DataContext: BankBalanceViewModel OR BankBalance -->
+    
     <Grid Margin="1"
           Background="{StaticResource Brush.TileBackground}">
         <Grid.ColumnDefinitions>
@@ -25,7 +27,7 @@
                    Style="{StaticResource TextBlock.ImportantNumber}"
                    Text="{Binding AdjustedBalance, StringFormat=N}"
                    ToolTip="The adjusted bank balance (AccountBankBalance + AnyBalanceAdjustments)"
-                   />
+                   Visibility="{Binding ShowAdjustedBalance, Converter={StaticResource Converter.BoolToVis}}"/>
         
         <Button Style="{StaticResource Button.Round.Cross}"
                 Grid.Column="3"

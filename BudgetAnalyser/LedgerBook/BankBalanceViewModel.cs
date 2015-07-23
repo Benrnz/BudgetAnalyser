@@ -3,6 +3,8 @@ using System.Linq;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Ledger;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace BudgetAnalyser.LedgerBook
 {
@@ -35,6 +37,14 @@ namespace BudgetAnalyser.LedgerBook
                 if (this.line == null) return Balance;
                 var adjustment = this.line.BankBalanceAdjustments.FirstOrDefault(b => b.BankAccount == Account);
                 return adjustment == null ? Balance : Balance + adjustment.Amount;
+            }
+        }
+
+        public bool ShowAdjustedBalance
+        {
+            get
+            {
+                return this.line != null;
             }
         }
     }

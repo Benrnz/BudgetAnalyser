@@ -71,9 +71,9 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand); }
         }
 
-        public decimal AdjustedBankBalanceTotal
+        public decimal? AdjustedBankBalanceTotal
         {
-            get { return BankBalances.Sum(b => b.AdjustedBalance); }
+            get { return AddBalanceVisibility ? default(Nullable<decimal>) : BankBalances.Sum(b => b.AdjustedBalance); }
         }
 
         public IEnumerable<Account> BankAccounts
