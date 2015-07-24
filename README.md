@@ -34,7 +34,9 @@ This application does not upload any information provided to it to the Internet.
 Getting Started
 ---------------
 No binaries are currently uploaded, so you will need to build the solution yourself.
-
+Dependencies:
+* Rees.UserInteraction.Contracts - this is a Nuget package and stable releases are available on Nuget.org. Pre-release versions are available on Myget.org (https://www.myget.org/F/benrnz/api/v2/package/Rees.UserInteraction.Contracts).  See https://github.com/Benrnz/ReesUserInteraction for more information about this library. The BudgetAnalyser uses this library, and may reference pre-release versions from time to time. If you experience difficulties building the code, please add MyGet.Org as a Nuget package source (https://www.myget.org/F/benrnz).
+* Rees.Wpf - this is a Nuget package and stable releases are available on Nuget.org. Pre-release versions are available on Myget.org (https://www.myget.org/F/benrnz/api/v2/package/Rees.Wpf).  See https://github.com/Benrnz/ReesUserInteraction for more information about this library. The BudgetAnalyser uses this library, and may reference pre-release versions from time to time. If you experience difficulties building the code, please add MyGet.Org as a Nuget package source (https://www.myget.org/F/benrnz).
 
 Terminology
 -----------
