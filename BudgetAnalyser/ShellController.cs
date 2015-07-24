@@ -8,7 +8,6 @@ using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -23,8 +22,7 @@ namespace BudgetAnalyser
 {
     public class ShellController : ControllerBase, IInitializableController
     {
-        private readonly IApplicationDatabaseService applicationDatabaseService;
-        private readonly IDashboardService dashboardService;
+        private readonly PersistenceOperations persistenceOperations;
         private readonly IPersistApplicationState statePersistence;
         private readonly IUiContext uiContext;
         private bool initialised;
@@ -34,28 +32,28 @@ namespace BudgetAnalyser
         public ShellController(
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
-            [NotNull] IApplicationDatabaseService applicationDatabaseService,
-            [NotNull] IDashboardService dashboardService
+            [NotNull] IDashboardService dashboardService,
+            [NotNull] PersistenceOperations persistenceOperations
             )
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (statePersistence == null)
             {
-                throw new ArgumentNullException("statePersistence");
-            }
-
-            if (applicationDatabaseService == null)
-            {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(statePersistence));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
+            }
+
+            if (persistenceOperations == null)
+            {
+                throw new ArgumentNullException(nameof(persistenceOperations));
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -64,8 +62,7 @@ namespace BudgetAnalyser
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
 
             this.statePersistence = statePersistence;
-            this.applicationDatabaseService = applicationDatabaseService;
-            this.dashboardService = dashboardService;
+            this.persistenceOperations = persistenceOperations;
             this.uiContext = uiContext;
 
             LedgerBookDialog = new ShellDialogController();
@@ -76,69 +73,39 @@ namespace BudgetAnalyser
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public BudgetController BudgetController
-        {
-            get { return this.uiContext.BudgetController; }
-        }
+        public BudgetController BudgetController => this.uiContext.BudgetController;
 
-        public ShellDialogController BudgetDialog { get; private set; }
-
-        public DashboardController DashboardController
-        {
-            get { return this.uiContext.DashboardController; }
-        }
-
-        public ShellDialogController DashboardDialog { get; private set; }
+        public ShellDialogController BudgetDialog { get; }
+        public DashboardController DashboardController => this.uiContext.DashboardController;
+        public ShellDialogController DashboardDialog { get; }
+        public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
 
         [Engine.Annotations.UsedImplicitly]
-        public LedgerBookController LedgerBookController
-        {
-            get { return this.uiContext.LedgerBookController; }
-        }
+        public LedgerBookController LedgerBookController => this.uiContext.LedgerBookController;
 
-        public ShellDialogController LedgerBookDialog { get; private set; }
-
-        public bool HasUnsavedChanges
-        {
-            get { return this.applicationDatabaseService.HasUnsavedChanges; }
-        }
+        public ShellDialogController LedgerBookDialog { get; }
 
         [Engine.Annotations.UsedImplicitly]
-        public MainMenuController MainMenuController
-        {
-            get { return this.uiContext.MainMenuController; }
-        }
+        public MainMenuController MainMenuController => this.uiContext.MainMenuController;
 
         [Engine.Annotations.UsedImplicitly]
-        public ReportsCatalogController ReportsCatalogController
-        {
-            get { return this.uiContext.ReportsCatalogController; }
-        }
+        public ReportsCatalogController ReportsCatalogController => this.uiContext.ReportsCatalogController;
 
-        public ShellDialogController ReportsDialog { get; private set; }
+        public ShellDialogController ReportsDialog { get; }
 
         [Engine.Annotations.UsedImplicitly]
-        public RulesController RulesController
-        {
-            get { return this.uiContext.RulesController; }
-        }
+        public RulesController RulesController => this.uiContext.RulesController;
 
         [Engine.Annotations.UsedImplicitly]
-        public StatementController StatementController
-        {
-            get { return this.uiContext.StatementController; }
-        }
+        public StatementController StatementController => this.uiContext.StatementController;
 
-        public ShellDialogController TransactionsDialog { get; private set; }
-        internal Point WindowSize { get; private set; }
+        public ShellDialogController TransactionsDialog { get; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
         [Engine.Annotations.UsedImplicitly]
-        public string WindowTitle
-        {
-            get { return "Budget Analyser"; }
-        }
+        public string WindowTitle => "Budget Analyser";
 
+        internal Point WindowSize { get; private set; }
         internal Point WindowTopLeft { get; private set; }
 
         public void Initialize()
@@ -193,24 +160,32 @@ namespace BudgetAnalyser
         }
 
         /// <summary>
+        ///     This method will persist the application state. Application State is user preference settings for the application,
+        ///     window, and last loaded file.
+        ///     Any data that is used for Budgets, reconciliation, reporting belongs in the Application Database.
+        /// </summary>
+        public void SaveApplicationState()
+        {
+            var gatherDataMessage = new ApplicationStateRequestedMessage();
+            MessengerInstance.Send(gatherDataMessage);
+            this.statePersistence.Persist(gatherDataMessage.PersistentData);
+        }
+
+        /// <summary>
         ///     Notify the ShellController the Shell is closing.
         /// </summary>
         public async Task<bool> ShellClosing()
         {
-            // Always save application metadata.
-            var gatherDataMessage = new ApplicationStateRequestedMessage();
-            MessengerInstance.Send(gatherDataMessage);
-            this.statePersistence.Persist(gatherDataMessage.PersistentData);
-
-            if (this.applicationDatabaseService.HasUnsavedChanges)
+            if (this.persistenceOperations.HasUnsavedChanges)
             {
                 bool? result = this.uiContext.UserPrompts.YesNoBox.Show("There are unsaved changes, save before exiting?", "Budget Analyser");
                 if (result != null && result.Value)
                 {
                     // Save must be run carefully because the application is exiting.  If run using the task factory with defaults the task will stall, as background tasks are waiting to be marshalled back to main context
                     // which is also waiting here, resulting in a deadlock.  This method will only work by first cancelling the close, awaiting this method and then re-triggering it.
-                    await this.applicationDatabaseService.SaveAsync();
+                    await this.persistenceOperations.SaveDatabase();
                 }
+
                 return true;
             }
 
@@ -221,7 +196,7 @@ namespace BudgetAnalyser
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             var shellState = message.ElementOfType<ShellPersistentStateV1>();
@@ -247,19 +222,14 @@ namespace BudgetAnalyser
             var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
             if (storedMainAppState != null)
             {
-                ApplicationDatabase applicationDatabase;
                 try
                 {
-                    applicationDatabase = await this.applicationDatabaseService.LoadAsync(storedMainAppState.BudgetAnalyserDataStorageKey);
-                    MessengerInstance.Send(new ApplicationDatabaseReadyMessage(applicationDatabase));
+                    await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
                 }
                 catch (KeyNotFoundException)
                 {
                     this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
-                    applicationDatabase = null;
                 }
-
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(applicationDatabase);
             }
         }
 
@@ -272,7 +242,7 @@ namespace BudgetAnalyser
             };
             message.PersistThisModel(shellPersistentStateV1);
 
-            MainApplicationStateModelV1 dataFileState = this.applicationDatabaseService.PreparePersistentStateData();
+            MainApplicationStateModelV1 dataFileState = this.persistenceOperations.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 

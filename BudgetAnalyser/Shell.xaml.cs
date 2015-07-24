@@ -16,10 +16,7 @@ namespace BudgetAnalyser
             InitializeComponent();
         }
 
-        private ShellController Controller
-        {
-            get { return (ShellController)DataContext; }
-        }
+        private ShellController Controller => (ShellController)DataContext;
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -55,6 +52,7 @@ namespace BudgetAnalyser
         {
             // While the application is closing using async tasks and the task factory is error prone.
             // Must wait for the ShellClosing method to complete before continueing to close.
+            Controller.SaveApplicationState();
             if (Controller.HasUnsavedChanges)
             {
                 e.Cancel = true;

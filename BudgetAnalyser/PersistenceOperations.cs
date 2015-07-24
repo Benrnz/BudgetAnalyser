@@ -26,22 +26,22 @@ namespace BudgetAnalyser
         {
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (demoFileHelper == null)
             {
-                throw new ArgumentNullException("demoFileHelper");
+                throw new ArgumentNullException(nameof(demoFileHelper));
             }
 
             if (userPrompts == null)
             {
-                throw new ArgumentNullException("userPrompts");
+                throw new ArgumentNullException(nameof(userPrompts));
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
@@ -50,9 +50,43 @@ namespace BudgetAnalyser
             this.userPrompts = userPrompts;
         }
 
-        public bool HasUnsavedChanges
+        public bool HasUnsavedChanges => this.applicationDatabaseService.HasUnsavedChanges;
+
+        public async Task LoadDatabase(string fileName)
         {
-            get { return this.applicationDatabaseService.HasUnsavedChanges; }
+            await LoadDatabase(() => fileName);
+        }
+
+        public async void OnCreateNewDatabaseCommandExecute()
+        {
+            if (!await PromptToSaveIfNecessary())
+            {
+                // User cancelled or model is invalid and preventing save.
+                return;
+            }
+
+            IUserPromptSaveFile fileDialog = this.userPrompts.SaveFileFactory();
+            fileDialog.CheckPathExists = true;
+            fileDialog.DefaultExt = "*.bax";
+            fileDialog.AddExtension = true;
+            fileDialog.Filter = "Budget Analyser files (*.bax)|*.bax";
+            fileDialog.Title = "Select a folder and filename";
+            bool? response = fileDialog.ShowDialog();
+            if (response == null || response == false || fileDialog.FileName.IsNothing())
+            {
+                return;
+            }
+            string fileName = fileDialog.FileName;
+
+            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
+            try
+            {
+                appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
+            }
+            finally
+            {
+                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
+            }
         }
 
         public async void OnLoadDatabaseCommandExecute()
@@ -73,42 +107,23 @@ namespace BudgetAnalyser
                 return;
             }
 
-            await SaveDatabase("Save Budget Analyser Data");
-            CommandManager.InvalidateRequerySuggested();
-        }
-
-        public async void OnCreateNewDatabaseCommandExecute()
-        {
-            if (!await PromptToSaveIfNecessary())
-            {
-                // User cancelled or model is invalid and preventing save.
-                return;
-            }
-
-            var fileDialog = this.userPrompts.SaveFileFactory();
-            fileDialog.CheckPathExists = true;
-            fileDialog.DefaultExt = "*.bax";
-            fileDialog.AddExtension = true;
-            fileDialog.Filter = "Budget Analyser files (*.bax)|*.bax";
-            fileDialog.Title = "Select a folder and filename";
-            var response = fileDialog.ShowDialog();
-            if (response == null || response == false || fileDialog.FileName.IsNothing()) return;
-            var fileName = fileDialog.FileName;
-
-            var appDb = this.applicationDatabaseService.Close();
-            try
-            {
-                appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
-            }
-            finally
-            {
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
-            }
+            await SaveDatabase();
         }
 
         public void OnValidateModelsCommandExecute()
         {
             ValidateModel("Validate Budget Analyser Data");
+        }
+
+        public MainApplicationStateModelV1 PreparePersistentStateData()
+        {
+            return this.applicationDatabaseService.PreparePersistentStateData();
+        }
+
+        public async Task SaveDatabase()
+        {
+            await SaveDatabase("Save Budget Analyser Data");
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private async Task LoadDatabase(Func<string> getFileName)
