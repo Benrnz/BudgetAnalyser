@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public override bool Enabled
         {
             get { return this.doNotUseEnabled; }
-            set
+            protected set
             {
                 this.doNotUseEnabled = value;
                 if (!this.doNotUseEnabled)

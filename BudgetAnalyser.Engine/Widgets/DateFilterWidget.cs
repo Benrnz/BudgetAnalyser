@@ -55,8 +55,8 @@ namespace BudgetAnalyser.Engine.Widgets
             DetailedText = string.Format(
                 CultureInfo.CurrentCulture,
                 "Filtered from {0} to {1}",
-                criteria.BeginDate.Value.ToShortDateString(),
-                criteria.EndDate.Value.ToShortDateString());
+                criteria.BeginDate?.Date.ToShortDateString(),
+                criteria.EndDate?.Date.ToShortDateString());
         }
 
         private void NoDateFilterApplied()

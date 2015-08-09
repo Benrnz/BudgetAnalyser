@@ -41,6 +41,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
             Visibility = true;
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor - ok here, simple bool property with straightforward usage.
             Enabled = true;
             Sequence = 99;
         }
@@ -99,7 +100,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public virtual bool Enabled
         {
             get { return this.doNotUseEnabled; }
-            set
+            protected set
             {
                 this.doNotUseEnabled = value;
                 OnPropertyChanged();
@@ -140,10 +141,10 @@ namespace BudgetAnalyser.Engine.Widgets
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
         public int Sequence { get; protected set; }
 
-        public WidgetSize Size
+        protected WidgetSize Size
         {
             get { return this.doNotUseSize; }
-            protected set
+            set
             {
                 this.doNotUseSize = value;
                 OnPropertyChanged();
