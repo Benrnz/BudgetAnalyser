@@ -262,10 +262,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new LedgerTransactionEventArgs(this.wasChanged));
-            }
+            handler?.Invoke(this, new LedgerTransactionEventArgs(this.wasChanged));
 
             Reset();
             this.wasChanged = false;

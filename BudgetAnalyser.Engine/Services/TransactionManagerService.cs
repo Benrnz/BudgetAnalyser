@@ -126,10 +126,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetCollection = null;
             this.budgetHash = 0;
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
@@ -248,10 +245,7 @@ namespace BudgetAnalyser.Engine.Services
             ResetTransactionsCollection();
 
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
@@ -303,10 +297,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
-            if (handler != null)
-            {
-                handler(this, new AdditionalInformationRequestedEventArgs());
-            }
+            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
             if (!ValidateModel(messages))
@@ -354,10 +345,7 @@ namespace BudgetAnalyser.Engine.Services
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
-            if (handler != null)
-            {
-                handler(this, new ValidatingEventArgs());
-            }
+            handler?.Invoke(this, new ValidatingEventArgs());
 
             // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
             return true;

@@ -301,10 +301,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 EventHandler<EditBankBalancesEventArgs> handler = Complete;
-                if (handler != null)
-                {
-                    handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
-                }
+                handler?.Invoke(this, new EditBankBalancesEventArgs { Canceled = Canceled });
             }
             finally
             {

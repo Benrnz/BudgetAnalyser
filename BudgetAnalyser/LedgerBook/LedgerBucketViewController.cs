@@ -128,10 +128,7 @@ namespace BudgetAnalyser.LedgerBook
 
                 this.ledgerService.MoveLedgerToAccount(this.ledger, StoredInAccount);
                 EventHandler handler = Updated;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                handler?.Invoke(this, EventArgs.Empty);
             }
             finally
             {

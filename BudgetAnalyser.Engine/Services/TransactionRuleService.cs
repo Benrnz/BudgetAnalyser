@@ -114,10 +114,7 @@ namespace BudgetAnalyser.Engine.Services
             MatchingRulesGroupedByBucket.Clear();
             MatchingRules.Clear();
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
@@ -215,10 +212,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public bool Match(IEnumerable<Transaction> transactions)
@@ -265,10 +259,7 @@ namespace BudgetAnalyser.Engine.Services
         public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
-            if (handler != null)
-            {
-                handler(this, new AdditionalInformationRequestedEventArgs());
-            }
+            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
             if (ValidateModel(messages))
@@ -294,10 +285,7 @@ namespace BudgetAnalyser.Engine.Services
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
-            if (handler != null)
-            {
-                handler(this, new ValidatingEventArgs());
-            }
+            handler?.Invoke(this, new ValidatingEventArgs());
             return true;
         }
 

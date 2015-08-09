@@ -129,10 +129,7 @@ namespace BudgetAnalyser.Budget
             }
 
             EventHandler<DialogResponseEventArgs> handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
-            }
+            handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
         }
     }
 }

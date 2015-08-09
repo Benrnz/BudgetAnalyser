@@ -318,10 +318,7 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerService.RemoveReconciliation(line);
             FileOperations.SyncDataFromLedgerService();
             EventHandler handler = LedgerBookUpdated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnSaveNotificationReceieved(object sender, EventArgs eventArgs)
@@ -423,10 +420,7 @@ namespace BudgetAnalyser.LedgerBook
         private void RaiseLedgerBookUpdated()
         {
             EventHandler handler = LedgerBookUpdated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -179,10 +179,7 @@ namespace BudgetAnalyser.Matching
                 }
 
                 EventHandler handler = SortChanged;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                handler?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -235,10 +232,7 @@ namespace BudgetAnalyser.Matching
 
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
             EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
-            if (handler != null)
-            {
-                handler(this, new MatchingRuleEventArgs { Rule = rule });
-            }
+            handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
         }
 
         private bool CanExecuteDeleteRuleCommand()
@@ -327,10 +321,7 @@ namespace BudgetAnalyser.Matching
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
 
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
-            if (handler != null)
-            {
-                handler(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
-            }
+            handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
 
             SelectedRule = null;
         }

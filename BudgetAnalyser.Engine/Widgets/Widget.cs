@@ -191,19 +191,13 @@ namespace BudgetAnalyser.Engine.Widgets
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void OnStyleChanged(EventHandler eventToInvoke)
         {
             EventHandler handler = eventToInvoke;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         protected bool ValidateUpdateInput(object[] input)

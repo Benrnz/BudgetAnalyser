@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             unchecked
             {
-                return (Bucket != null ? Bucket.GetHashCode() * GetType().GetHashCode() : 0);
+                return Bucket?.GetHashCode() * GetType().GetHashCode() ?? 0;
             }
         }
 
@@ -102,10 +102,7 @@ namespace BudgetAnalyser.Engine.Budget
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private static string EnsureNoRepeatedLastWord(string sentence1, string sentence2)

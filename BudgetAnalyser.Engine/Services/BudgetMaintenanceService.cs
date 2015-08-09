@@ -115,10 +115,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             CreateNewBudgetCollection();
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
@@ -141,10 +138,7 @@ namespace BudgetAnalyser.Engine.Services
 
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
 
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
@@ -173,10 +167,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
 
             if (args.ModificationComment.IsNothing())
             {
@@ -208,10 +199,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
             var args = new ValidatingEventArgs();
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
 
             return Budgets.Validate(messages);
         }

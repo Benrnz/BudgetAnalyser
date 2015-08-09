@@ -79,10 +79,7 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook = null;
             ReconciliationToDoList = new ToDoCollection();
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
@@ -158,10 +155,7 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
 
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public LedgerEntryLine MonthEndReconciliation(
@@ -270,10 +264,7 @@ namespace BudgetAnalyser.Engine.Services
 
             await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.FileName);
             EventHandler handler = Saved;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
@@ -322,10 +313,7 @@ namespace BudgetAnalyser.Engine.Services
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
-            if (handler != null)
-            {
-                handler(this, new ValidatingEventArgs());
-            }
+            handler?.Invoke(this, new ValidatingEventArgs());
 
             return LedgerBook.Validate(messages);
         }

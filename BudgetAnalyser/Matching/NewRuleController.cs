@@ -292,10 +292,7 @@ namespace BudgetAnalyser.Matching
                 AndChecked);
 
             EventHandler handler = RuleCreated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]

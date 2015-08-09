@@ -45,10 +45,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             {
                 LedgerBookDto = EmbeddedResourceHelper.ExtractXaml<LedgerBookDto>(fileName, true);
                 EventHandler handler = DtoDeserialised;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                handler?.Invoke(this, EventArgs.Empty);
 
                 return LedgerBookDto;
             }

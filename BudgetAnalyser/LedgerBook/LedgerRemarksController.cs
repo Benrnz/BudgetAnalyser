@@ -96,10 +96,7 @@ namespace BudgetAnalyser.LedgerBook
             Remarks = null;
 
             EventHandler handler = Completed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }
