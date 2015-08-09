@@ -51,10 +51,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler<EditBankBalancesEventArgs> Complete;
 
-        public string ActionButtonToolTip
-        {
-            get { return "Add new ledger entry line."; }
-        }
+        public  string ActionButtonToolTip => "Add new ledger entry line.";
 
         public bool AddBalanceVisibility
         {
@@ -66,10 +63,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand AddBankBalanceCommand
-        {
-            get { return new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand); }
-        }
+        public  ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
 
         public decimal? AdjustedBankBalanceTotal
         {
@@ -100,17 +94,11 @@ namespace BudgetAnalyser.LedgerBook
 
         public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; }
 
-        public decimal BankBalanceTotal
-        {
-            get { return BankBalances.Sum(b => b.Balance); }
-        }
+        public  decimal BankBalanceTotal => BankBalances.Sum(b => b.Balance);
 
         public bool Canceled { get; private set; }
 
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
         public bool CanExecuteOkButton
         {
@@ -125,15 +113,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteSaveButton => false;
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
-        }
+        public  string CloseButtonToolTip => "Cancel";
 
         public bool CreateMode { get; private set; }
 
@@ -161,15 +143,9 @@ namespace BudgetAnalyser.LedgerBook
         ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
         ///     included in the reconciliation.
         /// </summary>
-        public bool HasRequiredBalances
-        {
-            get { return this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount)); }
-        }
+        public  bool HasRequiredBalances => this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
 
-        public ICommand RemoveBankBalanceCommand
-        {
-            get { return new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
-        }
+        public  ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable);
 
         public Account SelectedBankAccount
         {

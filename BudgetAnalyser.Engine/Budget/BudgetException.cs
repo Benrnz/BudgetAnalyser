@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -12,6 +13,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetException" /> class.
         /// </summary>
+        [UsedImplicitly]
         public BudgetException()
         {
         }

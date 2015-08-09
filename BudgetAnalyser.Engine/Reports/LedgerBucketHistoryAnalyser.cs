@@ -8,10 +8,7 @@ namespace BudgetAnalyser.Engine.Reports
     public class LedgerBucketHistoryAnalyser
     {
         [UsedImplicitly]
-        public SeriesData BalanceLine
-        {
-            get { return GraphData.Series.FirstOrDefault(); }
-        }
+        public  SeriesData BalanceLine => GraphData.Series.FirstOrDefault();
 
         public GraphData GraphData { get; private set; }
 

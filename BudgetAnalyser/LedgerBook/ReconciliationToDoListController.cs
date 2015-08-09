@@ -38,15 +38,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand AddReminderCommand
-        {
-            get { return new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription)); }
-        }
+        public  ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
 
-        public ICommand BeginAddingReminderCommand
-        {
-            get { return new RelayCommand(() => AddingNewTask = true); }
-        }
+        public  ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
 
         public string NewTaskDescription
         {
@@ -58,15 +52,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand RemoveReminderCommand
-        {
-            get { return new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null); }
-        }
+        public  ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
 
-        public ICommand RemoveTaskCommand
-        {
-            get { return new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null); }
-        }
+        public  ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);
 
         public ToDoTask SelectedTask
         {
@@ -89,10 +77,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Reconciliation Reminders and To Do's"; }
-        }
+        public  string Title => "Reconciliation Reminders and To Do's";
 
         public void Close()
         {

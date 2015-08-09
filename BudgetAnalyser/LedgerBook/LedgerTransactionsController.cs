@@ -61,25 +61,13 @@ namespace BudgetAnalyser.LedgerBook
             get { return this.ledgerService.ValidLedgerAccounts(); }
         }
 
-        public ICommand AddTransactionCommand
-        {
-            get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
-        }
+        public  ICommand AddTransactionCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand);
 
-        public ICommand DeleteTransactionCommand
-        {
-            get { return new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand); }
-        }
+        public  ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
 
-        public bool InBalanceAdjustmentMode
-        {
-            get { return LedgerEntry == null; }
-        }
+        public  bool InBalanceAdjustmentMode => LedgerEntry == null;
 
-        public bool InLedgerEntryMode
-        {
-            get { return LedgerEntry != null; }
-        }
+        public  bool InLedgerEntryMode => LedgerEntry != null;
 
         public bool IsReadOnly
         {
@@ -155,15 +143,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public decimal TransactionsTotal
-        {
-            get { return ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Amount); }
-        }
+        public  decimal TransactionsTotal => ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Amount);
 
-        public ICommand ZeroNetAmountCommand
-        {
-            get { return new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand); }
-        }
+        public  ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
 
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.

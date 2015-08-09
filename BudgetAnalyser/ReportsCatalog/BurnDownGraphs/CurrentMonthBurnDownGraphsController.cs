@@ -56,10 +56,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
-        public ICommand AddChartCommand
-        {
-            get { return new RelayCommand(OnAddChartCommandExecuted); }
-        }
+        public  ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
@@ -73,10 +70,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        public ICommand RemoveChartCommand
-        {
-            get { return new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute); }
-        }
+        public  ICommand RemoveChartCommand => new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute);
 
         public BucketBurnDownController SelectedChart
         {
@@ -95,10 +89,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Current Month Burndown Graphs"; }
-        }
+        public  string Title => "Current Month Burndown Graphs";
 
         public void Load(
             [NotNull] StatementModel statementModel,

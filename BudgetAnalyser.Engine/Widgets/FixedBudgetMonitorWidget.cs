@@ -53,10 +53,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public StatementModel Statement { get; private set; }
 
-        public Type WidgetType
-        {
-            get { return GetType(); }
-        }
+        public  Type WidgetType => GetType();
 
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {

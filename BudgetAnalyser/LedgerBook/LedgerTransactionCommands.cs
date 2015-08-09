@@ -14,10 +14,7 @@ namespace BudgetAnalyser.LedgerBook
         [PropertyInjection]
         public static IMessenger MessengerInstance { get; set; }
 
-        public static ICommand NavigateToTransactionCommand
-        {
-            get { return new RelayCommand<Guid?>(OnNavigateToTransactionCommandExecute, CanExecuteNavigateToTransactionCommand); }
-        }
+        public  static ICommand NavigateToTransactionCommand => new RelayCommand<Guid?>(OnNavigateToTransactionCommandExecute, CanExecuteNavigateToTransactionCommand);
 
         private static bool CanExecuteNavigateToTransactionCommand(Guid? transactionId)
         {

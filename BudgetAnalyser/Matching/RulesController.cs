@@ -74,20 +74,11 @@ namespace BudgetAnalyser.Matching
 
         public event EventHandler SortChanged;
 
-        public string AndOrText
-        {
-            get { return SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR"; }
-        }
+        public  string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
 
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(() => Shown = false); }
-        }
+        public  ICommand CloseCommand => new RelayCommand(() => Shown = false);
 
-        public ICommand DeleteRuleCommand
-        {
-            get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
-        }
+        public  ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
 
         public bool EditingRule
         {
@@ -100,10 +91,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public ICommand EditRuleCommand
-        {
-            get { return new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null); }
-        }
+        public  ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
 
         public bool FlatListBoxVisibility
         {
@@ -198,10 +186,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public ICommand SortCommand
-        {
-            get { return new RelayCommand<string>(OnSortCommandExecute); }
-        }
+        public  ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
 
         public void CreateNewRuleFromTransaction([NotNull] Transaction transaction)
         {

@@ -12,9 +12,6 @@
         {
         }
 
-        public override string TypeDescription
-        {
-            get { return "Spent Monthly Expense"; }
-        }
+        public override string TypeDescription => "Spent Monthly Expense";
     }
 }

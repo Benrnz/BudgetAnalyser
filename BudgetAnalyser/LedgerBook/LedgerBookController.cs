@@ -83,16 +83,10 @@ namespace BudgetAnalyser.LedgerBook
         public event EventHandler LedgerBookUpdated;
 
         [UsedImplicitly]
-        public ICommand AddNewLedgerCommand
-        {
-            get { return new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand); }
-        }
+        public  ICommand AddNewLedgerCommand => new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand);
 
         [UsedImplicitly]
-        public ICommand AddNewReconciliationCommand
-        {
-            get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
-        }
+        public  ICommand AddNewReconciliationCommand => new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand);
 
         public LedgerBookControllerFileOperations FileOperations { get; }
 
@@ -106,25 +100,13 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand RemoveLedgerEntryLineCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
-        }
+        public  ICommand RemoveLedgerEntryLineCommand => new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand);
 
-        public ICommand ShowBankBalancesCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null); }
-        }
+        public  ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null);
 
-        public ICommand ShowHideMonthsCommand
-        {
-            get { return new RelayCommand<int>(OnShowHideMonthsCommandExecuted); }
-        }
+        public  ICommand ShowHideMonthsCommand => new RelayCommand<int>(OnShowHideMonthsCommandExecuted);
 
-        public ICommand ShowLedgerBucketDetailsCommand
-        {
-            get { return new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null); }
-        }
+        public  ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
 
         public bool Shown
         {
@@ -141,36 +123,18 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand ShowRemarksCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand); }
-        }
+        public  ICommand ShowRemarksCommand => new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
 
-        public ICommand ShowSurplusBalancesCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null); }
-        }
+        public  ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
 
-        public ICommand ShowTransactionsCommand
-        {
-            get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
-        }
+        public  ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
 
-        public ReconciliationToDoListController ToDoListController
-        {
-            get { return this.uiContext.ReconciliationToDoListController; }
-        }
+        public  ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
 
         [UsedImplicitly]
-        public ICommand UnlockLedgerLineCommand
-        {
-            get { return new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand); }
-        }
+        public  ICommand UnlockLedgerLineCommand => new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand);
 
-        public LedgerBookViewModel ViewModel
-        {
-            get { return FileOperations.ViewModel; }
-        }
+        public  LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
         public void DeregisterListener<T>(object listener, Action<T> handler)
         {

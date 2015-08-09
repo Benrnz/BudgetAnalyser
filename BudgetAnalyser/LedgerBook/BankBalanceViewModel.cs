@@ -41,9 +41,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool ShowAdjustedBalance
-        {
-            get { return this.line != null; }
-        }
+        public  bool ShowAdjustedBalance => this.line != null;
     }
 }

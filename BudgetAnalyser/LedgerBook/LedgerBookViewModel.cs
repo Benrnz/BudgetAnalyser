@@ -23,20 +23,11 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool NoBudgetLoaded
-        {
-            get { return CurrentBudget == null; }
-        }
+        public  bool NoBudgetLoaded => CurrentBudget == null;
 
-        public bool NoLedgerBookLoaded
-        {
-            get { return LedgerBook == null; }
-        }
+        public  bool NoLedgerBookLoaded => LedgerBook == null;
 
-        public bool NoStatementLoaded
-        {
-            get { return CurrentStatement == null; }
-        }
+        public  bool NoStatementLoaded => CurrentStatement == null;
 
         internal IBudgetCurrencyContext CurrentBudget
         {

@@ -13,9 +13,6 @@ namespace BudgetAnalyser.Engine.Reports
         public DateTime Date { get; set; }
 
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Ok for now, only english is supported")]
-        public string Month
-        {
-            get { return Date.ToString("MMM yy"); }
-        }
+        public  string Month => Date.ToString("MMM yy");
     }
 }

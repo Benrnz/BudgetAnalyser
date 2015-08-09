@@ -29,10 +29,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.mapper = mapper;
         }
 
-        public virtual IEnumerable<BudgetBucket> Buckets
-        {
-            get { return this.lookupTable.Values.OrderBy(b => b.Code).ToList(); }
-        }
+        public  virtual IEnumerable<BudgetBucket> Buckets => this.lookupTable.Values.OrderBy(b => b.Code).ToList();
 
         public BudgetBucket SurplusBucket { get; protected set; }
 

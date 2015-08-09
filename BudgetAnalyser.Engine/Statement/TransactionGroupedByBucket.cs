@@ -50,20 +50,11 @@ namespace BudgetAnalyser.Engine.Statement
 
         public BudgetBucket Bucket { get; private set; }
 
-        public bool HasTransactions
-        {
-            get { return Transactions != null && Transactions.Any(); }
-        }
+        public  bool HasTransactions => Transactions != null && Transactions.Any();
 
-        public DateTime MaxTransactionDate
-        {
-            get { return Transactions.Max(t => t.Date); }
-        }
+        public  DateTime MaxTransactionDate => Transactions.Max(t => t.Date);
 
-        public DateTime MinTransactionDate
-        {
-            get { return Transactions.Min(t => t.Date); }
-        }
+        public  DateTime MinTransactionDate => Transactions.Min(t => t.Date);
 
         public decimal TotalCount
         {
@@ -104,10 +95,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        public decimal TotalDifference
-        {
-            get { return TotalCredits + TotalDebits; }
-        }
+        public  decimal TotalDifference => TotalCredits + TotalDebits;
 
         public ObservableCollection<Transaction> Transactions { get; }
 

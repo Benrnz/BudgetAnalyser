@@ -78,34 +78,19 @@ namespace BudgetAnalyser.Statement
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-        public string AccountNameHelp
-        {
-            get { return "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file."; }
-        }
+        public  string AccountNameHelp => "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file.";
 
         public string ActionButtonToolTip { get; private set; }
 
-        public ICommand BrowseForFileCommand
-        {
-            get { return new RelayCommand(OnBrowseForFileCommandExecute); }
-        }
+        public  ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
 
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
         public bool CanExecuteOkButton { get; private set; }
 
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteSaveButton => false;
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
-        }
+        public  string CloseButtonToolTip => "Cancel";
 
         public IEnumerable<Account> ExistingAccountNames { get; private set; }
 

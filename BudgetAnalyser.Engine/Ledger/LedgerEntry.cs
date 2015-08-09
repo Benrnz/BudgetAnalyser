@@ -66,10 +66,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     The total net affect of all transactions in this entry.  Debits will be negative.
         /// </summary>
-        public decimal NetAmount
-        {
-            get { return this.transactions.Sum(t => t.Amount); }
-        }
+        public  decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
         public IEnumerable<LedgerTransaction> Transactions
         {

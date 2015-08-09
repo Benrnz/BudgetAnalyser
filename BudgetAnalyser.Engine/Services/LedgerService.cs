@@ -51,17 +51,11 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
 
-        public ApplicationDataType DataType
-        {
-            get { return ApplicationDataType.Ledger; }
-        }
+        public  ApplicationDataType DataType => ApplicationDataType.Ledger;
 
         public LedgerBook LedgerBook { get; private set; }
 
-        public int LoadSequence
-        {
-            get { return 50; }
-        }
+        public  int LoadSequence => 50;
 
         public ToDoCollection ReconciliationToDoList { get; private set; }
 

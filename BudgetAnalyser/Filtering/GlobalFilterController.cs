@@ -71,30 +71,15 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public string ActionButtonToolTip
-        {
-            get { return "Apply filter and close."; }
-        }
+        public  string ActionButtonToolTip => "Apply filter and close.";
 
-        public ICommand AddMonthCommand
-        {
-            get { return new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue); }
-        }
+        public  ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
 
-        public ICommand BackMonthCommand
-        {
-            get { return new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue); }
-        }
+        public  ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
 
-        public ICommand ClearCommand
-        {
-            get { return new RelayCommand(OnClearCommandExecute); }
-        }
+        public  ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel and do not change the filter."; }
-        }
+        public  string CloseButtonToolTip => "Cancel and do not change the filter.";
 
         public GlobalFilterCriteria Criteria
         {
@@ -127,15 +112,9 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public bool IsAccountFilterView
-        {
-            get { return this.filterMode == FilterMode.Account; }
-        }
+        public  bool IsAccountFilterView => this.filterMode == FilterMode.Account;
 
-        public bool IsDateFilterView
-        {
-            get { return this.filterMode == FilterMode.Dates; }
-        }
+        public  bool IsDateFilterView => this.filterMode == FilterMode.Dates;
 
         public Account SelectedAccount
         {

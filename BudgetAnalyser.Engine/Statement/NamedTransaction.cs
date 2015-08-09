@@ -17,10 +17,7 @@ namespace BudgetAnalyser.Engine.Statement
             Sign = sign;
         }
 
-        public override string Name
-        {
-            get { return this.name; }
-        }
+        public override string Name => this.name;
 
         public decimal Sign { get; private set; }
 

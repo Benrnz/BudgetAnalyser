@@ -32,10 +32,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         public string Name { get; set; }
 
-        public decimal Surplus
-        {
-            get { return Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount); }
-        }
+        public  decimal Surplus => Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount);
 
         internal void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
         {

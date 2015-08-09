@@ -47,18 +47,12 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string Summary
-        {
-            get
-            {
-                return string.Format(
-                    CultureInfo.CurrentCulture,
-                    "{0} {1}: {2}",
-                    Bucket.TypeDescription.AnOrA(true),
-                    EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
-                    Bucket.Description);
-            }
-        }
+        public string Summary => string.Format(
+            CultureInfo.CurrentCulture,
+            "{0} {1}: {2}",
+            Bucket.TypeDescription.AnOrA(true),
+            EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
+            Bucket.Description);
 
         public static bool operator ==(BudgetItem left, BudgetItem right)
         {
@@ -161,7 +155,7 @@ namespace BudgetAnalyser.Engine.Budget
             // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
             if (e.PropertyName == "Active")
             {
-                OnPropertyChanged("Bucket");
+                OnPropertyChanged(nameof(Bucket));
             }
         }
     }

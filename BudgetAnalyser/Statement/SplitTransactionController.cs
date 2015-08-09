@@ -36,32 +36,17 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        public string ActionButtonToolTip
-        {
-            get { return "Save Split Transactions."; }
-        }
+        public  string ActionButtonToolTip => "Save Split Transactions.";
 
         public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; }
 
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
-        public bool CanExecuteOkButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteOkButton => false;
 
-        public bool CanExecuteSaveButton
-        {
-            get { return Valid; }
-        }
+        public  bool CanExecuteSaveButton => Valid;
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel."; }
-        }
+        public  string CloseButtonToolTip => "Cancel.";
 
         public string InvalidMessage
         {
@@ -106,10 +91,7 @@ namespace BudgetAnalyser.Statement
         public BudgetBucket SplinterBucket1 { get; set; }
         public BudgetBucket SplinterBucket2 { get; set; }
 
-        public decimal TotalAmount
-        {
-            get { return SplinterAmount1 + SplinterAmount2; }
-        }
+        public  decimal TotalAmount => SplinterAmount1 + SplinterAmount2;
 
         public bool Valid
         {

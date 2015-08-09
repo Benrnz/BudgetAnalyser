@@ -22,10 +22,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetStorage = new SortedList<DateTime, BudgetModel>(initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom), new DateTimeDescendingOrder());
         }
 
-        public int Count
-        {
-            get { return this.budgetStorage.Count; }
-        }
+        public  int Count => this.budgetStorage.Count;
 
         public BudgetModel CurrentActiveBudget
         {

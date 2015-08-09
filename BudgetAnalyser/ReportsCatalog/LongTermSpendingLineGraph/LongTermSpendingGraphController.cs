@@ -73,10 +73,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Long Term Spending Line Graph"; }
-        }
+        public  string Title => "Long Term Spending Line Graph";
 
         public bool ToggleAll
         {

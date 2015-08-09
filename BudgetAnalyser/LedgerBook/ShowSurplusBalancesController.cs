@@ -17,10 +17,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private LedgerEntryLine ledgerEntryLine;
 
-        public bool HasNegativeBalances
-        {
-            get { return SurplusBalances.Any(b => b.Balance < 0); }
-        }
+        public  bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
         public ICommand RemoveBankBalanceCommand
@@ -34,10 +31,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public ObservableCollection<BankBalance> SurplusBalances { get; private set; }
 
-        public decimal SurplusTotal
-        {
-            get { return this.ledgerEntryLine.CalculatedSurplus; }
-        }
+        public  decimal SurplusTotal => this.ledgerEntryLine.CalculatedSurplus;
 
         public void ShowDialog([NotNull] LedgerEntryLine ledgerLine)
         {

@@ -39,10 +39,7 @@ namespace BudgetAnalyser.Engine.Widgets
             ImageResourceName2 = "OctWarningImage";
         }
 
-        public string BucketCode
-        {
-            get { return Id; }
-        }
+        public  string BucketCode => Id;
 
         public WeeklyOrFortnightly Frequency
         {
@@ -66,10 +63,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public DateTime StartPaymentDate { get; set; }
 
-        public Type WidgetType
-        {
-            get { return GetType(); }
-        }
+        public  Type WidgetType => GetType();
 
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {

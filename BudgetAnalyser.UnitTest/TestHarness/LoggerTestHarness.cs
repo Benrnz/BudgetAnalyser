@@ -15,10 +15,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public bool ConfigWasCalled { get; private set; }
 
-        public bool HasInternalLogger
-        {
-            get { return Log4NetLogger != null; }
-        }
+        public  bool HasInternalLogger => Log4NetLogger != null;
 
         public Mock<ILog> Log4NetLoggerMock { get; set; }
         public Level LoggingLevel { get; private set; } = Level.Info;

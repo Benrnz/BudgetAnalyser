@@ -30,26 +30,17 @@ namespace BudgetAnalyser.Budget
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteOkButton => false;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteSaveButton
-        {
-            get { return EffectiveFrom > DateTime.Today; }
-        }
+        public  bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
 
         public DateTime EffectiveFrom { get; set; }
 

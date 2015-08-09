@@ -46,15 +46,9 @@ namespace BudgetAnalyser.Matching
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand ApplyRulesCommand
-        {
-            get { return new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand); }
-        }
+        public  ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
 
-        public ICommand CreateRuleCommand
-        {
-            get { return new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand); }
-        }
+        public  ICommand CreateRuleCommand => new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
 
         public bool Dirty
         {
@@ -73,10 +67,7 @@ namespace BudgetAnalyser.Matching
 
         public RulesController RulesController { get; }
 
-        public ICommand ShowRulesCommand
-        {
-            get { return new RelayCommand(OnShowRulesCommandExecute); }
-        }
+        public  ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
 
         private bool CanExecuteApplyRulesCommand()
         {

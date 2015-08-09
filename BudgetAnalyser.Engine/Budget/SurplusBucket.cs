@@ -13,9 +13,6 @@
         {
         }
 
-        public override string TypeDescription
-        {
-            get { return "Calculated Surplus"; }
-        }
+        public override string TypeDescription => "Calculated Surplus";
     }
 }

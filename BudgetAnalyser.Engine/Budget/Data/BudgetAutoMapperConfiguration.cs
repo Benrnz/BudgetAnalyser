@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
             }
 
             this.bucketFactory = bucketFactory;
-            this.BucketRepository = bucketRepo;
+            BucketRepository = bucketRepo;
             this.logger = logger;
         }
 
@@ -58,20 +58,20 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(expense => expense.Bucket.Code));
 
             Mapper.CreateMap<ExpenseDto, Expense>()
-                .ForMember(expense => expense.Bucket, m => m.MapFrom(dto => this.BucketRepository.GetByCode(dto.BudgetBucketCode)));
+                .ForMember(expense => expense.Bucket, m => m.MapFrom(dto => BucketRepository.GetByCode(dto.BudgetBucketCode)));
 
             Mapper.CreateMap<Income, IncomeDto>()
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(expense => expense.Bucket.Code));
 
             Mapper.CreateMap<IncomeDto, Income>()
-                .ForMember(income => income.Bucket, m => m.MapFrom(dto => this.BucketRepository.GetByCode(dto.BudgetBucketCode)));
+                .ForMember(income => income.Bucket, m => m.MapFrom(dto => BucketRepository.GetByCode(dto.BudgetBucketCode)));
 
             Mapper.CreateMap<BudgetModel, BudgetModelDto>();
 
             Mapper.CreateMap<BudgetModelDto, BudgetModel>();
 
             Mapper.CreateMap<BudgetCollection, BudgetCollectionDto>()
-                .ForMember(dto => dto.Buckets, m => m.MapFrom(collection => this.BucketRepository.Buckets))
+                .ForMember(dto => dto.Buckets, m => m.MapFrom(collection => BucketRepository.Buckets))
                 .ForMember(dto => dto.Budgets, m => m.ResolveUsing(collection => collection.Select(Mapper.Map<BudgetModel, BudgetModelDto>)));
 
             Mapper.CreateMap<BudgetCollectionDto, BudgetCollection>()

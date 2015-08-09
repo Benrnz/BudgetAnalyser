@@ -34,10 +34,7 @@ namespace BudgetAnalyser.Budget
             this.budgetPieService = service;
         }
 
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(Close); }
-        }
+        public  ICommand CloseCommand => new RelayCommand(Close);
 
         public Expense CurrentExpense
         {
@@ -141,10 +138,7 @@ namespace BudgetAnalyser.Budget
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Budget Pie Charts"; }
-        }
+        public  string Title => "Budget Pie Charts";
 
         public void Close()
         {

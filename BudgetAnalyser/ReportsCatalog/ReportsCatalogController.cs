@@ -50,25 +50,16 @@ namespace BudgetAnalyser.ReportsCatalog
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
-        public ICommand BudgetPieCommand
-        {
-            get { return new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand); }
-        }
+        public  ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
 
         public BudgetPieController BudgetPieController { get; }
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; }
 
-        public ICommand LongTermSpendingGraphCommand
-        {
-            get { return new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null); }
-        }
+        public  ICommand LongTermSpendingGraphCommand => new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null);
 
         public LongTermSpendingGraphController LongTermSpendingGraphController { get; }
 
-        public ICommand OverallBudgetPerformanceCommand
-        {
-            get { return new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
-        }
+        public  ICommand OverallBudgetPerformanceCommand => new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
 
         public OverallPerformanceController OverallPerformanceController { get; }
 
@@ -86,10 +77,7 @@ namespace BudgetAnalyser.ReportsCatalog
             }
         }
 
-        public ICommand SpendingTrendCommand
-        {
-            get { return new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
-        }
+        public  ICommand SpendingTrendCommand => new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
 
         private bool CanExecuteBudgetPieCommand()
         {

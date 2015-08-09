@@ -9,9 +9,6 @@ namespace BudgetAnalyser.Engine.Statement
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public int LoadSequence
-        {
-            get { return 50; }
-        }
+        public  int LoadSequence => 50;
     }
 }

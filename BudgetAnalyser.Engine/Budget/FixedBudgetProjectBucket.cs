@@ -25,15 +25,9 @@ namespace BudgetAnalyser.Engine.Budget
         public DateTime Created { get; private set; }
         public decimal FixedBudgetAmount { get; private set; }
 
-        public string SubCode
-        {
-            get { return Code.Substring(Code.IndexOf('.') + 1); }
-        }
+        public string SubCode => Code.Substring(Code.IndexOf('.') + 1);
 
-        public override string TypeDescription
-        {
-            get { return "Fixed Budget Project (A sub-category of Surplus)"; }
-        }
+        public override string TypeDescription => "Fixed Budget Project (A sub-category of Surplus)";
 
         public static string CreateCode([NotNull] string subCode)
         {

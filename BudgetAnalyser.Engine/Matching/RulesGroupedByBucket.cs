@@ -34,10 +34,7 @@ namespace BudgetAnalyser.Engine.Matching
         public BudgetBucket Bucket { get; }
         public ObservableCollection<MatchingRule> Rules { get; }
 
-        public int RulesCount
-        {
-            get { return Rules.Count(); }
-        }
+        public  int RulesCount => Rules.Count();
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

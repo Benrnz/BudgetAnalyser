@@ -44,22 +44,13 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel" />.
         /// </summary>
-        public bool BudgetActive
-        {
-            get { return BudgetCollection.IsCurrentBudget(Model); }
-        }
+        public  bool BudgetActive => BudgetCollection.IsCurrentBudget(Model);
 
-        public bool BudgetArchived
-        {
-            get { return BudgetCollection.IsArchivedBudget(Model); }
-        }
+        public  bool BudgetArchived => BudgetCollection.IsArchivedBudget(Model);
 
         public BudgetCollection BudgetCollection { get; }
 
-        public bool BudgetInFuture
-        {
-            get { return BudgetCollection.IsFutureBudget(Model); }
-        }
+        public  bool BudgetInFuture => BudgetCollection.IsFutureBudget(Model);
 
         public DateTime? EffectiveUntil
         {
@@ -78,10 +69,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string FileName
-        {
-            get { return BudgetCollection.FileName; }
-        }
+        public  string FileName => BudgetCollection.FileName;
 
         public virtual BudgetModel Model { get; }
     }

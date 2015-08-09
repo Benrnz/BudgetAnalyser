@@ -54,26 +54,17 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get { return Selected != null && PaymentStartDate != DateTime.MinValue; }
-        }
+        public  bool CanExecuteOkButton => Selected != null && PaymentStartDate != DateTime.MinValue;
 
         /// <summary>
         ///     Will be called ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteSaveButton => false;
 
         public WeeklyOrFortnightly Frequency
         {

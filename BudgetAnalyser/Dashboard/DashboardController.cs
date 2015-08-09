@@ -104,10 +104,7 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public ICommand WidgetCommand
-        {
-            get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
-        }
+        public  ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 

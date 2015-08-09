@@ -49,10 +49,7 @@ namespace BudgetAnalyser.Budget
 
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
 
-        public string ActionButtonToolTip
-        {
-            get { return "Select and use this Expense Budget Bucket."; }
-        }
+        public  string ActionButtonToolTip => "Select and use this Expense Budget Bucket.";
 
         public IEnumerable<Account> BankAccounts
         {
@@ -70,25 +67,13 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
-        public bool CanExecuteOkButton
-        {
-            get { return Selected != null; }
-        }
+        public  bool CanExecuteOkButton => Selected != null;
 
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteSaveButton => false;
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
-        }
+        public  string CloseButtonToolTip => "Cancel";
 
         public string FilterDescription
         {

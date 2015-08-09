@@ -34,22 +34,13 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.chartsService = chartsService;
         }
 
-        public ICommand AddChartCommand
-        {
-            get { return new RelayCommand(OnAddChartCommandExecuted); }
-        }
+        public  ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
-        public ICommand AddSelectedCommand
-        {
-            get { return new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute); }
-        }
+        public  ICommand AddSelectedCommand => new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public string ChartTitle { get; set; }
 
-        public ICommand RemoveSelectedCommand
-        {
-            get { return new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute); }
-        }
+        public  ICommand RemoveSelectedCommand => new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public BindingList<BudgetBucket> SelectedBuckets { get; private set; }
         public BindingList<BudgetBucket> UnselectedBuckets { get; private set; }

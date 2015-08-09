@@ -66,15 +66,9 @@ namespace BudgetAnalyser.Engine.Services
         public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
 
-        public ApplicationDataType DataType
-        {
-            get { return ApplicationDataType.Budget; }
-        }
+        public  ApplicationDataType DataType => ApplicationDataType.Budget;
 
-        public int LoadSequence
-        {
-            get { return 5; }
-        }
+        public  int LoadSequence => 5;
 
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {

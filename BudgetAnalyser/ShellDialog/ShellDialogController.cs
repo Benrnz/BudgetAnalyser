@@ -66,10 +66,7 @@ namespace BudgetAnalyser.ShellDialog
 
         public Guid CorrelationId { get; set; }
 
-        public ICommand DialogCommand
-        {
-            get { return new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand); }
-        }
+        public  ICommand DialogCommand => new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
 
         public ShellDialogType DialogType
         {
@@ -107,10 +104,7 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
-        public bool OkIsCancel
-        {
-            get { return OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible; }
-        }
+        public  bool OkIsCancel => OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible;
 
         public bool SaveButtonVisible
         {

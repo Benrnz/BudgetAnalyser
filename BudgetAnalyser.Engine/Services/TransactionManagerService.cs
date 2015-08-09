@@ -68,15 +68,9 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        public ApplicationDataType DataType
-        {
-            get { return ApplicationDataType.Transactions; }
-        }
+        public  ApplicationDataType DataType => ApplicationDataType.Transactions;
 
-        public int LoadSequence
-        {
-            get { return 10; }
-        }
+        public  int LoadSequence => 10;
 
         public StatementModel StatementModel { get; private set; }
 

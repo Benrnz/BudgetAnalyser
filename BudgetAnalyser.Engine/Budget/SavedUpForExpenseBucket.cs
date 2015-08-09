@@ -12,9 +12,7 @@
         {
         }
 
-        public override string TypeDescription
-        {
-            get { return "Accumulated Expense"; }
-        }
+        public override string TypeDescription => "Accumulated Expense";
+        
     }
 }

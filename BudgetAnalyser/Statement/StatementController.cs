@@ -67,10 +67,7 @@ namespace BudgetAnalyser.Statement
             this.transactionService.Saved += OnSavedNotificationReceived;
         }
 
-        public AppliedRulesController AppliedRulesController
-        {
-            get { return this.uiContext.AppliedRulesController; }
-        }
+        public  AppliedRulesController AppliedRulesController => this.uiContext.AppliedRulesController;
 
         /// <summary>
         ///     Gets or sets the bucket filter.
@@ -107,23 +104,14 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public ICommand DeleteTransactionCommand
-        {
-            get { return new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow); }
-        }
+        public  ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
 
-        public ICommand EditTransactionCommand
-        {
-            get { return new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow); }
-        }
+        public  ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public StatementControllerFileOperations FileOperations { get; }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand MergeStatementCommand
-        {
-            get { return new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand); }
-        }
+        public  ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
 
         public bool Shown
         {
@@ -140,16 +128,10 @@ namespace BudgetAnalyser.Statement
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand SortCommand
-        {
-            get { return new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand); }
-        }
+        public  ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand SplitTransactionCommand
-        {
-            get { return new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow); }
-        }
+        public  ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public string TextFilter
         {
@@ -171,10 +153,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public StatementViewModel ViewModel
-        {
-            get { return FileOperations.ViewModel; }
-        }
+        public  StatementViewModel ViewModel => FileOperations.ViewModel;
 
         internal EditingTransactionController EditingTransactionController
         {

@@ -42,10 +42,7 @@ namespace BudgetAnalyser.Statement
             this.applicationDatabaseService = applicationDatabaseService;
         }
 
-        public decimal AverageDebit
-        {
-            get { return this.transactionService.AverageDebit; }
-        }
+        public  decimal AverageDebit => this.transactionService.AverageDebit;
 
         public bool Dirty
         {
@@ -88,10 +85,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public bool HasTransactions
-        {
-            get { return Statement != null && Statement.Transactions.Any(); }
-        }
+        public  bool HasTransactions => Statement != null && Statement.Transactions.Any();
 
         public Transaction SelectedRow
         {
@@ -167,25 +161,13 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public decimal TotalCount
-        {
-            get { return this.transactionService.TotalCount; }
-        }
+        public  decimal TotalCount => this.transactionService.TotalCount;
 
-        public decimal TotalCredits
-        {
-            get { return this.transactionService.TotalCredits; }
-        }
+        public  decimal TotalCredits => this.transactionService.TotalCredits;
 
-        public decimal TotalDebits
-        {
-            get { return this.transactionService.TotalDebits; }
-        }
+        public  decimal TotalDebits => this.transactionService.TotalDebits;
 
-        public decimal TotalDifference
-        {
-            get { return TotalCredits + TotalDebits; }
-        }
+        public  decimal TotalDifference => TotalCredits + TotalDebits;
 
         public ObservableCollection<Transaction> Transactions
         {

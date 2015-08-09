@@ -53,10 +53,7 @@ namespace BudgetAnalyser.Budget
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public  bool CanExecuteCancelButton => true;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
@@ -75,10 +72,7 @@ namespace BudgetAnalyser.Budget
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
+        public  bool CanExecuteSaveButton => false;
 
         public string Code
         {

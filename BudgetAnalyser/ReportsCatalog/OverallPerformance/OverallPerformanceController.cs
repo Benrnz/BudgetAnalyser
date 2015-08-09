@@ -58,10 +58,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         public double OverallPerformance { get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
-        public string Title
-        {
-            get { return "Overall Budget Performance"; }
-        }
+        public  string Title => "Overall Budget Performance";
 
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
