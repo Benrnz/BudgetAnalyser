@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetStorage = new SortedList<DateTime, BudgetModel>(initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom), new DateTimeDescendingOrder());
         }
 
-        public  int Count => this.budgetStorage.Count;
+        public int Count => this.budgetStorage.Count;
 
         public BudgetModel CurrentActiveBudget
         {
@@ -34,8 +34,7 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public string FileName { get; set; }
-
-internal  BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
+        internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
         public void Add([NotNull] BudgetModel item)
         {

@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        public  Type WidgetType => GetType();
+        public Type WidgetType => GetType();
 
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {

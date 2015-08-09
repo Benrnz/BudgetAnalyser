@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.Services
             InitialiseDirtyDataTable();
         }
 
-        public  bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
+        public bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
 
         public ApplicationDatabase Close()
         {

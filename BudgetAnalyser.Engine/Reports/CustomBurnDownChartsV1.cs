@@ -10,6 +10,6 @@ namespace BudgetAnalyser.Engine.Reports
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
         public List<CustomAggregateBurnDownGraph> Charts { get; set; }
 
-        public  int LoadSequence => 100;
+        public int LoadSequence => 100;
     }
 }

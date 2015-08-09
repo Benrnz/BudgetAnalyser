@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -55,7 +54,6 @@ namespace BudgetAnalyser.Engine
         private class DayClosestMondayToHoliday : Holiday
         {
             public int CloseToDate { get; set; }
-
             public int Month { get; set; }
 
             public override DateTime CalculateDate(DateTime start, DateTime end)

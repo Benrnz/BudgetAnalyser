@@ -61,11 +61,8 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-
-        public  ApplicationDataType DataType => ApplicationDataType.MatchingRules;
-
-        public  int LoadSequence => 50;
-
+        public ApplicationDataType DataType => ApplicationDataType.MatchingRules;
+        public int LoadSequence => 50;
         public ObservableCollection<MatchingRule> MatchingRules { get; }
         public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 

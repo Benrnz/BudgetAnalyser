@@ -14,7 +14,8 @@ namespace BudgetAnalyser.Engine.Account
         /// </summary>
         /// <param name="key">A unique key.</param>
         /// <param name="instance">The instance to add.</param>
-        /// <returns>Either the
+        /// <returns>
+        ///     Either the
         ///     <param name="instance" />
         ///     or if the key already exists in the repository a reference to the existing <see cref="Account" />.
         /// </returns>

@@ -8,9 +8,7 @@
         }
 
         public override AccountType AccountType => AccountType.CreditCard;
-
         public override string ImagePath => "VisaLogoImage";
-
         internal virtual string[] KeyWords => new[] { "VISA" };
 
         public virtual Account Clone(string name)

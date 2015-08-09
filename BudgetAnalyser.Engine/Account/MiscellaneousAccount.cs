@@ -8,9 +8,7 @@
         }
 
         public override AccountType AccountType => AccountType.General;
-
         public override string ImagePath => "../Assets/Misc1Logo.png";
-
         internal virtual string[] KeyWords => new string[] { };
 
         public virtual Account Clone(string name)

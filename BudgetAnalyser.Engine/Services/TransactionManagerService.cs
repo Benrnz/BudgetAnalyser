@@ -68,10 +68,8 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        public  ApplicationDataType DataType => ApplicationDataType.Transactions;
-
-        public  int LoadSequence => 10;
-
+        public ApplicationDataType DataType => ApplicationDataType.Transactions;
+        public int LoadSequence => 10;
         public StatementModel StatementModel { get; private set; }
 
         public decimal TotalCount

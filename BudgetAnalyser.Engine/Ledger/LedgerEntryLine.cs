@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     This is the amount of money left over after funds have been allocated to all budget buckets being tracked by the
         ///     ledger entries.
         /// </summary>
-        public  decimal CalculatedSurplus => LedgerBalance - Entries.Sum(e => e.Balance);
+        public decimal CalculatedSurplus => LedgerBalance - Entries.Sum(e => e.Balance);
 
         /// <summary>
         ///     This is the "as-at" date. It is the date of the fixed snapshot in time when this reconciliation line was created.
@@ -112,7 +112,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
         /// </summary>
-        public  decimal LedgerBalance => TotalBankBalance + TotalBalanceAdjustments;
+        public decimal LedgerBalance => TotalBankBalance + TotalBalanceAdjustments;
 
         public string Remarks { get; internal set; }
 
@@ -132,12 +132,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public  decimal TotalBalanceAdjustments => BankBalanceAdjustments.Sum(a => a.Amount);
+        public decimal TotalBalanceAdjustments => BankBalanceAdjustments.Sum(a => a.Amount);
 
         /// <summary>
         ///     Gets the total bank balance across all accounts. Does not include balance adjustments.
         /// </summary>
-        public  decimal TotalBankBalance => this.bankBalancesList.Sum(b => b.Balance);
+        public decimal TotalBankBalance => this.bankBalancesList.Sum(b => b.Balance);
 
         /// <summary>
         ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
@@ -197,8 +197,8 @@ namespace BudgetAnalyser.Engine.Ledger
             // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
             // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
             // 20/Jan (inclusive) and 19/Feb (inclusive).
-            List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() 
-                ?? new List<Transaction>();
+            List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList()
+                                                              ?? new List<Transaction>();
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 

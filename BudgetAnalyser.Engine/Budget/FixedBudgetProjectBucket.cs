@@ -24,9 +24,7 @@ namespace BudgetAnalyser.Engine.Budget
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
         public DateTime Created { get; private set; }
         public decimal FixedBudgetAmount { get; private set; }
-
         public string SubCode => Code.Substring(Code.IndexOf('.') + 1);
-
         public override string TypeDescription => "Fixed Budget Project (A sub-category of Surplus)";
 
         public static string CreateCode([NotNull] string subCode)

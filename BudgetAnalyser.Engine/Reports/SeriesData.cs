@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     Calculates the smallest value in the data series.
         /// </summary>
-        public  decimal MinimumValue => PlotsList.Min(p => p.Amount);
+        public decimal MinimumValue => PlotsList.Min(p => p.Amount);
 
         public IEnumerable<DatedGraphPlot> Plots => PlotsList;
 

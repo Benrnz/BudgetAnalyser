@@ -8,9 +8,7 @@
         }
 
         public override AccountType AccountType => AccountType.Savings;
-
         public override string ImagePath => "SavingsLogoImage";
-
         internal virtual string[] KeyWords => new[] { "SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL" };
 
         public virtual Account Clone(string name)

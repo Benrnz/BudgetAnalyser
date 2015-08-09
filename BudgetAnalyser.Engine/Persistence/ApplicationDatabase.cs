@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Persistence
         /// </summary>
         public string StatementModelStorageKey { get; [UsedImplicitly] private set; }
 
-protected  virtual string StoragePath => Path.GetDirectoryName(FileName);
+        protected virtual string StoragePath => Path.GetDirectoryName(FileName);
 
         public void Close()
         {

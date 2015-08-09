@@ -18,7 +18,6 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         public override string Name => this.name;
-
         public decimal Sign { get; private set; }
 
         public override int GetHashCode()

@@ -7,6 +7,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
     {
         [UsedImplicitly]
         public bool Active { get; set; }
+
         public string Code { get; set; }
         public string Description { get; set; }
 

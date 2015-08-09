@@ -10,11 +10,11 @@ namespace BudgetAnalyser.Engine.Account
         }
 
         public abstract AccountType AccountType { get; }
+
         [UsedImplicitly]
         public abstract string ImagePath { get; }
 
         public virtual bool IsSalaryAccount => false;
-
         public string Name { get; protected set; }
 
         public static bool operator ==(Account left, Account right)

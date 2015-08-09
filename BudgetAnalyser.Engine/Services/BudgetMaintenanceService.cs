@@ -65,10 +65,8 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<ValidatingEventArgs> Validating;
         public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
-
-        public  ApplicationDataType DataType => ApplicationDataType.Budget;
-
-        public  int LoadSequence => 5;
+        public ApplicationDataType DataType => ApplicationDataType.Budget;
+        public int LoadSequence => 5;
 
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {

@@ -13,6 +13,5 @@
         }
 
         public override string TypeDescription => "Accumulated Expense";
-        
     }
 }

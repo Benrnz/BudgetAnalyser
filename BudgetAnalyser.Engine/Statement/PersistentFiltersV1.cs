@@ -8,7 +8,6 @@ namespace BudgetAnalyser.Engine.Statement
         public Account.Account Account { get; set; }
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
-
-        public  int LoadSequence => 50;
+        public int LoadSequence => 50;
     }
 }

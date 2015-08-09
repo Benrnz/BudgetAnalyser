@@ -141,16 +141,6 @@ namespace BudgetAnalyser.Engine.Widgets
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
         public int Sequence { get; protected set; }
 
-        protected WidgetSize Size
-        {
-            get { return this.doNotUseSize; }
-            set
-            {
-                this.doNotUseSize = value;
-                OnPropertyChanged();
-            }
-        }
-
         public string ToolTip
         {
             get { return this.doNotUseToolTip; }
@@ -183,6 +173,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 {
                     OnStyleChanged(WidgetStyleChanged);
                 }
+            }
+        }
+
+        protected WidgetSize Size
+        {
+            get { return this.doNotUseSize; }
+            set
+            {
+                this.doNotUseSize = value;
+                OnPropertyChanged();
             }
         }
 

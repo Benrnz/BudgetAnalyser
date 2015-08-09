@@ -17,6 +17,6 @@ namespace BudgetAnalyser.Engine
         ///     Gets the sequence number for this implementation.
         ///     This is used to load more crucial higher priority persistent data first, if any.
         /// </summary>
-        public  int LoadSequence => 1;
+        public int LoadSequence => 1;
     }
 }
