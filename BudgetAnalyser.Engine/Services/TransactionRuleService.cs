@@ -256,7 +256,7 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
@@ -272,10 +272,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             EventHandler savedHandler = Saved;
-            if (savedHandler != null)
-            {
-                savedHandler(this, EventArgs.Empty);
-            }
+            savedHandler?.Invoke(this, EventArgs.Empty);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)

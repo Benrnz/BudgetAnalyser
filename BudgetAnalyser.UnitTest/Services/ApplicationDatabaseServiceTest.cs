@@ -217,8 +217,8 @@ namespace BudgetAnalyser.UnitTest.Services
             SaveSetup();
             await this.subject.SaveAsync();
 
-            this.mockService1.Verify(m => m.SaveAsync(It.IsAny<IDictionary<ApplicationDataType, object>>()));
-            this.mockService2.Verify(m => m.SaveAsync(It.IsAny<IDictionary<ApplicationDataType, object>>()));
+            this.mockService1.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyDictionary<ApplicationDataType, object>>()));
+            this.mockService2.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyDictionary<ApplicationDataType, object>>()));
         }
 
         [TestMethod]

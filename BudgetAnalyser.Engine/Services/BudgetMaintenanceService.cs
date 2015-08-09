@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Engine.Services
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             EnsureAllBucketsUsedAreInBucketRepo();
 
@@ -152,10 +152,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 await this.budgetRepository.SaveAsync();
                 EventHandler savedHandler = Saved;
-                if (savedHandler != null)
-                {
-                    savedHandler(this, EventArgs.Empty);
-                }
+                savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
 

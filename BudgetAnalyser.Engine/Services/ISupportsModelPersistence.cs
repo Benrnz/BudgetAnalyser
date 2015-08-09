@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     The optional context objects that may have been populated by implementations of the
         ///     <see cref="SavePreview" /> method call.
         /// </param>
-        Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects);
+        Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects);
 
         /// <summary>
         ///     Called before Save is called. This will be called on the UI Thread.

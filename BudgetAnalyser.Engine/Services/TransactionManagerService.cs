@@ -289,7 +289,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel.RemoveTransaction(transactionToRemove);
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             if (StatementModel == null)
             {
@@ -307,10 +307,7 @@ namespace BudgetAnalyser.Engine.Services
 
             await this.statementRepository.SaveAsync(StatementModel);
             EventHandler savedHandler = Saved;
-            if (savedHandler != null)
-            {
-                savedHandler(this, EventArgs.Empty);
-            }
+            savedHandler?.Invoke(this, EventArgs.Empty);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)

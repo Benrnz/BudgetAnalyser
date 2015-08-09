@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Engine.Services
             BudgetBucket bucket = this.bucketRepository.GetByCode(bucketCode);
             if (bucket == null)
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), "bucketCode");
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), nameof(bucketCode));
             }
 
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
@@ -234,22 +234,15 @@ namespace BudgetAnalyser.Engine.Services
 
             var baseWidget = (Widget)widgetToRemove;
             WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
-            if (widgetGroup == null)
-            {
-                return;
-            }
 
-            widgetGroup.Widgets.Remove(baseWidget);
+            widgetGroup?.Widgets.Remove(baseWidget);
         }
 
         public void ShowAllWidgets()
         {
-            if (WidgetGroups == null)
-            {
-                return;
-            }
-
-            WidgetGroups.ToList().ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
+            WidgetGroups?
+                .ToList()
+                .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
         }
 
         private static WidgetPersistentState CreateWidgetState(Widget widget)
@@ -308,15 +301,17 @@ namespace BudgetAnalyser.Engine.Services
 
         private IDictionary<Type, object> InitialiseSupportedDependenciesArray()
         {
-            this.availableDependencies = new Dictionary<Type, object>();
-            this.availableDependencies[typeof(StatementModel)] = null;
-            this.availableDependencies[typeof(BudgetCollection)] = null;
-            this.availableDependencies[typeof(IBudgetCurrencyContext)] = null;
-            this.availableDependencies[typeof(LedgerBook)] = null;
-            this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
-            this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
-            this.availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
-            this.availableDependencies[typeof(ApplicationDatabase)] = null;
+            this.availableDependencies = new Dictionary<Type, object>
+            {
+                [typeof(StatementModel)] = null,
+                [typeof(BudgetCollection)] = null,
+                [typeof(IBudgetCurrencyContext)] = null,
+                [typeof(LedgerBook)] = null,
+                [typeof(IBudgetBucketRepository)] = this.bucketRepository,
+                [typeof(GlobalFilterCriteria)] = null,
+                [typeof(LedgerCalculation)] = this.ledgerCalculator,
+                [typeof(ApplicationDatabase)] = null
+            };
             return this.availableDependencies;
         }
 
@@ -358,6 +353,7 @@ namespace BudgetAnalyser.Engine.Services
                                 Thread.CurrentThread.ManagedThreadId));
                         UpdateWidget(widget);
                     }
+                    // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
                 });
         }
 

@@ -248,13 +248,10 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook.Name = newName;
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             EventHandler<AdditionalInformationRequestedEventArgs> savingHandler = Saving;
-            if (savingHandler != null)
-            {
-                savingHandler(this, new AdditionalInformationRequestedEventArgs());
-            }
+            savingHandler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
             if (!LedgerBook.Validate(messages))
