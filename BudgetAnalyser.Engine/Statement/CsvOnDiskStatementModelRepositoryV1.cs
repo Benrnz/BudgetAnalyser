@@ -117,7 +117,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public async Task SaveAsync([NotNull] StatementModel model, string storageKey)
+        public async Task SaveAsync(StatementModel model, string storageKey)
         {
             if (model == null)
             {

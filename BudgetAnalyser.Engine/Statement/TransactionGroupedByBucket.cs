@@ -101,14 +101,14 @@ namespace BudgetAnalyser.Engine.Statement
 
         public void TriggerRefreshTotalsRow()
         {
-            OnPropertyChanged("TotalCredits");
-            OnPropertyChanged("TotalDebits");
-            OnPropertyChanged("TotalDifference");
-            OnPropertyChanged("AverageDebit");
-            OnPropertyChanged("TotalCount");
-            OnPropertyChanged("HasTransactions");
-            OnPropertyChanged("MinTransactionDate");
-            OnPropertyChanged("MaxTransactionDate");
+            OnPropertyChanged(nameof(TotalCredits));
+            OnPropertyChanged(nameof(TotalDebits));
+            OnPropertyChanged(nameof(TotalDifference));
+            OnPropertyChanged(nameof(AverageDebit));
+            OnPropertyChanged(nameof(TotalCount));
+            OnPropertyChanged(nameof(HasTransactions));
+            OnPropertyChanged(nameof(MinTransactionDate));
+            OnPropertyChanged(nameof(MaxTransactionDate));
         }
 
         [NotifyPropertyChangedInvocator]

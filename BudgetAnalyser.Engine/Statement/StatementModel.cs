@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.duplicates = null;
-            OnPropertyChanged("Transactions");
+            OnPropertyChanged(nameof(Transactions));
             SubscribeToTransactionChangedEvents();
             return this;
         }
