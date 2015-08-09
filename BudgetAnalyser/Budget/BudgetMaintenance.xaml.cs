@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace BudgetAnalyser.Budget
 {
@@ -18,26 +16,6 @@ namespace BudgetAnalyser.Budget
         private BudgetController Controller
         {
             get { return DataContext as BudgetController; }
-        }
-
-        private void OnExpensesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
-        {
-            if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
-            {
-                this.ExpensesListScrollViewer.ScrollToBottom();
-                int count = this.Expenses.Items.Count == 0 ? 0 : this.Expenses.Items.Count - 1;
-                this.Expenses.SelectedIndex = count;
-            }
-        }
-
-        private void OnIncomesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
-        {
-            if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
-            {
-                this.IncomesListScrollViewer.ScrollToBottom();
-                int count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
-                this.Incomes.SelectedIndex = count;
-            }
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -70,6 +48,26 @@ namespace BudgetAnalyser.Budget
                 {
                     Controller.Incomes.ListChanged += OnIncomesListChanged;
                 }
+            }
+        }
+
+        private void OnExpensesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
+        {
+            if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
+            {
+                this.ExpensesListScrollViewer.ScrollToBottom();
+                int count = this.Expenses.Items.Count == 0 ? 0 : this.Expenses.Items.Count - 1;
+                this.Expenses.SelectedIndex = count;
+            }
+        }
+
+        private void OnIncomesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
+        {
+            if (listChangedEventArgs.ListChangedType == ListChangedType.ItemAdded)
+            {
+                this.IncomesListScrollViewer.ScrollToBottom();
+                int count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
+                this.Incomes.SelectedIndex = count;
             }
         }
     }

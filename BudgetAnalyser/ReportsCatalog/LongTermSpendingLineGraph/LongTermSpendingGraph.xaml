@@ -35,10 +35,10 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <chartingToolkit:Chart x:Name="Chart"
@@ -68,18 +68,18 @@
             </chartingToolkit:Chart.Axes>
 
         </chartingToolkit:Chart>
-        
-        <StackPanel Grid.Row="1" 
+
+        <StackPanel Grid.Row="1"
                     Grid.Column="0"
                     Orientation="Horizontal">
-            <TextBlock Text="Selected Budget Bucket Line: " 
+            <TextBlock Text="Selected Budget Bucket Line: "
                        Style="{StaticResource TextBlock.LabelStyle}"
-                       Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}"/>
-            <TextBlock Margin="2,2,0,2" 
+                       Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}" />
+            <TextBlock Margin="2,2,0,2"
                        Text="["
                        Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}" />
-            <TextBlock Text="{Binding SelectedSeriesData.SeriesName}"/>
-            <TextBlock Margin="0,2,2,2" 
+            <TextBlock Text="{Binding SelectedSeriesData.SeriesName}" />
+            <TextBlock Margin="0,2,2,2"
                        Text="]"
                        Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}" />
             <TextBlock Text="{Binding SelectedSeriesData.Description}" />
@@ -87,11 +87,11 @@
                        Style="{StaticResource TextBlock.LabelStyle}"
                        Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}" />
             <TextBlock Text="{Binding SelectedPlotPoint.Month}" />
-            <TextBlock Margin="0,2,2,2" 
+            <TextBlock Margin="0,2,2,2"
                        Text=","
                        Visibility="{Binding SelectedSeriesData, Converter={StaticResource Converter.NullToVis}}" />
             <TextBlock Text="{Binding SelectedPlotPoint.Amount, StringFormat=C}"
-                       Style="{StaticResource TextBlock.Number}"/>
+                       Style="{StaticResource TextBlock.Number}" />
         </StackPanel>
 
         <Border Background="{StaticResource Brush.TileBackground}"
@@ -113,10 +113,12 @@
                     <StackPanel>
                         <TextBlock Text="Y Minimum"
                                    Style="{StaticResource TextBlock.LabelStyle}" />
-                        <TextBox Text="{Binding GraphMinimumValue, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox
+                            Text="{Binding GraphMinimumValue, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Y Maximum"
                                    Style="{StaticResource TextBlock.LabelStyle}" />
-                        <TextBox Text="{Binding GraphMaximumValue, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox
+                            Text="{Binding GraphMaximumValue, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <ItemsControl Margin="5"
                                   ItemsSource="{Binding Graph.Series}">
@@ -142,4 +144,3 @@
         </Border>
     </Grid>
 </UserControl>
-

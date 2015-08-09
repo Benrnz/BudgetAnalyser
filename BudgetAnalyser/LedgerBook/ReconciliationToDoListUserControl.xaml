@@ -32,11 +32,12 @@
                                 VerticalAlignment="Center"
                                 Visibility="{Binding SystemGenerated, Converter={StaticResource Converter.NotBoolToVis}}"
                                 Width="15" />
-                <Button Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                        CommandParameter="{Binding .}"
-                        Grid.Column="1"
-                        Style="{StaticResource Button.Round.SmallCross}"
-                        Visibility="{Binding CanDelete, Converter={StaticResource Converter.BoolToVis2}}" />
+                <Button
+                    Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                    CommandParameter="{Binding .}"
+                    Grid.Column="1"
+                    Style="{StaticResource Button.Round.SmallCross}"
+                    Visibility="{Binding CanDelete, Converter={StaticResource Converter.BoolToVis2}}" />
                 <TextBox Grid.Column="2"
                          Style="{StaticResource TextBox.ReadOnly}"
                          Text="{Binding Description, Mode=OneWay}"
@@ -73,8 +74,8 @@
         <ListBox ItemsSource="{Binding Tasks}"
                  ItemTemplate="{StaticResource TaskTemplate}"
                  SelectedItem="{Binding SelectedTask}"
-                 SelectionMode="Single" 
-                 DataContextChanged="OnListDataContextChanged"/>
+                 SelectionMode="Single"
+                 DataContextChanged="OnListDataContextChanged" />
         <GroupBox Grid.Row="1"
                   Margin="5,30,5,5"
                   Visibility="{Binding AddingNewTask, Converter={StaticResource Converter.BoolToVis}}">

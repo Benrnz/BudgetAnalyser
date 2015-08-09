@@ -4,7 +4,7 @@
              xmlns:shellDialog="clr-namespace:BudgetAnalyser.ShellDialog">
 
     <!-- DataContext ShellDialogController -->
-    
+
     <Grid Background="#cc000000"
           KeyUp="OnShellDialogKeyUp"
           Visibility="{Binding Content, Converter={StaticResource Converter.NullToVis}}">

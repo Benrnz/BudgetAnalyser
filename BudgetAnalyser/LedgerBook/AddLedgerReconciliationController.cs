@@ -73,7 +73,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public decimal? AdjustedBankBalanceTotal
         {
-            get { return AddBalanceVisibility ? default(Nullable<decimal>) : BankBalances.Sum(b => b.AdjustedBalance); }
+            get { return AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance); }
         }
 
         public IEnumerable<Account> BankAccounts

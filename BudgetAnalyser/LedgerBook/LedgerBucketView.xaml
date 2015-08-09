@@ -10,15 +10,15 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
- 
+
+
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
@@ -68,16 +68,17 @@
                        Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding BucketBeingTracked.TypeDescription}" />
         </Grid>
-        
+
         <Viewbox Grid.Column="1"
                  Grid.Row="0"
                  Margin="20"
                  VerticalAlignment="Top"
                  Width="40">
-            <Path Data="M 512.00,256.00L 256.00,0.00L 256.00,160.00L 0.001,160.00L0.00,352.00L 256.00,352.00L 256.00,512.00 z"
-                  Fill="{StaticResource Brush.Text.Default}" />
+            <Path
+                Data="M 512.00,256.00L 256.00,0.00L 256.00,160.00L 0.001,160.00L0.00,352.00L 256.00,352.00L 256.00,512.00 z"
+                Fill="{StaticResource Brush.Text.Default}" />
         </Viewbox>
-        
+
         <StackPanel Grid.Column="2"
                     Grid.Row="0">
             <TextBlock Margin="5,20,5,5"
@@ -98,12 +99,12 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        
-        <ledgerBook:LedgerBucketHistoryUserControl 
+
+        <ledgerBook:LedgerBucketHistoryUserControl
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Grid.Row="1" 
-            DataContext="{Binding LedgerBucketHistoryAnalysis}"/>
+            Grid.Row="1"
+            DataContext="{Binding LedgerBucketHistoryAnalysis}" />
     </Grid>
 
 </UserControl>

@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Converters
                 return value;
             }
 
-            var path = value.ToString();
+            string path = value.ToString();
             if (path.StartsWith("../", StringComparison.OrdinalIgnoreCase))
             {
                 return string.Format(CultureInfo.CurrentCulture, "../{0}/{1}", parameter, path.Substring(3));

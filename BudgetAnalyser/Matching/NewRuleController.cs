@@ -21,7 +21,9 @@ namespace BudgetAnalyser.Matching
         private readonly IUserMessageBox messageBoxService;
         private readonly ITransactionRuleService rulesService;
         private decimal doNotUseAmount;
+        private bool doNotUseAndChecked;
         private string doNotUseDescription;
+        private bool doNotUseOrChecked;
         private string doNotUseReference1;
         private string doNotUseReference2;
         private string doNotUseReference3;
@@ -32,8 +34,6 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
-        private bool doNotUseOrChecked;
-        private bool doNotUseAndChecked;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -75,8 +75,6 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public BudgetBucket Bucket { get; set; }
-
         public bool AndChecked
         {
             get { return this.doNotUseAndChecked; }
@@ -89,17 +87,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public bool OrChecked
-        {
-            get { return this.doNotUseOrChecked; }
-            set
-            {
-                this.doNotUseOrChecked = value;
-                RaisePropertyChanged();
-                this.doNotUseAndChecked = !OrChecked;
-                RaisePropertyChanged(() => AndChecked);
-            }
-        }
+        public BudgetBucket Bucket { get; set; }
 
         public bool CanExecuteCancelButton
         {
@@ -134,6 +122,18 @@ namespace BudgetAnalyser.Matching
         }
 
         public MatchingRule NewRule { get; set; }
+
+        public bool OrChecked
+        {
+            get { return this.doNotUseOrChecked; }
+            set
+            {
+                this.doNotUseOrChecked = value;
+                RaisePropertyChanged();
+                this.doNotUseAndChecked = !OrChecked;
+                RaisePropertyChanged(() => AndChecked);
+            }
+        }
 
         public string Reference1
         {
@@ -172,7 +172,6 @@ namespace BudgetAnalyser.Matching
         }
 
         public IEnumerable<MatchingRule> SimilarRules { get; private set; }
-
         public bool SimilarRulesExist { get; private set; }
 
         public string Title
@@ -274,7 +273,7 @@ namespace BudgetAnalyser.Matching
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
             {
                 CorrelationId = this.shellDialogCorrelationId,
-                Title = Title,
+                Title = Title
             };
             MessengerInstance.Send(dialogRequest);
         }

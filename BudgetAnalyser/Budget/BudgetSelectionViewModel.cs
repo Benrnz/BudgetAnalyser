@@ -10,7 +10,6 @@ namespace BudgetAnalyser.Budget
         }
 
         public BudgetCollection Budgets { get; private set; }
-
         public BudgetModel Selected { get; set; }
     }
 }

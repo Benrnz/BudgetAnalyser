@@ -20,8 +20,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           MinWidth="250">
                 <ItemsControl ItemsSource="{Binding SurplusBalances}"
-                              Margin="5">
-                </ItemsControl>
+                              Margin="5" />
             </ScrollViewer>
         </Border>
 
@@ -48,12 +47,12 @@
             <TextBlock MaxWidth="800"
                        Style="{StaticResource TextBlock.Paragraph}"
                        TextWrapping="Wrap">
-            <Run>
-                It seems you have one or more negative surplus balances.  This means there are not enough funds in your bank account to cover all the Budget Bucket's being tracked in the 
-                Ledger Book.  There will not be enough actual funds in the bank if you need to spend all the amounts from the buckets in that account.
-                You can transfer some money into the account with the negative surplus balance from another account. Alternatively you can decrease the balance of one or more 
-                Budget Buckets in the same account as the negative surplus balance and this will increase the surplus balance.
-            </Run>
+                <Run>
+                    It seems you have one or more negative surplus balances.  This means there are not enough funds in your bank account to cover all the Budget Bucket's being tracked in the
+                    Ledger Book.  There will not be enough actual funds in the bank if you need to spend all the amounts from the buckets in that account.
+                    You can transfer some money into the account with the negative surplus balance from another account. Alternatively you can decrease the balance of one or more
+                    Budget Buckets in the same account as the negative surplus balance and this will increase the surplus balance.
+                </Run>
             </TextBlock>
         </StackPanel>
     </Grid>

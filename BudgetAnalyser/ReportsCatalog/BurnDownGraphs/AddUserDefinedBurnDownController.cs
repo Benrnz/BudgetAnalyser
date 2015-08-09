@@ -52,7 +52,6 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         public BindingList<BudgetBucket> SelectedBuckets { get; private set; }
-
         public BindingList<BudgetBucket> UnselectedBuckets { get; private set; }
 
         public bool AddChart()

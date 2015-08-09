@@ -17,7 +17,7 @@
     <DataTemplate DataType="{x:Type overallPerformance:OverallPerformanceController}">
         <overallPerformance:OverallPerformanceView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type burnDownGraphs:BucketBurnDownController}">
         <burnDownGraphs:BucketBurnDownLineChart />
     </DataTemplate>
@@ -79,7 +79,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget:ChooseBudgetBucketController}">
-        <budget:ChooseBudgetBucketUserControl/>
+        <budget:ChooseBudgetBucketUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type budget:CreateNewFixedBudgetController}">
@@ -89,13 +89,13 @@
     <DataTemplate DataType="{x:Type budget:NewBudgetModelController}">
         <budget:CreateNewBudgetModelUserControl />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type dashboard:CreateNewSurprisePaymentMonitorController}">
         <dashboard:CreateNewSurprisePaymentMonitorUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:AddLedgerReconciliationController}">
-        <ledgerBook:AddLedgerReconciliationUserControl/>
+        <ledgerBook:AddLedgerReconciliationUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:ShowSurplusBalancesController}">
@@ -107,32 +107,32 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type ledgerBook:LedgerTransactionsController}">
-        <ledgerBook:LedgerTransactionsUserControl/>
+        <ledgerBook:LedgerTransactionsUserControl />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type filtering:GlobalFilterController}">
-        <filtering:GlobalDateFilterView/>
+        <filtering:GlobalDateFilterView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type statement:SplitTransactionController}">
-        <statement:SplitTransactionView/>
+        <statement:SplitTransactionView />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type budget1:BudgetBucket}">
-        <budget:BudgetBucketUserControl/>
+        <budget:BudgetBucketUserControl />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type ledger:BankBalance}">
-        <ledgerBook:BankBalanceUserControl/>
+        <ledgerBook:BankBalanceUserControl />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type account:Account}">
-        <statement:AccountUserControl/>
+        <statement:AccountUserControl />
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type longTermSpendingLineGraph:LongTermSpendingGraphController}">
-        <longTermSpendingLineGraph:LongTermSpendingGraph/>
+        <longTermSpendingLineGraph:LongTermSpendingGraph />
     </DataTemplate>
-    
-    
+
+
 </ResourceDictionary>

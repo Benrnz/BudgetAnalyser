@@ -22,6 +22,15 @@ namespace BudgetAnalyser.LedgerBook
             this.BankBalance.SelectAll();
         }
 
+        private void OnBankBalanceGotFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = e.OriginalSource as TextBox;
+            if (textBox != null)
+            {
+                textBox.SelectAll();
+            }
+        }
+
         private void OnBankBalanceMouseUp(object sender, MouseButtonEventArgs e)
         {
             this.BankBalance.SelectAll();
@@ -36,15 +45,6 @@ namespace BudgetAnalyser.LedgerBook
                 {
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.BankBalance.Focus());
                 }
-            }
-        }
-
-        private void OnBankBalanceGotFocus(object sender, RoutedEventArgs e)
-        {
-            var textBox = e.OriginalSource as TextBox;
-            if (textBox != null)
-            {
-                textBox.SelectAll();
             }
         }
     }

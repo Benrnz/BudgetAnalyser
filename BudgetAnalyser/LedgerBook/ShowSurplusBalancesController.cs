@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -21,7 +22,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return SurplusBalances.Any(b => b.Balance < 0); }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
         public ICommand RemoveBankBalanceCommand
         {
             get
@@ -51,7 +52,7 @@ namespace BudgetAnalyser.LedgerBook
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
                 CorrelationId = Guid.NewGuid(),
-                Title = "Surplus Balances in all Accounts",
+                Title = "Surplus Balances in all Accounts"
             };
 
             MessengerInstance.Send(dialogRequest);

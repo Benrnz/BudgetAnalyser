@@ -44,16 +44,15 @@
                              MinWidth="27"
                              Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
                              ToolTip="Search for text within a transaction"
-                             Width="27">
-                    </TextBox>
+                             Width="27" />
                     <ContentControl Grid.Column="0"
-                           Template="{StaticResource SearchImage}"
-                           IsHitTestVisible="False"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,7,0"
-                           Height="17"
-                           Width="17"
-                           Visibility="{Binding TextFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}" />
+                                    Template="{StaticResource SearchImage}"
+                                    IsHitTestVisible="False"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,7,0"
+                                    Height="17"
+                                    Width="17"
+                                    Visibility="{Binding TextFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}" />
                     <Button x:Name="ClearSearchButton"
                             Grid.Column="1"
                             Style="{StaticResource Button.Round.SmallCross}"
@@ -70,14 +69,14 @@
                               SelectedItem="{Binding BucketFilter}"
                               Width="37" />
                     <ContentControl Grid.Column="2"
-                           Height="17"
-                           HorizontalAlignment="Right"
-                           IsHitTestVisible="False"
-                           Margin="0,0,20,0"
-                           Template="{StaticResource Filter2Image}"
-                           ToolTip="Budget Bucket Filter"
-                           Visibility="{Binding BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
-                           Width="17" />
+                                    Height="17"
+                                    HorizontalAlignment="Right"
+                                    IsHitTestVisible="False"
+                                    Margin="0,0,20,0"
+                                    Template="{StaticResource Filter2Image}"
+                                    ToolTip="Budget Bucket Filter"
+                                    Visibility="{Binding BucketFilter, Converter={StaticResource Converter.NotNullToVis}, ConverterParameter=Empty}"
+                                    Width="17" />
                 </Grid>
                 <Menu Style="{StaticResource RoundMenuButton}">
                     <Menu.Resources>
@@ -152,14 +151,15 @@
                                Text="{Binding ViewModel.TotalDebits, StringFormat=C}" />
                 </StackPanel>
             </Border>
-            <Border Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
-                    Style="{StaticResource Badge.Border.WarningOilLightStyle}"
-                    ToolTip="Difference between total displayed credits and total displayed debits.">
+            <Border
+                Background="{Binding ViewModel.TotalDifference, Converter={StaticResource Converter.NumberToBrush}}"
+                Style="{StaticResource Badge.Border.WarningOilLightStyle}"
+                ToolTip="Difference between total displayed credits and total displayed debits.">
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Height="15"
-                           Margin="5,0,0,0"
-                           Template="{StaticResource DeltaImage}"
-                           Width="15" />
+                                    Margin="5,0,0,0"
+                                    Template="{StaticResource DeltaImage}"
+                                    Width="15" />
                     <TextBlock FontSize="16"
                                Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="{Binding ViewModel.TotalDifference, StringFormat=C}" />
@@ -180,11 +180,11 @@
                     Style="{StaticResource Badge.Border.WarningOilLightStyle}"
                     ToolTip="The number of transactions currently displayed.">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
-                               Text="Count: " />
                     <TextBlock FontSize="16"
                                Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                                Text="{Binding ViewModel.TotalCount}" />
+                    <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
+                               Text="Transactions" />
                 </StackPanel>
             </Border>
             <Border Background="{StaticResource Brush.NeutralNumberBackground}"

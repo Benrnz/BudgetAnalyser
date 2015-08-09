@@ -48,7 +48,6 @@ namespace BudgetAnalyser
         }
 
         public IUserInputBox InputBox { get; private set; }
-
         public IUserMessageBox MessageBox { get; private set; }
         public Func<IUserPromptOpenFile> OpenFileFactory { get; private set; }
         public Func<IUserPromptSaveFile> SaveFileFactory { get; private set; }

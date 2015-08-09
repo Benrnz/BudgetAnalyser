@@ -12,7 +12,6 @@ namespace BudgetAnalyser.Budget
         }
 
         public IBudgetCurrencyContext ActiveBudget { get; private set; }
-
         public BudgetCollection Budgets { get; private set; }
     }
 }

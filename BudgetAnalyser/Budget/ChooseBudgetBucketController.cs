@@ -14,12 +14,12 @@ namespace BudgetAnalyser.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class ChooseBudgetBucketController : ControllerBase, IShellDialogInteractivity, IShellDialogToolTips
     {
+        private readonly IAccountTypeRepository accountRepo;
+        private readonly IBudgetBucketRepository bucketRepository;
         private Guid dialogCorrelationId;
         private IEnumerable<BudgetBucket> doNotUseBudgetBuckets;
         private string doNotUseFilterDescription;
         private bool filtered;
-        private readonly IAccountTypeRepository accountRepo;
-        private readonly IBudgetBucketRepository bucketRepository;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public ChooseBudgetBucketController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository, [NotNull] IAccountTypeRepository accountRepo)
@@ -47,6 +47,13 @@ namespace BudgetAnalyser.Budget
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
+        public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
+
+        public string ActionButtonToolTip
+        {
+            get { return "Select and use this Expense Budget Bucket."; }
+        }
+
         public IEnumerable<Account> BankAccounts
         {
             get { return this.accountRepo.ListCurrentlyUsedAccountTypes(); }
@@ -63,20 +70,6 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public string FilterDescription
-        {
-            get { return this.doNotUseFilterDescription; }
-            set
-            {
-                this.doNotUseFilterDescription = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public BudgetBucket Selected { get; set; }
-        public bool ShowBankAccount { get; set; }
-        public Account StoreInThisAccount { get; set; }
-
         public bool CanExecuteCancelButton
         {
             get { return true; }
@@ -92,23 +85,51 @@ namespace BudgetAnalyser.Budget
             get { return false; }
         }
 
-        public string ActionButtonToolTip
-        {
-            get { return "Select and use this Expense Budget Bucket."; }
-        }
-
         public string CloseButtonToolTip
         {
             get { return "Cancel"; }
         }
 
-        public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
+        public string FilterDescription
+        {
+            get { return this.doNotUseFilterDescription; }
+            set
+            {
+                this.doNotUseFilterDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public BudgetBucket Selected { get; set; }
+        public bool ShowBankAccount { get; set; }
+        public Account StoreInThisAccount { get; set; }
 
         public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
         {
             FilterDescription = filterDescription;
             BudgetBuckets = this.bucketRepository.Buckets.Where(predicate).ToList();
             this.filtered = true;
+        }
+
+        public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null, bool showBankAccountSelector = false)
+        {
+            if (correlationId == null)
+            {
+                this.dialogCorrelationId = Guid.NewGuid();
+            }
+            else
+            {
+                this.dialogCorrelationId = correlationId.Value;
+            }
+
+            ShowBankAccount = showBankAccountSelector;
+
+            var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = title
+            };
+            MessengerInstance.Send(dialogRequest);
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -118,7 +139,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            var handler = Chosen;
+            EventHandler<BudgetBucketChosenEventArgs> handler = Chosen;
             if (handler != null)
             {
                 if (message.Response == ShellDialogButton.Cancel)
@@ -143,27 +164,6 @@ namespace BudgetAnalyser.Budget
 
             Selected = null;
             StoreInThisAccount = null;
-        }
-
-        public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null, bool showBankAccountSelector = false)
-        {
-            if (correlationId == null)
-            {
-                this.dialogCorrelationId = Guid.NewGuid();
-            }
-            else
-            {
-                this.dialogCorrelationId = correlationId.Value;
-            }
-
-            ShowBankAccount = showBankAccountSelector;
-
-            var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
-            {
-                CorrelationId = this.dialogCorrelationId,
-                Title = title
-            };
-            MessengerInstance.Send(dialogRequest);
         }
     }
 }

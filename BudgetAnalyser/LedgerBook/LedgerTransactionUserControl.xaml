@@ -4,7 +4,7 @@
              xmlns:ledgerBook="clr-namespace:BudgetAnalyser.LedgerBook"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:statement="clr-namespace:BudgetAnalyser.Statement">
-    
+
     <!-- Used to show (readonly) a transation in an items control -->
 
     <Grid Background="{StaticResource Brush.TileBackground}"
@@ -46,10 +46,10 @@
                        Width="60" />
             <TextBlock Text="{Binding Narrative}" />
         </StackPanel>
-        
-        <statement:AccountUserControl Grid.Column="1" 
-                                          DataContext="{Binding BankAccount}"/>
-            
+
+        <statement:AccountUserControl Grid.Column="1"
+                                      DataContext="{Binding BankAccount}" />
+
         <TextBlock x:Name="CreditAmount"
                    Grid.Column="2"
                    Style="{StaticResource TextBlock.Number}"
@@ -64,11 +64,12 @@
         <TextBlock x:Name="DebitLabel"
                    Grid.Column="5"
                    Text="DR" />
-        <Button Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
-                CommandParameter="{Binding .}"
-                Grid.Column="6"
-                Style="{StaticResource Button.Round.SmallCross}"
-                Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Converter.BoolToVis}}" />
+        <Button
+            Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteTransactionCommand}"
+            CommandParameter="{Binding .}"
+            Grid.Column="6"
+            Style="{StaticResource Button.Round.SmallCross}"
+            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource Converter.BoolToVis}}" />
     </Grid>
 
 </UserControl>

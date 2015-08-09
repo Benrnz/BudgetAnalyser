@@ -13,20 +13,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.RowSpan="2">
             <Image Source="../UI/Assets/PieChart.png"
                    Stretch="Uniform"
                    VerticalAlignment="Center" />
         </Grid>
-        
+
         <StackPanel Grid.ColumnSpan="2">
             <budget:BudgetModelNameUserControl />
             <TextBlock Style="{StaticResource TextBlock.Paragraph}"
                        Text="{Binding FileName}"
                        ToolTip="{Binding FileName}" />
         </StackPanel>
-        
+
         <StackPanel Grid.Column="1"
                     Grid.Row="1">
             <TextBlock Text="Effective From:" />

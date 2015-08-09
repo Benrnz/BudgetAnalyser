@@ -22,7 +22,7 @@
                             MinWidth="100"
                             Width="{TemplateBinding Width}">
                         <Border.Effect>
-                            <DropShadowEffect  Direction="315" />
+                            <DropShadowEffect Direction="315" />
                         </Border.Effect>
                         <TextBlock FontStyle="Italic"
                                    Foreground="{StaticResource Brush.MainBackground}"

@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Matching
 
             this.ruleService = ruleService;
             this.applicationDatabaseService = applicationDatabaseService;
-            
+
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
             MessengerInstance = uiContext.Messenger;
@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public NewRuleController NewRuleController { get; private set; }
+        public NewRuleController NewRuleController { get; }
         public ObservableCollection<MatchingRule> Rules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 

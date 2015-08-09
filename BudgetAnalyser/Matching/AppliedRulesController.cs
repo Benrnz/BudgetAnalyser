@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public RulesController RulesController { get; private set; }
+        public RulesController RulesController { get; }
 
         public ICommand ShowRulesCommand
         {

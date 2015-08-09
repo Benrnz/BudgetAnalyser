@@ -10,8 +10,8 @@ namespace BudgetAnalyser.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
     {
+        private readonly IUserMessageBox messageBox;
         private Guid dialogCorrelationId;
-        private IUserMessageBox messageBox;
 
         public NewBudgetModelController([NotNull] IUiContext uiContext)
         {
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Budget
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Create new Budget based on current",
-                HelpAvailable = true,
+                HelpAvailable = true
             };
             MessengerInstance.Send(dialogRequest);
         }

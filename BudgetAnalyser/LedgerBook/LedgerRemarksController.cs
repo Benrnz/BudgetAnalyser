@@ -75,7 +75,7 @@ namespace BudgetAnalyser.LedgerBook
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
                 Title = "Ledger Entry Remarks",
-                CorrelationId = this.dialogCorrelationId,
+                CorrelationId = this.dialogCorrelationId
             };
             MessengerInstance.Send(dialogRequest);
         }

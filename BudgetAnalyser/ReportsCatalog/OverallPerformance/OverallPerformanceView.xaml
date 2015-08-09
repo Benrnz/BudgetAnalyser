@@ -20,14 +20,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Expense}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Expense}" />
-                    <Border Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Income}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Income}" />
+                    <Border
+                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Expense}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Expense}" />
+                    <Border
+                        Background="{Binding Percent, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Income}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Visibility="{Binding Bucket, Converter={StaticResource Converter.BucketToVisibility}, ConverterParameter=Income}" />
                     <TextBlock FontSize="12"
                                FontWeight="Bold"
                                HorizontalAlignment="Left"
@@ -64,13 +66,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-             <!--Gauge--> 
+            <!--Gauge-->
             <RowDefinition Height="*" />
-             <!--List box--> 
+            <!--List box-->
             <RowDefinition Height="Auto" />
-             <!--Totals Row--> 
+            <!--Totals Row-->
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -150,12 +152,13 @@
                        StrokeThickness="1"
                        Width="1" />
         </Grid>
-        <StackPanel Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
-                    Grid.Row="4"
-                    Margin="2,4,2,4"
-                    Orientation="Horizontal"
-                    TextBlock.FontWeight="Bold"
-                    TextBlock.Foreground="{StaticResource Brush.MainBackground}">
+        <StackPanel
+            Background="{Binding OverallPerformance, Converter={StaticResource Converter.PercentToColour}, ConverterParameter=Performance}"
+            Grid.Row="4"
+            Margin="2,4,2,4"
+            Orientation="Horizontal"
+            TextBlock.FontWeight="Bold"
+            TextBlock.Foreground="{StaticResource Brush.MainBackground}">
             <TextBlock Margin="4,4,1,4"
                        Text="Avg Expenses " />
             <TextBlock Margin="0,4,0,4"

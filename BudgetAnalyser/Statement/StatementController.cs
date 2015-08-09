@@ -103,7 +103,7 @@ namespace BudgetAnalyser.Statement
                         TextFilter = null;
                         ViewModel.Transactions = this.transactionService.ClearBucketAndTextFilters();
                     },
-                    () => !String.IsNullOrWhiteSpace(TextFilter));
+                    () => !string.IsNullOrWhiteSpace(TextFilter));
             }
         }
 
@@ -112,17 +112,12 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
-        internal EditingTransactionController EditingTransactionController
-        {
-            get { return this.uiContext.EditingTransactionController; }
-        }
-
         public ICommand EditTransactionCommand
         {
             get { return new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
-        public StatementControllerFileOperations FileOperations { get; private set; }
+        public StatementControllerFileOperations FileOperations { get; }
 
         [Engine.Annotations.UsedImplicitly]
         public ICommand MergeStatementCommand
@@ -156,17 +151,12 @@ namespace BudgetAnalyser.Statement
             get { return new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow); }
         }
 
-        internal SplitTransactionController SplitTransactionController
-        {
-            get { return this.uiContext.SplitTransactionController; }
-        }
-
         public string TextFilter
         {
             get { return this.doNotUseTextFilter; }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     this.doNotUseTextFilter = null;
                 }
@@ -184,6 +174,16 @@ namespace BudgetAnalyser.Statement
         public StatementViewModel ViewModel
         {
             get { return FileOperations.ViewModel; }
+        }
+
+        internal EditingTransactionController EditingTransactionController
+        {
+            get { return this.uiContext.EditingTransactionController; }
+        }
+
+        internal SplitTransactionController SplitTransactionController
+        {
+            get { return this.uiContext.SplitTransactionController; }
         }
 
         public void Initialize()

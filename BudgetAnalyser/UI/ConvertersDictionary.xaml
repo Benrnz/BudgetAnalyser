@@ -3,7 +3,7 @@
                     xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
                     xmlns:converters1="clr-namespace:Rees.Wpf.Converters;assembly=Rees.Wpf">
     <BooleanToVisibilityConverter x:Key="Converter.BoolToVis" />
-    
+
     <!-- Rees.Wpf -->
     <converters1:NotBoolToVisibilityConverter x:Key="Converter.NotBoolToVis" />
     <converters1:BoolToVisibility2Converter x:Key="Converter.BoolToVis2" />
@@ -18,7 +18,7 @@
     <!-- Local -->
     <converters:BudgetBucketToStringConverter x:Key="Converter.BudgetBucketToString" />
     <converters:BucketToColourConverter x:Key="Converter.BucketToColour" />
-    <converters:ImagePathConverter x:Key="Converter.ImagePath"/>
+    <converters:ImagePathConverter x:Key="Converter.ImagePath" />
     <converters:NumberSignToBrushConverter x:Key="Converter.NumberToBrush" />
     <converters:NumberToBoldConverter x:Key="Converter.NumberToBold" />
 </ResourceDictionary>

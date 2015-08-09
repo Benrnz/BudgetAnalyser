@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public BudgetPieController BudgetPieController { get; private set; }
+        public BudgetPieController BudgetPieController { get; }
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.Budget
             get { return new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null); }
         }
 
-        public NewBudgetModelController NewBudgetController { get; private set; }
+        public NewBudgetModelController NewBudgetController { get; }
 
         [Engine.Annotations.UsedImplicitly]
         public ICommand ShowAllCommand

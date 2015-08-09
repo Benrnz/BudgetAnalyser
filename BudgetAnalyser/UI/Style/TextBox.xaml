@@ -14,7 +14,7 @@
     <Style TargetType="TextBox">
         <Setter Property="MinWidth" Value="130" />
         <Setter Property="Margin" Value="2" />
-        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="MinHeight" Value="30" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="Background" Value="{StaticResource Brush.TileBackgroundAlternate}" />
         <Setter Property="Foreground" Value="{StaticResource Brush.Text.Default}" />
@@ -25,7 +25,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="TextBox.ReadOnly" 
+    <Style x:Key="TextBox.ReadOnly"
            TargetType="TextBox"
            BasedOn="{StaticResource {x:Type TextBox}}">
         <Setter Property="Background"
@@ -33,6 +33,6 @@
         <Setter Property="BorderBrush"
                 Value="Transparent" />
         <Setter Property="IsReadOnly"
-                Value="True"/>
+                Value="True" />
     </Style>
 </ResourceDictionary>

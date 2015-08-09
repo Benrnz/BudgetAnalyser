@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows;
 using Autofac;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;

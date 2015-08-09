@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -14,9 +15,9 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         private readonly ILongTermSpendingChartService chartService;
         private decimal doNotUseGraphMaximumValue;
         private decimal doNotUseGraphMinimumValue;
-        private bool doNotUseToggleAll;
-        private SeriesData doNotUseSelectedSeriesData;
         private DatedGraphPlot doNotUseSelectedPlotPoint;
+        private SeriesData doNotUseSelectedSeriesData;
+        private bool doNotUseToggleAll;
 
         public LongTermSpendingGraphController([NotNull] ILongTermSpendingChartService chartService)
         {
@@ -24,29 +25,9 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             {
                 throw new ArgumentNullException("chartService");
             }
-        
+
             this.chartService = chartService;
             ToggleAll = true;
-        }
-
-        public SeriesData SelectedSeriesData
-        {
-            get { return this.doNotUseSelectedSeriesData; }
-            set
-            {
-                this.doNotUseSelectedSeriesData = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public DatedGraphPlot SelectedPlotPoint
-        {
-            get { return this.doNotUseSelectedPlotPoint; }
-            set
-            {
-                this.doNotUseSelectedPlotPoint = value;
-                RaisePropertyChanged();
-            }
         }
 
         public GraphData Graph { get; private set; }
@@ -71,7 +52,27 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
+        public DatedGraphPlot SelectedPlotPoint
+        {
+            get { return this.doNotUseSelectedPlotPoint; }
+            set
+            {
+                this.doNotUseSelectedPlotPoint = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public SeriesData SelectedSeriesData
+        {
+            get { return this.doNotUseSelectedSeriesData; }
+            set
+            {
+                this.doNotUseSelectedSeriesData = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
         public string Title
         {
             get { return "Long Term Spending Line Graph"; }

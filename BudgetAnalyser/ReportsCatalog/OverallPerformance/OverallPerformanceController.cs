@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -23,7 +24,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             {
                 throw new ArgumentNullException("chartService");
             }
-        
+
             this.chartService = chartService;
             this.doNotUseExpenseFilter = true;
         }
@@ -56,7 +57,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public double OverallPerformance { get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
         public string Title
         {
             get { return "Overall Budget Performance"; }

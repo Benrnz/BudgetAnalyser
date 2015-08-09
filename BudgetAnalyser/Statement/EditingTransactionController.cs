@@ -14,7 +14,9 @@ namespace BudgetAnalyser.Statement
     public class EditingTransactionController : ControllerBase
     {
         private readonly IBudgetBucketRepository bucketRepo;
+        private IEnumerable<BudgetBucket> doNotUseBuckets;
         private Transaction doNotUseTransaction;
+        private BudgetBucket originalBucket;
 
         public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
         {
@@ -37,7 +39,7 @@ namespace BudgetAnalyser.Statement
             get { return this.doNotUseBuckets; }
             private set
             {
-                this.doNotUseBuckets = value; 
+                this.doNotUseBuckets = value;
                 RaisePropertyChanged();
             }
         }
@@ -50,9 +52,6 @@ namespace BudgetAnalyser.Statement
                        || this.originalBucket != Transaction.BudgetBucket;
             }
         }
-
-        private BudgetBucket originalBucket;
-        private IEnumerable<BudgetBucket> doNotUseBuckets;
 
         public int OriginalHash { get; private set; }
 
@@ -87,7 +86,7 @@ namespace BudgetAnalyser.Statement
                     ShellDialogType.SaveCancel)
                 {
                     CorrelationId = correlationId,
-                    Title = "Edit Transaction",
+                    Title = "Edit Transaction"
                 });
         }
     }

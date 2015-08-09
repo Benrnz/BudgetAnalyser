@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        internal StatementViewModel ViewModel { get; private set; }
+        internal StatementViewModel ViewModel { get; }
 
         internal bool CanExecuteCloseStatementCommand()
         {

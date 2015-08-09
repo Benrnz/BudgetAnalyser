@@ -38,12 +38,6 @@ namespace BudgetAnalyser.LedgerBook
             get { return CurrentStatement == null; }
         }
 
-        /// <summary>
-        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
-        ///     it also indicates the ledger row can be edited.
-        /// </summary>
-        internal LedgerEntryLine NewLedgerLine { get; set; }
-
         internal IBudgetCurrencyContext CurrentBudget
         {
             get { return this.doNotUseCurrentBudget; }
@@ -64,5 +58,11 @@ namespace BudgetAnalyser.LedgerBook
                 RaisePropertyChanged(() => NoStatementLoaded);
             }
         }
+
+        /// <summary>
+        ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
+        ///     it also indicates the ledger row can be edited.
+        /// </summary>
+        internal LedgerEntryLine NewLedgerLine { get; set; }
     }
 }

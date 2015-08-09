@@ -73,8 +73,9 @@
     <SolidColorBrush x:Key="Menu.Static.Foreground"
                      Color="#FF212121" />
 
-    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-                     TargetType="{x:Type MenuItem}">
+    <ControlTemplate
+        x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+        TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -298,8 +299,9 @@
         </Setter>
     </Style>
 
-    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-                     TargetType="{x:Type MenuItem}">
+    <ControlTemplate
+        x:Key="{ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+        TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -424,8 +426,9 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-                     TargetType="{x:Type MenuItem}">
+    <ControlTemplate
+        x:Key="{ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+        TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -511,8 +514,9 @@
 
     <Geometry x:Key="RightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
 
-    <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
-                     TargetType="{x:Type MenuItem}">
+    <ControlTemplate
+        x:Key="{ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+        TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"

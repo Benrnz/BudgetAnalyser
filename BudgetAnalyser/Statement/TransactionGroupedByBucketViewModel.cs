@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
@@ -8,7 +9,7 @@ namespace BudgetAnalyser.Statement
 {
     public class TransactionGroupedByBucketViewModel : TransactionGroupedByBucket
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Cannot validate before being passed to base ctor")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Cannot validate before being passed to base ctor")]
         public TransactionGroupedByBucketViewModel([NotNull] TransactionGroupedByBucket baseline, [NotNull] IUiContext uiContext)
             : base(baseline.Transactions, baseline.Bucket)
         {
@@ -24,8 +25,10 @@ namespace BudgetAnalyser.Statement
 
         [UsedImplicitly]
         public AppliedRulesController AppliedRulesController { get; private set; }
+
         [UsedImplicitly]
         public ICommand DeleteTransactionCommand { get; private set; }
+
         [UsedImplicitly]
         public ICommand EditTransactionCommand { get; private set; }
     }

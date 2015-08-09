@@ -94,7 +94,7 @@ namespace BudgetAnalyser.LedgerBook
             get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
         }
 
-        public LedgerBookControllerFileOperations FileOperations { get; private set; }
+        public LedgerBookControllerFileOperations FileOperations { get; }
 
         public int NumberOfMonthsToShow
         {

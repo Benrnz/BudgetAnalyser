@@ -55,23 +55,22 @@ namespace BudgetAnalyser.ReportsCatalog
             get { return new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand); }
         }
 
-        public BudgetPieController BudgetPieController { get; private set; }
-
-        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; private set; }
+        public BudgetPieController BudgetPieController { get; }
+        public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; }
 
         public ICommand LongTermSpendingGraphCommand
         {
             get { return new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null); }
         }
 
-        public LongTermSpendingGraphController LongTermSpendingGraphController { get; private set; }
+        public LongTermSpendingGraphController LongTermSpendingGraphController { get; }
 
         public ICommand OverallBudgetPerformanceCommand
         {
             get { return new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand); }
         }
 
-        public OverallPerformanceController OverallPerformanceController { get; private set; }
+        public OverallPerformanceController OverallPerformanceController { get; }
 
         public bool Shown
         {

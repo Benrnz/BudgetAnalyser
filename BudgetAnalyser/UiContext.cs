@@ -71,7 +71,7 @@ namespace BudgetAnalyser
         public ILogger Logger { get; set; }
         public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
         public MainMenuController MainMenuController { get; set; }
-        public IMessenger Messenger { get; private set; }
+        public IMessenger Messenger { get; }
         public NewBudgetModelController NewBudgetModelController { get; set; }
         public NewRuleController NewRuleController { get; set; }
         public OverallPerformanceController OverallPerformanceController { get; set; }
@@ -88,7 +88,7 @@ namespace BudgetAnalyser
         public SplitTransactionController SplitTransactionController { get; set; }
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
-        public UserPrompts UserPrompts { get; private set; }
+        public UserPrompts UserPrompts { get; }
 
         private List<ControllerBase> DiscoverAllControllers()
         {

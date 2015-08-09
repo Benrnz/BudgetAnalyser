@@ -4,6 +4,6 @@
     {
         Ok,
         OkCancel,
-        SaveCancel,
+        SaveCancel
     }
 }

@@ -128,6 +128,11 @@ namespace BudgetAnalyser
             DashboardCommand.Execute(null);
         }
 
+        private static bool CanExecuteDashboardCommand()
+        {
+            return true;
+        }
+
         private void AfterTabExecutedCommon()
         {
             foreach (IShowableController controller in this.uiContext.ShowableControllers)
@@ -272,11 +277,6 @@ namespace BudgetAnalyser
 
             // Could possibily go direct to PersistenceOperation class here.
             PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
-        }
-
-        private static bool CanExecuteDashboardCommand()
-        {
-            return true;
         }
     }
 }

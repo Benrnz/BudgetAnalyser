@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Statement
             {
                 From = from,
                 To = to,
-                Duration = TimeSpan.FromSeconds(1),
+                Duration = TimeSpan.FromSeconds(1)
             };
 
             Storyboard.SetTarget(fade, element);
@@ -132,13 +132,14 @@ namespace BudgetAnalyser.Statement
 
         private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
         {
-            message.WhenReadyToNavigate.ContinueWith(t =>
-            {
-                if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+            message.WhenReadyToNavigate.ContinueWith(
+                t =>
                 {
-                    IsVisibleChanged += OnVisibleChangedShowTransaction;
-                }
-            });
+                    if (t.IsCompleted && !t.IsCanceled && !t.IsFaulted && message.Success)
+                    {
+                        IsVisibleChanged += OnVisibleChangedShowTransaction;
+                    }
+                });
         }
 
         private void OnSearchTextBoxGotFocus(object sender, RoutedEventArgs e)

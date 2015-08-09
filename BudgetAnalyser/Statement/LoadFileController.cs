@@ -22,7 +22,6 @@ namespace BudgetAnalyser.Statement
         private readonly IUserMessageBox messageBox;
         private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
-        private bool actionButtonReady;
         private Guid dialogCorrelationId;
         private bool disposed;
         private string doNotUseFileName;
@@ -96,10 +95,7 @@ namespace BudgetAnalyser.Statement
             get { return true; }
         }
 
-        public bool CanExecuteOkButton
-        {
-            get { return this.actionButtonReady; }
-        }
+        public bool CanExecuteOkButton { get; private set; }
 
         public bool CanExecuteSaveButton
         {
@@ -270,18 +266,18 @@ namespace BudgetAnalyser.Statement
 
             if (SelectedExistingAccountName == null)
             {
-                this.actionButtonReady = false;
+                this.CanExecuteOkButton = false;
                 return;
             }
 
-            this.actionButtonReady = true;
+            this.CanExecuteOkButton = true;
         }
 
         private async void CheckFileName()
         {
             if (string.IsNullOrEmpty(FileName))
             {
-                this.actionButtonReady = false;
+                this.CanExecuteOkButton = false;
                 FileTypeSelectionReady = false;
                 return;
             }
@@ -290,13 +286,13 @@ namespace BudgetAnalyser.Statement
             if (LastFileWasBudgetAnalyserStatementFile ?? false)
             {
                 FileTypeSelectionReady = false;
-                this.actionButtonReady = true;
+                this.CanExecuteOkButton = true;
             }
             else
             {
                 // Appears to be a new statement that has never been loaded before.
                 FileTypeSelectionReady = true;
-                this.actionButtonReady = true;
+                this.CanExecuteOkButton = true;
             }
         }
 

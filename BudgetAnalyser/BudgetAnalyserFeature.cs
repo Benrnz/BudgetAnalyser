@@ -6,6 +6,6 @@
         Transactions,
         Budget,
         LedgerBook,
-        Reports,
+        Reports
     }
 }

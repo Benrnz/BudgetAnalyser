@@ -127,14 +127,14 @@
                                         ItemsSource="{Binding BudgetLine.Plots}"
                                         PolylineStyle="{StaticResource DashedPolyLine}"
                                         Title="{Binding BudgetLine.SeriesName}"
-                                        ToolTip="{Binding BudgetLine.Description}"/>
+                                        ToolTip="{Binding BudgetLine.Description}" />
             <chartingToolkit:LineSeries DataPointStyle="{StaticResource ZeroLineDataPointStyle}"
                                         DependentValuePath="Amount"
                                         IndependentValuePath="Date"
                                         IsSelectionEnabled="False"
                                         ItemsSource="{Binding ZeroLine.Plots}"
                                         Title="{Binding ZeroLine.SeriesName}"
-                                        ToolTip="{Binding ZeroLine.Description}"/>
+                                        ToolTip="{Binding ZeroLine.Description}" />
         </chartingToolkit:Chart>
     </Grid>
 

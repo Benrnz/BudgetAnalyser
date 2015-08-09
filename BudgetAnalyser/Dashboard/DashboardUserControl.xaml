@@ -83,12 +83,13 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap"
                                VerticalAlignment="Bottom" />
-                    <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                            CommandParameter="{Binding .}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Style="{StaticResource Button.ModernTile.Overlay}"
-                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
+                    <Button
+                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                        CommandParameter="{Binding .}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Style="{StaticResource Button.ModernTile.Overlay}"
+                        Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>
@@ -131,12 +132,13 @@
                                Style="{StaticResource TextBlock.Widget.Paragraph}"
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
-                    <Button Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
-                            CommandParameter="{Binding .}"
-                            Grid.ColumnSpan="2"
-                            Grid.RowSpan="2"
-                            Style="{StaticResource Button.ModernTile.Overlay}"
-                            Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
+                    <Button
+                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                        CommandParameter="{Binding .}"
+                        Grid.ColumnSpan="2"
+                        Grid.RowSpan="2"
+                        Style="{StaticResource Button.ModernTile.Overlay}"
+                        Visibility="{Binding Clickable, Converter={StaticResource Converter.BoolToVis}}" />
                 </Grid>
             </Border>
         </DataTemplate>

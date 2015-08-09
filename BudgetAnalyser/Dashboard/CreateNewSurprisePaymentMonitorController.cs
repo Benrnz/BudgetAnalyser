@@ -17,11 +17,11 @@ namespace BudgetAnalyser.Dashboard
     public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellDialogInteractivity
     {
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IUserMessageBox messageBox;
         private Guid dialogCorrelationId;
+        private WeeklyOrFortnightly doNotUseFrequency;
         private DateTime doNotUsePaymentStartDate;
         private BudgetBucket doNotUseSelected;
-        private WeeklyOrFortnightly doNotUseFrequency;
-        private IUserMessageBox messageBox;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
@@ -51,26 +51,6 @@ namespace BudgetAnalyser.Dashboard
             get { return this.bucketRepository.Buckets.ToList(); }
         }
 
-        public BudgetBucket Selected
-        {
-            get { return this.doNotUseSelected; }
-            set
-            {
-                this.doNotUseSelected = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public WeeklyOrFortnightly Frequency
-        {
-            get { return this.doNotUseFrequency; }
-            set
-            {
-                this.doNotUseFrequency = value;
-                RaisePropertyChanged();
-            }
-        }
-
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
@@ -84,10 +64,7 @@ namespace BudgetAnalyser.Dashboard
         /// </summary>
         public bool CanExecuteOkButton
         {
-            get
-            {
-                return Selected != null && PaymentStartDate != DateTime.MinValue;
-            }
+            get { return Selected != null && PaymentStartDate != DateTime.MinValue; }
         }
 
         /// <summary>
@@ -98,12 +75,32 @@ namespace BudgetAnalyser.Dashboard
             get { return false; }
         }
 
+        public WeeklyOrFortnightly Frequency
+        {
+            get { return this.doNotUseFrequency; }
+            set
+            {
+                this.doNotUseFrequency = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public DateTime PaymentStartDate
         {
             get { return this.doNotUsePaymentStartDate; }
             set
             {
                 this.doNotUsePaymentStartDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public BudgetBucket Selected
+        {
+            get { return this.doNotUseSelected; }
+            set
+            {
+                this.doNotUseSelected = value;
                 RaisePropertyChanged();
             }
         }
@@ -123,7 +120,7 @@ namespace BudgetAnalyser.Dashboard
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Create new surprise regular payment monitor",
-                HelpAvailable = true,
+                HelpAvailable = true
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -137,11 +134,12 @@ namespace BudgetAnalyser.Dashboard
 
             if (message.Response == ShellDialogButton.Help)
             {
-                this.messageBox.Show("Using this feature you can create a widget to show upcoming months where that require more than usual weekly or fortnightly payments. This is because there is an uneven number of weeks per month, so occasionally there will be 5 weekly payments in one month and 3 fortnightly payments. This widget will show the months where this will occur for the given Budget Bucket.");
+                this.messageBox.Show(
+                    "Using this feature you can create a widget to show upcoming months where that require more than usual weekly or fortnightly payments. This is because there is an uneven number of weeks per month, so occasionally there will be 5 weekly payments in one month and 3 fortnightly payments. This widget will show the months where this will occur for the given Budget Bucket.");
                 return;
             }
 
-            var handler = Complete;
+            EventHandler<DialogResponseEventArgs> handler = Complete;
             if (handler != null)
             {
                 handler(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));

@@ -111,6 +111,11 @@ namespace BudgetAnalyser.Dashboard
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
+        private static bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
+        }
+
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
@@ -292,11 +297,6 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
-        }
-
-        private static bool WidgetCommandCanExecute(Widget widget)
-        {
-            return widget.Clickable;
         }
     }
 }

@@ -9,7 +9,6 @@ namespace BudgetAnalyser.Statement
     {
         private readonly CancellationTokenSource cancellationSource;
         private bool disposed;
-        private bool success;
 
         public NavigateToTransactionMessage(Guid transactionId)
         {
@@ -35,13 +34,9 @@ namespace BudgetAnalyser.Statement
             Dispose(false);
         }
 
-        public bool Success
-        {
-            get { return this.success; }
-        }
-
+        public bool Success { get; private set; }
         public Guid TransactionId { get; private set; }
-        public Task WhenReadyToNavigate { get; private set; }
+        public Task WhenReadyToNavigate { get; }
 
         /// <summary>
         ///     Implement IDisposable.
@@ -65,7 +60,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("NavigateToTransactionMessage");
             }
 
-            this.success = false;
+            this.Success = false;
             this.cancellationSource.Cancel();
         }
 
@@ -76,7 +71,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("NavigateToTransactionMessage");
             }
 
-            this.success = true;
+            this.Success = true;
             WhenReadyToNavigate.Start();
         }
 

@@ -13,7 +13,6 @@ namespace BudgetAnalyser.ShellDialog
 
         public object Content { get; private set; }
         public Guid CorrelationId { get; set; }
-
         public ShellDialogButton Response { get; private set; }
 
         public bool IsItForMe(Guid correlationId)
