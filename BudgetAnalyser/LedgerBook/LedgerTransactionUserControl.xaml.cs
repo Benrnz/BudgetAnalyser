@@ -40,10 +40,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private LedgerTransaction LedgerTransaction
-        {
-            get { return (LedgerTransaction)DataContext; }
-        }
+private  LedgerTransaction LedgerTransaction => (LedgerTransaction)DataContext;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

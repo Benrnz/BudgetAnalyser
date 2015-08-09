@@ -13,10 +13,7 @@ namespace BudgetAnalyser.Budget
             InitializeComponent();
         }
 
-        private BudgetController Controller
-        {
-            get { return DataContext as BudgetController; }
-        }
+private  BudgetController Controller => DataContext as BudgetController;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

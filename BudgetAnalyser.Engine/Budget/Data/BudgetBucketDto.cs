@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     public class BudgetBucketDto
     {
+        [UsedImplicitly]
         public bool Active { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }

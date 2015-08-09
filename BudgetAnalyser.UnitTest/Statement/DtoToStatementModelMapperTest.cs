@@ -13,10 +13,7 @@ namespace BudgetAnalyser.UnitTest.Statement
     {
         private StatementModel Result { get; set; }
 
-        private TransactionSetDto TestData
-        {
-            get { return TransactionSetDtoTestData.TestData2(); }
-        }
+private  TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();
 
         [TestMethod]
         public void ChangeHashShouldNotBeNull()

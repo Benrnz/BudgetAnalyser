@@ -15,10 +15,7 @@ namespace BudgetAnalyser.Dashboard
             InitializeComponent();
         }
 
-        private DashboardController Controller
-        {
-            get { return (DashboardController)DataContext; }
-        }
+private  DashboardController Controller => (DashboardController)DataContext;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

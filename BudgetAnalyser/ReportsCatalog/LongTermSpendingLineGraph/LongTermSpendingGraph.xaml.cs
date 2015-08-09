@@ -17,10 +17,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             InitializeComponent();
         }
 
-        private LongTermSpendingGraphController Controller
-        {
-            get { return (LongTermSpendingGraphController)DataContext; }
-        }
+private  LongTermSpendingGraphController Controller => (LongTermSpendingGraphController)DataContext;
 
         private void OnChartDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

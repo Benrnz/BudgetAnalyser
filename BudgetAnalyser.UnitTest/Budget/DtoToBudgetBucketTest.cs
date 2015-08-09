@@ -11,10 +11,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     {
         private BudgetBucket Result { get; set; }
 
-        private BudgetBucketDto TestData
-        {
-            get { return BudgetModelTestData.CreateBudgetBucketDtoTestData1().First(b => b.Code == TestDataConstants.CarMtcBucketCode); }
-        }
+private  BudgetBucketDto TestData => BudgetModelTestData.CreateBudgetBucketDtoTestData1().First(b => b.Code == TestDataConstants.CarMtcBucketCode);
 
         [TestMethod]
         public void ShouldMapCode()

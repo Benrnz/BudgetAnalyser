@@ -12,10 +12,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private LedgerBookDto Result { get; set; }
 
-        private LedgerBook TestData
-        {
-            get { return LedgerBookTestData.TestData4(); }
-        }
+private  LedgerBook TestData => LedgerBookTestData.TestData4();
 
         [TestMethod]
         public void ShouldMapFileName()

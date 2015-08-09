@@ -17,10 +17,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
     {
         private IBudgetCurrencyContext BudgetCurrencyContext { get; set; }
 
-        private GlobalFilterCriteria Filter
-        {
-            get { return new GlobalFilterCriteria { BeginDate = new DateTime(2013, 08, 15), EndDate = new DateTime(2013, 09, 14) }; }
-        }
+private  GlobalFilterCriteria Filter => new GlobalFilterCriteria { BeginDate = new DateTime(2013, 08, 15), EndDate = new DateTime(2013, 09, 14) };
 
         private IDictionary<BudgetBucket, decimal> LedgerBalancesFake { get; set; }
         private LedgerBook LedgerBook { get; set; }

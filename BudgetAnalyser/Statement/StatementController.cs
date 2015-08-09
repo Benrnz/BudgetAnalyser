@@ -155,15 +155,9 @@ namespace BudgetAnalyser.Statement
 
         public  StatementViewModel ViewModel => FileOperations.ViewModel;
 
-        internal EditingTransactionController EditingTransactionController
-        {
-            get { return this.uiContext.EditingTransactionController; }
-        }
+internal  EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
 
-        internal SplitTransactionController SplitTransactionController
-        {
-            get { return this.uiContext.SplitTransactionController; }
-        }
+internal  SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
 
         public void Initialize()
         {
