@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine
             new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true },
             new IndexDayHoliday { Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
             new IndexDayHoliday { Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3 },
-            new DayClosestToHoliday { Name = "Auckland Anniversary", DesiredDay = DayOfWeek.Monday, Month = 1, CloseToDate = 29 }
+            new DayClosestMondayToHoliday { Name = "Auckland Anniversary", Month = 1, CloseToDate = 29 }
         };
 
         public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
@@ -52,12 +52,9 @@ namespace BudgetAnalyser.Engine
         ///     A holiday that is celebrated closest to an anniversary date.
         ///     For example: Auckland anniversary is celebrated on the closest Monday to the 29th of January.
         /// </summary>
-        private class DayClosestToHoliday : Holiday
+        private class DayClosestMondayToHoliday : Holiday
         {
             public int CloseToDate { get; set; }
-
-            [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Should be available to external consumers.")]
-            public DayOfWeek DesiredDay { get; set; }
 
             public int Month { get; set; }
 
@@ -112,16 +109,14 @@ namespace BudgetAnalyser.Engine
                 for (int year = start.Year; year <= end.Year; year++)
                 {
                     // first calculate Easter Sunday
-                    var day = 0;
-                    var month = 0;
 
                     int goldenNumber = year % 19;
                     int century = year / 100;
                     int h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
                     int i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
 
-                    day = i - ((year + year / 4 + i + 2 - century + century / 4) % 7) + 28;
-                    month = 3;
+                    int day = i - ((year + year / 4 + i + 2 - century + century / 4) % 7) + 28;
+                    var month = 3;
 
                     if (day > 31)
                     {

@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException(nameof(autoMapperRegistrations));
             }
 
-            this.Registrations = autoMapperRegistrations;
+            Registrations = autoMapperRegistrations;
         }
 
         internal IEnumerable<ILocalAutoMapperConfiguration> Registrations { get; }
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine
             // In addition use of dependencies within the mapping effectively makes the dependencies "static-shared" as well, making it difficult to mock these
             // dependencies.  Will probably work ok if testing of mappers are isolated properly.  Ie, no integration tests that consume real mappers.
 
-            foreach (ILocalAutoMapperConfiguration configuration in this.Registrations)
+            foreach (ILocalAutoMapperConfiguration configuration in Registrations)
             {
                 configuration.RegisterMappings();
             }

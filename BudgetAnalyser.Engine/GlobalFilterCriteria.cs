@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine
         {
             unchecked
             {
-                int hashCode = (this.doNotUseAccount != null ? this.doNotUseAccount.GetHashCode() : 0);
+                int hashCode = this.doNotUseAccount?.GetHashCode() ?? 0;
                 hashCode = (hashCode * 397) ^ this.doNotUseBeginDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();

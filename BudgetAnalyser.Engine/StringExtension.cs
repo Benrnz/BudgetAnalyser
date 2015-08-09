@@ -57,11 +57,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static string TrimEndSafely(this string instance)
         {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance.TrimEnd();
+            return instance?.TrimEnd();
         }
 
         /// <summary>
