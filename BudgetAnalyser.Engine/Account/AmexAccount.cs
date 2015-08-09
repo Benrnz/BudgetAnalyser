@@ -7,22 +7,13 @@
             Name = name;
         }
 
-        public override AccountType AccountType
-        {
-            get { return AccountType.CreditCard; }
-        }
+        public override AccountType AccountType => AccountType.CreditCard;
 
-        public override string ImagePath
-        {
-            get { return "AmexLogoImage"; }
-        }
+        public override string ImagePath => "AmexLogoImage";
 
-        internal override string[] KeyWords
-        {
-            get { return new[] { "AMEX" }; }
-        }
+        internal virtual string[] KeyWords => new[] { "AMEX" };
 
-        public override Account Clone(string name)
+        public virtual Account Clone(string name)
         {
             return new AmexAccount(name);
         }

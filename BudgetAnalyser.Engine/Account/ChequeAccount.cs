@@ -7,31 +7,16 @@
             Name = name;
         }
 
-        public override AccountType AccountType
-        {
-            get { return AccountType.General; }
-        }
+        public override AccountType AccountType => AccountType.General;
 
-        public override string ImagePath
-        {
-            get { return "ChequeLogoImage"; }
-        }
+        public override string ImagePath => "ChequeLogoImage";
 
-        public override bool IsSalaryAccount
-        {
-            get
-            {
-                // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this may need to be more robust.
-                return true;
-            }
-        }
+        // TODO If multiple cheque (or multiple non-savings) accounts are ever allowed, this may need to be more robust.
+        public override bool IsSalaryAccount => true;
 
-        internal override string[] KeyWords
-        {
-            get { return new[] { "CHEQUE", "CHECK" }; }
-        }
+        internal virtual string[] KeyWords => new[] { "CHEQUE", "CHECK" };
 
-        public override Account Clone(string name)
+        public virtual Account Clone(string name)
         {
             return new ChequeAccount(name);
         }

@@ -7,22 +7,13 @@
             Name = name;
         }
 
-        public override AccountType AccountType
-        {
-            get { return AccountType.Savings; }
-        }
+        public override AccountType AccountType => AccountType.Savings;
 
-        public override string ImagePath
-        {
-            get { return "SavingsLogoImage"; }
-        }
+        public override string ImagePath => "SavingsLogoImage";
 
-        internal override string[] KeyWords
-        {
-            get { return new[] { "SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL" }; }
-        }
+        internal virtual string[] KeyWords => new[] { "SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL" };
 
-        public override Account Clone(string name)
+        public virtual Account Clone(string name)
         {
             return new SavingsAccount(name);
         }

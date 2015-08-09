@@ -81,10 +81,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public virtual string TypeDescription
-        {
-            get { return GetType().Name; }
-        }
+        public virtual string TypeDescription => GetType().Name;
 
         public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
         {

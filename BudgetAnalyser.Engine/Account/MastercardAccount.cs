@@ -7,22 +7,13 @@
             Name = name;
         }
 
-        public override AccountType AccountType
-        {
-            get { return AccountType.CreditCard; }
-        }
+        public override AccountType AccountType => AccountType.CreditCard;
 
-        public override string ImagePath
-        {
-            get { return "MastercardLogoImage"; }
-        }
+        public override string ImagePath => "MastercardLogoImage";
 
-        internal override string[] KeyWords
-        {
-            get { return new[] { "MASTERCARD" }; }
-        }
+        internal virtual string[] KeyWords => new[] { "MASTERCARD" };
 
-        public override Account Clone(string name)
+        public virtual Account Clone(string name)
         {
             return new MastercardAccount(name);
         }
