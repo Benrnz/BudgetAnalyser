@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Matching
                 transactions,
                 transaction =>
                 {
-                    if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
+                    if (transaction.BudgetBucket?.Code == null)
                     {
                         foreach (MatchingRule rule in rules.ToList())
                         {

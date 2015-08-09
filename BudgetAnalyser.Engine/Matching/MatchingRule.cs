@@ -68,6 +68,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             get { return this.bucketRepository.GetByCode(BucketCode); }
 
+            [UsedImplicitly]
             private set
             {
                 if (value == null)
@@ -125,7 +126,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             set
             {
-                this.doNotUseReference1 = value == null ? null : value.Trim();
+                this.doNotUseReference1 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -136,7 +137,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             set
             {
-                this.doNotUseReference2 = value == null ? null : value.Trim();
+                this.doNotUseReference2 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -147,7 +148,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             set
             {
-                this.doNotUseReference3 = value == null ? null : value.Trim();
+                this.doNotUseReference3 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -210,6 +211,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public override int GetHashCode()
         {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode - Property setter is used by Persistence only
             return RuleId.GetHashCode();
         }
 

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -12,7 +10,7 @@ namespace BudgetAnalyser.Engine.Matching
     /// <summary>
     ///     A class that models a group of matching rules grouped by a single <see cref="BudgetBucket" />.
     /// </summary>
-    public class RulesGroupedByBucket : INotifyPropertyChanged
+    public class RulesGroupedByBucket 
     {
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
@@ -26,21 +24,12 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(rules));
             }
 
-            this.Bucket = bucket;
-            this.Rules = new ObservableCollection<MatchingRule>(rules.ToList());
+            Bucket = bucket;
+            Rules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public BudgetBucket Bucket { get; }
         public ObservableCollection<MatchingRule> Rules { get; }
-
-        public  int RulesCount => Rules.Count();
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public int RulesCount => Rules.Count();
     }
 }
