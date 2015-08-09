@@ -54,7 +54,9 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
-                return ((BudgetBucket != null ? BudgetBucket.GetHashCode() : 0) * 397) ^ (StoredInAccount != null ? StoredInAccount.GetHashCode() : 0);
+                // ReSharper disable NonReadonlyMemberInGetHashCode - Properties are only set by persistence
+                return ((BudgetBucket?.GetHashCode() ?? 0) * 397) ^ (StoredInAccount?.GetHashCode() ?? 0);
+                // ReSharper restore NonReadonlyMemberInGetHashCode
             }
         }
 

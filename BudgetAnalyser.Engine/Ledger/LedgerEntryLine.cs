@@ -100,6 +100,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     transactions
         ///     now falling outside the date range would need to be removed, thus affected balances.
         /// </summary>
+        [UsedImplicitly]
         public DateTime Date { get; internal set; }
 
         public IEnumerable<LedgerEntry> Entries
@@ -196,9 +197,8 @@ namespace BudgetAnalyser.Engine.Ledger
             // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
             // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
             // 20/Jan (inclusive) and 19/Feb (inclusive).
-            List<Transaction> filteredStatementTransactions = statement == null
-                ? new List<Transaction>()
-                : statement.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList();
+            List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList() 
+                ?? new List<Transaction>();
 
             IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(parentLedgerBook);
 
@@ -378,7 +378,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
-            return previousEntry == null ? 0 : previousEntry.Balance;
+            return previousEntry?.Balance ?? 0;
         }
 
         private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
@@ -569,7 +569,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         {
                             toDoList.Add(
                                 new TransferTask(
-                                    string.Format("A {0} payment for {1:C} has been made from {2}, but funds are stored in {3}.", t.BudgetBucket.Code, t.Amount, t.Account, ledgerAccount),
+                                    $"A {t.BudgetBucket.Code} payment for {t.Amount:C} has been made from {t.Account}, but funds are stored in {ledgerAccount}.",
                                     true)
                                 {
                                     Amount = t.Amount,

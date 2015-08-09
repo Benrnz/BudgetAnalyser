@@ -222,10 +222,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntryLine UnlockMostRecentLine()
         {
             LedgerEntryLine line = Reconciliations.FirstOrDefault();
-            if (line != null)
-            {
-                line.Unlock();
-            }
+            line?.Unlock();
 
             return line;
         }

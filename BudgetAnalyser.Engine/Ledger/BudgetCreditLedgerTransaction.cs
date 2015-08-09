@@ -1,4 +1,5 @@
 ﻿using System;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -8,6 +9,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Creates a new instance of <see cref="BudgetCreditLedgerTransaction" />.
         ///     Called using reflection during deserialisation.
         /// </summary>
+        [UsedImplicitly]
         public BudgetCreditLedgerTransaction(Guid id)
             : base(id)
         {

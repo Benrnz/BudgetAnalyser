@@ -187,6 +187,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
+                // ReSharper disable once EnumerableSumInExplicitUncheckedContext - Used to calculate a checksum and revolving (overflowing) integers are ok here.
                 return dataEntity.Reconciliations.Sum(
                     l =>
                         (double)l.LedgerBalance

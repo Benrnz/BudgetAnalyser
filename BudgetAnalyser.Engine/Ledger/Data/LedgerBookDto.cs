@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -28,6 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member", Target = "BudgetAnalyser.Engine.Ledger.Data.LedgerBookDto.#Ledgers",
             Justification = "Required for serialisation")]
+        [UsedImplicitly]
         public List<LedgerBucketDto> Ledgers { get; set; }
 
         public DateTime Modified { get; set; }

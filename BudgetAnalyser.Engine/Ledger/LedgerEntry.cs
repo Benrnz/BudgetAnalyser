@@ -68,10 +68,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public  decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
-        public IEnumerable<LedgerTransaction> Transactions
-        {
-            get { return this.transactions; }
-        }
+        public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
         /// <summary>
         ///     Returns a string that represents the current object.
