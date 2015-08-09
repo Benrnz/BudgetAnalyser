@@ -26,10 +26,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     A list of data series, one for each line/series on the graph.
         /// </summary>
-        public IEnumerable<SeriesData> Series
-        {
-            get { return SeriesList; }
-        }
+        public IEnumerable<SeriesData> Series => SeriesList;
 
         internal IList<SeriesData> SeriesList { get; set; }
     }

@@ -32,10 +32,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public  decimal MinimumValue => PlotsList.Min(p => p.Amount);
 
-        public IEnumerable<DatedGraphPlot> Plots
-        {
-            get { return PlotsList; }
-        }
+        public IEnumerable<DatedGraphPlot> Plots => PlotsList;
 
         /// <summary>
         ///     The name of the series, typically used in the graph legend.

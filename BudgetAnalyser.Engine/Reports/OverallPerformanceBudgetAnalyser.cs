@@ -146,8 +146,8 @@ namespace BudgetAnalyser.Engine.Reports
             }
             else
             {
-                beginDate = criteria.BeginDate.Value;
-                endDate = criteria.EndDate.Value;
+                beginDate = criteria.BeginDate ?? DateTime.MinValue;
+                endDate = criteria.EndDate ?? DateTime.MinValue;
             }
         }
 

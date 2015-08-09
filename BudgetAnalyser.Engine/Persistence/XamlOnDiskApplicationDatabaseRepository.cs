@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Persistence
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            string path = Path.Combine(Path.GetDirectoryName(storageKey), Path.GetFileNameWithoutExtension(storageKey));
+            string path = Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey) ?? string.Empty);
             var storageRoot = new BudgetAnalyserStorageRoot
             {
                 BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.xml" },

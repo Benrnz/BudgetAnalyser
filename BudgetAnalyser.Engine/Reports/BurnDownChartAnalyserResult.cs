@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         public BurnDownChartAnalyserResult()
         {
-            this.GraphLines = new GraphData();
+            GraphLines = new GraphData();
         }
 
         public string ChartTitle { get; internal set; }

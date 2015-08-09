@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Reports
                 var plot = new DatedGraphPlot
                 {
                     Date = reconciliation.Date,
-                    Amount = entry == null ? 0 : entry.Balance
+                    Amount = entry?.Balance ?? 0
                 };
                 series.PlotsList.Add(plot);
             }

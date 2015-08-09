@@ -7,10 +7,7 @@ namespace BudgetAnalyser.Engine.Reports
     /// </summary>
     public class OverallPerformanceBudgetResult
     {
-        public IEnumerable<BucketPerformanceResult> Analyses
-        {
-            get { return AnalysesList; }
-        }
+        public IEnumerable<BucketPerformanceResult> Analyses => AnalysesList;
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
