@@ -12,12 +12,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         private BudgetBucketDto testData;
 
         [TestMethod]
-        public void ShouldMapFixedBudgetAmount()
-        {
-            Assert.AreEqual(((FixedBudgetBucketDto)this.testData).FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
-        }
-
-        [TestMethod]
         public void ShouldMapCode()
         {
             Assert.AreEqual(this.testData.Code, this.result.Code);
@@ -27,6 +21,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void ShouldMapDescription()
         {
             Assert.AreEqual(this.testData.Description, this.result.Description);
+        }
+
+        [TestMethod]
+        public void ShouldMapFixedBudgetAmount()
+        {
+            Assert.AreEqual(((FixedBudgetBucketDto)this.testData).FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
         }
 
         [TestMethod]

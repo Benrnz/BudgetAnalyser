@@ -12,6 +12,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         private BudgetBucketDto Result { get; set; }
 
         [TestMethod]
+        public void ShouldMapBucketType()
+        {
+            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Result.Type);
+        }
+
+        [TestMethod]
         public void ShouldMapCode()
         {
             Assert.AreEqual(TestDataConstants.CarMtcBucketCode, Result.Code);
@@ -34,12 +40,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             SpentMonthlyExpenseBucket testData = StatementModelTestData.CarMtcBucket;
             Result = Mapper.Map<BudgetBucketDto>(testData);
-        }
-
-        [TestMethod]
-        public void ShouldMapBucketType()
-        {
-            Assert.AreEqual(BucketDtoType.SpentMonthlyExpense, Result.Type);
         }
     }
 }

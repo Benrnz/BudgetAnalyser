@@ -11,9 +11,9 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class FixedBudgetProjectBucketToDtoMapperTest
     {
         private const string FixedProjectCode = "Foo";
+        private readonly DateTime testDataCreatedDate = new DateTime(2014, 09, 20);
         private BudgetBucketDto result;
         private BudgetBucket testData;
-        private readonly DateTime testDataCreatedDate = new DateTime(2014, 09, 20);
 
         [TestMethod]
         public void ShouldMapBucketType()

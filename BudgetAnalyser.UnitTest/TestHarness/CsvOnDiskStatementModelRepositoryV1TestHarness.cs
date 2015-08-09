@@ -5,28 +5,27 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {
         public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities)
-            : base(importUtilities, 
-                    new FakeLogger(), 
-                    new TransactionSetDtoToStatementModelMapper(), 
-                    new StatementModelToTransactionSetDtoMapper())
+            : base(importUtilities,
+                new FakeLogger(),
+                new TransactionSetDtoToStatementModelMapper(),
+                new StatementModelToTransactionSetDtoMapper())
         {
         }
 
         public CsvOnDiskStatementModelRepositoryV1TestHarness(
-            BankImportUtilities importUtilities, 
-            BasicMapper<TransactionSetDto, StatementModel> toDomainMapper, 
+            BankImportUtilities importUtilities,
+            BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
             BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
             : base(importUtilities,
-                    new FakeLogger(),
-                    toDomainMapper,
-                    toDtoMapper)
+                new FakeLogger(),
+                toDomainMapper,
+                toDtoMapper)
         {
         }
 

@@ -14,25 +14,26 @@ namespace BudgetAnalyser.UnitTest.Reports
     [TestClass]
     public class BurnDownGraphAnalyserTest
     {
+        private SeriesData BalanceLine
+        {
+            get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName); }
+        }
+
         private BudgetModel Budget { get; set; }
-        private LedgerBook LedgerBook { get; set; }
-        private StatementModel StatementModel { get; set; }
-        private BurnDownChartAnalyser Subject { get; set; }
-        private BurnDownChartAnalyserResult Result { get; set; }
 
         private SeriesData BudgetLine
         {
             get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName); }
         }
 
+        private LedgerBook LedgerBook { get; set; }
+        private BurnDownChartAnalyserResult Result { get; set; }
+        private StatementModel StatementModel { get; set; }
+        private BurnDownChartAnalyser Subject { get; set; }
+
         private SeriesData ZeroLine
         {
             get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName); }
-        }
-
-        private SeriesData BalanceLine
-        {
-            get { return Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName); }
         }
 
         [TestMethod]
@@ -51,6 +52,12 @@ namespace BudgetAnalyser.UnitTest.Reports
         public void AnalyseShouldReturn31DaysOfZeroLineElements()
         {
             Assert.AreEqual(31, ZeroLine.Plots.Count());
+        }
+
+        [TestMethod]
+        public void AnalyseShouldReturn5ReportTransactions()
+        {
+            Assert.AreEqual(5, Result.ReportTransactions.Count());
         }
 
         [TestMethod]
@@ -75,6 +82,22 @@ namespace BudgetAnalyser.UnitTest.Reports
         }
 
         [TestMethod]
+        public void AnalyseShouldReturnALastReportTransactionsElementWithBalanceEqualTo3376()
+        {
+            foreach (ReportTransactionWithRunningBalance transaction in Result.ReportTransactions)
+            {
+                Console.WriteLine(
+                    "{0} {1} {2:N} {3:N}",
+                    transaction.Date,
+                    transaction.Narrative.Truncate(30).PadRight(30),
+                    transaction.Amount.ToString().Truncate(10).PadRight(10),
+                    transaction.Balance);
+            }
+
+            Assert.AreEqual(3376.34M, Result.ReportTransactions.Last().Balance);
+        }
+
+        [TestMethod]
         public void AnalyseShouldReturnBalanceLineAxesMinimumOf0()
         {
             Assert.AreEqual(0, Result.GraphLines.GraphMinimumValue);
@@ -87,32 +110,15 @@ namespace BudgetAnalyser.UnitTest.Reports
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnZeroLineElementsTotalingToZero()
-        {
-            Assert.AreEqual(0, ZeroLine.Plots.Sum(z => z.Amount));
-        }
-
-        [TestMethod]
         public void AnalyseShouldReturnReportTransactionsAmountsTotaling3376()
         {
             Assert.AreEqual(3376.34M, Result.ReportTransactions.Sum(t => t.Amount));
         }
 
         [TestMethod]
-        public void AnalyseShouldReturnALastReportTransactionsElementWithBalanceEqualTo3376()
+        public void AnalyseShouldReturnZeroLineElementsTotalingToZero()
         {
-            foreach (var transaction in Result.ReportTransactions)
-            {
-                Console.WriteLine("{0} {1} {2:N} {3:N}", transaction.Date, transaction.Narrative.Truncate(30).PadRight(30), transaction.Amount.ToString().Truncate(10).PadRight(10), transaction.Balance);
-            }
-
-            Assert.AreEqual(3376.34M, Result.ReportTransactions.Last().Balance);
-        }
-
-        [TestMethod]
-        public void AnalyseShouldReturn5ReportTransactions()
-        {
-            Assert.AreEqual(5, Result.ReportTransactions.Count());
+            Assert.AreEqual(0, ZeroLine.Plots.Sum(z => z.Amount));
         }
 
         [TestInitialize]

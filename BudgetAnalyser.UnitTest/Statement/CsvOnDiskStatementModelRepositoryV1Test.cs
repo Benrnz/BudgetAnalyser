@@ -19,7 +19,10 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullBankImportUtils()
         {
-            new CsvOnDiskStatementModelRepositoryV1(null, new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(
+                null,
+                new FakeLogger(),
+                new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -28,7 +31,10 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullDomainMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), new FakeLogger(), new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(
+                new BankImportUtilities(new FakeLogger()),
+                new FakeLogger(),
+                new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 null);
             Assert.Fail();
         }
@@ -37,7 +43,10 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullDtoMapper()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), new FakeLogger(), null,
+            new CsvOnDiskStatementModelRepositoryV1(
+                new BankImportUtilities(new FakeLogger()),
+                new FakeLogger(),
+                null,
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -46,7 +55,10 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullLogger()
         {
-            new CsvOnDiskStatementModelRepositoryV1(new BankImportUtilities(new FakeLogger()), null, new BasicMapperFake<TransactionSetDto, StatementModel>(),
+            new CsvOnDiskStatementModelRepositoryV1(
+                new BankImportUtilities(new FakeLogger()),
+                null,
+                new BasicMapperFake<TransactionSetDto, StatementModel>(),
                 new BasicMapperFake<StatementModel, TransactionSetDto>());
             Assert.Fail();
         }
@@ -56,7 +68,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            var result = await subject.IsStatementModelAsync("Foo.foo");
+            bool result = await subject.IsStatementModelAsync("Foo.foo");
 
             Assert.IsFalse(result);
         }
@@ -66,7 +78,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var result = await subject.IsStatementModelAsync("Foo.foo");
+            bool result = await subject.IsStatementModelAsync("Foo.foo");
 
             Assert.IsTrue(result);
         }
@@ -76,7 +88,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.IsNotNull(model);
         }
@@ -86,7 +98,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual("Foo.foo", model.StorageKey);
         }
@@ -96,7 +108,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
             Console.WriteLine(model.LastImport);
             Assert.AreEqual(new DateTime(2012, 08, 20), model.LastImport);
         }
@@ -106,7 +118,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(0, model.AllTransactions.Count());
         }
@@ -116,7 +128,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(1, model.DurationInMonths);
         }
@@ -126,7 +138,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(15, model.AllTransactions.Count());
         }
@@ -136,7 +148,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
 
             Assert.AreEqual(0, model.DurationInMonths);
         }
@@ -179,7 +191,7 @@ namespace BudgetAnalyser.UnitTest.Statement
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
 
-            var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName);
+            StatementModel model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName);
 
             Assert.IsNotNull(model);
             Assert.AreEqual(33, model.AllTransactions.Count());
@@ -190,11 +202,10 @@ namespace BudgetAnalyser.UnitTest.Statement
         {
             CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
             subject.ReadLinesOverride = file => EmbeddedResourceHelper.ExtractLines(TestDataConstants.DemoTransactionsFileName, true);
-            var model = await subject.LoadAsync("Foo.foo");
+            StatementModel model = await subject.LoadAsync("Foo.foo");
             Console.WriteLine(model.DurationInMonths);
             Assert.AreEqual(1, model.DurationInMonths);
         }
-
 
         [TestMethod]
         [ExpectedException(typeof(StatementModelChecksumException))]
@@ -210,7 +221,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                 {
                     StorageKey = "Foo.bar",
                     LastImport = new DateTime(2013, 07, 20),
-                    Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList(),
+                    Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList()
                 });
 
             await subject.SaveAsync(model, "Foo.bar");
@@ -223,7 +234,8 @@ namespace BudgetAnalyser.UnitTest.Statement
             return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness());
         }
 
-        private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
+        private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(
+            BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
             BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
         {
             return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness(), toDomainMapper, toDtoMapper);

@@ -30,22 +30,22 @@ namespace BudgetAnalyser.UnitTest.Budget
                             new IncomeDto
                             {
                                 Amount = 2300.23M,
-                                BudgetBucketCode = TestDataConstants.IncomeBucketCode,
-                            },
+                                BudgetBucketCode = TestDataConstants.IncomeBucketCode
+                            }
                         },
                         Expenses = new List<ExpenseDto>
                         {
                             new ExpenseDto
                             {
                                 Amount = 350.11M,
-                                BudgetBucketCode = TestDataConstants.PhoneBucketCode,
+                                BudgetBucketCode = TestDataConstants.PhoneBucketCode
                             },
                             new ExpenseDto
                             {
                                 Amount = 221.22M,
-                                BudgetBucketCode = TestDataConstants.PowerBucketCode,
-                            },
-                        },
+                                BudgetBucketCode = TestDataConstants.PowerBucketCode
+                            }
+                        }
                     };
             }
         }
@@ -114,8 +114,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = new DtoToBudgetModelMapper().Map(TestData);
         }
     }

@@ -22,7 +22,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             var subject = new LedgerBook(new FakeLogger())
             {
-                Name = "Foo", Modified = new DateTime(2011, 12, 4), FileName = @"C:\TestLedgerBook.xml",
+                Name = "Foo",
+                Modified = new DateTime(2011, 12, 4),
+                FileName = @"C:\TestLedgerBook.xml"
             };
             LedgerEntryLine result = subject.UnlockMostRecentLine();
 
@@ -168,7 +170,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData2();
             book.Output();
         }
-
 
         private LedgerBook ArrangeAndAct()
         {

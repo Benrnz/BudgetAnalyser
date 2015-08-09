@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -18,6 +17,15 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.IsFalse(subject.BudgetActive);
             Assert.IsTrue(subject.BudgetArchived);
             Assert.IsFalse(subject.BudgetInFuture);
+        }
+
+        [TestMethod]
+        public void Budget1ShouldBeEffectiveUntilBudget2EffectiveDate()
+        {
+            BudgetCurrencyContext subject = CreateSubject1();
+
+            Assert.IsTrue(subject.BudgetArchived);
+            Assert.AreEqual(new DateTime(2014, 01, 20), subject.EffectiveUntil);
         }
 
         [TestMethod]
@@ -67,27 +75,19 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             var budget3 = new BudgetModel { EffectiveFrom = new DateTime(2020, 01, 30) };
             var subject = new BudgetCurrencyContext(
-                new BudgetCollection(new[]
-                {
-                    BudgetModelTestData.CreateTestData1(),
-                    BudgetModelTestData.CreateTestData2(),
-                    budget3
-                }),
+                new BudgetCollection(
+                    new[]
+                    {
+                        BudgetModelTestData.CreateTestData1(),
+                        BudgetModelTestData.CreateTestData2(),
+                        budget3
+                    }),
                 budget3
-           );
+                );
 
             Assert.IsFalse(subject.BudgetActive);
             Assert.IsFalse(subject.BudgetArchived);
             Assert.IsTrue(subject.BudgetInFuture);
-        }
-
-        [TestMethod]
-        public void Budget1ShouldBeEffectiveUntilBudget2EffectiveDate()
-        {
-            var subject = CreateSubject1();
-
-            Assert.IsTrue(subject.BudgetArchived);
-            Assert.AreEqual(new DateTime(2014, 01, 20), subject.EffectiveUntil);
         }
 
         private static BudgetCurrencyContext CreateSubject1()

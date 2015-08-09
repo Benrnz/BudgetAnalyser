@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,35 +18,35 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void BudgetBucketPropertiesShouldBeMapped()
         {
-            var properties = typeof(BudgetBucket).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
+            IEnumerable<PropertyInfo> properties = typeof(BudgetBucket).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
             Assert.AreEqual(3, properties.Count());
         }
 
         [TestMethod]
         public void Comparable_HairBucketIsLessThanPower()
         {
-            var hairBucket = TestData.StatementModelTestData.HairBucket;
-            var powerBucket = TestData.StatementModelTestData.PowerBucket;
+            SpentMonthlyExpenseBucket hairBucket = StatementModelTestData.HairBucket;
+            SpentMonthlyExpenseBucket powerBucket = StatementModelTestData.PowerBucket;
 
             Assert.IsTrue(hairBucket.CompareTo(powerBucket) < 0);
         }
 
         [TestMethod]
-        public void Comparable_PhoneBucketIsGreaterThanHair()
+        public void Comparable_PhoneBucketIsEqualToAnotherInstance()
         {
-            var hairBucket = TestData.StatementModelTestData.HairBucket;
-            var phoneBucket = TestData.StatementModelTestData.PhoneBucket;
+            SpentMonthlyExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
+            BudgetBucket phooneBucket2 = Arrange(TestDataConstants.PhoneBucketCode, "Foo");
 
-            Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);
+            Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
         }
 
         [TestMethod]
-        public void Comparable_PhoneBucketIsEqualToAnotherInstance()
+        public void Comparable_PhoneBucketIsGreaterThanHair()
         {
-            var phoneBucket = TestData.StatementModelTestData.PhoneBucket;
-            var phooneBucket2 = Arrange(TestData.TestDataConstants.PhoneBucketCode, "Foo");
+            SpentMonthlyExpenseBucket hairBucket = StatementModelTestData.HairBucket;
+            SpentMonthlyExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
 
-            Assert.IsTrue(phoneBucket.CompareTo(phooneBucket2) == 0);
+            Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);
         }
 
         [TestMethod]
@@ -121,6 +123,24 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
+        public void ValidateShouldRetrunFalseGivenLongCode()
+        {
+            BudgetBucket subject = Arrange();
+            subject.Code = "ABC345678";
+            bool result = subject.Validate(new StringBuilder());
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ValidateShouldThrowGivenNullStringBuilder()
+        {
+            BudgetBucket subject = Arrange();
+            subject.Validate(null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void ValidateWillReturnFalseWhenCodeIsNull()
         {
             BudgetBucket subject = Arrange();
@@ -148,24 +168,6 @@ namespace BudgetAnalyser.UnitTest.Budget
             var builder = new StringBuilder();
             Assert.IsFalse(subject.Validate(builder));
             Assert.IsTrue(builder.Length > 0);
-        }
-
-        [TestMethod]
-        public void ValidateShouldRetrunFalseGivenLongCode()
-        {
-            var subject = Arrange();
-            subject.Code = "ABC345678";
-            var result = subject.Validate(new StringBuilder());
-            Assert.IsFalse(result);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ValidateShouldThrowGivenNullStringBuilder()
-        {
-            var subject = Arrange();
-            subject.Validate(null);
-            Assert.Fail();
         }
 
         private BudgetBucket Arrange(string code = NotSpecified, string name = NotSpecified)

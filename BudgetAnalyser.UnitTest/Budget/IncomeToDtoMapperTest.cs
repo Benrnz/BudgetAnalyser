@@ -32,8 +32,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<IncomeDto>(TestData);
         }
     }

@@ -55,7 +55,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         [ExpectedException(typeof(NotSupportedException))]
         public async Task ImportShouldThrowGivenNoImportersCanImport()
         {
-            var model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));
+            StatementModel model = await Subject.ImportAsync("Foo.bar", new ChequeAccount("Cheque"));
         }
 
         [TestInitialize]

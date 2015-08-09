@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 
@@ -11,7 +10,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             get
             {
-                var budgetModel = BudgetModelTestData.CreateTestData1();
+                BudgetModel budgetModel = BudgetModelTestData.CreateTestData1();
                 return budgetModel.Expenses.Select(e => e.Bucket)
                     .Union(budgetModel.Incomes.Select(i => i.Bucket));
             }

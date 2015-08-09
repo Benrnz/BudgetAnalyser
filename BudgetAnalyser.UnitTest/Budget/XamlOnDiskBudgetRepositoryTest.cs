@@ -230,16 +230,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
         }
 
-        private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)
-        {
-            if (bucketRepo == null)
-            {
-                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
-            }
-
-            return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
-        }
-
         private static BudgetCollectionDto OnLoadFromDiskMock(string f)
         {
             return EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(f);
@@ -248,6 +238,16 @@ namespace BudgetAnalyser.UnitTest.Budget
         private static void SetPrivateBudgetCollection(XamlOnDiskBudgetRepositoryTestHarness subject)
         {
             PrivateAccessor.SetField<XamlOnDiskBudgetRepository>(subject, "currentBudgetCollection", BudgetModelTestData.CreateCollectionWith1And2());
+        }
+
+        private XamlOnDiskBudgetRepositoryTestHarness Arrange(IBudgetBucketRepository bucketRepo = null)
+        {
+            if (bucketRepo == null)
+            {
+                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
+            }
+
+            return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
         }
     }
 }

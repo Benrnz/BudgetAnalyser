@@ -7,31 +7,59 @@ namespace BudgetAnalyser.UnitTest
     public class StringExtensionTest
     {
         [TestMethod]
-        public void IsSomethingShouldReturnFalseGivenNull()
+        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithLowerVowel()
         {
-            string subject = null;
-            Assert.IsFalse(subject.IsSomething());
+            string result = "apple or banana".AnOrA();
+            Assert.AreEqual("an", result);
         }
 
         [TestMethod]
-        public void IsSomethingShouldReturnFalseGivenEmpty()
+        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithUpperVowel()
         {
-            string subject = string.Empty;
-            Assert.IsFalse(subject.IsSomething());
+            string result = "Apple or banana".AnOrA();
+            Assert.AreEqual("an", result);
         }
 
         [TestMethod]
-        public void IsSomethingShouldReturnTrueGivenAnyText()
+        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithLowerVowel()
         {
-            string subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
-            Assert.IsTrue(subject.IsSomething());
+            string result = "banana or apple".AnOrA();
+            Assert.AreEqual("a", result);
         }
 
         [TestMethod]
-        public void IsNothingShouldReturnFalseGivenNull()
+        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithUpperVowel()
         {
-            string subject = null;
-            Assert.IsTrue(subject.IsNothing());
+            string result = "banana or apple".AnOrA();
+            Assert.AreEqual("a", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            string result = "apple or banana".AnOrA(true);
+            Assert.AreEqual("An", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            string result = "Apple or banana".AnOrA(true);
+            Assert.AreEqual("An", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithLowerVowel()
+        {
+            string result = "banana or apple".AnOrA(true);
+            Assert.AreEqual("A", result);
+        }
+
+        [TestMethod]
+        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithUpperVowel()
+        {
+            string result = "banana or apple".AnOrA(true);
+            Assert.AreEqual("A", result);
         }
 
         [TestMethod]
@@ -42,112 +70,44 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
+        public void IsNothingShouldReturnFalseGivenNull()
+        {
+            string subject = null;
+            Assert.IsTrue(subject.IsNothing());
+        }
+
+        [TestMethod]
         public void IsNothingShouldReturnTrueGivenAnyText()
         {
-            string subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
+            var subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
             Assert.IsFalse(subject.IsNothing());
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithUpperVowel()
+        public void IsSomethingShouldReturnFalseGivenEmpty()
         {
-            var result = "Apple or banana".AnOrA(true);
-            Assert.AreEqual("An", result);
+            string subject = string.Empty;
+            Assert.IsFalse(subject.IsSomething());
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithLowerVowel()
+        public void IsSomethingShouldReturnFalseGivenNull()
         {
-            var result = "apple or banana".AnOrA(true);
-            Assert.AreEqual("An", result);
+            string subject = null;
+            Assert.IsFalse(subject.IsSomething());
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithUpperVowel()
+        public void IsSomethingShouldReturnTrueGivenAnyText()
         {
-            var result = "Apple or banana".AnOrA();
-            Assert.AreEqual("an", result);
-        }
-
-        [TestMethod]
-        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithLowerVowel()
-        {
-            var result = "apple or banana".AnOrA();
-            Assert.AreEqual("an", result);
-        }
-
-        [TestMethod]
-        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithUpperVowel()
-        {
-            var result = "banana or apple".AnOrA(true);
-            Assert.AreEqual("A", result);
-        }
-
-        [TestMethod]
-        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithLowerVowel()
-        {
-            var result = "banana or apple".AnOrA(true);
-            Assert.AreEqual("A", result);
-        }
-
-        [TestMethod]
-        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithUpperVowel()
-        {
-            var result = "banana or apple".AnOrA();
-            Assert.AreEqual("a", result);
-        }
-
-        [TestMethod]
-        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithLowerVowel()
-        {
-            var result = "banana or apple".AnOrA();
-            Assert.AreEqual("a", result);
+            var subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
+            Assert.IsTrue(subject.IsSomething());
         }
 
         [TestMethod]
         public void TruncateEmptyStringTo9()
         {
             Assert.AreEqual(string.Empty, string.Empty.Truncate(9));
-        }
-
-        [TestMethod]
-        public void TruncateValidStringTo9()
-        {
-            string data1 = "The quick brown fox";
-
-            Assert.AreEqual("The quick", data1.Truncate(9));
-        }
-
-        [TestMethod]
-        public void TruncateShortStringTo20()
-        {
-            string data1 = "The quick brown fox";
-
-            Assert.AreEqual("The quick brown fox", data1.Truncate(20));
-        }
-
-        [TestMethod]
-        public void TruncateValidStringTo9WithEllipses()
-        {
-            string data1 = "The quick brown fox";
-
-            Assert.AreEqual("The quic…", data1.Truncate(9, true));
-        }
-
-        [TestMethod]
-        public void TruncateLeftValidStringTo9()
-        {
-            string data1 = "The quick brown fox";
-
-            Assert.AreEqual("brown fox", data1.TruncateLeft(9));
-        }
-
-        [TestMethod]
-        public void TruncateLeftValidStringTo9WithEllipses()
-        {
-            string data1 = "The quick brown fox";
-
-            Assert.AreEqual("…rown fox", data1.TruncateLeft(9, true));
         }
 
         [TestMethod]
@@ -159,9 +119,49 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void TruncateLeftShortStringTo30()
         {
-            string data1 = "The quick brown fox";
+            var data1 = "The quick brown fox";
 
             Assert.AreEqual("The quick brown fox", data1.TruncateLeft(30));
+        }
+
+        [TestMethod]
+        public void TruncateLeftValidStringTo9()
+        {
+            var data1 = "The quick brown fox";
+
+            Assert.AreEqual("brown fox", data1.TruncateLeft(9));
+        }
+
+        [TestMethod]
+        public void TruncateLeftValidStringTo9WithEllipses()
+        {
+            var data1 = "The quick brown fox";
+
+            Assert.AreEqual("…rown fox", data1.TruncateLeft(9, true));
+        }
+
+        [TestMethod]
+        public void TruncateShortStringTo20()
+        {
+            var data1 = "The quick brown fox";
+
+            Assert.AreEqual("The quick brown fox", data1.Truncate(20));
+        }
+
+        [TestMethod]
+        public void TruncateValidStringTo9()
+        {
+            var data1 = "The quick brown fox";
+
+            Assert.AreEqual("The quick", data1.Truncate(9));
+        }
+
+        [TestMethod]
+        public void TruncateValidStringTo9WithEllipses()
+        {
+            var data1 = "The quick brown fox";
+
+            Assert.AreEqual("The quic…", data1.Truncate(9, true));
         }
     }
 }

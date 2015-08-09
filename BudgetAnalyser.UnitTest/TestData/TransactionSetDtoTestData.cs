@@ -27,7 +27,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "12334458989",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "1233411119",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "123xxxxxx89",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "12334458989",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "23411222",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "1233411119",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -105,7 +105,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "123xxxxxx89",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "1233411222",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "23411222",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
+                        TransactionType = "Bill Payment"
                     },
                     new TransactionDto
                     {
@@ -144,9 +144,9 @@ namespace BudgetAnalyser.UnitTest.TestData
                         Reference1 = "123xxxxxx89",
                         Reference2 = "",
                         Reference3 = "",
-                        TransactionType = "Bill Payment",
-                    },
-                },
+                        TransactionType = "Bill Payment"
+                    }
+                }
             };
         }
     }

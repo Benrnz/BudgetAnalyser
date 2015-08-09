@@ -16,9 +16,8 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class AutoMapperConfigurationTest
     {
-        private static volatile AutoMapperConfiguration Subject;
-
         private static readonly object SyncLock = new object();
+        private static volatile AutoMapperConfiguration Subject;
 
         public static AutoMapperConfiguration AutoMapperConfiguration()
         {
@@ -28,14 +27,15 @@ namespace BudgetAnalyser.UnitTest
                 {
                     if (Subject == null)
                     {
-                        Subject = new AutoMapperConfiguration(new ILocalAutoMapperConfiguration[]
-                        {
-                            new BudgetAutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
-                            new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
-                            new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())), 
-                            new StatementAutoMapperConfiguration(new InMemoryTransactionTypeRepository(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()), 
-                            new ApplicationAutoMapperConfiguration(), 
-                        }).Configure();
+                        Subject = new AutoMapperConfiguration(
+                            new ILocalAutoMapperConfiguration[]
+                            {
+                                new BudgetAutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                                new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                                new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())),
+                                new StatementAutoMapperConfiguration(new InMemoryTransactionTypeRepository(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                                new ApplicationAutoMapperConfiguration()
+                            }).Configure();
                     }
                 }
             }
@@ -49,21 +49,15 @@ namespace BudgetAnalyser.UnitTest
             Mapper.AssertConfigurationIsValid();
         }
 
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            Subject = AutoMapperConfiguration();
-        }
-
         [TestMethod]
         public void TestAutoMapperInternalPropertyMapping()
         {
             Mapper.CreateMap<TestDto, TestClassInternalSetters>();
 
-            var dto = new TestDto()
+            var dto = new TestDto
             {
                 Description = "Foo bar...",
-                Number = 339.38M,
+                Number = 339.38M
             };
 
             var result = Mapper.Map<TestClassInternalSetters>(dto);
@@ -77,10 +71,10 @@ namespace BudgetAnalyser.UnitTest
         {
             Mapper.CreateMap<TestDto, TestClassPrivateSetters>();
 
-            var dto = new TestDto()
+            var dto = new TestDto
             {
                 Description = "Foo bar...",
-                Number = 339.38M,
+                Number = 339.38M
             };
 
             var result = Mapper.Map<TestClassPrivateSetters>(dto);
@@ -94,10 +88,10 @@ namespace BudgetAnalyser.UnitTest
         {
             Mapper.CreateMap<TestDto, TestClassNoSetters>();
 
-            var dto = new TestDto()
+            var dto = new TestDto
             {
                 Description = "Foo bar...",
-                Number = 339.38M,
+                Number = 339.38M
             };
 
             var result = Mapper.Map<TestClassNoSetters>(dto);
@@ -106,47 +100,40 @@ namespace BudgetAnalyser.UnitTest
             Assert.AreEqual(dto.Description, result.Description);
         }
 
-        public class TestDto
+        [TestInitialize]
+        public void TestInitialise()
         {
-            public string Description { get; set; }
-
-            public decimal Number { get; set; }
+            Subject = AutoMapperConfiguration();
         }
 
         public class TestClassInternalSetters
         {
             public string Description { get; internal set; }
-
             public decimal Number { get; internal set; }
+        }
+
+        public class TestClassNoSetters
+        {
+            public TestClassNoSetters(string description, decimal number)
+            {
+                Description = description;
+                Number = number;
+            }
+
+            public string Description { get; }
+            public decimal Number { get; }
         }
 
         public class TestClassPrivateSetters
         {
             public string Description { get; private set; }
-
             public decimal Number { get; private set; }
         }
 
-        public class TestClassNoSetters
+        public class TestDto
         {
-            private string description;
-            private decimal number;
-
-            public TestClassNoSetters(string description, decimal number)
-            {
-                this.description = description;
-                this.number = number;
-            }
-
-            public string Description
-            {
-                get { return this.description; }
-            }
-
-            public decimal Number
-            {
-                get { return this.number; }
-            }
+            public string Description { get; set; }
+            public decimal Number { get; set; }
         }
     }
 }

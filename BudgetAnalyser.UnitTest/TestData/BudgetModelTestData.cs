@@ -17,17 +17,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 new BudgetBucketDto { Code = TestDataConstants.HairBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Haircuts" },
                 new BudgetBucketDto { Code = TestDataConstants.CarMtcBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Car Maintenance" },
                 new BudgetBucketDto { Code = TestDataConstants.PhoneBucketCode, Type = BucketDtoType.SavedUpForExpense, Description = "Phone and Internet" },
-                new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" },
+                new BudgetBucketDto { Code = TestDataConstants.IncomeBucketCode, Type = BucketDtoType.Income, Description = "Salary from Lawn Mowing business" }
             };
         }
 
         public static BudgetCollection CreateCollectionWith1And2()
         {
-            var collection = new BudgetCollection(new[]
-            {
-                CreateTestData1(),
-                CreateTestData2()
-            });
+            var collection = new BudgetCollection(
+                new[]
+                {
+                    CreateTestData1(),
+                    CreateTestData2()
+                });
             collection.FileName = @"C:\Temp\Foo.xaml";
             return collection;
         }
@@ -37,39 +38,41 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static BudgetModel CreateTestData1()
         {
-            var budget = new BudgetModel()
+            var budget = new BudgetModel
             {
                 EffectiveFrom = new DateTime(2013, 01, 01),
-                Name = TestDataConstants.Budget1Name,
+                Name = TestDataConstants.Budget1Name
             };
 
-            var expenses = new List<Expense>(new[]
-            {
-                new Expense
+            var expenses = new List<Expense>(
+                new[]
                 {
-                    Amount = 95M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
-                },
-                new Expense
-                {
-                    Amount = 55M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
-                },
-                new Expense
-                {
-                    Amount = 175M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
-                }
-            });
+                    new Expense
+                    {
+                        Amount = 95M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance")
+                    },
+                    new Expense
+                    {
+                        Amount = 55M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                    },
+                    new Expense
+                    {
+                        Amount = 175M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                    }
+                });
 
-            var incomes = new List<Income>(new[]
-            {
-                new Income
+            var incomes = new List<Income>(
+                new[]
                 {
-                    Amount = 1500M,
-                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                }
-            });
+                    new Income
+                    {
+                        Amount = 1500M,
+                        Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay")
+                    }
+                });
 
             budget.Update(incomes, expenses);
             return budget;
@@ -83,41 +86,43 @@ namespace BudgetAnalyser.UnitTest.TestData
             var budget = new BudgetModel
             {
                 EffectiveFrom = new DateTime(2014, 01, 20),
-                Name = TestDataConstants.Budget2Name,
+                Name = TestDataConstants.Budget2Name
             };
 
-            var expenses = new List<Expense>(new[]
-            {
-                new Expense
+            var expenses = new List<Expense>(
+                new[]
                 {
-                    Amount = 120M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet"),
-                },
-                new Expense
-                {
-                    Amount = 100M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
-                },
-                new Expense
-                {
-                    Amount = 65M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
-                },
-                new Expense
-                {
-                    Amount = 185M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
-                }
-            });
+                    new Expense
+                    {
+                        Amount = 120M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet")
+                    },
+                    new Expense
+                    {
+                        Amount = 100M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance")
+                    },
+                    new Expense
+                    {
+                        Amount = 65M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                    },
+                    new Expense
+                    {
+                        Amount = 185M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                    }
+                });
 
-            var incomes = new List<Income>(new[]
-            {
-                new Income
+            var incomes = new List<Income>(
+                new[]
                 {
-                    Amount = 1600M,
-                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                }
-            });
+                    new Income
+                    {
+                        Amount = 1600M,
+                        Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay")
+                    }
+                });
 
             budget.Update(incomes, expenses);
             return budget;
@@ -133,46 +138,48 @@ namespace BudgetAnalyser.UnitTest.TestData
             var budget = new BudgetModel
             {
                 EffectiveFrom = new DateTime(2013, 01, 01),
-                Name = TestDataConstants.Budget5Name,
+                Name = TestDataConstants.Budget5Name
             };
 
-            var expenses = new List<Expense>(new[]
-            {
-                new Expense
+            var expenses = new List<Expense>(
+                new[]
                 {
-                    Amount = 300M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home Insurance"),
-                },
-                new Expense
-                {
-                    Amount = 120M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet"),
-                },
-                new Expense
-                {
-                    Amount = 100M,
-                    Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance"),
-                },
-                new Expense
-                {
-                    Amount = 65M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"),
-                },
-                new Expense
-                {
-                    Amount = 185M,
-                    Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power"),
-                }
-            });
+                    new Expense
+                    {
+                        Amount = 300M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home Insurance")
+                    },
+                    new Expense
+                    {
+                        Amount = 120M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone/Internet")
+                    },
+                    new Expense
+                    {
+                        Amount = 100M,
+                        Bucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Car maintenance")
+                    },
+                    new Expense
+                    {
+                        Amount = 65M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts")
+                    },
+                    new Expense
+                    {
+                        Amount = 185M,
+                        Bucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power")
+                    }
+                });
 
-            var incomes = new List<Income>(new[]
-            {
-                new Income
+            var incomes = new List<Income>(
+                new[]
                 {
-                    Amount = 2600M,
-                    Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay"),
-                }
-            });
+                    new Income
+                    {
+                        Amount = 2600M,
+                        Bucket = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, "Pay")
+                    }
+                });
 
             budget.Update(incomes, expenses);
             return budget;

@@ -10,14 +10,14 @@ namespace BudgetAnalyser.UnitTest.TestHarness
     public class XamlOnDiskApplicationDatabaseRepositoryTestHarness : XamlOnDiskApplicationDatabaseRepository
     {
         public XamlOnDiskApplicationDatabaseRepositoryTestHarness(
-            [NotNull] BasicMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> loadingMapper, 
+            [NotNull] BasicMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> loadingMapper,
             [NotNull] BasicMapper<ApplicationDatabase, BudgetAnalyserStorageRoot> savingMapper) : base(loadingMapper, savingMapper)
         {
         }
 
+        public Func<string, bool> FileExistsOverride { get; set; }
         public BudgetAnalyserStorageRoot StorageRootDto { get; private set; }
         public string StorageRootDtoSerialised { get; private set; }
-        public Func<string, bool> FileExistsOverride { get; set; }
 
         protected override bool FileExists(string budgetAnalyserDataStorage)
         {

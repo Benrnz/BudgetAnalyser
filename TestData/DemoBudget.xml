@@ -1,21 +1,31 @@
-<BudgetCollectionDto FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml" xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<BudgetCollectionDto FileName="C:\Development\GitRepositories\BudgetAnalyserProject\Trunk\TestData\DemoBudget.xml"
+                     xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
+                     xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <BudgetCollectionDto.Buckets>
     <scg:List x:TypeArguments="BudgetBucketDto" Capacity="16">
-      <BudgetBucketDto Active="True" Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist" Type="SavedUpForExpense" />
+      <BudgetBucketDto Active="True" Code="DOC" Description="General Doctor Visits, Chiropractor and Chemist"
+                       Type="SavedUpForExpense" />
       <BudgetBucketDto Active="True" Code="FEES" Description="Bank Fees" Type="SavedUpForExpense" />
-      <BudgetBucketDto Active="True" Code="FOOD" Description="Groceries, staples, and necessities" Type="SpentMonthlyExpense" />
-      <BudgetBucketDto Active="True" Code="GIFT" Description="Income from gifts and paybacks and tax refunds." Type="Income" />
-      <BudgetBucketDto Active="True" Code="INSHOME" Description="Home and Contents Insurance" Type="SpentMonthlyExpense" />
-      <BudgetBucketDto Active="True" Code="JOURNAL" Description="A special bucket to allocate internal transfers." Type="Journal" />
+      <BudgetBucketDto Active="True" Code="FOOD" Description="Groceries, staples, and necessities"
+                       Type="SpentMonthlyExpense" />
+      <BudgetBucketDto Active="True" Code="GIFT" Description="Income from gifts and paybacks and tax refunds."
+                       Type="Income" />
+      <BudgetBucketDto Active="True" Code="INSHOME" Description="Home and Contents Insurance"
+                       Type="SpentMonthlyExpense" />
+      <BudgetBucketDto Active="True" Code="JOURNAL" Description="A special bucket to allocate internal transfers."
+                       Type="Journal" />
       <BudgetBucketDto Active="True" Code="RENT" Description="Rent for my bachelor pad" Type="SpentMonthlyExpense" />
       <BudgetBucketDto Active="True" Code="SALARY" Description="Salary from Lawn Mowing business" Type="Income" />
-      <BudgetBucketDto Active="True" Code="SURPLUS" Description="A special bucket to allocate against any discretionary spending." Type="Surplus" />
+      <BudgetBucketDto Active="True" Code="SURPLUS"
+                       Description="A special bucket to allocate against any discretionary spending." Type="Surplus" />
       <BudgetBucketDto Active="True" Code="WATER" Description="Water Rates" Type="SpentMonthlyExpense" />
     </scg:List>
   </BudgetCollectionDto.Buckets>
   <BudgetCollectionDto.Budgets>
     <scg:List x:TypeArguments="BudgetModelDto" Capacity="4">
-      <BudgetModelDto EffectiveFrom="2012-01-01" LastModified="2015-02-22T18:56:29.4619288+13:00" LastModifiedComment="" Name="Demo Budget 1">
+      <BudgetModelDto EffectiveFrom="2012-01-01" LastModified="2015-02-22T18:56:29.4619288+13:00"
+                      LastModifiedComment="" Name="Demo Budget 1">
         <BudgetModelDto.Expenses>
           <scg:List x:TypeArguments="ExpenseDto" Capacity="8">
             <ExpenseDto Amount="1200.00" BudgetBucketCode="RENT" />

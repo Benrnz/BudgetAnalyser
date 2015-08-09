@@ -12,13 +12,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private LedgerBook TestData { get; set; }
 
         [TestMethod]
-        public void ReconciliationsShouldHaveSameCount()
-        {
-            LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.Count(), result.Reconciliations.Count());
-        }
-
-        [TestMethod]
         public void FilenameShouldBeMapped()
         {
             LedgerBookDto result = ArrangeAndAct();
@@ -50,7 +43,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryShouldHaveSameNumberOfEntries()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.Count(),
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.Count(),
                 result.Reconciliations.First().Entries.Count());
         }
 
@@ -65,7 +59,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameCredit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
                 result.Reconciliations.First().BankBalanceAdjustments.First().Amount);
         }
 
@@ -73,7 +68,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameDebit()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().BankBalanceAdjustments.First().Amount,
                 result.Reconciliations.First().BankBalanceAdjustments.First().Amount);
         }
 
@@ -81,7 +77,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameId()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Id,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().BankBalanceAdjustments.First().Id,
                 result.Reconciliations.First().BankBalanceAdjustments.First().Id);
         }
 
@@ -89,7 +86,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstBalanceAdjustmentShouldHaveSameNarrative()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().BankBalanceAdjustments.First().Narrative,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().BankBalanceAdjustments.First().Narrative,
                 result.Reconciliations.First().BankBalanceAdjustments.First().Narrative);
         }
 
@@ -97,7 +95,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBalance()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Balance,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.First().Balance,
                 result.Reconciliations.First().Entries.First().Balance);
         }
 
@@ -105,7 +104,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryShouldHaveSameBucketCode()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.First().LedgerBucket.BudgetBucket.Code,
                 result.Reconciliations.First().Entries.First().BucketCode);
         }
 
@@ -113,7 +113,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryShouldHaveSameNumberOfTransactions()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.Count(),
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.First().Transactions.Count(),
                 result.Reconciliations.First().Entries.First().Transactions.Count());
         }
 
@@ -121,7 +122,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameAmount()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Amount,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.First().Transactions.First().Amount,
                 result.Reconciliations.First().Entries.First().Transactions.First().Amount);
         }
 
@@ -129,7 +131,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FirstDatedEntryWithFirstEntryWithFirstTransactionsShouldHaveSameNarrative()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.Reconciliations.First().Entries.First().Transactions.First().Narrative,
+            Assert.AreEqual(
+                TestData.Reconciliations.First().Entries.First().Transactions.First().Narrative,
                 result.Reconciliations.First().Entries.First().Transactions.First().Narrative);
         }
 
@@ -179,10 +182,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(7, dataProperties);
         }
 
+        [TestMethod]
+        public void ReconciliationsShouldHaveSameCount()
+        {
+            LedgerBookDto result = ArrangeAndAct();
+            Assert.AreEqual(TestData.Reconciliations.Count(), result.Reconciliations.Count());
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
             TestData = LedgerBookTestData.TestData2();
         }
 

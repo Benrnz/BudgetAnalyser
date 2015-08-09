@@ -37,8 +37,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             var subject = new DtoToBudgetBucketMapper();
             Result = subject.Map(TestData);
         }

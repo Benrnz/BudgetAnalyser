@@ -24,22 +24,22 @@ namespace BudgetAnalyser.UnitTest.Budget
                     new IncomeDto
                     {
                         Amount = 2300.23M,
-                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
-                    },
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode
+                    }
                 },
                 Expenses = new List<ExpenseDto>
                 {
                     new ExpenseDto
                     {
                         Amount = 350.11M,
-                        BudgetBucketCode = TestDataConstants.PhoneBucketCode,
+                        BudgetBucketCode = TestDataConstants.PhoneBucketCode
                     },
                     new ExpenseDto
                     {
                         Amount = 221.22M,
-                        BudgetBucketCode = TestDataConstants.PowerBucketCode,
-                    },
-                },
+                        BudgetBucketCode = TestDataConstants.PowerBucketCode
+                    }
+                }
             };
 
             var testData2 = new BudgetModelDto
@@ -53,28 +53,28 @@ namespace BudgetAnalyser.UnitTest.Budget
                     new IncomeDto
                     {
                         Amount = 2100.23M,
-                        BudgetBucketCode = TestDataConstants.IncomeBucketCode,
-                    },
+                        BudgetBucketCode = TestDataConstants.IncomeBucketCode
+                    }
                 },
                 Expenses = new List<ExpenseDto>
                 {
                     new ExpenseDto
                     {
                         Amount = 310.11M,
-                        BudgetBucketCode = TestDataConstants.PhoneBucketCode,
+                        BudgetBucketCode = TestDataConstants.PhoneBucketCode
                     },
                     new ExpenseDto
                     {
                         Amount = 111.22M,
-                        BudgetBucketCode = TestDataConstants.PowerBucketCode,
-                    },
-                },
+                        BudgetBucketCode = TestDataConstants.PowerBucketCode
+                    }
+                }
             };
 
             var collection = new BudgetCollectionDto
             {
                 Budgets = new List<BudgetModelDto> { testData1, testData2 },
-                FileName = "Foo.xml",
+                FileName = "Foo.xml"
             };
 
             string serialised = XamlServices.Save(collection);

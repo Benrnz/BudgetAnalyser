@@ -1,15 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <BudgetCollectionDto FileName="C:\Temp\Foo.xaml"
-                      xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
-                      xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                     xmlns="clr-namespace:BudgetAnalyser.Engine.Budget.Data;assembly=BudgetAnalyser.Engine"
+                     xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <BudgetCollectionDto.Buckets>
     <scg:List x:TypeArguments="BudgetBucketDto" Capacity="1">
-      <BudgetBucketDto Code="POWER" Type="SpentMonthlyExpense" Description="Power and Utility"/>
-      <BudgetBucketDto Code="CAR MTC" Type="SavedUpForExpense" Description="Car maintenance"/>
-      <BudgetBucketDto Code="HAIRCUT" Type="SavedUpForExpense" Description="Hair cuts"/>
-      <BudgetBucketDto Code="INCOME" Type="Income" Description="Salary"/>
+      <BudgetBucketDto Code="POWER" Type="SpentMonthlyExpense" Description="Power and Utility" />
+      <BudgetBucketDto Code="CAR MTC" Type="SavedUpForExpense" Description="Car maintenance" />
+      <BudgetBucketDto Code="HAIRCUT" Type="SavedUpForExpense" Description="Hair cuts" />
+      <BudgetBucketDto Code="INCOME" Type="Income" Description="Salary" />
     </scg:List>
   </BudgetCollectionDto.Buckets>
 
@@ -17,9 +18,9 @@
     <scg:List x:TypeArguments="BudgetModelDto" Capacity="4">
 
       <BudgetModelDto LastModifiedComment="{x:Null}"
-                       EffectiveFrom="2014-01-20"
-                       LastModified="2014-05-03T11:37:11.7916835+12:00"
-                       Name="Test Data 2 Budget">
+                      EffectiveFrom="2014-01-20"
+                      LastModified="2014-05-03T11:37:11.7916835+12:00"
+                      Name="Test Data 2 Budget">
 
         <BudgetModelDto.Expenses>
           <scg:List x:TypeArguments="ExpenseDto" Capacity="3">
@@ -35,7 +36,8 @@
         </BudgetModelDto.Incomes>
       </BudgetModelDto>
 
-      <BudgetModelDto LastModifiedComment="{x:Null}" EffectiveFrom="2013-01-01" LastModified="2014-05-03T11:37:11.7916835+12:00" Name="Test Data 1 Budget">
+      <BudgetModelDto LastModifiedComment="{x:Null}" EffectiveFrom="2013-01-01"
+                      LastModified="2014-05-03T11:37:11.7916835+12:00" Name="Test Data 1 Budget">
         <BudgetModelDto.Expenses>
           <scg:List x:TypeArguments="ExpenseDto" Capacity="3">
             <ExpenseDto BudgetBucketCode="POWER" Amount="175" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -12,14 +13,14 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             var fakeLogger = new FakeLogger();
             var importer = new CsvOnDiskStatementModelRepositoryV1(
-                new BankImportUtilities(fakeLogger), 
+                new BankImportUtilities(fakeLogger),
                 fakeLogger,
                 new TransactionSetDtoToStatementModelMapper(),
                 new StatementModelToTransactionSetDtoMapper());
 
-            var modelTask = importer.LoadAsync(fileName);
+            Task<StatementModel> modelTask = importer.LoadAsync(fileName);
             modelTask.Wait();
-            var model = modelTask.Result;
+            StatementModel model = modelTask.Result;
 
             Console.WriteLine(@"
 /// <summary>THIS IS GENERATED CODE </summary>
@@ -38,7 +39,7 @@ public static StatementModel TestDataGenerated()
             Console.WriteLine(@"
     var transactions = new List<Transaction>
     {");
-            foreach (var transaction in model.AllTransactions.Where(t => t.Date >= beginDate && t.Date <= endDate))
+            foreach (Transaction transaction in model.AllTransactions.Where(t => t.Date >= beginDate && t.Date <= endDate))
             {
                 Console.WriteLine(@"
         new Transaction 
@@ -63,7 +64,7 @@ public static StatementModel TestDataGenerated()
             Reference3 = ""{0}"",", transaction.Reference3);
                 Console.WriteLine(@"
             TransactionType = new NamedTransaction(""{0}""),", transaction.TransactionType);
-                
+
                 Console.WriteLine(@"
         },");
             }

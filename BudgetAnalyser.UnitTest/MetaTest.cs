@@ -8,17 +8,19 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class MetaTest
     {
+        private const int ExpectedMinimumTests = 794;
+
         [TestMethod]
         public void ListAllTests()
         {
-            var assembly = GetType().Assembly;
-            int count = 0;
-            foreach (var type in assembly.ExportedTypes)
+            Assembly assembly = GetType().Assembly;
+            var count = 0;
+            foreach (Type type in assembly.ExportedTypes)
             {
                 var testClassAttrib = type.GetCustomAttribute<TestClassAttribute>();
                 if (testClassAttrib != null)
                 {
-                    foreach (var method in type.GetMethods())
+                    foreach (MethodInfo method in type.GetMethods())
                     {
                         if (method.GetCustomAttribute<TestMethodAttribute>() != null)
                         {
@@ -29,12 +31,10 @@ namespace BudgetAnalyser.UnitTest
             }
         }
 
-        private const int ExpectedMinimumTests = 794;
-
         [TestMethod]
         public void NoDecreaseInTests()
         {
-            var count = CountTests();
+            int count = CountTests();
             Console.WriteLine(count);
             Assert.IsTrue(count >= ExpectedMinimumTests);
         }
@@ -42,14 +42,14 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void UpdateNoDecreaseInTests()
         {
-            var count = CountTests();
-            
+            int count = CountTests();
+
             Assert.IsFalse(count > ExpectedMinimumTests + 10, "Update the minimum expected number of tests to " + count);
         }
 
         private int CountTests()
         {
-            var assembly = GetType().Assembly;
+            Assembly assembly = GetType().Assembly;
             int count = (from type in assembly.ExportedTypes
                 let testClassAttrib = type.GetCustomAttribute<TestClassAttribute>()
                 where testClassAttrib != null

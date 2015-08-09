@@ -8,7 +8,7 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class PublicHolidays2016Test
     {
-        private List<DateTime> expectedHolidays = new List<DateTime>
+        private readonly List<DateTime> expectedHolidays = new List<DateTime>
         {
             new DateTime(2016, 1, 1),
             new DateTime(2016, 1, 4),
@@ -20,10 +20,16 @@ namespace BudgetAnalyser.UnitTest
             new DateTime(2016, 6, 6),
             new DateTime(2016, 10, 24),
             new DateTime(2016, 12, 26),
-            new DateTime(2016, 12, 27),
+            new DateTime(2016, 12, 27)
         };
 
         private NewZealandPublicHolidaysTestHarness subject;
+
+        [TestMethod]
+        public void CorrectNumberOfHolidays()
+        {
+            Assert.AreEqual(this.expectedHolidays.Count(), this.subject.Results.Count());
+        }
 
         [TestInitialize]
         public void Initialise()
@@ -34,13 +40,7 @@ namespace BudgetAnalyser.UnitTest
         [TestMethod]
         public void VerifyHolidays()
         {
-            this.subject.VerifyHolidays(expectedHolidays);
-        }
-
-        [TestMethod]
-        public void CorrectNumberOfHolidays()
-        {
-            Assert.AreEqual(expectedHolidays.Count(), this.subject.Results.Count());
+            this.subject.VerifyHolidays(this.expectedHolidays);
         }
     }
 }

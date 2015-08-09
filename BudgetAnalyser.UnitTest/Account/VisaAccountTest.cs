@@ -7,45 +7,45 @@ namespace BudgetAnalyser.UnitTest.Account
     public class VisaAccountTest
     {
         [TestMethod]
-        public void KeywordsShouldNotBeNull()
+        public void CloneShouldGiveUseNameGiven()
         {
-            var subject = CreateSubject();
+            VisaAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneVisa");
 
-            Assert.IsNotNull(subject.KeyWords);
-        }
-
-        [TestMethod]
-        public void KeywordsShouldContainElements()
-        {
-            var subject = CreateSubject();
-
-            Assert.IsTrue(subject.KeyWords.Length > 0);
-        }
-
-        [TestMethod]
-        public void NameShouldBeSomething()
-        {
-            var subject = CreateSubject();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
+            Assert.AreEqual("CloneVisa", clone.Name);
+            Assert.AreNotEqual("CloneVisa", subject.Name);
         }
 
         [TestMethod]
         public void CloneShouldNotJustCopyReference()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneVisa");
+            VisaAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneVisa");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }
 
         [TestMethod]
-        public void CloneShouldGiveUseNameGiven()
+        public void KeywordsShouldContainElements()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneVisa");
+            VisaAccount subject = CreateSubject();
 
-            Assert.AreEqual("CloneVisa", clone.Name);
-            Assert.AreNotEqual("CloneVisa", subject.Name);
+            Assert.IsTrue(subject.KeyWords.Length > 0);
+        }
+
+        [TestMethod]
+        public void KeywordsShouldNotBeNull()
+        {
+            VisaAccount subject = CreateSubject();
+
+            Assert.IsNotNull(subject.KeyWords);
+        }
+
+        [TestMethod]
+        public void NameShouldBeSomething()
+        {
+            VisaAccount subject = CreateSubject();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
         }
 
         private VisaAccount CreateSubject()

@@ -13,10 +13,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private BankBalance TestData
         {
-            get
-            {
-                return new BankBalance(StatementModelTestData.ChequeAccount, 44552.21M);
-            }
+            get { return new BankBalance(StatementModelTestData.ChequeAccount, 44552.21M); }
         }
 
         [TestMethod]

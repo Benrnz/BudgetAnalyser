@@ -18,6 +18,37 @@ namespace BudgetAnalyser.UnitTest.Statement
             get { return TransactionSetDtoTestData.TestData2(); }
         }
 
+        [TestMethod]
+        public void ChangeHashShouldNotBeNull()
+        {
+            Assert.IsNotNull(Result.SignificantDataChangeHash());
+        }
+
+        [TestMethod]
+        public void ShouldBeUnfiltered()
+        {
+            Assert.IsFalse(Result.Filtered);
+        }
+
+        [TestMethod]
+        public void ShouldMapAllTransactions()
+        {
+            Assert.AreEqual(TestData.Transactions.Count(), Result.AllTransactions.Count());
+        }
+
+        [TestMethod]
+        public void ShouldMapAllTransactionsAndHaveSameSum()
+        {
+            Assert.AreEqual(TestData.Transactions.Sum(t => t.Amount), Result.AllTransactions.Sum(t => t.Amount));
+            Assert.AreEqual(TestData.Transactions.Sum(t => t.Date.Ticks), Result.AllTransactions.Sum(t => t.Date.Ticks));
+        }
+
+        [TestMethod]
+        public void ShouldMapDurationInMonths()
+        {
+            Assert.AreEqual(2, Result.DurationInMonths);
+        }
+
 //        [TestMethod]
 //        public void CodifyTestData2()
 //        {
@@ -72,47 +103,22 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void ChangeHashShouldNotBeNull()
-        {
-            Assert.IsNotNull(Result.SignificantDataChangeHash());
-        }
-
-        [TestMethod]
-        public void ShouldMapDurationInMonths()
-        {
-            Assert.AreEqual(2, Result.DurationInMonths);
-        }
-
-        [TestMethod]
-        public void ShouldBeUnfiltered()
-        {
-            Assert.IsFalse(Result.Filtered);
-        }
-
-        [TestMethod]
         public void ShouldMapLastImport()
         {
             Assert.AreEqual(TestData.LastImport, Result.LastImport);
         }
 
-        [TestMethod]
-        public void ShouldMapAllTransactions()
+        [TestInitialize]
+        public void TestInitialise()
         {
-            Assert.AreEqual(TestData.Transactions.Count(), Result.AllTransactions.Count());
-        }
-
-        [TestMethod]
-        public void ShouldMapAllTransactionsAndHaveSameSum()
-        {
-            Assert.AreEqual(TestData.Transactions.Sum(t => t.Amount), Result.AllTransactions.Sum(t => t.Amount));
-            Assert.AreEqual(TestData.Transactions.Sum(t => t.Date.Ticks), Result.AllTransactions.Sum(t => t.Date.Ticks));
+            Result = Mapper.Map<StatementModel>(TestData);
         }
 
         [TestMethod]
         public void TransactionsShouldBeInAscendingOrder()
         {
             DateTime previous = DateTime.MinValue;
-            foreach (var txn in Result.AllTransactions)
+            foreach (Transaction txn in Result.AllTransactions)
             {
                 if (txn.Date < previous)
                 {
@@ -121,14 +127,6 @@ namespace BudgetAnalyser.UnitTest.Statement
 
                 previous = txn.Date;
             }
-        }
-
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            
-
-            Result = Mapper.Map<StatementModel>(TestData);
         }
     }
 }

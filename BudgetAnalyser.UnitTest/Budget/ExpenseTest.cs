@@ -47,31 +47,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void ZeroAmountIsNotValidWhenActive()
-        {
-            Expense subject = CreateSubject();
-            subject.Amount = 0;
-            subject.Bucket.Active = true;
-
-            bool result = subject.Validate(Logs);
-
-            Assert.IsFalse(result);
-            Assert.IsTrue(Logs.Length > 0);
-        }
-
-        [TestMethod]
-        public void ZeroAmountIsValidWhenInActive()
-        {
-            Expense subject = CreateSubject();
-            subject.Amount = 0;
-            subject.Bucket.Active = false;
-
-            bool result = subject.Validate(Logs);
-
-            Assert.IsTrue(result);
-        }
-
-        [TestMethod]
         public void NegativeAmountIsNotValid()
         {
             Expense subject = CreateSubject();
@@ -111,6 +86,31 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void TestInitialize()
         {
             Logs = new StringBuilder();
+        }
+
+        [TestMethod]
+        public void ZeroAmountIsNotValidWhenActive()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = 0;
+            subject.Bucket.Active = true;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsFalse(result);
+            Assert.IsTrue(Logs.Length > 0);
+        }
+
+        [TestMethod]
+        public void ZeroAmountIsValidWhenInActive()
+        {
+            Expense subject = CreateSubject();
+            subject.Amount = 0;
+            subject.Bucket.Active = false;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
         }
 
         private Expense CreateSubject()

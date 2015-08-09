@@ -92,8 +92,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             TestData = BudgetModelTestData.CreateTestData1();
         }
 

@@ -47,17 +47,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void ZeroAmountIsValid()
-        {
-            Income subject = CreateSubject();
-            subject.Amount = 0;
-
-            bool result = subject.Validate(Logs);
-
-            Assert.IsTrue(result);
-        }
-
-        [TestMethod]
         public void NegativeAmountIsNotValid()
         {
             Income subject = CreateSubject();
@@ -97,6 +86,17 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void TestInitialize()
         {
             Logs = new StringBuilder();
+        }
+
+        [TestMethod]
+        public void ZeroAmountIsValid()
+        {
+            Income subject = CreateSubject();
+            subject.Amount = 0;
+
+            bool result = subject.Validate(Logs);
+
+            Assert.IsTrue(result);
         }
 
         private Income CreateSubject()

@@ -14,16 +14,6 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class BudgetCollectionTest
     {
         [TestMethod]
-        public void OutputBudgetCollection()
-        {
-            BudgetCollection subject = Arrange();
-            foreach (var budget in subject)
-            {
-                Console.WriteLine("Budget: '{0}' EffectiveFrom: {1:d}", budget.Name, budget.EffectiveFrom);
-            }
-        }
-
-        [TestMethod]
         public void ForDate_1_1_2013_ShouldReturnBudget1()
         {
             BudgetCollection subject = Arrange();
@@ -83,6 +73,16 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
+        public void OutputBudgetCollection()
+        {
+            BudgetCollection subject = Arrange();
+            foreach (BudgetModel budget in subject)
+            {
+                Console.WriteLine("Budget: '{0}' EffectiveFrom: {1:d}", budget.Name, budget.EffectiveFrom);
+            }
+        }
+
+        [TestMethod]
         public void ShouldHaveAKnownNumberOfProperties()
         {
             // If this test breaks consider putting the new property into the Mappers and DTO's before updating the count.
@@ -94,11 +94,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void ValidateShouldFixGivenBudgetsWithDuplicateEffectiveDates()
         {
             BudgetCollection subject = Arrange();
-            subject.Add(new BudgetModelFake
-            {
-                EffectiveFrom = subject.First().EffectiveFrom,
-                Name = Guid.NewGuid().ToString(),
-            });
+            subject.Add(
+                new BudgetModelFake
+                {
+                    EffectiveFrom = subject.First().EffectiveFrom,
+                    Name = Guid.NewGuid().ToString()
+                });
             subject.Validate(new StringBuilder());
 
             Assert.IsTrue(subject.GroupBy(b => b.EffectiveFrom).Sum(group => group.Count()) == 3);
@@ -108,13 +109,14 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void ValidateShouldReturnFalseGivenOneBadBudget()
         {
             BudgetCollection subject = Arrange();
-            subject.Add(new BudgetModelFake
-            {
-                EffectiveFrom = DateTime.Now,
-                Name = "Foo123",
-                InitialiseOverride = () => { },
-                ValidateOverride = msg => false,
-            });
+            subject.Add(
+                new BudgetModelFake
+                {
+                    EffectiveFrom = DateTime.Now,
+                    Name = "Foo123",
+                    InitialiseOverride = () => { },
+                    ValidateOverride = msg => false
+                });
 
             bool result = subject.Validate(new StringBuilder());
 
@@ -125,11 +127,12 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void ValidateShouldReturnTrueGivenBudgetsWithDuplicateEffectiveDates()
         {
             BudgetCollection subject = Arrange();
-            subject.Add(new BudgetModelFake
-            {
-                EffectiveFrom = subject.First().EffectiveFrom,
-                Name = Guid.NewGuid().ToString(),
-            });
+            subject.Add(
+                new BudgetModelFake
+                {
+                    EffectiveFrom = subject.First().EffectiveFrom,
+                    Name = Guid.NewGuid().ToString()
+                });
 
             Assert.IsTrue(subject.Validate(new StringBuilder()));
         }
@@ -144,11 +147,12 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetCollection Arrange()
         {
-            return new BudgetCollection(new[]
-            {
-                BudgetModelTestData.CreateTestData2(),
-                BudgetModelTestData.CreateTestData1()
-            });
+            return new BudgetCollection(
+                new[]
+                {
+                    BudgetModelTestData.CreateTestData2(),
+                    BudgetModelTestData.CreateTestData1()
+                });
         }
     }
 }

@@ -19,12 +19,12 @@ namespace BudgetAnalyser.UnitTest
             {
                 return new List<Type>
                 {
-                    typeof (IModelValidate), // Used to indicate support for standard validation.
-                    typeof (IBankStatementImporter), // The implementations of this interface are discovered by reflection.
-                    typeof (IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
-                    typeof (IUserDefinedWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
-                    typeof (IDataChangeDetection), // Used to mark a type that can report back when data has changed. Similar to INotifyPropertyChange but across the whole type.
-                    typeof (IBudgetCurrencyContext), // Used to wrap a Budget Model and how it relates to time - is it the most current, an old one, or a future one.
+                    typeof(IModelValidate), // Used to indicate support for standard validation.
+                    typeof(IBankStatementImporter), // The implementations of this interface are discovered by reflection.
+                    typeof(IWidgetWithAdditionalImage), // Used only to give consistency when a second image is needed in a widget.
+                    typeof(IUserDefinedWidget), // Used to mark a widget as being multi-instance as opposed to the ordinary single instance approach.
+                    typeof(IDataChangeDetection), // Used to mark a type that can report back when data has changed. Similar to INotifyPropertyChange but across the whole type.
+                    typeof(IBudgetCurrencyContext) // Used to wrap a Budget Model and how it relates to time - is it the most current, an old one, or a future one.
                 };
             }
         }
@@ -34,11 +34,11 @@ namespace BudgetAnalyser.UnitTest
         {
             var builder = new ContainerBuilder();
             DefaultIoCRegistrations.RegisterDefaultMappings(builder);
-            var container = builder.Build();
+            IContainer container = builder.Build();
 
-            var interfaces = typeof(DataFormatException).Assembly.GetTypes().Where(t => t.IsInterface);
+            IEnumerable<Type> interfaces = typeof(DataFormatException).Assembly.GetTypes().Where(t => t.IsInterface);
 
-            foreach (var interfaceType in interfaces.Except(ExemptionList))
+            foreach (Type interfaceType in interfaces.Except(ExemptionList))
             {
                 Console.Write("Interface: {0}", interfaceType.Name);
                 if (!container.IsRegistered(interfaceType))

@@ -18,12 +18,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
             TestData = new CreditLedgerTransaction(new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6"))
             {
                 Amount = 123.99M,
-                Narrative = "Foo bar.",
+                Narrative = "Foo bar."
             };
         }
 
         private LedgerTransactionDto Result { get; set; }
-
         private LedgerTransaction TestData { get; set; }
 
         [TestMethod]
@@ -39,7 +38,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 BankAccount = new ChequeAccount("CHEQUE"),
                 Amount = -101,
-                Narrative = "TEsting 123",
+                Narrative = "TEsting 123"
             };
             TestInitialise(); // Re-initialise to use different test data.
 

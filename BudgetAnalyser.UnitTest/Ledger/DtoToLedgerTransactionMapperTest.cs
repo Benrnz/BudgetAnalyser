@@ -19,25 +19,24 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 Id = TransactionId,
                 Amount = -123.99M,
                 Narrative = "Foo bar.",
-                TransactionType = typeof(CreditLedgerTransaction).FullName,
+                TransactionType = typeof(CreditLedgerTransaction).FullName
             };
         }
 
         private LedgerTransaction Result { get; set; }
-
         private LedgerTransactionDto TestData { get; set; }
 
         [TestMethod]
         public void ShouldMapAccountTypeForBalanceAdjustmentTransaction()
         {
             TestData = new LedgerTransactionDto
-                {
-                    Id = TransactionId,
-                    Amount = -123.99M,
-                    Narrative = "Foo bar.",
-                    Account = StatementModelTestData.ChequeAccount.Name,
-                    TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName,
-                };
+            {
+                Id = TransactionId,
+                Amount = -123.99M,
+                Narrative = "Foo bar.",
+                Account = StatementModelTestData.ChequeAccount.Name,
+                TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName
+            };
             Result = Mapper.Map<BankBalanceAdjustmentTransaction>(TestData);
 
             Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, ((BankBalanceAdjustmentTransaction)Result).BankAccount.Name);

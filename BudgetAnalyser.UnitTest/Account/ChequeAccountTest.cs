@@ -7,45 +7,45 @@ namespace BudgetAnalyser.UnitTest.Account
     public class ChequeAccountTest
     {
         [TestMethod]
-        public void KeywordsShouldNotBeNull()
+        public void CloneShouldGiveUseNameGiven()
         {
-            var subject = CreateSubject();
+            ChequeAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneCheque");
 
-            Assert.IsNotNull(subject.KeyWords);
-        }
-
-        [TestMethod]
-        public void KeywordsShouldContainElements()
-        {
-            var subject = CreateSubject();
-
-            Assert.IsTrue(subject.KeyWords.Length > 0);
-        }
-
-        [TestMethod]
-        public void NameShouldBeSomething()
-        {
-            var subject = CreateSubject();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
+            Assert.AreEqual("CloneCheque", clone.Name);
+            Assert.AreNotEqual("CloneCheque", subject.Name);
         }
 
         [TestMethod]
         public void CloneShouldNotJustCopyReference()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneCheque");
+            ChequeAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneCheque");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }
 
         [TestMethod]
-        public void CloneShouldGiveUseNameGiven()
+        public void KeywordsShouldContainElements()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneCheque");
+            ChequeAccount subject = CreateSubject();
 
-            Assert.AreEqual("CloneCheque", clone.Name);
-            Assert.AreNotEqual("CloneCheque", subject.Name);
+            Assert.IsTrue(subject.KeyWords.Length > 0);
+        }
+
+        [TestMethod]
+        public void KeywordsShouldNotBeNull()
+        {
+            ChequeAccount subject = CreateSubject();
+
+            Assert.IsNotNull(subject.KeyWords);
+        }
+
+        [TestMethod]
+        public void NameShouldBeSomething()
+        {
+            ChequeAccount subject = CreateSubject();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
         }
 
         private ChequeAccount CreateSubject()

@@ -15,15 +15,15 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         }
 
         public XamlOnDiskBudgetRepositoryTestHarness(
-            IBudgetBucketRepository bucketRepo, 
-            BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper, 
+            IBudgetBucketRepository bucketRepo,
+            BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
             BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
-            : base(bucketRepo, toDtoMapper, toDomainMapper) { }
+            : base(bucketRepo, toDtoMapper, toDomainMapper)
+        {
+        }
 
         public Func<string, bool> FileExistsMock { get; set; }
-
         public Func<string, object> LoadFromDiskMock { get; set; }
-
         public Action<string, string> WriteToDiskMock { get; set; }
 
         protected override bool FileExists(string fileName)
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return FileExistsMock(fileName);
         }
 
-        protected async override Task<object> LoadFromDisk(string fileName)
+        protected override async Task<object> LoadFromDisk(string fileName)
         {
             if (LoadFromDiskMock == null)
             {
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadFromDiskMock(fileName);
         }
 
-        protected async override Task WriteToDisk(string fileName, string data)
+        protected override async Task WriteToDisk(string fileName, string data)
         {
             if (WriteToDiskMock == null)
             {

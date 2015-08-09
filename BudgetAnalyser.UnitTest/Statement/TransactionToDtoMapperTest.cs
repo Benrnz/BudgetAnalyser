@@ -11,7 +11,6 @@ namespace BudgetAnalyser.UnitTest.Statement
     public class TransactionToDtoMapperTest
     {
         private static readonly Guid TransactionId = new Guid("7F921750-4467-4EA4-81E6-3EFD466341C6");
-
         private TransactionDto Result { get; set; }
 
         private Transaction TestData
@@ -29,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "Reference 1",
                     Reference2 = "REference 23",
                     Reference3 = "REference 33",
-                    TransactionType = StatementModelTestData.TransactionType,
+                    TransactionType = StatementModelTestData.TransactionType
                 };
             }
         }
@@ -97,8 +96,6 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<TransactionDto>(TestData);
         }
     }

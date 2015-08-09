@@ -4,7 +4,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class BudgetBucketTestHarness : BudgetBucket
     {
-        public BudgetBucketTestHarness() : base()
+        public BudgetBucketTestHarness()
         {
         }
 

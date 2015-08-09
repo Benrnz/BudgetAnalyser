@@ -11,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.Helper
         {
             Console.WriteLine("Date       Description     Bucket     Reference1          Amount Account         Id");
             Console.WriteLine("==============================================================================================================");
-            foreach (var transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
+            foreach (Transaction transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
             {
                 Console.WriteLine(
                     "{0} {1} {2} {3} {4} {5} {6}",

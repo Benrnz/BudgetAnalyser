@@ -17,32 +17,35 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
             var ledgerOrder = new Dictionary<BudgetBucket, int>();
-            int index = 0;
-            foreach (var ledger in book.Ledgers.OrderBy(l => l.BudgetBucket))
+            var index = 0;
+            foreach (LedgerBucket ledger in book.Ledgers.OrderBy(l => l.BudgetBucket))
             {
                 Console.Write("{0}", ledger.BudgetBucket.Code.PadRight(20));
                 ledgerOrder.Add(ledger.BudgetBucket, index++);
             }
-            
+
             Console.Write("Surplus    BankBalances             Adjustments LedgerBalance");
             Console.WriteLine();
             Console.WriteLine("==============================================================================================================================================");
 
-            foreach (var line in book.Reconciliations)
+            foreach (LedgerEntryLine line in book.Reconciliations)
             {
                 Console.Write("{0:d}  ", line.Date);
-                foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
+                foreach (LedgerEntry entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
                 {
                     Console.Write("{0} {1} {2}", entry.NetAmount.ToString("N").PadRight(8), entry.LedgerBucket.StoredInAccount.Name.Truncate(1), entry.Balance.ToString("N").PadRight(9));
                 }
 
                 Console.Write(line.CalculatedSurplus.ToString("N").PadRight(9));
-                int balanceCount = 0;
-                foreach (var bankBalance in line.BankBalances)
+                var balanceCount = 0;
+                foreach (BankBalance bankBalance in line.BankBalances)
                 {
-                    if (++balanceCount > 2) break;
+                    if (++balanceCount > 2)
+                    {
+                        break;
+                    }
                     // Only two bank balances are shown in the test output at this stage.
-                    var balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
+                    string balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
                     Console.Write(balanceText.PadLeft(13).TruncateLeft(13));
                 }
                 Console.Write(line.TotalBalanceAdjustments.ToString("N").PadRight(13));
@@ -51,15 +54,16 @@ namespace BudgetAnalyser.UnitTest.Helper
 
                 if (outputTransactions)
                 {
-                    foreach (var entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
+                    foreach (LedgerEntry entry in line.Entries.OrderBy(e => e.LedgerBucket.BudgetBucket))
                     {
                         var tab = new string(' ', 11 + 18 * ledgerOrder[entry.LedgerBucket.BudgetBucket]);
-                        foreach (var transaction in entry.Transactions)
+                        foreach (LedgerTransaction transaction in entry.Transactions)
                         {
-                            Console.WriteLine("{0} {1} {2} {3} {4} {5}", 
+                            Console.WriteLine(
+                                "{0} {1} {2} {3} {4} {5}",
                                 tab,
-                                entry.LedgerBucket.BudgetBucket.Code.PadRight(6), 
-                                transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16), 
+                                entry.LedgerBucket.BudgetBucket.Code.PadRight(6),
+                                transaction.Amount >= 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                                 transaction.Narrative.Truncate(15),
                                 transaction.Id,
                                 transaction.AutoMatchingReference);
@@ -76,7 +80,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine("Filename: {0}", book.FileName);
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
-            foreach (var ledger in book.Reconciliations.SelectMany(l => l.Entries.Select(e => e.BucketCode)))
+            foreach (string ledger in book.Reconciliations.SelectMany(l => l.Entries.Select(e => e.BucketCode)))
             {
                 Console.Write("{0}", ledger.PadRight(18));
             }
@@ -85,12 +89,12 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.WriteLine();
             Console.WriteLine("====================================================================================================================");
 
-            foreach (var line in book.Reconciliations)
+            foreach (LedgerEntryLineDto line in book.Reconciliations)
             {
                 Console.Write("{0:d}  ", line.Date);
-                foreach (var entry in line.Entries)
+                foreach (LedgerEntryDto entry in line.Entries)
                 {
-                    Console.Write("{0} {1} ", new String(' ', 8), entry.Balance.ToString("N").PadRight(8));
+                    Console.Write("{0} {1} ", new string(' ', 8), entry.Balance.ToString("N").PadRight(8));
                 }
 
                 Console.Write(line.BankBalance.ToString("N").PadRight(13));
@@ -100,11 +104,12 @@ namespace BudgetAnalyser.UnitTest.Helper
 
                 if (outputTransactions)
                 {
-                    foreach (var entry in line.Entries)
+                    foreach (LedgerEntryDto entry in line.Entries)
                     {
-                        foreach (var transaction in entry.Transactions)
+                        foreach (LedgerTransactionDto transaction in entry.Transactions)
                         {
-                            Console.WriteLine("          {0} {1} {2}",
+                            Console.WriteLine(
+                                "          {0} {1} {2}",
                                 entry.BucketCode.PadRight(6),
                                 transaction.Amount > 0 ? (transaction.Amount.ToString("N") + "Cr").PadLeft(8) : (transaction.Amount.ToString("N") + "Dr").PadLeft(16),
                                 transaction.Narrative);

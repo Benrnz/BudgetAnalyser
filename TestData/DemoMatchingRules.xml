@@ -1,4 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<List x:TypeArguments="bemd:MatchingRuleDto" Capacity="256" xmlns="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:bemd="clr-namespace:BudgetAnalyser.Engine.Matching.Data;assembly=BudgetAnalyser.Engine" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <bemd:MatchingRuleDto Amount="{x:Null}" Description="Acme Inc" Reference1="Acme W E Coyote" Reference2="{x:Null}" Reference3="{x:Null}" And="True" BucketCode="SALARY" Created="2014-04-12T16:02:19.7922645+12:00" LastMatch="2014-08-30T10:21:24.6301711+12:00" MatchCount="1" RuleId="f21881f2-4ca7-4d90-b2f5-4d08a56b38cc" />
+
+<List x:TypeArguments="bemd:MatchingRuleDto" Capacity="256"
+      xmlns="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+      xmlns:bemd="clr-namespace:BudgetAnalyser.Engine.Matching.Data;assembly=BudgetAnalyser.Engine"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <bemd:MatchingRuleDto Amount="{x:Null}" Description="Acme Inc" Reference1="Acme W E Coyote" Reference2="{x:Null}"
+                        Reference3="{x:Null}" And="True" BucketCode="SALARY"
+                        Created="2014-04-12T16:02:19.7922645+12:00" LastMatch="2014-08-30T10:21:24.6301711+12:00"
+                        MatchCount="1" RuleId="f21881f2-4ca7-4d90-b2f5-4d08a56b38cc" />
 </List>

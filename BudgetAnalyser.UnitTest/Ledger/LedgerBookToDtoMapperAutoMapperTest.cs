@@ -18,12 +18,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldMapReconciliations()
-        {
-            Assert.AreEqual(3, Result.Reconciliations.Count);
-        }
-
-        [TestMethod]
         public void ShouldMapFileName()
         {
             Assert.AreEqual("C:\\Folder\\book1.xml", Result.FileName);
@@ -32,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapModified()
         {
-            Assert.AreEqual(new DateTime(2013,12,16), Result.Modified);
+            Assert.AreEqual(new DateTime(2013, 12, 16), Result.Modified);
         }
 
         [TestMethod]
@@ -41,11 +35,15 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual("Test Data 4 Book", Result.Name);
         }
 
+        [TestMethod]
+        public void ShouldMapReconciliations()
+        {
+            Assert.AreEqual(3, Result.Reconciliations.Count);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerBookDto>(TestData);
         }
     }
