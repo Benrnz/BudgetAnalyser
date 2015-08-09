@@ -3,6 +3,6 @@
     public enum WidgetSize
     {
         Small,
-        Medium,
+        Medium
     }
 }

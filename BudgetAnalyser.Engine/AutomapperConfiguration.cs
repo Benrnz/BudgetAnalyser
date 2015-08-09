@@ -5,13 +5,13 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    /// A class to run all AutoMapper configuration in this assembly.  Any class that implements <see cref="ILocalAutoMapperConfiguration"/> will be dependency injected into this class 
-    /// and all <see cref="ILocalAutoMapperConfiguration.RegisterMappings"/> methods on each are called.  The IoC container takes care of finding all the instances that implement the interface.
+    ///     A class to run all AutoMapper configuration in this assembly.  Any class that implements
+    ///     <see cref="ILocalAutoMapperConfiguration" /> will be dependency injected into this class
+    ///     and all <see cref="ILocalAutoMapperConfiguration.RegisterMappings" /> methods on each are called.  The IoC
+    ///     container takes care of finding all the instances that implement the interface.
     /// </summary>
     public class AutoMapperConfiguration
     {
-        private readonly IEnumerable<ILocalAutoMapperConfiguration> autoMapperRegistrations;
-
         public AutoMapperConfiguration([NotNull] IEnumerable<ILocalAutoMapperConfiguration> autoMapperRegistrations)
         {
             if (autoMapperRegistrations == null)
@@ -19,16 +19,13 @@ namespace BudgetAnalyser.Engine
                 throw new ArgumentNullException("autoMapperRegistrations");
             }
 
-            this.autoMapperRegistrations = autoMapperRegistrations;
+            this.Registrations = autoMapperRegistrations;
         }
 
-        internal IEnumerable<ILocalAutoMapperConfiguration> Registrations
-        {
-            get { return this.autoMapperRegistrations; }
-        }
+        internal IEnumerable<ILocalAutoMapperConfiguration> Registrations { get; }
 
         /// <summary>
-        /// Register all configurations on all known instances. This only needs to be done once during application startup.
+        ///     Register all configurations on all known instances. This only needs to be done once during application startup.
         /// </summary>
         public AutoMapperConfiguration Configure()
         {
@@ -37,7 +34,7 @@ namespace BudgetAnalyser.Engine
             // In addition use of dependencies within the mapping effectively makes the dependencies "static-shared" as well, making it difficult to mock these
             // dependencies.  Will probably work ok if testing of mappers are isolated properly.  Ie, no integration tests that consume real mappers.
 
-            foreach (var configuration in autoMapperRegistrations)
+            foreach (ILocalAutoMapperConfiguration configuration in this.Registrations)
             {
                 configuration.RegisterMappings();
             }

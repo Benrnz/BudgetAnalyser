@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.Statement
             return retval;
         }
 
-        internal Decimal FetchDecimal([NotNull] string[] array, int index)
+        internal decimal FetchDecimal([NotNull] string[] array, int index)
         {
             if (array == null)
             {
@@ -100,8 +100,8 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             string stringToParse = array[index];
-            Decimal retval;
-            if (!Decimal.TryParse(stringToParse, out retval))
+            decimal retval;
+            if (!decimal.TryParse(stringToParse, out retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
                 throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);

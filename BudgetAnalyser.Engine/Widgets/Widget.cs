@@ -13,9 +13,9 @@ namespace BudgetAnalyser.Engine.Widgets
     /// </summary>
     public abstract class Widget : INotifyPropertyChanged
     {
+        protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
-        protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
         private string doNotUseCategory;
         private bool doNotUseClickable;
         private string doNotUseColour;
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseColour; }
             protected set
             {
-                var changed = value != this.doNotUseColour;
+                bool changed = value != this.doNotUseColour;
                 this.doNotUseColour = value;
                 OnPropertyChanged();
                 if (changed)
@@ -138,6 +138,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public string Name { get; protected set; }
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
+        public int Sequence { get; protected set; }
 
         public WidgetSize Size
         {
@@ -174,7 +175,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseWidgetStyle; }
             protected set
             {
-                var changed = value != this.doNotUseWidgetStyle;
+                bool changed = value != this.doNotUseWidgetStyle;
                 this.doNotUseWidgetStyle = value;
                 OnPropertyChanged();
                 if (changed)
@@ -184,14 +185,12 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        public int Sequence { get; protected set; }
-
         public abstract void Update(params object[] input);
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
@@ -200,7 +199,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         protected void OnStyleChanged(EventHandler eventToInvoke)
         {
-            var handler = eventToInvoke;
+            EventHandler handler = eventToInvoke;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -214,16 +213,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 return false;
             }
 
-            var dependencies = Dependencies.ToList();
+            List<Type> dependencies = Dependencies.ToList();
             if (dependencies.Count() > input.Length)
             {
                 return false;
             }
 
             int index = 0, nullCount = 0;
-            foreach (var dependencyType in Dependencies)
+            foreach (Type dependencyType in Dependencies)
             {
-                var dependencyInstance = input[index++];
+                object dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.

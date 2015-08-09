@@ -9,7 +9,9 @@
         {
         }
 
-        protected SurplusBucket(string bucketCode, string description) : base(bucketCode, description) { }
+        protected SurplusBucket(string bucketCode, string description) : base(bucketCode, description)
+        {
+        }
 
         public override string TypeDescription
         {

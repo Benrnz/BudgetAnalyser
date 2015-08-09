@@ -34,27 +34,34 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("rules");
             }
 
-            bool matchesOccured = false;
+            var matchesOccured = false;
             this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation started."));
-            Parallel.ForEach(transactions, transaction =>
-            {
-                if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
+            Parallel.ForEach(
+                transactions,
+                transaction =>
                 {
-                    foreach (MatchingRule rule in rules.ToList())
+                    if (transaction.BudgetBucket == null || transaction.BudgetBucket.Code == null)
                     {
-                        if (rule.Match(transaction))
+                        foreach (MatchingRule rule in rules.ToList())
                         {
-                            transaction.BudgetBucket = rule.Bucket;
-                            matchesOccured = true;
-                            Transaction loggedTransaction = transaction;
-                            this.logger.LogInfo(
-                                l =>
-                                    l.Format("Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}", loggedTransaction.Date, loggedTransaction.Amount,
-                                        loggedTransaction.Description.Truncate(15, true), loggedTransaction.BudgetBucket.Code, rule.RuleId));
+                            if (rule.Match(transaction))
+                            {
+                                transaction.BudgetBucket = rule.Bucket;
+                                matchesOccured = true;
+                                Transaction loggedTransaction = transaction;
+                                this.logger.LogInfo(
+                                    l =>
+                                        l.Format(
+                                            "Matchmaker: Transaction Matched: {0} {1:C} {2} {3} RuleId:{4}",
+                                            loggedTransaction.Date,
+                                            loggedTransaction.Amount,
+                                            loggedTransaction.Description.Truncate(15, true),
+                                            loggedTransaction.BudgetBucket.Code,
+                                            rule.RuleId));
+                            }
                         }
                     }
-                }
-            });
+                });
 
             this.logger.LogInfo(l => l.Format("Matchmaker: Matching operation finished."));
             return matchesOccured;

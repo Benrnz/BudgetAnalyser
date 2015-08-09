@@ -7,13 +7,13 @@ namespace BudgetAnalyser.Engine.Reports
 {
     public class LedgerBucketHistoryAnalyser
     {
-        public GraphData GraphData { get; private set; }
-
         [UsedImplicitly]
         public SeriesData BalanceLine
         {
             get { return GraphData.Series.FirstOrDefault(); }
         }
+
+        public GraphData GraphData { get; private set; }
 
         public void Analyse([NotNull] LedgerBucket ledger, [NotNull] LedgerBook book)
         {
@@ -29,19 +29,19 @@ namespace BudgetAnalyser.Engine.Reports
 
             GraphData = new GraphData
             {
-                GraphName = "Bucket Balance History",
+                GraphName = "Bucket Balance History"
             };
 
             var series = new SeriesData { Description = "The actual bank balance of the Ledger Bucket over time.", SeriesName = "Balance" };
             GraphData.SeriesList.Add(series);
 
-            foreach (var reconciliation in book.Reconciliations.Take(24).Reverse())
+            foreach (LedgerEntryLine reconciliation in book.Reconciliations.Take(24).Reverse())
             {
-                var entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
+                LedgerEntry entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
                 var plot = new DatedGraphPlot
                 {
-                    Date = reconciliation.Date, 
-                    Amount = entry == null ? 0 : entry.Balance,
+                    Date = reconciliation.Date,
+                    Amount = entry == null ? 0 : entry.Balance
                 };
                 series.PlotsList.Add(plot);
             }

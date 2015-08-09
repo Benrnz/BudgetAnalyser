@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Statement
             get { return TotalCredits + TotalDebits; }
         }
 
-        public ObservableCollection<Transaction> Transactions { get; private set; }
+        public ObservableCollection<Transaction> Transactions { get; }
 
         public void TriggerRefreshTotalsRow()
         {

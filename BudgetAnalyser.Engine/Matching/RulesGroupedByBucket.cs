@@ -14,9 +14,6 @@ namespace BudgetAnalyser.Engine.Matching
     /// </summary>
     public class RulesGroupedByBucket : INotifyPropertyChanged
     {
-        private readonly BudgetBucket doNotUseBucket;
-        private readonly ObservableCollection<MatchingRule> doNotUseRules;
-
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
             if (bucket == null)
@@ -29,21 +26,13 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("rules");
             }
 
-            this.doNotUseBucket = bucket;
-            this.doNotUseRules = new ObservableCollection<MatchingRule>(rules.ToList());
+            this.Bucket = bucket;
+            this.Rules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public BudgetBucket Bucket
-        {
-            get { return this.doNotUseBucket; }
-        }
-
-        public ObservableCollection<MatchingRule> Rules
-        {
-            get { return this.doNotUseRules; }
-        }
+        public BudgetBucket Bucket { get; }
+        public ObservableCollection<MatchingRule> Rules { get; }
 
         public int RulesCount
         {

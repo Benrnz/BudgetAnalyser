@@ -72,8 +72,8 @@ namespace BudgetAnalyser.Engine.Services
             get { return 50; }
         }
 
-        public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
-        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
+        public ObservableCollection<MatchingRule> MatchingRules { get; }
+        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
         public bool AddRule(MatchingRule ruleToAdd)
         {

@@ -41,5 +41,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.9.2")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.UnitTest")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]
-
 [assembly: CLSCompliant(false)]

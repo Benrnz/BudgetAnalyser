@@ -60,6 +60,16 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        public static bool operator ==(BudgetItem left, BudgetItem right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BudgetItem left, BudgetItem right)
+        {
+            return !Equals(left, right);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -104,16 +114,6 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // This is to trigger updates dependent on Bucket, but isn't updated when Active is toggled. For example binding to bucket
-            // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
-            if (e.PropertyName == "Active")
-            {
-                OnPropertyChanged("Bucket");
-            }
-        }
-
         private static string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
         {
             if (string.IsNullOrWhiteSpace(sentence1) || string.IsNullOrWhiteSpace(sentence2))
@@ -155,14 +155,14 @@ namespace BudgetAnalyser.Engine.Budget
             return string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
         }
 
-        public static bool operator ==(BudgetItem left, BudgetItem right)
+        private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(BudgetItem left, BudgetItem right)
-        {
-            return !Equals(left, right);
+            // This is to trigger updates dependent on Bucket, but isn't updated when Active is toggled. For example binding to bucket
+            // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
+            if (e.PropertyName == "Active")
+            {
+                OnPropertyChanged("Bucket");
+            }
         }
     }
 }

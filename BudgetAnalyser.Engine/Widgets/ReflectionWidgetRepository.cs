@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.cachedWidgets = new SortedList<string, Widget>();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IUserDefinedWidget")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IUserDefinedWidget")]
         public IUserDefinedWidget Create(string widgetType, string id)
         {
             Type type = Type.GetType(widgetType);
@@ -33,7 +34,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var widget = Activator.CreateInstance(type) as IUserDefinedWidget;
             Debug.Assert(widget != null);
             widget.Id = id;
-            var key = BuildMultiUseWidgetKey(widget);
+            string key = BuildMultiUseWidgetKey(widget);
 
             if (this.cachedWidgets.ContainsKey(key))
             {
@@ -53,7 +54,7 @@ namespace BudgetAnalyser.Engine.Widgets
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract)
                     .ToList();
 
-                var specialisedUiWidgets = Assembly.GetEntryAssembly().GetExportedTypes()
+                List<Type> specialisedUiWidgets = Assembly.GetEntryAssembly().GetExportedTypes()
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.IsAbstract)
                     .ToList();
                 if (specialisedUiWidgets.Any())

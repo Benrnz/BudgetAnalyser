@@ -3,15 +3,13 @@ using System.Collections.Generic;
 namespace BudgetAnalyser.Engine.Reports
 {
     /// <summary>
-    /// A class to store the analysis result data for the Overall Performance chart.
+    ///     A class to store the analysis result data for the Overall Performance chart.
     /// </summary>
     public class OverallPerformanceBudgetResult
     {
-        internal IList<BucketPerformanceResult> AnalysesList { get; set; }
-
         public IEnumerable<BucketPerformanceResult> Analyses
         {
-            get { return this.AnalysesList; }
+            get { return AnalysesList; }
         }
 
         /// <summary>
@@ -26,10 +24,9 @@ namespace BudgetAnalyser.Engine.Reports
         public decimal AverageSurplus { get; internal set; }
 
         public int DurationInMonths { get; internal set; }
-
         public decimal OverallPerformance { get; internal set; }
         public decimal TotalBudgetExpenses { get; internal set; }
-
         public bool UsesMultipleBudgets { get; internal set; }
+        internal IList<BucketPerformanceResult> AnalysesList { get; set; }
     }
 }

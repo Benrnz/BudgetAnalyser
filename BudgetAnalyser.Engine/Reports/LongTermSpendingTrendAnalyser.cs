@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Engine.Reports
         private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
         {
             // Current month's data is complete - update totals and advance to next month
-            foreach (var subTotal in subTotals)
+            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
             {
                 // Find appropriate bucket series
                 SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);

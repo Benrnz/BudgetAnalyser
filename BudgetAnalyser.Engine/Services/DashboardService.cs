@@ -252,6 +252,39 @@ namespace BudgetAnalyser.Engine.Services
             WidgetGroups.ToList().ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
         }
 
+        private static WidgetPersistentState CreateWidgetState(Widget widget)
+        {
+            var multiInstanceWidget = widget as IUserDefinedWidget;
+            if (multiInstanceWidget != null)
+            {
+                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
+                if (surprisePaymentWidget == null)
+                {
+                    return new MultiInstanceWidgetState
+                    {
+                        Id = multiInstanceWidget.Id,
+                        Visible = multiInstanceWidget.Visibility,
+                        WidgetType = multiInstanceWidget.WidgetType.FullName
+                    };
+                }
+
+                return new SurprisePaymentWidgetPersistentState
+                {
+                    Id = surprisePaymentWidget.Id,
+                    Visible = surprisePaymentWidget.Visibility,
+                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
+                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
+                    Frequency = surprisePaymentWidget.Frequency
+                };
+            }
+
+            return new WidgetPersistentState
+            {
+                Visible = widget.Visibility,
+                WidgetType = widget.GetType().FullName
+            };
+        }
+
         private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
         {
             var supportsDataChangeDetection = dependency as IDataChangeDetection;
@@ -392,39 +425,6 @@ namespace BudgetAnalyser.Engine.Services
             widgetGroup.Widgets.Add(baseWidget);
             UpdateAllWidgets();
             return baseWidget;
-        }
-
-        private static WidgetPersistentState CreateWidgetState(Widget widget)
-        {
-            var multiInstanceWidget = widget as IUserDefinedWidget;
-            if (multiInstanceWidget != null)
-            {
-                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
-                if (surprisePaymentWidget == null)
-                {
-                    return new MultiInstanceWidgetState
-                    {
-                        Id = multiInstanceWidget.Id,
-                        Visible = multiInstanceWidget.Visibility,
-                        WidgetType = multiInstanceWidget.WidgetType.FullName
-                    };
-                }
-
-                return new SurprisePaymentWidgetPersistentState
-                {
-                    Id = surprisePaymentWidget.Id,
-                    Visible = surprisePaymentWidget.Visibility,
-                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
-                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
-                    Frequency = surprisePaymentWidget.Frequency
-                };
-            }
-
-            return new WidgetPersistentState
-            {
-                Visible = widget.Visibility,
-                WidgetType = widget.GetType().FullName
-            };
         }
     }
 }

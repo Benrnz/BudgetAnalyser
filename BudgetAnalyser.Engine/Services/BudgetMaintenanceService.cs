@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-        public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
+        public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
 
         public ApplicationDataType DataType
@@ -222,25 +222,6 @@ namespace BudgetAnalyser.Engine.Services
             return Budgets.Validate(messages);
         }
 
-        private void CreateNewBudgetCollection()
-        {
-            Budgets = this.budgetRepository.CreateNew();
-        }
-
-        private void EnsureAllBucketsUsedAreInBucketRepo()
-        {
-            // Make sure all buckets are in the bucket repo.
-            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
-                .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
-                .Distinct();
-
-            foreach (BudgetBucket budgetBucket in buckets)
-            {
-                BudgetBucket copyOfBucket = budgetBucket;
-                BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
-            }
-        }
-
         private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
         {
             return source.Expenses.Select(
@@ -259,6 +240,25 @@ namespace BudgetAnalyser.Engine.Services
                     Amount = sourceExpense.Amount,
                     Bucket = sourceExpense.Bucket
                 }).ToList();
+        }
+
+        private void CreateNewBudgetCollection()
+        {
+            Budgets = this.budgetRepository.CreateNew();
+        }
+
+        private void EnsureAllBucketsUsedAreInBucketRepo()
+        {
+            // Make sure all buckets are in the bucket repo.
+            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+                .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
+                .Distinct();
+
+            foreach (BudgetBucket budgetBucket in buckets)
+            {
+                BudgetBucket copyOfBucket = budgetBucket;
+                BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentException("The fixed budget amount must be greater than zero.", "fixedBudgetAmount");
             }
 
-            var upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
+            string upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
             if (IsValidCode(upperCode))
             {
                 throw new ArgumentException("A new fixed budget project bucket cannot be created, because the code " + bucketCode + " already exists.", bucketCode);
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("code");
             }
 
-            var upperCode = code.ToUpperInvariant();
+            string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException("factory");
             }
 
-            var upperCode = code.ToUpperInvariant();
+            string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return this.lookupTable[upperCode];
                 }
 
-                var newBucket = factory();
+                BudgetBucket newBucket = factory();
                 this.lookupTable.Add(upperCode, newBucket);
                 return newBucket;
             }

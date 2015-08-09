@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
             if (logger == null)
@@ -85,19 +86,40 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        ///     Calculates the duration in months from the beginning of the period to the end.
+        /// </summary>
+        /// <param name="criteria">
+        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
+        ///     statement dates.
+        /// </param>
+        /// <param name="transactions">The list of transactions to use to determine duration.</param>
+        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
+        {
+            List<Transaction> list = transactions.ToList();
+            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
+
+            if (criteria != null && !criteria.Cleared)
+            {
+                if (criteria.BeginDate != null)
+                {
+                    minDate = criteria.BeginDate.Value;
+                    Debug.Assert(criteria.EndDate != null);
+                    maxDate = criteria.EndDate.Value;
+                }
+            }
+            else
+            {
+                minDate = list.Min(t => t.Date);
+                maxDate = list.Max(t => t.Date);
+            }
+
+            return minDate.DurationInMonths(maxDate);
+        }
+
         public long SignificantDataChangeHash()
         {
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         internal virtual void Filter(GlobalFilterCriteria criteria)
@@ -273,6 +295,16 @@ namespace BudgetAnalyser.Engine.Statement
             return this.duplicates;
         }
 
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
         {
             if (criteria.Cleared)
@@ -341,37 +373,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
-        }
-
-        /// <summary>
-        ///     Calculates the duration in months from the beginning of the period to the end.
-        /// </summary>
-        /// <param name="criteria">
-        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-        ///     statement dates.
-        /// </param>
-        /// <param name="transactions">The list of transactions to use to determine duration.</param>
-        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
-        {
-            List<Transaction> list = transactions.ToList();
-            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
-
-            if (criteria != null && !criteria.Cleared)
-            {
-                if (criteria.BeginDate != null)
-                {
-                    minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate != null);
-                    maxDate = criteria.EndDate.Value;
-                }
-            }
-            else
-            {
-                minDate = list.Min(t => t.Date);
-                maxDate = list.Max(t => t.Date);
-            }
-
-            return minDate.DurationInMonths(maxDate);
         }
     }
 }

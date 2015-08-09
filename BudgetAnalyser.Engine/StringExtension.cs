@@ -42,6 +42,16 @@ namespace BudgetAnalyser.Engine
             return "a";
         }
 
+        public static bool IsNothing(this string instance)
+        {
+            return string.IsNullOrWhiteSpace(instance);
+        }
+
+        public static bool IsSomething(this string instance)
+        {
+            return !string.IsNullOrWhiteSpace(instance);
+        }
+
         /// <summary>
         ///     Trims the end of a string safely.  If the string is null, null is returned.
         /// </summary>
@@ -102,16 +112,6 @@ namespace BudgetAnalyser.Engine
             }
 
             return instance.Substring(instance.Length - truncateToLength, truncateToLength);
-        }
-
-        public static bool IsSomething(this string instance)
-        {
-            return !string.IsNullOrWhiteSpace(instance);
-        }
-
-        public static bool IsNothing(this string instance)
-        {
-            return string.IsNullOrWhiteSpace(instance);
         }
     }
 }

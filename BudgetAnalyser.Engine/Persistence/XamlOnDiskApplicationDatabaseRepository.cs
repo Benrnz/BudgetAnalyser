@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xaml;
@@ -45,14 +44,14 @@ namespace BudgetAnalyser.Engine.Persistence
             var storageRoot = new BudgetAnalyserStorageRoot
             {
                 BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.xml" },
-                LedgerBookRootDto = new StorageBranch { Source = path +".LedgerBook.xml" },
+                LedgerBookRootDto = new StorageBranch { Source = path + ".LedgerBook.xml" },
                 LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
                 MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.xml" },
-                StatementModelRootDto = new StorageBranch { Source = path +".Transactions.csv" }
+                StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" }
             };
             string serialised = Serialise(storageRoot);
             await WriteToDiskAsync(storageKey, serialised);
-            var appDb = this.loadingMapper.Map(storageRoot);
+            ApplicationDatabase appDb = this.loadingMapper.Map(storageRoot);
             appDb.FileName = storageKey;
             return appDb;
         }

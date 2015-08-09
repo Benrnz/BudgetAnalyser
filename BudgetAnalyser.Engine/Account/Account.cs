@@ -9,18 +9,16 @@ namespace BudgetAnalyser.Engine.Account
             Name = GetType().Name;
         }
 
-        public abstract string ImagePath { get; }
-
-        public string Name { get; protected set; }
-
         public abstract AccountType AccountType { get; }
-
-        internal abstract string[] KeyWords { get; }
+        public abstract string ImagePath { get; }
 
         public virtual bool IsSalaryAccount
         {
             get { return false; }
         }
+
+        public string Name { get; protected set; }
+        internal abstract string[] KeyWords { get; }
 
         public static bool operator ==(Account left, Account right)
         {
@@ -63,7 +61,10 @@ namespace BudgetAnalyser.Engine.Account
 
         protected bool Equals([CanBeNull] Account other)
         {
-            if (other == null) return false;
+            if (other == null)
+            {
+                return false;
+            }
             return string.Equals(Name, other.Name);
         }
     }

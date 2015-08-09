@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Engine
                 return true;
             }
 
-            bool valid = true;
+            var valid = true;
             if (BeginDate == null)
             {
                 validationMessages.AppendLine("Begin date cannot be blank unless filter is 'Cleared'.");

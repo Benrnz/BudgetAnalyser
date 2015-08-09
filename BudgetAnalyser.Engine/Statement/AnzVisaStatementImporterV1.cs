@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -74,7 +73,7 @@ namespace BudgetAnalyser.Engine.Statement
                     TransactionType = transactionType,
                     Amount = amount,
                     Description = this.importUtilities.FetchString(split, 3),
-                    Date = this.importUtilities.FetchDate(split, 4),
+                    Date = this.importUtilities.FetchDate(split, 4)
                 };
                 transactions.Add(transaction);
             }
@@ -82,7 +81,7 @@ namespace BudgetAnalyser.Engine.Statement
             return new StatementModel(this.logger)
             {
                 StorageKey = fileName,
-                LastImport = DateTime.Now,
+                LastImport = DateTime.Now
             }.LoadTransactions(transactions);
         }
 
@@ -106,7 +105,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            if (!Char.IsDigit(card.ToCharArray()[0]))
+            if (!char.IsDigit(card.ToCharArray()[0]))
             {
                 return false;
             }
@@ -126,12 +125,12 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
-        protected async virtual Task<string> ReadTextChunkAsync(string filePath)
+        protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {

@@ -117,34 +117,6 @@ namespace BudgetAnalyser.Engine.Reports
             return result;
         }
 
-        private static Func<BudgetModel, decimal> BuildExpenseFinder(BudgetBucket bucket)
-        {
-            return b =>
-            {
-                Expense first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
-                if (first == null)
-                {
-                    return 0;
-                }
-
-                return first.Amount;
-            };
-        }
-
-        private static Func<BudgetModel, decimal> BuildIncomeFinder(BudgetBucket bucket)
-        {
-            return b =>
-            {
-                Income first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
-                if (first == null)
-                {
-                    return 0;
-                }
-
-                return first.Amount;
-            };
-        }
-
         private static void AnalysisPreconditions(GlobalFilterCriteria criteria, StatementModel statement, BudgetCollection budgets, out DateTime beginDate, out DateTime endDate)
         {
             if (criteria == null)
@@ -179,6 +151,34 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
+        private static Func<BudgetModel, decimal> BuildExpenseFinder(BudgetBucket bucket)
+        {
+            return b =>
+            {
+                Expense first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+                if (first == null)
+                {
+                    return 0;
+                }
+
+                return first.Amount;
+            };
+        }
+
+        private static Func<BudgetModel, decimal> BuildIncomeFinder(BudgetBucket bucket)
+        {
+            return b =>
+            {
+                Income first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
+                if (first == null)
+                {
+                    return 0;
+                }
+
+                return first.Amount;
+            };
+        }
+
         private static decimal CalculateBudgetedTotalAmount(DateTime beginDate, Func<BudgetModel, decimal> whichBudgetBucket, BudgetCollection budgets, OverallPerformanceBudgetResult result)
         {
             if (!result.UsesMultipleBudgets)
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             decimal budgetedAmount = 0;
-            for (int month = 0; month < result.DurationInMonths; month++)
+            for (var month = 0; month < result.DurationInMonths; month++)
             {
                 BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
                 budgetedAmount += whichBudgetBucket(budget);
@@ -210,7 +210,7 @@ namespace BudgetAnalyser.Engine.Reports
             result.AverageSpend = totalExpensesSpend / result.DurationInMonths; // Expected to be negative
             result.AverageSurplus = totalSurplusSpend / result.DurationInMonths; // Expected to be negative
 
-            for (int month = 0; month < result.DurationInMonths; month++)
+            for (var month = 0; month < result.DurationInMonths; month++)
             {
                 BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
                 result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);

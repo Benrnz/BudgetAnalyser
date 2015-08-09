@@ -9,7 +9,6 @@
         }
 
         public Account.Account Account { get; private set; }
-
         public decimal Balance { get; private set; }
     }
 }

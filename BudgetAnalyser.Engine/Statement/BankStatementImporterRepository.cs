@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -33,7 +32,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <returns>True if this file can be imported one of the importers in the repository.</returns>
         public async Task<bool> CanImportAsync(string fullFileName)
         {
-            foreach (var importer in this.importers)
+            foreach (IBankStatementImporter importer in this.importers)
             {
                 if (await importer.TasteTestAsync(fullFileName))
                 {
@@ -45,7 +44,8 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        ///     Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImportAsync" /> first.
+        ///     Import the given file.  It is recommended to call <see cref="IBankStatementImporterRepository.CanImportAsync" />
+        ///     first.
         ///     If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>

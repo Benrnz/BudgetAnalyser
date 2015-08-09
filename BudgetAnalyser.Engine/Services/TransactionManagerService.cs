@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
@@ -417,11 +416,6 @@ namespace BudgetAnalyser.Engine.Services
             return allTransactionHaveABucket;
         }
 
-        private void ResetTransactionsCollection()
-        {
-            this.transactions = StatementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
-        }
-
         private static bool MatchTransactionBucket(Transaction t, string bucketCode)
         {
             if (bucketCode.IsNothing())
@@ -439,7 +433,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private static bool MatchTransactionText(Transaction t, string textFilter)
         {
-            if (!String.IsNullOrWhiteSpace(t.Description))
+            if (!string.IsNullOrWhiteSpace(t.Description))
             {
                 if (t.Description.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
@@ -447,7 +441,7 @@ namespace BudgetAnalyser.Engine.Services
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(t.Reference1))
+            if (!string.IsNullOrWhiteSpace(t.Reference1))
             {
                 if (t.Reference1.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
@@ -455,7 +449,7 @@ namespace BudgetAnalyser.Engine.Services
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(t.Reference2))
+            if (!string.IsNullOrWhiteSpace(t.Reference2))
             {
                 if (t.Reference2.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
@@ -463,7 +457,7 @@ namespace BudgetAnalyser.Engine.Services
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(t.Reference3))
+            if (!string.IsNullOrWhiteSpace(t.Reference3))
             {
                 if (t.Reference3.IndexOf(textFilter, StringComparison.CurrentCultureIgnoreCase) >= 0)
                 {
@@ -472,6 +466,11 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return false;
+        }
+
+        private void ResetTransactionsCollection()
+        {
+            this.transactions = StatementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Account;
 using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.Statement

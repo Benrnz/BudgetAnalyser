@@ -112,15 +112,6 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-        ///     loading from file.
-        ///     This variable is intentionally not persisted.
-        ///     AutoMapper always sets this to false.
-        ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
-        /// </summary>
-        internal bool IsNew { get; private set; }
-
-        /// <summary>
         ///     Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
         /// </summary>
         public decimal LedgerBalance
@@ -157,6 +148,26 @@ namespace BudgetAnalyser.Engine.Ledger
         public decimal TotalBankBalance
         {
             get { return this.bankBalancesList.Sum(b => b.Balance); }
+        }
+
+        /// <summary>
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
+        ///     loading from file.
+        ///     This variable is intentionally not persisted.
+        ///     AutoMapper always sets this to false.
+        ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
+        /// </summary>
+        internal bool IsNew { get; private set; }
+
+        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
+        {
+            IOrderedEnumerable<Transaction> txns = transactions.Where(
+                t =>
+                    t.Reference1.TrimEndSafely() == autoMatchingReference
+                    || t.Reference2.TrimEndSafely() == autoMatchingReference
+                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
+                .OrderBy(t => t.Amount);
+            return txns;
         }
 
         /// <summary>
@@ -228,7 +239,10 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             CreateBalanceAdjustmentTasksIfRequired(toDoList);
-            if (statement != null) AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
+            if (statement != null)
+            {
+                AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
+            }
             CreateTasksToJournalFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
         }
 
@@ -316,6 +330,115 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return result;
+        }
+
+        private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
+        {
+            var ledgersAndBalances = new List<LedgerEntry>();
+            LedgerEntryLine previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
+            if (previousLine == null)
+            {
+                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
+            }
+
+            foreach (LedgerBucket ledger in parentLedgerBook.Ledgers)
+            {
+                // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
+                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
+
+                // Its important to use the ledger column value from the book level map, not from the previous entry. The user
+                // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
+                if (previousEntry == null)
+                {
+                    // Indicates a new ledger column has been added to the book starting this month.
+                    ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerBucket = ledger });
+                }
+                else
+                {
+                    ledgersAndBalances.Add(previousEntry);
+                }
+            }
+
+            return ledgersAndBalances;
+        }
+
+        private static string ExtractNarrative(Transaction t)
+        {
+            if (!string.IsNullOrWhiteSpace(t.Description))
+            {
+                return t.Description;
+            }
+
+            if (t.TransactionType != null)
+            {
+                return t.TransactionType.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
+        {
+            if (ledgerBucket == null)
+            {
+                throw new ArgumentNullException("ledgerBucket");
+            }
+
+            if (previousLine == null)
+            {
+                return 0;
+            }
+
+            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
+            return previousEntry == null ? 0 : previousEntry.Balance;
+        }
+
+        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
+        {
+            if (filteredStatementTransactions.None())
+            {
+                return new List<LedgerTransaction>();
+            }
+
+            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
+            if (transactions.Any())
+            {
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
+                    t =>
+                    {
+                        if (t.Amount < 0)
+                        {
+                            return new CreditLedgerTransaction(t.Id)
+                            {
+                                Amount = t.Amount,
+                                Narrative = ExtractNarrative(t),
+                                Date = t.Date
+                            };
+                        }
+
+                        return new CreditLedgerTransaction(t.Id)
+                        {
+                            Amount = t.Amount,
+                            Narrative = ExtractNarrative(t),
+                            Date = t.Date
+                        };
+                    });
+
+                return newLedgerTransactions.ToList();
+            }
+
+            return new List<LedgerTransaction>();
+        }
+
+        private static string IssueTransactionReferenceNumber()
+        {
+            var reference = new StringBuilder(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
+            foreach (string disallowedChar in DisallowedChars)
+            {
+                reference.Replace(disallowedChar, string.Empty);
+            }
+
+            return reference.ToString().Substring(0, 7);
         }
 
         private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate, ToDoCollection toDoList)
@@ -520,126 +643,6 @@ namespace BudgetAnalyser.Engine.Ledger
         private decimal TotalBankBalanceAdjustmentForAccount(Account.Account account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
-        }
-
-        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
-        {
-            IOrderedEnumerable<Transaction> txns = transactions.Where(
-                t =>
-                    t.Reference1.TrimEndSafely() == autoMatchingReference
-                    || t.Reference2.TrimEndSafely() == autoMatchingReference
-                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
-                .OrderBy(t => t.Amount);
-            return txns;
-        }
-
-        private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
-        {
-            var ledgersAndBalances = new List<LedgerEntry>();
-            LedgerEntryLine previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
-            if (previousLine == null)
-            {
-                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
-            }
-
-            foreach (LedgerBucket ledger in parentLedgerBook.Ledgers)
-            {
-                // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
-                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
-
-                // Its important to use the ledger column value from the book level map, not from the previous entry. The user
-                // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
-                if (previousEntry == null)
-                {
-                    // Indicates a new ledger column has been added to the book starting this month.
-                    ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerBucket = ledger });
-                }
-                else
-                {
-                    ledgersAndBalances.Add(previousEntry);
-                }
-            }
-
-            return ledgersAndBalances;
-        }
-
-        private static string ExtractNarrative(Transaction t)
-        {
-            if (!string.IsNullOrWhiteSpace(t.Description))
-            {
-                return t.Description;
-            }
-
-            if (t.TransactionType != null)
-            {
-                return t.TransactionType.ToString();
-            }
-
-            return string.Empty;
-        }
-
-        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
-        {
-            if (ledgerBucket == null)
-            {
-                throw new ArgumentNullException("ledgerBucket");
-            }
-
-            if (previousLine == null)
-            {
-                return 0;
-            }
-
-            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
-            return previousEntry == null ? 0 : previousEntry.Balance;
-        }
-
-        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
-        {
-            if (filteredStatementTransactions.None())
-            {
-                return new List<LedgerTransaction>();
-            }
-
-            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
-            if (transactions.Any())
-            {
-                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
-                    t =>
-                    {
-                        if (t.Amount < 0)
-                        {
-                            return new CreditLedgerTransaction(t.Id)
-                            {
-                                Amount = t.Amount,
-                                Narrative = ExtractNarrative(t),
-                                Date = t.Date
-                            };
-                        }
-
-                        return new CreditLedgerTransaction(t.Id)
-                        {
-                            Amount = t.Amount,
-                            Narrative = ExtractNarrative(t),
-                            Date = t.Date
-                        };
-                    });
-
-                return newLedgerTransactions.ToList();
-            }
-
-            return new List<LedgerTransaction>();
-        }
-
-        private static string IssueTransactionReferenceNumber()
-        {
-            var reference = new StringBuilder(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-            foreach (string disallowedChar in DisallowedChars)
-            {
-                reference.Replace(disallowedChar, string.Empty);
-            }
-
-            return reference.ToString().Substring(0, 7);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -13,17 +14,17 @@ namespace BudgetAnalyser.Engine.Widgets
     /// </summary>
     public class SurprisePaymentWidget : Widget, IUserDefinedWidget
     {
-        private const int WeeklyPaymentsInOneNormalMonth = 4;
         private const int FortnightlyPaymentsInOneNormalMonth = 2;
 
         private const string ToolTipPrefix =
             "Given payments happen on the same day every week, this widget shows which months will require 5 weekly payments instead of 4, or 3 fortnightly payments instead of 2. (Does account for NZ public holidays.)\n";
 
+        private const int WeeklyPaymentsInOneNormalMonth = 4;
         private IBudgetBucketRepository bucketRepository;
+        private ILogger diagLogger;
         private WeeklyOrFortnightly doNotUseFrequency;
         private string doNotUseId;
         private GlobalFilterCriteria filter;
-        private ILogger diagLogger;
         private int multiplier = 1;
 
         public SurprisePaymentWidget()
@@ -78,7 +79,7 @@ namespace BudgetAnalyser.Engine.Widgets
             this.diagLogger = logger;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
         public override void Update(params object[] input)
         {
             if (input == null)
@@ -111,7 +112,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             this.diagLogger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
-            var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
+            PaymentDate currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
             var currentMonthTally = new NextOccurance { StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1), EndDate = this.filter.EndDate.Value };
@@ -157,7 +158,12 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 LargeNumber = firstOccurance.StartDate.ToString("MMMM");
                 ToolTip = ToolTipPrefix +
-                          string.Format(CultureInfo.InvariantCulture, "{0} to the {1} has payments on {2}", firstOccurance.StartDate.ToString("d-MMM"), firstOccurance.EndDate.ToString("d-MMM"), firstOccurance.ConcatDates());
+                          string.Format(
+                              CultureInfo.InvariantCulture,
+                              "{0} to the {1} has payments on {2}",
+                              firstOccurance.StartDate.ToString("d-MMM"),
+                              firstOccurance.EndDate.ToString("d-MMM"),
+                              firstOccurance.ConcatDates());
             }
         }
 
@@ -179,7 +185,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
             if (this.filter.BeginDate != null)
             {
-                var holidays = NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value, this.filter.BeginDate.Value.AddYears(1)).ToList();
+                List<DateTime> holidays = NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value, this.filter.BeginDate.Value.AddYears(1)).ToList();
                 while (holidays.Contains(proposedDate.Date))
                 {
                     proposedDate.Date = proposedDate.Date.AddDays(1);
@@ -213,14 +219,14 @@ namespace BudgetAnalyser.Engine.Widgets
                 Dates = new List<int>();
             }
 
-            public List<int> Dates { get; private set; }
+            public List<int> Dates { get; }
             public DateTime EndDate { get; set; }
             public DateTime StartDate { get; set; }
 
             public string ConcatDates()
             {
                 var builder = new StringBuilder();
-                foreach (var date in Dates)
+                foreach (int date in Dates)
                 {
                     builder.AppendFormat(", {0}", date);
                 }
@@ -256,7 +262,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             public DateTime Date { get; set; }
-            public DateTime ScheduledDate { get; private set; }
+            public DateTime ScheduledDate { get; }
         }
     }
 }

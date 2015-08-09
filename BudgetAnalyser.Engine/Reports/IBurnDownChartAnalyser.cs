@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public interface IBurnDownChartAnalyser 
+    public interface IBurnDownChartAnalyser
     {
         /// <summary>
         ///     Analyse the actual spending over a month as a burn down of the available budget.

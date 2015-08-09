@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Budget
             get { return BudgetCollection.IsArchivedBudget(Model); }
         }
 
-        public BudgetCollection BudgetCollection { get; private set; }
+        public BudgetCollection BudgetCollection { get; }
 
         public bool BudgetInFuture
         {
@@ -83,6 +83,6 @@ namespace BudgetAnalyser.Engine.Budget
             get { return BudgetCollection.FileName; }
         }
 
-        public virtual BudgetModel Model { get; private set; }
+        public virtual BudgetModel Model { get; }
     }
 }

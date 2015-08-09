@@ -86,6 +86,62 @@ namespace BudgetAnalyser.Engine.Budget
             get { return GetType().Name; }
         }
 
+        public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
+        {
+            object obj3 = obj1, obj4 = obj2;
+            if (obj3 == null && obj4 == null)
+            {
+                return true;
+            }
+
+            if (obj3 == null || obj4 == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException("obj1");
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException("obj2");
+            }
+
+            return obj1.CompareTo(obj2) > 0;
+        }
+
+        public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
+        {
+            return !(obj1 == obj2);
+        }
+
+        public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException("obj1");
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException("obj2");
+            }
+
+            return obj1.CompareTo(obj2) < 0;
+        }
+
         public int CompareTo(object obj)
         {
             var otherBucket = obj as BudgetBucket;
@@ -157,62 +213,6 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-        public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
-        {
-            object obj3 = obj1, obj4 = obj2;
-            if (obj3 == null && obj4 == null)
-            {
-                return true;
-            }
-
-            if (obj3 == null || obj4 == null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1.Equals(obj2);
-        }
-
-        public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
-        {
-            if (obj1 == null)
-            {
-                throw new ArgumentNullException("obj1");
-            }
-
-            if (obj2 == null)
-            {
-                throw new ArgumentNullException("obj2");
-            }
-
-            return obj1.CompareTo(obj2) > 0;
-        }
-
-        public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
-        {
-            return !(obj1 == obj2);
-        }
-
-        public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
-        {
-            if (obj1 == null)
-            {
-                throw new ArgumentNullException("obj1");
-            }
-
-            if (obj2 == null)
-            {
-                throw new ArgumentNullException("obj2");
-            }
-
-            return obj1.CompareTo(obj2) < 0;
         }
     }
 }

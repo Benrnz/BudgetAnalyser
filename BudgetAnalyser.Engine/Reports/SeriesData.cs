@@ -7,8 +7,8 @@ using BudgetAnalyser.Engine.Annotations;
 namespace BudgetAnalyser.Engine.Reports
 {
     /// <summary>
-    /// A data storage class to represent one series on a graph, ie a single line on a graph.
-    /// This class effectively wraps a List of dates and amounts.
+    ///     A data storage class to represent one series on a graph, ie a single line on a graph.
+    ///     This class effectively wraps a List of dates and amounts.
     /// </summary>
     public sealed class SeriesData : INotifyPropertyChanged
     {
@@ -20,35 +20,34 @@ namespace BudgetAnalyser.Engine.Reports
             Visible = true;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     The description of the series, typically used in the tool tip for a graph line.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        ///     Calculates the smallest value in the data series.
+        /// </summary>
+        public decimal MinimumValue
+        {
+            get { return PlotsList.Min(p => p.Amount); }
+        }
+
         public IEnumerable<DatedGraphPlot> Plots
         {
             get { return PlotsList; }
         }
 
         /// <summary>
-        /// The name of the series, typically used in the graph legend.
+        ///     The name of the series, typically used in the graph legend.
         /// </summary>
         public string SeriesName { get; set; }
 
         /// <summary>
-        /// The description of the series, typically used in the tool tip for a graph line.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Calculates the smallest value in the data series.
-        /// </summary>
-        public decimal MinimumValue
-        {
-            get
-            {
-                return PlotsList.Min(p => p.Amount);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a boolean to set the visibility of this line on the graph.
-        /// Defaults to true.
+        ///     Gets or sets a boolean to set the visibility of this line on the graph.
+        ///     Defaults to true.
         /// </summary>
         public bool Visible
         {
@@ -60,8 +59,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
-        internal IList<DatedGraphPlot> PlotsList { get; private set; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        internal IList<DatedGraphPlot> PlotsList { get; }
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

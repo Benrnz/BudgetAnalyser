@@ -6,12 +6,12 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A service interface to manage all aspects of using the Overall Performance Chart Report
+    ///     A service interface to manage all aspects of using the Overall Performance Chart Report
     /// </summary>
     public interface IOverallPerformanceChartService : IServiceFoundation
     {
         /// <summary>
-        /// Builds the chart.
+        ///     Builds the chart.
         /// </summary>
         /// <param name="statementModel">The current statement model.</param>
         /// <param name="budgets">The current budgets.</param>

@@ -5,13 +5,13 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A service interface to provide all functionality for the Long Term Spending Analysis Chart.
-    /// This service is not stateful, and is not threadsafe.
+    ///     A service interface to provide all functionality for the Long Term Spending Analysis Chart.
+    ///     This service is not stateful, and is not threadsafe.
     /// </summary>
     public interface ILongTermSpendingChartService : IServiceFoundation
     {
         /// <summary>
-        /// Builds the chart.
+        ///     Builds the chart.
         /// </summary>
         /// <param name="statementModel">The current statement model.</param>
         /// <param name="criteria">The current criteria.</param>

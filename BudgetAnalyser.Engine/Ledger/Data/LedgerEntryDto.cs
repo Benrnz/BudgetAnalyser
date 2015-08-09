@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     /// <summary>
-    /// A Dto for <see cref="LedgerEntry"/>.
+    ///     A Dto for <see cref="LedgerEntry" />.
     /// </summary>
     public class LedgerEntryDto
     {
@@ -14,18 +14,19 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
 
         /// <summary>
-        /// The Balance of the Ledger as at the date in the parent LedgerLine
+        ///     The Balance of the Ledger as at the date in the parent LedgerLine
         /// </summary>
         public decimal Balance { get; set; }
 
         /// <summary>
-        /// The Budget Bucket being tracked.  
-        /// The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger lines and the "next reconciliation" mapping at the LedgerBookDto level.
+        ///     The Budget Bucket being tracked.
+        ///     The LedgerBucketDto type was intentionally not used here, to prevent the same instance being used between ledger
+        ///     lines and the "next reconciliation" mapping at the LedgerBookDto level.
         /// </summary>
         public string BucketCode { get; set; }
 
         /// <summary>
-        /// The account in which the Ledger was stored in at the time of the month end reconciliation for this line.
+        ///     The account in which the Ledger was stored in at the time of the month end reconciliation for this line.
         /// </summary>
         public string StoredInAccount { get; set; }
 

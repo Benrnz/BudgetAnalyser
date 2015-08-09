@@ -21,8 +21,8 @@ namespace BudgetAnalyser.Engine.Services
             { WidgetGroup.ProjectsSectionName, 4 }
         };
 
-        private readonly IWidgetRepository widgetRepo;
         private readonly ILogger logger;
+        private readonly IWidgetRepository widgetRepo;
 
         public WidgetService([NotNull] IWidgetRepository widgetRepo, [NotNull] ILogger logger)
         {
@@ -44,10 +44,10 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedStates != null)
             {
-                var widgets = this.widgetRepo.GetAll().ToList();
-                foreach (var widgetState in storedStates)
+                List<Widget> widgets = this.widgetRepo.GetAll().ToList();
+                foreach (WidgetPersistentState widgetState in storedStates)
                 {
-                    var stateClone = widgetState;
+                    WidgetPersistentState stateClone = widgetState;
                     var multiInstanceState = widgetState as MultiInstanceWidgetState;
                     if (multiInstanceState != null)
                     {
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Services
                     else
                     {
                         // Ordinary widgets will already exist in the repository as they are single instance per class.
-                        var typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                        Widget typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
                         if (typedWidget != null)
                         {
                             typedWidget.Visibility = widgetState.Visible;

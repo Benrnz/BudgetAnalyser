@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using AutoMapper.Internal;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -17,6 +15,7 @@ namespace BudgetAnalyser.Engine.Matching
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private decimal? doNotUseAmount;
+        private bool doNotUseAnd;
         private string doNotUseDescription;
         private DateTime? doNotUseLastMatch;
         private int doNotUseMatchCount;
@@ -24,13 +23,12 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference2;
         private string doNotUseReference3;
         private string doNotUseTransactionType;
-        private bool doNotUseAnd;
 
         /// <summary>
         ///     Used any other time.
         /// </summary>
         /// <param name="bucketRepository"></param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
@@ -52,6 +50,16 @@ namespace BudgetAnalyser.Engine.Matching
             set
             {
                 this.doNotUseAmount = value == 0 ? null : value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool And
+        {
+            get { return this.doNotUseAnd; }
+            set
+            {
+                this.doNotUseAnd = value;
                 OnPropertyChanged();
             }
         }
@@ -107,16 +115,6 @@ namespace BudgetAnalyser.Engine.Matching
             internal set
             {
                 this.doNotUseMatchCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool And
-        {
-            get { return this.doNotUseAnd; }
-            set
-            {
-                this.doNotUseAnd = value;
                 OnPropertyChanged();
             }
         }
@@ -227,43 +225,64 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException("transaction");
             }
 
-            if (!Bucket.Active) return false;
+            if (!Bucket.Active)
+            {
+                return false;
+            }
 
-            int matchesMade = 0;
-            int maxMatches = 0;
+            var matchesMade = 0;
+            var maxMatches = 0;
             if (!string.IsNullOrWhiteSpace(Description))
             {
-                if (transaction.Description == Description) matchesMade++;
+                if (transaction.Description == Description)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference1))
             {
-                if (transaction.Reference1 == Reference1) matchesMade++;
+                if (transaction.Reference1 == Reference1)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference2))
             {
-                if (transaction.Reference2 == Reference2) matchesMade++;
+                if (transaction.Reference2 == Reference2)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference3))
             {
-                if (transaction.Reference3 == Reference3) matchesMade++;
+                if (transaction.Reference3 == Reference3)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(TransactionType))
             {
-                if (transaction.TransactionType.Name == TransactionType) matchesMade++;
+                if (transaction.TransactionType.Name == TransactionType)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (Amount != null)
             {
-                if (transaction.Amount == Amount.Value) matchesMade++;
+                if (transaction.Amount == Amount.Value)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -23,6 +22,16 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Gets or sets the Account in which this ledger's funds are stored.
         /// </summary>
         public Account.Account StoredInAccount { get; internal set; }
+
+        public static bool operator ==(LedgerBucket left, LedgerBucket right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(LedgerBucket left, LedgerBucket right)
+        {
+            return !Equals(left, right);
+        }
 
         public override bool Equals(object obj)
         {
@@ -67,16 +76,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
             return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
-        }
-
-        public static bool operator ==(LedgerBucket left, LedgerBucket right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(LedgerBucket left, LedgerBucket right)
-        {
-            return !Equals(left, right);
         }
     }
 }

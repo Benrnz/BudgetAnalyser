@@ -10,7 +10,8 @@ namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
     ///     A collection of budgets.  The collection is always sorted in descending order on the
-    ///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived budgets.
+    ///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived
+    ///     budgets.
     /// </summary>
     public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     {

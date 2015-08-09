@@ -31,10 +31,10 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         public IEnumerable<CustomAggregateBurnDownGraph> CustomCharts { get; set; }
-
         public BurnDownCharts Results { get; private set; }
 
-        public void Build(GlobalFilterCriteria criteria,
+        public void Build(
+            GlobalFilterCriteria criteria,
             StatementModel statementModel,
             BudgetModel budgetModel,
             LedgerBook ledgerBookModel)
@@ -101,7 +101,11 @@ namespace BudgetAnalyser.Engine.Reports
             return result;
         }
 
-        private BurnDownChartAnalyserResult AnalyseDataForChart(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, IEnumerable<BudgetBucket> buckets,
+        private BurnDownChartAnalyserResult AnalyseDataForChart(
+            StatementModel statementModel,
+            BudgetModel budgetModel,
+            LedgerBook ledgerBookModel,
+            IEnumerable<BudgetBucket> buckets,
             DateTime beginDate)
         {
             IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();

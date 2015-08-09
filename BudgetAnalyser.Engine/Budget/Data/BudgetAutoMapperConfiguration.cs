@@ -9,12 +9,11 @@ namespace BudgetAnalyser.Engine.Budget.Data
     internal class BudgetAutoMapperConfiguration : ILocalAutoMapperConfiguration
     {
         private readonly IBudgetBucketFactory bucketFactory;
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly ILogger logger;
 
         public BudgetAutoMapperConfiguration(
-            [NotNull] IBudgetBucketFactory bucketFactory, 
-            [NotNull] IBudgetBucketRepository bucketRepo, 
+            [NotNull] IBudgetBucketFactory bucketFactory,
+            [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger)
         {
             if (bucketFactory == null)
@@ -33,11 +32,11 @@ namespace BudgetAnalyser.Engine.Budget.Data
             }
 
             this.bucketFactory = bucketFactory;
-            this.bucketRepo = bucketRepo;
+            this.BucketRepository = bucketRepo;
             this.logger = logger;
         }
 
-        internal IBudgetBucketRepository BucketRepository { get { return this.bucketRepo; } }
+        internal IBudgetBucketRepository BucketRepository { get; }
 
         public void RegisterMappings()
         {
@@ -59,20 +58,20 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(expense => expense.Bucket.Code));
 
             Mapper.CreateMap<ExpenseDto, Expense>()
-                .ForMember(expense => expense.Bucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BudgetBucketCode)));
+                .ForMember(expense => expense.Bucket, m => m.MapFrom(dto => this.BucketRepository.GetByCode(dto.BudgetBucketCode)));
 
             Mapper.CreateMap<Income, IncomeDto>()
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(expense => expense.Bucket.Code));
 
             Mapper.CreateMap<IncomeDto, Income>()
-                .ForMember(income => income.Bucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BudgetBucketCode)));
+                .ForMember(income => income.Bucket, m => m.MapFrom(dto => this.BucketRepository.GetByCode(dto.BudgetBucketCode)));
 
             Mapper.CreateMap<BudgetModel, BudgetModelDto>();
 
             Mapper.CreateMap<BudgetModelDto, BudgetModel>();
 
             Mapper.CreateMap<BudgetCollection, BudgetCollectionDto>()
-                .ForMember(dto => dto.Buckets, m => m.MapFrom(collection => this.bucketRepo.Buckets))
+                .ForMember(dto => dto.Buckets, m => m.MapFrom(collection => this.BucketRepository.Buckets))
                 .ForMember(dto => dto.Budgets, m => m.ResolveUsing(collection => collection.Select(Mapper.Map<BudgetModel, BudgetModelDto>)));
 
             Mapper.CreateMap<BudgetCollectionDto, BudgetCollection>()

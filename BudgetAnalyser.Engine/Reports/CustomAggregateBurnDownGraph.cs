@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BudgetAnalyser.Engine.Reports
 {
     /// <summary>
-    /// A data storage to store a burn down graph that combines multiple buckets.
+    ///     A data storage to store a burn down graph that combines multiple buckets.
     /// </summary>
     public class CustomAggregateBurnDownGraph
     {

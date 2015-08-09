@@ -95,12 +95,12 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             var bucket = (FixedBudgetProjectBucket)this.bucketRepository.GetByCode(BucketCode);
-            var totalBudget = bucket.FixedBudgetAmount;
+            decimal totalBudget = bucket.FixedBudgetAmount;
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
-            var totalSpend = Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
-            var remainingBudget = totalBudget + totalSpend;
+            decimal totalSpend = Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            decimal remainingBudget = totalBudget + totalSpend;
 
             Value = Convert.ToDouble(remainingBudget);
             ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description, remainingBudget, totalSpend);

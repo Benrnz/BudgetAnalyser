@@ -11,8 +11,10 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    /// A widget to show the number of overspent buckets for the month. Compares actual spent transactions against a ledger in the ledgerbook, if there is one, or the current Budget if there isn't.
-    /// The budget used is the currently selected budget from the <see cref="BudgetCurrencyContext"/> instance given.  It may not be the current one as compared to today's date.
+    ///     A widget to show the number of overspent buckets for the month. Compares actual spent transactions against a ledger
+    ///     in the ledgerbook, if there is one, or the current Budget if there isn't.
+    ///     The budget used is the currently selected budget from the <see cref="BudgetCurrencyContext" /> instance given.  It
+    ///     may not be the current one as compared to today's date.
     /// </summary>
     public class OverspentWarning : Widget
     {
@@ -80,7 +82,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 LargeNumber = warnings.ToString(CultureInfo.CurrentCulture);
                 var builder = new StringBuilder();
                 OverSpentSummary = overspendingSummary.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
-                foreach (var ledger in OverSpentSummary)
+                foreach (KeyValuePair<BudgetBucket, decimal> ledger in OverSpentSummary)
                 {
                     builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
                     builder.AppendLine();
@@ -103,7 +105,7 @@ namespace BudgetAnalyser.Engine.Widgets
             IBudgetCurrencyContext budget,
             IDictionary<BudgetBucket, decimal> overspendingSummary)
         {
-            int warnings = 0;
+            var warnings = 0;
             List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate.Value.AddMonths(1)).ToList();
             foreach (Expense expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
             {
