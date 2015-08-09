@@ -19,21 +19,21 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenNoDataHasTransactionsShouldBeFalse()
         {
-            var subject = CreateSubject();
+            StatementViewModel subject = CreateSubject();
             Assert.IsFalse(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenNoDataStatementNameShouldBeNoTransactionsLoaded()
         {
-            var subject = CreateSubject();
+            StatementViewModel subject = CreateSubject();
             Assert.AreEqual("[No Transactions Loaded]", subject.StatementName);
         }
 
         [TestMethod]
         public void GivenSortByBucketSortByDateShouldBeFalse()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             subject.SortByBucket = true;
             Assert.IsFalse(subject.SortByDate);
         }
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenSortByDateSortByBucketShouldBeFalse()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             subject.SortByDate = true;
             Assert.IsFalse(subject.SortByBucket);
         }
@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenSortByDateUpdateGroupedByBucketShouldNotUpdateGroupedList()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             subject.SortByBucket = true;
             subject.SortByDate = true;
             subject.UpdateGroupedByBucket();
@@ -59,28 +59,28 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void GivenTestData1HasTransactionsShouldBeTrue()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             Assert.IsTrue(subject.HasTransactions);
         }
 
         [TestMethod]
         public void GivenTestData1StatementNameShouldBeFooStatement()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             Assert.AreEqual("FooStatement", subject.StatementName);
         }
 
         [TestMethod]
         public void GivenTestData1TotalCreditsShouldBe0()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             Assert.AreEqual(0, subject.TotalCredits);
         }
 
         [TestMethod]
         public void GivenTestData2OutputGroupedList()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             subject.SortByBucket = true;
             subject.UpdateGroupedByBucket();
 
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
                     group.TotalCredits,
                     group.TotalDebits,
                     group.TotalDifference);
-                foreach (var transaction in group.Transactions)
+                foreach (Transaction transaction in group.Transactions)
                 {
                     Console.WriteLine(
                         "     {0:d} {1:C} {2}",
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [ExpectedException(typeof(InvalidOperationException))]
         public void SetStatement_ShouldThrow_GivenInitialiseHasNotBeenCalled()
         {
-            var subject = CreateSubject();
+            StatementViewModel subject = CreateSubject();
             subject.Statement = StatementModelTestData.TestData1();
             Assert.Fail();
         }
@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void SortByDateShouldBeDefaultSort()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             Assert.IsTrue(subject.SortByDate);
         }
 
@@ -134,7 +134,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         [TestMethod]
         public void TriggerRefreshTotalsRowShouldRaise10Events()
         {
-            var subject = Arrange();
+            StatementViewModel subject = Arrange();
             var eventCount = 0;
             subject.PropertyChanged += (s, e) => eventCount++;
             subject.TriggerRefreshTotalsRow();
@@ -142,28 +142,16 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
             Assert.AreEqual(8, eventCount);
         }
 
-        private StatementViewModel Arrange()
-        {
-            var subject = CreateSubject().Initialise(this.mockTransactionService.Object);
-            subject.Statement = StatementModelTestData.TestData1();
-            return subject;
-        }
-
-        private StatementViewModel CreateSubject()
-        {
-            return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseService>().Object);
-        }
-
         private static Transaction GetPhoneTxnFromFullList(StatementViewModel subject)
         {
-            var transactionFromFullList = subject.Statement.Transactions
+            Transaction transactionFromFullList = subject.Statement.Transactions
                 .Single(t => t.BudgetBucket == StatementModelTestData.PhoneBucket && t.Date == new DateTime(2013, 07, 16));
             return transactionFromFullList;
         }
 
         private static Transaction GetPhoneTxnFromGroupedList(StatementViewModel subject)
         {
-            var transactionFromGroupedList = subject.GroupedByBucket.Single(g => g.Bucket == StatementModelTestData.PhoneBucket)
+            Transaction transactionFromGroupedList = subject.GroupedByBucket.Single(g => g.Bucket == StatementModelTestData.PhoneBucket)
                 .Transactions.Single(t => t.Date == new DateTime(2013, 07, 16));
             return transactionFromGroupedList;
         }
@@ -171,6 +159,18 @@ namespace BudgetAnalyser.Wpf.UnitTest.Statement
         private static IWaitCursor WaitCursorFactory()
         {
             return new Mock<IWaitCursor>().Object;
+        }
+
+        private StatementViewModel Arrange()
+        {
+            StatementViewModel subject = CreateSubject().Initialise(this.mockTransactionService.Object);
+            subject.Statement = StatementModelTestData.TestData1();
+            return subject;
+        }
+
+        private StatementViewModel CreateSubject()
+        {
+            return new StatementViewModel(this.mockUiContext.Object, new Mock<IApplicationDatabaseService>().Object);
         }
     }
 }
