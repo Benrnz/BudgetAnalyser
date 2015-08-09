@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             if (string.IsNullOrWhiteSpace(FileName))
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (line == null)
             {
-                throw new ArgumentNullException("line");
+                throw new ArgumentNullException(nameof(line));
             }
 
             if (!line.IsNew)

@@ -22,17 +22,17 @@ namespace BudgetAnalyser.Statement
         {
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             if (controller == null)
             {
-                throw new ArgumentNullException("controller");
+                throw new ArgumentNullException(nameof(controller));
             }
 
             if (questionBox == null)
             {
-                throw new ArgumentNullException("questionBox");
+                throw new ArgumentNullException(nameof(questionBox));
             }
 
             MessengerInstance = messenger;

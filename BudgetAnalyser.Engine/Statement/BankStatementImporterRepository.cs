@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (importers == null || importers.None())
             {
-                throw new ArgumentNullException("importers");
+                throw new ArgumentNullException(nameof(importers));
             }
 
             this.importers = importers.ToList();

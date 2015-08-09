@@ -38,17 +38,17 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (fileOperations == null)
             {
-                throw new ArgumentNullException("fileOperations");
+                throw new ArgumentNullException(nameof(fileOperations));
             }
 
             if (transactionService == null)
             {
-                throw new ArgumentNullException("transactionService");
+                throw new ArgumentNullException(nameof(transactionService));
             }
 
             FileOperations = fileOperations;

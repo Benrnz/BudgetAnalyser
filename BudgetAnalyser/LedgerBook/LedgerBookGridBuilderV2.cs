@@ -77,12 +77,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (viewResources == null)
             {
-                throw new ArgumentNullException("viewResources");
+                throw new ArgumentNullException(nameof(viewResources));
             }
 
             if (contentPanel == null)
             {
-                throw new ArgumentNullException("contentPanel");
+                throw new ArgumentNullException(nameof(contentPanel));
             }
 
             this.ledgerBook = currentLedgerBook;

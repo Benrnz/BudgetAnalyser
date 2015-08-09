@@ -39,7 +39,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (subCode == null)
             {
-                throw new ArgumentNullException("subCode");
+                throw new ArgumentNullException(nameof(subCode));
             }
 
             return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", SurplusCode, subCode.ToUpperInvariant());

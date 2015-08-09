@@ -60,7 +60,7 @@ namespace Rees.TestUtilities
         {
             if (rectifyTheProblem == null)
             {
-                throw new ArgumentNullException("rectifyTheProblem");
+                throw new ArgumentNullException(nameof(rectifyTheProblem));
             }
 
             if (erroneousCondition == null || erroneousCondition())
@@ -82,7 +82,7 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             Implements<TInterface>(instance.GetType(), message);
@@ -116,7 +116,7 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             InheritsFrom<TBase>(instance.GetType(), message);
@@ -133,7 +133,7 @@ namespace Rees.TestUtilities
         {
             if (type == null)
             {
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             }
 
             if (type.BaseType != typeof(TBase))

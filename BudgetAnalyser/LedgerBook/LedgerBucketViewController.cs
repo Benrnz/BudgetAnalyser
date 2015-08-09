@@ -28,17 +28,17 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (accountRepo == null)
             {
-                throw new ArgumentNullException("accountRepo");
+                throw new ArgumentNullException(nameof(accountRepo));
             }
 
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             MessengerInstance = context.Messenger;
@@ -59,17 +59,17 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (parentLedgerBook == null)
             {
-                throw new ArgumentNullException("parentLedgerBook");
+                throw new ArgumentNullException(nameof(parentLedgerBook));
             }
 
             if (ledgerBucket == null)
             {
-                throw new ArgumentNullException("ledgerBucket");
+                throw new ArgumentNullException(nameof(ledgerBucket));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
             if (LedgerBucketHistoryAnalysis == null)

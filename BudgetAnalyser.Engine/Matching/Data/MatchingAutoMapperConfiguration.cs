@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
         {
             if (ruleFactory == null)
             {
-                throw new ArgumentNullException("ruleFactory");
+                throw new ArgumentNullException(nameof(ruleFactory));
             }
 
             this.ruleFactory = ruleFactory;

@@ -37,17 +37,17 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ruleService == null)
             {
-                throw new ArgumentNullException("ruleService");
+                throw new ArgumentNullException(nameof(ruleService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.ruleService = ruleService;
@@ -207,7 +207,7 @@ namespace BudgetAnalyser.Matching
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
             if (transaction.BudgetBucket == null || string.IsNullOrWhiteSpace(transaction.BudgetBucket.Code))

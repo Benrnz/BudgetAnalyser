@@ -28,12 +28,12 @@ namespace BudgetAnalyser.Dashboard
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;

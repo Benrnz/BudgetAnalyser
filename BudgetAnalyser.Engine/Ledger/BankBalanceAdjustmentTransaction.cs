@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (account == null)
             {
-                throw new ArgumentNullException("account");
+                throw new ArgumentNullException(nameof(account));
             }
 
             BankAccount = account;

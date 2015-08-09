@@ -18,12 +18,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (ledgerCalculator == null)
             {
-                throw new ArgumentNullException("ledgerCalculator");
+                throw new ArgumentNullException(nameof(ledgerCalculator));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.ledgerCalculator = ledgerCalculator;
@@ -34,12 +34,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();

@@ -20,12 +20,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (dataToDomainMapper == null)
             {
-                throw new ArgumentNullException("dataToDomainMapper");
+                throw new ArgumentNullException(nameof(dataToDomainMapper));
             }
 
             if (domainToDataMapper == null)
             {
-                throw new ArgumentNullException("domainToDataMapper");
+                throw new ArgumentNullException(nameof(domainToDataMapper));
             }
 
             this.dataToDomainMapper = dataToDomainMapper;
@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             var newRules = new List<MatchingRule>();
@@ -83,12 +83,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (rules == null)
             {
-                throw new ArgumentNullException("rules");
+                throw new ArgumentNullException(nameof(rules));
             }
 
             if (storageKey == null)
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));

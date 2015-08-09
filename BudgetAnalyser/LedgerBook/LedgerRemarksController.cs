@@ -22,12 +22,12 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerService = ledgerService;
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             MessengerInstance = uiContext.Messenger;

@@ -22,12 +22,12 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (viewLoader == null)
             {
-                throw new ArgumentNullException("viewLoader");
+                throw new ArgumentNullException(nameof(viewLoader));
             }
 
             if (chartsService == null)
             {
-                throw new ArgumentNullException("chartsService");
+                throw new ArgumentNullException(nameof(chartsService));
             }
 
             this.viewLoader = viewLoader;

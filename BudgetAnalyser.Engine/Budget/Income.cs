@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             bool retval = Bucket.Validate(validationMessages);

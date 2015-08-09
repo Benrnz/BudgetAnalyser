@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (item == null)
             {
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException(nameof(item));
             }
 
             DateTime key = item.EffectiveFrom;
@@ -110,7 +110,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (budget == null)
             {
-                throw new ArgumentNullException("budget");
+                throw new ArgumentNullException(nameof(budget));
             }
 
             return budget.EffectiveFrom > DateTime.Now;

@@ -20,12 +20,12 @@ namespace BudgetAnalyser
         {
             if (defaultMessenger == null)
             {
-                throw new ArgumentNullException("defaultMessenger");
+                throw new ArgumentNullException(nameof(defaultMessenger));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.defaultMessenger = defaultMessenger;

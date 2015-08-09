@@ -27,17 +27,17 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (loadFileController == null)
             {
-                throw new ArgumentNullException("loadFileController");
+                throw new ArgumentNullException(nameof(loadFileController));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.messageBox = uiContext.UserPrompts.MessageBox;

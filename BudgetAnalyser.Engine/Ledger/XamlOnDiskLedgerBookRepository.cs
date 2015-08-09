@@ -28,22 +28,22 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (dataToDomainMapper == null)
             {
-                throw new ArgumentNullException("dataToDomainMapper");
+                throw new ArgumentNullException(nameof(dataToDomainMapper));
             }
 
             if (domainToDataMapper == null)
             {
-                throw new ArgumentNullException("domainToDataMapper");
+                throw new ArgumentNullException(nameof(domainToDataMapper));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (importUtilities == null)
             {
-                throw new ArgumentNullException("importUtilities");
+                throw new ArgumentNullException(nameof(importUtilities));
             }
 
             this.dataToDomainMapper = dataToDomainMapper;
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             var book = new LedgerBook(this.logger)
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             LedgerBookDto dataEntity;
@@ -127,12 +127,12 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (book == null)
             {
-                throw new ArgumentNullException("book");
+                throw new ArgumentNullException(nameof(book));
             }
 
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (dataEntity == null)
             {
-                throw new ArgumentNullException("dataEntity");
+                throw new ArgumentNullException(nameof(dataEntity));
             }
 
             await WriteToDiskAsync(dataEntity.FileName, Serialise(dataEntity));
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (dataEntity == null)
             {
-                throw new ArgumentNullException("dataEntity");
+                throw new ArgumentNullException(nameof(dataEntity));
             }
 
             return XamlServices.Save(dataEntity);

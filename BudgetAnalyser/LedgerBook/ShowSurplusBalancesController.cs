@@ -43,7 +43,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerLine == null)
             {
-                throw new ArgumentNullException("ledgerLine");
+                throw new ArgumentNullException(nameof(ledgerLine));
             }
 
             SurplusBalances = new ObservableCollection<BankBalance>(ledgerLine.SurplusBalances);

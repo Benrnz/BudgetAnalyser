@@ -23,22 +23,22 @@ namespace BudgetAnalyser.Engine.Statement.Data
         {
             if (transactionTypeRepo == null)
             {
-                throw new ArgumentNullException("transactionTypeRepo");
+                throw new ArgumentNullException(nameof(transactionTypeRepo));
             }
 
             if (accountTypeRepo == null)
             {
-                throw new ArgumentNullException("accountTypeRepo");
+                throw new ArgumentNullException(nameof(accountTypeRepo));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.transactionTypeRepo = transactionTypeRepo;

@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (budgetBucketRepository == null)
             {
-                throw new ArgumentNullException("budgetBucketRepository");
+                throw new ArgumentNullException(nameof(budgetBucketRepository));
             }
 
             this.budgetBucketRepository = budgetBucketRepository;
@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (budget == null)
             {
-                throw new ArgumentNullException("budget");
+                throw new ArgumentNullException(nameof(budget));
             }
 
             var surplus = new Expense { Amount = budget.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (budget == null)
             {
-                throw new ArgumentNullException("budget");
+                throw new ArgumentNullException(nameof(budget));
             }
 
             List<KeyValuePair<string, decimal>> list = budget.Incomes
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             return new Expense { Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };

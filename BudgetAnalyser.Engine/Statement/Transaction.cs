@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 if (value == null && this.budgetBucket != null)
                 {
-                    throw new ArgumentNullException("value", "Setting a budget bucket to null when it already has a non-null value is not allowed.");
+                    throw new ArgumentNullException(nameof(value), "Setting a budget bucket to null when it already has a non-null value is not allowed.");
                 }
 
                 this.budgetBucket = value;

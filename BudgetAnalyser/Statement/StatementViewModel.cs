@@ -29,12 +29,12 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.doNotUseSortByDate = true;

@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             this.name = name;

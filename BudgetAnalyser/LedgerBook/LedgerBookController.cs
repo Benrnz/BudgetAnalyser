@@ -37,27 +37,27 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (fileOperations == null)
             {
-                throw new ArgumentNullException("fileOperations");
+                throw new ArgumentNullException(nameof(fileOperations));
             }
 
             if (uiBuilder == null)
             {
-                throw new ArgumentNullException("uiBuilder");
+                throw new ArgumentNullException(nameof(uiBuilder));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             if (newWindowViewLoader == null)
             {
-                throw new ArgumentNullException("newWindowViewLoader");
+                throw new ArgumentNullException(nameof(newWindowViewLoader));
             }
 
             this.uiBuilder = uiBuilder;

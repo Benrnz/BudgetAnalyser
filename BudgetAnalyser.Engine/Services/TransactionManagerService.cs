@@ -31,17 +31,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (statementRepository == null)
             {
-                throw new ArgumentNullException("statementRepository");
+                throw new ArgumentNullException(nameof(statementRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.bucketRepository = bucketRepository;
@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase.StatementModelStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
@@ -202,7 +202,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             StatementModel.Filter(criteria);
@@ -212,12 +212,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             if (account == null)
             {
-                throw new ArgumentNullException("account");
+                throw new ArgumentNullException(nameof(account));
             }
 
             StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
@@ -228,7 +228,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (stateData == null)
             {
-                throw new ArgumentNullException("stateData");
+                throw new ArgumentNullException(nameof(stateData));
             }
 
             this.budgetHash = 0;
@@ -239,7 +239,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase == null)
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             try
@@ -295,7 +295,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (transactionToRemove == null)
             {
-                throw new ArgumentNullException("transactionToRemove");
+                throw new ArgumentNullException(nameof(transactionToRemove));
             }
 
             StatementModel.RemoveTransaction(transactionToRemove);
@@ -336,17 +336,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (originalTransaction == null)
             {
-                throw new ArgumentNullException("originalTransaction");
+                throw new ArgumentNullException(nameof(originalTransaction));
             }
 
             if (splinterBucket1 == null)
             {
-                throw new ArgumentNullException("splinterBucket1");
+                throw new ArgumentNullException(nameof(splinterBucket1));
             }
 
             if (splinterBucket2 == null)
             {
-                throw new ArgumentNullException("splinterBucket2");
+                throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
             StatementModel.SplitTransaction(
@@ -374,7 +374,7 @@ namespace BudgetAnalyser.Engine.Services
             // This method must be called at least once with a budget collection.  Second and subsequent times do not require the budget.
             if (this.budgetCollection == null && budgets == null)
             {
-                throw new ArgumentNullException("budgets");
+                throw new ArgumentNullException(nameof(budgets));
             }
 
             this.budgetCollection = budgets ?? this.budgetCollection;

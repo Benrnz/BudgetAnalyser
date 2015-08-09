@@ -24,17 +24,17 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (toDtoMapper == null)
             {
-                throw new ArgumentNullException("toDtoMapper");
+                throw new ArgumentNullException(nameof(toDtoMapper));
             }
 
             if (toDomainMapper == null)
             {
-                throw new ArgumentNullException("toDomainMapper");
+                throw new ArgumentNullException(nameof(toDomainMapper));
             }
 
             this.budgetBucketRepository = bucketRepository;
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             var newBudget = new BudgetModel
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             if (!FileExists(storageKey))

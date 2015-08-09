@@ -18,12 +18,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (rules == null)
             {
-                throw new ArgumentNullException("rules");
+                throw new ArgumentNullException(nameof(rules));
             }
 
             this.Bucket = bucket;

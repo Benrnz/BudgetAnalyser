@@ -24,12 +24,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (budgets == null)
             {
-                throw new ArgumentNullException("budgets");
+                throw new ArgumentNullException(nameof(budgets));
             }
 
             if (budget == null)
             {
-                throw new ArgumentNullException("budget");
+                throw new ArgumentNullException(nameof(budget));
             }
 
             BudgetCollection = budgets;

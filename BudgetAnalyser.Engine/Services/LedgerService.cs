@@ -27,17 +27,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ledgerRepository == null)
             {
-                throw new ArgumentNullException("ledgerRepository");
+                throw new ArgumentNullException(nameof(ledgerRepository));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.ledgerRepository = ledgerRepository;
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (entryLine == null)
             {
-                throw new ArgumentNullException("entryLine");
+                throw new ArgumentNullException(nameof(entryLine));
             }
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase.LedgerBookStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
@@ -106,17 +106,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (entryLine == null)
             {
-                throw new ArgumentNullException("entryLine");
+                throw new ArgumentNullException(nameof(entryLine));
             }
 
             if (narrative == null)
             {
-                throw new ArgumentNullException("narrative");
+                throw new ArgumentNullException(nameof(narrative));
             }
 
             if (account == null)
             {
-                throw new ArgumentNullException("account");
+                throw new ArgumentNullException(nameof(account));
             }
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))
@@ -133,12 +133,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ledgerEntry == null)
             {
-                throw new ArgumentNullException("ledgerEntry");
+                throw new ArgumentNullException(nameof(ledgerEntry));
             }
 
             if (narrative == null)
             {
-                throw new ArgumentNullException("narrative");
+                throw new ArgumentNullException(nameof(narrative));
             }
 
             if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
@@ -157,7 +157,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase == null)
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             ReconciliationToDoList = applicationDatabase.LedgerReconciliationToDoCollection;
@@ -179,17 +179,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (balances == null)
             {
-                throw new ArgumentNullException("balances");
+                throw new ArgumentNullException(nameof(balances));
             }
 
             if (budgetContext == null)
             {
-                throw new ArgumentNullException("budgetContext");
+                throw new ArgumentNullException(nameof(budgetContext));
             }
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (!budgetContext.BudgetActive)
@@ -215,11 +215,11 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ledger == null)
             {
-                throw new ArgumentNullException("ledger");
+                throw new ArgumentNullException(nameof(ledger));
             }
             if (storedInAccount == null)
             {
-                throw new ArgumentNullException("storedInAccount");
+                throw new ArgumentNullException(nameof(storedInAccount));
             }
 
             LedgerBook.SetLedgerAccount(ledger, storedInAccount);
@@ -229,7 +229,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (line == null)
             {
-                throw new ArgumentNullException("line");
+                throw new ArgumentNullException(nameof(line));
             }
 
             LedgerBook.RemoveLine(line);
@@ -239,7 +239,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ledgerEntry == null)
             {
-                throw new ArgumentNullException("ledgerEntry");
+                throw new ArgumentNullException(nameof(ledgerEntry));
             }
 
             if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
@@ -254,7 +254,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (newName == null)
             {
-                throw new ArgumentNullException("newName");
+                throw new ArgumentNullException(nameof(newName));
             }
 
             LedgerBook.Name = newName;
@@ -290,11 +290,11 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
             if (storeInThisAccount == null)
             {
-                throw new ArgumentNullException("storeInThisAccount");
+                throw new ArgumentNullException(nameof(storeInThisAccount));
             }
 
             return LedgerBook.AddLedger(bucket, storeInThisAccount);
@@ -309,12 +309,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (entryLine == null)
             {
-                throw new ArgumentNullException("entryLine");
+                throw new ArgumentNullException(nameof(entryLine));
             }
 
             if (remarks == null)
             {
-                throw new ArgumentNullException("remarks");
+                throw new ArgumentNullException(nameof(remarks));
             }
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))

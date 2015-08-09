@@ -11,7 +11,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerBookController == null)
             {
-                throw new ArgumentNullException("ledgerBookController");
+                throw new ArgumentNullException(nameof(ledgerBookController));
             }
 
             return new LedgerBookGridBuilderV2(

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (balance == null)
             {
-                throw new ArgumentNullException("balance");
+                throw new ArgumentNullException(nameof(balance));
             }
 
             this.line = line;

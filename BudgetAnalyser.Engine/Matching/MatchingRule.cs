@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;
@@ -222,7 +222,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
             if (!Bucket.Active)

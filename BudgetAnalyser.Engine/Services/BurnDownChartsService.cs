@@ -20,17 +20,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (chartsBuilder == null)
             {
-                throw new ArgumentNullException("chartsBuilder");
+                throw new ArgumentNullException(nameof(chartsBuilder));
             }
 
             if (chartAnalyser == null)
             {
-                throw new ArgumentNullException("chartAnalyser");
+                throw new ArgumentNullException(nameof(chartAnalyser));
             }
 
             this.bucketRepository = bucketRepository;
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (persistedStateData == null)
             {
-                throw new ArgumentNullException("persistedStateData");
+                throw new ArgumentNullException(nameof(persistedStateData));
             }
 
             this.chartsBuilder.CustomCharts = persistedStateData.Charts;

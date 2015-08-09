@@ -29,17 +29,17 @@ namespace BudgetAnalyser
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (demoFileHelper == null)
             {
-                throw new ArgumentNullException("demoFileHelper");
+                throw new ArgumentNullException(nameof(demoFileHelper));
             }
 
             this.uiContext = uiContext;
@@ -207,7 +207,7 @@ namespace BudgetAnalyser
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Handled)

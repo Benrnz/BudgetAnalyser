@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             var appDb = input[0] as ApplicationDatabase;
@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (fileName == null)
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException(nameof(fileName));
             }
 
             if (fileName.Length < 30)

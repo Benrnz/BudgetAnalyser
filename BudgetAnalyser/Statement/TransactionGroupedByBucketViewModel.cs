@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             DeleteTransactionCommand = uiContext.StatementController.DeleteTransactionCommand;

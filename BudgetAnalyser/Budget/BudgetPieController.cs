@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Budget
         {
             if (service == null)
             {
-                throw new ArgumentNullException("service");
+                throw new ArgumentNullException(nameof(service));
             }
 
             this.budgetPieService = service;
@@ -161,7 +161,7 @@ namespace BudgetAnalyser.Budget
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             this.surplus = this.budgetPieService.SurplusExpense(model);

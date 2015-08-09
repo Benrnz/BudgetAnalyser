@@ -24,22 +24,22 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             if (ledgerTransactionFactory == null)
             {
-                throw new ArgumentNullException("ledgerTransactionFactory");
+                throw new ArgumentNullException(nameof(ledgerTransactionFactory));
             }
 
             if (accountTypeRepo == null)
             {
-                throw new ArgumentNullException("accountTypeRepo");
+                throw new ArgumentNullException(nameof(accountTypeRepo));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.ledgerTransactionFactory = ledgerTransactionFactory;

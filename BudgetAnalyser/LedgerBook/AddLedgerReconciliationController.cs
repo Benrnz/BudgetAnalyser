@@ -36,12 +36,12 @@ namespace BudgetAnalyser.LedgerBook
             this.accountTypeRepository = accountTypeRepository;
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             this.parentBook = ledgerBook;
@@ -212,12 +212,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (line == null)
             {
-                throw new ArgumentNullException("line");
+                throw new ArgumentNullException(nameof(line));
             }
 
             this.parentBook = ledgerBook;

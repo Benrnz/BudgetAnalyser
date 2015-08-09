@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             if (Cleared)

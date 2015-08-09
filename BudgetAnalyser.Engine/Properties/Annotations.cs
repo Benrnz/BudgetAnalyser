@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Annotations
     /// public void Foo(string param)
     /// {
     ///   if (param == null)
-    ///     throw new ArgumentNullException("par"); // Warning: Cannot resolve symbol
+    ///     throw new ArgumentNullException(nameof(par)); // Warning: Cannot resolve symbol
     /// }
     /// </code>
     /// </example>

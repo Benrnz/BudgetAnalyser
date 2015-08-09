@@ -41,12 +41,12 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (rulesService == null)
             {
-                throw new ArgumentNullException("rulesService");
+                throw new ArgumentNullException(nameof(rulesService));
             }
 
             this.rulesService = rulesService;

@@ -28,22 +28,22 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (importUtilities == null)
             {
-                throw new ArgumentNullException("importUtilities");
+                throw new ArgumentNullException(nameof(importUtilities));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (dtoToDomainMapper == null)
             {
-                throw new ArgumentNullException("dtoToDomainMapper");
+                throw new ArgumentNullException(nameof(dtoToDomainMapper));
             }
 
             if (domainToDtoMapper == null)
             {
-                throw new ArgumentNullException("domainToDtoMapper");
+                throw new ArgumentNullException(nameof(domainToDtoMapper));
             }
 
             this.importUtilities = importUtilities;
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             this.importUtilities.AbortIfFileDoesntExist(storageKey);
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             try
@@ -121,12 +121,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             TransactionSetDto transactionSet = this.domainToDtoMapper.Map(model);

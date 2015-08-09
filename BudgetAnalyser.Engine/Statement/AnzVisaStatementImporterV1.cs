@@ -22,12 +22,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (importUtilities == null)
             {
-                throw new ArgumentNullException("importUtilities");
+                throw new ArgumentNullException(nameof(importUtilities));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.importUtilities = importUtilities;

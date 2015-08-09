@@ -45,7 +45,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (analysisResult == null)
             {
-                throw new ArgumentNullException("analysisResult");
+                throw new ArgumentNullException(nameof(analysisResult));
             }
 
             if (analysisResult.IsCustomAggregateChart)

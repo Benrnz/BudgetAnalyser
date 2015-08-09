@@ -18,12 +18,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (budgetBucketRepository == null)
             {
-                throw new ArgumentNullException("budgetBucketRepository");
+                throw new ArgumentNullException(nameof(budgetBucketRepository));
             }
 
             if (chartAnalyserFactory == null)
             {
-                throw new ArgumentNullException("chartAnalyserFactory");
+                throw new ArgumentNullException(nameof(chartAnalyserFactory));
             }
 
             this.budgetBucketRepository = budgetBucketRepository;

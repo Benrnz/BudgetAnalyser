@@ -33,22 +33,22 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (budgetRepository == null)
             {
-                throw new ArgumentNullException("budgetRepository");
+                throw new ArgumentNullException(nameof(budgetRepository));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             this.budgetRepository = budgetRepository;
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (sourceBudget == null)
             {
-                throw new ArgumentNullException("sourceBudget");
+                throw new ArgumentNullException(nameof(sourceBudget));
             }
 
             if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase.BudgetCollectionStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.budgetRepository.CreateNewAndSaveAsync(applicationDatabase.BudgetCollectionStorageKey);
@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase == null)
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             // Copy view model bound data back into model.

@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (bucket is IncomeBudgetBucket)

@@ -35,17 +35,17 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (addUserDefinedBurnDownController == null)
             {
-                throw new ArgumentNullException("addUserDefinedBurnDownController");
+                throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             }
 
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (chartsService == null)
             {
-                throw new ArgumentNullException("chartsService");
+                throw new ArgumentNullException(nameof(chartsService));
             }
 
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController;
@@ -108,17 +108,17 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             this.statement = statementModel;

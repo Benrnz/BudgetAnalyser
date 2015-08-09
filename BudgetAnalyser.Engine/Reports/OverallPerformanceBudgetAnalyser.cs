@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             if (!criteria.Cleared && (criteria.BeginDate == null || criteria.EndDate == null))
@@ -131,12 +131,12 @@ namespace BudgetAnalyser.Engine.Reports
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement", "The statement supplied is null, analysis cannot proceed with no statement.");
+                throw new ArgumentNullException(nameof(statement), "The statement supplied is null, analysis cannot proceed with no statement.");
             }
 
             if (budgets == null)
             {
-                throw new ArgumentNullException("budgets");
+                throw new ArgumentNullException(nameof(budgets));
             }
 
             if (criteria.Cleared)

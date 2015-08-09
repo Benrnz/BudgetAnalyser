@@ -30,12 +30,12 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (newWindowViewLoader == null)
             {
-                throw new ArgumentNullException("newWindowViewLoader");
+                throw new ArgumentNullException(nameof(newWindowViewLoader));
             }
 
             this.newWindowViewLoader = newWindowViewLoader;
@@ -122,7 +122,7 @@ namespace BudgetAnalyser.ReportsCatalog
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             this.currentLedgerBook = message.LedgerBook;

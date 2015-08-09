@@ -24,17 +24,17 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ruleService == null)
             {
-                throw new ArgumentNullException("ruleService");
+                throw new ArgumentNullException(nameof(ruleService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             RulesController = uiContext.RulesController;

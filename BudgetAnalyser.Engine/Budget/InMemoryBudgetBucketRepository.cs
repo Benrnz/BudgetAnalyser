@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (mapper == null)
             {
-                throw new ArgumentNullException("mapper");
+                throw new ArgumentNullException(nameof(mapper));
             }
 
             this.mapper = mapper;
@@ -40,12 +40,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ArgumentNullException("description");
+                throw new ArgumentNullException(nameof(description));
             }
 
             if (fixedBudgetAmount <= 0)
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             string upperCode = code.ToUpperInvariant();
@@ -92,12 +92,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             if (factory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException(nameof(factory));
             }
 
             string upperCode = code.ToUpperInvariant();
@@ -123,7 +123,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (buckets == null)
             {
-                throw new ArgumentNullException("buckets");
+                throw new ArgumentNullException(nameof(buckets));
             }
 
             this.lookupTable = buckets
@@ -139,7 +139,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (projectBucket == null)
             {
-                throw new ArgumentNullException("projectBucket");
+                throw new ArgumentNullException(nameof(projectBucket));
             }
 
             lock (this.syncRoot)
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (IsValidCode(bucket.Code))

@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -45,12 +45,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             string stringType = FetchString(array, index);
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -162,7 +162,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)

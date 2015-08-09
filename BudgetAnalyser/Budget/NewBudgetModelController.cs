@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Budget
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             MessengerInstance = uiContext.Messenger;

@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (newTransaction == null)
             {
-                throw new ArgumentNullException("newTransaction");
+                throw new ArgumentNullException(nameof(newTransaction));
             }
 
             this.transactions.Add(newTransaction);

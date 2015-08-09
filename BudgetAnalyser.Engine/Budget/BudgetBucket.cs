@@ -24,12 +24,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             if (name == null)
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             this.doNotUseDescription = name;
@@ -111,12 +111,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (obj1 == null)
             {
-                throw new ArgumentNullException("obj1");
+                throw new ArgumentNullException(nameof(obj1));
             }
 
             if (obj2 == null)
             {
-                throw new ArgumentNullException("obj2");
+                throw new ArgumentNullException(nameof(obj2));
             }
 
             return obj1.CompareTo(obj2) > 0;
@@ -131,12 +131,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (obj1 == null)
             {
-                throw new ArgumentNullException("obj1");
+                throw new ArgumentNullException(nameof(obj1));
             }
 
             if (obj2 == null)
             {
-                throw new ArgumentNullException("obj2");
+                throw new ArgumentNullException(nameof(obj2));
             }
 
             return obj1.CompareTo(obj2) < 0;
@@ -178,7 +178,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             var retval = true;

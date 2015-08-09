@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine
         {
             if (logEntryBuilder == null)
             {
-                throw new ArgumentNullException("logEntryBuilder");
+                throw new ArgumentNullException(nameof(logEntryBuilder));
             }
 
             if (this.disposed)
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine
         {
             if (logEntryBuilder == null)
             {
-                throw new ArgumentNullException("logEntryBuilder");
+                throw new ArgumentNullException(nameof(logEntryBuilder));
             }
 
             if (this.disposed)
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine
         {
             if (logEntryBuilder == null)
             {
-                throw new ArgumentNullException("logEntryBuilder");
+                throw new ArgumentNullException(nameof(logEntryBuilder));
             }
 
             if (this.disposed)
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine
         {
             if (logEntryBuilder == null)
             {
-                throw new ArgumentNullException("logEntryBuilder");
+                throw new ArgumentNullException(nameof(logEntryBuilder));
             }
 
             if (this.disposed)
@@ -151,7 +151,7 @@ namespace BudgetAnalyser.Engine
         {
             if (logEntryBuilder == null)
             {
-                throw new ArgumentNullException("logEntryBuilder");
+                throw new ArgumentNullException(nameof(logEntryBuilder));
             }
 
             if (this.disposed)

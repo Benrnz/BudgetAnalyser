@@ -26,17 +26,17 @@ namespace BudgetAnalyser.Budget
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (accountRepo == null)
             {
-                throw new ArgumentNullException("accountRepo");
+                throw new ArgumentNullException(nameof(accountRepo));
             }
 
             this.bucketRepository = bucketRepository;

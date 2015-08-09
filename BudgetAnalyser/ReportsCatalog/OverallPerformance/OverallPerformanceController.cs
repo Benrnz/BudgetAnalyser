@@ -22,7 +22,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         {
             if (chartService == null)
             {
-                throw new ArgumentNullException("chartService");
+                throw new ArgumentNullException(nameof(chartService));
             }
 
             this.chartService = chartService;

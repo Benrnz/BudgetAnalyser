@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))

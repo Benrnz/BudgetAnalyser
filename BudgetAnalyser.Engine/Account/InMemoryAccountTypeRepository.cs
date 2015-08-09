@@ -43,12 +43,12 @@ namespace BudgetAnalyser.Engine.Account
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             return this.repository.GetOrAdd(key.ToUpperInvariant(), instance);

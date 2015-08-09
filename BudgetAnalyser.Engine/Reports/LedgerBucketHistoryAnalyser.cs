@@ -19,12 +19,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (ledger == null)
             {
-                throw new ArgumentNullException("ledger");
+                throw new ArgumentNullException(nameof(ledger));
             }
 
             if (book == null)
             {
-                throw new ArgumentNullException("book");
+                throw new ArgumentNullException(nameof(book));
             }
 
             GraphData = new GraphData

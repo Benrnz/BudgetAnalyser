@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (other == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
             }
 
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();

@@ -39,17 +39,17 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             if (statementModelRepository == null)
             {
-                throw new ArgumentNullException("statementModelRepository");
+                throw new ArgumentNullException(nameof(statementModelRepository));
             }
 
             this.messageBox = uiContext.UserPrompts.MessageBox;

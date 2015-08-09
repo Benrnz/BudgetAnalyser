@@ -42,17 +42,17 @@ namespace BudgetAnalyser.Budget
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (maintenanceService == null)
             {
-                throw new ArgumentNullException("maintenanceService");
+                throw new ArgumentNullException(nameof(maintenanceService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.maintenanceService = maintenanceService;

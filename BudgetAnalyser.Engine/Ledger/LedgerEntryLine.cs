@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (bankBalances == null)
             {
-                throw new ArgumentNullException("bankBalances");
+                throw new ArgumentNullException(nameof(bankBalances));
             }
 
             Date = date;
@@ -302,7 +302,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             var result = true;
@@ -381,7 +381,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (ledgerBucket == null)
             {
-                throw new ArgumentNullException("ledgerBucket");
+                throw new ArgumentNullException(nameof(ledgerBucket));
             }
 
             if (previousLine == null)

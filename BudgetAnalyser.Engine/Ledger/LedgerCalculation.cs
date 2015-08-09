@@ -31,17 +31,17 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             var ledgers = new Dictionary<BudgetBucket, decimal>();
@@ -65,17 +65,17 @@ namespace BudgetAnalyser.Engine.Ledger
             CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (filter.Cleared || filter.BeginDate == null)
@@ -115,12 +115,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (ledger == null)
             {
-                throw new ArgumentNullException("ledger");
+                throw new ArgumentNullException(nameof(ledger));
             }
 
             // Given the same ledger, statement and begin date this data won't change.
@@ -171,12 +171,12 @@ namespace BudgetAnalyser.Engine.Ledger
             CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             LedgerEntryLine line = LocateApplicableLedgerLine(ledgerBook, filter);
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (filter.Cleared)

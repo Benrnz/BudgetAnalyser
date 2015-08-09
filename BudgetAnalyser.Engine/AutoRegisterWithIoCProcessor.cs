@@ -32,12 +32,12 @@ namespace BudgetAnalyser.Engine
         {
             if (container == null)
             {
-                throw new ArgumentNullException("container");
+                throw new ArgumentNullException(nameof(container));
             }
 
             if (assembly == null)
             {
-                throw new ArgumentNullException("assembly");
+                throw new ArgumentNullException(nameof(assembly));
             }
 
             Type[] allTypes = assembly.GetTypes()
@@ -74,12 +74,12 @@ namespace BudgetAnalyser.Engine
         {
             if (builder == null)
             {
-                throw new ArgumentNullException("builder");
+                throw new ArgumentNullException(nameof(builder));
             }
 
             if (assembly == null)
             {
-                throw new ArgumentNullException("assembly");
+                throw new ArgumentNullException(nameof(assembly));
             }
 
             Type[] allTypes = assembly.GetTypes()

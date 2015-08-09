@@ -18,17 +18,17 @@ namespace BudgetAnalyser.Engine.Budget.Data
         {
             if (bucketFactory == null)
             {
-                throw new ArgumentNullException("bucketFactory");
+                throw new ArgumentNullException(nameof(bucketFactory));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.bucketFactory = bucketFactory;

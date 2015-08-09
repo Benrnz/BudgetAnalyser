@@ -39,17 +39,17 @@ namespace BudgetAnalyser.Dashboard
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
@@ -163,7 +163,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Budgets == null)
@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Criteria == null)
@@ -236,7 +236,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.LedgerBook == null)
@@ -253,7 +253,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.StatementModel == null)
@@ -268,7 +268,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.StatementModel == null)

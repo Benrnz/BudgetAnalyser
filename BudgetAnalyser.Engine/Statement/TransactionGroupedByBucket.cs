@@ -15,12 +15,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (transactions == null)
             {
-                throw new ArgumentNullException("transactions");
+                throw new ArgumentNullException(nameof(transactions));
             }
 
             if (groupByThisBucket == null)
             {
-                throw new ArgumentNullException("groupByThisBucket");
+                throw new ArgumentNullException(nameof(groupByThisBucket));
             }
 
             Bucket = groupByThisBucket;

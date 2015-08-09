@@ -28,7 +28,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (transactionId == null)
             {
-                throw new ArgumentNullException("transactionId");
+                throw new ArgumentNullException(nameof(transactionId));
             }
 
             using (var message = new NavigateToTransactionMessage(transactionId.Value))

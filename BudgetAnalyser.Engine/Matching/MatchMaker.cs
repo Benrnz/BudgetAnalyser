@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -26,12 +26,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (transactions == null)
             {
-                throw new ArgumentNullException("transactions");
+                throw new ArgumentNullException(nameof(transactions));
             }
 
             if (rules == null)
             {
-                throw new ArgumentNullException("rules");
+                throw new ArgumentNullException(nameof(rules));
             }
 
             var matchesOccured = false;

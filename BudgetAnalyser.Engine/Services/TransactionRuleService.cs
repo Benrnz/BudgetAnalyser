@@ -30,22 +30,22 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ruleRepository == null)
             {
-                throw new ArgumentNullException("ruleRepository");
+                throw new ArgumentNullException(nameof(ruleRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (matchmaker == null)
             {
-                throw new ArgumentNullException("matchmaker");
+                throw new ArgumentNullException(nameof(matchmaker));
             }
 
             if (ruleFactory == null)
             {
-                throw new ArgumentNullException("ruleFactory");
+                throw new ArgumentNullException(nameof(ruleFactory));
             }
 
             this.ruleRepository = ruleRepository;
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ruleToAdd == null)
             {
-                throw new ArgumentNullException("ruleToAdd");
+                throw new ArgumentNullException(nameof(ruleToAdd));
             }
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase.MatchingRulesCollectionStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.ruleRepository.CreateNewAndSaveAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
@@ -141,12 +141,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (references == null)
             {
-                throw new ArgumentNullException("references");
+                throw new ArgumentNullException(nameof(references));
             }
 
             if (references.Length != 3)
@@ -169,12 +169,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (rule == null)
             {
-                throw new ArgumentNullException("rule");
+                throw new ArgumentNullException(nameof(rule));
             }
 
             if (references == null)
             {
-                throw new ArgumentNullException("references");
+                throw new ArgumentNullException(nameof(references));
             }
 
             return amount == rule.Amount
@@ -236,7 +236,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ruleToRemove == null)
             {
-                throw new ArgumentNullException("ruleToRemove");
+                throw new ArgumentNullException(nameof(ruleToRemove));
             }
 
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))

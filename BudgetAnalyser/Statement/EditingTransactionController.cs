@@ -22,12 +22,12 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             this.bucketRepo = bucketRepo;

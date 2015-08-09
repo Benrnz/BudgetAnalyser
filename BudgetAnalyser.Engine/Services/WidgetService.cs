@@ -28,12 +28,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (widgetRepo == null)
             {
-                throw new ArgumentNullException("widgetRepo");
+                throw new ArgumentNullException(nameof(widgetRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.widgetRepo = widgetRepo;

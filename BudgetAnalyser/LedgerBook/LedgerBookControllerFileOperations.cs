@@ -19,12 +19,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.applicationDatabaseService = applicationDatabaseService;

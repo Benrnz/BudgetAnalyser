@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -194,7 +194,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (additionalModel == null)
             {
-                throw new ArgumentNullException("additionalModel");
+                throw new ArgumentNullException(nameof(additionalModel));
             }
 
             LastImport = additionalModel.LastImport;
@@ -206,12 +206,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (reassignmentBucket == null)
             {
-                throw new ArgumentNullException("reassignmentBucket");
+                throw new ArgumentNullException(nameof(reassignmentBucket));
             }
 
             foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
             transaction.PropertyChanged -= OnTransactionPropertyChanged;
@@ -242,17 +242,17 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (originalTransaction == null)
             {
-                throw new ArgumentNullException("originalTransaction");
+                throw new ArgumentNullException(nameof(originalTransaction));
             }
 
             if (splinterBucket1 == null)
             {
-                throw new ArgumentNullException("splinterBucket1");
+                throw new ArgumentNullException(nameof(splinterBucket1));
             }
 
             if (splinterBucket2 == null)
             {
-                throw new ArgumentNullException("splinterBucket2");
+                throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
             var splinterTransaction1 = (Transaction)originalTransaction.Clone();

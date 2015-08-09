@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (task == null)
             {
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
             }
 
             if (task.CanDelete)
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (task == null)
             {
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
             }
 
             task.CanDelete = true;

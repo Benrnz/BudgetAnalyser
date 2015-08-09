@@ -35,12 +35,12 @@ namespace BudgetAnalyser
         {
             if (userPrompts == null)
             {
-                throw new ArgumentNullException("userPrompts");
+                throw new ArgumentNullException(nameof(userPrompts));
             }
 
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             UserPrompts = userPrompts;

@@ -40,37 +40,37 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (widgetService == null)
             {
-                throw new ArgumentNullException("widgetService");
+                throw new ArgumentNullException(nameof(widgetService));
             }
 
             if (widgetRepository == null)
             {
-                throw new ArgumentNullException("widgetRepository");
+                throw new ArgumentNullException(nameof(widgetRepository));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (budgetRepository == null)
             {
-                throw new ArgumentNullException("budgetRepository");
+                throw new ArgumentNullException(nameof(budgetRepository));
             }
 
             if (ledgerCalculator == null)
             {
-                throw new ArgumentNullException("ledgerCalculator");
+                throw new ArgumentNullException(nameof(ledgerCalculator));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.widgetService = widgetService;
@@ -109,12 +109,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ArgumentNullException("description");
+                throw new ArgumentNullException(nameof(description));
             }
 
             if (fixedBudgetAmount <= 0)
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (paymentDate == DateTime.MinValue)
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedState == null)
             {
-                throw new ArgumentNullException("storedState");
+                throw new ArgumentNullException(nameof(storedState));
             }
 
             if (this.availableDependencies == null)

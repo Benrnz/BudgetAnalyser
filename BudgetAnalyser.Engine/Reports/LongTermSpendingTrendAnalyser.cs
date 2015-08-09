@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (budgetBucketRepo == null)
             {
-                throw new ArgumentNullException("budgetBucketRepo");
+                throw new ArgumentNullException(nameof(budgetBucketRepo));
             }
 
             this.budgetBucketRepo = budgetBucketRepo;
@@ -31,12 +31,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             Reset();

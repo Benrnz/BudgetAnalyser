@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine
         {
             if (autoMapperRegistrations == null)
             {
-                throw new ArgumentNullException("autoMapperRegistrations");
+                throw new ArgumentNullException(nameof(autoMapperRegistrations));
             }
 
             this.Registrations = autoMapperRegistrations;

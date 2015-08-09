@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (narrative == null)
             {
-                throw new ArgumentNullException("narrative");
+                throw new ArgumentNullException(nameof(narrative));
             }
 
             Narrative = narrative;

@@ -22,7 +22,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
