@@ -123,13 +123,16 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(buckets));
             }
 
-            this.lookupTable = buckets
-                .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
-                .Select(dto => this.mapper.Map(dto))
-                .Distinct()
-                .ToDictionary(e => e.Code, e => e);
+            lock (this.syncRoot)
+            {
+                this.lookupTable = buckets
+                    .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
+                    .Select(dto => this.mapper.Map(dto))
+                    .Distinct()
+                    .ToDictionary(e => e.Code, e => e);
 
-            InitialiseMandatorySpecialBuckets();
+                InitialiseMandatorySpecialBuckets();
+            }
         }
 
         public virtual bool IsValidCode(string code)
