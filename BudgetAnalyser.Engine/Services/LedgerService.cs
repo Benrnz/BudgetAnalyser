@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
-                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", nameof(entryLine));
             }
 
             entryLine.CancelBalanceAdjustment(transactionId);
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
-                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", nameof(entryLine));
             }
 
             BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative).WithAccount(account);
@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
             {
-                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
+                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", nameof(ledgerEntry));
             }
 
             LedgerTransaction newTransaction = new CreditLedgerTransaction();
@@ -244,7 +244,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (LedgerBook.Reconciliations.First().Entries.All(e => e != ledgerEntry))
             {
-                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", "ledgerEntry");
+                throw new ArgumentException("Ledger Entry provided does not exist in the current Ledger Book.", nameof(ledgerEntry));
             }
 
             ledgerEntry.RemoveTransaction(transactionId);
@@ -319,7 +319,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (LedgerBook.Reconciliations.All(l => l != entryLine))
             {
-                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", "entryLine");
+                throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", nameof(entryLine));
             }
 
             entryLine.UpdateRemarks(remarks);

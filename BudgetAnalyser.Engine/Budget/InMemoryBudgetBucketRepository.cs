@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             if (fixedBudgetAmount <= 0)
             {
-                throw new ArgumentException("The fixed budget amount must be greater than zero.", "fixedBudgetAmount");
+                throw new ArgumentException("The fixed budget amount must be greater than zero.", nameof(fixedBudgetAmount));
             }
 
             string upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);

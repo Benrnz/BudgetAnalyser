@@ -85,12 +85,12 @@ namespace BudgetAnalyser.Engine.Services
 
             if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
             {
-                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", "newBudgetEffectiveFrom");
+                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", nameof(newBudgetEffectiveFrom));
             }
 
             if (newBudgetEffectiveFrom <= DateTime.Today)
             {
-                throw new ArgumentException("The effective date of the new budget must be a future date.", "newBudgetEffectiveFrom");
+                throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
             }
 
             var validationMessages = new StringBuilder();

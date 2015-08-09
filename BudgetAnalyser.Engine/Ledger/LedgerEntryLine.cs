@@ -255,7 +255,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (adjustment == 0)
             {
-                throw new ArgumentException("The balance adjustment amount cannot be zero.", "adjustment");
+                throw new ArgumentException("The balance adjustment amount cannot be zero.", nameof(adjustment));
             }
 
             var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment };

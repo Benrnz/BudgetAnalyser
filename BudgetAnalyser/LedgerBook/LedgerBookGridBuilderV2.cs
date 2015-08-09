@@ -178,7 +178,7 @@ namespace BudgetAnalyser.LedgerBook
             }
             else
             {
-                throw new ArgumentException("parent is not a Panel nor a Decorator", "parent");
+                throw new ArgumentException("parent is not a Panel nor a Decorator", nameof(parent));
             }
 
             return textBlock;

@@ -119,7 +119,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (fixedBudgetAmount <= 0)
             {
-                throw new ArgumentException("Fixed Budget amount must be greater than zero.", "fixedBudgetAmount");
+                throw new ArgumentException("Fixed Budget amount must be greater than zero.", nameof(fixedBudgetAmount));
             }
 
             FixedBudgetProjectBucket bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (paymentDate == DateTime.MinValue)
             {
-                throw new ArgumentException("Payment date is not set.", "paymentDate");
+                throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
             }
 
             BudgetBucket bucket = this.bucketRepository.GetByCode(bucketCode);

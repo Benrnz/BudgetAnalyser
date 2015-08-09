@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (this.cachedWidgets.ContainsKey(key))
             {
-                throw new ArgumentException("A widget with this key already exists.", "id");
+                throw new ArgumentException("A widget with this key already exists.", nameof(id));
             }
 
             var baseWidget = (Widget)widget;
