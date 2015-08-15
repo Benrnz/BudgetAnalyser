@@ -186,7 +186,6 @@
     <Compile Include="Converters\BudgetNameViewModelConverter.cs" />
     <Compile Include="Converters\ConverterHelper.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
-    <Compile Include="Converters\MatchingRuleDescriptorConverter.cs" />
     <Compile Include="Converters\NumberSignToBrushConverter.cs" />
     <Compile Include="Converters\NumberToBoldConverter.cs" />
     <Compile Include="Converters\PercentToColourConverter.cs" />
