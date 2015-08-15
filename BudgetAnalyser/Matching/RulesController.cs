@@ -76,9 +76,11 @@ namespace BudgetAnalyser.Matching
 
         public  string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
 
-        public  ICommand CloseCommand => new RelayCommand(() => Shown = false);
+        [UsedImplicitly]
+        public ICommand CloseCommand => new RelayCommand(() => Shown = false);
 
-        public  ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
+        [UsedImplicitly]
+        public ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
 
         public bool EditingRule
         {
@@ -91,7 +93,8 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public  ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
+        [UsedImplicitly]
+        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
 
         public bool FlatListBoxVisibility
         {
@@ -183,7 +186,8 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public  ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
+        [UsedImplicitly]
+        public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
 
         public void CreateNewRuleFromTransaction([NotNull] Transaction transaction)
         {
@@ -192,7 +196,7 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException(nameof(transaction));
             }
 
-            if (transaction.BudgetBucket == null || string.IsNullOrWhiteSpace(transaction.BudgetBucket.Code))
+            if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
             {
                 MessageBox.Show("Select a Bucket code first.");
                 return;

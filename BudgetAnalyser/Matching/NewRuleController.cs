@@ -111,6 +111,7 @@ namespace BudgetAnalyser.Matching
         public bool OrChecked
         {
             get { return this.doNotUseOrChecked; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseOrChecked = value;
@@ -177,6 +178,7 @@ namespace BudgetAnalyser.Matching
         {
             get { return this.doNotUseUseAmount; }
 
+            [UsedImplicitly]
             set
             {
                 this.doNotUseUseAmount = value;
@@ -223,6 +225,7 @@ namespace BudgetAnalyser.Matching
         {
             get { return this.doNotUseUseTransactionType; }
 
+            [UsedImplicitly]
             set
             {
                 this.doNotUseUseTransactionType = value;
