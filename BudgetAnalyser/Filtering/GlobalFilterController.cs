@@ -59,10 +59,11 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
-        public IEnumerable<Account> Accounts { get; private set; }
+        public IEnumerable<Account> Accounts {[UsedImplicitly] get; private set; }
 
         public string AccountTypeSummary
         {
+            [UsedImplicitly]
             get { return this.doNotUseAccountTypeSummary; }
             private set
             {
@@ -73,10 +74,13 @@ namespace BudgetAnalyser.Filtering
 
         public  string ActionButtonToolTip => "Apply filter and close.";
 
+        [UsedImplicitly]
         public  ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
 
+        [UsedImplicitly]
         public  ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
 
+        [UsedImplicitly]
         public  ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
 
         public  string CloseButtonToolTip => "Cancel and do not change the filter.";
@@ -94,6 +98,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine1
         {
+            [UsedImplicitly]
             get { return this.doNotUseDateSummaryLine1; }
             private set
             {
@@ -104,6 +109,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine2
         {
+            [UsedImplicitly]
             get { return this.doNotUseDateSummaryLine2; }
             private set
             {
