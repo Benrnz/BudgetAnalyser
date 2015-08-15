@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public GlobalFilterController GlobalFilterController { get; private set; }
+        public GlobalFilterController GlobalFilterController { [UsedImplicitly] get; private set; }
 
         public bool Shown
         {
@@ -104,6 +104,7 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
+        [UsedImplicitly]
         public  ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }

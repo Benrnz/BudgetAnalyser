@@ -46,10 +46,8 @@ namespace BudgetAnalyser.Dashboard
 
         public event EventHandler<DialogResponseEventArgs> Complete;
 
-        public IEnumerable<BudgetBucket> BudgetBuckets
-        {
-            get { return this.bucketRepository.Buckets.ToList(); }
-        }
+        [UsedImplicitly]
+        public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
@@ -89,6 +87,7 @@ namespace BudgetAnalyser.Dashboard
         public BudgetBucket Selected
         {
             get { return this.doNotUseSelected; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseSelected = value;
@@ -98,14 +97,7 @@ namespace BudgetAnalyser.Dashboard
 
         public void ShowDialog(BudgetAnalyserFeature source, Guid? correlationId = null)
         {
-            if (correlationId == null)
-            {
-                this.dialogCorrelationId = Guid.NewGuid();
-            }
-            else
-            {
-                this.dialogCorrelationId = correlationId.Value;
-            }
+            this.dialogCorrelationId = correlationId ?? Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
