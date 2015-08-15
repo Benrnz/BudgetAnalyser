@@ -43,6 +43,7 @@ namespace BudgetAnalyser.Budget
         public decimal Amount
         {
             get { return this.doNotUseAmount; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseAmount = value;
@@ -53,30 +54,25 @@ namespace BudgetAnalyser.Budget
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public  bool CanExecuteCancelButton => true;
+        public bool CanExecuteCancelButton => true;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(Code)
-                       && !this.bucketRepository.IsValidCode(FixedBudgetProjectBucket.CreateCode(Code))
-                       && !string.IsNullOrWhiteSpace(Description)
-                       && Amount > 0;
-            }
-        }
+        public bool CanExecuteOkButton => !string.IsNullOrWhiteSpace(Code)
+                                          && !this.bucketRepository.IsValidCode(FixedBudgetProjectBucket.CreateCode(Code))
+                                          && !string.IsNullOrWhiteSpace(Description)
+                                          && Amount > 0;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public  bool CanExecuteSaveButton => false;
+        public bool CanExecuteSaveButton => false;
 
         public string Code
         {
             get { return this.doNotUseCode; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseCode = value;
@@ -87,6 +83,7 @@ namespace BudgetAnalyser.Budget
         public string Description
         {
             get { return this.doNotUseDescription; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseDescription = value;
@@ -96,14 +93,7 @@ namespace BudgetAnalyser.Budget
 
         public void ShowDialog(BudgetAnalyserFeature source, Guid? correlationId = null)
         {
-            if (correlationId == null)
-            {
-                this.dialogCorrelationId = Guid.NewGuid();
-            }
-            else
-            {
-                this.dialogCorrelationId = correlationId.Value;
-            }
+            this.dialogCorrelationId = correlationId ?? Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {

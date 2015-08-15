@@ -48,17 +48,14 @@ namespace BudgetAnalyser.Budget
         }
 
         public event EventHandler<BudgetBucketChosenEventArgs> Chosen;
+        public string ActionButtonToolTip => "Select and use this Expense Budget Bucket.";
 
-        public  string ActionButtonToolTip => "Select and use this Expense Budget Bucket.";
-
-        public IEnumerable<Account> BankAccounts
-        {
-            get { return this.accountRepo.ListCurrentlyUsedAccountTypes(); }
-        }
+        [UsedImplicitly]
+        public IEnumerable<Account> BankAccounts => this.accountRepo.ListCurrentlyUsedAccountTypes();
 
         public IEnumerable<BudgetBucket> BudgetBuckets
         {
-            get { return this.doNotUseBudgetBuckets; }
+            [UsedImplicitly] get { return this.doNotUseBudgetBuckets; }
 
             private set
             {
@@ -67,17 +64,14 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public  bool CanExecuteCancelButton => true;
-
-        public  bool CanExecuteOkButton => Selected != null;
-
-        public  bool CanExecuteSaveButton => false;
-
-        public  string CloseButtonToolTip => "Cancel";
+        public bool CanExecuteCancelButton => true;
+        public bool CanExecuteOkButton => Selected != null;
+        public bool CanExecuteSaveButton => false;
+        public string CloseButtonToolTip => "Cancel";
 
         public string FilterDescription
         {
-            get { return this.doNotUseFilterDescription; }
+            [UsedImplicitly] get { return this.doNotUseFilterDescription; }
             set
             {
                 this.doNotUseFilterDescription = value;
@@ -85,8 +79,12 @@ namespace BudgetAnalyser.Budget
             }
         }
 
+        [UsedImplicitly]
         public BudgetBucket Selected { get; set; }
+
+        [UsedImplicitly]
         public bool ShowBankAccount { get; set; }
+
         public Account StoreInThisAccount { get; set; }
 
         public void Filter(Func<BudgetBucket, bool> predicate, string filterDescription)
@@ -98,14 +96,7 @@ namespace BudgetAnalyser.Budget
 
         public void ShowDialog(BudgetAnalyserFeature source, string title, Guid? correlationId = null, bool showBankAccountSelector = false)
         {
-            if (correlationId == null)
-            {
-                this.dialogCorrelationId = Guid.NewGuid();
-            }
-            else
-            {
-                this.dialogCorrelationId = correlationId.Value;
-            }
+            this.dialogCorrelationId = correlationId ?? Guid.NewGuid();
 
             ShowBankAccount = showBankAccountSelector;
 

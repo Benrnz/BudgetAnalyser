@@ -34,11 +34,12 @@ namespace BudgetAnalyser.Budget
             this.budgetPieService = service;
         }
 
-        public  ICommand CloseCommand => new RelayCommand(Close);
+        [UsedImplicitly]
+        public ICommand CloseCommand => new RelayCommand(Close);
 
         public Expense CurrentExpense
         {
-            get { return this.doNotUseCurrentExpense; }
+            [UsedImplicitly] get { return this.doNotUseCurrentExpense; }
 
             private set
             {
@@ -62,7 +63,7 @@ namespace BudgetAnalyser.Budget
 
         public Income CurrentIncome
         {
-            get { return this.doNotUseCurrentIncome; }
+            [UsedImplicitly] get { return this.doNotUseCurrentIncome; }
 
             private set
             {
@@ -138,7 +139,8 @@ namespace BudgetAnalyser.Budget
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public  string Title => "Budget Pie Charts";
+        [UsedImplicitly]
+        public string Title => "Budget Pie Charts";
 
         public void Close()
         {
