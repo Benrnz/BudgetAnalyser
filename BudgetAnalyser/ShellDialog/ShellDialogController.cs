@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Threading;
+using BudgetAnalyser.Engine.Annotations;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 
@@ -65,8 +66,7 @@ namespace BudgetAnalyser.ShellDialog
         }
 
         public Guid CorrelationId { get; set; }
-
-        public  ICommand DialogCommand => new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
+        public ICommand DialogCommand => new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
 
         public ShellDialogType DialogType
         {
@@ -85,9 +85,7 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool HelpButtonVisible
         {
-            [Engine.Annotations.UsedImplicitly]
-            get
-            { return this.doNotUseHelpButtonVisible; }
+            [UsedImplicitly] get { return this.doNotUseHelpButtonVisible; }
             set
             {
                 this.doNotUseHelpButtonVisible = value;
@@ -106,7 +104,7 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
-        public  bool OkIsCancel => OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible;
+        public bool OkIsCancel => OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible;
 
         public bool SaveButtonVisible
         {
@@ -120,9 +118,7 @@ namespace BudgetAnalyser.ShellDialog
 
         public string Title
         {
-            [Engine.Annotations.UsedImplicitly]
-            get
-            { return this.doNotUseTitle; }
+            [UsedImplicitly] get { return this.doNotUseTitle; }
             set
             {
                 this.doNotUseTitle = value;

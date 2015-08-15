@@ -23,11 +23,9 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public  bool NoBudgetLoaded => CurrentBudget == null;
-
-        public  bool NoLedgerBookLoaded => LedgerBook == null;
-
-        public  bool NoStatementLoaded => CurrentStatement == null;
+        public bool NoBudgetLoaded => CurrentBudget == null;
+        public bool NoLedgerBookLoaded => LedgerBook == null;
+        public bool NoStatementLoaded => CurrentStatement == null;
 
         internal IBudgetCurrencyContext CurrentBudget
         {

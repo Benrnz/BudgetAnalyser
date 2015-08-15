@@ -30,8 +30,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool AddingNewTask
         {
-            [UsedImplicitly]
-            get { return this.doNotUseAddingNewTask; }
+            [UsedImplicitly] get { return this.doNotUseAddingNewTask; }
             private set
             {
                 this.doNotUseAddingNewTask = value;
@@ -40,10 +39,10 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [UsedImplicitly]
-        public  ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
+        public ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
 
         [UsedImplicitly]
-        public  ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
+        public ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
 
         public string NewTaskDescription
         {
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [UsedImplicitly]
-        public  ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
+        public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
 
         [UsedImplicitly]
         public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);

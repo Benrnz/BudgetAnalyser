@@ -12,7 +12,7 @@ namespace BudgetAnalyser
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App 
+    public partial class App
     {
         private ILogger logger;
         private ShellController shellController;

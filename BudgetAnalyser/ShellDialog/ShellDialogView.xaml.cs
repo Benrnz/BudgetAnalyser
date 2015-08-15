@@ -13,7 +13,7 @@ namespace BudgetAnalyser.ShellDialog
             InitializeComponent();
         }
 
-private  ShellDialogController Controller => (ShellDialogController)DataContext;
+        private ShellDialogController Controller => (ShellDialogController)DataContext;
 
         private void OnShellDialogKeyUp(object sender, KeyEventArgs e)
         {

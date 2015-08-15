@@ -46,7 +46,7 @@ namespace BudgetAnalyser.Matching
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public  ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
+        public ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
 
         [Engine.Annotations.UsedImplicitly]
         public ICommand CreateRuleCommand => new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);

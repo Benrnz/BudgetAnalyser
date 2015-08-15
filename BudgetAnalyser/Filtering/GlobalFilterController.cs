@@ -59,12 +59,11 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
-        public IEnumerable<Account> Accounts {[UsedImplicitly] get; private set; }
+        public IEnumerable<Account> Accounts { [UsedImplicitly] get; private set; }
 
         public string AccountTypeSummary
         {
-            [UsedImplicitly]
-            get { return this.doNotUseAccountTypeSummary; }
+            [UsedImplicitly] get { return this.doNotUseAccountTypeSummary; }
             private set
             {
                 this.doNotUseAccountTypeSummary = value;
@@ -72,18 +71,18 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public  string ActionButtonToolTip => "Apply filter and close.";
+        public string ActionButtonToolTip => "Apply filter and close.";
 
         [UsedImplicitly]
-        public  ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
+        public ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
 
         [UsedImplicitly]
-        public  ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
+        public ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
 
         [UsedImplicitly]
-        public  ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
+        public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
 
-        public  string CloseButtonToolTip => "Cancel and do not change the filter.";
+        public string CloseButtonToolTip => "Cancel and do not change the filter.";
 
         public GlobalFilterCriteria Criteria
         {
@@ -98,8 +97,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine1
         {
-            [UsedImplicitly]
-            get { return this.doNotUseDateSummaryLine1; }
+            [UsedImplicitly] get { return this.doNotUseDateSummaryLine1; }
             private set
             {
                 this.doNotUseDateSummaryLine1 = value;
@@ -109,8 +107,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine2
         {
-            [UsedImplicitly]
-            get { return this.doNotUseDateSummaryLine2; }
+            [UsedImplicitly] get { return this.doNotUseDateSummaryLine2; }
             private set
             {
                 this.doNotUseDateSummaryLine2 = value;
@@ -118,9 +115,8 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public  bool IsAccountFilterView => this.filterMode == FilterMode.Account;
-
-        public  bool IsDateFilterView => this.filterMode == FilterMode.Dates;
+        public bool IsAccountFilterView => this.filterMode == FilterMode.Account;
+        public bool IsDateFilterView => this.filterMode == FilterMode.Dates;
 
         public Account SelectedAccount
         {

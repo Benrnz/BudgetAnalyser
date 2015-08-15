@@ -18,7 +18,7 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine ledgerEntryLine;
 
         [UsedImplicitly]
-        public  bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
+        public bool HasNegativeBalances => SurplusBalances.Any(b => b.Balance < 0);
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance method required for data binding")]
         [UsedImplicitly]
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.LedgerBook
         public ObservableCollection<BankBalance> SurplusBalances { get; private set; }
 
         [UsedImplicitly]
-        public  decimal SurplusTotal => this.ledgerEntryLine.CalculatedSurplus;
+        public decimal SurplusTotal => this.ledgerEntryLine.CalculatedSurplus;
 
         public void ShowDialog([NotNull] LedgerEntryLine ledgerLine)
         {

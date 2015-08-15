@@ -15,7 +15,7 @@ namespace BudgetAnalyser.LedgerBook
             InitializeComponent();
         }
 
-private  ReconciliationToDoListController Controller => DataContext as ReconciliationToDoListController;
+        private ReconciliationToDoListController Controller => DataContext as ReconciliationToDoListController;
 
         private void OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

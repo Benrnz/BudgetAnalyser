@@ -16,7 +16,7 @@ namespace BudgetAnalyser.LedgerBook
             InitializeComponent();
         }
 
-private  LedgerBookController Controller => DataContext as LedgerBookController;
+        private LedgerBookController Controller => DataContext as LedgerBookController;
 
         private void DynamicallyCreateLedgerBookGrid()
         {

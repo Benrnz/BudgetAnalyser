@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -12,11 +12,7 @@ namespace BudgetAnalyser.LedgerBook
     public static class LedgerTransactionCommands
     {
         [PropertyInjection]
-        public static IMessenger MessengerInstance
-        {
-            get;
-            [Engine.Annotations.UsedImplicitly] set;
-        }
+        public static IMessenger MessengerInstance { get; [UsedImplicitly] set; }
 
         public static ICommand NavigateToTransactionCommand => new RelayCommand<Guid?>(OnNavigateToTransactionCommandExecute, CanExecuteNavigateToTransactionCommand);
 
@@ -25,7 +21,7 @@ namespace BudgetAnalyser.LedgerBook
             return transactionId != null;
         }
 
-        private static void OnNavigateToTransactionCommandExecute([NotNull] Guid? transactionId)
+        private static void OnNavigateToTransactionCommandExecute([Annotations.NotNull] Guid? transactionId)
         {
             if (transactionId == null)
             {

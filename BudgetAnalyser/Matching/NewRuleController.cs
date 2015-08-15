@@ -57,8 +57,7 @@ namespace BudgetAnalyser.Matching
         }
 
         public event EventHandler RuleCreated;
-
-        public  string ActionButtonToolTip => "Save the new rule.";
+        public string ActionButtonToolTip => "Save the new rule.";
 
         public decimal Amount
         {
@@ -85,14 +84,10 @@ namespace BudgetAnalyser.Matching
         }
 
         public BudgetBucket Bucket { get; set; }
-
-        public  bool CanExecuteCancelButton => true;
-
-        public  bool CanExecuteOkButton => false;
-
-        public  bool CanExecuteSaveButton => UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType;
-
-        public  string CloseButtonToolTip => "Cancel";
+        public bool CanExecuteCancelButton => true;
+        public bool CanExecuteOkButton => false;
+        public bool CanExecuteSaveButton => UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType;
+        public string CloseButtonToolTip => "Cancel";
 
         public string Description
         {
@@ -159,8 +154,7 @@ namespace BudgetAnalyser.Matching
 
         public IEnumerable<MatchingRule> SimilarRules { get; private set; }
         public bool SimilarRulesExist { get; private set; }
-
-        public  string Title => "New Matching Rule for: " + Bucket;
+        public string Title => "New Matching Rule for: " + Bucket;
 
         public string TransactionType
         {

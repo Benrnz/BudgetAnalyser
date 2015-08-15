@@ -48,12 +48,16 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public event EventHandler Updated;
+
         [UsedImplicitly]
         public ObservableCollection<Account> BankAccounts { get; private set; }
+
         public BudgetBucket BucketBeingTracked { get; private set; }
         public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
+
         [UsedImplicitly]
         public decimal MonthlyBudgetAmount { get; private set; }
+
         public Account StoredInAccount { get; set; }
 
         public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerBucket ledgerBucket, [NotNull] BudgetModel budgetModel)

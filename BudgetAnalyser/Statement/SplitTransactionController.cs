@@ -37,9 +37,7 @@ namespace BudgetAnalyser.Statement
         }
 
         public string ActionButtonToolTip => "Save Split Transactions.";
-
         public IEnumerable<BudgetBucket> BudgetBuckets { [UsedImplicitly] get; private set; }
-
         public bool CanExecuteCancelButton => true;
         public bool CanExecuteOkButton => false;
         public bool CanExecuteSaveButton => Valid;

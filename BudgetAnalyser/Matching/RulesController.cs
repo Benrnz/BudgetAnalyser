@@ -73,8 +73,7 @@ namespace BudgetAnalyser.Matching
         public event EventHandler<MatchingRuleEventArgs> RuleRemoved;
 
         public event EventHandler SortChanged;
-
-        public  string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
+        public string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
 
         [UsedImplicitly]
         public ICommand CloseCommand => new RelayCommand(() => Shown = false);

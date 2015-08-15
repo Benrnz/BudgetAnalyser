@@ -14,11 +14,9 @@ namespace BudgetAnalyser.Dashboard
     [AutoRegisterWithIoC]
     public static class DashboardCommands
     {
-        public  static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
-
-        public  static ICommand AddNewFixedBudgetMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
-
-        public  static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
+        public static ICommand AddNewBucketMonitorWidgetCommand => new RelayCommand<Guid>(OnAddNewBucketMonitorWidgetCommandExecute);
+        public static ICommand AddNewFixedBudgetMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewFixedBudgetMonitorWidgetCommandExecute);
+        public static ICommand AddNewSurprisePaymentMonitorWidgetCommand => new GalaSoft.MvvmLight.Command.RelayCommand<Guid>(OnAddNewSurprisePaymentMonitorWidgetCommandExecute);
 
         [PropertyInjection]
         public static ChooseBudgetBucketController ChooseBudgetBucketController { get; [UsedImplicitly] set; }
@@ -32,14 +30,13 @@ namespace BudgetAnalyser.Dashboard
         [PropertyInjection]
         public static IDashboardService DashboardService { get; [UsedImplicitly] set; }
 
-        public  static ICommand HideWidgetCommand => new RelayCommand<Widget>(w => w.Visibility = false, w => w != null);
+        public static ICommand HideWidgetCommand => new RelayCommand<Widget>(w => w.Visibility = false, w => w != null);
 
         [PropertyInjection]
         public static IUserQuestionBoxYesNo QuestionBoxService { get; [UsedImplicitly] set; }
 
-        public  static ICommand RemoveWidgetCommand => new RelayCommand<Widget>(OnRemoveWidgetCommandExecute, w => w is IUserDefinedWidget);
-
-        public  static ICommand UnhideAllWidgetsCommand => new RelayCommand(OnUnhideAllWidgetsCommandExecute);
+        public static ICommand RemoveWidgetCommand => new RelayCommand<Widget>(OnRemoveWidgetCommandExecute, w => w is IUserDefinedWidget);
+        public static ICommand UnhideAllWidgetsCommand => new RelayCommand(OnUnhideAllWidgetsCommandExecute);
 
         private static void OnAddNewBucketMonitorWidgetCommandExecute(Guid correlationId)
         {

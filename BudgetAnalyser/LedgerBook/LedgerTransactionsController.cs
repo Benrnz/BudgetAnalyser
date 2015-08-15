@@ -65,9 +65,8 @@ namespace BudgetAnalyser.LedgerBook
         [UsedImplicitly]
         public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
 
-        public  bool InBalanceAdjustmentMode => LedgerEntry == null;
-
-        public  bool InLedgerEntryMode => LedgerEntry != null;
+        public bool InBalanceAdjustmentMode => LedgerEntry == null;
+        public bool InLedgerEntryMode => LedgerEntry != null;
 
         public bool IsReadOnly
         {
@@ -143,7 +142,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public  decimal TransactionsTotal => ShownTransactions?.Sum(t => t.Amount) ?? 0;
+        public decimal TransactionsTotal => ShownTransactions?.Sum(t => t.Amount) ?? 0;
 
         [UsedImplicitly]
         public ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);

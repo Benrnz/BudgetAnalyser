@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Matching
             InitializeComponent();
         }
 
-private  RulesController Controller => (RulesController)DataContext;
+        private RulesController Controller => (RulesController)DataContext;
 
         private void OnCheckedAndSelectedRule(object sender, RoutedEventArgs e)
         {
