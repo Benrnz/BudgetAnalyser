@@ -48,7 +48,8 @@ namespace BudgetAnalyser
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
-        public  ICommand BudgetCommand => new RelayCommand(OnBudgetExecuted);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand BudgetCommand => new RelayCommand(OnBudgetExecuted);
 
         public bool BudgetToggle
         {
@@ -72,7 +73,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public  ICommand LedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand LedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
         public bool LedgerBookToggle
         {
@@ -84,7 +86,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public  ICommand ReportsCommand => new RelayCommand(OnReportsExecuted);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand ReportsCommand => new RelayCommand(OnReportsExecuted);
 
         public bool ReportsToggle
         {
@@ -96,7 +99,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public  ICommand TransactionsCommand => new RelayCommand(OnTransactionExecuted);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand TransactionsCommand => new RelayCommand(OnTransactionExecuted);
 
         public bool TransactionsToggle
         {

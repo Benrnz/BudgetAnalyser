@@ -53,10 +53,7 @@ namespace BudgetAnalyser
         public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
 
-        public IEnumerable<ControllerBase> Controllers
-        {
-            get { return this.controllers ?? (this.controllers = DiscoverAllControllers()); }
-        }
+        public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
 
         public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
         public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
@@ -79,10 +76,7 @@ namespace BudgetAnalyser
         public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
 
-        public IEnumerable<IShowableController> ShowableControllers
-        {
-            get { return Controllers.OfType<IShowableController>(); }
-        }
+        public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
 
         public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
         public SplitTransactionController SplitTransactionController { get; set; }

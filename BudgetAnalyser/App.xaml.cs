@@ -12,7 +12,7 @@ namespace BudgetAnalyser
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App 
     {
         private ILogger logger;
         private ShellController shellController;
@@ -30,16 +30,13 @@ namespace BudgetAnalyser
             Current.Exit += OnApplicationExit;
 
             var compositionRoot = new CompositionRoot();
-            compositionRoot.Compose(this);
+            compositionRoot.Compose();
             this.logger = compositionRoot.Logger;
 
             this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
             this.logger.LogAlways(_ => compositionRoot.ShellController.DashboardController.VersionString);
             this.shellController = compositionRoot.ShellController;
-            if (this.shellController != null)
-            {
-                this.shellController.Initialize();
-            }
+            this.shellController?.Initialize();
 
             compositionRoot.ShellWindow.DataContext = compositionRoot.ShellController;
             this.logger.LogInfo(_ => "Initialisation finished.");

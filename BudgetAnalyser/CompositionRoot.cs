@@ -53,9 +53,8 @@ namespace BudgetAnalyser
         /// <summary>
         ///     Register all IoC mappings and instantiate the object graph required to run the application.
         /// </summary>
-        /// <param name="app">The main <see cref="Application" /> object for this Windows application.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "IoC Config")]
-        public void Compose(Application app)
+        public void Compose()
         {
             var builder = new ContainerBuilder();
 
@@ -72,12 +71,12 @@ namespace BudgetAnalyser
             RegistrationsForReesWpf(builder);
 
 
-            AllLocalNonAutomaticRegistrations(app, builder);
+            AllLocalNonAutomaticRegistrations();
 
             BuildApplicationObjectGraph(builder);
         }
 
-        private static void AllLocalNonAutomaticRegistrations(Application app, ContainerBuilder builder)
+        private static void AllLocalNonAutomaticRegistrations()
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.

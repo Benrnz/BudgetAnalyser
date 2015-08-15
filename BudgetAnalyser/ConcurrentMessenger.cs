@@ -74,19 +74,28 @@ namespace BudgetAnalyser
 
         public void Send<TMessage>(TMessage message)
         {
-            this.defaultMessenger.Send(message);
+            lock (SyncRoot)
+            {
+                this.defaultMessenger.Send(message);
+            }
             this.logger.LogInfo(l => l.Format("IMessenger.Send {0}", message));
         }
 
         public void Send<TMessage, TTarget>(TMessage message)
         {
-            this.defaultMessenger.Send<TMessage, TTarget>(message);
+            lock (SyncRoot)
+            {
+                this.defaultMessenger.Send<TMessage, TTarget>(message);
+            }
             this.logger.LogInfo(l => l.Format("IMessenger.Send {0} to target {1}", message, typeof(TTarget).FullName));
         }
 
         public void Send<TMessage>(TMessage message, object token)
         {
-            this.defaultMessenger.Send(message, token);
+            lock (SyncRoot)
+            {
+                this.defaultMessenger.Send(message, token);
+            }
             this.logger.LogInfo(l => l.Format("IMessenger.Send {0} with token {1}", message, token));
         }
 
