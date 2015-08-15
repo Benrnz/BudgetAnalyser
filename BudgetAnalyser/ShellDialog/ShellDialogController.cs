@@ -85,7 +85,9 @@ namespace BudgetAnalyser.ShellDialog
 
         public bool HelpButtonVisible
         {
-            get { return this.doNotUseHelpButtonVisible; }
+            [Engine.Annotations.UsedImplicitly]
+            get
+            { return this.doNotUseHelpButtonVisible; }
             set
             {
                 this.doNotUseHelpButtonVisible = value;
@@ -118,7 +120,9 @@ namespace BudgetAnalyser.ShellDialog
 
         public string Title
         {
-            get { return this.doNotUseTitle; }
+            [Engine.Annotations.UsedImplicitly]
+            get
+            { return this.doNotUseTitle; }
             set
             {
                 this.doNotUseTitle = value;
