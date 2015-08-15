@@ -34,7 +34,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public IMessenger MessengerInstance { get; set; }
+        public IMessenger MessengerInstance { get; }
 
         internal bool Dirty
         {
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         internal ILedgerService LedgerService { get; set; }
 
-        internal LedgerBookViewModel ViewModel { get; set; }
+        internal LedgerBookViewModel ViewModel { get; }
 
         public void Close()
         {

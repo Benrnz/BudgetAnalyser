@@ -30,6 +30,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool AddingNewTask
         {
+            [UsedImplicitly]
             get { return this.doNotUseAddingNewTask; }
             private set
             {
@@ -38,13 +39,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        [UsedImplicitly]
         public  ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
 
+        [UsedImplicitly]
         public  ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
 
         public string NewTaskDescription
         {
             get { return this.doNotUseNewTaskDescription; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseNewTaskDescription = value;
@@ -52,10 +56,13 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        [UsedImplicitly]
         public  ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
 
-        public  ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);
+        [UsedImplicitly]
+        public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);
 
+        [UsedImplicitly]
         public ToDoTask SelectedTask
         {
             get { return this.doNotUseSelectedTask; }
@@ -77,7 +84,8 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public  string Title => "Reconciliation Reminders and To Do's";
+        [UsedImplicitly]
+        public string Title => "Reconciliation Reminders and To Do's";
 
         public void Close()
         {

@@ -56,14 +56,14 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler<LedgerTransactionEventArgs> Complete;
 
-        public IEnumerable<Account> Accounts
-        {
-            get { return this.ledgerService.ValidLedgerAccounts(); }
-        }
+        [UsedImplicitly]
+        public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
-        public  ICommand AddTransactionCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand);
+        [UsedImplicitly]
+        public ICommand AddTransactionCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand);
 
-        public  ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
+        [UsedImplicitly]
+        public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
 
         public  bool InBalanceAdjustmentMode => LedgerEntry == null;
 
@@ -143,9 +143,10 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public  decimal TransactionsTotal => ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Amount);
+        public  decimal TransactionsTotal => ShownTransactions?.Sum(t => t.Amount) ?? 0;
 
-        public  ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
+        [UsedImplicitly]
+        public ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
 
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.

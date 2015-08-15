@@ -22,7 +22,6 @@ namespace BudgetAnalyser.LedgerBook
         private readonly IUserMessageBox messageBox;
         private Guid correlationId;
         private LedgerBucket ledger;
-        private Engine.Ledger.LedgerBook ledgerBook;
 
         public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext context, [NotNull] ILedgerService ledgerService)
         {
@@ -49,9 +48,11 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public event EventHandler Updated;
+        [UsedImplicitly]
         public ObservableCollection<Account> BankAccounts { get; private set; }
         public BudgetBucket BucketBeingTracked { get; private set; }
         public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
+        [UsedImplicitly]
         public decimal MonthlyBudgetAmount { get; private set; }
         public Account StoredInAccount { get; set; }
 
@@ -78,7 +79,6 @@ namespace BudgetAnalyser.LedgerBook
             }
             LedgerBucketHistoryAnalysis.Analyse(ledgerBucket, parentLedgerBook);
             this.ledger = ledgerBucket;
-            this.ledgerBook = parentLedgerBook;
             BankAccounts = new ObservableCollection<Account>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerBucket.BudgetBucket;
             StoredInAccount = ledgerBucket.StoredInAccount;

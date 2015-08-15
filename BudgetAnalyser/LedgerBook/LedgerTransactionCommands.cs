@@ -12,9 +12,13 @@ namespace BudgetAnalyser.LedgerBook
     public static class LedgerTransactionCommands
     {
         [PropertyInjection]
-        public static IMessenger MessengerInstance { get; set; }
+        public static IMessenger MessengerInstance
+        {
+            get;
+            [Engine.Annotations.UsedImplicitly] set;
+        }
 
-        public  static ICommand NavigateToTransactionCommand => new RelayCommand<Guid?>(OnNavigateToTransactionCommandExecute, CanExecuteNavigateToTransactionCommand);
+        public static ICommand NavigateToTransactionCommand => new RelayCommand<Guid?>(OnNavigateToTransactionCommandExecute, CanExecuteNavigateToTransactionCommand);
 
         private static bool CanExecuteNavigateToTransactionCommand(Guid? transactionId)
         {

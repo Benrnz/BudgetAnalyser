@@ -63,7 +63,8 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public  ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
+        [UsedImplicitly]
+        public ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
 
         public decimal? AdjustedBankBalanceTotal
         {
@@ -72,7 +73,9 @@ namespace BudgetAnalyser.LedgerBook
 
         public IEnumerable<Account> BankAccounts
         {
-            get { return this.doNotUseBankAccounts; }
+            [UsedImplicitly]
+            get
+            { return this.doNotUseBankAccounts; }
             private set
             {
                 this.doNotUseBankAccounts = value;
@@ -145,7 +148,8 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         public  bool HasRequiredBalances => this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
 
-        public  ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable);
+        [UsedImplicitly]
+        public ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable);
 
         public Account SelectedBankAccount
         {
@@ -176,7 +180,7 @@ namespace BudgetAnalyser.LedgerBook
 
             var requestFilterMessage = new RequestFilterMessage(this);
             MessengerInstance.Send(requestFilterMessage);
-            Date = requestFilterMessage.Criteria.EndDate == null ? DateTime.Today : requestFilterMessage.Criteria.EndDate.Value.AddDays(1);
+            Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateTime.Today;
 
             ShowDialogCommon("New Monthly Reconciliation");
         }

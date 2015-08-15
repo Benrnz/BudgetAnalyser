@@ -37,10 +37,11 @@ namespace BudgetAnalyser.LedgerBook
                     return Balance;
                 }
                 BankBalanceAdjustmentTransaction adjustment = this.line.BankBalanceAdjustments.FirstOrDefault(b => b.BankAccount == Account);
-                return adjustment == null ? Balance : Balance + adjustment.Amount;
+                return Balance + adjustment?.Amount ?? Balance;
             }
         }
 
-        public  bool ShowAdjustedBalance => this.line != null;
+        [Engine.Annotations.UsedImplicitly]
+        public bool ShowAdjustedBalance => this.line != null;
     }
 }
