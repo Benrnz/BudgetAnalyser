@@ -13,8 +13,7 @@ namespace BudgetAnalyser.Statement
             InitializeComponent();
         }
 
-        public  Account Account => (Account)DataContext;
-
-        public  string FriendlyAccountName => Account.ToString();
+        public Account Account => (Account)DataContext;
+        public string FriendlyAccountName => Account.ToString();
     }
 }

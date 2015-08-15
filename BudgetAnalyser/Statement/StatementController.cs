@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Statement
             this.transactionService.Saved += OnSavedNotificationReceived;
         }
 
-        public  AppliedRulesController AppliedRulesController => this.uiContext.AppliedRulesController;
+        public AppliedRulesController AppliedRulesController => this.uiContext.AppliedRulesController;
 
         /// <summary>
         ///     Gets or sets the bucket filter.
@@ -104,14 +104,12 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public  ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
-
-        public  ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
-
+        public ICommand DeleteTransactionCommand => new RelayCommand(OnDeleteTransactionCommandExecute, ViewModel.HasSelectedRow);
+        public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         public StatementControllerFileOperations FileOperations { get; }
 
         [Engine.Annotations.UsedImplicitly]
-        public  ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
+        public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
 
         public bool Shown
         {
@@ -128,24 +126,17 @@ namespace BudgetAnalyser.Statement
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public  ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
+        public ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
 
         [Engine.Annotations.UsedImplicitly]
-        public  ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
+        public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public string TextFilter
         {
             get { return this.doNotUseTextFilter; }
             set
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    this.doNotUseTextFilter = null;
-                }
-                else
-                {
-                    this.doNotUseTextFilter = value;
-                }
+                this.doNotUseTextFilter = string.IsNullOrEmpty(value) ? null : value;
 
                 RaisePropertyChanged();
                 ViewModel.Transactions = this.transactionService.FilterBySearchText(TextFilter);
@@ -153,11 +144,9 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public  StatementViewModel ViewModel => FileOperations.ViewModel;
-
-internal  EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
-
-internal  SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
+        public StatementViewModel ViewModel => FileOperations.ViewModel;
+        internal EditingTransactionController EditingTransactionController => this.uiContext.EditingTransactionController;
+        internal SplitTransactionController SplitTransactionController => this.uiContext.SplitTransactionController;
 
         public void Initialize()
         {

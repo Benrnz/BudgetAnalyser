@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Statement
 
         public bool LoadingData
         {
-            get { return this.doNotUseLoadingData; }
+            [UsedImplicitly] get { return this.doNotUseLoadingData; }
             private set
             {
                 this.doNotUseLoadingData = value;

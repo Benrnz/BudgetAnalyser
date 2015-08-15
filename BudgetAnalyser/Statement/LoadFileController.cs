@@ -78,20 +78,15 @@ namespace BudgetAnalyser.Statement
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
-        public  string AccountNameHelp => "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file.";
+        [UsedImplicitly]
+        public string AccountNameHelp => "When importing a new bank statement file, you must select the account the statement comes from.\nThis allows merging of multiple accounts into one file.";
 
         public string ActionButtonToolTip { get; private set; }
-
-        public  ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
-
-        public  bool CanExecuteCancelButton => true;
-
+        public ICommand BrowseForFileCommand => new RelayCommand(OnBrowseForFileCommandExecute);
+        public bool CanExecuteCancelButton => true;
         public bool CanExecuteOkButton { get; private set; }
-
-        public  bool CanExecuteSaveButton => false;
-
-        public  string CloseButtonToolTip => "Cancel";
-
+        public bool CanExecuteSaveButton => false;
+        public string CloseButtonToolTip => "Cancel";
         public IEnumerable<Account> ExistingAccountNames { get; private set; }
 
         public string FileName
@@ -125,7 +120,7 @@ namespace BudgetAnalyser.Statement
         }
 
         public bool? LastFileWasBudgetAnalyserStatementFile { get; private set; }
-        public bool MergeMode { get; private set; }
+        public bool MergeMode { [UsedImplicitly] get; private set; }
 
         public Account SelectedExistingAccountName
         {
@@ -140,7 +135,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public string SuggestedDateRange { get; private set; }
+        public string SuggestedDateRange { [UsedImplicitly] get; private set; }
 
         public string Title
         {
@@ -251,18 +246,18 @@ namespace BudgetAnalyser.Statement
 
             if (SelectedExistingAccountName == null)
             {
-                this.CanExecuteOkButton = false;
+                CanExecuteOkButton = false;
                 return;
             }
 
-            this.CanExecuteOkButton = true;
+            CanExecuteOkButton = true;
         }
 
         private async void CheckFileName()
         {
             if (string.IsNullOrEmpty(FileName))
             {
-                this.CanExecuteOkButton = false;
+                CanExecuteOkButton = false;
                 FileTypeSelectionReady = false;
                 return;
             }
@@ -271,13 +266,13 @@ namespace BudgetAnalyser.Statement
             if (LastFileWasBudgetAnalyserStatementFile ?? false)
             {
                 FileTypeSelectionReady = false;
-                this.CanExecuteOkButton = true;
+                CanExecuteOkButton = true;
             }
             else
             {
                 // Appears to be a new statement that has never been loaded before.
                 FileTypeSelectionReady = true;
-                this.CanExecuteOkButton = true;
+                CanExecuteOkButton = true;
             }
         }
 
@@ -304,10 +299,7 @@ namespace BudgetAnalyser.Statement
                 if (disposing)
                 {
                     // Dispose managed resources. 
-                    if (this.fileSelectionTask != null)
-                    {
-                        this.fileSelectionTask.Dispose();
-                    }
+                    this.fileSelectionTask?.Dispose();
                 }
             }
 
@@ -383,10 +375,7 @@ namespace BudgetAnalyser.Statement
                 Title = Title
             };
 
-            if (this.fileSelectionTask != null)
-            {
-                this.fileSelectionTask.Dispose();
-            }
+            this.fileSelectionTask?.Dispose();
 
             this.fileSelectionTask = new Task(() => { });
             MessengerInstance.Send(popRequest);

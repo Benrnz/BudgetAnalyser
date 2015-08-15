@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Statement
             InitializeComponent();
         }
 
-private  StatementController Controller => (StatementController)DataContext;
+        private StatementController Controller => (StatementController)DataContext;
 
         private static void AnimateWidth(FrameworkElement element, double from, double to)
         {

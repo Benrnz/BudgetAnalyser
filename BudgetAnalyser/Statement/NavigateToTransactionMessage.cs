@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("NavigateToTransactionMessage");
             }
 
-            this.Success = false;
+            Success = false;
             this.cancellationSource.Cancel();
         }
 
@@ -71,7 +71,7 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("NavigateToTransactionMessage");
             }
 
-            this.Success = true;
+            Success = true;
             WhenReadyToNavigate.Start();
         }
 

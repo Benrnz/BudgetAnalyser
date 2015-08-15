@@ -43,8 +43,7 @@ namespace BudgetAnalyser.Statement
         }
 
         private IMessenger MessengerInstance { get; }
-
-private  StatementViewModel ViewModel => this.controller.ViewModel;
+        private StatementViewModel ViewModel => this.controller.ViewModel;
 
         private bool NavigateToTransactionOutsideOfFilter(Guid transactionId)
         {
