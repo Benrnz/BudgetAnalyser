@@ -50,16 +50,19 @@ namespace BudgetAnalyser.ReportsCatalog
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
         }
 
-        public  ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
+        [UsedImplicitly]
+        public ICommand BudgetPieCommand => new RelayCommand(OnBudgetPieCommandExecute, CanExecuteBudgetPieCommand);
 
         public BudgetPieController BudgetPieController { get; }
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; }
 
-        public  ICommand LongTermSpendingGraphCommand => new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null);
+        [UsedImplicitly]
+        public ICommand LongTermSpendingGraphCommand => new RelayCommand(OnLongTermSpendingGraphCommandExecute, () => this.currentStatementModel != null);
 
         public LongTermSpendingGraphController LongTermSpendingGraphController { get; }
 
-        public  ICommand OverallBudgetPerformanceCommand => new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
+        [UsedImplicitly]
+        public ICommand OverallBudgetPerformanceCommand => new RelayCommand(OnOverallBudgetPerformanceCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
 
         public OverallPerformanceController OverallPerformanceController { get; }
 
@@ -77,19 +80,19 @@ namespace BudgetAnalyser.ReportsCatalog
             }
         }
 
-        public  ICommand SpendingTrendCommand => new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
+        [UsedImplicitly]
+        public ICommand SpendingTrendCommand => new RelayCommand(OnSpendingTrendCommandExecute, CanExecuteOverallBudgetPerformanceCommand);
 
         private bool CanExecuteBudgetPieCommand()
         {
-            return this.budgets != null && this.budgets.CurrentActiveBudget != null;
+            return this.budgets?.CurrentActiveBudget != null;
         }
 
         private bool CanExecuteOverallBudgetPerformanceCommand()
         {
             return this.currentStatementModel != null
                    && this.currentStatementModel.Transactions.Any()
-                   && this.budgets != null
-                   && this.budgets.CurrentActiveBudget != null;
+                   && this.budgets?.CurrentActiveBudget != null;
         }
 
         private void OnBudgetPieCommandExecute()

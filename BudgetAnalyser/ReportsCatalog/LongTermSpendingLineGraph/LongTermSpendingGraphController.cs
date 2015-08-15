@@ -34,7 +34,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public decimal GraphMaximumValue
         {
-            get { return this.doNotUseGraphMaximumValue; }
+            [UsedImplicitly] get { return this.doNotUseGraphMaximumValue; }
             set
             {
                 this.doNotUseGraphMaximumValue = value;
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public decimal GraphMinimumValue
         {
-            get { return this.doNotUseGraphMinimumValue; }
+            [UsedImplicitly] get { return this.doNotUseGraphMinimumValue; }
             set
             {
                 this.doNotUseGraphMinimumValue = value;
@@ -54,7 +54,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public DatedGraphPlot SelectedPlotPoint
         {
-            get { return this.doNotUseSelectedPlotPoint; }
+            [UsedImplicitly] get { return this.doNotUseSelectedPlotPoint; }
             set
             {
                 this.doNotUseSelectedPlotPoint = value;
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public SeriesData SelectedSeriesData
         {
-            get { return this.doNotUseSelectedSeriesData; }
+            [UsedImplicitly] get { return this.doNotUseSelectedSeriesData; }
             set
             {
                 this.doNotUseSelectedSeriesData = value;
@@ -73,7 +73,8 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public  string Title => "Long Term Spending Line Graph";
+        [UsedImplicitly]
+        public string Title => "Long Term Spending Line Graph";
 
         public bool ToggleAll
         {
@@ -100,12 +101,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         private void ToggleAllLinesVisibility()
         {
-            if (Graph == null)
-            {
-                return;
-            }
-
-            Graph.Series.ToList().ForEach(s => s.Visible = ToggleAll);
+            Graph?.Series.ToList().ForEach(s => s.Visible = ToggleAll);
         }
     }
 }

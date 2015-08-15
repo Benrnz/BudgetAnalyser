@@ -33,7 +33,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public bool ExpenseFilter
         {
-            get { return this.doNotUseExpenseFilter; }
+            [UsedImplicitly] get { return this.doNotUseExpenseFilter; }
 
             set
             {
@@ -55,10 +55,11 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             }
         }
 
-        public double OverallPerformance { get; private set; }
+        public double OverallPerformance { [UsedImplicitly] get; private set; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
-        public  string Title => "Overall Budget Performance";
+        [UsedImplicitly]
+        public string Title => "Overall Budget Performance";
 
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
@@ -89,7 +90,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         private void RefreshCollection()
         {
-            if (Analysis == null || Analysis.Analyses == null || Analysis.Analyses.None())
+            if (Analysis?.Analyses == null || Analysis.Analyses.None())
             {
                 return;
             }

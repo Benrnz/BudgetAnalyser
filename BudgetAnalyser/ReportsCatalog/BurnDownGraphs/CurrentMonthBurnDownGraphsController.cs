@@ -56,13 +56,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
-        public  ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
         public string DateRangeDescription
         {
-            get { return this.doNotUseDateRangeDescription; }
+            [Engine.Annotations.UsedImplicitly] get { return this.doNotUseDateRangeDescription; }
             private set
             {
                 this.doNotUseDateRangeDescription = value;
@@ -70,12 +71,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        public  ICommand RemoveChartCommand => new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute);
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand RemoveChartCommand => new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute);
 
         public BucketBurnDownController SelectedChart
         {
             get { return this.doNotUseSelectedChart; }
 
+            [Engine.Annotations.UsedImplicitly]
             set
             {
                 if (value == null)
@@ -89,7 +92,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public  string Title => "Current Month Burndown Graphs";
+        [Engine.Annotations.UsedImplicitly]
+        public string Title => "Current Month Burndown Graphs";
 
         public void Load(
             [NotNull] StatementModel statementModel,

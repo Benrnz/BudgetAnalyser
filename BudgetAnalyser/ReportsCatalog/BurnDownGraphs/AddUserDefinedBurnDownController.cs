@@ -34,15 +34,20 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             this.chartsService = chartsService;
         }
 
-        public  ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
+        [UsedImplicitly]
+        public ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
-        public  ICommand AddSelectedCommand => new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute);
+        [UsedImplicitly]
+        public ICommand AddSelectedCommand => new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public string ChartTitle { get; set; }
 
-        public  ICommand RemoveSelectedCommand => new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute);
+        [UsedImplicitly]
+        public ICommand RemoveSelectedCommand => new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public BindingList<BudgetBucket> SelectedBuckets { get; private set; }
+
+        [UsedImplicitly]
         public BindingList<BudgetBucket> UnselectedBuckets { get; private set; }
 
         public bool AddChart()
@@ -60,7 +65,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             return false;
         }
 
-        private bool AddSelectedCommandCanExecute(BudgetBucket parameter)
+        private static bool AddSelectedCommandCanExecute(BudgetBucket parameter)
         {
             return parameter != null;
         }
