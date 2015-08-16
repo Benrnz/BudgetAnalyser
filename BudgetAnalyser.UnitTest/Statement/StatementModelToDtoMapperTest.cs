@@ -13,8 +13,7 @@ namespace BudgetAnalyser.UnitTest.Statement
     public class StatementModelToDtoMapperTest
     {
         private TransactionSetDto Result { get; set; }
-
-private  StatementModel TestData => StatementModelTestData.TestData2();
+        private StatementModel TestData => StatementModelTestData.TestData2();
 
         [TestMethod]
         public void ShouldMapAllTransactions()

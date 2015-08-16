@@ -14,18 +14,14 @@ namespace BudgetAnalyser.UnitTest.Reports
     [TestClass]
     public class BurnDownGraphAnalyserTest
     {
-private  SeriesData BalanceLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName);
-
+        private SeriesData BalanceLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BalanceSeriesName);
         private BudgetModel Budget { get; set; }
-
-private  SeriesData BudgetLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName);
-
+        private SeriesData BudgetLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.BudgetSeriesName);
         private LedgerBook LedgerBook { get; set; }
         private BurnDownChartAnalyserResult Result { get; set; }
         private StatementModel StatementModel { get; set; }
         private BurnDownChartAnalyser Subject { get; set; }
-
-private  SeriesData ZeroLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName);
+        private SeriesData ZeroLine => Result.GraphLines.Series.Single(s => s.SeriesName == BurnDownChartAnalyserResult.ZeroSeriesName);
 
         [TestMethod]
         public void AnalyseShouldReturn31DaysOfBalanceLineElements()

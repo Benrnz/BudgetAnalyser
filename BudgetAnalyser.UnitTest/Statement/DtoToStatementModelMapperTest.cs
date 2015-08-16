@@ -12,8 +12,7 @@ namespace BudgetAnalyser.UnitTest.Statement
     public class DtoToStatementModelMapperTest
     {
         private StatementModel Result { get; set; }
-
-private  TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();
+        private TransactionSetDto TestData => TransactionSetDtoTestData.TestData2();
 
         [TestMethod]
         public void ChangeHashShouldNotBeNull()

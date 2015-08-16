@@ -10,8 +10,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class BankBalanceToDtoMapperTest
     {
         private BankBalanceDto Result { get; set; }
-
-private  BankBalance TestData => new BankBalance(StatementModelTestData.ChequeAccount, 44552.21M);
+        private BankBalance TestData => new BankBalance(StatementModelTestData.ChequeAccount, 44552.21M);
 
         [TestMethod]
         public void ShouldMapAmount()

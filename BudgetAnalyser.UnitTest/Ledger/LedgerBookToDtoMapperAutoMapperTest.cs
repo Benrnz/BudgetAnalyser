@@ -11,8 +11,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class LedgerBookToDtoMapperAutoMapperTest
     {
         private LedgerBookDto Result { get; set; }
-
-private  LedgerBook TestData => LedgerBookTestData.TestData4();
+        private LedgerBook TestData => LedgerBookTestData.TestData4();
 
         [TestMethod]
         public void ShouldMapFileName()
