@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -114,23 +115,13 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime lastDate,
             decimal openingBalance)
         {
-            // The below query excludes Surplus buckets - as there are sub-classes that should be treated as Surplus, and a simple join checking for equality will exclude them.
-            // For example: If you have a FixedBudgetProjectBucket which inherits from SurplusBucket, joining on Bucket to the Transactions list will exclude the FixedBudgetProjectBuckets because they will not be defined in the report.
+            // The below query has to cater for special Surplus buckets which are intended to be equivelent but use a type hierarchy with inheritance.
             var query = statementModel.Transactions
-                .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t)
-                .Where(t => t.Date >= beginDate && t.Date <= lastDate && !(t.BudgetBucket is SurplusBucket))
+                .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t, new SurplusAgnosticBucketComparer())
+                .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)
                 .Select(t => new ReportTransactionWithRunningBalance { Amount = t.Amount, Date = t.Date, Narrative = t.Description })
                 .ToList();
-
-            // Add Surplus buckets if any are included in the bucketsToInclude list.
-            if (bucketsToInclude.Any(b => b is SurplusBucket))
-            {
-                query.AddRange(statementModel.Transactions
-                    .Where(t => t.Date >= beginDate && t.Date <= lastDate && t.BudgetBucket is SurplusBucket)
-                    .Select(t => new ReportTransactionWithRunningBalance { Amount = t.Amount, Date = t.Date, Narrative = t.Description }));
-                query = query.OrderBy(t => t.Date).ToList();
-            }
 
             // Insert the opening balance transaction with the earliest date in the list.
             query.Insert(0, new ReportTransactionWithRunningBalance { Amount = openingBalance, Date = beginDate.AddSeconds(-1), Narrative = "Opening Balance", Balance = openingBalance });
