@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -12,6 +13,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Initializes a new instance of the <see cref="CorruptedLedgerBookException" /> class.
         /// </summary>
+        [UsedImplicitly]
         public CorruptedLedgerBookException()
         {
         }

@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="BudgetAnalyser.LedgerBook.BankBalanceUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <!-- A single Bank Balance line for a single account -->
     <!-- DataContext: BankBalanceViewModel OR BankBalance -->
-    
+
     <Grid Margin="1"
           Background="{StaticResource Brush.TileBackground}">
         <Grid.ColumnDefinitions>
@@ -13,22 +13,21 @@
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
-        <ContentPresenter Content="{Binding Account}" 
-                          Height="60"/>
-        
+
+        <ContentPresenter Content="{Binding Account}"
+                          Height="60" />
+
         <TextBlock Grid.Column="1"
                    Style="{StaticResource TextBlock.ImportantNumber}"
-                   Text="{Binding Balance, StringFormat=N}" 
-                   ToolTip="The bank balance, as it was entered (unadjusted)."
-                   />
+                   Text="{Binding Balance, StringFormat=N}"
+                   ToolTip="The bank balance, as it was entered (unadjusted)." />
 
         <TextBlock Grid.Column="2"
                    Style="{StaticResource TextBlock.ImportantNumber}"
                    Text="{Binding AdjustedBalance, StringFormat=N}"
                    ToolTip="The adjusted bank balance (AccountBankBalance + AnyBalanceAdjustments)"
-                   Visibility="{Binding ShowAdjustedBalance, Converter={StaticResource Converter.BoolToVis}}"/>
-        
+                   Visibility="{Binding ShowAdjustedBalance, Converter={StaticResource Converter.BoolToVis}}" />
+
         <Button Style="{StaticResource Button.Round.Cross}"
                 Grid.Column="3"
                 Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.RemoveBankBalanceCommand}"

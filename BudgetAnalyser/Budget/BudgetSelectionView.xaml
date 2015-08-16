@@ -12,7 +12,7 @@
         <converters:BudgetNameViewModelConverter x:Key="Converter.BudgetNameViewModel" />
 
         <DataTemplate DataType="{x:Type budget:BudgetModel}">
-            <Grid Margin="2"> 
+            <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -22,8 +22,9 @@
                         <MultiBinding Converter="{StaticResource Converter.BudgetNameViewModel}">
                             <MultiBinding.Bindings>
                                 <Binding Path="." />
-                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=budget1:BudgetSelectionView}"
-                                         Path="DataContext.Budgets" />
+                                <Binding
+                                    RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=budget1:BudgetSelectionView}"
+                                    Path="DataContext.Budgets" />
                             </MultiBinding.Bindings>
                         </MultiBinding>
                     </budget1:BudgetModelNameUserControl.DataContext>
@@ -58,9 +59,9 @@
                       Margin="10"
                       VerticalAlignment="Top"
                       VerticalScrollBarVisibility="Auto">
-            <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}" 
-                     ItemsSource="{Binding Budgets}" 
-                     SelectedItem="{Binding Selected}"/>
+            <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
+                     ItemsSource="{Binding Budgets}"
+                     SelectedItem="{Binding Selected}" />
         </ScrollViewer>
     </Grid>
 

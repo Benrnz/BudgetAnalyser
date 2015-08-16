@@ -3,6 +3,6 @@
     public enum WeeklyOrFortnightly
     {
         Weekly,
-        Fortnightly,
+        Fortnightly
     }
 }

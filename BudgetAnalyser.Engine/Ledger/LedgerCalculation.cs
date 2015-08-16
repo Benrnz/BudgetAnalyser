@@ -24,21 +24,24 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static DateTime CacheLastUpdated;
 
-        public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
+        public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances(
+            [NotNull] LedgerBook ledgerBook,
+            [NotNull] GlobalFilterCriteria filter,
+            [NotNull] StatementModel statement)
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             var ledgers = new Dictionary<BudgetBucket, decimal>();
@@ -62,17 +65,17 @@ namespace BudgetAnalyser.Engine.Ledger
             CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (filter.Cleared || filter.BeginDate == null)
@@ -112,12 +115,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (ledger == null)
             {
-                throw new ArgumentNullException("ledger");
+                throw new ArgumentNullException(nameof(ledger));
             }
 
             // Given the same ledger, statement and begin date this data won't change.
@@ -168,12 +171,12 @@ namespace BudgetAnalyser.Engine.Ledger
             CheckCacheForCleanUp();
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             LedgerEntryLine line = LocateApplicableLedgerLine(ledgerBook, filter);
@@ -198,7 +201,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (filter == null)
             {
-                throw new ArgumentNullException("filter");
+                throw new ArgumentNullException(nameof(filter));
             }
 
             if (filter.Cleared)
@@ -256,7 +259,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
             foreach (LedgerEntry entry in currentLegderLine.Entries)
             {
-                var transactionsSubset = transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket);
+                IEnumerable<Transaction> transactionsSubset = transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket);
                 decimal balance = entry.Balance + transactionsSubset.Sum(t => t.Amount);
                 ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, balance);
             }
@@ -300,7 +303,7 @@ namespace BudgetAnalyser.Engine.Ledger
             List<ReportTransaction> overSpendTransactions,
             DateTime currentDate)
         {
-            foreach (var runningBalance in runningBalances)
+            foreach (KeyValuePair<BudgetBucket, decimal> runningBalance in runningBalances)
             {
                 decimal previousBalance = previousBalances[runningBalance.Key];
 
@@ -316,12 +319,13 @@ namespace BudgetAnalyser.Engine.Ledger
                 if (runningBalance.Value < 0 && previousBalance >= 0)
                 {
                     // Ledger has been overdrawn today.
-                    overSpendTransactions.Add(new ReportTransaction
-                    {
-                        Date = currentDate,
-                        Amount = runningBalance.Value,
-                        Narrative = runningBalance.Key + " overdrawn - will be supplemented from Surplus."
-                    });
+                    overSpendTransactions.Add(
+                        new ReportTransaction
+                        {
+                            Date = currentDate,
+                            Amount = runningBalance.Value,
+                            Narrative = runningBalance.Key + " overdrawn - will be supplemented from Surplus."
+                        });
                     continue;
                 }
 
@@ -329,28 +333,30 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     // Ledger was overdrawn yesterday and is still overdrawn today. Ensure the difference is added to the overSpend.
                     decimal amount = -(previousBalance - runningBalance.Value);
-                    overSpendTransactions.Add(new ReportTransaction
-                    {
-                        Date = currentDate,
-                        Amount = amount,
-                        Narrative = string.Format(
-                            CultureInfo.CurrentCulture,
-                            "{0} was overdrawn, {1}. Will be supplemented from Surplus.",
-                            runningBalance.Key,
-                            amount < 0 ? "and has been further overdrawn" : "has been credited, but is still overdrawn"),
-                    });
+                    overSpendTransactions.Add(
+                        new ReportTransaction
+                        {
+                            Date = currentDate,
+                            Amount = amount,
+                            Narrative = string.Format(
+                                CultureInfo.CurrentCulture,
+                                "{0} was overdrawn, {1}. Will be supplemented from Surplus.",
+                                runningBalance.Key,
+                                amount < 0 ? "and has been further overdrawn" : "has been credited, but is still overdrawn")
+                        });
                     continue;
                 }
 
                 if (runningBalance.Value >= 0 && previousBalance < 0)
                 {
                     // Ledger was overdrawn yesterday and is now back in credit.
-                    overSpendTransactions.Add(new ReportTransaction
-                    {
-                        Date = currentDate,
-                        Amount = -previousBalance,
-                        Narrative = runningBalance.Key + " was overdrawn, and has been credited back into a positive balance."
-                    });
+                    overSpendTransactions.Add(
+                        new ReportTransaction
+                        {
+                            Date = currentDate,
+                            Amount = -previousBalance,
+                            Narrative = runningBalance.Key + " was overdrawn, and has been credited back into a positive balance."
+                        });
                 }
             }
         }

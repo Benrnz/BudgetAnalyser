@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using BudgetAnalyser.Engine.Budget;
 
@@ -11,12 +10,9 @@ namespace BudgetAnalyser.Engine.Reports
     public class BucketPerformanceResult
     {
         public decimal AverageSpend { get; internal set; }
-
         public decimal Balance { get; internal set; }
         public BudgetBucket Bucket { get; internal set; }
-
         public decimal Budget { get; internal set; }
-
         public string BudgetComparedToAverage { get; internal set; }
         public decimal BudgetTotal { get; internal set; }
 

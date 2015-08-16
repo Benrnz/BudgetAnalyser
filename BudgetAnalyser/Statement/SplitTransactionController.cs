@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using BudgetAnalyser.Engine;
@@ -24,12 +23,12 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             this.bucketRepo = bucketRepo;
@@ -37,34 +36,16 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
 
-        public string ActionButtonToolTip
-        {
-            get { return "Save Split Transactions."; }
-        }
-
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
-
-        public bool CanExecuteOkButton
-        {
-            get { return false; }
-        }
-
-        public bool CanExecuteSaveButton
-        {
-            get { return Valid; }
-        }
-
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel."; }
-        }
+        public string ActionButtonToolTip => "Save Split Transactions.";
+        public IEnumerable<BudgetBucket> BudgetBuckets { [UsedImplicitly] get; private set; }
+        public bool CanExecuteCancelButton => true;
+        public bool CanExecuteOkButton => false;
+        public bool CanExecuteSaveButton => Valid;
+        public string CloseButtonToolTip => "Cancel.";
 
         public string InvalidMessage
         {
-            get { return this.doNotUseInvalidMessage; }
+            [UsedImplicitly] get { return this.doNotUseInvalidMessage; }
             private set
             {
                 this.doNotUseInvalidMessage = value;
@@ -102,10 +83,9 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public decimal TotalAmount
-        {
-            get { return SplinterAmount1 + SplinterAmount2; }
-        }
+        public BudgetBucket SplinterBucket1 { get; set; }
+        public BudgetBucket SplinterBucket2 { get; set; }
+        public decimal TotalAmount => SplinterAmount1 + SplinterAmount2;
 
         public bool Valid
         {
@@ -133,15 +113,9 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public IEnumerable<BudgetBucket> BudgetBuckets { get; private set; }
-
-        public BudgetBucket SplinterBucket1 { get; set; }
-
-        public BudgetBucket SplinterBucket2 { get; set; }
-
         public void ShowDialog(Transaction originalTransaction, Guid correlationId)
         {
-            BudgetBuckets = bucketRepo.Buckets;
+            BudgetBuckets = this.bucketRepo.Buckets;
             this.dialogCorrelationId = correlationId;
             OriginalTransaction = originalTransaction;
             SplinterAmount1 = OriginalTransaction.Amount;
@@ -151,7 +125,7 @@ namespace BudgetAnalyser.Statement
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
             {
                 CorrelationId = correlationId,
-                Title = "Split Transaction",
+                Title = "Split Transaction"
             };
             MessengerInstance.Send(dialogRequest);
         }

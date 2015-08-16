@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                 return new IncomeDto
                 {
                     Amount = 1444.22M,
-                    BudgetBucketCode = TestDataConstants.IncomeBucketCode,
+                    BudgetBucketCode = TestDataConstants.IncomeBucketCode
                 };
             }
         }
@@ -38,8 +38,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<Income>(TestData);
         }
     }

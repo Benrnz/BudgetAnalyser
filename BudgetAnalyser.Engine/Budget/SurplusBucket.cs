@@ -9,11 +9,10 @@
         {
         }
 
-        protected SurplusBucket(string bucketCode, string description) : base(bucketCode, description) { }
-
-        public override string TypeDescription
+        protected SurplusBucket(string bucketCode, string description) : base(bucketCode, description)
         {
-            get { return "Calculated Surplus"; }
         }
+
+        public override string TypeDescription => "Calculated Surplus";
     }
 }

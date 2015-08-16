@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -45,12 +45,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             string stringType = FetchString(array, index);
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -87,11 +87,11 @@ namespace BudgetAnalyser.Engine.Statement
             return retval;
         }
 
-        internal Decimal FetchDecimal([NotNull] string[] array, int index)
+        internal decimal FetchDecimal([NotNull] string[] array, int index)
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -100,8 +100,8 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             string stringToParse = array[index];
-            Decimal retval;
-            if (!Decimal.TryParse(stringToParse, out retval))
+            decimal retval;
+            if (!decimal.TryParse(stringToParse, out retval))
             {
                 this.logger.LogError(l => "BankImportUtilities: Unable to parse decimal: " + stringToParse);
                 throw new InvalidDataException("Expected decimal, but provided data is invalid. " + stringToParse);
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)
@@ -162,7 +162,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (index > array.Length - 1 || index < 0)

@@ -13,23 +13,7 @@ namespace BudgetAnalyser.UnitTest.Statement
     public class StatementModelToDtoMapperTest
     {
         private TransactionSetDto Result { get; set; }
-
-        private StatementModel TestData
-        {
-            get { return StatementModelTestData.TestData2(); }
-        }
-
-        [TestMethod]
-        public void ShouldMapFileName()
-        {
-            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
-        }
-
-        [TestMethod]
-        public void ShouldMapLastImport()
-        {
-            Assert.AreEqual(TestData.LastImport, Result.LastImport);
-        }
+        private StatementModel TestData => StatementModelTestData.TestData2();
 
         [TestMethod]
         public void ShouldMapAllTransactions()
@@ -47,17 +31,28 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ShouldMapAllTransactionsEvenWhenFiltered()
         {
-            var testData = TestData;
+            StatementModel testData = TestData;
             testData.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
             Act(testData);
 
             Assert.AreEqual(TestData.AllTransactions.Count(), Result.Transactions.Count);
         }
 
+        [TestMethod]
+        public void ShouldMapFileName()
+        {
+            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
+        }
+
+        [TestMethod]
+        public void ShouldMapLastImport()
+        {
+            Assert.AreEqual(TestData.LastImport, Result.LastImport);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
             Act(TestData);
         }
 

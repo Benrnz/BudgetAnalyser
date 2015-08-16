@@ -3,12 +3,13 @@
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    /// A generic delayed logging interface.
+    ///     A generic delayed logging interface.
     /// </summary>
     public interface ILogger
     {
         /// <summary>
-        /// A custom string format method to avoid code translation and localisation warnings. The logging language is always English.
+        ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
+        ///     English.
         /// </summary>
         string Format(string formatTemplate, params object[] parameters);
 

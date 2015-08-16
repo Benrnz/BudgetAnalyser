@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             this.bucketRepo = bucketRepo;

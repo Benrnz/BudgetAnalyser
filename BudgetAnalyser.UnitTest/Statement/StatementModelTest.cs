@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
@@ -34,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn1;
             }
@@ -54,7 +55,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn2;
             }
@@ -74,7 +75,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn3;
             }
@@ -94,7 +95,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn1;
             }
@@ -114,7 +115,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn2;
             }
@@ -134,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.Statement
                     Reference1 = "1",
                     Reference2 = "2",
                     Reference3 = "3",
-                    TransactionType = this.transactionType,
+                    TransactionType = this.transactionType
                 };
                 return txn3;
             }
@@ -143,8 +144,8 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void PerformanceOfValidateTest()
         {
-            var subject = StatementModelTestData.TestData1();
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            StatementModel subject = StatementModelTestData.TestData1();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             subject.ValidateAgainstDuplicates();
             stopwatch.Stop();
             Console.WriteLine("{0:N0} ms", stopwatch.ElapsedMilliseconds);
@@ -154,28 +155,28 @@ namespace BudgetAnalyser.UnitTest.Statement
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates1()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Transaction3, this.Duplicate1 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3, Duplicate1 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates2()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Duplicate2, this.Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Duplicate2, Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldFailWhenDuplicates3()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Duplicate3, this.Transaction1, this.Transaction2, this.Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Duplicate3, Transaction1, Transaction2, Transaction3 });
             Assert.IsTrue(statement.ValidateAgainstDuplicates().Any());
         }
 
         [TestMethod]
         public void ValidateShouldPassWhenNoDuplicates()
         {
-            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { this.Transaction1, this.Transaction2, this.Transaction3 });
+            StatementModel statement = new StatementModel(new FakeLogger()).LoadTransactions(new List<Transaction> { Transaction1, Transaction2, Transaction3 });
             Assert.IsFalse(statement.ValidateAgainstDuplicates().Any());
         }
     }

@@ -35,17 +35,17 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (addUserDefinedBurnDownController == null)
             {
-                throw new ArgumentNullException("addUserDefinedBurnDownController");
+                throw new ArgumentNullException(nameof(addUserDefinedBurnDownController));
             }
 
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (chartsService == null)
             {
-                throw new ArgumentNullException("chartsService");
+                throw new ArgumentNullException(nameof(chartsService));
             }
 
             this.addUserDefinedBurnDownController = addUserDefinedBurnDownController;
@@ -56,16 +56,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
-        public ICommand AddChartCommand
-        {
-            get { return new RelayCommand(OnAddChartCommandExecuted); }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
         public string DateRangeDescription
         {
-            get { return this.doNotUseDateRangeDescription; }
+            [Engine.Annotations.UsedImplicitly] get { return this.doNotUseDateRangeDescription; }
             private set
             {
                 this.doNotUseDateRangeDescription = value;
@@ -73,15 +71,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        public ICommand RemoveChartCommand
-        {
-            get { return new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute); }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand RemoveChartCommand => new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute);
 
         public BucketBurnDownController SelectedChart
         {
             get { return this.doNotUseSelectedChart; }
 
+            [Engine.Annotations.UsedImplicitly]
             set
             {
                 if (value == null)
@@ -95,10 +92,8 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Current Month Burndown Graphs"; }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public string Title => "Current Month Burndown Graphs";
 
         public void Load(
             [NotNull] StatementModel statementModel,
@@ -108,17 +103,17 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             this.statement = statementModel;

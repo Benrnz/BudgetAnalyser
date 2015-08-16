@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;
@@ -117,6 +117,40 @@ namespace BudgetAnalyser.Engine.Reports
             return result;
         }
 
+        private static void AnalysisPreconditions(GlobalFilterCriteria criteria, StatementModel statement, BudgetCollection budgets, out DateTime beginDate, out DateTime endDate)
+        {
+            if (criteria == null)
+            {
+                throw new ArgumentNullException(nameof(criteria));
+            }
+
+            if (!criteria.Cleared && (criteria.BeginDate == null || criteria.EndDate == null))
+            {
+                throw new ArgumentException("The given criteria does not contain any filtering dates.");
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement), "The statement supplied is null, analysis cannot proceed with no statement.");
+            }
+
+            if (budgets == null)
+            {
+                throw new ArgumentNullException(nameof(budgets));
+            }
+
+            if (criteria.Cleared)
+            {
+                beginDate = statement.AllTransactions.First().Date;
+                endDate = statement.AllTransactions.Last().Date;
+            }
+            else
+            {
+                beginDate = criteria.BeginDate ?? DateTime.MinValue;
+                endDate = criteria.EndDate ?? DateTime.MinValue;
+            }
+        }
+
         private static Func<BudgetModel, decimal> BuildExpenseFinder(BudgetBucket bucket)
         {
             return b =>
@@ -145,40 +179,6 @@ namespace BudgetAnalyser.Engine.Reports
             };
         }
 
-        private static void AnalysisPreconditions(GlobalFilterCriteria criteria, StatementModel statement, BudgetCollection budgets, out DateTime beginDate, out DateTime endDate)
-        {
-            if (criteria == null)
-            {
-                throw new ArgumentNullException("criteria");
-            }
-
-            if (!criteria.Cleared && (criteria.BeginDate == null || criteria.EndDate == null))
-            {
-                throw new ArgumentException("The given criteria does not contain any filtering dates.");
-            }
-
-            if (statement == null)
-            {
-                throw new ArgumentNullException("statement", "The statement supplied is null, analysis cannot proceed with no statement.");
-            }
-
-            if (budgets == null)
-            {
-                throw new ArgumentNullException("budgets");
-            }
-
-            if (criteria.Cleared)
-            {
-                beginDate = statement.AllTransactions.First().Date;
-                endDate = statement.AllTransactions.Last().Date;
-            }
-            else
-            {
-                beginDate = criteria.BeginDate.Value;
-                endDate = criteria.EndDate.Value;
-            }
-        }
-
         private static decimal CalculateBudgetedTotalAmount(DateTime beginDate, Func<BudgetModel, decimal> whichBudgetBucket, BudgetCollection budgets, OverallPerformanceBudgetResult result)
         {
             if (!result.UsesMultipleBudgets)
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             decimal budgetedAmount = 0;
-            for (int month = 0; month < result.DurationInMonths; month++)
+            for (var month = 0; month < result.DurationInMonths; month++)
             {
                 BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
                 budgetedAmount += whichBudgetBucket(budget);
@@ -210,7 +210,7 @@ namespace BudgetAnalyser.Engine.Reports
             result.AverageSpend = totalExpensesSpend / result.DurationInMonths; // Expected to be negative
             result.AverageSurplus = totalSurplusSpend / result.DurationInMonths; // Expected to be negative
 
-            for (int month = 0; month < result.DurationInMonths; month++)
+            for (var month = 0; month < result.DurationInMonths; month++)
             {
                 BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
                 result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);

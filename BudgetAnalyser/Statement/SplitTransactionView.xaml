@@ -14,13 +14,13 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
+
         <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.ColumnSpan="3"
@@ -45,7 +45,7 @@
                  Grid.Row="0"
                  Margin="5,2,20,2"
                  Text="{Binding SplinterAmount1, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
-        
+
         <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                 BorderThickness="2"
                 Grid.Column="0"
@@ -66,12 +66,12 @@
                   ItemContainerStyle="{StaticResource BudgetBucketComboItemStyle}"
                   ItemsSource="{Binding BudgetBuckets}"
                   Margin="5,2,5,2"
-                  SelectedItem="{Binding SplinterBucket2}"/>
+                  SelectedItem="{Binding SplinterBucket2}" />
         <TextBox Grid.Column="3"
                  Grid.Row="2"
                  Margin="5,2,20,2"
                  Text="{Binding SplinterAmount2, StringFormat=N, UpdateSourceTrigger=PropertyChanged}" />
-        
+
         <TextBlock Grid.Column="2"
                    Grid.Row="4"
                    HorizontalAlignment="Right"
@@ -92,13 +92,13 @@
             <TextBlock Style="{StaticResource Badge.TextBlock.WarningLightStyle}"
                        Text="Valid" />
         </Border>
-        
+
         <Border Grid.Column="3"
-                Grid.Row="4" 
+                Grid.Row="4"
                 BorderBrush="{StaticResource Brush.Text.Default}"
                 BorderThickness="1"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"/>
+                VerticalAlignment="Top" />
         <Border Grid.Column="3"
                 Grid.Row="4"
                 BorderBrush="{StaticResource Brush.Text.Default}"

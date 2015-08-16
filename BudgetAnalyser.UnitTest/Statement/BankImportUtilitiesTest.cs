@@ -135,6 +135,18 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void FetchDecimalWithInvalidDecimalShouldThrow()
+        {
+            BankImportUtilities subject = CreateSubject();
+            string[] testArray = CreateTestArray();
+
+            subject.FetchDecimal(testArray, 2);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(UnexpectedIndexException))]
         public void FetchDecimalWithNegativeOutOfRangeIndexShouldThrow()
         {
@@ -175,20 +187,20 @@ namespace BudgetAnalyser.UnitTest.Statement
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
 
-            Decimal result = subject.FetchDecimal(testArray, 0);
+            decimal result = subject.FetchDecimal(testArray, 0);
 
-            Assert.IsInstanceOfType(result, typeof(Decimal));
-            Assert.AreNotEqual(Decimal.MinValue, result);
+            Assert.IsInstanceOfType(result, typeof(decimal));
+            Assert.AreNotEqual(decimal.MinValue, result);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidDataException))]
-        public void FetchDecimalWithInvalidDecimalShouldThrow()
+        public void FetchGuidWithInvalidGuidShouldThrow()
         {
             BankImportUtilities subject = CreateSubject();
             string[] testArray = CreateTestArray();
 
-            subject.FetchDecimal(testArray, 2);
+            subject.FetchGuid(testArray, 2);
 
             Assert.Fail();
         }
@@ -217,6 +229,18 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnexpectedIndexException))]
+        public void FetchGuidWithOutOfRangeIndexShouldThrow()
+        {
+            BankImportUtilities subject = CreateSubject();
+            string[] testArray = CreateTestArray();
+
+            subject.FetchGuid(testArray, 12);
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void FetchGuidWithValidGuidStringShouldReturnGuid()
         {
             BankImportUtilities subject = CreateSubject();
@@ -228,30 +252,6 @@ namespace BudgetAnalyser.UnitTest.Statement
             Assert.AreNotEqual(Guid.Empty, result);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidDataException))]
-        public void FetchGuidWithInvalidGuidShouldThrow()
-        {
-            BankImportUtilities subject = CreateSubject();
-            string[] testArray = CreateTestArray();
-
-            subject.FetchGuid(testArray, 2);
-
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnexpectedIndexException))]
-        public void FetchGuidWithOutOfRangeIndexShouldThrow()
-        {
-            BankImportUtilities subject = CreateSubject();
-            string[] testArray = CreateTestArray();
-
-            subject.FetchGuid(testArray, 12);
-
-            Assert.Fail();
-        }
-        
         [TestMethod]
         [ExpectedException(typeof(UnexpectedIndexException))]
         public void FetchStringWithNegativeOutOfRangeIndexShouldThrow()
@@ -276,19 +276,6 @@ namespace BudgetAnalyser.UnitTest.Statement
         }
 
         [TestMethod]
-        public void FetchStringWithValidStringShouldReturnString()
-        {
-            BankImportUtilities subject = CreateSubject();
-            string[] testArray = CreateTestArray();
-
-            String result = subject.FetchString(testArray, 2);
-
-            Assert.IsInstanceOfType(result, typeof(String));
-            Assert.AreNotEqual(String.Empty, result);
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(UnexpectedIndexException))]
         public void FetchStringWithOutOfRangeIndexShouldThrow()
         {
@@ -298,6 +285,19 @@ namespace BudgetAnalyser.UnitTest.Statement
             subject.FetchString(testArray, 12);
 
             Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FetchStringWithValidStringShouldReturnString()
+        {
+            BankImportUtilities subject = CreateSubject();
+            string[] testArray = CreateTestArray();
+
+            string result = subject.FetchString(testArray, 2);
+
+            Assert.IsInstanceOfType(result, typeof(string));
+            Assert.AreNotEqual(string.Empty, result);
+            Assert.IsNotNull(result);
         }
 
         private BankImportUtilities CreateSubject()

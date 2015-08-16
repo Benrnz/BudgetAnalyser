@@ -71,14 +71,14 @@
                             HorizontalAlignment="Right">
                     <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
                                TextAlignment="Right"
-                               Text="{Binding BankBalanceTotal, StringFormat=N}" 
+                               Text="{Binding BankBalanceTotal, StringFormat=N}"
                                Width="150"
-                               ToolTip="The total of all bank accounts entered."/>
+                               ToolTip="The total of all bank accounts entered." />
                     <TextBlock Style="{StaticResource TextBlock.ImportantNumber}"
                                Text="{Binding AdjustedBankBalanceTotal, StringFormat=N}"
                                Width="150"
-                               TextAlignment="Right" 
-                               ToolTip="The total of all bank accounts used, including balance adjustments."/>
+                               TextAlignment="Right"
+                               ToolTip="The total of all bank accounts used, including balance adjustments." />
                 </StackPanel>
             </Border>
         </Border>

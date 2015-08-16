@@ -21,7 +21,9 @@ namespace BudgetAnalyser.Matching
         private readonly IUserMessageBox messageBoxService;
         private readonly ITransactionRuleService rulesService;
         private decimal doNotUseAmount;
+        private bool doNotUseAndChecked;
         private string doNotUseDescription;
+        private bool doNotUseOrChecked;
         private string doNotUseReference1;
         private string doNotUseReference2;
         private string doNotUseReference3;
@@ -32,8 +34,6 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
-        private bool doNotUseOrChecked;
-        private bool doNotUseAndChecked;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -41,12 +41,12 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (rulesService == null)
             {
-                throw new ArgumentNullException("rulesService");
+                throw new ArgumentNullException(nameof(rulesService));
             }
 
             this.rulesService = rulesService;
@@ -57,11 +57,7 @@ namespace BudgetAnalyser.Matching
         }
 
         public event EventHandler RuleCreated;
-
-        public string ActionButtonToolTip
-        {
-            get { return "Save the new rule."; }
-        }
+        public string ActionButtonToolTip => "Save the new rule.";
 
         public decimal Amount
         {
@@ -75,8 +71,6 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public BudgetBucket Bucket { get; set; }
-
         public bool AndChecked
         {
             get { return this.doNotUseAndChecked; }
@@ -89,37 +83,11 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public bool OrChecked
-        {
-            get { return this.doNotUseOrChecked; }
-            set
-            {
-                this.doNotUseOrChecked = value;
-                RaisePropertyChanged();
-                this.doNotUseAndChecked = !OrChecked;
-                RaisePropertyChanged(() => AndChecked);
-            }
-        }
-
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
-
-        public bool CanExecuteOkButton
-        {
-            get { return false; }
-        }
-
-        public bool CanExecuteSaveButton
-        {
-            get { return UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType; }
-        }
-
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
-        }
+        public BudgetBucket Bucket { get; set; }
+        public bool CanExecuteCancelButton => true;
+        public bool CanExecuteOkButton => false;
+        public bool CanExecuteSaveButton => UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType;
+        public string CloseButtonToolTip => "Cancel";
 
         public string Description
         {
@@ -134,6 +102,19 @@ namespace BudgetAnalyser.Matching
         }
 
         public MatchingRule NewRule { get; set; }
+
+        public bool OrChecked
+        {
+            get { return this.doNotUseOrChecked; }
+            [UsedImplicitly]
+            set
+            {
+                this.doNotUseOrChecked = value;
+                RaisePropertyChanged();
+                this.doNotUseAndChecked = !OrChecked;
+                RaisePropertyChanged(() => AndChecked);
+            }
+        }
 
         public string Reference1
         {
@@ -172,13 +153,8 @@ namespace BudgetAnalyser.Matching
         }
 
         public IEnumerable<MatchingRule> SimilarRules { get; private set; }
-
         public bool SimilarRulesExist { get; private set; }
-
-        public string Title
-        {
-            get { return "New Matching Rule for: " + Bucket; }
-        }
+        public string Title => "New Matching Rule for: " + Bucket;
 
         public string TransactionType
         {
@@ -196,6 +172,7 @@ namespace BudgetAnalyser.Matching
         {
             get { return this.doNotUseUseAmount; }
 
+            [UsedImplicitly]
             set
             {
                 this.doNotUseUseAmount = value;
@@ -242,6 +219,7 @@ namespace BudgetAnalyser.Matching
         {
             get { return this.doNotUseUseTransactionType; }
 
+            [UsedImplicitly]
             set
             {
                 this.doNotUseUseTransactionType = value;
@@ -274,7 +252,7 @@ namespace BudgetAnalyser.Matching
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Transactions, this, ShellDialogType.SaveCancel)
             {
                 CorrelationId = this.shellDialogCorrelationId,
-                Title = Title,
+                Title = Title
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -311,10 +289,7 @@ namespace BudgetAnalyser.Matching
                 AndChecked);
 
             EventHandler handler = RuleCreated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]

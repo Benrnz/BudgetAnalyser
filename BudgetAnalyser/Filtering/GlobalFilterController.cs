@@ -37,12 +37,12 @@ namespace BudgetAnalyser.Filtering
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             this.dashboardService = dashboardService;
@@ -59,11 +59,11 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
-        public IEnumerable<Account> Accounts { get; private set; }
+        public IEnumerable<Account> Accounts { [UsedImplicitly] get; private set; }
 
         public string AccountTypeSummary
         {
-            get { return this.doNotUseAccountTypeSummary; }
+            [UsedImplicitly] get { return this.doNotUseAccountTypeSummary; }
             private set
             {
                 this.doNotUseAccountTypeSummary = value;
@@ -71,30 +71,18 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public string ActionButtonToolTip
-        {
-            get { return "Apply filter and close."; }
-        }
+        public string ActionButtonToolTip => "Apply filter and close.";
 
-        public ICommand AddMonthCommand
-        {
-            get { return new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue); }
-        }
+        [UsedImplicitly]
+        public ICommand AddMonthCommand => new RelayCommand<DateTime>(OnAddMonthCommandExecute, d => d != DateTime.MinValue);
 
-        public ICommand BackMonthCommand
-        {
-            get { return new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue); }
-        }
+        [UsedImplicitly]
+        public ICommand BackMonthCommand => new RelayCommand<DateTime>(OnBackMonthCommandExecute, d => d != DateTime.MinValue);
 
-        public ICommand ClearCommand
-        {
-            get { return new RelayCommand(OnClearCommandExecute); }
-        }
+        [UsedImplicitly]
+        public ICommand ClearCommand => new RelayCommand(OnClearCommandExecute);
 
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel and do not change the filter."; }
-        }
+        public string CloseButtonToolTip => "Cancel and do not change the filter.";
 
         public GlobalFilterCriteria Criteria
         {
@@ -109,7 +97,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine1
         {
-            get { return this.doNotUseDateSummaryLine1; }
+            [UsedImplicitly] get { return this.doNotUseDateSummaryLine1; }
             private set
             {
                 this.doNotUseDateSummaryLine1 = value;
@@ -119,7 +107,7 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine2
         {
-            get { return this.doNotUseDateSummaryLine2; }
+            [UsedImplicitly] get { return this.doNotUseDateSummaryLine2; }
             private set
             {
                 this.doNotUseDateSummaryLine2 = value;
@@ -127,15 +115,8 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public bool IsAccountFilterView
-        {
-            get { return this.filterMode == FilterMode.Account; }
-        }
-
-        public bool IsDateFilterView
-        {
-            get { return this.filterMode == FilterMode.Dates; }
-        }
+        public bool IsAccountFilterView => this.filterMode == FilterMode.Account;
+        public bool IsDateFilterView => this.filterMode == FilterMode.Dates;
 
         public Account SelectedAccount
         {
@@ -299,7 +280,7 @@ namespace BudgetAnalyser.Filtering
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Widget is DateFilterWidget)

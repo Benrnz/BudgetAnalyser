@@ -9,18 +9,13 @@ namespace BudgetAnalyser.Engine.Account
             Name = GetType().Name;
         }
 
-        public abstract string ImagePath { get; }
-
-        public string Name { get; protected set; }
-
         public abstract AccountType AccountType { get; }
 
-        internal abstract string[] KeyWords { get; }
+        [UsedImplicitly]
+        public abstract string ImagePath { get; }
 
-        public virtual bool IsSalaryAccount
-        {
-            get { return false; }
-        }
+        public virtual bool IsSalaryAccount => false;
+        public string Name { get; protected set; }
 
         public static bool operator ==(Account left, Account right)
         {
@@ -31,8 +26,6 @@ namespace BudgetAnalyser.Engine.Account
         {
             return !Equals(left, right);
         }
-
-        public abstract Account Clone(string name);
 
         public override bool Equals(object obj)
         {
@@ -53,7 +46,8 @@ namespace BudgetAnalyser.Engine.Account
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            // ReSharper disable once NonReadonlyMemberInGetHashCode - Name cannot be readonly because it is set implicitly by Automapper
+            return Name?.GetHashCode() ?? 0;
         }
 
         public override string ToString()
@@ -63,7 +57,10 @@ namespace BudgetAnalyser.Engine.Account
 
         protected bool Equals([CanBeNull] Account other)
         {
-            if (other == null) return false;
+            if (other == null)
+            {
+                return false;
+            }
             return string.Equals(Name, other.Name);
         }
     }

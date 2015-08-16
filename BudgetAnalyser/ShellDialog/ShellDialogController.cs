@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Threading;
+using BudgetAnalyser.Engine.Annotations;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 
@@ -9,13 +10,12 @@ namespace BudgetAnalyser.ShellDialog
     public class ShellDialogController : ControllerBase
     {
         private bool doNotUseCancelButtonVisible;
-
         private object doNotUseContent;
         private ShellDialogType doNotUseDialogType;
+        private bool doNotUseHelpButtonVisible;
         private bool doNotUseOkButtonVisible;
         private bool doNotUseSaveButtonVisible;
         private string doNotUseTitle;
-        private bool doNotUseHelpButtonVisible;
 
         public string ActionToolTip
         {
@@ -66,11 +66,7 @@ namespace BudgetAnalyser.ShellDialog
         }
 
         public Guid CorrelationId { get; set; }
-
-        public ICommand DialogCommand
-        {
-            get { return new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand); }
-        }
+        public ICommand DialogCommand => new RelayCommand<ShellDialogButton>(OnDialogCommandExecute, CanExecuteDialogCommand);
 
         public ShellDialogType DialogType
         {
@@ -87,6 +83,16 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
+        public bool HelpButtonVisible
+        {
+            [UsedImplicitly] get { return this.doNotUseHelpButtonVisible; }
+            set
+            {
+                this.doNotUseHelpButtonVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public bool OkButtonVisible
         {
             get { return this.doNotUseOkButtonVisible; }
@@ -98,10 +104,7 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
-        public bool OkIsCancel
-        {
-            get { return OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible; }
-        }
+        public bool OkIsCancel => OkButtonVisible && !CancelButtonVisible && !SaveButtonVisible;
 
         public bool SaveButtonVisible
         {
@@ -113,19 +116,9 @@ namespace BudgetAnalyser.ShellDialog
             }
         }
 
-        public bool HelpButtonVisible
-        {
-            get { return this.doNotUseHelpButtonVisible; }
-            set
-            {
-                this.doNotUseHelpButtonVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public string Title
         {
-            get { return this.doNotUseTitle; }
+            [UsedImplicitly] get { return this.doNotUseTitle; }
             set
             {
                 this.doNotUseTitle = value;
@@ -163,35 +156,37 @@ namespace BudgetAnalyser.ShellDialog
         private void OnDialogCommandExecute(ShellDialogButton commandType)
         {
             // Delay execution so that keyed events happen
-            Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                // No correlation id given so no response is expected.
-                if (CorrelationId != Guid.Empty)
+            Dispatcher.BeginInvoke(
+                DispatcherPriority.ApplicationIdle,
+                () =>
                 {
-                    switch (commandType)
+                    // No correlation id given so no response is expected.
+                    if (CorrelationId != Guid.Empty)
                     {
-                        case ShellDialogButton.Ok:
-                        case ShellDialogButton.Save:
-                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
-                            break;
+                        switch (commandType)
+                        {
+                            case ShellDialogButton.Ok:
+                            case ShellDialogButton.Save:
+                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
+                                break;
 
-                        case ShellDialogButton.Cancel:
-                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
-                            break;
+                            case ShellDialogButton.Cancel:
+                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Cancel) { CorrelationId = CorrelationId });
+                                break;
 
-                        case ShellDialogButton.Help:
-                            MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Help) { CorrelationId = CorrelationId });
-                            // Don't close the dialog after this button click is processed.
-                            return;
+                            case ShellDialogButton.Help:
+                                MessengerInstance.Send(new ShellDialogResponseMessage(Content, ShellDialogButton.Help) { CorrelationId = CorrelationId });
+                                // Don't close the dialog after this button click is processed.
+                                return;
 
-                        default:
-                            throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
+                            default:
+                                throw new NotSupportedException("Unsupported command type received from Shell Dialog on Shell view. " + commandType);
+                        }
                     }
-                }
 
-                // Setting the content to null will hide the dialog, its visibility is bound to the Content != null
-                Content = null;
-            });
+                    // Setting the content to null will hide the dialog, its visibility is bound to the Content != null
+                    Content = null;
+                });
         }
     }
 }

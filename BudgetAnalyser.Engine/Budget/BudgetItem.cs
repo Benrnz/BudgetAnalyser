@@ -47,17 +47,21 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string Summary
+        public string Summary => string.Format(
+            CultureInfo.CurrentCulture,
+            "{0} {1}: {2}",
+            Bucket.TypeDescription.AnOrA(true),
+            EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
+            Bucket.Description);
+
+        public static bool operator ==(BudgetItem left, BudgetItem right)
         {
-            get
-            {
-                return string.Format(
-                    CultureInfo.CurrentCulture,
-                    "{0} {1}: {2}",
-                    Bucket.TypeDescription.AnOrA(true),
-                    EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
-                    Bucket.Description);
-            }
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BudgetItem left, BudgetItem right)
+        {
+            return !Equals(left, right);
         }
 
         public override bool Equals(object obj)
@@ -80,7 +84,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             unchecked
             {
-                return (Bucket != null ? Bucket.GetHashCode() * GetType().GetHashCode() : 0);
+                return Bucket?.GetHashCode() * GetType().GetHashCode() ?? 0;
             }
         }
 
@@ -88,7 +92,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (other == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
             }
 
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
@@ -98,20 +102,7 @@ namespace BudgetAnalyser.Engine.Budget
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // This is to trigger updates dependent on Bucket, but isn't updated when Active is toggled. For example binding to bucket
-            // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
-            if (e.PropertyName == "Active")
-            {
-                OnPropertyChanged("Bucket");
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private static string EnsureNoRepeatedLastWord(string sentence1, string sentence2)
@@ -155,14 +146,14 @@ namespace BudgetAnalyser.Engine.Budget
             return string.Format(CultureInfo.CurrentCulture, "{0} {1}", sentence1, sentence2);
         }
 
-        public static bool operator ==(BudgetItem left, BudgetItem right)
+        private void OnBucketPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(BudgetItem left, BudgetItem right)
-        {
-            return !Equals(left, right);
+            // This is to trigger updates dependent on Bucket, but isn't updated when Active is toggled. For example binding to bucket
+            // and using the bucket to colour converter. This converter must return grey when the bucket is inactive.
+            if (e.PropertyName == "Active")
+            {
+                OnPropertyChanged(nameof(Bucket));
+            }
         }
     }
 }

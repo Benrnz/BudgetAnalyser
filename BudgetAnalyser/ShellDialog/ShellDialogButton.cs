@@ -5,6 +5,6 @@
         Ok,
         Cancel,
         Save,
-        Help,
+        Help
     }
 }

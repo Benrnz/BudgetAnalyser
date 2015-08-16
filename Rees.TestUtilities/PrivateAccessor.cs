@@ -31,12 +31,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(fieldName))
             {
-                throw new ArgumentNullException("fieldName");
+                throw new ArgumentNullException(nameof(fieldName));
             }
 
             return GetFieldInfo(instance.GetType(), fieldName).GetValue(instance);
@@ -52,12 +52,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
 
             return GetPropertyInfo(instance.GetType(), propertyName).GetValue(instance, new object[] { });
@@ -74,12 +74,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
 
             return GetPropertyInfo(typeof(T), propertyName).GetValue(instance, new object[] { });
@@ -239,12 +239,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(fieldName))
             {
-                throw new ArgumentNullException("fieldName");
+                throw new ArgumentNullException(nameof(fieldName));
             }
 
             GetFieldInfo(instance.GetType(), fieldName).SetValue(instance, value);
@@ -262,12 +262,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(fieldName))
             {
-                throw new ArgumentNullException("fieldName");
+                throw new ArgumentNullException(nameof(fieldName));
             }
 
             GetFieldInfo(typeof(T), fieldName).SetValue(instance, value);
@@ -283,12 +283,12 @@ namespace Rees.TestUtilities
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
 
             try

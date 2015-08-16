@@ -17,23 +17,23 @@ namespace BudgetAnalyser.Dashboard
     public class CreateNewSurprisePaymentMonitorController : ControllerBase, IShellDialogInteractivity
     {
         private readonly IBudgetBucketRepository bucketRepository;
+        private readonly IUserMessageBox messageBox;
         private Guid dialogCorrelationId;
+        private WeeklyOrFortnightly doNotUseFrequency;
         private DateTime doNotUsePaymentStartDate;
         private BudgetBucket doNotUseSelected;
-        private WeeklyOrFortnightly doNotUseFrequency;
-        private IUserMessageBox messageBox;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public CreateNewSurprisePaymentMonitorController([NotNull] IUiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;
@@ -46,20 +46,23 @@ namespace BudgetAnalyser.Dashboard
 
         public event EventHandler<DialogResponseEventArgs> Complete;
 
-        public IEnumerable<BudgetBucket> BudgetBuckets
-        {
-            get { return this.bucketRepository.Buckets.ToList(); }
-        }
+        [UsedImplicitly]
+        public IEnumerable<BudgetBucket> BudgetBuckets => this.bucketRepository.Buckets.ToList();
 
-        public BudgetBucket Selected
-        {
-            get { return this.doNotUseSelected; }
-            set
-            {
-                this.doNotUseSelected = value;
-                RaisePropertyChanged();
-            }
-        }
+        /// <summary>
+        ///     Will be called to ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteCancelButton => true;
+
+        /// <summary>
+        ///     Will be called to ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteOkButton => Selected != null && PaymentStartDate != DateTime.MinValue;
+
+        /// <summary>
+        ///     Will be called ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteSaveButton => false;
 
         public WeeklyOrFortnightly Frequency
         {
@@ -69,33 +72,6 @@ namespace BudgetAnalyser.Dashboard
                 this.doNotUseFrequency = value;
                 RaisePropertyChanged();
             }
-        }
-
-        /// <summary>
-        ///     Will be called to ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
-
-        /// <summary>
-        ///     Will be called to ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get
-            {
-                return Selected != null && PaymentStartDate != DateTime.MinValue;
-            }
-        }
-
-        /// <summary>
-        ///     Will be called ascertain the availability of the button.
-        /// </summary>
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
         }
 
         public DateTime PaymentStartDate
@@ -108,22 +84,26 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
+        public BudgetBucket Selected
+        {
+            get { return this.doNotUseSelected; }
+            [UsedImplicitly]
+            set
+            {
+                this.doNotUseSelected = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public void ShowDialog(BudgetAnalyserFeature source, Guid? correlationId = null)
         {
-            if (correlationId == null)
-            {
-                this.dialogCorrelationId = Guid.NewGuid();
-            }
-            else
-            {
-                this.dialogCorrelationId = correlationId.Value;
-            }
+            this.dialogCorrelationId = correlationId ?? Guid.NewGuid();
 
             var dialogRequest = new ShellDialogRequestMessage(source, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Create new surprise regular payment monitor",
-                HelpAvailable = true,
+                HelpAvailable = true
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -137,15 +117,13 @@ namespace BudgetAnalyser.Dashboard
 
             if (message.Response == ShellDialogButton.Help)
             {
-                this.messageBox.Show("Using this feature you can create a widget to show upcoming months where that require more than usual weekly or fortnightly payments. This is because there is an uneven number of weeks per month, so occasionally there will be 5 weekly payments in one month and 3 fortnightly payments. This widget will show the months where this will occur for the given Budget Bucket.");
+                this.messageBox.Show(
+                    "Using this feature you can create a widget to show upcoming months where that require more than usual weekly or fortnightly payments. This is because there is an uneven number of weeks per month, so occasionally there will be 5 weekly payments in one month and 3 fortnightly payments. This widget will show the months where this will occur for the given Budget Bucket.");
                 return;
             }
 
-            var handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
-            }
+            EventHandler<DialogResponseEventArgs> handler = Complete;
+            handler?.Invoke(this, new DialogResponseEventArgs(this.dialogCorrelationId, message.Response == ShellDialogButton.Cancel));
         }
     }
 }

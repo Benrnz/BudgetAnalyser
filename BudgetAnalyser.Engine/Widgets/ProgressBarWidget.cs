@@ -4,16 +4,16 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     public abstract class ProgressBarWidget : Widget
     {
+        private bool doNotUseEnabled;
         private double doNotUseMaximum;
         private double doNotUseMinimum;
-        private double doNotUseValue;
-        private bool doNotUseEnabled;
         private bool doNotUseProgressBarVisibility;
+        private double doNotUseValue;
 
         public override bool Enabled
         {
             get { return this.doNotUseEnabled; }
-            set
+            protected set
             {
                 this.doNotUseEnabled = value;
                 if (!this.doNotUseEnabled)

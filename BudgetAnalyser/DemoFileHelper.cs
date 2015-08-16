@@ -14,7 +14,7 @@ namespace BudgetAnalyser
         {
             string folder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             Debug.Assert(folder != null);
-            for (int failsafe = 0; failsafe < 10; failsafe++)
+            for (var failsafe = 0; failsafe < 10; failsafe++)
             {
                 string path = Path.Combine(folder, DemoFileName);
                 if (FileExists(path))

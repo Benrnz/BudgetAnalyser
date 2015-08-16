@@ -40,37 +40,37 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (widgetService == null)
             {
-                throw new ArgumentNullException("widgetService");
+                throw new ArgumentNullException(nameof(widgetService));
             }
 
             if (widgetRepository == null)
             {
-                throw new ArgumentNullException("widgetRepository");
+                throw new ArgumentNullException(nameof(widgetRepository));
             }
 
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             if (budgetRepository == null)
             {
-                throw new ArgumentNullException("budgetRepository");
+                throw new ArgumentNullException(nameof(budgetRepository));
             }
 
             if (ledgerCalculator == null)
             {
-                throw new ArgumentNullException("ledgerCalculator");
+                throw new ArgumentNullException(nameof(ledgerCalculator));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.widgetService = widgetService;
@@ -109,17 +109,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ArgumentNullException("description");
+                throw new ArgumentNullException(nameof(description));
             }
 
             if (fixedBudgetAmount <= 0)
             {
-                throw new ArgumentException("Fixed Budget amount must be greater than zero.", "fixedBudgetAmount");
+                throw new ArgumentException("Fixed Budget amount must be greater than zero.", nameof(fixedBudgetAmount));
             }
 
             FixedBudgetProjectBucket bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
@@ -132,18 +132,18 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (paymentDate == DateTime.MinValue)
             {
-                throw new ArgumentException("Payment date is not set.", "paymentDate");
+                throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
             }
 
             BudgetBucket bucket = this.bucketRepository.GetByCode(bucketCode);
             if (bucket == null)
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), "bucketCode");
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), nameof(bucketCode));
             }
 
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedState == null)
             {
-                throw new ArgumentNullException("storedState");
+                throw new ArgumentNullException(nameof(storedState));
             }
 
             if (this.availableDependencies == null)
@@ -234,22 +234,48 @@ namespace BudgetAnalyser.Engine.Services
 
             var baseWidget = (Widget)widgetToRemove;
             WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
-            if (widgetGroup == null)
-            {
-                return;
-            }
 
-            widgetGroup.Widgets.Remove(baseWidget);
+            widgetGroup?.Widgets.Remove(baseWidget);
         }
 
         public void ShowAllWidgets()
         {
-            if (WidgetGroups == null)
+            WidgetGroups?
+                .ToList()
+                .ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
+        }
+
+        private static WidgetPersistentState CreateWidgetState(Widget widget)
+        {
+            var multiInstanceWidget = widget as IUserDefinedWidget;
+            if (multiInstanceWidget != null)
             {
-                return;
+                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
+                if (surprisePaymentWidget == null)
+                {
+                    return new MultiInstanceWidgetState
+                    {
+                        Id = multiInstanceWidget.Id,
+                        Visible = multiInstanceWidget.Visibility,
+                        WidgetType = multiInstanceWidget.WidgetType.FullName
+                    };
+                }
+
+                return new SurprisePaymentWidgetPersistentState
+                {
+                    Id = surprisePaymentWidget.Id,
+                    Visible = surprisePaymentWidget.Visibility,
+                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
+                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
+                    Frequency = surprisePaymentWidget.Frequency
+                };
             }
 
-            WidgetGroups.ToList().ForEach(g => g.Widgets.ToList().ForEach(w => w.Visibility = true));
+            return new WidgetPersistentState
+            {
+                Visible = widget.Visibility,
+                WidgetType = widget.GetType().FullName
+            };
         }
 
         private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
@@ -275,15 +301,17 @@ namespace BudgetAnalyser.Engine.Services
 
         private IDictionary<Type, object> InitialiseSupportedDependenciesArray()
         {
-            this.availableDependencies = new Dictionary<Type, object>();
-            this.availableDependencies[typeof(StatementModel)] = null;
-            this.availableDependencies[typeof(BudgetCollection)] = null;
-            this.availableDependencies[typeof(IBudgetCurrencyContext)] = null;
-            this.availableDependencies[typeof(LedgerBook)] = null;
-            this.availableDependencies[typeof(IBudgetBucketRepository)] = this.bucketRepository;
-            this.availableDependencies[typeof(GlobalFilterCriteria)] = null;
-            this.availableDependencies[typeof(LedgerCalculation)] = this.ledgerCalculator;
-            this.availableDependencies[typeof(ApplicationDatabase)] = null;
+            this.availableDependencies = new Dictionary<Type, object>
+            {
+                [typeof(StatementModel)] = null,
+                [typeof(BudgetCollection)] = null,
+                [typeof(IBudgetCurrencyContext)] = null,
+                [typeof(LedgerBook)] = null,
+                [typeof(IBudgetBucketRepository)] = this.bucketRepository,
+                [typeof(GlobalFilterCriteria)] = null,
+                [typeof(LedgerCalculation)] = this.ledgerCalculator,
+                [typeof(ApplicationDatabase)] = null
+            };
             return this.availableDependencies;
         }
 
@@ -325,6 +353,7 @@ namespace BudgetAnalyser.Engine.Services
                                 Thread.CurrentThread.ManagedThreadId));
                         UpdateWidget(widget);
                     }
+                    // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
                 });
         }
 
@@ -392,39 +421,6 @@ namespace BudgetAnalyser.Engine.Services
             widgetGroup.Widgets.Add(baseWidget);
             UpdateAllWidgets();
             return baseWidget;
-        }
-
-        private static WidgetPersistentState CreateWidgetState(Widget widget)
-        {
-            var multiInstanceWidget = widget as IUserDefinedWidget;
-            if (multiInstanceWidget != null)
-            {
-                var surprisePaymentWidget = multiInstanceWidget as SurprisePaymentWidget;
-                if (surprisePaymentWidget == null)
-                {
-                    return new MultiInstanceWidgetState
-                    {
-                        Id = multiInstanceWidget.Id,
-                        Visible = multiInstanceWidget.Visibility,
-                        WidgetType = multiInstanceWidget.WidgetType.FullName
-                    };
-                }
-
-                return new SurprisePaymentWidgetPersistentState
-                {
-                    Id = surprisePaymentWidget.Id,
-                    Visible = surprisePaymentWidget.Visibility,
-                    WidgetType = surprisePaymentWidget.WidgetType.FullName,
-                    PaymentStartDate = surprisePaymentWidget.StartPaymentDate,
-                    Frequency = surprisePaymentWidget.Frequency
-                };
-            }
-
-            return new WidgetPersistentState
-            {
-                Visible = widget.Visibility,
-                WidgetType = widget.GetType().FullName
-            };
         }
     }
 }

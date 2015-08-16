@@ -15,10 +15,7 @@ namespace BudgetAnalyser.Dashboard
             InitializeComponent();
         }
 
-        private DashboardController Controller
-        {
-            get { return (DashboardController)DataContext; }
-        }
+        private DashboardController Controller => (DashboardController)DataContext;
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -27,7 +24,7 @@ namespace BudgetAnalyser.Dashboard
                 return;
             }
 
-            var view = CollectionViewSource.GetDefaultView(Controller.WidgetGroups);
+            ICollectionView view = CollectionViewSource.GetDefaultView(Controller.WidgetGroups);
             if (view == null)
             {
                 return;

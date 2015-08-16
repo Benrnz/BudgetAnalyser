@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Services;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -18,7 +16,8 @@ namespace BudgetAnalyser.Engine.Statement
     {
         /// <summary>
         ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <see cref="storageKey" />. Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync"/> method to
+        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
+        ///     to
         ///     load the new collection.
         /// </summary>
         Task CreateNewAndSaveAsync(string storageKey);
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.Engine.Statement
         Task<StatementModel> LoadAsync([NotNull] string storageKey);
 
         /// <summary>
-        ///     Save the given <see cref="StatementModel" /> into persistent storage. Files are saved into the proprietry 
+        ///     Save the given <see cref="StatementModel" /> into persistent storage. Files are saved into the proprietry
         ///     Budget Analyser format.
         /// </summary>
         Task SaveAsync(StatementModel statementModel);

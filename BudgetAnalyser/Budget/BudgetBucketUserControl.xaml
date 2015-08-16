@@ -10,7 +10,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="["/>
+            <TextBlock Text="[" />
             <TextBlock Margin="0,2,0,2" Text="{Binding Code}" />
             <TextBlock Text="]" />
         </StackPanel>

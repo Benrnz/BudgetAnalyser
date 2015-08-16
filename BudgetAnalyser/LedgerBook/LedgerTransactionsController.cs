@@ -17,7 +17,7 @@ using Rees.Wpf;
 namespace BudgetAnalyser.LedgerBook
 {
     /// <summary>
-    /// A controller for editing transactions and balance adjustments.
+    ///     A controller for editing transactions and balance adjustments.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerTransactionsController : ControllerBase
@@ -26,6 +26,7 @@ namespace BudgetAnalyser.LedgerBook
         private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
+        private Account doNotUseNewTransactionAccount;
         private decimal doNotUseNewTransactionAmount;
         private string doNotUseNewTransactionNarrative;
         private bool doNotUseShowAddingNewTransactionPanel;
@@ -33,19 +34,18 @@ namespace BudgetAnalyser.LedgerBook
         private LedgerEntryLine entryLine;
         private bool isAddDirty;
         private bool wasChanged;
-        private Account doNotUseNewTransactionAccount;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             this.ledgerService = ledgerService;
@@ -56,30 +56,17 @@ namespace BudgetAnalyser.LedgerBook
 
         public event EventHandler<LedgerTransactionEventArgs> Complete;
 
-        public IEnumerable<Account> Accounts
-        {
-            get { return this.ledgerService.ValidLedgerAccounts(); } 
-        }
+        [UsedImplicitly]
+        public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
-        public ICommand AddTransactionCommand
-        {
-            get { return new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand); }
-        }
+        [UsedImplicitly]
+        public ICommand AddTransactionCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, CanExecuteAddTransactionCommand);
 
-        public ICommand DeleteTransactionCommand
-        {
-            get { return new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand); }
-        }
+        [UsedImplicitly]
+        public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
 
-        public bool InBalanceAdjustmentMode
-        {
-            get { return LedgerEntry == null; }
-        }
-
-        public bool InLedgerEntryMode
-        {
-            get { return LedgerEntry != null; }
-        }
+        public bool InBalanceAdjustmentMode => LedgerEntry == null;
+        public bool InLedgerEntryMode => LedgerEntry != null;
 
         public bool IsReadOnly
         {
@@ -155,15 +142,10 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public decimal TransactionsTotal
-        {
-            get { return ShownTransactions == null ? 0 : ShownTransactions.Sum(t => t.Amount); }
-        }
+        public decimal TransactionsTotal => ShownTransactions?.Sum(t => t.Amount) ?? 0;
 
-        public ICommand ZeroNetAmountCommand
-        {
-            get { return new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand); }
-        }
+        [UsedImplicitly]
+        public ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
 
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
@@ -280,10 +262,7 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             EventHandler<LedgerTransactionEventArgs> handler = Complete;
-            if (handler != null)
-            {
-                handler(this, new LedgerTransactionEventArgs(this.wasChanged));
-            }
+            handler?.Invoke(this, new LedgerTransactionEventArgs(this.wasChanged));
 
             Reset();
             this.wasChanged = false;
@@ -346,7 +325,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            var newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
+            LedgerTransaction newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
             RaisePropertyChanged(() => TransactionsTotal);
@@ -356,7 +335,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                var newTransaction = this.ledgerService.CreateLedgerTransaction(LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
+                LedgerTransaction newTransaction = this.ledgerService.CreateLedgerTransaction(LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
                 ShownTransactions.Add(newTransaction);
             }
             catch (ArgumentException)
@@ -376,7 +355,7 @@ namespace BudgetAnalyser.LedgerBook
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, IsReadOnly ? ShellDialogType.Ok : ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = Title,
+                Title = Title
             };
             MessengerInstance.Send(dialogRequest);
         }

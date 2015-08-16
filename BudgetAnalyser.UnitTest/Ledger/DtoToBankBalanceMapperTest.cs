@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 return new BankBalanceDto
                 {
                     Account = StatementModelTestData.ChequeAccount.Name,
-                    Balance = 44552.44M,
+                    Balance = 44552.44M
                 };
             }
         }
@@ -38,8 +38,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<BankBalance>(TestData);
         }
     }

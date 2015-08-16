@@ -11,11 +11,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class ExpenseToDtoMapperTest
     {
         private ExpenseDto Result { get; set; }
-
-        private Expense TestData
-        {
-            get { return BudgetModelTestData.CreateTestData1().Expenses.First(e => e.Bucket.Code == TestDataConstants.CarMtcBucketCode); }
-        }
+        private Expense TestData => BudgetModelTestData.CreateTestData1().Expenses.First(e => e.Bucket.Code == TestDataConstants.CarMtcBucketCode);
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -32,8 +28,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<ExpenseDto>(TestData);
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xaml;
@@ -22,12 +21,12 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             if (loadingMapper == null)
             {
-                throw new ArgumentNullException("loadingMapper");
+                throw new ArgumentNullException(nameof(loadingMapper));
             }
 
             if (savingMapper == null)
             {
-                throw new ArgumentNullException("savingMapper");
+                throw new ArgumentNullException(nameof(savingMapper));
             }
 
             this.loadingMapper = loadingMapper;
@@ -38,21 +37,21 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
-            string path = Path.Combine(Path.GetDirectoryName(storageKey), Path.GetFileNameWithoutExtension(storageKey));
+            string path = Path.Combine(Path.GetDirectoryName(storageKey) ?? string.Empty, Path.GetFileNameWithoutExtension(storageKey) ?? string.Empty);
             var storageRoot = new BudgetAnalyserStorageRoot
             {
                 BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.xml" },
-                LedgerBookRootDto = new StorageBranch { Source = path +".LedgerBook.xml" },
+                LedgerBookRootDto = new StorageBranch { Source = path + ".LedgerBook.xml" },
                 LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
                 MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.xml" },
-                StatementModelRootDto = new StorageBranch { Source = path +".Transactions.csv" }
+                StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" }
             };
             string serialised = Serialise(storageRoot);
             await WriteToDiskAsync(storageKey, serialised);
-            var appDb = this.loadingMapper.Map(storageRoot);
+            ApplicationDatabase appDb = this.loadingMapper.Map(storageRoot);
             appDb.FileName = storageKey;
             return appDb;
         }
@@ -61,7 +60,7 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             string fileName = storageKey;
@@ -93,7 +92,7 @@ namespace BudgetAnalyser.Engine.Persistence
         {
             if (budgetAnalyserDatabase == null)
             {
-                throw new ArgumentNullException("budgetAnalyserDatabase");
+                throw new ArgumentNullException(nameof(budgetAnalyserDatabase));
             }
 
             string serialised = Serialise(this.savingMapper.Map(budgetAnalyserDatabase));

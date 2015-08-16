@@ -11,12 +11,8 @@ namespace BudgetAnalyser.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var bucket = value as BudgetBucket;
-            if (bucket == null)
-            {
-                return null;
-            }
 
-            return bucket.Code;
+            return bucket?.Code;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

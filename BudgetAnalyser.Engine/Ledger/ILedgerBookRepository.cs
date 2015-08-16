@@ -10,8 +10,9 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         /// <summary>
         ///     Creates a new empty <see cref="LedgerBook" /> at the location indicated by the <see cref="storageKey" />. Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync"/> method to
-        ///     load the new <see cref="LedgerBook"/>.
+        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
+        ///     to
+        ///     load the new <see cref="LedgerBook" />.
         /// </summary>
         Task<LedgerBook> CreateNewAndSaveAsync([NotNull] string storageKey);
 

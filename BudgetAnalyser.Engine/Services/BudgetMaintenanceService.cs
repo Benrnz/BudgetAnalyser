@@ -33,22 +33,22 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (budgetRepository == null)
             {
-                throw new ArgumentNullException("budgetRepository");
+                throw new ArgumentNullException(nameof(budgetRepository));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             this.budgetRepository = budgetRepository;
@@ -63,34 +63,26 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-        public IBudgetBucketRepository BudgetBucketRepository { get; private set; }
+        public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
-
-        public ApplicationDataType DataType
-        {
-            get { return ApplicationDataType.Budget; }
-        }
-
-        public int LoadSequence
-        {
-            get { return 5; }
-        }
+        public ApplicationDataType DataType => ApplicationDataType.Budget;
+        public int LoadSequence => 5;
 
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {
             if (sourceBudget == null)
             {
-                throw new ArgumentNullException("sourceBudget");
+                throw new ArgumentNullException(nameof(sourceBudget));
             }
 
             if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
             {
-                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", "newBudgetEffectiveFrom");
+                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", nameof(newBudgetEffectiveFrom));
             }
 
             if (newBudgetEffectiveFrom <= DateTime.Today)
             {
-                throw new ArgumentException("The effective date of the new budget must be a future date.", "newBudgetEffectiveFrom");
+                throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
             }
 
             var validationMessages = new StringBuilder();
@@ -121,17 +113,14 @@ namespace BudgetAnalyser.Engine.Services
         {
             CreateNewBudgetCollection();
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase.BudgetCollectionStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.budgetRepository.CreateNewAndSaveAsync(applicationDatabase.BudgetCollectionStorageKey);
@@ -142,20 +131,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationDatabase == null)
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
 
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             EnsureAllBucketsUsedAreInBucketRepo();
 
@@ -164,10 +150,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 await this.budgetRepository.SaveAsync();
                 EventHandler savedHandler = Saved;
-                if (savedHandler != null)
-                {
-                    savedHandler(this, EventArgs.Empty);
-                }
+                savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -179,10 +162,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
 
             if (args.ModificationComment.IsNothing())
             {
@@ -203,7 +183,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             // Copy view model bound data back into model.
@@ -214,31 +194,9 @@ namespace BudgetAnalyser.Engine.Services
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
             var args = new ValidatingEventArgs();
-            if (handler != null)
-            {
-                handler(this, args);
-            }
+            handler?.Invoke(this, args);
 
             return Budgets.Validate(messages);
-        }
-
-        private void CreateNewBudgetCollection()
-        {
-            Budgets = this.budgetRepository.CreateNew();
-        }
-
-        private void EnsureAllBucketsUsedAreInBucketRepo()
-        {
-            // Make sure all buckets are in the bucket repo.
-            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
-                .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
-                .Distinct();
-
-            foreach (BudgetBucket budgetBucket in buckets)
-            {
-                BudgetBucket copyOfBucket = budgetBucket;
-                BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
-            }
         }
 
         private static IEnumerable<Expense> CloneBudgetExpenses(BudgetModel source)
@@ -259,6 +217,25 @@ namespace BudgetAnalyser.Engine.Services
                     Amount = sourceExpense.Amount,
                     Bucket = sourceExpense.Bucket
                 }).ToList();
+        }
+
+        private void CreateNewBudgetCollection()
+        {
+            Budgets = this.budgetRepository.CreateNew();
+        }
+
+        private void EnsureAllBucketsUsedAreInBucketRepo()
+        {
+            // Make sure all buckets are in the bucket repo.
+            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+                .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
+                .Distinct();
+
+            foreach (BudgetBucket budgetBucket in buckets)
+            {
+                BudgetBucket copyOfBucket = budgetBucket;
+                BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
+            }
         }
     }
 }

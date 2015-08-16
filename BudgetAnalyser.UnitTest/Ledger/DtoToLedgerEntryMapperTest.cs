@@ -13,9 +13,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class DtoToLedgerEntryMapperTest
     {
-        private LedgerEntry Result { get; set; }
-
         private LedgerEntry Control { get; set; }
+        private LedgerEntry Result { get; set; }
 
         private LedgerEntryDto TestData
         {
@@ -42,7 +41,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                             Amount = 140M,
                             Id = Guid.NewGuid(),
                             Narrative = "Foo...",
-                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName,
+                            TransactionType = typeof(BudgetCreditLedgerTransaction).FullName
                         },
                         new LedgerTransactionDto
                         {
@@ -50,29 +49,17 @@ namespace BudgetAnalyser.UnitTest.Ledger
                             Amount = -98.56M,
                             Id = Guid.NewGuid(),
                             Narrative = "Bar...",
-                            TransactionType = typeof(CreditLedgerTransaction).FullName,
-                        },
-                    },
+                            TransactionType = typeof(CreditLedgerTransaction).FullName
+                        }
+                    }
                 };
             }
-        }
-
-        [TestMethod]
-        public void ShouldSetIsNewToFalse()
-        {
-            Assert.IsFalse((bool)PrivateAccessor.GetField(Result, "isNew"));
         }
 
         [TestMethod]
         public void ShouldMapBalance()
         {
             Assert.AreEqual(Control.Balance, Result.Balance);
-        }
-
-        [TestMethod]
-        public void ShouldMapNetAmount()
-        {
-            Assert.AreEqual(Control.NetAmount, Result.NetAmount);
         }
 
         [TestMethod]
@@ -87,14 +74,24 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(2, Result.Transactions.Count());
         }
 
+        [TestMethod]
+        public void ShouldMapNetAmount()
+        {
+            Assert.AreEqual(Control.NetAmount, Result.NetAmount);
+        }
+
+        [TestMethod]
+        public void ShouldSetIsNewToFalse()
+        {
+            Assert.IsFalse((bool)PrivateAccessor.GetField(Result, "isNew"));
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerEntry>(TestData);
 
-            var book = LedgerBookTestData.TestData2();
+            LedgerBook book = LedgerBookTestData.TestData2();
             Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);
         }
     }

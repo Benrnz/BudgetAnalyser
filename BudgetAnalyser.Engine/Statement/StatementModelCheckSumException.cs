@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
         }
 
-        public string FileChecksum { get; private set; }
+        public string FileChecksum { get; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

@@ -9,7 +9,6 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;
-using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 
@@ -20,28 +19,25 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IAccountTypeRepository accountRepo;
         private readonly ILedgerService ledgerService;
+        private readonly IUserMessageBox messageBox;
         private Guid correlationId;
         private LedgerBucket ledger;
-        private Engine.Ledger.LedgerBook ledgerBook;
-        private IUserMessageBox messageBox;
-
-        public event EventHandler Updated;
 
         public LedgerBucketViewController([NotNull] IAccountTypeRepository accountRepo, [NotNull] IUiContext context, [NotNull] ILedgerService ledgerService)
         {
             if (accountRepo == null)
             {
-                throw new ArgumentNullException("accountRepo");
+                throw new ArgumentNullException(nameof(accountRepo));
             }
 
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             MessengerInstance = context.Messenger;
@@ -51,36 +47,42 @@ namespace BudgetAnalyser.LedgerBook
             this.messageBox = context.UserPrompts.MessageBox;
         }
 
-        public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
+        public event EventHandler Updated;
 
+        [UsedImplicitly]
         public ObservableCollection<Account> BankAccounts { get; private set; }
 
         public BudgetBucket BucketBeingTracked { get; private set; }
+        public LedgerBucketHistoryAnalyser LedgerBucketHistoryAnalysis { get; private set; }
 
+        [UsedImplicitly]
         public decimal MonthlyBudgetAmount { get; private set; }
+
         public Account StoredInAccount { get; set; }
 
         public void ShowDialog([NotNull] Engine.Ledger.LedgerBook parentLedgerBook, [NotNull] LedgerBucket ledgerBucket, [NotNull] BudgetModel budgetModel)
         {
             if (parentLedgerBook == null)
             {
-                throw new ArgumentNullException("parentLedgerBook");
+                throw new ArgumentNullException(nameof(parentLedgerBook));
             }
 
             if (ledgerBucket == null)
             {
-                throw new ArgumentNullException("ledgerBucket");
+                throw new ArgumentNullException(nameof(ledgerBucket));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
-            if (LedgerBucketHistoryAnalysis == null) LedgerBucketHistoryAnalysis = CreateBucketHistoryAnalyser();
+            if (LedgerBucketHistoryAnalysis == null)
+            {
+                LedgerBucketHistoryAnalysis = CreateBucketHistoryAnalyser();
+            }
             LedgerBucketHistoryAnalysis.Analyse(ledgerBucket, parentLedgerBook);
             this.ledger = ledgerBucket;
-            this.ledgerBook = parentLedgerBook;
             BankAccounts = new ObservableCollection<Account>(this.accountRepo.ListCurrentlyUsedAccountTypes());
             BucketBeingTracked = ledgerBucket.BudgetBucket;
             StoredInAccount = ledgerBucket.StoredInAccount;
@@ -91,7 +93,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 CorrelationId = this.correlationId,
                 Title = "Ledger - " + BucketBeingTracked,
-                HelpAvailable = true,
+                HelpAvailable = true
             };
 
             MessengerInstance.Send(dialogRequest);
@@ -116,7 +118,8 @@ namespace BudgetAnalyser.LedgerBook
 
             if (message.Response == ShellDialogButton.Help)
             {
-                this.messageBox.Show("Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
+                this.messageBox.Show(
+                    "Ledgers within the Ledger Book track the actual bank balance over time of a single Bucket.  This is especially useful for budget items that you need to save up for. For example, annual vehicle registration, or car maintenance.  It can also be useful to track Spent-Monthly Buckets. Even though they are always spent down to zero each month, (like rent or mortgage payments), sometimes its useful to have an extra payment, for when there are five weekly payments in a month instead of four.");
                 return;
             }
 
@@ -128,8 +131,8 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 this.ledgerService.MoveLedgerToAccount(this.ledger, StoredInAccount);
-                var handler = Updated;
-                if (handler != null) handler(this, EventArgs.Empty);
+                EventHandler handler = Updated;
+                handler?.Invoke(this, EventArgs.Empty);
             }
             finally
             {

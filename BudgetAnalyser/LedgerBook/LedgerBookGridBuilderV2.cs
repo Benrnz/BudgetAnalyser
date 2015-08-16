@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +26,7 @@ namespace BudgetAnalyser.LedgerBook
         private const string ImportantNumberStyle = "LedgerBookTextBlockImportantNumber";
         private const string LessButtonStyle = "Button.Round.Minus";
         private const string LightBorderBrush = "Brush.BorderLight";
+        private const string MainBackground = "Brush.MainBackground";
         private const string MoreButtonStyle = "Button.Round.Add";
         private const string NormalHighlightBackground = "Brush.TileBackground";
         private const string NormalStyle = "LedgerBookTextBlockOther";
@@ -34,7 +34,6 @@ namespace BudgetAnalyser.LedgerBook
         private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
         private const string SurplusBackground = "Brush.TileBackgroundAlternate";
         private const string SurplusTextBrush = "Brush.CreditBackground1";
-        private const string MainBackground = "Brush.MainBackground";
         private readonly ICommand removeLedgerEntryLineCommand;
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showHideMonthsCommand;
@@ -78,18 +77,57 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (viewResources == null)
             {
-                throw new ArgumentNullException("viewResources");
+                throw new ArgumentNullException(nameof(viewResources));
             }
 
             if (contentPanel == null)
             {
-                throw new ArgumentNullException("contentPanel");
+                throw new ArgumentNullException(nameof(contentPanel));
             }
 
             this.ledgerBook = currentLedgerBook;
             this.localResources = viewResources;
             this.contentPresenter = contentPanel;
             DynamicallyCreateLedgerBookGrid(numberOfMonthsToShow);
+        }
+
+        private static string BuildToolTipForBankBalance(LedgerEntryLine line)
+        {
+            var individualLedgerBalances = new StringBuilder();
+            foreach (BankBalance bankBalance in line.BankBalances)
+            {
+                individualLedgerBalances.AppendFormat(
+                    "{0}: {1:N}; ",
+                    bankBalance.Account,
+                    bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));
+            }
+
+            return string.Format(
+                CultureInfo.CurrentCulture,
+                "Total Ledger Balance: {0:N}; Total Bank Balance {1:N}; {2}",
+                line.LedgerBalance,
+                line.TotalBankBalance,
+                individualLedgerBalances);
+        }
+
+        private static Brush StripColour(LedgerBucket ledger)
+        {
+            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
+            {
+                return ConverterHelper.SpentMonthlyBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavedUpForExpenseBucket)
+            {
+                return ConverterHelper.AccumulatedBucketBrush;
+            }
+
+            if (ledger.BudgetBucket is SavingsCommitmentBucket)
+            {
+                return ConverterHelper.SavingsCommitmentBucketBrush;
+            }
+
+            return ConverterHelper.TileBackgroundBrush;
         }
 
         private Border AddBorderToGridCell(Panel parent, bool hasBackground, bool hasBorder, int gridRow, int gridColumn)
@@ -140,7 +178,7 @@ namespace BudgetAnalyser.LedgerBook
             }
             else
             {
-                throw new ArgumentException("parent is not a Panel nor a Decorator", "parent");
+                throw new ArgumentException(nameof(parent) + " is not a Panel nor a Decorator", nameof(parent));
             }
 
             return textBlock;
@@ -417,25 +455,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        private static string BuildToolTipForBankBalance(LedgerEntryLine line)
-        {
-            var individualLedgerBalances = new StringBuilder();
-            foreach (var bankBalance in line.BankBalances)
-            {
-                individualLedgerBalances.AppendFormat(
-                    "{0}: {1:N}; ",
-                    bankBalance.Account,
-                    bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));
-            }
-
-            return string.Format(
-                CultureInfo.CurrentCulture, 
-                "Total Ledger Balance: {0:N}; Total Bank Balance {1:N}; {2}", 
-                line.LedgerBalance, 
-                line.TotalBankBalance,
-                individualLedgerBalances);
-        }
-
         private void AddLedgerRows(Grid grid)
         {
             foreach (LedgerBucket ledger in this.sortedLedgers)
@@ -573,26 +592,6 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             return Application.Current.FindResource(resourceName);
-        }
-
-        private static Brush StripColour(LedgerBucket ledger)
-        {
-            if (ledger.BudgetBucket is SpentMonthlyExpenseBucket)
-            {
-                return ConverterHelper.SpentMonthlyBucketBrush;
-            }
-
-            if (ledger.BudgetBucket is SavedUpForExpenseBucket)
-            {
-                return ConverterHelper.AccumulatedBucketBrush;
-            }
-
-            if (ledger.BudgetBucket is SavingsCommitmentBucket)
-            {
-                return ConverterHelper.SavingsCommitmentBucketBrush;
-            }
-
-            return ConverterHelper.TileBackgroundBrush;
         }
     }
 }

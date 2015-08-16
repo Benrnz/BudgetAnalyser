@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
@@ -12,6 +13,7 @@ namespace BudgetAnalyser.Engine
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValidationWarningException" /> class.
         /// </summary>
+        [UsedImplicitly]
         public ValidationWarningException()
         {
         }

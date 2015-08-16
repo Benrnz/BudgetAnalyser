@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
@@ -6,9 +7,9 @@ namespace BudgetAnalyser.Engine.Persistence
     internal class ApplicationAutoMapperConfiguration : ILocalAutoMapperConfiguration
     {
         /// <summary>
-        /// Register the localised mappings.
+        ///     Register the localised mappings.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Ok in AutoMapper files of this size")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Ok in AutoMapper files of this size")]
         public void RegisterMappings()
         {
             Mapper.CreateMap<BudgetAnalyserStorageRoot, ApplicationDatabase>()

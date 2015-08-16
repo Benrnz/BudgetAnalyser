@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))
@@ -55,8 +55,8 @@ namespace BudgetAnalyser.Engine.Widgets
             DetailedText = string.Format(
                 CultureInfo.CurrentCulture,
                 "Filtered from {0} to {1}",
-                criteria.BeginDate.Value.ToShortDateString(),
-                criteria.EndDate.Value.ToShortDateString());
+                criteria.BeginDate?.Date.ToShortDateString(),
+                criteria.EndDate?.Date.ToShortDateString());
         }
 
         private void NoDateFilterApplied()

@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             if (accountRepo == null)
             {
-                throw new ArgumentNullException("accountRepo");
+                throw new ArgumentNullException(nameof(accountRepo));
             }
 
             this.accountRepo = accountRepo;

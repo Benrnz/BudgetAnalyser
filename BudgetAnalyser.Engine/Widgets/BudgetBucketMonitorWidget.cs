@@ -12,22 +12,29 @@ namespace BudgetAnalyser.Engine.Widgets
     public sealed class BudgetBucketMonitorWidget : ProgressBarWidget, IUserDefinedWidget
     {
         private readonly string disabledToolTip;
-        private LedgerCalculation ledgerCalculator;
         private readonly string remainingBudgetToolTip;
         private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
-
         private IBudgetCurrencyContext budget;
         private string doNotUseBucketCode;
         private string doNotUseId;
         private GlobalFilterCriteria filter;
         private LedgerBook ledgerBook;
+        private LedgerCalculation ledgerCalculator;
         private StatementModel statement;
 
         public BudgetBucketMonitorWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
-            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
+            Dependencies = new[]
+            {
+                typeof(IBudgetCurrencyContext),
+                typeof(StatementModel),
+                typeof(GlobalFilterCriteria),
+                typeof(IBudgetBucketRepository),
+                typeof(LedgerBook),
+                typeof(LedgerCalculation)
+            };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle3";
 
@@ -59,10 +66,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        public Type WidgetType
-        {
-            get { return GetType(); }
-        }
+        public Type WidgetType => GetType();
 
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
@@ -72,7 +76,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))

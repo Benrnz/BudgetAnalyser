@@ -24,17 +24,17 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ruleService == null)
             {
-                throw new ArgumentNullException("ruleService");
+                throw new ArgumentNullException(nameof(ruleService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             RulesController = uiContext.RulesController;
@@ -46,15 +46,10 @@ namespace BudgetAnalyser.Matching
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand ApplyRulesCommand
-        {
-            get { return new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand); }
-        }
+        public ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
 
-        public ICommand CreateRuleCommand
-        {
-            get { return new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand); }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand CreateRuleCommand => new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
 
         public bool Dirty
         {
@@ -71,12 +66,10 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public RulesController RulesController { get; private set; }
+        public RulesController RulesController { get; }
 
-        public ICommand ShowRulesCommand
-        {
-            get { return new RelayCommand(OnShowRulesCommandExecute); }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
 
         private bool CanExecuteApplyRulesCommand()
         {

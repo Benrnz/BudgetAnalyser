@@ -13,10 +13,7 @@ namespace BudgetAnalyser.Statement
             InitializeComponent();
         }
 
-        private LoadFileController Controller
-        {
-            get { return (LoadFileController)DataContext; }
-        }
+        private LoadFileController Controller => (LoadFileController)DataContext;
 
         private void OnFileNameMouseUp(object sender, MouseEventArgs e)
         {

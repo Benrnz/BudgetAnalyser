@@ -41,6 +41,12 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
+        public void CtorShouldSetClearedToTrue()
+        {
+            Assert.IsTrue(new GlobalFilterCriteria().Cleared);
+        }
+
+        [TestMethod]
         public void EndDateShouldAutoAdjustGivenDateAfterStartDate()
         {
             var invalidEndDate = new DateTime(2014, 3, 1);
@@ -96,6 +102,15 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
+        public void ValidateShouldReturnFalseGivenAccountAndNoDates()
+        {
+            // Currently not valid to specify an account filter without dates.  Dates are always mandatory when filtering.
+            var subject = new GlobalFilterCriteria { Account = this.testVisaAccount };
+            Assert.IsFalse(subject.Cleared);
+            Assert.IsFalse(subject.Validate(this.validationMessages));
+        }
+
+        [TestMethod]
         public void ValidateShouldReturnFalseGivenBeginDateIsNull()
         {
             var subject = new GlobalFilterCriteria { BeginDate = new DateTime(), EndDate = DateTime.Now };
@@ -112,27 +127,18 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        public void ValidateShouldReturnTrueGivenDatesButNoAccount()
-        {
-            var subject = new GlobalFilterCriteria { BeginDate = DateTime.Today.AddDays(-1), EndDate = DateTime.Now };
-            Assert.IsFalse(subject.Cleared);
-            Assert.IsTrue(subject.Validate(this.validationMessages));
-        }
-
-        [TestMethod]
-        public void ValidateShouldReturnFalseGivenAccountAndNoDates()
-        {
-            // Currently not valid to specify an account filter without dates.  Dates are always mandatory when filtering.
-            var subject = new GlobalFilterCriteria { Account = this.testVisaAccount };
-            Assert.IsFalse(subject.Cleared);
-            Assert.IsFalse(subject.Validate(this.validationMessages));
-        }
-
-        [TestMethod]
         public void ValidateShouldReturnTrueGivenCleared()
         {
             var subject = new GlobalFilterCriteria();
             Assert.IsTrue(subject.Cleared);
+            Assert.IsTrue(subject.Validate(this.validationMessages));
+        }
+
+        [TestMethod]
+        public void ValidateShouldReturnTrueGivenDatesButNoAccount()
+        {
+            var subject = new GlobalFilterCriteria { BeginDate = DateTime.Today.AddDays(-1), EndDate = DateTime.Now };
+            Assert.IsFalse(subject.Cleared);
             Assert.IsTrue(subject.Validate(this.validationMessages));
         }
 
@@ -142,12 +148,6 @@ namespace BudgetAnalyser.UnitTest
         {
             var subject = new GlobalFilterCriteria { BeginDate = new DateTime(), EndDate = DateTime.Now };
             Assert.IsFalse(subject.Validate(null));
-        }
-
-        [TestMethod]
-        public void CtorShouldSetClearedToTrue()
-        {
-            Assert.IsTrue(new GlobalFilterCriteria().Cleared);
         }
 
         [TestMethod]

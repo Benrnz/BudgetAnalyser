@@ -10,14 +10,14 @@ namespace BudgetAnalyser.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class NewBudgetModelController : ControllerBase, IShellDialogInteractivity
     {
+        private readonly IUserMessageBox messageBox;
         private Guid dialogCorrelationId;
-        private IUserMessageBox messageBox;
 
         public NewBudgetModelController([NotNull] IUiContext uiContext)
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -30,26 +30,17 @@ namespace BudgetAnalyser.Budget
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public bool CanExecuteCancelButton => true;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton
-        {
-            get { return false; }
-        }
+        public bool CanExecuteOkButton => false;
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteSaveButton
-        {
-            get { return EffectiveFrom > DateTime.Today; }
-        }
+        public bool CanExecuteSaveButton => EffectiveFrom > DateTime.Today;
 
         public DateTime EffectiveFrom { get; set; }
 
@@ -62,7 +53,7 @@ namespace BudgetAnalyser.Budget
             {
                 CorrelationId = this.dialogCorrelationId,
                 Title = "Create new Budget based on current",
-                HelpAvailable = true,
+                HelpAvailable = true
             };
             MessengerInstance.Send(dialogRequest);
         }

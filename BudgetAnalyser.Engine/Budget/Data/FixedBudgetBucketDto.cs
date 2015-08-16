@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         public override BucketDtoType Type
         {
             get { return BucketDtoType.FixedBudgetProject; }
-            set {  }
+            set { }
         }
     }
 }

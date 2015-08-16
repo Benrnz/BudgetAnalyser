@@ -17,9 +17,7 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public DateTime EffectiveFrom { get; set; }
-
         public virtual IEnumerable<Expense> Expenses { get; private set; }
-
         public virtual IEnumerable<Income> Incomes { get; private set; }
 
         /// <summary>
@@ -33,24 +31,7 @@ namespace BudgetAnalyser.Engine.Budget
         public string LastModifiedComment { get; set; }
 
         public string Name { get; set; }
-
-        public decimal Surplus
-        {
-            get { return Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount); }
-        }
-
-        protected virtual void Initialise()
-        {
-            Expenses = Expenses.OrderByDescending(e => e.Amount).ToList();
-            Incomes = Incomes.OrderByDescending(i => i.Amount).ToList();
-
-            var builder = new StringBuilder();
-            if (!Validate(builder))
-            {
-                // Consumer should have already called validate and resolved any issues before calling Update+Initialise.
-                throw new ValidationWarningException("The model is invalid. " + builder);
-            }
-        }
+        public decimal Surplus => Incomes.Sum(i => i.Amount) - Expenses.Sum(e => e.Amount);
 
         internal void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
         {
@@ -62,7 +43,7 @@ namespace BudgetAnalyser.Engine.Budget
 
         internal virtual bool Validate(StringBuilder validationMessages)
         {
-            bool retval = true;
+            var retval = true;
             retval &= Incomes.OfType<IModelValidate>().ToList().All(i => i.Validate(validationMessages));
             retval &= Expenses.OfType<IModelValidate>().ToList().All(e => e.Validate(validationMessages));
 
@@ -84,6 +65,19 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return retval;
+        }
+
+        protected virtual void Initialise()
+        {
+            Expenses = Expenses.OrderByDescending(e => e.Amount).ToList();
+            Incomes = Incomes.OrderByDescending(i => i.Amount).ToList();
+
+            var builder = new StringBuilder();
+            if (!Validate(builder))
+            {
+                // Consumer should have already called validate and resolved any issues before calling Update+Initialise.
+                throw new ValidationWarningException("The model is invalid. " + builder);
+            }
         }
     }
 }

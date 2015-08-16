@@ -7,22 +7,11 @@
             Name = name;
         }
 
-        public override AccountType AccountType
-        {
-            get { return AccountType.General; }
-        }
+        public override AccountType AccountType => AccountType.General;
+        public override string ImagePath => "../Assets/Misc1Logo.png";
+        internal virtual string[] KeyWords => new string[] { };
 
-        public override string ImagePath
-        {
-            get { return "../Assets/Misc1Logo.png"; }
-        }
-
-        internal override string[] KeyWords
-        {
-            get { return new string[] { }; }
-        }
-
-        public override Account Clone(string name)
+        public virtual Account Clone(string name)
         {
             return new MiscellaneousAccount(name);
         }

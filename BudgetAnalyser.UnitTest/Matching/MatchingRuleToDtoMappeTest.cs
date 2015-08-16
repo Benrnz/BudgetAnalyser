@@ -12,7 +12,6 @@ namespace BudgetAnalyser.UnitTest.Matching
     public class MatchingRuleToDtoMapperTest
     {
         private static readonly Guid Id = new Guid("901EC4BB-B8B5-43CD-A8C9-15121048CBA4");
-
         private MatchingRuleDto Result { get; set; }
 
         private MatchingRule TestData
@@ -31,7 +30,7 @@ namespace BudgetAnalyser.UnitTest.Matching
                     Reference2 = "over",
                     Reference3 = "the lazy",
                     RuleId = Id,
-                    TransactionType = "dog.",
+                    TransactionType = "dog."
                 };
             }
         }
@@ -43,15 +42,15 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
-        public void ShouldMapBucketCode()
-        {
-            Assert.AreEqual(TestData.Bucket.Code, Result.BucketCode);
-        }
-
-        [TestMethod]
         public void ShouldMapBucket()
         {
             Assert.AreEqual(TestData.BucketCode, Result.BucketCode);
+        }
+
+        [TestMethod]
+        public void ShouldMapBucketCode()
+        {
+            Assert.AreEqual(TestData.Bucket.Code, Result.BucketCode);
         }
 
         [TestMethod]
@@ -111,8 +110,6 @@ namespace BudgetAnalyser.UnitTest.Matching
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<MatchingRuleDto>(TestData);
         }
     }

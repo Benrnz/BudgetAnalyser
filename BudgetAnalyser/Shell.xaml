@@ -26,37 +26,37 @@
             <budgetAnalyser:MainMenuUserControl DataContext="{Binding MainMenuController}" />
         </Grid>
         <Grid>
-            
+
             <Grid Visibility="{Binding StatementController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding StatementController}"
                                   DataContext="{Binding StatementController}" />
                 <shellDialog:ShellDialogView DataContext="{Binding TransactionsDialog}" />
             </Grid>
-            
+
             <Grid Visibility="{Binding BudgetController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding BudgetController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding BudgetDialog}" />
             </Grid>
-            
+
             <Grid Visibility="{Binding LedgerBookController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding LedgerBookController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding LedgerBookDialog}" />
             </Grid>
-            
+
             <Grid Visibility="{Binding DashboardController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding DashboardController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding DashboardDialog}" />
             </Grid>
-            
+
             <Grid Visibility="{Binding ReportsCatalogController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding ReportsCatalogController}"
                                   VerticalAlignment="Stretch" />
                 <shellDialog:ShellDialogView DataContext="{Binding ReportsDialog}" />
             </Grid>
-            
+
             <Grid Visibility="{Binding RulesController.Shown, Converter={StaticResource Converter.BoolToVis}}">
                 <ContentPresenter Content="{Binding RulesController}"
                                   VerticalAlignment="Stretch" />

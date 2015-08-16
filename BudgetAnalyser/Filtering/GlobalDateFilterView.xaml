@@ -18,15 +18,15 @@
                        Text="Begin Date (inclusive)"
                        Height="21"
                        Margin="2,6" />
-            <StackPanel  Grid.Column="1"
-                         Grid.Row="0"
-                         Margin="3,3,0,3"
-                         Orientation="Horizontal">
+            <StackPanel Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="3,3,0,3"
+                        Orientation="Horizontal">
                 <DatePicker SelectedDate="{Binding Criteria.BeginDate, StringFormat=d}" />
                 <Button Style="{StaticResource Button.Round.Minus}"
                         Command="{Binding BackMonthCommand}"
-                        CommandParameter="{Binding Criteria.BeginDate}" 
-                        ToolTip="Back a month"/>
+                        CommandParameter="{Binding Criteria.BeginDate}"
+                        ToolTip="Back a month" />
                 <Button Style="{StaticResource Button.Round.Add}"
                         Command="{Binding AddMonthCommand}"
                         CommandParameter="{Binding Criteria.BeginDate}"

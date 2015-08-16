@@ -10,16 +10,17 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 {
     public class XamlOnDiskMatchingRuleRepositoryTestHarness : XamlOnDiskMatchingRuleRepository
     {
-        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper, [NotNull] BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper)
+        public XamlOnDiskMatchingRuleRepositoryTestHarness(
+            [NotNull] BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper,
+            [NotNull] BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper)
             : base(dataToDomainMapper, domainToDataMapper)
         {
         }
 
         public Func<string, bool> ExistsOveride { get; set; }
-
         public Func<string, List<MatchingRuleDto>> LoadFromDiskOveride { get; set; }
-        public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
         public Func<string, string> LoadXamlFromDiskOveride { get; set; }
+        public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
 
         protected override bool Exists(string storageKey)
         {
@@ -31,6 +32,16 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return ExistsOveride(storageKey);
         }
 
+        protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
+        {
+            if (LoadFromDiskOveride == null)
+            {
+                return await base.LoadFromDiskAsync(fileName);
+            }
+
+            return LoadFromDiskOveride(fileName);
+        }
+
         protected override string LoadXamlFromDisk(string fileName)
         {
             if (LoadXamlFromDiskOveride == null)
@@ -39,16 +50,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             }
 
             return LoadXamlFromDiskOveride(fileName);
-        }
-
-        protected async override Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
-        {
-            if (LoadFromDiskOveride == null)
-            {
-                return await base.LoadFromDiskAsync(fileName);
-            }
-
-            return LoadFromDiskOveride(fileName);
         }
 
         protected override Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)

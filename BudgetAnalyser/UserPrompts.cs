@@ -17,27 +17,27 @@ namespace BudgetAnalyser
         {
             if (messageBox == null)
             {
-                throw new ArgumentNullException("messageBox");
+                throw new ArgumentNullException(nameof(messageBox));
             }
 
             if (openFileFactory == null)
             {
-                throw new ArgumentNullException("openFileFactory");
+                throw new ArgumentNullException(nameof(openFileFactory));
             }
 
             if (saveFileFactory == null)
             {
-                throw new ArgumentNullException("saveFileFactory");
+                throw new ArgumentNullException(nameof(saveFileFactory));
             }
 
             if (yesNoBox == null)
             {
-                throw new ArgumentNullException("yesNoBox");
+                throw new ArgumentNullException(nameof(yesNoBox));
             }
 
             if (inputBox == null)
             {
-                throw new ArgumentNullException("inputBox");
+                throw new ArgumentNullException(nameof(inputBox));
             }
 
             OpenFileFactory = openFileFactory;
@@ -48,7 +48,6 @@ namespace BudgetAnalyser
         }
 
         public IUserInputBox InputBox { get; private set; }
-
         public IUserMessageBox MessageBox { get; private set; }
         public Func<IUserPromptOpenFile> OpenFileFactory { get; private set; }
         public Func<IUserPromptSaveFile> SaveFileFactory { get; private set; }

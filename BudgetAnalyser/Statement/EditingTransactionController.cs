@@ -14,18 +14,20 @@ namespace BudgetAnalyser.Statement
     public class EditingTransactionController : ControllerBase
     {
         private readonly IBudgetBucketRepository bucketRepo;
+        private IEnumerable<BudgetBucket> doNotUseBuckets;
         private Transaction doNotUseTransaction;
+        private BudgetBucket originalBucket;
 
         public EditingTransactionController([NotNull] UiContext uiContext, [NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             this.bucketRepo = bucketRepo;
@@ -34,25 +36,16 @@ namespace BudgetAnalyser.Statement
 
         public IEnumerable<BudgetBucket> Buckets
         {
-            get { return this.doNotUseBuckets; }
+            [UsedImplicitly] get { return this.doNotUseBuckets; }
             private set
             {
-                this.doNotUseBuckets = value; 
+                this.doNotUseBuckets = value;
                 RaisePropertyChanged();
             }
         }
 
-        public bool HasChanged
-        {
-            get
-            {
-                return OriginalHash != Transaction.GetEqualityHashCode()
-                       || this.originalBucket != Transaction.BudgetBucket;
-            }
-        }
-
-        private BudgetBucket originalBucket;
-        private IEnumerable<BudgetBucket> doNotUseBuckets;
+        public bool HasChanged => OriginalHash != Transaction.GetEqualityHashCode()
+                                  || this.originalBucket != Transaction.BudgetBucket;
 
         public int OriginalHash { get; private set; }
 
@@ -61,14 +54,7 @@ namespace BudgetAnalyser.Statement
             get { return this.doNotUseTransaction; }
             set
             {
-                if (value == null)
-                {
-                    OriginalHash = 0;
-                }
-                else
-                {
-                    OriginalHash = value.GetEqualityHashCode();
-                }
+                OriginalHash = value?.GetEqualityHashCode() ?? 0;
 
                 this.doNotUseTransaction = value;
             }
@@ -87,7 +73,7 @@ namespace BudgetAnalyser.Statement
                     ShellDialogType.SaveCancel)
                 {
                     CorrelationId = correlationId,
-                    Title = "Edit Transaction",
+                    Title = "Edit Transaction"
                 });
         }
     }

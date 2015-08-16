@@ -19,15 +19,20 @@ namespace BudgetAnalyser.Engine
             new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true },
             new IndexDayHoliday { Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
             new IndexDayHoliday { Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3 },
-            new DayClosestToHoliday { Name = "Auckland Anniversary", DesiredDay = DayOfWeek.Monday, Month = 1, CloseToDate = 29 }
+            new DayClosestMondayToHoliday { Name = "Auckland Anniversary", Month = 1, CloseToDate = 29 }
         };
+
+        public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
+        {
+            return CalculateHolidaysVerbose(start, end).Select(t => t.Item2);
+        }
 
         public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
         {
             var holidays = new Dictionary<DateTime, string>();
-            foreach (var holidayTemplate in HolidayTemplates)
+            foreach (Holiday holidayTemplate in HolidayTemplates)
             {
-                var proposedDate = holidayTemplate.CalculateDate(start, end);
+                DateTime proposedDate = holidayTemplate.CalculateDate(start, end);
 
                 if (holidays.ContainsKey(proposedDate))
                 {
@@ -42,112 +47,18 @@ namespace BudgetAnalyser.Engine
             return holidays.Select(h => new Tuple<string, DateTime>(h.Value, h.Key)).OrderBy(d => d.Item2);
         }
 
-        public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
-        {
-            return CalculateHolidaysVerbose(start, end).Select(t => t.Item2);
-        }
-
-        private abstract class Holiday
-        {
-            public string Name { get; set; }
-            public abstract DateTime CalculateDate(DateTime start, DateTime end);
-        }
-
         /// <summary>
-        /// A holiday that occurs every year on a specific date.  For example Christmas day, the 25th of December.
-        /// These holidays can still be optionally "Monday-ised" using the <see cref="MondayiseIfOnWeekend"/> property.
+        ///     A holiday that is celebrated closest to an anniversary date.
+        ///     For example: Auckland anniversary is celebrated on the closest Monday to the 29th of January.
         /// </summary>
-        private class FixedDateHoliday : Holiday
-        {
-            public int Day { get; set; }
-            public int Month { get; set; }
-            public bool MondayiseIfOnWeekend { get; set; }
-
-            public override DateTime CalculateDate(DateTime start, DateTime end)
-            {
-                DateTime proposed = DateTime.MinValue;
-                for (var year = start.Year; year <= end.Year; year++)
-                {
-                    proposed = new DateTime(year, Month, Day);
-                    if (proposed >= start && proposed <= end)
-                    {
-                        break;
-                    }
-                }
-
-                if (MondayiseIfOnWeekend && (proposed.DayOfWeek == DayOfWeek.Saturday || proposed.DayOfWeek == DayOfWeek.Sunday))
-                {
-                    do
-                    {
-                        proposed = proposed.AddDays(1);
-                    } while (proposed.DayOfWeek != DayOfWeek.Monday);
-                }
-
-                if (proposed < DateTime.MinValue.AddMonths(1))
-                {
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
-                }
-
-                return proposed;
-            }
-        }
-
-        /// <summary>
-        /// A holiday that occurs on a certain day of the week and at a certain indexed week in the month.
-        /// For example: Queen's birthday is celebrated on the first Monday of June.
-        /// </summary>
-        private class IndexDayHoliday : Holiday
-        {
-            public DayOfWeek Day { get; set; }
-            public int Index { get; set; }
-            public int Month { get; set; }
-
-            public override DateTime CalculateDate(DateTime start, DateTime end)
-            {
-                for (var year = start.Year; year <= end.Year; year++)
-                {
-                    var proposed = ProposeDate(year);
-                    if (proposed >= start && proposed <= end)
-                    {
-                        return proposed;
-                    }
-                }
-
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
-            }
-
-            private DateTime ProposeDate(int year)
-            {
-                var proposed = new DateTime(year, Month, 1);
-                while (proposed.DayOfWeek != Day)
-                {
-                    proposed = proposed.AddDays(1);
-                }
-
-                var count = 0;
-                while (count != Index)
-                {
-                    proposed = proposed.AddDays(7);
-                    count++;
-                }
-                return proposed;
-            }
-        }
-
-        /// <summary>
-        /// A holiday that is celebrated closest to an anniversary date.
-        /// For example: Auckland anniversary is celebrated on the closest Monday to the 29th of January.
-        /// </summary>
-        private class DayClosestToHoliday : Holiday
+        private class DayClosestMondayToHoliday : Holiday
         {
             public int CloseToDate { get; set; }
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Should be available to external consumers.")]
-            public DayOfWeek DesiredDay { get; set; }
             public int Month { get; set; }
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                for (var year = start.Year; year <= end.Year; year++)
+                for (int year = start.Year; year <= end.Year; year++)
                 {
                     var proposed = new DateTime(year, Month, CloseToDate);
                     switch (proposed.DayOfWeek)
@@ -185,7 +96,7 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
-        /// A custom calculator specifically to find the dates for Easter for any year.
+        ///     A custom calculator specifically to find the dates for Easter for any year.
         /// </summary>
         private class EasterHoliday : Holiday
         {
@@ -193,19 +104,17 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                for (var year = start.Year; year <= end.Year; year++)
+                for (int year = start.Year; year <= end.Year; year++)
                 {
                     // first calculate Easter Sunday
-                    var day = 0;
-                    var month = 0;
 
-                    var goldenNumber = year % 19;
-                    var century = year / 100;
-                    var h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
-                    var i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
+                    int goldenNumber = year % 19;
+                    int century = year / 100;
+                    int h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
+                    int i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
 
-                    day = i - ((year + year / 4 + i + 2 - century + century / 4) % 7) + 28;
-                    month = 3;
+                    int day = i - ((year + year / 4 + i + 2 - century + century / 4) % 7) + 28;
+                    var month = 3;
 
                     if (day > 31)
                     {
@@ -239,6 +148,93 @@ namespace BudgetAnalyser.Engine
                 }
 
                 throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+            }
+        }
+
+        /// <summary>
+        ///     A holiday that occurs every year on a specific date.  For example Christmas day, the 25th of December.
+        ///     These holidays can still be optionally "Monday-ised" using the <see cref="MondayiseIfOnWeekend" /> property.
+        /// </summary>
+        private class FixedDateHoliday : Holiday
+        {
+            public int Day { get; set; }
+            public bool MondayiseIfOnWeekend { get; set; }
+            public int Month { get; set; }
+
+            public override DateTime CalculateDate(DateTime start, DateTime end)
+            {
+                DateTime proposed = DateTime.MinValue;
+                for (int year = start.Year; year <= end.Year; year++)
+                {
+                    proposed = new DateTime(year, Month, Day);
+                    if (proposed >= start && proposed <= end)
+                    {
+                        break;
+                    }
+                }
+
+                if (MondayiseIfOnWeekend && (proposed.DayOfWeek == DayOfWeek.Saturday || proposed.DayOfWeek == DayOfWeek.Sunday))
+                {
+                    do
+                    {
+                        proposed = proposed.AddDays(1);
+                    } while (proposed.DayOfWeek != DayOfWeek.Monday);
+                }
+
+                if (proposed < DateTime.MinValue.AddMonths(1))
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                }
+
+                return proposed;
+            }
+        }
+
+        private abstract class Holiday
+        {
+            public string Name { get; set; }
+            public abstract DateTime CalculateDate(DateTime start, DateTime end);
+        }
+
+        /// <summary>
+        ///     A holiday that occurs on a certain day of the week and at a certain indexed week in the month.
+        ///     For example: Queen's birthday is celebrated on the first Monday of June.
+        /// </summary>
+        private class IndexDayHoliday : Holiday
+        {
+            public DayOfWeek Day { get; set; }
+            public int Index { get; set; }
+            public int Month { get; set; }
+
+            public override DateTime CalculateDate(DateTime start, DateTime end)
+            {
+                for (int year = start.Year; year <= end.Year; year++)
+                {
+                    DateTime proposed = ProposeDate(year);
+                    if (proposed >= start && proposed <= end)
+                    {
+                        return proposed;
+                    }
+                }
+
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+            }
+
+            private DateTime ProposeDate(int year)
+            {
+                var proposed = new DateTime(year, Month, 1);
+                while (proposed.DayOfWeek != Day)
+                {
+                    proposed = proposed.AddDays(1);
+                }
+
+                var count = 0;
+                while (count != Index)
+                {
+                    proposed = proposed.AddDays(7);
+                    count++;
+                }
+                return proposed;
             }
         }
     }

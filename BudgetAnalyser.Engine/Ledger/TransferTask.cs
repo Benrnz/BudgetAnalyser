@@ -1,5 +1,3 @@
-using BudgetAnalyser.Engine.Account;
-
 namespace BudgetAnalyser.Engine.Ledger
 {
     public class TransferTask : ToDoTask
@@ -9,7 +7,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         public decimal Amount { get; internal set; }
-        public Account.Account SourceAccount { get; internal set; }
         public Account.Account DestinationAccount { get; internal set; }
+        public Account.Account SourceAccount { get; internal set; }
     }
 }

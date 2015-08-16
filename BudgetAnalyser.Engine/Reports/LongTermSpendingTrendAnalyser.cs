@@ -19,7 +19,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (budgetBucketRepo == null)
             {
-                throw new ArgumentNullException("budgetBucketRepo");
+                throw new ArgumentNullException(nameof(budgetBucketRepo));
             }
 
             this.budgetBucketRepo = budgetBucketRepo;
@@ -31,12 +31,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (statement == null)
             {
-                throw new ArgumentNullException("statement");
+                throw new ArgumentNullException(nameof(statement));
             }
 
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             Reset();
@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Engine.Reports
         private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
         {
             // Current month's data is complete - update totals and advance to next month
-            foreach (var subTotal in subTotals)
+            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
             {
                 // Find appropriate bucket series
                 SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);

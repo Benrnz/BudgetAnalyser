@@ -16,37 +16,14 @@ namespace BudgetAnalyser.LedgerBook
             DataContextChanged += OnDataContextChanged;
         }
 
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (Credit != null && Credit >= 0)
-            {
-                CreditAmount.Text = Credit.Value.ToString("N", CultureInfo.CurrentCulture);
-                CreditAmount.Visibility = Visibility.Visible;
-                CreditLabel.Visibility = Visibility.Visible;
-                DebitAmount.Visibility = Visibility.Hidden;
-                DebitLabel.Visibility = Visibility.Hidden;
-            }
-
-            if (Debit != null && Debit > 0)
-            {
-                DebitAmount.Text = Debit.Value.ToString("N", CultureInfo.CurrentCulture);
-                CreditAmount.Visibility = Visibility.Hidden;
-                CreditLabel.Visibility = Visibility.Hidden;
-                DebitAmount.Visibility = Visibility.Visible;
-                DebitLabel.Visibility = Visibility.Visible;
-            }
-        }
-
-        private LedgerTransaction LedgerTransaction
-        {
-            get { return (LedgerTransaction)DataContext; }
-        }
-
         public decimal? Credit
         {
             get
             {
-                if (LedgerTransaction == null) return null;
+                if (LedgerTransaction == null)
+                {
+                    return null;
+                }
                 return LedgerTransaction.Amount >= 0 ? LedgerTransaction.Amount : 0M;
             }
         }
@@ -55,8 +32,34 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (LedgerTransaction == null) return null;
+                if (LedgerTransaction == null)
+                {
+                    return null;
+                }
                 return LedgerTransaction.Amount < 0 ? -LedgerTransaction.Amount : 0M;
+            }
+        }
+
+        private LedgerTransaction LedgerTransaction => (LedgerTransaction)DataContext;
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Credit != null && Credit >= 0)
+            {
+                this.CreditAmount.Text = Credit.Value.ToString("N", CultureInfo.CurrentCulture);
+                this.CreditAmount.Visibility = Visibility.Visible;
+                this.CreditLabel.Visibility = Visibility.Visible;
+                this.DebitAmount.Visibility = Visibility.Hidden;
+                this.DebitLabel.Visibility = Visibility.Hidden;
+            }
+
+            if (Debit != null && Debit > 0)
+            {
+                this.DebitAmount.Text = Debit.Value.ToString("N", CultureInfo.CurrentCulture);
+                this.CreditAmount.Visibility = Visibility.Hidden;
+                this.CreditLabel.Visibility = Visibility.Hidden;
+                this.DebitAmount.Visibility = Visibility.Visible;
+                this.DebitLabel.Visibility = Visibility.Visible;
             }
         }
     }

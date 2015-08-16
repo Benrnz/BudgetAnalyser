@@ -14,7 +14,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void AddChartOnClick(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            DialogResult = true;
             Close();
         }
     }

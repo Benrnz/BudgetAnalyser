@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -30,12 +29,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (statementModelRepository == null)
             {
-                throw new ArgumentNullException("statementModelRepository");
+                throw new ArgumentNullException(nameof(statementModelRepository));
             }
 
             if (importerRepository == null)
             {
-                throw new ArgumentNullException("importerRepository");
+                throw new ArgumentNullException(nameof(importerRepository));
             }
             this.statementModelRepository = statementModelRepository;
             this.importerRepository = importerRepository;
@@ -52,12 +51,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             if (account == null)
             {
-                throw new ArgumentNullException("account");
+                throw new ArgumentNullException(nameof(account));
             }
 
             // TODO add generic UI to let user classify columns.
@@ -79,7 +78,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             await this.statementModelRepository.SaveAsync(statementModel, statementModel.StorageKey);

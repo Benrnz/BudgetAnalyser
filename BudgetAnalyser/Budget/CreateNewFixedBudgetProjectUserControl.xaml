@@ -17,7 +17,7 @@
                     Grid.Row="1">
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Code" />
-            <TextBox x:Name="CodeTextBox" 
+            <TextBox x:Name="CodeTextBox"
                      Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel Grid.Column="1"

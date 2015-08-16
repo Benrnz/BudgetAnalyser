@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using AutoMapper.Internal;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -17,6 +15,7 @@ namespace BudgetAnalyser.Engine.Matching
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private decimal? doNotUseAmount;
+        private bool doNotUseAnd;
         private string doNotUseDescription;
         private DateTime? doNotUseLastMatch;
         private int doNotUseMatchCount;
@@ -24,18 +23,17 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference2;
         private string doNotUseReference3;
         private string doNotUseTransactionType;
-        private bool doNotUseAnd;
 
         /// <summary>
         ///     Used any other time.
         /// </summary>
         /// <param name="bucketRepository"></param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
             {
-                throw new ArgumentNullException("bucketRepository");
+                throw new ArgumentNullException(nameof(bucketRepository));
             }
 
             this.bucketRepository = bucketRepository;
@@ -56,10 +54,21 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        public bool And
+        {
+            get { return this.doNotUseAnd; }
+            set
+            {
+                this.doNotUseAnd = value;
+                OnPropertyChanged();
+            }
+        }
+
         public BudgetBucket Bucket
         {
             get { return this.bucketRepository.GetByCode(BucketCode); }
 
+            [UsedImplicitly]
             private set
             {
                 if (value == null)
@@ -111,23 +120,13 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
-        public bool And
-        {
-            get { return this.doNotUseAnd; }
-            set
-            {
-                this.doNotUseAnd = value;
-                OnPropertyChanged();
-            }
-        }
-
         public string Reference1
         {
             get { return this.doNotUseReference1; }
 
             set
             {
-                this.doNotUseReference1 = value == null ? null : value.Trim();
+                this.doNotUseReference1 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -138,7 +137,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             set
             {
-                this.doNotUseReference2 = value == null ? null : value.Trim();
+                this.doNotUseReference2 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -149,7 +148,7 @@ namespace BudgetAnalyser.Engine.Matching
 
             set
             {
-                this.doNotUseReference3 = value == null ? null : value.Trim();
+                this.doNotUseReference3 = value?.Trim();
                 OnPropertyChanged();
             }
         }
@@ -212,6 +211,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public override int GetHashCode()
         {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode - Property setter is used by Persistence only
             return RuleId.GetHashCode();
         }
 
@@ -224,46 +224,67 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
-            if (!Bucket.Active) return false;
+            if (!Bucket.Active)
+            {
+                return false;
+            }
 
-            int matchesMade = 0;
-            int maxMatches = 0;
+            var matchesMade = 0;
+            var maxMatches = 0;
             if (!string.IsNullOrWhiteSpace(Description))
             {
-                if (transaction.Description == Description) matchesMade++;
+                if (transaction.Description == Description)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference1))
             {
-                if (transaction.Reference1 == Reference1) matchesMade++;
+                if (transaction.Reference1 == Reference1)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference2))
             {
-                if (transaction.Reference2 == Reference2) matchesMade++;
+                if (transaction.Reference2 == Reference2)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(Reference3))
             {
-                if (transaction.Reference3 == Reference3) matchesMade++;
+                if (transaction.Reference3 == Reference3)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (!string.IsNullOrWhiteSpace(TransactionType))
             {
-                if (transaction.TransactionType.Name == TransactionType) matchesMade++;
+                if (transaction.TransactionType.Name == TransactionType)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
             if (Amount != null)
             {
-                if (transaction.Amount == Amount.Value) matchesMade++;
+                if (transaction.Amount == Amount.Value)
+                {
+                    matchesMade++;
+                }
                 maxMatches++;
             }
 
@@ -286,10 +307,7 @@ namespace BudgetAnalyser.Engine.Matching
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private decimal CalculateOpeningBalance()
         {
             LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
-            return line == null ? 0 : line.CalculatedSurplus;
+            return line?.CalculatedSurplus ?? 0;
         }
     }
 }

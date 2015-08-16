@@ -8,7 +8,7 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    /// Use this widget class for hard coded budget bucket widgets.
+    ///     Use this widget class for hard coded budget bucket widgets.
     /// </summary>
     public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))

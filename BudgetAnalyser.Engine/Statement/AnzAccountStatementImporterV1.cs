@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -23,12 +22,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (importUtilities == null)
             {
-                throw new ArgumentNullException("importUtilities");
+                throw new ArgumentNullException(nameof(importUtilities));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.importUtilities = importUtilities;
@@ -73,7 +72,7 @@ namespace BudgetAnalyser.Engine.Statement
                     Reference2 = this.importUtilities.FetchString(split, 3),
                     Reference3 = this.importUtilities.FetchString(split, 4),
                     Amount = this.importUtilities.FetchDecimal(split, 5),
-                    Date = this.importUtilities.FetchDate(split, 6),
+                    Date = this.importUtilities.FetchDate(split, 6)
                 };
                 transactions.Add(transaction);
             }
@@ -81,7 +80,7 @@ namespace BudgetAnalyser.Engine.Statement
             StatementModel statement = new StatementModel(this.logger)
             {
                 StorageKey = fileName,
-                LastImport = DateTime.Now,
+                LastImport = DateTime.Now
             }.LoadTransactions(transactions);
 
             return statement;
@@ -109,7 +108,7 @@ namespace BudgetAnalyser.Engine.Statement
                     return false;
                 }
 
-                if (Char.IsDigit(type.ToCharArray()[0]))
+                if (char.IsDigit(type.ToCharArray()[0]))
                 {
                     return false;
                 }
@@ -143,12 +142,12 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
-        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
-        protected async virtual Task<string> ReadTextChunkAsync(string filePath)
+        protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {

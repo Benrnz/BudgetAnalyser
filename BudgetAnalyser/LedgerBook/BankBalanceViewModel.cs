@@ -3,13 +3,11 @@ using System.Linq;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Ledger;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace BudgetAnalyser.LedgerBook
 {
     /// <summary>
-    /// A view model that wraps the <see cref="BankBalance"/> class to include a adjusted balance.
+    ///     A view model that wraps the <see cref="BankBalance" /> class to include a adjusted balance.
     /// </summary>
     public class BankBalanceViewModel : BankBalance
     {
@@ -19,7 +17,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (balance == null)
             {
-                throw new ArgumentNullException("balance");
+                throw new ArgumentNullException(nameof(balance));
             }
 
             this.line = line;
@@ -34,18 +32,16 @@ namespace BudgetAnalyser.LedgerBook
         {
             get
             {
-                if (this.line == null) return Balance;
-                var adjustment = this.line.BankBalanceAdjustments.FirstOrDefault(b => b.BankAccount == Account);
-                return adjustment == null ? Balance : Balance + adjustment.Amount;
+                if (this.line == null)
+                {
+                    return Balance;
+                }
+                BankBalanceAdjustmentTransaction adjustment = this.line.BankBalanceAdjustments.FirstOrDefault(b => b.BankAccount == Account);
+                return Balance + adjustment?.Amount ?? Balance;
             }
         }
 
-        public bool ShowAdjustedBalance
-        {
-            get
-            {
-                return this.line != null;
-            }
-        }
+        [Engine.Annotations.UsedImplicitly]
+        public bool ShowAdjustedBalance => this.line != null;
     }
 }

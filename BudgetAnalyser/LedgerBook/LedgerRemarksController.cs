@@ -22,12 +22,12 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerService = ledgerService;
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.LedgerBook
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.Ok)
             {
                 Title = "Ledger Entry Remarks",
-                CorrelationId = this.dialogCorrelationId,
+                CorrelationId = this.dialogCorrelationId
             };
             MessengerInstance.Send(dialogRequest);
         }
@@ -96,10 +96,7 @@ namespace BudgetAnalyser.LedgerBook
             Remarks = null;
 
             EventHandler handler = Completed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

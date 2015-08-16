@@ -20,14 +20,10 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         }
 
         public event EventHandler DtoDeserialised;
-
         public Func<string, bool> FileExistsOverride { get; set; }
         public LedgerBookDto LedgerBookDto { get; private set; }
-
         public Func<string, string> LoadXamlAsStringOverride { get; set; }
-
         public bool LoadXamlFromDiskFromEmbeddedResources { get; set; }
-
         public Action<LedgerBookDto> SaveDtoToDiskOverride { get; set; }
         public Action<string, string> WriteToDiskOverride { get; set; }
 
@@ -43,16 +39,13 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LoadXamlAsStringOverride(fileName);
         }
 
-        protected async override Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
+        protected override async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
                 LedgerBookDto = EmbeddedResourceHelper.ExtractXaml<LedgerBookDto>(fileName, true);
-                var handler = DtoDeserialised;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                EventHandler handler = DtoDeserialised;
+                handler?.Invoke(this, EventArgs.Empty);
 
                 return LedgerBookDto;
             }
@@ -61,7 +54,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             return LedgerBookDto;
         }
 
-        protected async override Task SaveDtoToDiskAsync(LedgerBookDto dataEntity)
+        protected override async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity)
         {
             if (SaveDtoToDiskOverride == null)
             {

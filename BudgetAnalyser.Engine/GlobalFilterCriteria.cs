@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine
         {
             unchecked
             {
-                int hashCode = (this.doNotUseAccount != null ? this.doNotUseAccount.GetHashCode() : 0);
+                int hashCode = this.doNotUseAccount?.GetHashCode() ?? 0;
                 hashCode = (hashCode * 397) ^ this.doNotUseBeginDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             if (Cleared)
@@ -90,7 +90,7 @@ namespace BudgetAnalyser.Engine
                 return true;
             }
 
-            bool valid = true;
+            var valid = true;
             if (BeginDate == null)
             {
                 validationMessages.AppendLine("Begin date cannot be blank unless filter is 'Cleared'.");
@@ -115,10 +115,7 @@ namespace BudgetAnalyser.Engine
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void CheckConsistency()

@@ -6,7 +6,6 @@ using System.Threading;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Budget
@@ -56,7 +55,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var expenses = new List<Expense>
             {
                 new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
-                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") },
+                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
             };
 
             subject.Update(subject.Incomes, expenses);
@@ -72,7 +71,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var expenses = new List<Expense>
             {
                 new Expense { Amount = 4444, Bucket = new SpentMonthlyExpenseBucket("Horse", "Shit") },
-                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") },
+                new Expense { Amount = 9999, Bucket = new SavedUpForExpenseBucket("Foo", "Bar") }
             };
 
             subject.Update(subject.Incomes, expenses);
@@ -88,7 +87,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var incomes = new List<Income>
             {
                 new Income { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") },
-                new Income { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") },
+                new Income { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") }
             };
 
             subject.Update(incomes, subject.Expenses);
@@ -104,7 +103,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var incomes = new List<Income>
             {
                 new Income { Amount = 4444, Bucket = new IncomeBudgetBucket("Horse", "Shit") },
-                new Income { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") },
+                new Income { Amount = 9999, Bucket = new IncomeBudgetBucket("Foo", "Bar") }
             };
 
             subject.Update(incomes, subject.Expenses);
@@ -160,7 +159,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialize()
         {
-            this.Logs = new StringBuilder();
+            Logs = new StringBuilder();
         }
 
         private static void EnsureDescendingOrder(IEnumerable<BudgetItem> items)

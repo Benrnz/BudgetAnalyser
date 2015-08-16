@@ -90,7 +90,7 @@ namespace BudgetAnalyser.UnitTest.Statement
         public void TriggerRefreshOfTotalsRowShouldRaise8Events()
         {
             TransactionGroupedByBucket subject = Arrange();
-            int eventCount = 0;
+            var eventCount = 0;
             subject.PropertyChanged += (s, e) => eventCount++;
             subject.TriggerRefreshTotalsRow();
             Assert.AreEqual(8, eventCount);

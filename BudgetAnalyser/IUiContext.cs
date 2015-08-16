@@ -23,12 +23,14 @@ namespace BudgetAnalyser
         AppliedRulesController AppliedRulesController { get; }
         BudgetController BudgetController { get; }
         ChooseBudgetBucketController ChooseBudgetBucketController { get; }
+        IEnumerable<ControllerBase> Controllers { get; }
         CreateNewFixedBudgetController CreateNewFixedBudgetController { get; }
         CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; }
         DashboardController DashboardController { get; }
         EditingTransactionController EditingTransactionController { get; }
         GlobalFilterController GlobalFilterController { get; }
         LedgerBookController LedgerBookController { get; }
+        MainMenuController MainMenuController { get; }
         IMessenger Messenger { get; }
         NewRuleController NewRuleController { get; }
         ReportsCatalogController ReportsCatalogController { get; }
@@ -37,7 +39,5 @@ namespace BudgetAnalyser
         SplitTransactionController SplitTransactionController { get; }
         StatementController StatementController { get; }
         UserPrompts UserPrompts { get; }
-        MainMenuController MainMenuController { get; }
-        IEnumerable<ControllerBase> Controllers { get; }
     }
 }

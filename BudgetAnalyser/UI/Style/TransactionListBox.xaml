@@ -115,8 +115,8 @@
                            ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='D'}" />
                 <TextBlock Grid.Column="1"
                            Style="{StaticResource TextBlock.TransactionNumber}"
-                           Text="{Binding Amount, StringFormat=\{0:N\}}" 
-                           ToolTip="{Binding Amount, Converter={StaticResource Converter.ToString}, ConverterParameter='C'}"/>
+                           Text="{Binding Amount, StringFormat=\{0:N\}}"
+                           ToolTip="{Binding Amount, Converter={StaticResource Converter.ToString}, ConverterParameter='C'}" />
                 <TextBlock Grid.Column="2"
                            Style="{StaticResource TextBlock.TransactionStyle}"
                            Text="{Binding Description}"

@@ -1,6 +1,4 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -11,9 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestData
     public static class StatementModelTestDataGenerated
     {
         public static IAccountTypeRepository AccountTypeRepo { get; set; }
-
         public static IBudgetBucketRepository BudgetBucketRepo { get; set; }
-
 
         /// <summary>THIS IS GENERATED CODE </summary>
         [GeneratedCode("StatementModelTestDataGenerator.GenerateCSharp", "06/06/2014 17:03:50")]

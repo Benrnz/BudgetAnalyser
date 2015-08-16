@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Data;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -21,9 +22,9 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
         {
             if (chartService == null)
             {
-                throw new ArgumentNullException("chartService");
+                throw new ArgumentNullException(nameof(chartService));
             }
-        
+
             this.chartService = chartService;
             this.doNotUseExpenseFilter = true;
         }
@@ -32,7 +33,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         public bool ExpenseFilter
         {
-            get { return this.doNotUseExpenseFilter; }
+            [UsedImplicitly] get { return this.doNotUseExpenseFilter; }
 
             set
             {
@@ -54,13 +55,11 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
             }
         }
 
-        public double OverallPerformance { get; private set; }
+        public double OverallPerformance { [UsedImplicitly] get; private set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
-        public string Title
-        {
-            get { return "Overall Budget Performance"; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required by data binding")]
+        [UsedImplicitly]
+        public string Title => "Overall Budget Performance";
 
         public void Load(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
         {
@@ -91,7 +90,7 @@ namespace BudgetAnalyser.ReportsCatalog.OverallPerformance
 
         private void RefreshCollection()
         {
-            if (Analysis == null || Analysis.Analyses == null || Analysis.Analyses.None())
+            if (Analysis?.Analyses == null || Analysis.Analyses.None())
             {
                 return;
             }

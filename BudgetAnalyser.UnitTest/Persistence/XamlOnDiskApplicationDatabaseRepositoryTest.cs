@@ -12,29 +12,10 @@ namespace BudgetAnalyser.UnitTest.Persistence
         private ApplicationDatabase result;
         private XamlOnDiskApplicationDatabaseRepositoryTestHarness subject;
 
-        [TestInitialize()]
-        public void TestInitialise()
-        {
-            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new StorageRootToApplicationDatabaseMapper(), new ApplicationDatabaseToStorageRootMapper())
-            {
-                FileExistsOverride = fileName => true
-            };
-
-            var task = this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
-            task.Wait();
-            this.result = task.Result;
-        }
-
         [TestMethod]
         public void LoadShouldSetBudgetCollectionStorageKeyGivenDemoFile()
         {
             Assert.AreEqual("DemoBudget.xml", this.result.BudgetCollectionStorageKey);
-        }
-
-        [TestMethod]
-        public void LoadShouldSetStatementModelStorageKeyGivenDemoFile()
-        {
-            Assert.AreEqual("DemoTransactions.csv", this.result.StatementModelStorageKey);
         }
 
         [TestMethod]
@@ -53,6 +34,25 @@ namespace BudgetAnalyser.UnitTest.Persistence
         public void LoadShouldSetReconciliationTasksGivenDemoFile()
         {
             Assert.AreEqual(2, this.result.LedgerReconciliationToDoCollection.Count);
+        }
+
+        [TestMethod]
+        public void LoadShouldSetStatementModelStorageKeyGivenDemoFile()
+        {
+            Assert.AreEqual("DemoTransactions.csv", this.result.StatementModelStorageKey);
+        }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new StorageRootToApplicationDatabaseMapper(), new ApplicationDatabaseToStorageRootMapper())
+            {
+                FileExistsOverride = fileName => true
+            };
+
+            Task<ApplicationDatabase> task = this.subject.LoadAsync(TestDataConstants.DemoBudgetAnalyserFileName);
+            task.Wait();
+            this.result = task.Result;
         }
     }
 }

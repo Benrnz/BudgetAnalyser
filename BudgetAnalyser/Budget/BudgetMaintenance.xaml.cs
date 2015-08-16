@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace BudgetAnalyser.Budget
 {
@@ -15,9 +13,36 @@ namespace BudgetAnalyser.Budget
             InitializeComponent();
         }
 
-        private BudgetController Controller
+        private BudgetController Controller => DataContext as BudgetController;
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            get { return DataContext as BudgetController; }
+            var controller = e.OldValue as BudgetController;
+            if (controller != null)
+            {
+                if (controller.Expenses != null)
+                {
+                    controller.Expenses.ListChanged -= OnExpensesListChanged;
+                }
+
+                if (controller.Incomes != null)
+                {
+                    controller.Incomes.ListChanged -= OnIncomesListChanged;
+                }
+            }
+
+            if (Controller != null)
+            {
+                if (Controller.Expenses != null)
+                {
+                    Controller.Expenses.ListChanged += OnExpensesListChanged;
+                }
+
+                if (Controller.Incomes != null)
+                {
+                    Controller.Incomes.ListChanged += OnIncomesListChanged;
+                }
+            }
         }
 
         private void OnExpensesListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
@@ -37,39 +62,6 @@ namespace BudgetAnalyser.Budget
                 this.IncomesListScrollViewer.ScrollToBottom();
                 int count = this.Incomes.Items.Count == 0 ? 0 : this.Incomes.Items.Count - 1;
                 this.Incomes.SelectedIndex = count;
-            }
-        }
-
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.OldValue != null)
-            {
-                var controller = e.OldValue as BudgetController;
-                if (controller != null)
-                {
-                    if (controller.Expenses != null)
-                    {
-                        controller.Expenses.ListChanged -= OnExpensesListChanged;
-                    }
-
-                    if (controller.Incomes != null)
-                    {
-                        controller.Incomes.ListChanged -= OnIncomesListChanged;
-                    }
-                }
-            }
-
-            if (Controller != null)
-            {
-                if (Controller.Expenses != null)
-                {
-                    Controller.Expenses.ListChanged += OnExpensesListChanged;
-                }
-
-                if (Controller.Incomes != null)
-                {
-                    Controller.Incomes.ListChanged += OnIncomesListChanged;
-                }
             }
         }
     }

@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (analyser == null)
             {
-                throw new ArgumentNullException("analyser");
+                throw new ArgumentNullException(nameof(analyser));
             }
 
             this.analyser = analyser;
@@ -25,17 +25,17 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             if (budgets == null)
             {
-                throw new ArgumentNullException("budgets");
+                throw new ArgumentNullException(nameof(budgets));
             }
 
             if (criteria == null)
             {
-                throw new ArgumentNullException("criteria");
+                throw new ArgumentNullException(nameof(criteria));
             }
 
             return this.analyser.Analyse(statementModel, budgets, criteria);

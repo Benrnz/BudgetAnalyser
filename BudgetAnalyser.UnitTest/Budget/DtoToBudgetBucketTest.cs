@@ -10,11 +10,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class DtoToBudgetBucketTest
     {
         private BudgetBucket Result { get; set; }
-
-        private BudgetBucketDto TestData
-        {
-            get { return BudgetModelTestData.CreateBudgetBucketDtoTestData1().First(b => b.Code == TestDataConstants.CarMtcBucketCode); }
-        }
+        private BudgetBucketDto TestData => BudgetModelTestData.CreateBudgetBucketDtoTestData1().First(b => b.Code == TestDataConstants.CarMtcBucketCode);
 
         [TestMethod]
         public void ShouldMapCode()
@@ -37,8 +33,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             var subject = new DtoToBudgetBucketMapper();
             Result = subject.Map(TestData);
         }

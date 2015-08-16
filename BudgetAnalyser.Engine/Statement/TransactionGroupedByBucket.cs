@@ -15,12 +15,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (transactions == null)
             {
-                throw new ArgumentNullException("transactions");
+                throw new ArgumentNullException(nameof(transactions));
             }
 
             if (groupByThisBucket == null)
             {
-                throw new ArgumentNullException("groupByThisBucket");
+                throw new ArgumentNullException(nameof(groupByThisBucket));
             }
 
             Bucket = groupByThisBucket;
@@ -49,21 +49,9 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         public BudgetBucket Bucket { get; private set; }
-
-        public bool HasTransactions
-        {
-            get { return Transactions != null && Transactions.Any(); }
-        }
-
-        public DateTime MaxTransactionDate
-        {
-            get { return Transactions.Max(t => t.Date); }
-        }
-
-        public DateTime MinTransactionDate
-        {
-            get { return Transactions.Min(t => t.Date); }
-        }
+        public bool HasTransactions => Transactions != null && Transactions.Any();
+        public DateTime MaxTransactionDate => Transactions.Max(t => t.Date);
+        public DateTime MinTransactionDate => Transactions.Min(t => t.Date);
 
         public decimal TotalCount
         {
@@ -104,33 +92,26 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        public decimal TotalDifference
-        {
-            get { return TotalCredits + TotalDebits; }
-        }
-
-        public ObservableCollection<Transaction> Transactions { get; private set; }
+        public decimal TotalDifference => TotalCredits + TotalDebits;
+        public ObservableCollection<Transaction> Transactions { get; }
 
         public void TriggerRefreshTotalsRow()
         {
-            OnPropertyChanged("TotalCredits");
-            OnPropertyChanged("TotalDebits");
-            OnPropertyChanged("TotalDifference");
-            OnPropertyChanged("AverageDebit");
-            OnPropertyChanged("TotalCount");
-            OnPropertyChanged("HasTransactions");
-            OnPropertyChanged("MinTransactionDate");
-            OnPropertyChanged("MaxTransactionDate");
+            OnPropertyChanged(nameof(TotalCredits));
+            OnPropertyChanged(nameof(TotalDebits));
+            OnPropertyChanged(nameof(TotalDifference));
+            OnPropertyChanged(nameof(AverageDebit));
+            OnPropertyChanged(nameof(TotalCount));
+            OnPropertyChanged(nameof(HasTransactions));
+            OnPropertyChanged(nameof(MinTransactionDate));
+            OnPropertyChanged(nameof(MaxTransactionDate));
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

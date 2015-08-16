@@ -27,17 +27,17 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (loadFileController == null)
             {
-                throw new ArgumentNullException("loadFileController");
+                throw new ArgumentNullException(nameof(loadFileController));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.messageBox = uiContext.UserPrompts.MessageBox;
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Statement
 
         public bool LoadingData
         {
-            get { return this.doNotUseLoadingData; }
+            [UsedImplicitly] get { return this.doNotUseLoadingData; }
             private set
             {
                 this.doNotUseLoadingData = value;
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        internal StatementViewModel ViewModel { get; private set; }
+        internal StatementViewModel ViewModel { get; }
 
         internal bool CanExecuteCloseStatementCommand()
         {

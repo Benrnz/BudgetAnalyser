@@ -35,12 +35,12 @@ namespace BudgetAnalyser
         {
             if (userPrompts == null)
             {
-                throw new ArgumentNullException("userPrompts");
+                throw new ArgumentNullException(nameof(userPrompts));
             }
 
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             UserPrompts = userPrompts;
@@ -52,12 +52,7 @@ namespace BudgetAnalyser
         public BudgetController BudgetController { get; set; }
         public BudgetPieController BudgetPieController { get; set; }
         public ChooseBudgetBucketController ChooseBudgetBucketController { get; set; }
-
-        public IEnumerable<ControllerBase> Controllers
-        {
-            get { return this.controllers ?? (this.controllers = DiscoverAllControllers()); }
-        }
-
+        public IEnumerable<ControllerBase> Controllers => this.controllers ?? (this.controllers = DiscoverAllControllers());
         public CreateNewFixedBudgetController CreateNewFixedBudgetController { get; set; }
         public CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; set; }
         public CurrentMonthBurnDownGraphsController CurrentMonthBurnDownGraphsController { get; set; }
@@ -71,24 +66,19 @@ namespace BudgetAnalyser
         public ILogger Logger { get; set; }
         public LongTermSpendingGraphController LongTermSpendingGraphController { get; set; }
         public MainMenuController MainMenuController { get; set; }
-        public IMessenger Messenger { get; private set; }
+        public IMessenger Messenger { get; }
         public NewBudgetModelController NewBudgetModelController { get; set; }
         public NewRuleController NewRuleController { get; set; }
         public OverallPerformanceController OverallPerformanceController { get; set; }
         public ReconciliationToDoListController ReconciliationToDoListController { get; set; }
         public ReportsCatalogController ReportsCatalogController { get; set; }
         public RulesController RulesController { get; set; }
-
-        public IEnumerable<IShowableController> ShowableControllers
-        {
-            get { return Controllers.OfType<IShowableController>(); }
-        }
-
+        public IEnumerable<IShowableController> ShowableControllers => Controllers.OfType<IShowableController>();
         public ShowSurplusBalancesController ShowSurplusBalancesController { get; set; }
         public SplitTransactionController SplitTransactionController { get; set; }
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
-        public UserPrompts UserPrompts { get; private set; }
+        public UserPrompts UserPrompts { get; }
 
         private List<ControllerBase> DiscoverAllControllers()
         {

@@ -16,8 +16,9 @@
                     <vsm:VisualState x:Name="Normal" />
                     <vsm:VisualState x:Name="MouseOver">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource Colour.ControlMouseOver}" />
                             </ColorAnimationUsingKeyFrames>
@@ -26,18 +27,21 @@
                     <vsm:VisualState x:Name="Pressed" />
                     <vsm:VisualState x:Name="Disabled">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource Colour.DisabledControlDark}" />
                             </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="Arrow">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="Arrow">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource Colour.DisabledForeground}" />
                             </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource Colour.DisabledBorderDark}" />
                             </ColorAnimationUsingKeyFrames>
@@ -47,8 +51,9 @@
                 <vsm:VisualStateGroup x:Name="CheckStates">
                     <vsm:VisualState x:Name="Checked">
                         <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                          Storyboard.TargetName="MainBorder">
+                            <ColorAnimationUsingKeyFrames
+                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                Storyboard.TargetName="MainBorder">
                                 <EasingColorKeyFrame KeyTime="0"
                                                      Value="{StaticResource Colour.ControlPressed}" />
                             </ColorAnimationUsingKeyFrames>
@@ -141,13 +146,15 @@
                             <vsm:VisualStateGroup x:Name="EditStates">
                                 <vsm:VisualState x:Name="Editable">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="PART_EditableTextBox">
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="PART_EditableTextBox">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{x:Static Visibility.Visible}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="ContentSite">
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="ContentSite">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{x:Static Visibility.Hidden}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -338,8 +345,8 @@
                 <DataTemplate>
                     <Viewbox MaxHeight="35">
                         <statement:AccountUserControl Focusable="False"
-                                                          IsHitTestVisible="False"
-                                                          IsTabStop="False" />
+                                                      IsHitTestVisible="False"
+                                                      IsTabStop="False" />
                     </Viewbox>
                 </DataTemplate>
             </Setter.Value>

@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
             Amount = transaction.Amount;

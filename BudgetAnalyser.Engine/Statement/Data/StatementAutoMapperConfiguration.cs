@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
@@ -9,10 +10,10 @@ namespace BudgetAnalyser.Engine.Statement.Data
     [AutoRegisterWithIoC]
     internal class StatementAutoMapperConfiguration : ILocalAutoMapperConfiguration
     {
-        private readonly ITransactionTypeRepository transactionTypeRepo;
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly ILogger logger;
+        private readonly ITransactionTypeRepository transactionTypeRepo;
 
         public StatementAutoMapperConfiguration(
             [NotNull] ITransactionTypeRepository transactionTypeRepo,
@@ -22,22 +23,22 @@ namespace BudgetAnalyser.Engine.Statement.Data
         {
             if (transactionTypeRepo == null)
             {
-                throw new ArgumentNullException("transactionTypeRepo");
+                throw new ArgumentNullException(nameof(transactionTypeRepo));
             }
 
             if (accountTypeRepo == null)
             {
-                throw new ArgumentNullException("accountTypeRepo");
+                throw new ArgumentNullException(nameof(accountTypeRepo));
             }
 
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.transactionTypeRepo = transactionTypeRepo;
@@ -46,7 +47,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.logger = logger;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Necessary for Statement Automapper configuration.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Necessary for Statement Automapper configuration.")]
         public void RegisterMappings()
         {
             Mapper.CreateMap<TransactionDto, Transaction>()
@@ -61,7 +62,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
                 .ForMember(dto => dto.BudgetBucketCode, m => m.MapFrom(txn => txn.BudgetBucket == null ? null : txn.BudgetBucket.Code));
 
             Mapper.CreateMap<TransactionSetDto, StatementModel>()
-                .ConstructUsing(new Func<TransactionSetDto, StatementModel>(dto => new StatementModel(logger)))
+                .ConstructUsing(new Func<TransactionSetDto, StatementModel>(dto => new StatementModel(this.logger)))
                 .ForMember(model => model.AllTransactions, m => m.MapFrom(dto => dto.Transactions))
                 .ForMember(model => model.DurationInMonths, m => m.Ignore())
                 .ForMember(model => model.Filtered, m => m.Ignore())

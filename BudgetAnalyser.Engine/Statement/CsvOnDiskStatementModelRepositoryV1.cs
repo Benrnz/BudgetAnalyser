@@ -15,9 +15,8 @@ namespace BudgetAnalyser.Engine.Statement
     public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
-        private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
         private readonly BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper;
-
+        private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
 
@@ -29,22 +28,22 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (importUtilities == null)
             {
-                throw new ArgumentNullException("importUtilities");
+                throw new ArgumentNullException(nameof(importUtilities));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (dtoToDomainMapper == null)
             {
-                throw new ArgumentNullException("dtoToDomainMapper");
+                throw new ArgumentNullException(nameof(dtoToDomainMapper));
             }
 
             if (domainToDtoMapper == null)
             {
-                throw new ArgumentNullException("domainToDtoMapper");
+                throw new ArgumentNullException(nameof(domainToDtoMapper));
             }
 
             this.importUtilities = importUtilities;
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
@@ -68,7 +67,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             this.importUtilities.AbortIfFileDoesntExist(storageKey);
@@ -85,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             try
@@ -118,19 +117,19 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public async Task SaveAsync([NotNull] StatementModel model, string storageKey)
+        public async Task SaveAsync(StatementModel model, string storageKey)
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var transactionSet = this.domainToDtoMapper.Map(model);
+            TransactionSetDto transactionSet = this.domainToDtoMapper.Map(model);
             transactionSet.VersionHash = VersionHash;
             transactionSet.StorageKey = storageKey;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
@@ -139,8 +138,8 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new StatementModelChecksumException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "Only {0} out of {1} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.", 
-                        transactionSet.Transactions.Count, 
+                        "Only {0} out of {1} transactions have been mapped correctly. Aborting the save, to avoid data loss and corruption.",
+                        transactionSet.Transactions.Count,
                         model.AllTransactions.Count()));
             }
 
@@ -192,19 +191,19 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
-        protected async virtual Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             var responseList = new List<string>();
-            using (var reader = File.OpenText(fileName))
+            using (StreamReader reader = File.OpenText(fileName))
             {
                 try
                 {
-                    for (int index = 0; index < lines; index++)
+                    for (var index = 0; index < lines; index++)
                     {
                         string line = await reader.ReadLineAsync();
                         if (string.IsNullOrWhiteSpace(line))
@@ -277,7 +276,7 @@ namespace BudgetAnalyser.Engine.Statement
                 StorageKey = fileName,
                 LastImport = this.importUtilities.FetchDate(headerSplit, 4),
                 Transactions = transactions,
-                VersionHash = this.importUtilities.FetchString(headerSplit, 1),
+                VersionHash = this.importUtilities.FetchString(headerSplit, 1)
             };
             return transactionSet;
         }
@@ -285,7 +284,7 @@ namespace BudgetAnalyser.Engine.Statement
         private List<TransactionDto> ReadTransactions(long totalLines, List<string> allLines)
         {
             var transactions = new List<TransactionDto>();
-            for (int index = 1; index < totalLines; index++)
+            for (var index = 1; index < totalLines; index++)
             {
                 string line = allLines[index];
                 if (string.IsNullOrWhiteSpace(line))
@@ -308,7 +307,7 @@ namespace BudgetAnalyser.Engine.Statement
                         Date = this.importUtilities.FetchDate(split, 6),
                         BudgetBucketCode = this.importUtilities.FetchString(split, 7),
                         Account = this.importUtilities.FetchString(split, 8),
-                        Id = this.importUtilities.FetchGuid(split, 9),
+                        Id = this.importUtilities.FetchGuid(split, 9)
                     };
                 }
                 catch (InvalidDataException ex)

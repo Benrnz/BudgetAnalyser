@@ -3,6 +3,6 @@
     public enum FilterMode
     {
         Dates,
-        Account,
+        Account
     }
 }

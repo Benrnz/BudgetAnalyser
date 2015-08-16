@@ -22,37 +22,32 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         {
             if (viewLoader == null)
             {
-                throw new ArgumentNullException("viewLoader");
+                throw new ArgumentNullException(nameof(viewLoader));
             }
 
             if (chartsService == null)
             {
-                throw new ArgumentNullException("chartsService");
+                throw new ArgumentNullException(nameof(chartsService));
             }
 
             this.viewLoader = viewLoader;
             this.chartsService = chartsService;
         }
 
-        public ICommand AddChartCommand
-        {
-            get { return new RelayCommand(OnAddChartCommandExecuted); }
-        }
+        [UsedImplicitly]
+        public ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
-        public ICommand AddSelectedCommand
-        {
-            get { return new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute); }
-        }
+        [UsedImplicitly]
+        public ICommand AddSelectedCommand => new RelayCommand<BudgetBucket>(OnAddSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public string ChartTitle { get; set; }
 
-        public ICommand RemoveSelectedCommand
-        {
-            get { return new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute); }
-        }
+        [UsedImplicitly]
+        public ICommand RemoveSelectedCommand => new RelayCommand<BudgetBucket>(OnRemoveSelectedCommandExecute, AddSelectedCommandCanExecute);
 
         public BindingList<BudgetBucket> SelectedBuckets { get; private set; }
 
+        [UsedImplicitly]
         public BindingList<BudgetBucket> UnselectedBuckets { get; private set; }
 
         public bool AddChart()
@@ -70,7 +65,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             return false;
         }
 
-        private bool AddSelectedCommandCanExecute(BudgetBucket parameter)
+        private static bool AddSelectedCommandCanExecute(BudgetBucket parameter)
         {
             return parameter != null;
         }

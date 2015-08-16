@@ -17,16 +17,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void WithAmountMinus50ShouldCreateADebitOf50()
-        {
-            var subject = new CreditLedgerTransaction();
-
-            LedgerTransaction result = subject.WithAmount(-50);
-
-            Assert.AreEqual(-50M, result.Amount);
-        }
-
-        [TestMethod]
         public void WithAmount50ShouldCreateACreditOf50()
         {
             var subject = new CreditLedgerTransaction();
@@ -44,6 +34,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerTransaction result = subject.WithAmount(50);
 
             Assert.AreSame(subject, result);
+        }
+
+        [TestMethod]
+        public void WithAmountMinus50ShouldCreateADebitOf50()
+        {
+            var subject = new CreditLedgerTransaction();
+
+            LedgerTransaction result = subject.WithAmount(-50);
+
+            Assert.AreEqual(-50M, result.Amount);
         }
     }
 }

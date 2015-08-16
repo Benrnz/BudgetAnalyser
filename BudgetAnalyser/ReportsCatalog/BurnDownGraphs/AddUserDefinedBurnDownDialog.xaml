@@ -57,7 +57,7 @@
         <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-            <Button Style="{StaticResource Button.Round.Left}" ToolTip="Close and go back"/>
+            <Button Style="{StaticResource Button.Round.Left}" ToolTip="Close and go back" />
             <Button Click="AddChartOnClick"
                     IsDefault="True"
                     Style="{StaticResource Button.Round.Save}" />

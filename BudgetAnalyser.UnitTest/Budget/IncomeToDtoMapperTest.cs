@@ -11,11 +11,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class IncomeToDtoMapperTest
     {
         private IncomeDto Result { get; set; }
-
-        private Income TestData
-        {
-            get { return BudgetModelTestData.CreateTestData1().Incomes.First(e => e.Bucket.Code == TestDataConstants.IncomeBucketCode); }
-        }
+        private Income TestData => BudgetModelTestData.CreateTestData1().Incomes.First(e => e.Bucket.Code == TestDataConstants.IncomeBucketCode);
 
         [TestMethod]
         public void ShouldMapAmount()
@@ -32,8 +28,6 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<IncomeDto>(TestData);
         }
     }

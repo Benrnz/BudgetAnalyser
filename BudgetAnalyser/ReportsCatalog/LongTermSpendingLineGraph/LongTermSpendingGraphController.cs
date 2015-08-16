@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
@@ -14,46 +15,26 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
         private readonly ILongTermSpendingChartService chartService;
         private decimal doNotUseGraphMaximumValue;
         private decimal doNotUseGraphMinimumValue;
-        private bool doNotUseToggleAll;
-        private SeriesData doNotUseSelectedSeriesData;
         private DatedGraphPlot doNotUseSelectedPlotPoint;
+        private SeriesData doNotUseSelectedSeriesData;
+        private bool doNotUseToggleAll;
 
         public LongTermSpendingGraphController([NotNull] ILongTermSpendingChartService chartService)
         {
             if (chartService == null)
             {
-                throw new ArgumentNullException("chartService");
+                throw new ArgumentNullException(nameof(chartService));
             }
-        
+
             this.chartService = chartService;
             ToggleAll = true;
-        }
-
-        public SeriesData SelectedSeriesData
-        {
-            get { return this.doNotUseSelectedSeriesData; }
-            set
-            {
-                this.doNotUseSelectedSeriesData = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public DatedGraphPlot SelectedPlotPoint
-        {
-            get { return this.doNotUseSelectedPlotPoint; }
-            set
-            {
-                this.doNotUseSelectedPlotPoint = value;
-                RaisePropertyChanged();
-            }
         }
 
         public GraphData Graph { get; private set; }
 
         public decimal GraphMaximumValue
         {
-            get { return this.doNotUseGraphMaximumValue; }
+            [UsedImplicitly] get { return this.doNotUseGraphMaximumValue; }
             set
             {
                 this.doNotUseGraphMaximumValue = value;
@@ -63,7 +44,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         public decimal GraphMinimumValue
         {
-            get { return this.doNotUseGraphMinimumValue; }
+            [UsedImplicitly] get { return this.doNotUseGraphMinimumValue; }
             set
             {
                 this.doNotUseGraphMinimumValue = value;
@@ -71,11 +52,29 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
+        public DatedGraphPlot SelectedPlotPoint
         {
-            get { return "Long Term Spending Line Graph"; }
+            [UsedImplicitly] get { return this.doNotUseSelectedPlotPoint; }
+            set
+            {
+                this.doNotUseSelectedPlotPoint = value;
+                RaisePropertyChanged();
+            }
         }
+
+        public SeriesData SelectedSeriesData
+        {
+            [UsedImplicitly] get { return this.doNotUseSelectedSeriesData; }
+            set
+            {
+                this.doNotUseSelectedSeriesData = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
+        [UsedImplicitly]
+        public string Title => "Long Term Spending Line Graph";
 
         public bool ToggleAll
         {
@@ -102,12 +101,7 @@ namespace BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph
 
         private void ToggleAllLinesVisibility()
         {
-            if (Graph == null)
-            {
-                return;
-            }
-
-            Graph.Series.ToList().ForEach(s => s.Visible = ToggleAll);
+            Graph?.Series.ToList().ForEach(s => s.Visible = ToggleAll);
         }
     }
 }

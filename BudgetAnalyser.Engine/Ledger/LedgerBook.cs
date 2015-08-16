@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -14,8 +13,8 @@ namespace BudgetAnalyser.Engine.Ledger
     public class LedgerBook : IModelValidate
     {
         private readonly ILogger logger;
-        private List<LedgerEntryLine> reconciliations;
         private List<LedgerBucket> ledgersColumns = new List<LedgerBucket>();
+        private List<LedgerEntryLine> reconciliations;
 
         public LedgerBook()
             : this(null)
@@ -26,12 +25,6 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             this.logger = logger ?? new NullLogger();
             this.reconciliations = new List<LedgerEntryLine>();
-        }
-
-        public IEnumerable<LedgerEntryLine> Reconciliations
-        {
-            get { return this.reconciliations; }
-            [UsedImplicitly] private set { this.reconciliations = value.ToList(); }
         }
 
         public string FileName { get; internal set; }
@@ -50,11 +43,17 @@ namespace BudgetAnalyser.Engine.Ledger
         public DateTime Modified { get; internal set; }
         public string Name { get; internal set; }
 
+        public IEnumerable<LedgerEntryLine> Reconciliations
+        {
+            get { return this.reconciliations; }
+            [UsedImplicitly] private set { this.reconciliations = value.ToList(); }
+        }
+
         public bool Validate([NotNull] StringBuilder validationMessages)
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             if (string.IsNullOrWhiteSpace(FileName))
@@ -63,10 +62,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
 
-            var line = Reconciliations.FirstOrDefault();
+            LedgerEntryLine line = Reconciliations.FirstOrDefault();
             if (line != null)
             {
-                var previous = Reconciliations.Skip(1).FirstOrDefault();
+                LedgerEntryLine previous = Reconciliations.Skip(1).FirstOrDefault();
                 if (previous != null && line.Date <= previous.Date)
                 {
                     validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Duplicate and or out of sequence dates exist in the reconciliations for this Ledger Book.");
@@ -99,14 +98,18 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
         /// <param name="dateIfFirstEver">
-        ///     The startDate for the <see cref="LedgerEntryLine" />. If its the first ever reconciliation, otherwise this date is ignored.
+        ///     The startDate for the <see cref="LedgerEntryLine" />. If its the first ever reconciliation, otherwise this date is
+        ///     ignored.
         /// </param>
         /// <param name="bankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <param name="budget">The current budget.</param>
-        /// <param name="toDoList">The task list that will have tasks added to it to remind the user to perform transfers and payments etc.</param>
+        /// <param name="toDoList">
+        ///     The task list that will have tasks added to it to remind the user to perform transfers and
+        ///     payments etc.
+        /// </param>
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
@@ -131,7 +134,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
             }
 
-            if (toDoList == null) toDoList = new ToDoCollection();
+            if (toDoList == null)
+            {
+                toDoList = new ToDoCollection();
+            }
 
             decimal consistencyCheck1 = Reconciliations.Sum(e => e.CalculatedSurplus);
             var newLine = new LedgerEntryLine(dateIfFirstEver, bankBalances, this.logger);
@@ -144,15 +150,16 @@ namespace BudgetAnalyser.Engine.Ledger
 
             this.reconciliations.Insert(0, newLine);
 
-            foreach (var surplusBalance in newLine.SurplusBalances.Where(s => s.Balance < 0))
+            foreach (BankBalance surplusBalance in newLine.SurplusBalances.Where(s => s.Balance < 0))
             {
-                toDoList.Add(new ToDoTask(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        "{0} has a negative surplus balance {1}, there must be one or more transfers to action.", 
-                        surplusBalance.Account, 
-                        surplusBalance.Balance), 
-                    true));
+                toDoList.Add(
+                    new ToDoTask(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "{0} has a negative surplus balance {1}, there must be one or more transfers to action.",
+                            surplusBalance.Account,
+                            surplusBalance.Balance),
+                        true));
             }
 
             return newLine;
@@ -167,7 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (line == null)
             {
-                throw new ArgumentNullException("line");
+                throw new ArgumentNullException(nameof(line));
             }
 
             if (!line.IsNew)
@@ -181,11 +188,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.reconciliations.Remove(line);
-        }
-
-        internal void SetReconciliations(List<LedgerEntryLine> lines)
-        {
-            this.reconciliations = lines.OrderByDescending(l => l.Date).ToList();
         }
 
         /// <summary>
@@ -205,6 +207,11 @@ namespace BudgetAnalyser.Engine.Ledger
             throw new InvalidOperationException("You cannot change the account in a ledger that is not in the Ledgers collection.");
         }
 
+        internal void SetReconciliations(List<LedgerEntryLine> lines)
+        {
+            this.reconciliations = lines.OrderByDescending(l => l.Date).ToList();
+        }
+
         /// <summary>
         ///     Used to unlock the most recent <see cref="LedgerEntryLine" />. Lines are locked as soon as they are saved after
         ///     creation to prevent changes.
@@ -215,10 +222,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal LedgerEntryLine UnlockMostRecentLine()
         {
             LedgerEntryLine line = Reconciliations.FirstOrDefault();
-            if (line != null)
-            {
-                line.Unlock();
-            }
+            line?.Unlock();
 
             return line;
         }

@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public string AutoMatchingReference { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the transaction date.
+        ///     Gets or sets the transaction date.
         /// </summary>
         public DateTime? Date { get; internal set; }
 
@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (narrative == null)
             {
-                throw new ArgumentNullException("narrative");
+                throw new ArgumentNullException(nameof(narrative));
             }
 
             Narrative = narrative;

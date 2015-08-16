@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Budget
 {
@@ -9,8 +10,10 @@ namespace BudgetAnalyser.Budget
             Budgets = budgets;
         }
 
+        [UsedImplicitly]
         public BudgetCollection Budgets { get; private set; }
 
+        [UsedImplicitly]
         public BudgetModel Selected { get; set; }
     }
 }

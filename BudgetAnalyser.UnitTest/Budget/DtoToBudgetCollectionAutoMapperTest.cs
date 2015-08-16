@@ -11,8 +11,13 @@ namespace BudgetAnalyser.UnitTest.Budget
     public class DtoToBudgetCollectionAutoMapperTest
     {
         private BudgetCollection Result { get; set; }
-
         private BudgetCollectionDto TestData { get; set; }
+
+        [TestMethod]
+        public void ShouldMapBudgetsCorrectly()
+        {
+            Assert.AreEqual(TestData.Budgets.Sum(b => b.Expenses.Sum(e => e.Amount)), Result.Sum(b => b.Expenses.Sum(e => e.Amount)));
+        }
 
         [TestMethod]
         public void ShouldMapFileName()
@@ -26,17 +31,9 @@ namespace BudgetAnalyser.UnitTest.Budget
             Assert.AreEqual(TestData.Budgets.Count, Result.Count);
         }
 
-        [TestMethod]
-        public void ShouldMapBudgetsCorrectly()
-        {
-            Assert.AreEqual(TestData.Budgets.Sum(b => b.Expenses.Sum(e => e.Amount)), Result.Sum(b => b.Expenses.Sum(e => e.Amount)));
-        }
-
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
             Result = Mapper.Map<BudgetCollection>(TestData);
         }

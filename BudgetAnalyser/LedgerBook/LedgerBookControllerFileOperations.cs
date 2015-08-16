@@ -19,12 +19,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
@@ -34,6 +34,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public IMessenger MessengerInstance { get; }
 
         internal bool Dirty
         {
@@ -54,9 +55,7 @@ namespace BudgetAnalyser.LedgerBook
         /// </summary>
         internal ILedgerService LedgerService { get; set; }
 
-        public IMessenger MessengerInstance { get; set; }
-
-        internal LedgerBookViewModel ViewModel { get; set; }
+        internal LedgerBookViewModel ViewModel { get; }
 
         public void Close()
         {
@@ -64,20 +63,17 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         internal void SyncDataFromLedgerService()
         {
             ViewModel.LedgerBook = LedgerService.LedgerBook;
             MessengerInstance.Send(new LedgerBookReadyMessage(ViewModel.LedgerBook) { ForceUiRefresh = true });
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

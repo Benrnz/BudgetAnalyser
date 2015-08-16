@@ -36,12 +36,12 @@ namespace BudgetAnalyser.LedgerBook
             this.accountTypeRepository = accountTypeRepository;
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (accountTypeRepository == null)
             {
-                throw new ArgumentNullException("accountTypeRepository");
+                throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
             MessengerInstance = uiContext.Messenger;
@@ -50,11 +50,7 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public event EventHandler<EditBankBalancesEventArgs> Complete;
-
-        public string ActionButtonToolTip
-        {
-            get { return "Add new ledger entry line."; }
-        }
+        public string ActionButtonToolTip => "Add new ledger entry line.";
 
         public bool AddBalanceVisibility
         {
@@ -66,19 +62,17 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand AddBankBalanceCommand
-        {
-            get { return new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand); }
-        }
+        [UsedImplicitly]
+        public ICommand AddBankBalanceCommand => new RelayCommand(OnAddBankBalanceCommandExecuted, CanExecuteAddBankBalanceCommand);
 
         public decimal? AdjustedBankBalanceTotal
         {
-            get { return AddBalanceVisibility ? default(Nullable<decimal>) : BankBalances.Sum(b => b.AdjustedBalance); }
+            get { return AddBalanceVisibility ? default(decimal?) : BankBalances.Sum(b => b.AdjustedBalance); }
         }
 
         public IEnumerable<Account> BankAccounts
         {
-            get { return this.doNotUseBankAccounts; }
+            [UsedImplicitly] get { return this.doNotUseBankAccounts; }
             private set
             {
                 this.doNotUseBankAccounts = value;
@@ -99,18 +93,9 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         public ObservableCollection<BankBalanceViewModel> BankBalances { get; private set; }
-
-        public decimal BankBalanceTotal
-        {
-            get { return BankBalances.Sum(b => b.Balance); }
-        }
-
+        public decimal BankBalanceTotal => BankBalances.Sum(b => b.Balance);
         public bool Canceled { get; private set; }
-
-        public bool CanExecuteCancelButton
-        {
-            get { return true; }
-        }
+        public bool CanExecuteCancelButton => true;
 
         public bool CanExecuteOkButton
         {
@@ -125,16 +110,8 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool CanExecuteSaveButton
-        {
-            get { return false; }
-        }
-
-        public string CloseButtonToolTip
-        {
-            get { return "Cancel"; }
-        }
-
+        public bool CanExecuteSaveButton => false;
+        public string CloseButtonToolTip => "Cancel";
         public bool CreateMode { get; private set; }
 
         public DateTime Date
@@ -161,15 +138,10 @@ namespace BudgetAnalyser.LedgerBook
         ///     Checks to make sure the <see cref="BankBalances" /> collection contains a balance for every ledger that will be
         ///     included in the reconciliation.
         /// </summary>
-        public bool HasRequiredBalances
-        {
-            get { return this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount)); }
-        }
+        public bool HasRequiredBalances => this.parentBook.Ledgers.All(l => BankBalances.Any(b => b.Account == l.StoredInAccount));
 
-        public ICommand RemoveBankBalanceCommand
-        {
-            get { return new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable); }
-        }
+        [UsedImplicitly]
+        public ICommand RemoveBankBalanceCommand => new RelayCommand<BankBalanceViewModel>(OnRemoveBankBalanceCommandExecuted, x => Editable);
 
         public Account SelectedBankAccount
         {
@@ -189,7 +161,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             this.parentBook = ledgerBook;
@@ -200,7 +172,7 @@ namespace BudgetAnalyser.LedgerBook
 
             var requestFilterMessage = new RequestFilterMessage(this);
             MessengerInstance.Send(requestFilterMessage);
-            Date = requestFilterMessage.Criteria.EndDate == null ? DateTime.Today : requestFilterMessage.Criteria.EndDate.Value.AddDays(1);
+            Date = requestFilterMessage.Criteria.EndDate?.AddDays(1) ?? DateTime.Today;
 
             ShowDialogCommon("New Monthly Reconciliation");
         }
@@ -212,12 +184,12 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (ledgerBook == null)
             {
-                throw new ArgumentNullException("ledgerBook");
+                throw new ArgumentNullException(nameof(ledgerBook));
             }
 
             if (line == null)
             {
-                throw new ArgumentNullException("line");
+                throw new ArgumentNullException(nameof(line));
             }
 
             this.parentBook = ledgerBook;
@@ -325,10 +297,7 @@ namespace BudgetAnalyser.LedgerBook
                 }
 
                 EventHandler<EditBankBalancesEventArgs> handler = Complete;
-                if (handler != null)
-                {
-                    handler(this, new EditBankBalancesEventArgs { Canceled = Canceled });
-                }
+                handler?.Invoke(this, new EditBankBalancesEventArgs { Canceled = Canceled });
             }
             finally
             {

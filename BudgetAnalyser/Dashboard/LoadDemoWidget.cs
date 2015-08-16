@@ -14,13 +14,13 @@ namespace BudgetAnalyser.Dashboard
             ImageResourceName = "SmileyImage";
             Clickable = true;
             Sequence = 25;
-        } 
+        }
 
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             Enabled = true;

@@ -22,7 +22,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
@@ -30,7 +30,7 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool AddingNewTask
         {
-            get { return this.doNotUseAddingNewTask; }
+            [UsedImplicitly] get { return this.doNotUseAddingNewTask; }
             private set
             {
                 this.doNotUseAddingNewTask = value;
@@ -38,19 +38,16 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand AddReminderCommand
-        {
-            get { return new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription)); }
-        }
+        [UsedImplicitly]
+        public ICommand AddReminderCommand => new RelayCommand(OnAddReminderCommandExecuted, () => !string.IsNullOrWhiteSpace(NewTaskDescription));
 
-        public ICommand BeginAddingReminderCommand
-        {
-            get { return new RelayCommand(() => AddingNewTask = true); }
-        }
+        [UsedImplicitly]
+        public ICommand BeginAddingReminderCommand => new RelayCommand(() => AddingNewTask = true);
 
         public string NewTaskDescription
         {
             get { return this.doNotUseNewTaskDescription; }
+            [UsedImplicitly]
             set
             {
                 this.doNotUseNewTaskDescription = value;
@@ -58,16 +55,13 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand RemoveReminderCommand
-        {
-            get { return new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null); }
-        }
+        [UsedImplicitly]
+        public ICommand RemoveReminderCommand => new RelayCommand<ToDoTask>(OnRemoveReminderCommandExecuted, t => t != null);
 
-        public ICommand RemoveTaskCommand
-        {
-            get { return new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null); }
-        }
+        [UsedImplicitly]
+        public ICommand RemoveTaskCommand => new RelayCommand<ToDoTask>(OnRemoveTaskCommandExecuted, t => t != null);
 
+        [UsedImplicitly]
         public ToDoTask SelectedTask
         {
             get { return this.doNotUseSelectedTask; }
@@ -89,10 +83,8 @@ namespace BudgetAnalyser.LedgerBook
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Reconciliation Reminders and To Do's"; }
-        }
+        [UsedImplicitly]
+        public string Title => "Reconciliation Reminders and To Do's";
 
         public void Close()
         {

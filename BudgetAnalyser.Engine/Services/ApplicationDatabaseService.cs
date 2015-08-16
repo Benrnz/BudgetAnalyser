@@ -22,12 +22,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (applicationRepository == null)
             {
-                throw new ArgumentNullException("applicationRepository");
+                throw new ArgumentNullException(nameof(applicationRepository));
             }
 
             if (databaseDependents == null)
             {
-                throw new ArgumentNullException("databaseDependents");
+                throw new ArgumentNullException(nameof(databaseDependents));
             }
 
             this.applicationRepository = applicationRepository;
@@ -35,10 +35,7 @@ namespace BudgetAnalyser.Engine.Services
             InitialiseDirtyDataTable();
         }
 
-        public bool HasUnsavedChanges
-        {
-            get { return this.dirtyData.Values.Any(v => v); }
-        }
+        public bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
 
         public ApplicationDatabase Close()
         {
@@ -63,7 +60,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             ClearDirtyDataFlags();
@@ -80,7 +77,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             ClearDirtyDataFlags();
@@ -170,7 +167,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (messages == null)
             {
-                throw new ArgumentNullException("messages");
+                throw new ArgumentNullException(nameof(messages));
             }
 
             var valid = true;

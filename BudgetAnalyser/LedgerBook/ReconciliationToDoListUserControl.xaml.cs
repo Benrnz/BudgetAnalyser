@@ -15,6 +15,14 @@ namespace BudgetAnalyser.LedgerBook
             InitializeComponent();
         }
 
+        private ReconciliationToDoListController Controller => DataContext as ReconciliationToDoListController;
+
+        private void OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(Controller.Tasks);
+            view.SortDescriptions.Add(new SortDescription("SystemGenerated", ListSortDirection.Descending));
+        }
+
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             var controller = DataContext as ReconciliationToDoListController;
@@ -24,17 +32,6 @@ namespace BudgetAnalyser.LedgerBook
             }
 
             controller.Close();
-        }
-
-        private ReconciliationToDoListController Controller
-        {
-            get { return DataContext as ReconciliationToDoListController; }
-        }
-
-        private void OnListDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            var view = CollectionViewSource.GetDefaultView(Controller.Tasks);
-            view.SortDescriptions.Add(new SortDescription("SystemGenerated", ListSortDirection.Descending));
         }
     }
 }

@@ -37,27 +37,27 @@ namespace BudgetAnalyser.LedgerBook
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (fileOperations == null)
             {
-                throw new ArgumentNullException("fileOperations");
+                throw new ArgumentNullException(nameof(fileOperations));
             }
 
             if (uiBuilder == null)
             {
-                throw new ArgumentNullException("uiBuilder");
+                throw new ArgumentNullException(nameof(uiBuilder));
             }
 
             if (ledgerService == null)
             {
-                throw new ArgumentNullException("ledgerService");
+                throw new ArgumentNullException(nameof(ledgerService));
             }
 
             if (newWindowViewLoader == null)
             {
-                throw new ArgumentNullException("newWindowViewLoader");
+                throw new ArgumentNullException(nameof(newWindowViewLoader));
             }
 
             this.uiBuilder = uiBuilder;
@@ -83,18 +83,12 @@ namespace BudgetAnalyser.LedgerBook
         public event EventHandler LedgerBookUpdated;
 
         [UsedImplicitly]
-        public ICommand AddNewLedgerCommand
-        {
-            get { return new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand); }
-        }
+        public ICommand AddNewLedgerCommand => new RelayCommand(OnAddNewLedgerCommandExecuted, CanExecuteAddNewLedgerCommand);
 
         [UsedImplicitly]
-        public ICommand AddNewReconciliationCommand
-        {
-            get { return new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand); }
-        }
+        public ICommand AddNewReconciliationCommand => new RelayCommand(OnAddNewReconciliationCommandExecuted, CanExecuteNewReconciliationCommand);
 
-        public LedgerBookControllerFileOperations FileOperations { get; private set; }
+        public LedgerBookControllerFileOperations FileOperations { get; }
 
         public int NumberOfMonthsToShow
         {
@@ -106,25 +100,10 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand RemoveLedgerEntryLineCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand); }
-        }
-
-        public ICommand ShowBankBalancesCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null); }
-        }
-
-        public ICommand ShowHideMonthsCommand
-        {
-            get { return new RelayCommand<int>(OnShowHideMonthsCommandExecuted); }
-        }
-
-        public ICommand ShowLedgerBucketDetailsCommand
-        {
-            get { return new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null); }
-        }
+        public ICommand RemoveLedgerEntryLineCommand => new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand);
+        public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null);
+        public ICommand ShowHideMonthsCommand => new RelayCommand<int>(OnShowHideMonthsCommandExecuted);
+        public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
 
         public bool Shown
         {
@@ -141,36 +120,15 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand ShowRemarksCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand); }
-        }
-
-        public ICommand ShowSurplusBalancesCommand
-        {
-            get { return new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null); }
-        }
-
-        public ICommand ShowTransactionsCommand
-        {
-            get { return new RelayCommand<object>(OnShowTransactionsCommandExecuted); }
-        }
-
-        public ReconciliationToDoListController ToDoListController
-        {
-            get { return this.uiContext.ReconciliationToDoListController; }
-        }
+        public ICommand ShowRemarksCommand => new RelayCommand<LedgerEntryLine>(OnShowRemarksCommandExecuted, CanExecuteShowRemarksCommand);
+        public ICommand ShowSurplusBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowSurplusBalancesCommandExecuted, param => param != null);
+        public ICommand ShowTransactionsCommand => new RelayCommand<object>(OnShowTransactionsCommandExecuted);
+        public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
 
         [UsedImplicitly]
-        public ICommand UnlockLedgerLineCommand
-        {
-            get { return new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand); }
-        }
+        public ICommand UnlockLedgerLineCommand => new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand);
 
-        public LedgerBookViewModel ViewModel
-        {
-            get { return FileOperations.ViewModel; }
-        }
+        public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
 
         public void DeregisterListener<T>(object listener, Action<T> handler)
         {
@@ -354,10 +312,7 @@ namespace BudgetAnalyser.LedgerBook
             this.ledgerService.RemoveReconciliation(line);
             FileOperations.SyncDataFromLedgerService();
             EventHandler handler = LedgerBookUpdated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnSaveNotificationReceieved(object sender, EventArgs eventArgs)
@@ -459,10 +414,7 @@ namespace BudgetAnalyser.LedgerBook
         private void RaiseLedgerBookUpdated()
         {
             EventHandler handler = LedgerBookUpdated;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

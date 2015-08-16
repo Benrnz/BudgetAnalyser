@@ -13,11 +13,9 @@ namespace BudgetAnalyser.Engine.Reports
         public const string BudgetSeriesName = "Budget Line";
         public const string ZeroSeriesName = "Zero Line";
 
-        private readonly GraphData graphLines;
-
         public BurnDownChartAnalyserResult()
         {
-            this.graphLines = new GraphData();
+            GraphLines = new GraphData();
         }
 
         public string ChartTitle { get; internal set; }
@@ -25,10 +23,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     Gets the series lines for the burndown graph.  It consists of three lines: Budget, Balance, and zero-line.
         /// </summary>
-        public GraphData GraphLines
-        {
-            get { return this.graphLines; }
-        }
+        public GraphData GraphLines { get; }
 
         public bool IsCustomAggregateChart { get; internal set; }
 

@@ -74,7 +74,7 @@ public static IEnumerable<MatchingRule> TestData999()
                 return "null";
             }
 
-            return String.Format("new DateTime({0}, {1}, {2})", date.Value.Year, date.Value.Month, date.Value.Day);
+            return string.Format("new DateTime({0}, {1}, {2})", date.Value.Year, date.Value.Month, date.Value.Day);
         }
 
         private static string NullDecimalOrValue(decimal? amount)
@@ -84,17 +84,17 @@ public static IEnumerable<MatchingRule> TestData999()
                 return "null";
             }
 
-            return String.Format("{0}M", amount);
+            return string.Format("{0}M", amount);
         }
 
         private static string NullStringOrQuotedValue(string description)
         {
-            if (String.IsNullOrWhiteSpace(description))
+            if (string.IsNullOrWhiteSpace(description))
             {
                 return "null";
             }
 
-            return String.Format("\"{0}\"", description);
+            return string.Format("\"{0}\"", description);
         }
     }
 }

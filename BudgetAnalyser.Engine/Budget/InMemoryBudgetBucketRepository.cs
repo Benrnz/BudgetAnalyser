@@ -23,37 +23,33 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (mapper == null)
             {
-                throw new ArgumentNullException("mapper");
+                throw new ArgumentNullException(nameof(mapper));
             }
 
             this.mapper = mapper;
         }
 
-        public virtual IEnumerable<BudgetBucket> Buckets
-        {
-            get { return this.lookupTable.Values.OrderBy(b => b.Code).ToList(); }
-        }
-
+        public virtual IEnumerable<BudgetBucket> Buckets => this.lookupTable.Values.OrderBy(b => b.Code).ToList();
         public BudgetBucket SurplusBucket { get; protected set; }
 
         public FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description, decimal fixedBudgetAmount)
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
-                throw new ArgumentNullException("bucketCode");
+                throw new ArgumentNullException(nameof(bucketCode));
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                throw new ArgumentNullException("description");
+                throw new ArgumentNullException(nameof(description));
             }
 
             if (fixedBudgetAmount <= 0)
             {
-                throw new ArgumentException("The fixed budget amount must be greater than zero.", "fixedBudgetAmount");
+                throw new ArgumentException("The fixed budget amount must be greater than zero.", nameof(fixedBudgetAmount));
             }
 
-            var upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
+            string upperCode = FixedBudgetProjectBucket.CreateCode(bucketCode);
             if (IsValidCode(upperCode))
             {
                 throw new ArgumentException("A new fixed budget project bucket cannot be created, because the code " + bucketCode + " already exists.", bucketCode);
@@ -76,10 +72,10 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
-            var upperCode = code.ToUpperInvariant();
+            string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -92,15 +88,15 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             if (factory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException(nameof(factory));
             }
 
-            var upperCode = code.ToUpperInvariant();
+            string upperCode = code.ToUpperInvariant();
             if (IsValidCode(upperCode))
             {
                 return this.lookupTable[upperCode];
@@ -113,7 +109,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return this.lookupTable[upperCode];
                 }
 
-                var newBucket = factory();
+                BudgetBucket newBucket = factory();
                 this.lookupTable.Add(upperCode, newBucket);
                 return newBucket;
             }
@@ -123,23 +119,26 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (buckets == null)
             {
-                throw new ArgumentNullException("buckets");
+                throw new ArgumentNullException(nameof(buckets));
             }
 
-            this.lookupTable = buckets
-                .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
-                .Select(dto => this.mapper.Map(dto))
-                .Distinct()
-                .ToDictionary(e => e.Code, e => e);
+            lock (this.syncRoot)
+            {
+                this.lookupTable = buckets
+                    .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
+                    .Select(dto => this.mapper.Map(dto))
+                    .Distinct()
+                    .ToDictionary(e => e.Code, e => e);
 
-            InitialiseMandatorySpecialBuckets();
+                InitialiseMandatorySpecialBuckets();
+            }
         }
 
         public virtual bool IsValidCode(string code)
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
@@ -153,7 +152,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (projectBucket == null)
             {
-                throw new ArgumentNullException("projectBucket");
+                throw new ArgumentNullException(nameof(projectBucket));
             }
 
             lock (this.syncRoot)
@@ -174,7 +173,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (IsValidCode(bucket.Code))

@@ -4,7 +4,7 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     public class SurprisePaymentWidgetPersistentState : MultiInstanceWidgetState
     {
-        public DateTime PaymentStartDate { get; set; }
         public WeeklyOrFortnightly Frequency { get; set; }
+        public DateTime PaymentStartDate { get; set; }
     }
 }

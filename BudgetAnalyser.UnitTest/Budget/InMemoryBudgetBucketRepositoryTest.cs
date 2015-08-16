@@ -18,7 +18,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterInitialiseJournalBucketShouldExist()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.Initialise(new List<BudgetBucketDto>());
 
             Assert.IsTrue(subject.IsValidCode(JournalBucket.JournalCode));
@@ -28,35 +28,18 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void AfterInitialiseSurplusBucketShouldExist()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.Initialise(new List<BudgetBucketDto>());
 
             Assert.IsTrue(subject.IsValidCode(SurplusBucket.SurplusCode));
             Assert.IsInstanceOfType(subject.GetByCode(SurplusBucket.SurplusCode), typeof(SurplusBucket));
         }
 
-        private InMemoryBudgetBucketRepository Arrange()
-        {
-            var subject = CreateSubject();
-            subject.Initialise(CreateBudgetBucketDtoTestData());
-            return subject;
-        }
-
-        private IEnumerable<BudgetBucketDto> CreateBudgetBucketDtoTestData()
-        {
-            return BudgetModelTestData.CreateBudgetBucketDtoTestData1();
-        }
-
-        private BudgetCollection CreateBudgetCollectionModel()
-        {
-            return BudgetModelTestData.CreateCollectionWith1And2();
-        }
-
         [TestMethod]
         public void CreateNewFixedBudgetProjectShouldReturnNewBucket()
         {
-            var subject = CreateSubject();
-            var result = subject.CreateNewFixedBudgetProject("Foo", "Foo var", 1000);
+            InMemoryBudgetBucketRepository subject = CreateSubject();
+            FixedBudgetProjectBucket result = subject.CreateNewFixedBudgetProject("Foo", "Foo var", 1000);
             Assert.IsNotNull(result);
             Assert.IsTrue(subject.IsValidCode(result.Code));
         }
@@ -65,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenAmountLessThanZero()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.CreateNewFixedBudgetProject("Foo", "Foo bvar", 0);
             Assert.Fail();
         }
@@ -74,7 +57,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenCodeAlreadyExists()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.GetOrCreateNew(FixedBudgetProjectBucket.CreateCode("Foo"), () => new FixedBudgetProjectBucket("Foo", "Foo bajh", 2000));
             subject.CreateNewFixedBudgetProject("Foo", "Foo var", 1000);
             Assert.Fail();
@@ -84,7 +67,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenEmptyCode()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.CreateNewFixedBudgetProject(string.Empty, "foo bar", 1000);
             Assert.Fail();
         }
@@ -93,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenEmptyDescription()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.CreateNewFixedBudgetProject("Foo", string.Empty, 1000);
             Assert.Fail();
         }
@@ -102,7 +85,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenNullCode()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.CreateNewFixedBudgetProject(null, "foo bar", 1000);
             Assert.Fail();
         }
@@ -111,14 +94,9 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateNewFixedBudgetProjectShouldThrowGivenNullDescription()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.CreateNewFixedBudgetProject("Foo", null, 1000);
             Assert.Fail();
-        }
-
-        private InMemoryBudgetBucketRepository CreateSubject()
-        {
-            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
         }
 
         [TestMethod]
@@ -133,7 +111,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetByCodeShouldThrowGivenNullCode()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.GetByCode(null);
 
@@ -144,7 +122,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetByOrCreateNewShouldThrowGivenNullCode()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.GetOrCreateNew(null, () => new JournalBucket());
 
@@ -155,7 +133,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetByOrCreateNewShouldThrowGivenNullFactory()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.GetOrCreateNew("CODE", null);
 
@@ -165,7 +143,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void GetOrAddShouldAddWhenItemDoesntExist()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.GetOrCreateNew("Foo", () => new IncomeBudgetBucket("Foo", "Bar"));
 
@@ -175,9 +153,9 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void GetOrAddShouldNotAddWhenItemDoesExist()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
-            var count = subject.Buckets.Count();
+            int count = subject.Buckets.Count();
             subject.GetOrCreateNew(
                 TestDataConstants.HairBucketCode,
                 () =>
@@ -192,15 +170,15 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void InitialiseShouldPopulate9Buckets()
         {
-            var subject = Arrange();
-            var expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
+            InMemoryBudgetBucketRepository subject = Arrange();
+            int expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
             Assert.AreEqual(expected, subject.Buckets.Count());
         }
 
         [TestMethod]
         public void InitialiseShouldPopulateKnownBuckets()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             Assert.IsTrue(subject.IsValidCode(TestDataConstants.CarMtcBucketCode));
             Assert.IsTrue(subject.IsValidCode(TestDataConstants.HairBucketCode));
@@ -212,7 +190,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void InitialiseShouldThrowGivenNullBucketsArgument()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.Initialise(null);
 
             Assert.Fail();
@@ -221,7 +199,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void IsValidCodeShouldReturnFalseWhenRepositoryIsEmpty()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             Assert.IsFalse(subject.IsValidCode(SurplusBucket.SurplusCode));
         }
 
@@ -229,7 +207,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsValidCodeShouldThrowGivenNullCode()
         {
-            var subject = Arrange();
+            InMemoryBudgetBucketRepository subject = Arrange();
 
             subject.IsValidCode(null);
 
@@ -239,15 +217,71 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void NewRepositoryShouldBeEmpty()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             Assert.IsFalse(subject.Buckets.Any());
         }
 
         [TestMethod]
         public void NewRepositoryShouldNotContainDefaultBuckets()
         {
-            var subject = CreateSubject();
+            InMemoryBudgetBucketRepository subject = CreateSubject();
             Assert.IsNull(subject.GetByCode(SurplusBucket.SurplusCode));
+        }
+
+        [TestMethod]
+        public void ThreadSafetyCheckOnGetOrAdd()
+        {
+            InMemoryBudgetBucketRepository subject = Arrange();
+
+            var threads = new List<Thread>();
+            var concurrency = 50;
+            var options = new ParallelOptions { MaxDegreeOfParallelism = 20 };
+            ParallelLoopResult result = Parallel.For(
+                1,
+                concurrency,
+                options,
+                index =>
+                {
+                    var thread = new Thread(ThreadSafetyCheckOneThread);
+                    threads.Add(thread);
+                    Console.WriteLine("Starting thread " + index);
+                    thread.Start(subject);
+                });
+
+            while (!result.IsCompleted)
+            {
+                Thread.Sleep(10);
+            }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
+                Console.WriteLine("Thread finished ");
+            }
+
+            Assert.IsFalse(this.concurrencyFail);
+        }
+
+        private InMemoryBudgetBucketRepository Arrange()
+        {
+            InMemoryBudgetBucketRepository subject = CreateSubject();
+            subject.Initialise(CreateBudgetBucketDtoTestData());
+            return subject;
+        }
+
+        private IEnumerable<BudgetBucketDto> CreateBudgetBucketDtoTestData()
+        {
+            return BudgetModelTestData.CreateBudgetBucketDtoTestData1();
+        }
+
+        private BudgetCollection CreateBudgetCollectionModel()
+        {
+            return BudgetModelTestData.CreateCollectionWith1And2();
+        }
+
+        private InMemoryBudgetBucketRepository CreateSubject()
+        {
+            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
         }
 
         private void ThreadSafetyCheckOneThread(object subject)
@@ -267,40 +301,6 @@ namespace BudgetAnalyser.UnitTest.Budget
                     throw;
                 }
             }
-        }
-
-        [TestMethod]
-        public void ThreadSafetyCheckOnGetOrAdd()
-        {
-            var subject = Arrange();
-
-            var threads = new List<Thread>();
-            var concurrency = 50;
-            var options = new ParallelOptions { MaxDegreeOfParallelism = 20 };
-            var result = Parallel.For(
-                1,
-                concurrency,
-                options,
-                index =>
-                {
-                    var thread = new Thread(ThreadSafetyCheckOneThread);
-                    threads.Add(thread);
-                    Console.WriteLine("Starting thread " + index);
-                    thread.Start(subject);
-                });
-
-            while (!result.IsCompleted)
-            {
-                Thread.Sleep(10);
-            }
-
-            foreach (var thread in threads)
-            {
-                thread.Join();
-                Console.WriteLine("Thread finished ");
-            }
-
-            Assert.IsFalse(this.concurrencyFail);
         }
     }
 }

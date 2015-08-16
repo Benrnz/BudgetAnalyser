@@ -30,22 +30,22 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ruleRepository == null)
             {
-                throw new ArgumentNullException("ruleRepository");
+                throw new ArgumentNullException(nameof(ruleRepository));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             if (matchmaker == null)
             {
-                throw new ArgumentNullException("matchmaker");
+                throw new ArgumentNullException(nameof(matchmaker));
             }
 
             if (ruleFactory == null)
             {
-                throw new ArgumentNullException("ruleFactory");
+                throw new ArgumentNullException(nameof(ruleFactory));
             }
 
             this.ruleRepository = ruleRepository;
@@ -61,25 +61,16 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-
-        public ApplicationDataType DataType
-        {
-            get { return ApplicationDataType.MatchingRules; }
-        }
-
-        public int LoadSequence
-        {
-            get { return 50; }
-        }
-
-        public ObservableCollection<MatchingRule> MatchingRules { get; private set; }
-        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; private set; }
+        public ApplicationDataType DataType => ApplicationDataType.MatchingRules;
+        public int LoadSequence => 50;
+        public ObservableCollection<MatchingRule> MatchingRules { get; }
+        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
         public bool AddRule(MatchingRule ruleToAdd)
         {
             if (ruleToAdd == null)
             {
-                throw new ArgumentNullException("ruleToAdd");
+                throw new ArgumentNullException(nameof(ruleToAdd));
             }
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
@@ -120,17 +111,14 @@ namespace BudgetAnalyser.Engine.Services
             MatchingRulesGroupedByBucket.Clear();
             MatchingRules.Clear();
             EventHandler handler = Closed;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase.MatchingRulesCollectionStorageKey.IsNothing())
             {
-                throw new ArgumentNullException("applicationDatabase");
+                throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
             await this.ruleRepository.CreateNewAndSaveAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
@@ -141,12 +129,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (references == null)
             {
-                throw new ArgumentNullException("references");
+                throw new ArgumentNullException(nameof(references));
             }
 
             if (references.Length != 3)
@@ -169,12 +157,12 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (rule == null)
             {
-                throw new ArgumentNullException("rule");
+                throw new ArgumentNullException(nameof(rule));
             }
 
             if (references == null)
             {
-                throw new ArgumentNullException("references");
+                throw new ArgumentNullException(nameof(references));
             }
 
             return amount == rule.Amount
@@ -221,10 +209,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             EventHandler handler = NewDataSourceAvailable;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public bool Match(IEnumerable<Transaction> transactions)
@@ -236,7 +221,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (ruleToRemove == null)
             {
-                throw new ArgumentNullException("ruleToRemove");
+                throw new ArgumentNullException(nameof(ruleToRemove));
             }
 
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
@@ -268,13 +253,10 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        public async Task SaveAsync(IDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
-            if (handler != null)
-            {
-                handler(this, new AdditionalInformationRequestedEventArgs());
-            }
+            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
             if (ValidateModel(messages))
@@ -287,10 +269,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             EventHandler savedHandler = Saved;
-            if (savedHandler != null)
-            {
-                savedHandler(this, EventArgs.Empty);
-            }
+            savedHandler?.Invoke(this, EventArgs.Empty);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
@@ -300,10 +279,7 @@ namespace BudgetAnalyser.Engine.Services
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
-            if (handler != null)
-            {
-                handler(this, new ValidatingEventArgs());
-            }
+            handler?.Invoke(this, new ValidatingEventArgs());
             return true;
         }
 

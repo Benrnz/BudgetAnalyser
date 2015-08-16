@@ -15,31 +15,24 @@ namespace BudgetAnalyser.Statement
         private readonly StatementController controller;
         private readonly IUserQuestionBoxYesNo questionBox;
 
-        private IMessenger MessengerInstance { get; set; }
-
-        private StatementViewModel ViewModel
-        {
-            get { return this.controller.ViewModel; }
-        }
-
         public StatementControllerNavigation(
-            [NotNull] IMessenger messenger, 
-            [NotNull] StatementController controller, 
+            [NotNull] IMessenger messenger,
+            [NotNull] StatementController controller,
             [NotNull] IUserQuestionBoxYesNo questionBox)
         {
             if (messenger == null)
             {
-                throw new ArgumentNullException("messenger");
+                throw new ArgumentNullException(nameof(messenger));
             }
 
             if (controller == null)
             {
-                throw new ArgumentNullException("controller");
+                throw new ArgumentNullException(nameof(controller));
             }
-            
+
             if (questionBox == null)
             {
-                throw new ArgumentNullException("questionBox");
+                throw new ArgumentNullException(nameof(questionBox));
             }
 
             MessengerInstance = messenger;
@@ -49,30 +42,15 @@ namespace BudgetAnalyser.Statement
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
-        private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
-        {
-            if (NavigateToVisibleTransaction(message.TransactionId))
-            {
-                message.SetSearchAsSuccessful();
-                return;
-            }
-
-            if (NavigateToTransactionOutsideOfFilter(message.TransactionId))
-            {
-                message.SetSearchAsSuccessful();
-                return;
-            }
-
-            message.SetSearchAsFailed();
-            // No such transaction id found.
-        }
+        private IMessenger MessengerInstance { get; }
+        private StatementViewModel ViewModel => this.controller.ViewModel;
 
         private bool NavigateToTransactionOutsideOfFilter(Guid transactionId)
         {
             Transaction foundTransaction = ViewModel.Statement.AllTransactions.FirstOrDefault(t => t.Id == transactionId);
             if (foundTransaction != null)
             {
-                var result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
+                bool? result = this.questionBox.Show("The transaction falls outside the current filter. Do you wish to adjust the filter to show the transaction?", "Navigate to Transaction");
                 if (result == null || !result.Value)
                 {
                     return false;
@@ -109,6 +87,24 @@ namespace BudgetAnalyser.Statement
             }
 
             return false;
+        }
+
+        private void OnNavigateToTransactionRequestReceived(NavigateToTransactionMessage message)
+        {
+            if (NavigateToVisibleTransaction(message.TransactionId))
+            {
+                message.SetSearchAsSuccessful();
+                return;
+            }
+
+            if (NavigateToTransactionOutsideOfFilter(message.TransactionId))
+            {
+                message.SetSearchAsSuccessful();
+                return;
+            }
+
+            message.SetSearchAsFailed();
+            // No such transaction id found.
         }
     }
 }

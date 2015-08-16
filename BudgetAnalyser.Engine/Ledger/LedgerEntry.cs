@@ -66,15 +66,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     The total net affect of all transactions in this entry.  Debits will be negative.
         /// </summary>
-        public decimal NetAmount
-        {
-            get { return this.transactions.Sum(t => t.Amount); }
-        }
+        public decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
-        public IEnumerable<LedgerTransaction> Transactions
-        {
-            get { return this.transactions; }
-        }
+        public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
         /// <summary>
         ///     Returns a string that represents the current object.
@@ -91,7 +85,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (newTransaction == null)
             {
-                throw new ArgumentNullException("newTransaction");
+                throw new ArgumentNullException(nameof(newTransaction));
             }
 
             this.transactions.Add(newTransaction);
@@ -126,7 +120,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
         /// </summary>
         /// <param name="newTransactions">The list of new transactions for this entry. This includes the monthly budgeted amount.</param>
-        /// <param name="reconciliationDate">The reconciliation date - this is used to give automatically created transactions a date.</param>
+        /// <param name="reconciliationDate">
+        ///     The reconciliation date - this is used to give automatically created transactions a
+        ///     date.
+        /// </param>
         internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions, DateTime reconciliationDate)
         {
             const string supplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";

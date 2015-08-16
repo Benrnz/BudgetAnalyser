@@ -12,17 +12,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class DtoToLedgerBookMapperAutoMapperTest
     {
         private LedgerBook Result { get; set; }
-
-        private LedgerBookDto TestData
-        {
-            get { return LedgerBookDtoTestData.TestData3(); }
-        }
-
-        [TestMethod]
-        public void ShouldMapReconciliations()
-        {
-            Assert.AreEqual(3, Result.Reconciliations.Count());
-        }
+        private LedgerBookDto TestData => LedgerBookDtoTestData.TestData3();
 
         [TestMethod]
         public void ShouldMapFileName()
@@ -33,7 +23,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapModified()
         {
-            Assert.AreEqual(new DateTime(2013,12,14), Result.Modified);
+            Assert.AreEqual(new DateTime(2013, 12, 14), Result.Modified);
         }
 
         [TestMethod]
@@ -42,11 +32,15 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual("Test Budget Ledger Book 3", Result.Name);
         }
 
+        [TestMethod]
+        public void ShouldMapReconciliations()
+        {
+            Assert.AreEqual(3, Result.Reconciliations.Count());
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerBook>(TestData);
         }
     }

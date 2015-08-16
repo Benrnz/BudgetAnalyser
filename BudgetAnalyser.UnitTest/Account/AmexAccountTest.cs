@@ -7,45 +7,45 @@ namespace BudgetAnalyser.UnitTest.Account
     public class AmexAccountTest
     {
         [TestMethod]
-        public void KeywordsShouldNotBeNull()
+        public void CloneShouldGiveUseNameGiven()
         {
-            var subject = CreateSubject();
+            AmexAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneAmex");
 
-            Assert.IsNotNull(subject.KeyWords);
-        }
-
-        [TestMethod]
-        public void KeywordsShouldContainElements()
-        {
-            var subject = CreateSubject();
-
-            Assert.IsTrue(subject.KeyWords.Length > 0);
-        }
-
-        [TestMethod]
-        public void NameShouldBeSomething()
-        {
-            var subject = CreateSubject();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
+            Assert.AreEqual("CloneAmex", clone.Name);
+            Assert.AreNotEqual("CloneAmex", subject.Name);
         }
 
         [TestMethod]
         public void CloneShouldNotJustCopyReference()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneAmex");
+            AmexAccount subject = CreateSubject();
+            Engine.Account.Account clone = subject.Clone("CloneAmex");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }
 
         [TestMethod]
-        public void CloneShouldGiveUseNameGiven()
+        public void KeywordsShouldContainElements()
         {
-            var subject = CreateSubject();
-            var clone = subject.Clone("CloneAmex");
+            AmexAccount subject = CreateSubject();
 
-            Assert.AreEqual("CloneAmex", clone.Name);
-            Assert.AreNotEqual("CloneAmex", subject.Name);
+            Assert.IsTrue(subject.KeyWords.Length > 0);
+        }
+
+        [TestMethod]
+        public void KeywordsShouldNotBeNull()
+        {
+            AmexAccount subject = CreateSubject();
+
+            Assert.IsNotNull(subject.KeyWords);
+        }
+
+        [TestMethod]
+        public void NameShouldBeSomething()
+        {
+            AmexAccount subject = CreateSubject();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(subject.Name));
         }
 
         private AmexAccount CreateSubject()

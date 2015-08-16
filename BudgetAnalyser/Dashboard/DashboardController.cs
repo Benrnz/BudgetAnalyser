@@ -39,17 +39,17 @@ namespace BudgetAnalyser.Dashboard
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.chooseBudgetBucketController = uiContext.ChooseBudgetBucketController;
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public GlobalFilterController GlobalFilterController { get; private set; }
+        public GlobalFilterController GlobalFilterController { [UsedImplicitly] get; private set; }
 
         public bool Shown
         {
@@ -104,18 +104,21 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public ICommand WidgetCommand
-        {
-            get { return new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute); }
-        }
+        [UsedImplicitly]
+        public ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
+
+        private static bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
+        }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
@@ -158,7 +161,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Budgets == null)
@@ -216,7 +219,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Criteria == null)
@@ -231,7 +234,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.LedgerBook == null)
@@ -248,7 +251,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.StatementModel == null)
@@ -263,7 +266,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.StatementModel == null)
@@ -292,11 +295,6 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
             MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
             MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
-        }
-
-        private static bool WidgetCommandCanExecute(Widget widget)
-        {
-            return widget.Clickable;
         }
     }
 }

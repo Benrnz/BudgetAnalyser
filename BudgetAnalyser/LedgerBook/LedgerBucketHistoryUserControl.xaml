@@ -66,7 +66,7 @@
                     Value="Transparent" />
         </Style>
 
-        <ControlTemplate x:Key="ChartTemplate" 
+        <ControlTemplate x:Key="ChartTemplate"
                          TargetType="chartingToolkit:Chart">
             <Border Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
@@ -74,12 +74,12 @@
                     Padding="{TemplateBinding Padding}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <visualizationToolkit:Title Content="{TemplateBinding Title}"
-                                   Style="{TemplateBinding TitleStyle}" />
-                    
+                                                Style="{TemplateBinding TitleStyle}" />
+
                     <primitives:EdgePanel x:Name="ChartArea"
                                           Grid.Row="1"
                                           Style="{TemplateBinding ChartAreaStyle}">
@@ -110,7 +110,7 @@
                                         Title="{Binding BalanceLine.SeriesName}"
                                         ToolTip="{Binding BalanceLine.Description}"
                                         IndependentValueBinding="{Binding Date}">
-                
+
                 <chartingToolkit:LineSeries.DependentRangeAxis>
                     <chartingToolkit:LinearAxis AxisLabelStyle="{StaticResource AxesLabelStyle}"
                                                 Minimum="{Binding BalanceLine.MinimumValue}"
@@ -122,7 +122,7 @@
                     <chartingToolkit:DateTimeAxis AxisLabelStyle="{StaticResource DateTimeAxesLabelStyle}"
                                                   Orientation="X" />
                 </chartingToolkit:LineSeries.IndependentAxis>
-                
+
             </chartingToolkit:LineSeries>
         </chartingToolkit:Chart>
 

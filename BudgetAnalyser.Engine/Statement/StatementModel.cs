@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -27,12 +28,12 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.logger = logger;
@@ -85,19 +86,40 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        ///     Calculates the duration in months from the beginning of the period to the end.
+        /// </summary>
+        /// <param name="criteria">
+        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
+        ///     statement dates.
+        /// </param>
+        /// <param name="transactions">The list of transactions to use to determine duration.</param>
+        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
+        {
+            List<Transaction> list = transactions.ToList();
+            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
+
+            if (criteria != null && !criteria.Cleared)
+            {
+                if (criteria.BeginDate != null)
+                {
+                    minDate = criteria.BeginDate.Value;
+                    Debug.Assert(criteria.EndDate != null);
+                    maxDate = criteria.EndDate.Value;
+                }
+            }
+            else
+            {
+                minDate = list.Min(t => t.Date);
+                maxDate = list.Max(t => t.Date);
+            }
+
+            return minDate.DurationInMonths(maxDate);
+        }
+
         public long SignificantDataChangeHash()
         {
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         internal virtual void Filter(GlobalFilterCriteria criteria)
@@ -163,7 +185,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.duplicates = null;
-            OnPropertyChanged("Transactions");
+            OnPropertyChanged(nameof(Transactions));
             SubscribeToTransactionChangedEvents();
             return this;
         }
@@ -172,7 +194,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (additionalModel == null)
             {
-                throw new ArgumentNullException("additionalModel");
+                throw new ArgumentNullException(nameof(additionalModel));
             }
 
             LastImport = additionalModel.LastImport;
@@ -184,12 +206,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (bucket == null)
             {
-                throw new ArgumentNullException("bucket");
+                throw new ArgumentNullException(nameof(bucket));
             }
 
             if (reassignmentBucket == null)
             {
-                throw new ArgumentNullException("reassignmentBucket");
+                throw new ArgumentNullException(nameof(reassignmentBucket));
             }
 
             foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
@@ -202,7 +224,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
             transaction.PropertyChanged -= OnTransactionPropertyChanged;
@@ -220,17 +242,17 @@ namespace BudgetAnalyser.Engine.Statement
         {
             if (originalTransaction == null)
             {
-                throw new ArgumentNullException("originalTransaction");
+                throw new ArgumentNullException(nameof(originalTransaction));
             }
 
             if (splinterBucket1 == null)
             {
-                throw new ArgumentNullException("splinterBucket1");
+                throw new ArgumentNullException(nameof(splinterBucket1));
             }
 
             if (splinterBucket2 == null)
             {
-                throw new ArgumentNullException("splinterBucket2");
+                throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
             var splinterTransaction1 = (Transaction)originalTransaction.Clone();
@@ -271,6 +293,13 @@ namespace BudgetAnalyser.Engine.Statement
                 });
             this.duplicates = query;
             return this.duplicates;
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
@@ -341,37 +370,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
-        }
-
-        /// <summary>
-        ///     Calculates the duration in months from the beginning of the period to the end.
-        /// </summary>
-        /// <param name="criteria">
-        ///     The criteria that is currently applied to the Statement. Pass in null to use first and last
-        ///     statement dates.
-        /// </param>
-        /// <param name="transactions">The list of transactions to use to determine duration.</param>
-        public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
-        {
-            List<Transaction> list = transactions.ToList();
-            DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
-
-            if (criteria != null && !criteria.Cleared)
-            {
-                if (criteria.BeginDate != null)
-                {
-                    minDate = criteria.BeginDate.Value;
-                    Debug.Assert(criteria.EndDate != null);
-                    maxDate = criteria.EndDate.Value;
-                }
-            }
-            else
-            {
-                minDate = list.Min(t => t.Date);
-                maxDate = list.Max(t => t.Date);
-            }
-
-            return minDate.DurationInMonths(maxDate);
         }
     }
 }

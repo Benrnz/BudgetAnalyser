@@ -13,9 +13,9 @@ namespace BudgetAnalyser.Engine.Widgets
     /// </summary>
     public abstract class Widget : INotifyPropertyChanged
     {
+        protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
-        protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
         private string doNotUseCategory;
         private bool doNotUseClickable;
         private string doNotUseColour;
@@ -41,6 +41,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
             Visibility = true;
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor - ok here, simple bool property with straightforward usage.
             Enabled = true;
             Sequence = 99;
         }
@@ -74,7 +75,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseColour; }
             protected set
             {
-                var changed = value != this.doNotUseColour;
+                bool changed = value != this.doNotUseColour;
                 this.doNotUseColour = value;
                 OnPropertyChanged();
                 if (changed)
@@ -99,7 +100,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public virtual bool Enabled
         {
             get { return this.doNotUseEnabled; }
-            set
+            protected set
             {
                 this.doNotUseEnabled = value;
                 OnPropertyChanged();
@@ -138,16 +139,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         public string Name { get; protected set; }
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
-
-        public WidgetSize Size
-        {
-            get { return this.doNotUseSize; }
-            protected set
-            {
-                this.doNotUseSize = value;
-                OnPropertyChanged();
-            }
-        }
+        public int Sequence { get; protected set; }
 
         public string ToolTip
         {
@@ -174,7 +166,7 @@ namespace BudgetAnalyser.Engine.Widgets
             get { return this.doNotUseWidgetStyle; }
             protected set
             {
-                var changed = value != this.doNotUseWidgetStyle;
+                bool changed = value != this.doNotUseWidgetStyle;
                 this.doNotUseWidgetStyle = value;
                 OnPropertyChanged();
                 if (changed)
@@ -184,27 +176,29 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        public int Sequence { get; protected set; }
+        protected WidgetSize Size
+        {
+            get { return this.doNotUseSize; }
+            set
+            {
+                this.doNotUseSize = value;
+                OnPropertyChanged();
+            }
+        }
 
         public abstract void Update(params object[] input);
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void OnStyleChanged(EventHandler eventToInvoke)
         {
-            var handler = eventToInvoke;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            EventHandler handler = eventToInvoke;
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         protected bool ValidateUpdateInput(object[] input)
@@ -214,16 +208,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 return false;
             }
 
-            var dependencies = Dependencies.ToList();
+            List<Type> dependencies = Dependencies.ToList();
             if (dependencies.Count() > input.Length)
             {
                 return false;
             }
 
             int index = 0, nullCount = 0;
-            foreach (var dependencyType in Dependencies)
+            foreach (Type dependencyType in Dependencies)
             {
-                var dependencyInstance = input[index++];
+                object dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.

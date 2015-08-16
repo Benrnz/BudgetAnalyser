@@ -29,12 +29,12 @@ namespace BudgetAnalyser.Statement
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.doNotUseSortByDate = true;
@@ -42,10 +42,7 @@ namespace BudgetAnalyser.Statement
             this.applicationDatabaseService = applicationDatabaseService;
         }
 
-        public decimal AverageDebit
-        {
-            get { return this.transactionService.AverageDebit; }
-        }
+        public decimal AverageDebit => this.transactionService.AverageDebit;
 
         public bool Dirty
         {
@@ -64,7 +61,7 @@ namespace BudgetAnalyser.Statement
 
         public string DuplicateSummary
         {
-            get { return this.doNotUseDuplicateSummary; }
+            [UsedImplicitly] get { return this.doNotUseDuplicateSummary; }
 
             private set
             {
@@ -73,10 +70,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public IEnumerable<string> FilterBudgetBuckets
-        {
-            get { return this.transactionService.FilterableBuckets(); }
-        }
+        public IEnumerable<string> FilterBudgetBuckets => this.transactionService.FilterableBuckets();
 
         public ObservableCollection<TransactionGroupedByBucketViewModel> GroupedByBucket
         {
@@ -88,10 +82,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public bool HasTransactions
-        {
-            get { return Statement != null && Statement.Transactions.Any(); }
-        }
+        public bool HasTransactions => Statement != null && Statement.Transactions.Any();
 
         public Transaction SelectedRow
         {
@@ -167,25 +158,10 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public decimal TotalCount
-        {
-            get { return this.transactionService.TotalCount; }
-        }
-
-        public decimal TotalCredits
-        {
-            get { return this.transactionService.TotalCredits; }
-        }
-
-        public decimal TotalDebits
-        {
-            get { return this.transactionService.TotalDebits; }
-        }
-
-        public decimal TotalDifference
-        {
-            get { return TotalCredits + TotalDebits; }
-        }
+        public decimal TotalCount => this.transactionService.TotalCount;
+        public decimal TotalCredits => this.transactionService.TotalCredits;
+        public decimal TotalDebits => this.transactionService.TotalDebits;
+        public decimal TotalDifference => TotalCredits + TotalDebits;
 
         public ObservableCollection<Transaction> Transactions
         {
@@ -223,14 +199,7 @@ namespace BudgetAnalyser.Statement
             RaisePropertyChanged(() => HasTransactions);
             RaisePropertyChanged(() => StatementName);
 
-            if (Statement == null)
-            {
-                DuplicateSummary = null;
-            }
-            else
-            {
-                DuplicateSummary = this.transactionService.DetectDuplicateTransactions();
-            }
+            DuplicateSummary = Statement == null ? null : this.transactionService.DetectDuplicateTransactions();
         }
 
         public void UpdateGroupedByBucket()

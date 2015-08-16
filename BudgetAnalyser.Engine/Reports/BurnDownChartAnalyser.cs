@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -18,12 +19,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (ledgerCalculator == null)
             {
-                throw new ArgumentNullException("ledgerCalculator");
+                throw new ArgumentNullException(nameof(ledgerCalculator));
             }
 
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.ledgerCalculator = ledgerCalculator;
@@ -34,12 +35,12 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (statementModel == null)
             {
-                throw new ArgumentNullException("statementModel");
+                throw new ArgumentNullException(nameof(statementModel));
             }
 
             if (budgetModel == null)
             {
-                throw new ArgumentNullException("budgetModel");
+                throw new ArgumentNullException(nameof(budgetModel));
             }
 
             List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
@@ -89,15 +90,34 @@ namespace BudgetAnalyser.Engine.Reports
             return result;
         }
 
+        private static void CalculateBudgetLineValues(decimal budgetTotal, List<DateTime> datesOfTheMonth, BurnDownChartAnalyserResult result)
+        {
+            decimal average = budgetTotal / datesOfTheMonth.Count();
+
+            var seriesData = new SeriesData
+            {
+                Description = "The budget line shows ideal linear spending over the month to keep within your budget.",
+                SeriesName = BurnDownChartAnalyserResult.BudgetSeriesName
+            };
+            result.GraphLines.SeriesList.Add(seriesData);
+
+            var iteration = 0;
+            foreach (DateTime day in datesOfTheMonth)
+            {
+                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - (average * iteration++), Date = day });
+            }
+        }
+
         private static List<ReportTransactionWithRunningBalance> CollateStatementTransactions(
             StatementModel statementModel,
-            IEnumerable<BudgetBucket> bucketsCopy,
+            IList<BudgetBucket> bucketsToInclude,
             DateTime beginDate,
             DateTime lastDate,
             decimal openingBalance)
         {
-            List<ReportTransactionWithRunningBalance> query = statementModel.Transactions
-                .Join(bucketsCopy, t => t.BudgetBucket, b => b, (t, b) => t)
+            // The below query has to cater for special Surplus buckets which are intended to be equivelent but use a type hierarchy with inheritance.
+            var query = statementModel.Transactions
+                .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t, new SurplusAgnosticBucketComparer())
                 .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)
                 .Select(t => new ReportTransactionWithRunningBalance { Amount = t.Amount, Date = t.Date, Narrative = t.Description })
@@ -109,6 +129,20 @@ namespace BudgetAnalyser.Engine.Reports
             UpdateReportTransactionRunningBalances(query);
 
             return query;
+        }
+
+        private static void CreateZeroLine(IEnumerable<DateTime> datesOfTheMonth, BurnDownChartAnalyserResult result)
+        {
+            var series = new SeriesData
+            {
+                SeriesName = BurnDownChartAnalyserResult.ZeroSeriesName,
+                Description = "Zero line"
+            };
+            result.GraphLines.SeriesList.Add(series);
+            foreach (DateTime day in datesOfTheMonth)
+            {
+                series.PlotsList.Add(new DatedGraphPlot { Amount = 0, Date = day });
+            }
         }
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)
@@ -189,38 +223,6 @@ namespace BudgetAnalyser.Engine.Reports
             } while (current <= end);
 
             return data;
-        }
-
-        private static void CalculateBudgetLineValues(decimal budgetTotal, List<DateTime> datesOfTheMonth, BurnDownChartAnalyserResult result)
-        {
-            decimal average = budgetTotal / datesOfTheMonth.Count();
-
-            var seriesData = new SeriesData
-            {
-                Description = "The budget line shows ideal linear spending over the month to keep within your budget.",
-                SeriesName = BurnDownChartAnalyserResult.BudgetSeriesName,
-            };
-            result.GraphLines.SeriesList.Add(seriesData);
-
-            int iteration = 0;
-            foreach (var day in datesOfTheMonth)
-            {
-                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - (average * iteration++), Date = day });
-            }
-        }
-
-        private static void CreateZeroLine(IEnumerable<DateTime> datesOfTheMonth, BurnDownChartAnalyserResult result)
-        {
-            var series = new SeriesData
-            {
-                SeriesName = BurnDownChartAnalyserResult.ZeroSeriesName,
-                Description = "Zero line",
-            };
-            result.GraphLines.SeriesList.Add(series);
-            foreach (DateTime day in datesOfTheMonth)
-            {
-                series.PlotsList.Add(new DatedGraphPlot { Amount = 0, Date = day });
-            }
         }
 
         /// <summary>

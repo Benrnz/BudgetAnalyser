@@ -14,7 +14,6 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         }
 
         public Func<string, IEnumerable<string>> ReadLinesOverride { get; set; }
-
         public Func<string, string> ReadTextChunkOverride { get; set; }
 
         protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)

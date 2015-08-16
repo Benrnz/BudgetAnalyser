@@ -29,17 +29,17 @@ namespace BudgetAnalyser
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (dashboardService == null)
             {
-                throw new ArgumentNullException("dashboardService");
+                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (demoFileHelper == null)
             {
-                throw new ArgumentNullException("demoFileHelper");
+                throw new ArgumentNullException(nameof(demoFileHelper));
             }
 
             this.uiContext = uiContext;
@@ -48,10 +48,8 @@ namespace BudgetAnalyser
             MessengerInstance.Register<NavigateToTransactionMessage>(this, OnNavigateToTransactionRequestReceived);
         }
 
-        public ICommand BudgetCommand
-        {
-            get { return new RelayCommand(OnBudgetExecuted); }
-        }
+        [UsedImplicitly]
+        public ICommand BudgetCommand => new RelayCommand(OnBudgetExecuted);
 
         public bool BudgetToggle
         {
@@ -63,10 +61,7 @@ namespace BudgetAnalyser
             }
         }
 
-        public ICommand DashboardCommand
-        {
-            get { return new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand); }
-        }
+        public ICommand DashboardCommand => new RelayCommand(OnDashboardExecuted, CanExecuteDashboardCommand);
 
         public bool DashboardToggle
         {
@@ -78,10 +73,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public ICommand LedgerBookCommand
-        {
-            get { return new RelayCommand(OnLedgerBookExecuted); }
-        }
+        [UsedImplicitly]
+        public ICommand LedgerBookCommand => new RelayCommand(OnLedgerBookExecuted);
 
         public bool LedgerBookToggle
         {
@@ -93,10 +86,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public ICommand ReportsCommand
-        {
-            get { return new RelayCommand(OnReportsExecuted); }
-        }
+        [UsedImplicitly]
+        public ICommand ReportsCommand => new RelayCommand(OnReportsExecuted);
 
         public bool ReportsToggle
         {
@@ -108,10 +99,8 @@ namespace BudgetAnalyser
             }
         }
 
-        public ICommand TransactionsCommand
-        {
-            get { return new RelayCommand(OnTransactionExecuted); }
-        }
+        [UsedImplicitly]
+        public ICommand TransactionsCommand => new RelayCommand(OnTransactionExecuted);
 
         public bool TransactionsToggle
         {
@@ -126,6 +115,11 @@ namespace BudgetAnalyser
         public void Initialize()
         {
             DashboardCommand.Execute(null);
+        }
+
+        private static bool CanExecuteDashboardCommand()
+        {
+            return true;
         }
 
         private void AfterTabExecutedCommon()
@@ -202,7 +196,7 @@ namespace BudgetAnalyser
         {
             if (message == null)
             {
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
             }
 
             if (message.Handled)
@@ -272,11 +266,6 @@ namespace BudgetAnalyser
 
             // Could possibily go direct to PersistenceOperation class here.
             PersistenceOperationCommands.LoadDemoDatabaseCommand.Execute(this);
-        }
-
-        private static bool CanExecuteDashboardCommand()
-        {
-            return true;
         }
     }
 }

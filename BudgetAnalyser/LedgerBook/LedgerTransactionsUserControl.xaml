@@ -5,7 +5,7 @@
 
     <!-- Controller: LedgerTransactionsController -->
     <!-- Used to show any kind of transaction list including balance adjustments -->
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -17,14 +17,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Stripe -->
-        <Border BorderBrush="{Binding LedgerEntry.LedgerBucket.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
-                BorderThickness="24,0,0,0"
-                Grid.Column="0"
-                Grid.RowSpan="3"
-                HorizontalAlignment="Left"
-                Margin="-6,0,12,0"
-                ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
-                VerticalAlignment="Stretch" />
+        <Border
+            BorderBrush="{Binding LedgerEntry.LedgerBucket.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
+            BorderThickness="24,0,0,0"
+            Grid.Column="0"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Left"
+            Margin="-6,0,12,0"
+            ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
+            VerticalAlignment="Stretch" />
         <Grid Grid.Column="1"
               Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -37,8 +38,8 @@
             <Button Command="{Binding AddTransactionCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
-                    ToolTip="Add new transaction" 
-                    Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}"/>
+                    ToolTip="Add new transaction"
+                    Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}" />
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -118,7 +119,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Grid.Column="0"
                            Grid.Row="0"
                            HorizontalAlignment="Right"

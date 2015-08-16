@@ -14,6 +14,17 @@ namespace BudgetAnalyser.UnitTest.Matching
         private IBudgetBucketRepository BucketRepo { get; set; }
 
         [TestMethod]
+        public void AndMatchShouldFailWhenBucketIsInactive()
+        {
+            MatchingRule subject = Arrange();
+            subject.Description = "Testing Description";
+            subject.Bucket.Active = false;
+
+            bool success = subject.Match(new Transaction { Description = "Testing Description" });
+            Assert.IsFalse(success);
+        }
+
+        [TestMethod]
         public void AndMatchShouldMatchOnAmountAndDescription()
         {
             MatchingRule subject = Arrange();
@@ -64,17 +75,6 @@ namespace BudgetAnalyser.UnitTest.Matching
             subject.Description = "Testing Description";
 
             bool success = subject.Match(new Transaction { Description = "xxxTesting Description" });
-            Assert.IsFalse(success);
-        }
-
-        [TestMethod]
-        public void AndMatchShouldFailWhenBucketIsInactive()
-        {
-            MatchingRule subject = Arrange();
-            subject.Description = "Testing Description";
-            subject.Bucket.Active = false;
-
-            bool success = subject.Match(new Transaction { Description = "Testing Description" });
             Assert.IsFalse(success);
         }
 
@@ -283,7 +283,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         {
             return new MatchingRule(BucketRepo)
             {
-                BucketCode = StatementModelTestData.PowerBucket.Code,
+                BucketCode = StatementModelTestData.PowerBucket.Code
             };
         }
     }

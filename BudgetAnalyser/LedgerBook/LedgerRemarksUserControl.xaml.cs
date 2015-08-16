@@ -19,7 +19,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             if ((bool)e.NewValue)
             {
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => RemarksTextBox.Focus());
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => this.RemarksTextBox.Focus());
             }
         }
     }

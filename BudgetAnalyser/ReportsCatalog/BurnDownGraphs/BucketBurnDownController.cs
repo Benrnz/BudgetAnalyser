@@ -12,14 +12,12 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
     {
         private SeriesData doNotUseBalanceLine;
         private SeriesData doNotUseTrendLine;
-
-        public decimal ActualSpendingAxesMinimum { get; private set; }
-
+        public decimal ActualSpendingAxesMinimum { [UsedImplicitly] get; private set; }
         public Brush Background { get; private set; }
 
         public SeriesData BalanceLine
         {
-            get { return this.doNotUseBalanceLine; }
+            [UsedImplicitly] get { return this.doNotUseBalanceLine; }
 
             private set
             {
@@ -30,7 +28,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         public SeriesData BudgetLine
         {
-            get { return this.doNotUseTrendLine; }
+            [UsedImplicitly] get { return this.doNotUseTrendLine; }
 
             private set
             {
@@ -40,16 +38,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         public string ChartTitle { get; private set; }
-
         public bool IsCustomChart { get; private set; }
-
-        public SeriesData ZeroLine { get; private set; }
+        public SeriesData ZeroLine { [UsedImplicitly] get; private set; }
 
         public void Load([NotNull] BurnDownChartAnalyserResult analysisResult)
         {
             if (analysisResult == null)
             {
-                throw new ArgumentNullException("analysisResult");
+                throw new ArgumentNullException(nameof(analysisResult));
             }
 
             if (analysisResult.IsCustomAggregateChart)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 
 namespace BudgetAnalyser.Engine.Statement
 {

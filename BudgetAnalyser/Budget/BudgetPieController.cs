@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -27,20 +28,18 @@ namespace BudgetAnalyser.Budget
         {
             if (service == null)
             {
-                throw new ArgumentNullException("service");
+                throw new ArgumentNullException(nameof(service));
             }
 
             this.budgetPieService = service;
         }
 
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(Close); }
-        }
+        [UsedImplicitly]
+        public ICommand CloseCommand => new RelayCommand(Close);
 
         public Expense CurrentExpense
         {
-            get { return this.doNotUseCurrentExpense; }
+            [UsedImplicitly] get { return this.doNotUseCurrentExpense; }
 
             private set
             {
@@ -64,7 +63,7 @@ namespace BudgetAnalyser.Budget
 
         public Income CurrentIncome
         {
-            get { return this.doNotUseCurrentIncome; }
+            [UsedImplicitly] get { return this.doNotUseCurrentIncome; }
 
             private set
             {
@@ -139,11 +138,9 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        public string Title
-        {
-            get { return "Budget Pie Charts"; }
-        }
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
+        [UsedImplicitly]
+        public string Title => "Budget Pie Charts";
 
         public void Close()
         {
@@ -160,7 +157,7 @@ namespace BudgetAnalyser.Budget
         {
             if (model == null)
             {
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             }
 
             this.surplus = this.budgetPieService.SurplusExpense(model);

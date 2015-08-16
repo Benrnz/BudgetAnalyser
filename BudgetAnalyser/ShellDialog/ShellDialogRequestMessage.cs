@@ -24,10 +24,8 @@ namespace BudgetAnalyser.ShellDialog
         public Guid CorrelationId { get; set; }
 
         public ShellDialogType DialogType { get; private set; }
-        public BudgetAnalyserFeature Location { get; private set; }
-
         public bool HelpAvailable { get; set; }
-
+        public BudgetAnalyserFeature Location { get; private set; }
         public string Title { get; set; }
     }
 }

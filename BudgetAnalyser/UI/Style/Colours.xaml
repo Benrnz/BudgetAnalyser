@@ -192,7 +192,6 @@
     </Color>
 
 
-
     <SolidColorBrush x:Key="Brush.BudgetBucket.Income"
                      Color="{StaticResource Colour.BudgetBucket.Income}" />
 
@@ -293,7 +292,6 @@
                      Color="{StaticResource Colour.SecondaryBackground}" />
 
 
-
     <SolidColorBrush x:Key="Brush.ModernTile.Background1"
                      Color="{StaticResource Colour.ModernTile.Background1}" />
 
@@ -305,7 +303,6 @@
 
     <SolidColorBrush x:Key="Brush.ModernTile.Disabled"
                      Color="{StaticResource Colour.ModernTile.Disabled}" />
-
 
 
     <SolidColorBrush x:Key="Brush.Button.Chrome"

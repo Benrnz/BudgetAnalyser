@@ -18,8 +18,7 @@
                             <ColorAnimation Duration="0:0:0.5"
                                             Storyboard.TargetName="Root"
                                             Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                            To="{StaticResource Colour.ControlMouseOver}">
-                            </ColorAnimation>
+                                            To="{StaticResource Colour.ControlMouseOver}" />
                         </Storyboard>
                     </vsm:VisualState>
                     <vsm:VisualState Name="Selected">
@@ -27,8 +26,7 @@
                             <ColorAnimation Duration="0:0:0.5"
                                             Storyboard.TargetName="Root"
                                             Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                            To="{StaticResource Colour.SelectedItem}">
-                            </ColorAnimation>
+                                            To="{StaticResource Colour.SelectedItem}" />
                         </Storyboard>
                     </vsm:VisualState>
                 </vsm:VisualStateGroup>
@@ -58,7 +56,7 @@
                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
         </Border>
     </ControlTemplate>
-    
+
     <Style x:Key="ListBox.StandardContainerStyle"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background"

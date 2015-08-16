@@ -17,15 +17,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             get
             {
-                var book = LedgerBookDtoTestData.TestData3();
+                LedgerBookDto book = LedgerBookDtoTestData.TestData3();
                 return book.Reconciliations.First();
             }
-        }
-
-        [TestMethod]
-        public void ShouldSetIsNewToFalse()
-        {
-            Assert.IsFalse(Result.IsNew);
         }
 
         [TestMethod]
@@ -38,12 +32,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapBankBalances()
         {
             Assert.AreEqual(2, Result.BankBalances.Count());
-        }
-
-        [TestMethod]
-        public void ShouldMapSurplus()
-        {
-            Assert.AreEqual(1498.99M, Result.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -71,6 +59,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void ShouldMapSurplus()
+        {
+            Assert.AreEqual(1498.99M, Result.CalculatedSurplus);
+        }
+
+        [TestMethod]
         public void ShouldMapTotalBalanceAdjustments()
         {
             Assert.AreEqual(-100.01M, Result.TotalBalanceAdjustments);
@@ -82,11 +76,15 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(2002.45M, Result.TotalBankBalance);
         }
 
+        [TestMethod]
+        public void ShouldSetIsNewToFalse()
+        {
+            Assert.IsFalse(Result.IsNew);
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerEntryLine>(TestData);
         }
     }

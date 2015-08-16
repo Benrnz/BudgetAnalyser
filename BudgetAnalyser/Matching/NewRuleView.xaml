@@ -25,23 +25,23 @@
                       Margin="10"
                       BorderBrush="{StaticResource Brush.ControlBorder}">
                 <GroupBox.Header>
-                    <TextBlock Text=" AND or OR "></TextBlock>
+                    <TextBlock Text=" AND or OR " />
                 </GroupBox.Header>
                 <StackPanel>
                     <RadioButton GroupName="AndOr"
                                  Margin="5"
                                  IsChecked="{Binding OrChecked}">
                         <RadioButton.Content>
-                            <TextBlock Text="Or"/>
+                            <TextBlock Text="Or" />
                         </RadioButton.Content>
                     </RadioButton>
                     <RadioButton Margin="5"
                                  GroupName="AndOr"
                                  IsChecked="{Binding AndChecked}">
                         <RadioButton.Content>
-                            <TextBlock Text="And"/>
+                            <TextBlock Text="And" />
                         </RadioButton.Content>
-                        </RadioButton>
+                    </RadioButton>
                 </StackPanel>
             </GroupBox>
             <CheckBox Grid.Row="1"

@@ -37,22 +37,22 @@ namespace BudgetAnalyser.Matching
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (ruleService == null)
             {
-                throw new ArgumentNullException("ruleService");
+                throw new ArgumentNullException(nameof(ruleService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.ruleService = ruleService;
             this.applicationDatabaseService = applicationDatabaseService;
-            
+
             this.questionBox = uiContext.UserPrompts.YesNoBox;
             NewRuleController = uiContext.NewRuleController;
             MessengerInstance = uiContext.Messenger;
@@ -73,21 +73,13 @@ namespace BudgetAnalyser.Matching
         public event EventHandler<MatchingRuleEventArgs> RuleRemoved;
 
         public event EventHandler SortChanged;
+        public string AndOrText => SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR";
 
-        public string AndOrText
-        {
-            get { return SelectedRule == null ? null : SelectedRule.And ? "AND" : "OR"; }
-        }
+        [UsedImplicitly]
+        public ICommand CloseCommand => new RelayCommand(() => Shown = false);
 
-        public ICommand CloseCommand
-        {
-            get { return new RelayCommand(() => Shown = false); }
-        }
-
-        public ICommand DeleteRuleCommand
-        {
-            get { return new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand); }
-        }
+        [UsedImplicitly]
+        public ICommand DeleteRuleCommand => new RelayCommand(OnDeleteRuleCommandExecute, CanExecuteDeleteRuleCommand);
 
         public bool EditingRule
         {
@@ -100,10 +92,8 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public ICommand EditRuleCommand
-        {
-            get { return new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null); }
-        }
+        [UsedImplicitly]
+        public ICommand EditRuleCommand => new RelayCommand(OnEditRuleCommandExecute, () => SelectedRule != null);
 
         public bool FlatListBoxVisibility
         {
@@ -125,7 +115,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public NewRuleController NewRuleController { get; private set; }
+        public NewRuleController NewRuleController { get; }
         public ObservableCollection<MatchingRule> Rules { get; private set; }
         public ObservableCollection<RulesGroupedByBucket> RulesGroupedByBucket { get; private set; }
 
@@ -191,26 +181,21 @@ namespace BudgetAnalyser.Matching
                 }
 
                 EventHandler handler = SortChanged;
-                if (handler != null)
-                {
-                    handler(this, EventArgs.Empty);
-                }
+                handler?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public ICommand SortCommand
-        {
-            get { return new RelayCommand<string>(OnSortCommandExecute); }
-        }
+        [UsedImplicitly]
+        public ICommand SortCommand => new RelayCommand<string>(OnSortCommandExecute);
 
         public void CreateNewRuleFromTransaction([NotNull] Transaction transaction)
         {
             if (transaction == null)
             {
-                throw new ArgumentNullException("transaction");
+                throw new ArgumentNullException(nameof(transaction));
             }
 
-            if (transaction.BudgetBucket == null || string.IsNullOrWhiteSpace(transaction.BudgetBucket.Code))
+            if (string.IsNullOrWhiteSpace(transaction.BudgetBucket?.Code))
             {
                 MessageBox.Show("Select a Bucket code first.");
                 return;
@@ -250,10 +235,7 @@ namespace BudgetAnalyser.Matching
 
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
             EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
-            if (handler != null)
-            {
-                handler(this, new MatchingRuleEventArgs { Rule = rule });
-            }
+            handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
         }
 
         private bool CanExecuteDeleteRuleCommand()
@@ -342,10 +324,7 @@ namespace BudgetAnalyser.Matching
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
 
             EventHandler<MatchingRuleEventArgs> handler = RuleRemoved;
-            if (handler != null)
-            {
-                handler(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
-            }
+            handler?.Invoke(selectedRule, new MatchingRuleEventArgs { Rule = selectedRule });
 
             SelectedRule = null;
         }

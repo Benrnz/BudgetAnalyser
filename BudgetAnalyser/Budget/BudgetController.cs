@@ -42,17 +42,17 @@ namespace BudgetAnalyser.Budget
         {
             if (uiContext == null)
             {
-                throw new ArgumentNullException("uiContext");
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
             if (maintenanceService == null)
             {
-                throw new ArgumentNullException("maintenanceService");
+                throw new ArgumentNullException(nameof(maintenanceService));
             }
 
             if (applicationDatabaseService == null)
             {
-                throw new ArgumentNullException("applicationDatabaseService");
+                throw new ArgumentNullException(nameof(applicationDatabaseService));
             }
 
             this.maintenanceService = maintenanceService;
@@ -77,20 +77,14 @@ namespace BudgetAnalyser.Budget
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand AddNewExpenseCommand
-        {
-            get { return new RelayCommand<ExpenseBucket>(OnAddNewExpenseExecute); }
-        }
+        public ICommand AddNewExpenseCommand => new RelayCommand<ExpenseBucket>(OnAddNewExpenseExecute);
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand AddNewIncomeCommand
-        {
-            get { return new RelayCommand(OnAddNewIncomeExecute); }
-        }
+        public ICommand AddNewIncomeCommand => new RelayCommand(OnAddNewIncomeExecute);
 
         public string BudgetMenuItemName
         {
-            get { return this.budgetMenuItemName; }
+            [Engine.Annotations.UsedImplicitly] get { return this.budgetMenuItemName; }
 
             set
             {
@@ -99,7 +93,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public BudgetPieController BudgetPieController { get; private set; }
+        public BudgetPieController BudgetPieController { get; }
         public BudgetCollection Budgets { get; private set; }
 
         public BudgetCurrencyContext CurrentBudget
@@ -129,16 +123,10 @@ namespace BudgetAnalyser.Budget
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand DeleteBudgetItemCommand
-        {
-            get { return new RelayCommand<object>(OnDeleteBudgetItemCommandExecute); }
-        }
+        public ICommand DeleteBudgetItemCommand => new RelayCommand<object>(OnDeleteBudgetItemCommandExecute);
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand DetailsCommand
-        {
-            get { return new RelayCommand(OnDetailsCommandExecute); }
-        }
+        public ICommand DetailsCommand => new RelayCommand(OnDetailsCommandExecute);
 
         public bool Dirty
         {
@@ -182,18 +170,12 @@ namespace BudgetAnalyser.Budget
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand NewBudgetCommand
-        {
-            get { return new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null); }
-        }
+        public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null);
 
-        public NewBudgetModelController NewBudgetController { get; private set; }
+        public NewBudgetModelController NewBudgetController { get; }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand ShowAllCommand
-        {
-            get { return new RelayCommand(OnShowAllCommandExecuted); }
-        }
+        public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
 
         public bool Shown
         {
@@ -213,14 +195,11 @@ namespace BudgetAnalyser.Budget
         }
 
         [Engine.Annotations.UsedImplicitly]
-        public ICommand ShowPieCommand
-        {
-            get { return new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand); }
-        }
+        public ICommand ShowPieCommand => new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand);
 
         public decimal Surplus
         {
-            get { return this.surplus; }
+            [Engine.Annotations.UsedImplicitly] get { return this.surplus; }
             private set
             {
                 this.surplus = value;
@@ -228,10 +207,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public string TruncatedFileName
-        {
-            get { return Budgets.FileName.TruncateLeft(100, true); }
-        }
+        public string TruncatedFileName => Budgets.FileName.TruncateLeft(100, true);
 
         protected virtual string PromptUserForLastModifiedComment()
         {

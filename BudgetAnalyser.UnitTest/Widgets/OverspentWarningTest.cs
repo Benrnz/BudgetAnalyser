@@ -16,20 +16,11 @@ namespace BudgetAnalyser.UnitTest.Widgets
     public class OverspentWarningTest
     {
         private IBudgetCurrencyContext BudgetCurrencyContext { get; set; }
-
-        private GlobalFilterCriteria Filter
-        {
-            get { return new GlobalFilterCriteria { BeginDate = new DateTime(2013, 08, 15), EndDate = new DateTime(2013, 09, 14) }; }
-        }
-
+        private GlobalFilterCriteria Filter => new GlobalFilterCriteria { BeginDate = new DateTime(2013, 08, 15), EndDate = new DateTime(2013, 09, 14) };
         private IDictionary<BudgetBucket, decimal> LedgerBalancesFake { get; set; }
-
         private LedgerBook LedgerBook { get; set; }
-
         private LedgerCalculation LedgerCalculator { get; set; }
-
         private StatementModel Statement { get; set; }
-
         private OverspentWarning Subject { get; set; }
 
         [TestInitialize]
@@ -43,6 +34,24 @@ namespace BudgetAnalyser.UnitTest.Widgets
 
             Subject = new OverspentWarning();
             Act();
+        }
+
+        [TestMethod]
+        public void UpdateShouldAdd2ElementsToOverSpentSummaryGivenOverSpentTestData()
+        {
+            Assert.AreEqual(2, Subject.OverSpentSummary.Count());
+        }
+
+        [TestMethod]
+        public void UpdateShouldAddHairElementToOverSpentSummaryGivenOverSpentTestData()
+        {
+            Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.HairBucket));
+        }
+
+        [TestMethod]
+        public void UpdateShouldAddPhoneElementToOverSpentSummaryGivenOverSpentTestData()
+        {
+            Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.PhoneBucket));
         }
 
         [TestMethod]
@@ -87,24 +96,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
             Assert.AreEqual("WidgetStandardStyle", Subject.ColourStyleName);
         }
 
-        [TestMethod]
-        public void UpdateShouldAdd2ElementsToOverSpentSummaryGivenOverSpentTestData()
-        {
-            Assert.AreEqual(2, Subject.OverSpentSummary.Count());
-        }
-
-        [TestMethod]
-        public void UpdateShouldAddPhoneElementToOverSpentSummaryGivenOverSpentTestData()
-        {
-            Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.PhoneBucket));
-        }
-
-        [TestMethod]
-        public void UpdateShouldAddHairElementToOverSpentSummaryGivenOverSpentTestData()
-        {
-            Assert.IsTrue(Subject.OverSpentSummary.Any(s => s.Key == StatementModelTestData.HairBucket));
-        }
-
         private void Act()
         {
             var expenseListFake = new List<Expense>
@@ -113,7 +104,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
                 new Expense { Bucket = StatementModelTestData.HairBucket, Amount = 55 },
                 new Expense { Bucket = StatementModelTestData.PhoneBucket, Amount = 65 }, // Overpsent 3.29
                 new Expense { Bucket = StatementModelTestData.PowerBucket, Amount = 100 },
-                new Expense { Bucket = StatementModelTestData.RegoBucket, Amount = 20 },
+                new Expense { Bucket = StatementModelTestData.RegoBucket, Amount = 20 }
             };
             var modelMock = new Mock<BudgetModel>();
             modelMock.Setup(m => m.Expenses).Returns(expenseListFake);
@@ -137,7 +128,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
                 { StatementModelTestData.HairBucket, -10.00M },
                 { StatementModelTestData.PowerBucket, 0 },
                 { StatementModelTestData.RegoBucket, -3 },
-                { StatementModelTestData.PhoneBucket, 10 },
+                { StatementModelTestData.PhoneBucket, 10 }
             };
         }
 

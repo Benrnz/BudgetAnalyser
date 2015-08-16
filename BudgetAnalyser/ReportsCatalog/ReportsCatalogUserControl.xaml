@@ -48,11 +48,11 @@
                             Style="{StaticResource Button.ModernTile.Overlay}" />
                 </Grid>
             </Border>
-            
+
             <Border Style="{StaticResource ModernTileMediumStyle1}">
                 <Border.ToolTip>
-                    The graphs tell you if there is any surplus left over in each bucket for the current month. 
-                        This report does not show more than one month even if the global filter is set to larger than one month. 
+                    The graphs tell you if there is any surplus left over in each bucket for the current month.
+                    This report does not show more than one month even if the global filter is set to larger than one month.
                     If it is, then the End Date is used less one month.
                 </Border.ToolTip>
                 <Grid>

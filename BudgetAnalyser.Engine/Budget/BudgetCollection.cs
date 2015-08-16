@@ -10,7 +10,8 @@ namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
     ///     A collection of budgets.  The collection is always sorted in descending order on the
-    ///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived budgets.
+    ///     <see cref="BudgetModel.EffectiveFrom" /> date. Ie: Future budgets are on top, then the current budget then archived
+    ///     budgets.
     /// </summary>
     public class BudgetCollection : IEnumerable<BudgetModel>, IModelValidate
     {
@@ -21,10 +22,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetStorage = new SortedList<DateTime, BudgetModel>(initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom), new DateTimeDescendingOrder());
         }
 
-        public int Count
-        {
-            get { return this.budgetStorage.Count; }
-        }
+        public int Count => this.budgetStorage.Count;
 
         public BudgetModel CurrentActiveBudget
         {
@@ -36,17 +34,13 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         public string FileName { get; set; }
-
-        internal BudgetModel this[int index]
-        {
-            get { return this.budgetStorage.ElementAt(index).Value; }
-        }
+        internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
         public void Add([NotNull] BudgetModel item)
         {
             if (item == null)
             {
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException(nameof(item));
             }
 
             DateTime key = item.EffectiveFrom;
@@ -109,7 +103,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (budget == null)
             {
-                throw new ArgumentNullException("budget");
+                throw new ArgumentNullException(nameof(budget));
             }
 
             return budget.EffectiveFrom > DateTime.Now;

@@ -24,12 +24,12 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (code == null)
             {
-                throw new ArgumentNullException("code");
+                throw new ArgumentNullException(nameof(code));
             }
 
             if (name == null)
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             this.doNotUseDescription = name;
@@ -81,9 +81,62 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public virtual string TypeDescription
+        public virtual string TypeDescription => GetType().Name;
+
+        public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
         {
-            get { return GetType().Name; }
+            object obj3 = obj1, obj4 = obj2;
+            if (obj3 == null && obj4 == null)
+            {
+                return true;
+            }
+
+            if (obj3 == null || obj4 == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(obj1, obj2))
+            {
+                return true;
+            }
+
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException(nameof(obj1));
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException(nameof(obj2));
+            }
+
+            return obj1.CompareTo(obj2) > 0;
+        }
+
+        public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
+        {
+            return !(obj1 == obj2);
+        }
+
+        public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
+        {
+            if (obj1 == null)
+            {
+                throw new ArgumentNullException(nameof(obj1));
+            }
+
+            if (obj2 == null)
+            {
+                throw new ArgumentNullException(nameof(obj2));
+            }
+
+            return obj1.CompareTo(obj2) < 0;
         }
 
         public int CompareTo(object obj)
@@ -122,7 +175,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             if (validationMessages == null)
             {
-                throw new ArgumentNullException("validationMessages");
+                throw new ArgumentNullException(nameof(validationMessages));
             }
 
             var retval = true;
@@ -153,66 +206,7 @@ namespace BudgetAnalyser.Engine.Budget
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
-        {
-            object obj3 = obj1, obj4 = obj2;
-            if (obj3 == null && obj4 == null)
-            {
-                return true;
-            }
-
-            if (obj3 == null || obj4 == null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-
-            return obj1.Equals(obj2);
-        }
-
-        public static bool operator >([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
-        {
-            if (obj1 == null)
-            {
-                throw new ArgumentNullException("obj1");
-            }
-
-            if (obj2 == null)
-            {
-                throw new ArgumentNullException("obj2");
-            }
-
-            return obj1.CompareTo(obj2) > 0;
-        }
-
-        public static bool operator !=(BudgetBucket obj1, BudgetBucket obj2)
-        {
-            return !(obj1 == obj2);
-        }
-
-        public static bool operator <([NotNull] BudgetBucket obj1, [NotNull] BudgetBucket obj2)
-        {
-            if (obj1 == null)
-            {
-                throw new ArgumentNullException("obj1");
-            }
-
-            if (obj2 == null)
-            {
-                throw new ArgumentNullException("obj2");
-            }
-
-            return obj1.CompareTo(obj2) < 0;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

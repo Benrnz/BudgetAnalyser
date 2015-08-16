@@ -7,9 +7,9 @@ namespace BudgetAnalyser.UnitTest
     [UsedImplicitly]
     public static class AutoRegisterWithIoCProcessorPropertyInjectionTestSource
     {
-        public static ILogger NotInjected { get; set; }
-
         [PropertyInjection]
         public static ILogger Logger { get; set; }
+
+        public static ILogger NotInjected { get; set; }
     }
 }

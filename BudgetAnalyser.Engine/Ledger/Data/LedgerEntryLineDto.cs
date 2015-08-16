@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     /// <summary>
-    /// A Dto for <see cref="LedgerEntryLine"/>
+    ///     A Dto for <see cref="LedgerEntryLine" />
     /// </summary>
     public class LedgerEntryLineDto
     {

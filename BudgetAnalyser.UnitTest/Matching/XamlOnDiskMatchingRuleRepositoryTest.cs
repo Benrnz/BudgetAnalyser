@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
+using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         public async Task LoadFromDemoFileShouldReturnMatchingRules()
         {
             XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
-            subject.LoadXamlFromDiskOveride = fileName => Helper.EmbeddedResourceHelper.ExtractText(TestDataConstants.DemoRulesFileName);
+            subject.LoadXamlFromDiskOveride = fileName => EmbeddedResourceHelper.ExtractText(TestDataConstants.DemoRulesFileName);
             IEnumerable<MatchingRule> results = await subject.LoadAsync("foo.bar");
 
             Assert.IsNotNull(results);
@@ -94,19 +94,19 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public async Task SaveShouldThrowGivenNullRulesList()
+        public async Task SaveShouldThrowGivenNullFileName()
         {
-            var subject = Arrange();
-            await subject.SaveAsync(null, "Foo.bar");
+            XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
+            await subject.SaveAsync(MatchingRulesTestDataGenerated.TestData1(), null);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public async Task SaveShouldThrowGivenNullFileName()
+        public async Task SaveShouldThrowGivenNullRulesList()
         {
-            var subject = Arrange();
-            await subject.SaveAsync(MatchingRulesTestDataGenerated.TestData1(), null);
+            XamlOnDiskMatchingRuleRepositoryTestHarness subject = Arrange();
+            await subject.SaveAsync(null, "Foo.bar");
             Assert.Fail();
         }
 

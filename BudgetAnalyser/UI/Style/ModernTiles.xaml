@@ -22,8 +22,9 @@
                                 <vsm:VisualState x:Name="Normal" />
                                 <vsm:VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
-                                                                      Storyboard.TargetName="MainPanel">
+                                        <ColorAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"
+                                            Storyboard.TargetName="MainPanel">
                                             <EasingColorKeyFrame KeyTime="0:0:0.05"
                                                                  Value="{StaticResource Colour.ModernTile.Highlight}" />
                                         </ColorAnimationUsingKeyFrames>
@@ -54,7 +55,7 @@
                          Value="False">
                 <DataTrigger.Setters>
                     <Setter Property="Background"
-                            Value="{StaticResource Brush.ModernTile.Disabled}"/>
+                            Value="{StaticResource Brush.ModernTile.Disabled}" />
                 </DataTrigger.Setters>
             </DataTrigger>
         </Style.Triggers>

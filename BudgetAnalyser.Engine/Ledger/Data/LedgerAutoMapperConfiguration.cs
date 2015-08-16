@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine.Account;
@@ -11,35 +11,35 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     [AutoRegisterWithIoC]
     internal class LedgerAutoMapperConfiguration : ILocalAutoMapperConfiguration
     {
-        private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly ILogger logger;
 
         public LedgerAutoMapperConfiguration(
-            [NotNull] ILedgerTransactionFactory ledgerTransactionFactory, 
-            [NotNull] IAccountTypeRepository accountTypeRepo, 
-            [NotNull] IBudgetBucketRepository bucketRepo, 
+            [NotNull] ILedgerTransactionFactory ledgerTransactionFactory,
+            [NotNull] IAccountTypeRepository accountTypeRepo,
+            [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger)
         {
             if (ledgerTransactionFactory == null)
             {
-                throw new ArgumentNullException("ledgerTransactionFactory");
+                throw new ArgumentNullException(nameof(ledgerTransactionFactory));
             }
 
             if (accountTypeRepo == null)
             {
-                throw new ArgumentNullException("accountTypeRepo");
+                throw new ArgumentNullException(nameof(accountTypeRepo));
             }
-            
+
             if (bucketRepo == null)
             {
-                throw new ArgumentNullException("bucketRepo");
+                throw new ArgumentNullException(nameof(bucketRepo));
             }
-            
+
             if (logger == null)
             {
-                throw new ArgumentNullException("logger");
+                throw new ArgumentNullException(nameof(logger));
             }
 
             this.ledgerTransactionFactory = ledgerTransactionFactory;
@@ -48,8 +48,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.logger = logger;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simple Automapper expressions artificially inflating cyclomatic complexity")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary for the mapping in this namespace")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simple Automapper expressions artificially inflating cyclomatic complexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Necessary for the mapping in this namespace")]
         public void RegisterMappings()
         {
             Mapper.CreateMap<BankBalanceAdjustmentTransaction, LedgerTransactionDto>()
@@ -57,7 +57,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.Account, m => m.MapFrom(transaction => transaction.BankAccount.Name));
 
             Mapper.CreateMap<LedgerTransactionDto, BankBalanceAdjustmentTransaction>()
-                .ForMember(transaction => transaction.BankAccount,
+                .ForMember(
+                    transaction => transaction.BankAccount,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
             Mapper.CreateMap<LedgerTransaction, LedgerTransactionDto>()
@@ -74,7 +75,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
 
             Mapper.CreateMap<BankBalanceDto, BankBalance>()
-                .ForMember(balance => balance.Account,
+                .ForMember(
+                    balance => balance.Account,
                     m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque)));
 
             Mapper.CreateMap<LedgerBucket, LedgerBucketDto>()
@@ -90,7 +92,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
-                .ForMember(entry => entry.LedgerBucket,
+                .ForMember(
+                    entry => entry.LedgerBucket,
                     m => m.MapFrom(dto => new LedgerBucket { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
                 .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
 

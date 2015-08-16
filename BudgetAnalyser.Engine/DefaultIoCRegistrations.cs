@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using Autofac.Features.ResolveAnything;
 
 namespace BudgetAnalyser.Engine
@@ -11,10 +12,13 @@ namespace BudgetAnalyser.Engine
         /// <summary>
         ///     Register all IoC mappings in this assembly.
         /// </summary>
-        /// <param name="builder">Autofac's builder object. AUTOFAC IS ISOLATED TO THIS CLASS AND METHOD ONLY, DONT USE IT ANYWHERE ELSE.</param>
+        /// <param name="builder">
+        ///     Autofac's builder object. AUTOFAC IS ISOLATED TO THIS CLASS AND METHOD ONLY, DONT USE IT ANYWHERE
+        ///     ELSE.
+        /// </param>
         public static void RegisterDefaultMappings(ContainerBuilder builder)
         {
-            var thisAssembly = typeof(DefaultIoCRegistrations).Assembly;
+            Assembly thisAssembly = typeof(DefaultIoCRegistrations).Assembly;
             AutoRegisterWithIoCProcessor.RegisterAutoMappingsFromAssembly(builder, thisAssembly);
 
             // Everything else

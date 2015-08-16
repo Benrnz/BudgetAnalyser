@@ -20,12 +20,12 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (dataToDomainMapper == null)
             {
-                throw new ArgumentNullException("dataToDomainMapper");
+                throw new ArgumentNullException(nameof(dataToDomainMapper));
             }
 
             if (domainToDataMapper == null)
             {
-                throw new ArgumentNullException("domainToDataMapper");
+                throw new ArgumentNullException(nameof(domainToDataMapper));
             }
 
             this.dataToDomainMapper = dataToDomainMapper;
@@ -41,15 +41,14 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (storageKey.IsNothing())
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var newRules = new List<MatchingRule>();
-            await SaveAsync(newRules, storageKey);
+            await SaveAsync(new List<MatchingRule>(), storageKey);
         }
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
-        public async Task<IEnumerable<MatchingRule>> LoadAsync([NotNull] string storageKey)
+        public async Task<IEnumerable<MatchingRule>> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -79,16 +78,16 @@ namespace BudgetAnalyser.Engine.Matching
             return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
         }
 
-        public async Task SaveAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey)
+        public async Task SaveAsync(IEnumerable<MatchingRule> rules, string storageKey)
         {
             if (rules == null)
             {
-                throw new ArgumentNullException("rules");
+                throw new ArgumentNullException(nameof(rules));
             }
 
             if (storageKey == null)
             {
-                throw new ArgumentNullException("storageKey");
+                throw new ArgumentNullException(nameof(storageKey));
             }
 
             IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));

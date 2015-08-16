@@ -43,8 +43,7 @@
             <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
                        Text="Payment Frequency" />
             <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
-                      SelectedItem="{Binding Frequency}">
-            </ComboBox>
+                      SelectedItem="{Binding Frequency}" />
         </StackPanel>
     </Grid>
 

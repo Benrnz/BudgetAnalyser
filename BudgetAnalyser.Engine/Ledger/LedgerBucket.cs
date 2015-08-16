@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -24,6 +23,16 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public Account.Account StoredInAccount { get; internal set; }
 
+        public static bool operator ==(LedgerBucket left, LedgerBucket right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(LedgerBucket left, LedgerBucket right)
+        {
+            return !Equals(left, right);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -45,7 +54,9 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             unchecked
             {
-                return ((BudgetBucket != null ? BudgetBucket.GetHashCode() : 0) * 397) ^ (StoredInAccount != null ? StoredInAccount.GetHashCode() : 0);
+                // ReSharper disable NonReadonlyMemberInGetHashCode - Properties are only set by persistence
+                return ((BudgetBucket?.GetHashCode() ?? 0) * 397) ^ (StoredInAccount?.GetHashCode() ?? 0);
+                // ReSharper restore NonReadonlyMemberInGetHashCode
             }
         }
 
@@ -67,16 +78,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
             return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
-        }
-
-        public static bool operator ==(LedgerBucket left, LedgerBucket right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(LedgerBucket left, LedgerBucket right)
-        {
-            return !Equals(left, right);
         }
     }
 }

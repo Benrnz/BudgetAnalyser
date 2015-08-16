@@ -11,7 +11,6 @@ namespace BudgetAnalyser.UnitTest.Matching
     public class DtoToMatchingRuleMapperTest
     {
         private static readonly Guid Id = new Guid("901EC4BB-B8B5-43CD-A8C9-15121048CBA4");
-
         private MatchingRule Result { get; set; }
 
         private MatchingRuleDto TestData
@@ -30,25 +29,9 @@ namespace BudgetAnalyser.UnitTest.Matching
                     Reference2 = "over",
                     Reference3 = "the lazy",
                     RuleId = Id,
-                    TransactionType = "dog.",
+                    TransactionType = "dog."
                 };
             }
-        }
-
-        [TestMethod]
-        public void ShouldSetCreatedDateToNowIfGivenNull()
-        {
-            TestData.Created = null;
-            Result = Mapper.Map<MatchingRule>(TestData);
-            Assert.IsFalse(Result.Created == default(DateTime));
-        }
-
-        [TestMethod]
-        public void ShouldSetRuleIdDateToNowIfGivenNull()
-        {
-            TestData.RuleId = null;
-            Result = Mapper.Map<MatchingRule>(TestData);
-            Assert.IsFalse(Result.RuleId == default(Guid));
         }
 
         [TestMethod]
@@ -58,15 +41,15 @@ namespace BudgetAnalyser.UnitTest.Matching
         }
 
         [TestMethod]
-        public void ShouldMapBucketCode()
-        {
-            Assert.AreEqual(TestData.BucketCode, Result.BucketCode);
-        }
-
-        [TestMethod]
         public void ShouldMapBucket()
         {
             Assert.AreEqual(TestData.BucketCode, Result.Bucket.Code);
+        }
+
+        [TestMethod]
+        public void ShouldMapBucketCode()
+        {
+            Assert.AreEqual(TestData.BucketCode, Result.BucketCode);
         }
 
         [TestMethod]
@@ -123,11 +106,25 @@ namespace BudgetAnalyser.UnitTest.Matching
             Assert.AreEqual(TestData.TransactionType, Result.TransactionType);
         }
 
+        [TestMethod]
+        public void ShouldSetCreatedDateToNowIfGivenNull()
+        {
+            TestData.Created = null;
+            Result = Mapper.Map<MatchingRule>(TestData);
+            Assert.IsFalse(Result.Created == default(DateTime));
+        }
+
+        [TestMethod]
+        public void ShouldSetRuleIdDateToNowIfGivenNull()
+        {
+            TestData.RuleId = null;
+            Result = Mapper.Map<MatchingRule>(TestData);
+            Assert.IsFalse(Result.RuleId == default(Guid));
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<MatchingRule>(TestData);
         }
     }

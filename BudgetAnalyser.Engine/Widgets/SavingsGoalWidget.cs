@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (input == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
             }
 
             if (!ValidateUpdateInput(input))
@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var totalMonths = filter.BeginDate.Value.DurationInMonths(filter.EndDate.Value);
+            int totalMonths = filter.BeginDate.Value.DurationInMonths(filter.EndDate.Value);
             Maximum = Convert.ToDouble(budget.Model.Expenses.Where(s => s.Bucket is SavingsCommitmentBucket).Sum(s => s.Amount)) * totalMonths;
 
             decimal savingsToDate = CalculateSavingsToDateWithTrackedLedgers(statement, ledger);
@@ -73,10 +73,10 @@ namespace BudgetAnalyser.Engine.Widgets
                 return 0;
             }
 
-            var trackedSavingsLedgers = ledger.Ledgers
-                                            .Where(l => l.BudgetBucket is SavingsCommitmentBucket)
-                                            .Select(l => l.BudgetBucket)
-                                            .ToList();
+            List<BudgetBucket> trackedSavingsLedgers = ledger.Ledgers
+                .Where(l => l.BudgetBucket is SavingsCommitmentBucket)
+                .Select(l => l.BudgetBucket)
+                .ToList();
             if (!trackedSavingsLedgers.Any())
             {
                 return SumDebitSavingsTransactions(statement);
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Engine.Widgets
             decimal savingsToDate = CalculateTrackedSavingLedgersContributions(statement, trackedSavingsLedgers);
 
             // Other non-ledger-book-tracked savings will appear as debits in the statement so need to be negated.
-            var otherNontrackedSavings = statement.Transactions.Where(t => t.BudgetBucket is SavingsCommitmentBucket && trackedSavingsLedgers.All(b => b != t.BudgetBucket));
+            IEnumerable<Transaction> otherNontrackedSavings = statement.Transactions.Where(t => t.BudgetBucket is SavingsCommitmentBucket && trackedSavingsLedgers.All(b => b != t.BudgetBucket));
             savingsToDate += otherNontrackedSavings.Sum(t => -t.Amount);
             return savingsToDate;
         }
@@ -93,15 +93,15 @@ namespace BudgetAnalyser.Engine.Widgets
         private static decimal CalculateTrackedSavingLedgersContributions(StatementModel statement, IEnumerable<BudgetBucket> trackedSavingsLedgers)
         {
             decimal savingsToDate = 0;
-            foreach (var bucket in trackedSavingsLedgers)
+            foreach (BudgetBucket bucket in trackedSavingsLedgers)
             {
-                var transactions = statement.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
+                List<Transaction> transactions = statement.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
 
                 // This will give interest earned.  This is because the transaction list will contain both debits and credits for transfering the savings around.
                 savingsToDate += transactions.Sum(t => t.Amount);
 
                 // This will give the savings credited.
-                var amounts = transactions
+                IEnumerable<IGrouping<decimal, decimal>> amounts = transactions
                     .Select(t => Math.Abs(t.Amount))
                     .GroupBy(amount => amount, amount => amount)
                     .Where(group => @group.Count() > 1);
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private static decimal SumDebitSavingsTransactions(StatementModel statement)
         {
-            var savingsToDate = -statement.Transactions.Where(t => t.BudgetBucket is SavingsCommitmentBucket && t.Amount < 0).Sum(t => t.Amount);
+            decimal savingsToDate = -statement.Transactions.Where(t => t.BudgetBucket is SavingsCommitmentBucket && t.Amount < 0).Sum(t => t.Amount);
             if (savingsToDate < 0)
             {
                 savingsToDate = 0;

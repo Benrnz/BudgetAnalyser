@@ -11,11 +11,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class LedgerEntryToDtoMapperTest
     {
         private LedgerEntryDto Result { get; set; }
-
-        private LedgerEntry TestData
-        {
-            get { return LedgerBookTestData.TestData1().Reconciliations.First().Entries.First(); }
-        }
+        private LedgerEntry TestData => LedgerBookTestData.TestData1().Reconciliations.First().Entries.First();
 
         [TestMethod]
         public void ShouldMapBalance()
@@ -38,8 +34,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            
-
             Result = Mapper.Map<LedgerEntryDto>(TestData);
         }
     }

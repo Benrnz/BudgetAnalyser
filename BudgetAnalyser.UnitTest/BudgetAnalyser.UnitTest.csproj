@@ -206,10 +206,13 @@
     <Compile Include="Persistence\ApplicationDatabaseToDtoMapperTest.cs" />
     <Compile Include="Persistence\DtoToApplicationDatabaseMapperTest.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepositoryTest.cs" />
-    <Compile Include="PublicHolidays2014Test.cs" />
-    <Compile Include="PublicHolidays2017Test.cs" />
-    <Compile Include="PublicHolidays2016Test.cs" />
-    <Compile Include="PublicHolidays2015Test.cs" />
+    <Compile Include="PublicHolidaysTestData.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PublicHolidaysTestGenerator.tt</DependentUpon>
+    </Compile>
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
     <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
@@ -330,6 +333,15 @@
     <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml">
       <Link>TestData\DemoMatchingRules.xml</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PublicHolidaysTestGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PublicHolidaysTestGenerator.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
