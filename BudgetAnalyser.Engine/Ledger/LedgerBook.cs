@@ -12,17 +12,22 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class LedgerBook : IModelValidate
     {
+        private readonly IReconciliationBuilder reconciliationBuilder;
         private readonly ILogger logger;
         private List<LedgerBucket> ledgersColumns = new List<LedgerBucket>();
         private List<LedgerEntryLine> reconciliations;
 
-        public LedgerBook()
-            : this(null)
+        /// <summary>
+        /// Constructs a new instance of the <see cref="LedgerBook"/> class.  The Persistence system calls this constructor, not the IoC system. 
+        /// </summary>
+        public LedgerBook(ILogger logger, [NotNull] IReconciliationBuilder reconciliationBuilder)
         {
-        }
-
-        public LedgerBook(ILogger logger)
-        {
+            if (reconciliationBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(reconciliationBuilder));
+            }
+            this.reconciliationBuilder = reconciliationBuilder;
+            this.reconciliationBuilder.LedgerBook = this;
             this.logger = logger ?? new NullLogger();
             this.reconciliations = new List<LedgerEntryLine>();
         }
@@ -97,11 +102,11 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
-        /// <param name="dateIfFirstEver">
-        ///     The startDate for the <see cref="LedgerEntryLine" />. If its the first ever reconciliation, otherwise this date is
-        ///     ignored.
+        /// <param name="reconciliationStartDate">
+        ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date", as this month's reconciliation starts with this date and includes transactions
+        ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
         /// </param>
-        /// <param name="bankBalances">
+        /// <param name="currentBankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
@@ -114,8 +119,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         internal LedgerEntryLine Reconcile(
-            DateTime dateIfFirstEver,
-            IEnumerable<BankBalance> bankBalances,
+            DateTime reconciliationStartDate,
+            IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
             ToDoCollection toDoList = null,
             StatementModel statement = null,
@@ -124,7 +129,7 @@ namespace BudgetAnalyser.Engine.Ledger
             // TODO Statement and ToDo list are not really optional.  Only unit tests do not pass in these values. 
             try
             {
-                PreReconciliationValidation(dateIfFirstEver, statement);
+                PreReconciliationValidation(reconciliationStartDate, statement);
             }
             catch (ValidationWarningException)
             {
@@ -140,8 +145,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal consistencyCheck1 = Reconciliations.Sum(e => e.CalculatedSurplus);
-            var newLine = new LedgerEntryLine(dateIfFirstEver, bankBalances, this.logger);
-            newLine.AddNew(this, budget, statement, CalculateDateForReconcile(dateIfFirstEver), toDoList);
+            var newLine = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationStartDate, currentBankBalances, budget, statement, toDoList);
             decimal consistencyCheck2 = Reconciliations.Sum(e => e.CalculatedSurplus);
             if (consistencyCheck1 != consistencyCheck2)
             {
@@ -149,18 +153,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.reconciliations.Insert(0, newLine);
-
-            foreach (BankBalance surplusBalance in newLine.SurplusBalances.Where(s => s.Balance < 0))
-            {
-                toDoList.Add(
-                    new ToDoTask(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            "{0} has a negative surplus balance {1}, there must be one or more transfers to action.",
-                            surplusBalance.Account,
-                            surplusBalance.Balance),
-                        true));
-            }
 
             return newLine;
         }
@@ -227,25 +219,6 @@ namespace BudgetAnalyser.Engine.Ledger
             return line;
         }
 
-        /// <summary>
-        ///     When creating a new reconciliation a start startDate is required to be able to search a statement for transactions
-        ///     between a start startDate and
-        ///     the startDate specified (today or pay day). The start startDate should start from the previous ledger entry line or
-        ///     one month
-        ///     prior if no records
-        ///     exist.
-        /// </summary>
-        /// <param name="date">The chosen startDate from the user</param>
-        private DateTime CalculateDateForReconcile(DateTime date)
-        {
-            if (Reconciliations.Any())
-            {
-                return Reconciliations.First().Date;
-            }
-            DateTime startDateIncl = date.AddMonths(-1);
-            return startDateIncl;
-        }
-
         private void PreReconciliationValidation(DateTime startDate, StatementModel statement)
         {
             var messages = new StringBuilder();
@@ -276,7 +249,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             List<LedgerTransaction> unmatchedTxns = lastLine.Entries
                 .SelectMany(e => e.Transactions)
-                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(LedgerEntryLine.MatchedPrefix, StringComparison.Ordinal))
+                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix, StringComparison.Ordinal))
                 .ToList();
 
             if (unmatchedTxns.None())
@@ -287,7 +260,7 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
             foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
             {
-                IEnumerable<Transaction> statementTxns = LedgerEntryLine.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference);
+                IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference);
                 if (statementTxns.None())
                 {
                     this.logger.LogWarning(

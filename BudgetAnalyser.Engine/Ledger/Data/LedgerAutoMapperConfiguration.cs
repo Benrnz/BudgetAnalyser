@@ -15,12 +15,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         private readonly IBudgetBucketRepository bucketRepo;
         private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly ILogger logger;
+        private readonly ILedgerBookFactory ledgerBookFactory;
 
         public LedgerAutoMapperConfiguration(
             [NotNull] ILedgerTransactionFactory ledgerTransactionFactory,
             [NotNull] IAccountTypeRepository accountTypeRepo,
             [NotNull] IBudgetBucketRepository bucketRepo,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] ILedgerBookFactory ledgerBookFactory)
         {
             if (ledgerTransactionFactory == null)
             {
@@ -46,6 +48,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.accountTypeRepo = accountTypeRepo;
             this.bucketRepo = bucketRepo;
             this.logger = logger;
+            this.ledgerBookFactory = ledgerBookFactory;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simple Automapper expressions artificially inflating cyclomatic complexity")]
@@ -98,7 +101,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
-                .ConstructUsing((LedgerEntryLineDto x) => new LedgerEntryLine(this.logger))
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));
 
             Mapper.CreateMap<LedgerEntryLine, LedgerEntryLineDto>()
@@ -108,7 +110,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.Checksum, m => m.Ignore());
 
             Mapper.CreateMap<LedgerBookDto, LedgerBook>()
-                .ConstructUsing(new Func<LedgerBookDto, LedgerBook>(dto => new LedgerBook(this.logger)));
+                .ConstructUsing(new Func<LedgerBookDto, LedgerBook>(dto => this.ledgerBookFactory.CreateNew()));
 
             Mapper.CreateMap<ToDoTask, ToDoTaskDto>();
 

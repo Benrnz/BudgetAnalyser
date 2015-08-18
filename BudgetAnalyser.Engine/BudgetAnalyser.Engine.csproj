@@ -145,6 +145,9 @@
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
+    <Compile Include="Ledger\ILedgerBookFactory.cs" />
+    <Compile Include="Ledger\LedgerBookFactory.cs" />
+    <Compile Include="Ledger\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />

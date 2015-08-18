@@ -53,6 +53,10 @@ namespace BudgetAnalyser.Engine.Services
         public ApplicationDataType DataType => ApplicationDataType.Ledger;
         public LedgerBook LedgerBook { get; private set; }
         public int LoadSequence => 50;
+
+        /// <summary>
+        /// The To Do List loaded from a persistent storage.
+        /// </summary>
         public ToDoCollection ReconciliationToDoList { get; private set; }
 
         public void CancelBalanceAdjustment(LedgerEntryLine entryLine, Guid transactionId)
