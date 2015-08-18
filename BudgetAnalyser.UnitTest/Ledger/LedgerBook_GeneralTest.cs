@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldNotThrowIfBookIsEmpty()
         {
-            var subject = new LedgerBook(new FakeLogger())
+            var subject = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Foo",
                 Modified = new DateTime(2011, 12, 4),

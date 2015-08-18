@@ -46,7 +46,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [ExpectedException(typeof(InvalidOperationException))]
         public void UsingInvalidLedgerBook_Reconcile_ShouldThrow()
         {
-            var subject = new LedgerBook(new FakeLogger())
+            var subject = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Foo",
                 Modified = new DateTime(2012, 02, 29),
