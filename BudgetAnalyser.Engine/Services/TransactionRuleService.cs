@@ -138,21 +138,7 @@ namespace BudgetAnalyser.Engine.Services
                 repoRules = this.ruleRepository.CreateNew().ToList();
             }
 
-            foreach (MatchingRule rule in repoRules)
-            {
-                MatchingRules.Add(rule);
-            }
-
-            IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
-                .Where(group => group.Key != null)
-                // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
-                .Select(group => new RulesGroupedByBucket(group.Key, group))
-                .OrderBy(group => group.Bucket.Code);
-
-            foreach (RulesGroupedByBucket groupedByBucket in grouped)
-            {
-                MatchingRulesGroupedByBucket.Add(groupedByBucket);
-            }
+            InitialiseTheRulesCollections(repoRules);
 
             EventHandler handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
@@ -160,10 +146,13 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool Match(IEnumerable<Transaction> transactions)
         {
-            var matchesMade = this.matchmaker.Match(transactions, MatchingRules);
-            foreach (var rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
+            bool matchesMade = this.matchmaker.Match(transactions, MatchingRules);
+            foreach (SingleUseMatchingRule rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
             {
-                if (rule.MatchCount > 0) RemoveRule(rule);
+                if (rule.MatchCount > 0)
+                {
+                    RemoveRule(rule);
+                }
             }
             return matchesMade;
         }
@@ -286,6 +275,25 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
+        }
+
+        private void InitialiseTheRulesCollections(List<MatchingRule> repoRules)
+        {
+            foreach (MatchingRule rule in repoRules)
+            {
+                MatchingRules.Add(rule);
+            }
+
+            IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
+                .Where(group => @group.Key != null)
+                // this is to prevent showing rules that have a bucket code not currently in the current budget model. Happens when loading the demo or empty budget model.
+                .Select(group => new RulesGroupedByBucket(@group.Key, @group))
+                .OrderBy(group => @group.Bucket.Code);
+
+            foreach (RulesGroupedByBucket groupedByBucket in grouped)
+            {
+                MatchingRulesGroupedByBucket.Add(groupedByBucket);
+            }
         }
     }
 }

@@ -201,7 +201,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
                 var transferTask = task as TransferTask;
-                if (transferTask != null)
+                if (transferTask != null && transferTask.SystemGenerated && transferTask.Reference.IsSomething())
                 {
                     this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, transferTask.Amount, true);
                 }
