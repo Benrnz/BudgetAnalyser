@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest.Services
             var testTodoList = new ToDoCollection();
             PrivateAccessor.SetProperty(this.subject, nameof(this.subject.LedgerBook), new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
             PrivateAccessor.SetProperty(this.subject, nameof(this.subject.ReconciliationToDoList), testTodoList);
-            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true))
+            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), true, 2))
                 .Returns(new SingleUseMatchingRule(this.bucketRepo));
 
             this.subject.MonthEndReconciliation(

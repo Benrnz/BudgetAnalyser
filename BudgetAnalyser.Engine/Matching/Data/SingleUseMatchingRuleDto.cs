@@ -2,5 +2,6 @@
 {
     public class SingleUseMatchingRuleDto : MatchingRuleDto
     {
+        public int Lifetime { get; set; }
     }
 }

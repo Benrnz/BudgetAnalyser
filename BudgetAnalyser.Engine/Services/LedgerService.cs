@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Services
                 var transferTask = task as TransferTask;
                 if (transferTask != null && transferTask.SystemGenerated && transferTask.Reference.IsSomething())
                 {
-                    this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, transferTask.Amount, true);
+                    this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, null, true, 2);
                 }
             }
 

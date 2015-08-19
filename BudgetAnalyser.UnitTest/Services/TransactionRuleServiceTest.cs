@@ -87,7 +87,7 @@ namespace BudgetAnalyser.UnitTest.Services
         private void ArrangeForCreateNewRule()
         {
             this.mockRuleFactory
-                .Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), It.IsAny<bool>()))
+                .Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), It.IsAny<bool>(), 1))
                 .Returns(new SingleUseMatchingRule(this.mockBucketRepo) { BucketCode = "Foo" });
 
             // This is to bypass validating that Initialise has happened when adding a new rule
