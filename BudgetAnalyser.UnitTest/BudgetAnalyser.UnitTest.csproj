@@ -223,6 +223,7 @@
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />
+    <Compile Include="Services\LedgerServiceTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
     <Compile Include="TestHarness\LoggerTestHarness.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />

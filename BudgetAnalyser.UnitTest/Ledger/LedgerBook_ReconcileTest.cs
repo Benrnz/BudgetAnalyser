@@ -20,8 +20,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class LedgerBook_ReconcileTest
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
-        private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
-        private ToDoCollection toDoCollection = new ToDoCollection();
+        private static readonly DateTime ReconcileStartDate = new DateTime(2013, 09, 15);
+        private readonly ToDoCollection toDoCollection = new ToDoCollection();
 
         [TestMethod]
         public void DuplicateReferenceNumberTest()
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             book.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget);
 
             Assert.IsTrue(result.Entries.Any(e => e.LedgerBucket.BudgetBucket.Code == "FOO"));
         }
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget);
 
             book.Output();
         }
@@ -99,7 +99,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget);
 
             Assert.AreEqual(result, book.Reconciliations.First());
         }
@@ -110,7 +110,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget);
             book.Output(true);
             Assert.AreEqual(1558.47M, result.CalculatedSurplus);
         }
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget);
 
             Assert.AreEqual(4, book.Reconciliations.Count());
         }
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             book.Output(true);
         }
 
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 });
             statement.LoadTransactions(additionalTransactions);
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             book.Output(true);
 
             Assert.AreEqual(55M, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Balance);
@@ -170,7 +170,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
             book.Output();
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             Assert.AreEqual(2, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.HairBucketCode).Transactions.Count());
         }
 
@@ -181,7 +181,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
             book.Output();
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             book.Output(true);
             Assert.AreEqual(3, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode).Transactions.Count());
         }
@@ -192,7 +192,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = LedgerBookTestData.TestData1();
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             book.Output(true);
             Assert.AreEqual(1613.47M, result.CalculatedSurplus);
         }
@@ -204,7 +204,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             book.Output(true);
 
             Assert.AreEqual(64.71M, result.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
@@ -217,7 +217,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
             StatementModel statement = StatementModelTestData.TestData1();
 
-            LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, statement: statement);
+            LedgerEntryLine result = book.Reconcile(ReconcileStartDate, NextReconcileBankBalance, budget, statement: statement);
             result.BalanceAdjustment(-599M, "Visa pmt not yet in statement");
             book.Output(true);
             Assert.AreEqual(1014.47M, result.CalculatedSurplus);
@@ -351,11 +351,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
             }
 
             Console.WriteLine("********************** BEFORE RUNNING RECONCILIATION *******************************");
-            statementTestData.Output(NextReconcileDate.AddMonths(-1));
+            statementTestData.Output(ReconcileStartDate.AddMonths(-1));
             book.Output(true);
 
             book.Reconcile(
-                NextReconcileDate,
+                ReconcileStartDate,
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
                 budget,
                 statement: statementTestData,

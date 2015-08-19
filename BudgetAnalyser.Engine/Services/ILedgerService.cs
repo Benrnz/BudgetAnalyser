@@ -40,13 +40,12 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
         /// </summary>
-        /// <param name="reconciliationDateIfFirstEver">
-        ///     The date for the <see cref="LedgerEntryLine" />. Also used to search for transactions in the
-        ///     <see cref="statement" />. This date ideally is your payday of the month, and should be the same date
-        ///     every month. Transactions are searched for up to but not including this date.
+        /// <param name="reconciliationStartDate">
+        ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date", as this month's reconciliation starts with this date and includes transactions
+        ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
         /// </param>
         /// <param name="balances">
-        ///     The bank balances as at the <see cref="reconciliationDateIfFirstEver" /> to include in this new single line of the
+        ///     The bank balances as at the <see cref="reconciliationStartDate" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <param name="budgetContext">The current budget context.</param>
@@ -54,7 +53,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         LedgerEntryLine MonthEndReconciliation(
-            DateTime reconciliationDateIfFirstEver,
+            DateTime reconciliationStartDate,
             [NotNull] IEnumerable<BankBalance> balances,
             [NotNull] IBudgetCurrencyContext budgetContext,
             [NotNull] StatementModel statement,

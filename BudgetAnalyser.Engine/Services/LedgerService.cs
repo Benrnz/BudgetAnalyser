@@ -167,7 +167,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public LedgerEntryLine MonthEndReconciliation(
-            DateTime reconciliationDateIfFirstEver,
+            DateTime reconciliationStartDate,
             IEnumerable<BankBalance> balances,
             IBudgetCurrencyContext budgetContext,
             StatementModel statement,
@@ -196,7 +196,7 @@ namespace BudgetAnalyser.Engine.Services
             ReconciliationToDoList.Clear();
             Stopwatch stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
-            LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationDateIfFirstEver, balances, budgetContext.Model, ReconciliationToDoList, statement, ignoreWarnings);
+            LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationStartDate, balances, budgetContext.Model, ReconciliationToDoList, statement, ignoreWarnings);
             foreach (ToDoTask task in ReconciliationToDoList)
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));

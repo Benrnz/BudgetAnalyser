@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
-        internal LedgerEntryLine Reconcile(
+        internal virtual LedgerEntryLine Reconcile(
             DateTime reconciliationStartDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
