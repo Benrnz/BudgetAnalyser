@@ -14,6 +14,7 @@ namespace BudgetAnalyser.Engine.Matching
         {
             if (lifeTimeMatchTarget <= 0) throw new ArgumentException($"Invalid value for '{nameof(lifeTimeMatchTarget)}' : {lifeTimeMatchTarget}, it must be 1 or greater.");
             Lifetime = lifeTimeMatchTarget;
+            Hidden = true;
         }
 
         /// <summary>

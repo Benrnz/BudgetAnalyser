@@ -31,11 +31,10 @@ namespace BudgetAnalyser.Engine.Matching.Data
 
             Mapper.CreateMap<SingleUseMatchingRuleDto, SingleUseMatchingRule>()
                 .ConstructUsing(dto => this.ruleFactory.CreateSingleUseRuleForPersistence(dto.BucketCode))
-                .ForMember(rule => rule.Bucket, m => m.Ignore())
-                .ForMember(rule => rule.Created, m => m.MapFrom(dto => dto.Created ?? DateTime.Now))
-                .ForMember(rule => rule.RuleId, m => m.MapFrom(dto => dto.RuleId ?? Guid.NewGuid()));
+                .IncludeBase<MatchingRuleDto, MatchingRule>();
 
-            Mapper.CreateMap<SingleUseMatchingRule, SingleUseMatchingRuleDto>();
+            Mapper.CreateMap<SingleUseMatchingRule, SingleUseMatchingRuleDto>()
+                .IncludeBase<MatchingRule, MatchingRuleDto>();
         }
     }
 }

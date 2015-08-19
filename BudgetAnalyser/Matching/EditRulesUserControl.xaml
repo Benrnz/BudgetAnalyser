@@ -4,7 +4,6 @@
              xmlns:matching1="clr-namespace:BudgetAnalyser.Matching"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
@@ -19,7 +18,7 @@
         </Style>
 
         <DataTemplate DataType="{x:Type matching:MatchingRule}">
-            <Grid>
+            <Grid Visibility="{Binding Hidden, Converter={StaticResource Converter.NotBoolToVis}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
