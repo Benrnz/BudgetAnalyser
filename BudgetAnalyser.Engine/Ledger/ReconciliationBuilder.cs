@@ -7,31 +7,16 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    public interface IReconciliationBuilder
-    {
-        /// <summary>
-        ///     The <see cref="LedgerBook" /> that we are building a monthly reconciliation for. This property must be set prior to
-        ///     calling <see cref="CreateNewMonthlyReconciliation" /> otherwise a
-        ///     <see cref="ArgumentException" /> will be thrown.
-        /// </summary>
-        LedgerBook LedgerBook { get; set; }
-
-        /// <summary>
-        ///     Creates a new monthly reconciliation the the given <see cref="LedgerBook" /> for the current month.
-        /// </summary>
-        /// <returns>A newly created and populated <see cref="LedgerEntryLine" />.</returns>
-        LedgerEntryLine CreateNewMonthlyReconciliation(DateTime startDateIncl, IEnumerable<BankBalance> bankBalances, BudgetModel budget, StatementModel statement, ToDoCollection toDoList);
-    }
-
-
+    [AutoRegisterWithIoC(SingleInstance = true)]
     internal class ReconciliationBuilder : IReconciliationBuilder
     {
         internal const string MatchedPrefix = "Matched ";
-        private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=" };
+        private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+" };
         private readonly ILogger logger;
         private LedgerEntryLine newReconciliationLine;
 
@@ -164,12 +149,15 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private static string IssueTransactionReferenceNumber()
         {
-            var reference = new StringBuilder(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-            foreach (string disallowedChar in DisallowedChars)
+            var reference = new StringBuilder();
+            do
             {
-                reference.Replace(disallowedChar, string.Empty);
-            }
-
+                reference.Append(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
+                foreach (string disallowedChar in DisallowedChars)
+                {
+                    reference.Replace(disallowedChar, string.Empty);
+                }
+            } while (reference.Length < 8);
             return reference.ToString().Substring(0, 7);
         }
 
@@ -262,6 +250,9 @@ namespace BudgetAnalyser.Engine.Ledger
             CreateTasksToJournalFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
         }
 
+        /// <summary>
+        /// Match statement transaction with special automatching references to Ledger transactions.
+        /// </summary>
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(
             List<Transaction> transactions,
             LedgerEntry previousLedgerEntry,
@@ -279,6 +270,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             "Ledger Reconciliation - AutoMatching - Found {0} {1} ledger transaction that require matching.",
                             ledgerAutoMatchTransactions.Count(),
                             previousLedgerEntry.LedgerBucket.BudgetBucket.Code));
+
                 LedgerTransaction ledgerTxn = lastMonthLedgerTransaction;
                 foreach (Transaction matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
                 {
@@ -459,7 +451,13 @@ namespace BudgetAnalyser.Engine.Ledger
                                 ledgerBucket.StoredInAccount,
                                 budgetedAmount.AutoMatchingReference),
                             true)
-                        { Amount = budgetedAmount.Amount, SourceAccount = salaryAccount, DestinationAccount = ledgerBucket.StoredInAccount });
+                        {
+                            Amount = budgetedAmount.Amount,
+                            SourceAccount = salaryAccount,
+                            DestinationAccount = ledgerBucket.StoredInAccount,
+                            BucketCode = budgetedExpense.Bucket.Code
+                        });
+
                 }
 
                 budgetedAmount.Date = reconciliationDate;

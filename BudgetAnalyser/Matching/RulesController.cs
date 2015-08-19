@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
@@ -228,14 +229,15 @@ namespace BudgetAnalyser.Matching
 
         private void AddToList(MatchingRule rule)
         {
-            if (!this.ruleService.AddRule(rule))
+            if (!(rule is SingleUseMatchingRule))
             {
-                return;
+                Rules.Add(rule);
+                RulesGroupedByBucket.Single(g => g.Bucket == rule.Bucket).Rules.Add(rule);
+                EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
+                handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
             }
 
             this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
-            EventHandler<MatchingRuleEventArgs> handler = RuleAdded;
-            handler?.Invoke(this, new MatchingRuleEventArgs { Rule = rule });
         }
 
         private bool CanExecuteDeleteRuleCommand()
@@ -281,7 +283,7 @@ namespace BudgetAnalyser.Matching
         private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
         {
             SortBy = BucketSortKey; // Defaults to Bucket sort order.
-            Rules = this.ruleService.MatchingRules;
+            Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules.Where(r => !(r is SingleUseMatchingRule)));
             RulesGroupedByBucket = this.ruleService.MatchingRulesGroupedByBucket;
             SelectedRule = null;
             RaisePropertyChanged(() => Rules);

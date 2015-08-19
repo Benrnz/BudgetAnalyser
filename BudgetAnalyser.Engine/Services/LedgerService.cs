@@ -19,11 +19,13 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBookRepository ledgerRepository;
         private readonly ILogger logger;
+        private readonly ITransactionRuleService transactionRuleService;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] ITransactionRuleService transactionRuleService)
         {
             if (ledgerRepository == null)
             {
@@ -40,9 +42,15 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(logger));
             }
 
+            if (transactionRuleService == null)
+            {
+                throw new ArgumentNullException(nameof(transactionRuleService));
+            }
+
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
+            this.transactionRuleService = transactionRuleService;
         }
 
         public event EventHandler Closed;
@@ -192,6 +200,11 @@ namespace BudgetAnalyser.Engine.Services
             foreach (ToDoTask task in ReconciliationToDoList)
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
+                var transferTask = task as TransferTask;
+                if (transferTask != null)
+                {
+                    this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, transferTask.Amount, true);
+                }
             }
 
             stopWatch.Stop();

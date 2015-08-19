@@ -10,6 +10,9 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Matching
 {
+    /// <summary>
+    /// An instance of this class describes how and if a transaction can be automatically matched to a Bucket when auto-matching rules are applied.
+    /// </summary>
     [DebuggerDisplay("Rule: {Description} {RuleId} {BucketCode")]
     public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     {
@@ -24,11 +27,6 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
-        /// <summary>
-        ///     Used any other time.
-        /// </summary>
-        /// <param name="bucketRepository"></param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)

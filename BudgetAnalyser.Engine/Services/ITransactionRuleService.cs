@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
 
@@ -18,23 +17,9 @@ namespace BudgetAnalyser.Engine.Services
         ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
         /// <summary>
-        ///     Adds a new rule to the currently loaded set. Will also immediately persist the matching rule set.
-        /// </summary>
-        /// <param name="ruleToAdd">The rule to add.</param>
-        /// <returns>True if the rule was added successfully, otherwise false to indicate the rule already exists.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        ///     <paramref name="ruleToAdd" />
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        ///     Will be thrown when the service has not yet been initialised by calling
-        ///     <see cref="ISupportsModelPersistence.LoadAsync" />
-        /// </exception>
-        bool AddRule([NotNull] MatchingRule ruleToAdd);
-
-        /// <summary>
         ///     Creates a new matching rule.
         /// </summary>
-        /// <param name="bucket">The budget bucket to match transactions to.</param>
+        /// <param name="bucketCode">The budget bucket to match transactions to.</param>
         /// <param name="description">The description to match. If null, it will not be used to match.</param>
         /// <param name="references">The references to match. If null, it will not be used to match.</param>
         /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
@@ -45,7 +30,28 @@ namespace BudgetAnalyser.Engine.Services
         /// </param>
         /// <returns>The new matching rule.</returns>
         MatchingRule CreateNewRule(
-            [NotNull] BudgetBucket bucket,
+            [NotNull] string bucketCode,
+            [CanBeNull] string description,
+            [NotNull] string[] references,
+            [CanBeNull] string transactionTypeName,
+            [CanBeNull] decimal? amount,
+            bool andMatching);
+
+        /// <summary>
+        ///     Creates a new single use matching rule. (One that will be deleted after it is used to make a match).
+        /// </summary>
+        /// <param name="bucketCode">The budget bucket code to match transactions to.</param>
+        /// <param name="description">The description to match. If null, it will not be used to match.</param>
+        /// <param name="references">The references to match. If null, it will not be used to match.</param>
+        /// <param name="transactionTypeName">Name of the transaction type to match. If null, it will not be used to match.</param>
+        /// <param name="amount">The exact amount to match.</param>
+        /// <param name="andMatching">
+        ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the
+        ///     transaction. Otherwise chosen elements are matched using an OR operator.
+        /// </param>
+        /// <returns>The new matching rule.</returns>
+        SingleUseMatchingRule CreateNewSingleUseRule(
+            [NotNull] string bucketCode,
             [CanBeNull] string description,
             [NotNull] string[] references,
             [CanBeNull] string transactionTypeName,
