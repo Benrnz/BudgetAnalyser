@@ -455,7 +455,8 @@ namespace BudgetAnalyser.Engine.Ledger
                             Amount = budgetedAmount.Amount,
                             SourceAccount = salaryAccount,
                             DestinationAccount = ledgerBucket.StoredInAccount,
-                            BucketCode = budgetedExpense.Bucket.Code
+                            BucketCode = budgetedExpense.Bucket.Code,
+                            Reference = budgetedAmount.AutoMatchingReference,
                         });
 
                 }

@@ -439,8 +439,6 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// <summary>
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         ///     There are multiple Bank Balances for the latest entry, and the Home Insurance bucket in a different account.
-        ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
-        ///     August transactions include some balance adjustments.
         /// </summary>
         public static LedgerBook TestData5()
         {

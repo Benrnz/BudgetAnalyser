@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -20,6 +21,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
+        private ToDoCollection toDoCollection = new ToDoCollection();
 
         [TestMethod]
         public void DuplicateReferenceNumberTest()
@@ -28,7 +30,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var duplicateCheck = new Dictionary<string, string>();
             for (var i = 0; i < 1000; i++)
             {
-                var result = PrivateAccessor.InvokeStaticFunction<string>(typeof(LedgerEntryLine), "IssueTransactionReferenceNumber");
+                var result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "IssueTransactionReferenceNumber");
                 Console.WriteLine(result);
                 Assert.IsNotNull(result);
                 duplicateCheck.Add(result, result);
@@ -109,7 +111,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             BudgetModel budget = BudgetModelTestData.CreateTestData1();
 
             LedgerEntryLine result = book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget);
-            book.Output();
+            book.Output(true);
             Assert.AreEqual(1558.47M, result.CalculatedSurplus);
         }
 
@@ -324,6 +326,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void UsingTestData5_Reconcile_ShouldCreateToDoEntries()
+        {
+            ActOnTestData5();
+            
+            Assert.AreEqual(1, this.toDoCollection.OfType<TransferTask>().Count(t => t.Reference.IsSomething() && t.BucketCode.IsSomething()));
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ValidationWarningException))]
         public void UsingTestData5_Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement()
         {
@@ -331,7 +341,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.Fail();
         }
 
-        private static LedgerBook ActOnTestData5(StatementModel statementTestData = null)
+        private LedgerBook ActOnTestData5(StatementModel statementTestData = null)
         {
             LedgerBook book = LedgerBookTestData.TestData5();
             BudgetModel budget = BudgetModelTestData.CreateTestData5();
@@ -348,7 +358,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 NextReconcileDate,
                 new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1200M) },
                 budget,
-                statement: statementTestData);
+                statement: statementTestData,
+                toDoList: this.toDoCollection);
 
             Console.WriteLine();
             Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
