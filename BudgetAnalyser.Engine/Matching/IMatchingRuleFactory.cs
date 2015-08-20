@@ -18,8 +18,7 @@ namespace BudgetAnalyser.Engine.Matching
             [CanBeNull] string[] references,
             [CanBeNull] string transactionTypeName,
             [CanBeNull] decimal? amount,
-            bool andMatching,
-            int lifetime = 1);
+            bool andMatching);
 
         MatchingRule CreateRuleForPersistence([NotNull] string budgetBucketCode);
         SingleUseMatchingRule CreateSingleUseRuleForPersistence([NotNull] string budgetBucketCode);

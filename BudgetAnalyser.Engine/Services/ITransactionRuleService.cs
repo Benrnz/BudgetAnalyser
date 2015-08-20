@@ -49,7 +49,6 @@ namespace BudgetAnalyser.Engine.Services
         ///     If true, they are matched using an AND operator and all elements must be matched for the rule to match the
         ///     transaction. Otherwise chosen elements are matched using an OR operator.
         /// </param>
-        /// <param name="lifetime">The match count target. After reaching this target the rule will automatically be deleted. Defaults to 1.</param>
         /// <returns>The new matching rule.</returns>
         SingleUseMatchingRule CreateNewSingleUseRule(
             [NotNull] string bucketCode,
@@ -57,8 +56,7 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] string[] references,
             [CanBeNull] string transactionTypeName,
             [CanBeNull] decimal? amount,
-            bool andMatching,
-            int lifetime = 1);
+            bool andMatching);
 
         /// <summary>
         ///     Determines whether a rule similar to the input values.
