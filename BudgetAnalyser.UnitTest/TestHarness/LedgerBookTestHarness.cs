@@ -18,12 +18,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         }
 
         internal override LedgerEntryLine Reconcile(
-            DateTime reconciliationStartDate,
+            DateTime reconciliationDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
             ToDoCollection toDoList = null,
-            StatementModel statement = null,
-            bool ignoreWarnings = false)
+            StatementModel statement = null)
         {
             return null;
         }

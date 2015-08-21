@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -32,7 +31,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public LedgerEntryLine CreateNewMonthlyReconciliation(DateTime startDateIncl, IEnumerable<BankBalance> bankBalances, BudgetModel budget, StatementModel statement, ToDoCollection toDoList)
+        public LedgerEntryLine CreateNewMonthlyReconciliation(DateTime reconciliationDateExcl, IEnumerable<BankBalance> bankBalances, BudgetModel budget, StatementModel statement, ToDoCollection toDoList)
         {
             if (LedgerBook == null)
             {
@@ -41,8 +40,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             try
             {
-                this.newReconciliationLine = new LedgerEntryLine(startDateIncl, bankBalances);
-                AddNew(budget, statement, CalculateDateForReconcile(startDateIncl), toDoList);
+                this.newReconciliationLine = new LedgerEntryLine(reconciliationDateExcl, bankBalances);
+                AddNew(budget, statement, CalculateDateForReconcile(LedgerBook, reconciliationDateExcl), toDoList);
 
                 CreateToDoForAnyOverdrawnSurplusBalance(toDoList);
 
@@ -63,6 +62,24 @@ namespace BudgetAnalyser.Engine.Ledger
                     || t.Reference3.TrimEndSafely() == autoMatchingReference)
                 .OrderBy(t => t.Amount);
             return txns;
+        }
+
+        /// <summary>
+        ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
+        ///     between the start date and the reconciliation date specified (today or pay day). The start date should start from the previous ledger entry line or
+        ///     one month prior if no records exist.
+        /// </summary>
+        /// <param name="ledgerBook">The Ledger Book to find the date for</param>
+        /// <param name="reconciliationDate">The chosen reconciliation date from the user</param>
+        internal static DateTime CalculateDateForReconcile(LedgerBook ledgerBook, DateTime reconciliationDate)
+        {
+            if (ledgerBook.Reconciliations.Any())
+            {
+                return ledgerBook.Reconciliations.First().Date;
+            }
+
+            DateTime startDateIncl = reconciliationDate.AddMonths(-1);
+            return startDateIncl;
         }
 
         private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
@@ -251,7 +268,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Match statement transaction with special automatching references to Ledger transactions.
+        ///     Match statement transaction with special automatching references to Ledger transactions.
         /// </summary>
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(
             List<Transaction> transactions,
@@ -316,25 +333,6 @@ namespace BudgetAnalyser.Engine.Ledger
                             true));
                 }
             }
-        }
-
-        /// <summary>
-        ///     When creating a new reconciliation a start startDate is required to be able to search a statement for transactions
-        ///     between a start startDate and
-        ///     the startDate specified (today or pay day). The start startDate should start from the previous ledger entry line or
-        ///     one month
-        ///     prior if no records
-        ///     exist.
-        /// </summary>
-        /// <param name="date">The chosen startDate from the user</param>
-        private DateTime CalculateDateForReconcile(DateTime date)
-        {
-            if (LedgerBook.Reconciliations.Any())
-            {
-                return LedgerBook.Reconciliations.First().Date;
-            }
-            DateTime startDateIncl = date.AddMonths(-1);
-            return startDateIncl;
         }
 
         private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
@@ -456,9 +454,8 @@ namespace BudgetAnalyser.Engine.Ledger
                             SourceAccount = salaryAccount,
                             DestinationAccount = ledgerBucket.StoredInAccount,
                             BucketCode = budgetedExpense.Bucket.Code,
-                            Reference = budgetedAmount.AutoMatchingReference,
+                            Reference = budgetedAmount.AutoMatchingReference
                         });
-
                 }
 
                 budgetedAmount.Date = reconciliationDate;

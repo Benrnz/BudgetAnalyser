@@ -35,9 +35,9 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Constructs a new instance of <see cref="LedgerEntryLine" />.
         ///     Use this constructor for adding a new line when reconciling once a month.
         /// </summary>
-        /// <param name="date">The date of the line</param>
+        /// <param name="reconciliationDate">The date of the line</param>
         /// <param name="bankBalances">The bank balances for this date.</param>
-        internal LedgerEntryLine(DateTime date, [NotNull] IEnumerable<BankBalance> bankBalances)
+        internal LedgerEntryLine(DateTime reconciliationDate, [NotNull] IEnumerable<BankBalance> bankBalances)
             : this()
         {
             if (bankBalances == null)
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(bankBalances));
             }
 
-            Date = date;
+            Date = reconciliationDate;
             this.bankBalancesList = bankBalances.ToList();
         }
 
