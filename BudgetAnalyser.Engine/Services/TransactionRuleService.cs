@@ -195,9 +195,6 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
-            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
-
             var messages = new StringBuilder();
             if (ValidateModel(messages))
             {
@@ -214,6 +211,8 @@ namespace BudgetAnalyser.Engine.Services
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
         {
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
         }
 
         public bool ValidateModel(StringBuilder messages)
