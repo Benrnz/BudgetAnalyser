@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -13,9 +12,12 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         /// <summary>
         /// Constructs a new instance of the <see cref="LedgerBook"/> class.  The Persistence system calls this constructor, not the IoC system. 
         /// </summary>
-        public LedgerBookTestHarness([NotNull] IReconciliationBuilder reconciliationBuilder) : base(new FakeLogger(), reconciliationBuilder)
+        public LedgerBookTestHarness([NotNull] IReconciliationBuilder reconciliationBuilder) 
+            : base(new FakeLogger(), reconciliationBuilder)
         {
         }
+
+        public Func<LedgerEntryLine> ReconcileOverride { get; set; }
 
         internal override LedgerEntryLine Reconcile(
             DateTime reconciliationDate,
@@ -24,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             ToDoCollection toDoList = null,
             StatementModel statement = null)
         {
-            return null;
+            return ReconcileOverride?.Invoke();
         }
     }
 }

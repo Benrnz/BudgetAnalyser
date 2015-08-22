@@ -440,7 +440,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         ///     There are multiple Bank Balances for the latest entry, and the Home Insurance bucket in a different account.
         /// </summary>
-        public static LedgerBook TestData5()
+        public static LedgerBook TestData5(Func<LedgerBook> ctor = null)
         {
             ChequeAccount chequeAccount = StatementModelTestData.ChequeAccount;
             SavingsAccount savingsAccount = StatementModelTestData.SavingsAccount;
@@ -464,13 +464,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
                 StoredInAccount = savingsAccount
             };
-
-            var book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
+            LedgerBook book;
+            if (ctor != null)
             {
-                Name = "Test Data 5 Book",
-                Modified = new DateTime(2013, 12, 16),
-                FileName = "C:\\Folder\\book5.xml"
-            };
+                book = ctor();
+            }
+            else
+            {
+                book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()));
+            }
+            book.Name = "Test Data 5 Book";
+            book.Modified = new DateTime(2013, 12, 16);
+            book.FileName = "C:\\Folder\\book5.xml";
 
             var list = new List<LedgerEntryLine>
             {

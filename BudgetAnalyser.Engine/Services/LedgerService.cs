@@ -230,6 +230,7 @@ namespace BudgetAnalyser.Engine.Services
                 var transferTask = task as TransferTask;
                 if (transferTask != null && transferTask.SystemGenerated && transferTask.Reference.IsSomething())
                 {
+                    this.logger.LogInfo(l => l.Format("TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}", task.Description, task.SystemGenerated, transferTask.Reference));
                     this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, null, true);
                 }
             }
