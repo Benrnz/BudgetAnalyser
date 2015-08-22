@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -53,16 +54,32 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(references));
             }
 
-            if (references.Length != 3)
+            if (references.Length > 3)
             {
                 throw new ArgumentException("The references array is expected to contain 3 elements.");
             }
 
+            var adjustedReferences = new List<string>();
+            if (references.Length < 3)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (i <= references.GetUpperBound(0))
+                    {
+                        adjustedReferences.Add(references[i]);
+                    }
+                    else
+                    {
+                        adjustedReferences.Add(null);
+                    }
+                }
+            }
+
             T newRule = ruleCtor(bucketCode);
             newRule.Description = description;
-            newRule.Reference1 = references[0];
-            newRule.Reference2 = references[1];
-            newRule.Reference3 = references[2];
+            newRule.Reference1 = adjustedReferences[0];
+            newRule.Reference2 = adjustedReferences[1];
+            newRule.Reference3 = adjustedReferences[2];
             newRule.Amount = amount;
             newRule.TransactionType = transactionTypeName;
             newRule.And = andMatching;

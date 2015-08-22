@@ -443,7 +443,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         new TransferTask(
                             string.Format(
                                 CultureInfo.CurrentCulture,
-                                "For {0} transfer {1:C} from Salary Account to {2} with auto-matching reference: {3}",
+                                "Budgeted Amount for {0} transfer {1:C} from Salary Account to {2} with auto-matching reference: {3}",
                                 budgetedExpense.Bucket.Code,
                                 budgetedAmount.Amount,
                                 ledgerBucket.StoredInAccount,

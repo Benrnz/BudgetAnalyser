@@ -218,7 +218,7 @@ namespace BudgetAnalyser.Engine.Services
 
             decimal consistencyCheck1 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
             LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, ReconciliationToDoList, statement);
-            decimal consistencyCheck2 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
+            decimal consistencyCheck2 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - recon.CalculatedSurplus;
             if (consistencyCheck1 != consistencyCheck2)
             {
                 throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
