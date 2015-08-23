@@ -10,7 +10,10 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Matching
 {
-    [DebuggerDisplay("Rule: {Description} {RuleId} {BucketCode")]
+    /// <summary>
+    /// An instance of this class describes how and if a transaction can be automatically matched to a Bucket when auto-matching rules are applied.
+    /// </summary>
+    [DebuggerDisplay("Rule: {Description} {RuleId} {BucketCode}")]
     public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
     {
         private readonly IBudgetBucketRepository bucketRepository;
@@ -24,11 +27,6 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
-        /// <summary>
-        ///     Used any other time.
-        /// </summary>
-        /// <param name="bucketRepository"></param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
@@ -43,6 +41,8 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool Hidden { get; set; }
 
         public decimal? Amount
         {
@@ -300,7 +300,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "MatchingRule({0} {1} {2})", Bucket.Code, Description, Amount);
+            return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code, Description, Amount);
         }
 
         [NotifyPropertyChangedInvocator]

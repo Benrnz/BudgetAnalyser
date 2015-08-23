@@ -145,6 +145,13 @@
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
+    <Compile Include="Ledger\ILedgerBookFactory.cs" />
+    <Compile Include="Ledger\IReconciliationBuilder.cs" />
+    <Compile Include="Ledger\IReconciliationConsistency.cs" />
+    <Compile Include="Ledger\LedgerBookFactory.cs" />
+    <Compile Include="Ledger\ReconciliationBuilder.cs" />
+    <Compile Include="Ledger\ReconciliationConsistency.cs" />
+    <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />
@@ -205,11 +212,13 @@
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\Data\SingleUseMatchingRuleDto.cs" />
     <Compile Include="Matching\IMatchingRuleFactory.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
+    <Compile Include="Matching\SingleUseMatchingRule.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="Persistence\ApplicationAutoMapperConfiguration.cs" />
     <Compile Include="Persistence\ApplicationDatabase.cs" />

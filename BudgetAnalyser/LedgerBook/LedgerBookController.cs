@@ -199,7 +199,7 @@ namespace BudgetAnalyser.LedgerBook
                     ViewModel.CurrentStatement,
                     ignoreWarnings);
 
-                FileOperations.Dirty = true;
+                FileOperations.ReconciliationChangesWillNeedToBeSaved();
                 NumberOfMonthsToShow++;
                 RaiseLedgerBookUpdated();
                 if (this.ledgerService.ReconciliationToDoList.Any())

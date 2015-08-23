@@ -60,7 +60,7 @@
     <Style x:Key="ListBox.StandardContainerStyle"
            TargetType="{x:Type ListBoxItem}">
         <Setter Property="Background"
-                Value="{StaticResource Brush.TileBackground}" />
+                Value="Transparent" />
         <Setter Property="SnapsToDevicePixels"
                 Value="True" />
         <Setter Property="HorizontalContentAlignment"

@@ -63,6 +63,13 @@ namespace BudgetAnalyser.LedgerBook
             MessengerInstance.Send(new LedgerBookReadyMessage(null));
         }
 
+        internal void ReconciliationChangesWillNeedToBeSaved()
+        {
+            Dirty = true;
+            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.MatchingRules);
+            this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Tasks);
+        }
+
         internal void SyncDataFromLedgerService()
         {
             ViewModel.LedgerBook = LedgerService.LedgerBook;

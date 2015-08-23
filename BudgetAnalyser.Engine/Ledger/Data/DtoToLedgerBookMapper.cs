@@ -6,6 +6,10 @@ using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    /// <summary>
+    /// An overriden mapper class to allow custom initialisation to be done after the base <see cref="LedgerBook"/> has been created and mapped.
+    /// For example: Must make sure that the <see cref="LedgerBook.Ledgers"/> Collection is populated and each one has a default storage Account.
+    /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true, RegisterAs = typeof(BasicMapper<LedgerBookDto, LedgerBook>))]
     public class DtoToLedgerBookMapper : MagicMapper<LedgerBookDto, LedgerBook>
     {

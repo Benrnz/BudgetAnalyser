@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger())
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 1 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger())
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 2 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -246,7 +246,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var clothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
             var docLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
 
-            var book = new LedgerBook(new FakeLogger())
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Smith Budget 2014",
                 Modified = new DateTime(2013, 12, 22),
@@ -338,7 +338,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger())
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 4 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -439,10 +439,8 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// <summary>
         ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
         ///     There are multiple Bank Balances for the latest entry, and the Home Insurance bucket in a different account.
-        ///     A Test LedgerBook with data populated for June July and August 2013.  Also includes some debit transactions.
-        ///     August transactions include some balance adjustments.
         /// </summary>
-        public static LedgerBook TestData5()
+        public static LedgerBook TestData5(Func<LedgerBook> ctor = null)
         {
             ChequeAccount chequeAccount = StatementModelTestData.ChequeAccount;
             SavingsAccount savingsAccount = StatementModelTestData.SavingsAccount;
@@ -466,13 +464,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
                 StoredInAccount = savingsAccount
             };
-
-            var book = new LedgerBook(new FakeLogger())
+            LedgerBook book;
+            if (ctor != null)
             {
-                Name = "Test Data 5 Book",
-                Modified = new DateTime(2013, 12, 16),
-                FileName = "C:\\Folder\\book5.xml"
-            };
+                book = ctor();
+            }
+            else
+            {
+                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
+            }
+            book.Name = "Test Data 5 Book";
+            book.Modified = new DateTime(2013, 12, 16);
+            book.FileName = "C:\\Folder\\book5.xml";
 
             var list = new List<LedgerEntryLine>
             {
@@ -594,7 +597,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
         private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
         {
-            var line = new LedgerEntryLine(date, bankBalances, new FakeLogger()) { Remarks = remarks };
+            var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
             return line;
         }
 

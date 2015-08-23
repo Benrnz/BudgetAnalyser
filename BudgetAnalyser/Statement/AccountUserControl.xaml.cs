@@ -14,6 +14,6 @@ namespace BudgetAnalyser.Statement
         }
 
         public Account Account => (Account)DataContext;
-        public string FriendlyAccountName => Account.ToString();
+        public string FriendlyAccountName => Account?.ToString();
     }
 }
