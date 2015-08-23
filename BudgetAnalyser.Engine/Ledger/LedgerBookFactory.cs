@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook CreateNew()
         {
-            return new LedgerBook(this.logger, this.reconciliationBuilder);
+            return new LedgerBook(this.reconciliationBuilder);
         }
     }
 }

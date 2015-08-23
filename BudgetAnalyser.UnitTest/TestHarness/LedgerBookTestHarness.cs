@@ -13,7 +13,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         /// Constructs a new instance of the <see cref="LedgerBook"/> class.  The Persistence system calls this constructor, not the IoC system. 
         /// </summary>
         public LedgerBookTestHarness([NotNull] IReconciliationBuilder reconciliationBuilder) 
-            : base(new FakeLogger(), reconciliationBuilder)
+            : base(reconciliationBuilder)
         {
         }
 

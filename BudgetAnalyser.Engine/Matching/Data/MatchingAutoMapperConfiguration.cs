@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Engine.Matching.Data
         {
             Mapper.CreateMap<MatchingRuleDto, MatchingRule>()
                 .ConstructUsing(dto => this.ruleFactory.CreateRuleForPersistence(dto.BucketCode))
+                .ForMember(rule => rule.Hidden, m => m.Ignore())
                 .ForMember(rule => rule.Bucket, m => m.Ignore())
                 .ForMember(rule => rule.Created, m => m.MapFrom(dto => dto.Created ?? DateTime.Now))
                 .ForMember(rule => rule.RuleId, m => m.MapFrom(dto => dto.RuleId ?? Guid.NewGuid()));

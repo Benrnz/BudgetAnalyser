@@ -22,12 +22,14 @@ namespace BudgetAnalyser.Engine.Services
         private readonly ILedgerBookRepository ledgerRepository;
         private readonly ILogger logger;
         private readonly ITransactionRuleService transactionRuleService;
+        private readonly IReconciliationConsistency reconciliationConsistency;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ILogger logger,
-            [NotNull] ITransactionRuleService transactionRuleService)
+            [NotNull] ITransactionRuleService transactionRuleService,
+            [NotNull] IReconciliationConsistency reconciliationConsistency)
         {
             if (ledgerRepository == null)
             {
@@ -49,10 +51,16 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(transactionRuleService));
             }
 
+            if (reconciliationConsistency == null)
+            {
+                throw new ArgumentNullException(nameof(reconciliationConsistency));
+            }
+
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
             this.transactionRuleService = transactionRuleService;
+            this.reconciliationConsistency = reconciliationConsistency;
         }
 
         public event EventHandler Closed;
@@ -216,12 +224,10 @@ namespace BudgetAnalyser.Engine.Services
                 ReconciliationToDoList = new ToDoCollection();
             }
 
-            decimal consistencyCheck1 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
-            LedgerEntryLine recon = LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, ReconciliationToDoList, statement);
-            decimal consistencyCheck2 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - recon.CalculatedSurplus;
-            if (consistencyCheck1 != consistencyCheck2)
+            LedgerEntryLine recon;
+            using (this.reconciliationConsistency.EnsureConsistency(LedgerBook))
             {
-                throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
+                recon = LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, ReconciliationToDoList, statement);
             }
 
             foreach (ToDoTask task in ReconciliationToDoList)

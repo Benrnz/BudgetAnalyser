@@ -149,6 +149,7 @@
     <Compile Include="Ledger\IReconciliationBuilder.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
     <Compile Include="Ledger\ReconciliationBuilder.cs" />
+    <Compile Include="Ledger\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />

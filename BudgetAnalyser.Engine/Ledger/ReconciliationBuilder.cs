@@ -33,6 +33,26 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerEntryLine CreateNewMonthlyReconciliation(DateTime reconciliationDateExcl, IEnumerable<BankBalance> bankBalances, BudgetModel budget, StatementModel statement, ToDoCollection toDoList)
         {
+            if (bankBalances == null)
+            {
+                throw new ArgumentNullException(nameof(bankBalances));
+            }
+
+            if (budget == null)
+            {
+                throw new ArgumentNullException(nameof(budget));
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement));
+            }
+
+            if (toDoList == null)
+            {
+                throw new ArgumentNullException(nameof(toDoList));
+            }
+
             if (LedgerBook == null)
             {
                 throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");

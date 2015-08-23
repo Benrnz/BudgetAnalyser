@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -13,14 +12,14 @@ namespace BudgetAnalyser.Engine.Ledger
     public class LedgerBook : IModelValidate
     {
         private readonly IReconciliationBuilder reconciliationBuilder;
-        private readonly ILogger logger;
         private List<LedgerBucket> ledgersColumns = new List<LedgerBucket>();
         private List<LedgerEntryLine> reconciliations;
 
         /// <summary>
-        /// Constructs a new instance of the <see cref="LedgerBook"/> class.  The Persistence system calls this constructor, not the IoC system. 
+        ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor,
+        ///     not the IoC system.
         /// </summary>
-        public LedgerBook(ILogger logger, [NotNull] IReconciliationBuilder reconciliationBuilder)
+        public LedgerBook([NotNull] IReconciliationBuilder reconciliationBuilder)
         {
             if (reconciliationBuilder == null)
             {
@@ -28,7 +27,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             this.reconciliationBuilder = reconciliationBuilder;
             this.reconciliationBuilder.LedgerBook = this;
-            this.logger = logger ?? new NullLogger();
             this.reconciliations = new List<LedgerEntryLine>();
         }
 
@@ -103,8 +101,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Creates a new LedgerEntryLine for this <see cref="LedgerBook" />.
         /// </summary>
         /// <param name="reconciliationDate">
-        ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date", as this month's reconciliation starts with this date and includes transactions
-        ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting reconciliation which is the end date for the period.
+        ///     The startDate for the <see cref="LedgerEntryLine" />. This is usually the previous Month's "Reconciliation-Date",
+        ///     as this month's reconciliation starts with this date and includes transactions
+        ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
+        ///     reconciliation which is the end date for the period.
         /// </param>
         /// <param name="currentBankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
@@ -121,10 +121,10 @@ namespace BudgetAnalyser.Engine.Ledger
             DateTime reconciliationDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
-            ToDoCollection toDoList = null,
-            StatementModel statement = null)
+            ToDoCollection toDoList,
+            StatementModel statement)
         {
-            var newLine = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement, toDoList);
+            LedgerEntryLine newLine = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement, toDoList);
             this.reconciliations.Insert(0, newLine);
             return newLine;
         }

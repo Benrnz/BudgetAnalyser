@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 1 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 2 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -246,7 +246,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var clothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
             var docLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
 
-            var book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Smith Budget 2014",
                 Modified = new DateTime(2013, 12, 22),
@@ -338,7 +338,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
             var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
 
-            var book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()))
+            var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 4 Book",
                 Modified = new DateTime(2013, 12, 16),
@@ -471,7 +471,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             }
             else
             {
-                book = new LedgerBook(new FakeLogger(), new ReconciliationBuilder(new FakeLogger()));
+                book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()));
             }
             book.Name = "Test Data 5 Book";
             book.Modified = new DateTime(2013, 12, 16);
