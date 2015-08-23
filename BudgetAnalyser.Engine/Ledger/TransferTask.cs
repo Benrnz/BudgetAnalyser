@@ -7,7 +7,9 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         public decimal Amount { get; internal set; }
+        public string BucketCode { get; internal set; }
         public Account.Account DestinationAccount { get; internal set; }
+        public string Reference { get; internal set; }
         public Account.Account SourceAccount { get; internal set; }
     }
 }

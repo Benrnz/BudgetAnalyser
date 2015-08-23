@@ -22,12 +22,20 @@ namespace BudgetAnalyser.Engine.Matching.Data
         public void RegisterMappings()
         {
             Mapper.CreateMap<MatchingRuleDto, MatchingRule>()
-                .ConstructUsing(dto => this.ruleFactory.CreateRule(dto.BucketCode))
+                .ConstructUsing(dto => this.ruleFactory.CreateRuleForPersistence(dto.BucketCode))
+                .ForMember(rule => rule.Hidden, m => m.Ignore())
                 .ForMember(rule => rule.Bucket, m => m.Ignore())
                 .ForMember(rule => rule.Created, m => m.MapFrom(dto => dto.Created ?? DateTime.Now))
                 .ForMember(rule => rule.RuleId, m => m.MapFrom(dto => dto.RuleId ?? Guid.NewGuid()));
 
             Mapper.CreateMap<MatchingRule, MatchingRuleDto>();
+
+            Mapper.CreateMap<SingleUseMatchingRuleDto, SingleUseMatchingRule>()
+                .ConstructUsing(dto => this.ruleFactory.CreateSingleUseRuleForPersistence(dto.BucketCode))
+                .IncludeBase<MatchingRuleDto, MatchingRule>();
+
+            Mapper.CreateMap<SingleUseMatchingRule, SingleUseMatchingRuleDto>()
+                .IncludeBase<MatchingRule, MatchingRuleDto>();
         }
     }
 }

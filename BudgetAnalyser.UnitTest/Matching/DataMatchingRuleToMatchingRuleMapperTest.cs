@@ -57,7 +57,7 @@ namespace BudgetAnalyser.UnitTest.Matching
         public void NumberOfDataMatchingRulePropertiesShouldBe12()
         {
             int dataProperties = typeof(MatchingRule).CountProperties();
-            Assert.AreEqual(12, dataProperties);
+            Assert.AreEqual(13, dataProperties);
         }
 
         [TestMethod]

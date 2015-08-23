@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Services
                     return 0;
                 }
 
-                return this.transactions.Where(t => t.Amount < 0).Average(t => t.Amount);
+                return this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
             }
         }
 

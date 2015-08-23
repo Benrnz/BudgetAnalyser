@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Statement
                 IEnumerable<Transaction> query = Transactions.Where(t => t.Amount < 0).ToList();
                 if (query.Any())
                 {
-                    return query.Average(t => t.Amount);
+                    return query.SafeAverage(t => t.Amount);
                 }
 
                 return 0;

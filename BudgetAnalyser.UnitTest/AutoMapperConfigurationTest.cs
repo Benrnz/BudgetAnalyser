@@ -2,6 +2,7 @@
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
@@ -31,7 +32,12 @@ namespace BudgetAnalyser.UnitTest
                             new ILocalAutoMapperConfiguration[]
                             {
                                 new BudgetAutoMapperConfiguration(new BudgetBucketFactory(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
-                                new LedgerAutoMapperConfiguration(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
+                                new LedgerAutoMapperConfiguration(
+                                    new LedgerTransactionFactory(), 
+                                    new InMemoryAccountTypeRepository(), 
+                                    new BucketBucketRepoAlwaysFind(), 
+                                    new FakeLogger(), 
+                                    new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger()), new FakeLogger())),
                                 new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())),
                                 new StatementAutoMapperConfiguration(new InMemoryTransactionTypeRepository(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
                                 new ApplicationAutoMapperConfiguration()

@@ -276,7 +276,7 @@ namespace BudgetAnalyser.Matching
             }
 
             NewRule = this.rulesService.CreateNewRule(
-                Bucket,
+                Bucket.Code,
                 UseDescription ? Description : null,
                 new[]
                 {

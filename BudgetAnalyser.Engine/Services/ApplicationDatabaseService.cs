@@ -151,6 +151,9 @@ namespace BudgetAnalyser.Engine.Services
                 .ToList()
                 .ForEach(service => service.SavePreview(contexts));
 
+            // This clears all the temporary tasks from the collection.  Only tasks that have CanDelete=false will be kept and saved.
+            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
+
             // Save the main application repository first.
             await this.applicationRepository.SaveAsync(this.budgetAnalyserDatabase);
 
