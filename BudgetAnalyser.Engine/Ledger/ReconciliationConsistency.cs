@@ -3,11 +3,11 @@
 namespace BudgetAnalyser.Engine.Ledger
 {
     [AutoRegisterWithIoC]
-    public class ReconciliationConsistency : IReconciliationConsistency
+    internal class ReconciliationConsistency : IReconciliationConsistency
     {
         public IDisposable EnsureConsistency(LedgerBook book)
         {
-            return new ReconciliationConsistencyChecker { LedgerBook = book };
+            return new ReconciliationConsistencyChecker(book);
         }
     }
 }

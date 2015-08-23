@@ -12,16 +12,17 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly decimal check1;
         private decimal check2;
 
-        public ReconciliationConsistencyChecker()
-        {
-            this.check1 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
-        }
+        private readonly LedgerBook ledgerBook;
 
-        public LedgerBook LedgerBook { get; set; }
+        public ReconciliationConsistencyChecker(LedgerBook book)
+        {
+            this.ledgerBook = book;
+            this.check1 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
+        }
 
         public void Dispose()
         {
-            this.check2 = LedgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - LedgerBook.Reconciliations.First().CalculatedSurplus;
+            this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - this.ledgerBook.Reconciliations.First().CalculatedSurplus;
             if (this.check1 != this.check2)
             {
                 throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
