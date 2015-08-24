@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Services
             await LoadAsync(applicationDatabase);
         }
 
-        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, Account.Account account)
+        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, BankAccount.Account account)
         {
             if (entryLine == null)
             {
@@ -230,6 +230,7 @@ namespace BudgetAnalyser.Engine.Services
                 recon = LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, ReconciliationToDoList, statement);
             }
 
+            // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
             foreach (ToDoTask task in ReconciliationToDoList)
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
@@ -246,7 +247,7 @@ namespace BudgetAnalyser.Engine.Services
             return recon;
         }
 
-        public void MoveLedgerToAccount(LedgerBucket ledger, Account.Account storedInAccount)
+        public void MoveLedgerToAccount(LedgerBucket ledger, BankAccount.Account storedInAccount)
         {
             if (ledger == null)
             {
@@ -315,7 +316,7 @@ namespace BudgetAnalyser.Engine.Services
         {
         }
 
-        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account.Account storeInThisAccount)
+        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, BankAccount.Account storeInThisAccount)
         {
             if (bucket == null)
             {
@@ -362,7 +363,7 @@ namespace BudgetAnalyser.Engine.Services
             return LedgerBook.Validate(messages);
         }
 
-        public IEnumerable<Account.Account> ValidLedgerAccounts()
+        public IEnumerable<BankAccount.Account> ValidLedgerAccounts()
         {
             return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }

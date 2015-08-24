@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine
 {
     public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
     {
-        private Account.Account doNotUseAccount;
+        private BankAccount.Account doNotUseAccount;
         private DateTime? doNotUseBeginDate;
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Account.Account Account
+        public BankAccount.Account Account
         {
             get { return this.doNotUseAccount; }
 

@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).
         /// </summary>
-        IEnumerable<Account.Account> FilterableAccountTypes();
+        IEnumerable<BankAccount.Account> FilterableAccountTypes();
 
         /// <summary>
         ///     Initialises and returns the widget groups to view in the UI.

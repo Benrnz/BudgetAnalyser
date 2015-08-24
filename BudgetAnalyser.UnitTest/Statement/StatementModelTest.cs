@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestData;
@@ -14,12 +14,12 @@ namespace BudgetAnalyser.UnitTest.Statement
     [TestClass]
     public class StatementModelTest
     {
-        private readonly Engine.Account.Account cheque = new ChequeAccount("Cheque");
+        private readonly Engine.BankAccount.Account cheque = new ChequeAccount("Cheque");
         private readonly BudgetBucket expense1 = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, string.Empty);
         private readonly BudgetBucket income = new IncomeBudgetBucket(TestDataConstants.IncomeBucketCode, string.Empty);
         private readonly BudgetBucket surplus = new SurplusBucket();
         private readonly TransactionType transactionType = new NamedTransaction("Something");
-        private readonly Engine.Account.Account visa = new VisaAccount("Visa");
+        private readonly Engine.BankAccount.Account visa = new VisaAccount("Visa");
 
         private Transaction Duplicate1
         {

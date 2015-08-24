@@ -43,7 +43,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     The account to classify these transactions. This is useful when merging one statement to another. For example,
         ///     merging a cheque account export with visa account export, each can be classified using an account.
         /// </param>
-        public async Task<StatementModel> LoadAsync(string fileName, Account.Account account)
+        public async Task<StatementModel> LoadAsync(string fileName, BankAccount.Account account)
         {
             try
             {

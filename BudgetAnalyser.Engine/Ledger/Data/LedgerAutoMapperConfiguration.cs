@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             Mapper.CreateMap<BankBalance, BankBalanceDto>()
                 .ForMember(dto => dto.Account, m => m.MapFrom(bankBalance => bankBalance.Account.Name));
 
-            Mapper.CreateMap<string, Account.Account>()
+            Mapper.CreateMap<string, BankAccount.Account>()
                 .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
 
             Mapper.CreateMap<BankBalanceDto, BankBalance>()

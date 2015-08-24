@@ -243,7 +243,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return previousEntry?.Balance ?? 0;
         }
 
-        private decimal TotalBankBalanceAdjustmentForAccount(Account.Account account)
+        private decimal TotalBankBalanceAdjustmentForAccount(BankAccount.Account account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }

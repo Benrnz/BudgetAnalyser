@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Engine.Account
+﻿namespace BudgetAnalyser.Engine.BankAccount
 {
     /// <summary>
     ///     An enum to describe the account type or purpose.

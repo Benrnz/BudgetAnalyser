@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;

@@ -1,6 +1,6 @@
 ﻿using BudgetAnalyser.Engine.Annotations;
 
-namespace BudgetAnalyser.Engine.Account
+namespace BudgetAnalyser.Engine.BankAccount
 {
     public abstract class Account
     {

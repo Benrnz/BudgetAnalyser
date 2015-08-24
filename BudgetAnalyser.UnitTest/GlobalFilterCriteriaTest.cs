@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest

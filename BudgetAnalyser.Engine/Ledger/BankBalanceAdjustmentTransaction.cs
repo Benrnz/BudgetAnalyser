@@ -23,9 +23,9 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Transactions.
         ///     In the case of <see cref="LedgerEntry" /> transactions it is set by the <see cref="LedgerEntry.LedgerBucket" />.
         /// </summary>
-        public Account.Account BankAccount { get; internal set; }
+        public BankAccount.Account BankAccount { get; internal set; }
 
-        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] Account.Account account)
+        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] BankAccount.Account account)
         {
             if (account == null)
             {

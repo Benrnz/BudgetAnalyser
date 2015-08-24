@@ -9,7 +9,7 @@
                     xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
                     xmlns:filtering="clr-namespace:BudgetAnalyser.Filtering"
                     xmlns:ledger="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine"
-                    xmlns:account="clr-namespace:BudgetAnalyser.Engine.Account;assembly=BudgetAnalyser.Engine"
+                    xmlns:account="clr-namespace:BudgetAnalyser.Engine.BankAccount;assembly=BudgetAnalyser.Engine"
                     xmlns:longTermSpendingLineGraph="clr-namespace:BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph"
                     xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs"
                     xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance">

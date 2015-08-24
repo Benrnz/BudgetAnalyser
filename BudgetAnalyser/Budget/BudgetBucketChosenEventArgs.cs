@@ -1,5 +1,5 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Budget

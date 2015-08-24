@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
@@ -31,7 +31,12 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public LedgerEntryLine CreateNewMonthlyReconciliation(DateTime reconciliationDateExcl, IEnumerable<BankBalance> bankBalances, BudgetModel budget, StatementModel statement, ToDoCollection toDoList)
+        public LedgerEntryLine CreateNewMonthlyReconciliation(
+            DateTime reconciliationDateExcl,
+            IEnumerable<BankBalance> bankBalances,
+            BudgetModel budget,
+            StatementModel statement,
+            ToDoCollection toDoList)
         {
             if (bankBalances == null)
             {
@@ -73,20 +78,10 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
-        {
-            IOrderedEnumerable<Transaction> txns = transactions.Where(
-                t =>
-                    t.Reference1.TrimEndSafely() == autoMatchingReference
-                    || t.Reference2.TrimEndSafely() == autoMatchingReference
-                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
-                .OrderBy(t => t.Amount);
-            return txns;
-        }
-
         /// <summary>
         ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
-        ///     between the start date and the reconciliation date specified (today or pay day). The start date should start from the previous ledger entry line or
+        ///     between the start date and the reconciliation date specified (today or pay day). The start date should start from
+        ///     the previous ledger entry line or
         ///     one month prior if no records exist.
         /// </summary>
         /// <param name="ledgerBook">The Ledger Book to find the date for</param>
@@ -100,6 +95,17 @@ namespace BudgetAnalyser.Engine.Ledger
 
             DateTime startDateIncl = reconciliationDate.AddMonths(-1);
             return startDateIncl;
+        }
+
+        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
+        {
+            IOrderedEnumerable<Transaction> txns = transactions.Where(
+                t =>
+                    t.Reference1.TrimEndSafely() == autoMatchingReference
+                    || t.Reference2.TrimEndSafely() == autoMatchingReference
+                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
+                .OrderBy(t => t.Amount);
+            return txns;
         }
 
         private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
@@ -284,7 +290,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
             }
 
-            CreateTasksToJournalFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
+            CreateTasksToTransferFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
         }
 
         /// <summary>
@@ -358,7 +364,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
         {
             List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
-            foreach (IGrouping<Account.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            foreach (IGrouping<BankAccount.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -367,7 +373,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     .WithAccount(grouping.Key);
             }
 
-            foreach (IGrouping<Account.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            foreach (IGrouping<BankAccount.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -377,39 +383,64 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private void CreateTasksToJournalFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
+        private void CreateTasksToTransferFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
         {
             var syncRoot = new object();
-            Dictionary<BudgetBucket, Account.Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
+            Dictionary<BudgetBucket, BankAccount.Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
                 .Distinct()
                 .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
 
+            var debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+
             // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
+            var proposedTasks = new List<Tuple<Transaction, TransferTask>>();
             Parallel.ForEach(
-                transactions.Where(t => t.Amount < 0 && t.Account.AccountType != AccountType.CreditCard).ToList(),
+                debitAccountTransactionsOnly.Where(t => t.Amount < 0).ToList(),
                 t =>
                 {
                     if (!ledgerBuckets.ContainsKey(t.BudgetBucket))
                     {
                         return;
                     }
-                    Account.Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
+                    BankAccount.Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
                     if (t.Account != ledgerAccount)
                     {
+                        var reference = IssueTransactionReferenceNumber();
                         lock (syncRoot)
                         {
-                            toDoList.Add(
-                                new TransferTask(
-                                    $"A {t.BudgetBucket.Code} payment for {t.Amount:C} has been made from {t.Account}, but funds are stored in {ledgerAccount}.",
-                                    true)
-                                {
-                                    Amount = t.Amount,
-                                    SourceAccount = ledgerAccount,
-                                    DestinationAccount = t.Account
-                                });
+                            proposedTasks.Add(
+                                Tuple.Create(
+                                    t,
+                                    new TransferTask(
+                                        $"A {t.BudgetBucket.Code} payment for {t.Amount:C} on the {t.Date:d} has been made from {t.Account}, but funds are stored in {ledgerAccount}. Use reference {reference}",
+                                        true)
+                                    {
+                                        Amount = -t.Amount,
+                                        SourceAccount = ledgerAccount,
+                                        DestinationAccount = t.Account,
+                                        BucketCode = t.BudgetBucket.Code,
+                                        Reference = reference
+                                    }));
                         }
                     }
                 });
+            // Now check to ensure the detected transactions themselves are not one side of a journal style transfer.
+            foreach (Tuple<Transaction, TransferTask> tuple in proposedTasks)
+            {
+                var suspectedPaymentTransaction = tuple.Item1;
+                var transferTask = tuple.Item2;
+                Transaction matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(
+                    t => t.Amount == -suspectedPaymentTransaction.Amount 
+                        && t.Date == suspectedPaymentTransaction.Date 
+                        && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
+                        && t.Account != suspectedPaymentTransaction.Account 
+                        && t.Reference1 == suspectedPaymentTransaction.Reference1);
+                if (matchingTransferTransaction == null)
+                {
+                    // No matching transaction exists - therefore the transaction is a payment.
+                    toDoList.Add(transferTask);
+                }
+            }
         }
 
         /// <summary>
@@ -458,7 +489,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
-                    Account.Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
+                    BankAccount.Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
                     toDoList.Add(
                         new TransferTask(
                             string.Format(

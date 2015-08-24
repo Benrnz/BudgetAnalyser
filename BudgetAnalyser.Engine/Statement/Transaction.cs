@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Statement
         public const string BucketPropertyName = "BudgetBucket";
         public const string DatePropertyName = "Date";
         private BudgetBucket budgetBucket;
-        private Account.Account doNotUseAccount;
+        private BankAccount.Account doNotUseAccount;
         private decimal doNotUseAmount;
         private DateTime doNotUseDate;
         private string doNotUseDescription;
@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Account.Account Account
+        public BankAccount.Account Account
         {
             get { return this.doNotUseAccount; }
             set

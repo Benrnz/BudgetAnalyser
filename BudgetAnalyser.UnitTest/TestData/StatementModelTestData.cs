@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -519,6 +519,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     Date = new DateTime(2013, 08, 16),
                     Description = "Transfer InsHome monthly budget amount",
                     Reference1 = "agkT9kC",
+                    Reference2 = InsHomeBucket.Code,
                     TransactionType = TransactionType
                 },
                 new Transaction
@@ -529,6 +530,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                     Date = new DateTime(2013, 08, 16),
                     Description = "Transfer InsHome monthly budget amount",
                     Reference1 = "agkT9kC",
+                    Reference2 = InsHomeBucket.Code,
+                    TransactionType = TransactionType
+                },
+                new Transaction
+                {
+                    Account = SavingsAccount,
+                    Amount = -1000M,
+                    BudgetBucket = InsHomeBucket,
+                    Date = new DateTime(2013, 08, 16),
+                    Description = "Pay annual house insurance",
+                    Reference1 = "HOUSE1234",
+                    Reference2 = InsHomeBucket.Code,
                     TransactionType = TransactionType
                 }
             };

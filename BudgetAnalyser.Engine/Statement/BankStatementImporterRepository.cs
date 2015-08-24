@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
-        public async Task<StatementModel> ImportAsync(string fullFileName, Account.Account account)
+        public async Task<StatementModel> ImportAsync(string fullFileName, BankAccount.Account account)
         {
             foreach (IBankStatementImporter importer in this.importers)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -73,6 +74,10 @@ namespace BudgetAnalyser.Engine.Matching
                         adjustedReferences.Add(null);
                     }
                 }
+            }
+            else
+            {
+                adjustedReferences = references.ToList();
             }
 
             T newRule = ruleCtor(bucketCode);

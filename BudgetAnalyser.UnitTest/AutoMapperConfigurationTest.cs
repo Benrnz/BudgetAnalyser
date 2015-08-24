@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;

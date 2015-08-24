@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Creates a new balance adjustment transaction for the given entry line.  The entry line must exist in the current
         ///     Ledger Book.
         /// </summary>
-        LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount, [NotNull] string narrative, [NotNull] Account.Account account);
+        LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount, [NotNull] string narrative, [NotNull] BankAccount.Account account);
 
         /// <summary>
         ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="ledger">The ledger column to move.</param>
         /// <param name="storedInAccount">The new account to store the ledger in.</param>
-        void MoveLedgerToAccount([NotNull] LedgerBucket ledger, [NotNull] Account.Account storedInAccount);
+        void MoveLedgerToAccount([NotNull] LedgerBucket ledger, [NotNull] BankAccount.Account storedInAccount);
 
         /// <summary>
         ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="bucket">The bucket to track.</param>
         /// <param name="storeInThisAccount">The account to store the ledger's funds.</param>
-        LedgerBucket TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] Account.Account storeInThisAccount);
+        LedgerBucket TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] BankAccount.Account storeInThisAccount);
 
         /// <summary>
         ///     Unlocks the current month after it has been saved and locked.
@@ -104,6 +104,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Returns a list of valid accounts for use with the Ledger Book.
         /// </summary>
-        IEnumerable<Account.Account> ValidLedgerAccounts();
+        IEnumerable<BankAccount.Account> ValidLedgerAccounts();
     }
 }
