@@ -181,21 +181,21 @@ namespace BudgetAnalyser.Engine.Budget
             var retval = true;
             if (string.IsNullOrWhiteSpace(Code))
             {
-                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Code must be a small textual code.", Code);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Budget Bucket {0} is invalid, Code must be a small textual code.", Code);
                 retval = false;
             }
             else
             {
                 if (Code.Length > 7)
                 {
-                    validationMessages.AppendFormat("Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", Code, Description);
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Budget Bucket {0} - {1} is invalid, Code must be a small textual code less than 7 characters.", Code, Description);
                     retval = false;
                 }
             }
 
             if (string.IsNullOrWhiteSpace(Description))
             {
-                validationMessages.AppendFormat("Budget Bucket {0} is invalid, Description must not be blank.", Code);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Budget Bucket {0} is invalid, Description must not be blank.", Code);
                 retval = false;
             }
 

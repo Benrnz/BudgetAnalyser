@@ -239,13 +239,13 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (LedgerBucket.BudgetBucket == null)
             {
-                validationMessages.AppendFormat("Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
                 result = false;
             }
 
             if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
             {
-                validationMessages.AppendFormat("Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
                 result = false;
             }
 

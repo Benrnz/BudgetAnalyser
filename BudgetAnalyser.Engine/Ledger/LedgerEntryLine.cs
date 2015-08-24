@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
-                    validationMessages.AppendFormat("\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
                     result = false;
                 }
             }

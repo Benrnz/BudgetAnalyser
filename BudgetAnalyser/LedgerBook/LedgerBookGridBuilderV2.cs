@@ -97,6 +97,7 @@ namespace BudgetAnalyser.LedgerBook
             foreach (BankBalance bankBalance in line.BankBalances)
             {
                 individualLedgerBalances.AppendFormat(
+                    CultureInfo.CurrentCulture,
                     "{0}: {1:N}; ",
                     bankBalance.Account,
                     bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));

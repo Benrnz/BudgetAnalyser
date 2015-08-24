@@ -38,6 +38,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
         internal IBudgetBucketRepository BucketRepository { get; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Allowed here, required to map all types in this ns")]
         public void RegisterMappings()
         {
             Mapper.CreateMap<FixedBudgetProjectBucket, FixedBudgetBucketDto>()

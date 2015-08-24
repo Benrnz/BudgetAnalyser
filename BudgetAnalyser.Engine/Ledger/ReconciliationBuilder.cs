@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public LedgerBook LedgerBook { get; set; }
 
         public LedgerEntryLine CreateNewMonthlyReconciliation(
-            DateTime reconciliationDateExcl,
+            DateTime reconciliationDateExclusive,
             IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,
             StatementModel statement,
@@ -65,8 +65,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             try
             {
-                this.newReconciliationLine = new LedgerEntryLine(reconciliationDateExcl, bankBalances);
-                AddNew(budget, statement, CalculateDateForReconcile(LedgerBook, reconciliationDateExcl), toDoList);
+                this.newReconciliationLine = new LedgerEntryLine(reconciliationDateExclusive, bankBalances);
+                AddNew(budget, statement, CalculateDateForReconcile(LedgerBook, reconciliationDateExclusive), toDoList);
 
                 CreateToDoForAnyOverdrawnSurplusBalance(toDoList);
 

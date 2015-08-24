@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Matching
             return new SingleUseMatchingRule(this.bucketRepo) { BucketCode = budgetBucketCode };
         }
 
-        private T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+        private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
             where T : MatchingRule
         {
             if (string.IsNullOrEmpty(bucketCode))

@@ -82,6 +82,7 @@ namespace BudgetAnalyser
             // Explicit object creation below is necessary to correctly register with IoC container.
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
         private static void RegistrationsForReesWpf(ContainerBuilder builder)
         {
             // Wait Cursor Builder
