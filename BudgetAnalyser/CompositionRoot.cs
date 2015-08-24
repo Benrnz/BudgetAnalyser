@@ -94,9 +94,9 @@ namespace BudgetAnalyser
             builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
             builder.RegisterType<WindowsMessageBox>().As<IUserMessageBox>().SingleInstance();
             builder.RegisterType<WindowsQuestionBoxYesNo>().As<IUserQuestionBoxYesNo>().SingleInstance();
-            builder.Register(c => (() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
+            builder.Register(c => new Func<IUserPromptOpenFile>(() => new WindowsOpenFileDialog { AddExtension = true, CheckFileExists = true, CheckPathExists = true }))
                 .SingleInstance();
-            builder.Register(c => (() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
+            builder.Register(c => new Func<IUserPromptSaveFile>(() => new WindowsSaveFileDialog { AddExtension = true, CheckPathExists = true }))
                 .SingleInstance();
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -21,7 +20,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account.
         /// </param>
-        Task<StatementModel> LoadAsync(string fileName, Account account);
+        Task<StatementModel> LoadAsync(string fileName, BankAccount.Account account);
 
         /// <summary>
         ///     Test the given file to see if this importer implementation can read and import it.

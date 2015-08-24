@@ -63,7 +63,6 @@ namespace BudgetAnalyser.Converters
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush TileBackgroundAlternateBrush =
             Application.Current.Resources[TileBackgroundAlternate] as Brush;
 
-
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
         public static decimal? ParseNumber(object value)

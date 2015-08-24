@@ -6,8 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
@@ -153,9 +153,9 @@ namespace BudgetAnalyser.Engine.Services
             return UpdateWidgetCollectionWithNewAddition((Widget)widget);
         }
 
-        public IEnumerable<Account> FilterableAccountTypes()
+        public IEnumerable<BankAccount.Account> FilterableAccountTypes()
         {
-            List<Account> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
+            List<BankAccount.Account> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
             accountTypeList.Insert(0, null);
             return accountTypeList;
         }

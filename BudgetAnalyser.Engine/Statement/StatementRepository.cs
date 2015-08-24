@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -48,7 +47,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public async Task<StatementModel> ImportBankStatementAsync(
             string storageKey,
-            Account account)
+            BankAccount.Account account)
         {
             if (string.IsNullOrWhiteSpace(storageKey))
             {

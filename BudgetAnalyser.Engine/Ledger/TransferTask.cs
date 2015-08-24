@@ -1,5 +1,3 @@
-using BudgetAnalyser.Engine.BankAccount;
-
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
@@ -24,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Funds need to be transfered into this account. This is where the <see cref="LedgerBucket" /> is stored.
         /// </summary>
-        public Account DestinationAccount { get; internal set; }
+        public BankAccount.Account DestinationAccount { get; internal set; }
 
         /// <summary>
         ///     The auto-matching reference.  IMPORTANT: Only use this if you wish a single use matching rule to be automatically
@@ -35,6 +33,6 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Funds need to be transfered out of this account. Typically this is the Salary account.
         /// </summary>
-        public Account SourceAccount { get; internal set; }
+        public BankAccount.Account SourceAccount { get; internal set; }
     }
 }

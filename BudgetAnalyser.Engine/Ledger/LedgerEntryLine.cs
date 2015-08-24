@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -167,8 +166,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Sets the <see cref="LedgerEntry" /> list for this reconciliation. Used when building a new reconciliation and
-        ///     populating a new <see cref="LedgerEntryLine" />.
+        /// Sets the <see cref="LedgerEntry"/> list for this reconciliation. Used when building a new reconciliation and populating a new <see cref="LedgerEntryLine"/>.
         /// </summary>
         internal void SetNewLedgerEntries(IEnumerable<LedgerEntry> ledgerEntries)
         {
@@ -245,7 +243,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return previousEntry?.Balance ?? 0;
         }
 
-        private decimal TotalBankBalanceAdjustmentForAccount(Account account)
+        private decimal TotalBankBalanceAdjustmentForAccount(BankAccount.Account account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }

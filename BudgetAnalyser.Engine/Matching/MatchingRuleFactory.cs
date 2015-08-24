@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
-            SingleUseMatchingRule rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
+            var rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
             return rule;
         }
 
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Matching
             var adjustedReferences = new List<string>();
             if (references.Length < 3)
             {
-                for (var i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     if (i <= references.GetUpperBound(0))
                     {

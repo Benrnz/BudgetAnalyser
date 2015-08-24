@@ -10,9 +10,9 @@ namespace BudgetAnalyser.Engine.Ledger
     public class ReconciliationConsistencyChecker : IDisposable
     {
         private readonly decimal check1;
+        private decimal check2;
 
         private readonly LedgerBook ledgerBook;
-        private decimal check2;
 
         public ReconciliationConsistencyChecker(LedgerBook book)
         {

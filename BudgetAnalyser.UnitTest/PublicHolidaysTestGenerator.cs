@@ -17,12 +17,6 @@ namespace BudgetAnalyser.UnitTest
             return builder.ToString();
         }
 
-        private static void WriteFileFooter(StringBuilder builder)
-        {
-            builder.AppendLine(@"
-} // End namespace");
-        }
-
         private static void WriteFileHeader(StringBuilder builder)
         {
             builder.AppendFormat(@"
@@ -35,6 +29,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest
 {{
 ", DateTime.Now);
+        }
+
+        private static void WriteFileFooter(StringBuilder builder)
+        {
+            builder.AppendLine(@"
+} // End namespace");
         }
 
         private static void WriteMainBody(StringBuilder builder)

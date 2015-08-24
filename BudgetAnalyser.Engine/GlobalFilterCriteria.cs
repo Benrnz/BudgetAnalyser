@@ -3,13 +3,12 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine
 {
     public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
     {
-        private Account doNotUseAccount;
+        private BankAccount.Account doNotUseAccount;
         private DateTime? doNotUseBeginDate;
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
@@ -21,7 +20,7 @@ namespace BudgetAnalyser.Engine
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Account Account
+        public BankAccount.Account Account
         {
             get { return this.doNotUseAccount; }
 
