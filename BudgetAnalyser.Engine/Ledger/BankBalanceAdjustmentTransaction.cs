@@ -1,5 +1,6 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -23,9 +24,9 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Transactions.
         ///     In the case of <see cref="LedgerEntry" /> transactions it is set by the <see cref="LedgerEntry.LedgerBucket" />.
         /// </summary>
-        public BankAccount.Account BankAccount { get; internal set; }
+        public Account BankAccount { get; internal set; }
 
-        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] BankAccount.Account account)
+        internal BankBalanceAdjustmentTransaction WithAccount([NotNull] Account account)
         {
             if (account == null)
             {

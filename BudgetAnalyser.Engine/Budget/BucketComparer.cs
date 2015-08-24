@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
-        /// Linq Join uses this method.
+        ///     Linq Join uses this method.
         /// </summary>
         public int GetHashCode(BudgetBucket obj)
         {

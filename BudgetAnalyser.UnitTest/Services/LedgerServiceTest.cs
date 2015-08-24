@@ -20,18 +20,20 @@ namespace BudgetAnalyser.UnitTest.Services
     [TestClass]
     public class LedgerServiceTest
     {
-        private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
+        private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
 
         private IBudgetBucketRepository bucketRepo;
         private Mock<ILedgerBookRepository> mockLedgerRepo;
+        private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
         private LedgerService subject;
         private IBudgetCurrencyContext testDataBudgetContext;
         private BudgetCollection testDataBudgets;
+
+        private LedgerBook testDataLedgerBook;
         private StatementModel testDataStatement;
         private ToDoCollection testDataToDoList;
-        private Mock<IReconciliationConsistency> mockReconciliationConsistency;
 
         [TestMethod]
         public void MonthEndReconciliation_ShouldCreateSingleUseMatchingRulesForTransferToDos()
@@ -83,23 +85,6 @@ namespace BudgetAnalyser.UnitTest.Services
             PrivateAccessor.SetProperty(this.subject, nameof(this.subject.ReconciliationToDoList), this.testDataToDoList);
 
             this.mockReconciliationConsistency.Setup(m => m.EnsureConsistency(It.IsAny<LedgerBook>())).Returns(new Mock<IDisposable>().Object);
-        }
-
-        private void Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
-        {
-            var balances = bankBalances ?? NextReconcileBankBalance;
-
-            var ledgerBookTestHarness = (LedgerBookTestHarness)this.subject.LedgerBook;
-            if (ledgerBookTestHarness.ReconcileOverride == null)
-            {
-                ledgerBookTestHarness.ReconcileOverride = () => new LedgerEntryLine(ReconcileDate, balances);
-            }
-
-            this.subject.MonthEndReconciliation(
-                reconciliationDate ?? ReconcileDate,
-                balances,
-                this.testDataBudgetContext,
-                this.testDataStatement);
         }
 
         [TestMethod]
@@ -158,12 +143,27 @@ namespace BudgetAnalyser.UnitTest.Services
             Assert.Fail();
         }
 
-        private LedgerBook testDataLedgerBook;
+        private void Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
+        {
+            IEnumerable<BankBalance> balances = bankBalances ?? NextReconcileBankBalance;
+
+            var ledgerBookTestHarness = (LedgerBookTestHarness)this.subject.LedgerBook;
+            if (ledgerBookTestHarness.ReconcileOverride == null)
+            {
+                ledgerBookTestHarness.ReconcileOverride = () => new LedgerEntryLine(ReconcileDate, balances);
+            }
+
+            this.subject.MonthEndReconciliation(
+                reconciliationDate ?? ReconcileDate,
+                balances,
+                this.testDataBudgetContext,
+                this.testDataStatement);
+        }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)
         {
             this.testDataLedgerBook = LedgerBookTestData.TestData5();
-            this.testDataBudgets = new BudgetCollection(new [] { BudgetModelTestData.CreateTestData5() });
+            this.testDataBudgets = new BudgetCollection(new[] { BudgetModelTestData.CreateTestData5() });
             this.testDataBudgetContext = new BudgetCurrencyContext(this.testDataBudgets, this.testDataBudgets.CurrentActiveBudget);
             this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();
 
@@ -177,6 +177,5 @@ namespace BudgetAnalyser.UnitTest.Services
             Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
             this.testDataLedgerBook.Output(true);
         }
-
     }
 }

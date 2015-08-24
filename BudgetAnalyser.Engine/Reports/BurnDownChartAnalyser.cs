@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -116,7 +115,7 @@ namespace BudgetAnalyser.Engine.Reports
             decimal openingBalance)
         {
             // The below query has to cater for special Surplus buckets which are intended to be equivelent but use a type hierarchy with inheritance.
-            var query = statementModel.Transactions
+            List<ReportTransactionWithRunningBalance> query = statementModel.Transactions
                 .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t, new SurplusAgnosticBucketComparer())
                 .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -84,7 +85,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, BankAccount.Account storeInThisAccount)
+        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, Account storeInThisAccount)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
             {
@@ -160,7 +161,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <param name="ledger"></param>
         /// <param name="storedInAccount"></param>
-        internal void SetLedgerAccount(LedgerBucket ledger, BankAccount.Account storedInAccount)
+        internal void SetLedgerAccount(LedgerBucket ledger, Account storedInAccount)
         {
             if (Ledgers.Any(l => l == ledger))
             {

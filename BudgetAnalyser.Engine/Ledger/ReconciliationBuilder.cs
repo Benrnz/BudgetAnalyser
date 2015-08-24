@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -364,7 +364,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
         {
             List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
-            foreach (IGrouping<BankAccount.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -373,7 +373,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     .WithAccount(grouping.Key);
             }
 
-            foreach (IGrouping<BankAccount.Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -386,11 +386,11 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateTasksToTransferFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
         {
             var syncRoot = new object();
-            Dictionary<BudgetBucket, BankAccount.Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
+            Dictionary<BudgetBucket, Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
                 .Distinct()
                 .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
 
-            var debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+            List<Transaction> debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
             // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
             var proposedTasks = new List<Tuple<Transaction, TransferTask>>();
@@ -402,10 +402,10 @@ namespace BudgetAnalyser.Engine.Ledger
                     {
                         return;
                     }
-                    BankAccount.Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
+                    Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
                     if (t.Account != ledgerAccount)
                     {
-                        var reference = IssueTransactionReferenceNumber();
+                        string reference = IssueTransactionReferenceNumber();
                         lock (syncRoot)
                         {
                             proposedTasks.Add(
@@ -427,14 +427,14 @@ namespace BudgetAnalyser.Engine.Ledger
             // Now check to ensure the detected transactions themselves are not one side of a journal style transfer.
             foreach (Tuple<Transaction, TransferTask> tuple in proposedTasks)
             {
-                var suspectedPaymentTransaction = tuple.Item1;
-                var transferTask = tuple.Item2;
+                Transaction suspectedPaymentTransaction = tuple.Item1;
+                TransferTask transferTask = tuple.Item2;
                 Transaction matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(
-                    t => t.Amount == -suspectedPaymentTransaction.Amount 
-                        && t.Date == suspectedPaymentTransaction.Date 
-                        && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
-                        && t.Account != suspectedPaymentTransaction.Account 
-                        && t.Reference1 == suspectedPaymentTransaction.Reference1);
+                    t => t.Amount == -suspectedPaymentTransaction.Amount
+                         && t.Date == suspectedPaymentTransaction.Date
+                         && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
+                         && t.Account != suspectedPaymentTransaction.Account
+                         && t.Reference1 == suspectedPaymentTransaction.Reference1);
                 if (matchingTransferTransaction == null)
                 {
                     // No matching transaction exists - therefore the transaction is a payment.
@@ -489,7 +489,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         AutoMatchingReference = IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
-                    BankAccount.Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
+                    Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
                     toDoList.Add(
                         new TransferTask(
                             string.Format(

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement.Data

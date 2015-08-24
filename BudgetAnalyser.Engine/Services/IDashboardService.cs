@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 
@@ -48,7 +49,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).
         /// </summary>
-        IEnumerable<BankAccount.Account> FilterableAccountTypes();
+        IEnumerable<Account> FilterableAccountTypes();
 
         /// <summary>
         ///     Initialises and returns the widget groups to view in the UI.
