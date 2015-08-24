@@ -10,7 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 
@@ -97,6 +97,7 @@ namespace BudgetAnalyser.LedgerBook
             foreach (BankBalance bankBalance in line.BankBalances)
             {
                 individualLedgerBalances.AppendFormat(
+                    CultureInfo.CurrentCulture,
                     "{0}: {1:N}; ",
                     bankBalance.Account,
                     bankBalance.Balance + line.BankBalanceAdjustments.Where(a => a.BankAccount == bankBalance.Account).Sum(a => a.Amount));

@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Engine.Account
+﻿namespace BudgetAnalyser.Engine.BankAccount
 {
     public static class AccountTypeRepositoryConstants
     {

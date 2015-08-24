@@ -88,6 +88,7 @@ namespace BudgetAnalyser.Statement
         ///     <c>true</c> to release both managed and unmanaged
         ///     resources; <c>false</c> to release only unmanaged resources.
         /// </param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "<WhenReadyToNavigate>k__BackingField", Justification = "R# bug")]
         private void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called. 

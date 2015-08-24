@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Widgets
                         {
                             firstOccurance = currentMonthTally;
                         }
-                        content.AppendFormat("{0}, ", currentMonthTally.StartDate.ToString("MMMM"));
+                        content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ", currentMonthTally.StartDate.ToString("MMMM"));
                         if (currentMonthTally.EndDate == this.filter.EndDate.Value || currentMonthTally.EndDate == this.filter.EndDate.Value.AddMonths(1))
                         {
                             // Is current or next month, so signal alert status
@@ -221,7 +221,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 var builder = new StringBuilder();
                 foreach (int date in Dates)
                 {
-                    builder.AppendFormat(", {0}", date);
+                    builder.AppendFormat(CultureInfo.CurrentCulture, ", {0}", date);
                 }
 
                 if (builder[0] == ',')

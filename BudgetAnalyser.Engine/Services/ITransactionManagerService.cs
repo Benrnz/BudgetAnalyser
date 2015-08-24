@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 
@@ -76,7 +77,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </exception>
         Task ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey,
-            [NotNull] Account.Account account);
+            [NotNull] Account account);
 
         /// <summary>
         ///     Parses and loads the persisted state data from the provided object.

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
@@ -11,7 +10,8 @@ using BudgetAnalyser.Engine.Statement;
 namespace BudgetAnalyser.Engine.Matching
 {
     /// <summary>
-    /// An instance of this class describes how and if a transaction can be automatically matched to a Bucket when auto-matching rules are applied.
+    ///     An instance of this class describes how and if a transaction can be automatically matched to a Bucket when
+    ///     auto-matching rules are applied.
     /// </summary>
     [DebuggerDisplay("Rule: {Description} {RuleId} {BucketCode}")]
     public class MatchingRule : INotifyPropertyChanged, IEquatable<MatchingRule>
@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
@@ -41,8 +42,6 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public bool Hidden { get; set; }
 
         public decimal? Amount
         {
@@ -93,6 +92,8 @@ namespace BudgetAnalyser.Engine.Matching
                 OnPropertyChanged();
             }
         }
+
+        public bool Hidden { get; set; }
 
         /// <summary>
         ///     Gets the last date and time the rule was matched to a transaction.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -17,19 +18,19 @@ namespace BudgetAnalyser.Engine.Budget
 
             if (retval && Bucket.GetType() != typeof(IncomeBudgetBucket))
             {
-                validationMessages.AppendFormat("Income {0} with amount {1:C} is invalid, you must allocate an income bucket.", Bucket.Description, Amount);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Income {0} with amount {1:C} is invalid, you must allocate an income bucket.", Bucket.Description, Amount);
                 retval = false;
             }
 
             if (retval && Amount < 0)
             {
-                validationMessages.AppendFormat("Income {0} with Amount {1:C} is invalid, it can't be less than zero.", Bucket.Description, Amount);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Income {0} with Amount {1:C} is invalid, it can't be less than zero.", Bucket.Description, Amount);
                 retval = false;
             }
 
             if (string.IsNullOrWhiteSpace(Bucket.Description))
             {
-                validationMessages.AppendFormat("Income with Amount {0:C} is invalid, Description can not be blank.", Amount);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Income with Amount {0:C} is invalid, Description can not be blank.", Amount);
                 retval = false;
             }
 

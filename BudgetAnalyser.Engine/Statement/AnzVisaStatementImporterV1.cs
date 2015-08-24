@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -44,7 +45,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     merging a cheque account
         ///     export with visa account export, each can be classified using an account.
         /// </param>
-        public async Task<StatementModel> LoadAsync(string fileName, Account.Account account)
+        public async Task<StatementModel> LoadAsync(string fileName, Account account)
         {
             try
             {

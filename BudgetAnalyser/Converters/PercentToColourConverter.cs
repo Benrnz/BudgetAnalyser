@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Converters
 {
@@ -8,6 +9,11 @@ namespace BudgetAnalyser.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (parameter == null || value == null)
+            {
+                return ConverterHelper.TransparentBrush;
+            }
+
             try
             {
                 var percent = (double)value;

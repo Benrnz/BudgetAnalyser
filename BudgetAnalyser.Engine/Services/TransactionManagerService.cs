@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
@@ -197,7 +198,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel.Filter(criteria);
         }
 
-        public async Task ImportAndMergeBankStatementAsync(string storageKey, Account.Account account)
+        public async Task ImportAndMergeBankStatementAsync(string storageKey, Account account)
         {
             if (storageKey.IsNothing())
             {

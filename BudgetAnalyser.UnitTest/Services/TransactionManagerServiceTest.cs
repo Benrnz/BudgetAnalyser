@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
@@ -117,7 +117,7 @@ namespace BudgetAnalyser.UnitTest.Services
         public async Task ImportAndMergeBankStatement_ShouldCallStatementRepo_GivenStorageKeyAndAccount()
         {
             this.mockStatementRepo
-                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.Account.Account>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.BankAccount.Account>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.UnitTest.Services
             Arrange();
 
             this.mockStatementRepo
-                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.Account.Account>()))
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.BankAccount.Account>()))
                 .Returns(Task.FromResult(StatementModelTestData.TestData2()))
                 .Verifiable();
 

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -166,7 +167,8 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Sets the <see cref="LedgerEntry"/> list for this reconciliation. Used when building a new reconciliation and populating a new <see cref="LedgerEntryLine"/>.
+        ///     Sets the <see cref="LedgerEntry" /> list for this reconciliation. Used when building a new reconciliation and
+        ///     populating a new <see cref="LedgerEntryLine" />.
         /// </summary>
         internal void SetNewLedgerEntries(IEnumerable<LedgerEntry> ledgerEntries)
         {
@@ -219,7 +221,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
-                    validationMessages.AppendFormat("\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
                     result = false;
                 }
             }
@@ -243,7 +245,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return previousEntry?.Balance ?? 0;
         }
 
-        private decimal TotalBankBalanceAdjustmentForAccount(Account.Account account)
+        private decimal TotalBankBalanceAdjustmentForAccount(Account account)
         {
             return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }

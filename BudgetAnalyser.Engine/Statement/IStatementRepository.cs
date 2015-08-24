@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -34,7 +35,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </exception>
         Task<StatementModel> ImportBankStatementAsync(
             [NotNull] string storageKey,
-            [NotNull] Account.Account account);
+            [NotNull] Account account);
 
         /// <summary>
         ///     Loads an existing Budget Analyser Transaction file.

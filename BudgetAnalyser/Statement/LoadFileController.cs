@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -289,6 +289,7 @@ namespace BudgetAnalyser.Statement
         ///     <c>true</c> to release both managed and unmanaged
         ///     resources; <c>false</c> to release only unmanaged resources.
         /// </param>
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "fileSelectionTask", Justification = "R# bug")]
         private void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called. 

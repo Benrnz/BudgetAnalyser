@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
@@ -20,18 +20,20 @@ namespace BudgetAnalyser.UnitTest.Services
     [TestClass]
     public class LedgerServiceTest
     {
-        private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
+        private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
 
         private IBudgetBucketRepository bucketRepo;
         private Mock<ILedgerBookRepository> mockLedgerRepo;
+        private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
         private LedgerService subject;
         private IBudgetCurrencyContext testDataBudgetContext;
         private BudgetCollection testDataBudgets;
+
+        private LedgerBook testDataLedgerBook;
         private StatementModel testDataStatement;
         private ToDoCollection testDataToDoList;
-        private Mock<IReconciliationConsistency> mockReconciliationConsistency;
 
         [TestMethod]
         public void MonthEndReconciliation_ShouldCreateSingleUseMatchingRulesForTransferToDos()
@@ -85,9 +87,65 @@ namespace BudgetAnalyser.UnitTest.Services
             this.mockReconciliationConsistency.Setup(m => m.EnsureConsistency(It.IsAny<LedgerBook>())).Returns(new Mock<IDisposable>().Object);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
+        {
+            Act(new DateTime(2012, 02, 20));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationWarningException))]
+        public void Reconcile_ShouldThrow_GivenTestData1AndNoStatementModelTransactions()
+        {
+            this.testDataStatement = new StatementModel(new FakeLogger());
+            Act(new DateTime(2013, 10, 15));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationWarningException))]
+        public void Reconcile_ShouldThrow_GivenTestData1AndUnclassifiedTransactions()
+        {
+            Transaction aTransaction = this.testDataStatement.AllTransactions.Last();
+            PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
+
+            Act(new DateTime(2013, 9, 21));
+        }
+
+        [TestMethod]
+        public void Reconcile_ShouldNotThrow_GivenTestData1AndUnclassifiedTransactionsOutsideReconPeriod()
+        {
+            Transaction aTransaction = this.testDataStatement.AllTransactions.First();
+            PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
+
+            Act(new DateTime(2013, 9, 15));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Reconcile_ShouldThrow_GivenTestData1WithDateEqualToExistingLine()
+        {
+            Act(new DateTime(2013, 08, 15));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Reconcile_ShouldThrow_GivenTestData1WithDateLessThanExistingLine()
+        {
+            Act(new DateTime(2013, 07, 15));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ValidationWarningException))]
+        public void Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement_GivenTestData5()
+        {
+            ActOnTestData5(StatementModelTestData.TestData4());
+            Assert.Fail();
+        }
+
         private void Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
         {
-            var balances = bankBalances ?? NextReconcileBankBalance;
+            IEnumerable<BankBalance> balances = bankBalances ?? NextReconcileBankBalance;
 
             var ledgerBookTestHarness = (LedgerBookTestHarness)this.subject.LedgerBook;
             if (ledgerBookTestHarness.ReconcileOverride == null)
@@ -102,68 +160,10 @@ namespace BudgetAnalyser.UnitTest.Services
                 this.testDataStatement);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingInvalidLedgerBook_Reconcile_ShouldThrow()
-        {
-            Act(new DateTime(2012, 02, 20));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData1AndNoStatementModelTransactions_Reconcile_ShouldThrow()
-        {
-            this.testDataStatement = new StatementModel(new FakeLogger());
-            Act(new DateTime(2013, 10, 15));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData1AndUnclassifiedTransactions_Reconcile_ShouldThrow()
-        {
-            Transaction aTransaction = this.testDataStatement.AllTransactions.Last();
-            PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
-
-            Act(new DateTime(2013, 9, 21));
-        }
-
-        [TestMethod]
-        public void UsingTestData1AndUnclassifiedTransactionsOutsideReconPeriod_Reconcile_ShouldNotThrow()
-        {
-            Transaction aTransaction = this.testDataStatement.AllTransactions.First();
-            PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
-
-            Act(new DateTime(2013, 9, 15));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingTestData1WithDateEqualToExistingLine_Reconcile_ShouldThrow()
-        {
-            Act(new DateTime(2013, 08, 15));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingTestData1WithDateLessThanExistingLine_Reconcile_ShouldThrow()
-        {
-            Act(new DateTime(2013, 07, 15));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData5_Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement()
-        {
-            ActOnTestData5(StatementModelTestData.TestData4());
-            Assert.Fail();
-        }
-
-        private LedgerBook testDataLedgerBook;
-
         private void ActOnTestData5(StatementModel statementModelTestData = null)
         {
             this.testDataLedgerBook = LedgerBookTestData.TestData5();
-            this.testDataBudgets = new BudgetCollection(new [] { BudgetModelTestData.CreateTestData5() });
+            this.testDataBudgets = new BudgetCollection(new[] { BudgetModelTestData.CreateTestData5() });
             this.testDataBudgetContext = new BudgetCurrencyContext(this.testDataBudgets, this.testDataBudgets.CurrentActiveBudget);
             this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();
 
@@ -177,6 +177,5 @@ namespace BudgetAnalyser.UnitTest.Services
             Console.WriteLine("********************** AFTER RUNNING RECONCILIATION *******************************");
             this.testDataLedgerBook.Output(true);
         }
-
     }
 }

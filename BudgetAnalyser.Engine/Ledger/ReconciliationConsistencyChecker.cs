@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using BudgetAnalyser.Engine.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -7,19 +8,26 @@ namespace BudgetAnalyser.Engine.Ledger
     ///     This class is responsible for validating that changes were made during a reconciliation that did not alter the
     ///     Ledger Book in an inappropriate and invalid way.
     /// </summary>
-    public class ReconciliationConsistencyChecker : IDisposable
+    public sealed class ReconciliationConsistencyChecker : IDisposable
     {
         private readonly decimal check1;
-        private decimal check2;
 
         private readonly LedgerBook ledgerBook;
+        private decimal check2;
 
-        public ReconciliationConsistencyChecker(LedgerBook book)
+        public ReconciliationConsistencyChecker([NotNull] LedgerBook book)
         {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+
             this.ledgerBook = book;
             this.check1 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
         public void Dispose()
         {
             this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - this.ledgerBook.Reconciliations.First().CalculatedSurplus;

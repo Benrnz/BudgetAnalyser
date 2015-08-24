@@ -1,4 +1,4 @@
-﻿using BudgetAnalyser.Engine.Account;
+﻿using BudgetAnalyser.Engine.BankAccount;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Account
@@ -10,7 +10,7 @@ namespace BudgetAnalyser.UnitTest.Account
         public void CloneShouldGiveUseNameGiven()
         {
             VisaAccount subject = CreateSubject();
-            Engine.Account.Account clone = subject.Clone("CloneVisa");
+            Engine.BankAccount.Account clone = subject.Clone("CloneVisa");
 
             Assert.AreEqual("CloneVisa", clone.Name);
             Assert.AreNotEqual("CloneVisa", subject.Name);
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.UnitTest.Account
         public void CloneShouldNotJustCopyReference()
         {
             VisaAccount subject = CreateSubject();
-            Engine.Account.Account clone = subject.Clone("CloneVisa");
+            Engine.BankAccount.Account clone = subject.Clone("CloneVisa");
 
             Assert.IsFalse(ReferenceEquals(subject, clone));
         }

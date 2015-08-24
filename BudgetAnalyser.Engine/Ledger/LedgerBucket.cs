@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
@@ -21,7 +22,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Gets or sets the Account in which this ledger's funds are stored.
         /// </summary>
-        public Account.Account StoredInAccount { get; internal set; }
+        public Account StoredInAccount { get; internal set; }
 
         public static bool operator ==(LedgerBucket left, LedgerBucket right)
         {

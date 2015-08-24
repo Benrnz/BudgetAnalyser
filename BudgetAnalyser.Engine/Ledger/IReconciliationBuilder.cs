@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <returns>A newly created and populated <see cref="LedgerEntryLine" />.</returns>
         LedgerEntryLine CreateNewMonthlyReconciliation(
-            DateTime reconciliationDateExcl,
+            DateTime reconciliationDateExclusive,
             [NotNull] IEnumerable<BankBalance> bankBalances,
             [NotNull] BudgetModel budget,
             [NotNull] StatementModel statement,

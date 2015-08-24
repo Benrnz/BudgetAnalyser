@@ -16,10 +16,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
+        private LedgerBook subject;
         private BudgetModel testDataBudget;
         private StatementModel testDataStatement;
         private ToDoCollection testDataToDoList;
-        private LedgerBook subject;
 
         [TestInitialize]
         public void TestInitialise()
@@ -39,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 Modified = new DateTime(2011, 12, 4),
                 FileName = @"C:\TestLedgerBook.xml"
             };
-            LedgerEntryLine result = subject.UnlockMostRecentLine();
+            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
 
             Assert.IsNull(result);
         }
@@ -47,8 +47,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldReturnMostRecentLine()
         {
-            LedgerEntryLine result = subject.UnlockMostRecentLine();
-            LedgerEntryLine expectedLine = subject.Reconciliations.OrderByDescending(e => e.Date).First();
+            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
+            LedgerEntryLine expectedLine = this.subject.Reconciliations.OrderByDescending(e => e.Date).First();
 
             Assert.AreSame(expectedLine, result);
         }
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void UnlockMostRecentLineShouldUnlockMostRecentLine()
         {
-            LedgerEntryLine result = subject.UnlockMostRecentLine();
+            LedgerEntryLine result = this.subject.UnlockMostRecentLine();
 
             Assert.IsTrue(result.IsNew);
         }

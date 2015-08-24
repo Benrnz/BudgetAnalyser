@@ -6,8 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Account;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
@@ -21,8 +21,8 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBookRepository ledgerRepository;
         private readonly ILogger logger;
-        private readonly ITransactionRuleService transactionRuleService;
         private readonly IReconciliationConsistency reconciliationConsistency;
+        private readonly ITransactionRuleService transactionRuleService;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Services
         public int LoadSequence => 50;
 
         /// <summary>
-        /// The To Do List loaded from a persistent storage.
+        ///     The To Do List loaded from a persistent storage.
         /// </summary>
         public ToDoCollection ReconciliationToDoList { get; private set; }
 
@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Services
             await LoadAsync(applicationDatabase);
         }
 
-        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, Account.Account account)
+        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, Account account)
         {
             if (entryLine == null)
             {
@@ -230,13 +230,15 @@ namespace BudgetAnalyser.Engine.Services
                 recon = LedgerBook.Reconcile(reconciliationDate, balances, budgetContext.Model, ReconciliationToDoList, statement);
             }
 
+            // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
             foreach (ToDoTask task in ReconciliationToDoList)
             {
                 this.logger.LogInfo(l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
                 var transferTask = task as TransferTask;
                 if (transferTask != null && transferTask.SystemGenerated && transferTask.Reference.IsSomething())
                 {
-                    this.logger.LogInfo(l => l.Format("TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}", task.Description, task.SystemGenerated, transferTask.Reference));
+                    this.logger.LogInfo(
+                        l => l.Format("TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}", task.Description, task.SystemGenerated, transferTask.Reference));
                     this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null, new[] { transferTask.Reference }, null, null, true);
                 }
             }
@@ -246,7 +248,7 @@ namespace BudgetAnalyser.Engine.Services
             return recon;
         }
 
-        public void MoveLedgerToAccount(LedgerBucket ledger, Account.Account storedInAccount)
+        public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
         {
             if (ledger == null)
             {
@@ -315,7 +317,7 @@ namespace BudgetAnalyser.Engine.Services
         {
         }
 
-        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account.Account storeInThisAccount)
+        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
         {
             if (bucket == null)
             {
@@ -362,7 +364,7 @@ namespace BudgetAnalyser.Engine.Services
             return LedgerBook.Validate(messages);
         }
 
-        public IEnumerable<Account.Account> ValidLedgerAccounts()
+        public IEnumerable<Account> ValidLedgerAccounts()
         {
             return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }
@@ -380,7 +382,7 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            var startDate = ReconciliationBuilder.CalculateDateForReconcile(LedgerBook, reconciliationDate);
+            DateTime startDate = ReconciliationBuilder.CalculateDateForReconcile(LedgerBook, reconciliationDate);
 
             ValidateDates(startDate, reconciliationDate, statement);
 

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Statement
 {

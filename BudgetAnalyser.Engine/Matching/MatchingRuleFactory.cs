@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
-            var rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
+            SingleUseMatchingRule rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
             return rule;
         }
 
@@ -41,7 +42,7 @@ namespace BudgetAnalyser.Engine.Matching
             return new SingleUseMatchingRule(this.bucketRepo) { BucketCode = budgetBucketCode };
         }
 
-        private T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+        private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
             where T : MatchingRule
         {
             if (string.IsNullOrEmpty(bucketCode))
@@ -62,7 +63,7 @@ namespace BudgetAnalyser.Engine.Matching
             var adjustedReferences = new List<string>();
             if (references.Length < 3)
             {
-                for (int i = 0; i < 3; i++)
+                for (var i = 0; i < 3; i++)
                 {
                     if (i <= references.GetUpperBound(0))
                     {
@@ -73,6 +74,10 @@ namespace BudgetAnalyser.Engine.Matching
                         adjustedReferences.Add(null);
                     }
                 }
+            }
+            else
+            {
+                adjustedReferences = references.ToList();
             }
 
             T newRule = ruleCtor(bucketCode);

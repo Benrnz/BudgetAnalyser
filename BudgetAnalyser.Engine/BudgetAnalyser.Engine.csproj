@@ -116,17 +116,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\Account.cs" />
-    <Compile Include="Account\AccountType.cs" />
-    <Compile Include="Account\AccountTypeRepositoryConstants.cs" />
-    <Compile Include="Account\InMemoryAccountTypeRepository.cs" />
-    <Compile Include="Account\ChequeAccount.cs" />
-    <Compile Include="Account\AmexAccount.cs" />
-    <Compile Include="Account\IAccountTypeRepository.cs" />
-    <Compile Include="Account\MastercardAccount.cs" />
-    <Compile Include="Account\MiscellaneousAccount.cs" />
-    <Compile Include="Account\SavingsAccount.cs" />
-    <Compile Include="Account\VisaAccount.cs" />
+    <Compile Include="BankAccount\Account.cs" />
+    <Compile Include="BankAccount\AccountType.cs" />
+    <Compile Include="BankAccount\AccountTypeRepositoryConstants.cs" />
+    <Compile Include="BankAccount\InMemoryAccountTypeRepository.cs" />
+    <Compile Include="BankAccount\ChequeAccount.cs" />
+    <Compile Include="BankAccount\AmexAccount.cs" />
+    <Compile Include="BankAccount\IAccountTypeRepository.cs" />
+    <Compile Include="BankAccount\MastercardAccount.cs" />
+    <Compile Include="BankAccount\MiscellaneousAccount.cs" />
+    <Compile Include="BankAccount\SavingsAccount.cs" />
+    <Compile Include="BankAccount\VisaAccount.cs" />
     <Compile Include="ApplicationDataType.cs" />
     <Compile Include="Budget\BucketComparer.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />

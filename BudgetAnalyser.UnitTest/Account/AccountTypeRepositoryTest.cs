@@ -1,5 +1,5 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Account;
+using BudgetAnalyser.Engine.BankAccount;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest.Account
@@ -64,7 +64,7 @@ namespace BudgetAnalyser.UnitTest.Account
             subject.Add(Key1, CreateTestData());
             subject.Add(Key2, CreateTestData());
 
-            Engine.Account.Account result = subject.Find(a => a.Name == Key1);
+            Engine.BankAccount.Account result = subject.Find(a => a.Name == Key1);
 
             Assert.IsNotNull(result);
         }
@@ -76,7 +76,7 @@ namespace BudgetAnalyser.UnitTest.Account
             subject.Add(Key1, CreateTestData());
             subject.Add(Key2, CreateTestData());
 
-            Engine.Account.Account result = subject.Find(a => a.Name == "Key99");
+            Engine.BankAccount.Account result = subject.Find(a => a.Name == "Key99");
 
             Assert.IsNull(result);
         }
@@ -85,8 +85,8 @@ namespace BudgetAnalyser.UnitTest.Account
         public void GetOrCreateNewDuplicateEntryShouldNotThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            Engine.Account.Account result1 = subject.GetByKey(Key1);
-            Engine.Account.Account result2 = subject.GetByKey(Key1);
+            Engine.BankAccount.Account result1 = subject.GetByKey(Key1);
+            Engine.BankAccount.Account result2 = subject.GetByKey(Key1);
 
             Assert.AreSame(result1, result2);
         }

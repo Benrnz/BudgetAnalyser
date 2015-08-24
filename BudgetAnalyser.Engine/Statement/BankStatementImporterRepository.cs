@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -51,7 +52,7 @@ namespace BudgetAnalyser.Engine.Statement
         ///     If the file cannot
         ///     be imported by any of this repositories importers a <see cref="NotSupportedException" /> will be thrown.
         /// </summary>
-        public async Task<StatementModel> ImportAsync(string fullFileName, Account.Account account)
+        public async Task<StatementModel> ImportAsync(string fullFileName, Account account)
         {
             foreach (IBankStatementImporter importer in this.importers)
             {
