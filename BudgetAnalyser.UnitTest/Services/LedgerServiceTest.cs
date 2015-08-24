@@ -89,14 +89,14 @@ namespace BudgetAnalyser.UnitTest.Services
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingInvalidLedgerBook_Reconcile_ShouldThrow()
+        public void Reconcile_ShouldThrow_GivenInvalidLedgerBook()
         {
             Act(new DateTime(2012, 02, 20));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData1AndNoStatementModelTransactions_Reconcile_ShouldThrow()
+        public void Reconcile_ShouldThrow_GivenTestData1AndNoStatementModelTransactions()
         {
             this.testDataStatement = new StatementModel(new FakeLogger());
             Act(new DateTime(2013, 10, 15));
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.UnitTest.Services
 
         [TestMethod]
         [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData1AndUnclassifiedTransactions_Reconcile_ShouldThrow()
+        public void Reconcile_ShouldThrow_GivenTestData1AndUnclassifiedTransactions()
         {
             Transaction aTransaction = this.testDataStatement.AllTransactions.Last();
             PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.UnitTest.Services
         }
 
         [TestMethod]
-        public void UsingTestData1AndUnclassifiedTransactionsOutsideReconPeriod_Reconcile_ShouldNotThrow()
+        public void Reconcile_ShouldNotThrow_GivenTestData1AndUnclassifiedTransactionsOutsideReconPeriod()
         {
             Transaction aTransaction = this.testDataStatement.AllTransactions.First();
             PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
@@ -123,21 +123,21 @@ namespace BudgetAnalyser.UnitTest.Services
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingTestData1WithDateEqualToExistingLine_Reconcile_ShouldThrow()
+        public void Reconcile_ShouldThrow_GivenTestData1WithDateEqualToExistingLine()
         {
             Act(new DateTime(2013, 08, 15));
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void UsingTestData1WithDateLessThanExistingLine_Reconcile_ShouldThrow()
+        public void Reconcile_ShouldThrow_GivenTestData1WithDateLessThanExistingLine()
         {
             Act(new DateTime(2013, 07, 15));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ValidationWarningException))]
-        public void UsingTestData5_Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement()
+        public void Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement_GivenTestData5()
         {
             ActOnTestData5(StatementModelTestData.TestData4());
             Assert.Fail();
