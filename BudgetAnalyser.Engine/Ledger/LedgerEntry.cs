@@ -136,13 +136,16 @@ namespace BudgetAnalyser.Engine.Ledger
                 // The balance does not need to be updated, it will always remain the same as the previous closing balance.
                 if (NetAmount < 0)
                 {
-                    var budgetAmountTransaction = newTransactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
+                    BudgetCreditLedgerTransaction budgetAmountTransaction = newTransactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
                     if (budgetAmountTransaction != null)
                     {
                         // Ledger is still overdrawn despite having a budgeted amount transfered into this ledger bucket. Create a zeroing transaction so the sum total of all txns = 0.
                         // This way the ledger closing balance will be equal to the previous ledger closing balance.
-                        var adjustmentAmount = -NetAmount;
-                        if (adjustmentAmount + Balance < budgetAmountTransaction.Amount) adjustmentAmount += budgetAmountTransaction.Amount - (adjustmentAmount + Balance);
+                        decimal adjustmentAmount = -NetAmount;
+                        if (adjustmentAmount + Balance < budgetAmountTransaction.Amount)
+                        {
+                            adjustmentAmount += budgetAmountTransaction.Amount - (adjustmentAmount + Balance);
+                        }
                         zeroingTransaction = new CreditLedgerTransaction
                         {
                             Date = reconciliationDate,

@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var book = this.ledgerBookFactory.CreateNew();
+            LedgerBook book = this.ledgerBookFactory.CreateNew();
             book.Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ');
             book.FileName = storageKey;
             book.Modified = DateTime.Now;

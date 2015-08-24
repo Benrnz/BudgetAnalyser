@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
@@ -15,7 +16,7 @@ namespace BudgetAnalyser.Engine.Statement
         public const string BucketPropertyName = "BudgetBucket";
         public const string DatePropertyName = "Date";
         private BudgetBucket budgetBucket;
-        private BankAccount.Account doNotUseAccount;
+        private Account doNotUseAccount;
         private decimal doNotUseAmount;
         private DateTime doNotUseDate;
         private string doNotUseDescription;
@@ -31,7 +32,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public BankAccount.Account Account
+        public Account Account
         {
             get { return this.doNotUseAccount; }
             set

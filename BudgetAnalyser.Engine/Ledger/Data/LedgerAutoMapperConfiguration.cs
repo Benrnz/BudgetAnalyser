@@ -2,8 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
@@ -13,9 +13,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     {
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILedgerBookFactory ledgerBookFactory;
         private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly ILogger logger;
-        private readonly ILedgerBookFactory ledgerBookFactory;
 
         public LedgerAutoMapperConfiguration(
             [NotNull] ILedgerTransactionFactory ledgerTransactionFactory,
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             Mapper.CreateMap<BankBalance, BankBalanceDto>()
                 .ForMember(dto => dto.Account, m => m.MapFrom(bankBalance => bankBalance.Account.Name));
 
-            Mapper.CreateMap<string, BankAccount.Account>()
+            Mapper.CreateMap<string, Account>()
                 .ConvertUsing(name => this.accountTypeRepo.GetByKey(name));
 
             Mapper.CreateMap<BankBalanceDto, BankBalance>()

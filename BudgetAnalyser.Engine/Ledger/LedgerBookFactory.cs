@@ -6,8 +6,8 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC]
     internal class LedgerBookFactory : ILedgerBookFactory
     {
-        private readonly IReconciliationBuilder reconciliationBuilder;
         private readonly ILogger logger;
+        private readonly IReconciliationBuilder reconciliationBuilder;
 
         public LedgerBookFactory([NotNull] IReconciliationBuilder reconciliationBuilder, [NotNull] ILogger logger)
         {
