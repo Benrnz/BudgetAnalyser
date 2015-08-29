@@ -112,22 +112,16 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     ledger book.
         /// </param>
         /// <param name="budget">The current budget.</param>
-        /// <param name="toDoList">
-        ///     The task list that will have tasks added to it to remind the user to perform transfers and
-        ///     payments etc.
-        /// </param>
         /// <param name="statement">The currently loaded statement.</param>
-        /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
-        internal virtual LedgerEntryLine Reconcile(
+        internal virtual ReconciliationResult Reconcile(
             DateTime reconciliationDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
-            ToDoCollection toDoList,
             StatementModel statement)
         {
-            LedgerEntryLine newLine = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement, toDoList);
-            this.reconciliations.Insert(0, newLine);
-            return newLine;
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement);
+            this.reconciliations.Insert(0, newRecon.Reconciliation);
+            return newRecon;
         }
 
         /// <summary>

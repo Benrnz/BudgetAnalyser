@@ -48,6 +48,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
             Date = reconciliationDate;
             this.bankBalancesList = bankBalances.ToList();
+            if (this.bankBalancesList.None())
+            {
+                throw new ArgumentException("There are no bank balances in the collection provided.", nameof(bankBalances));
+            }
         }
 
         /// <summary>

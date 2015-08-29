@@ -148,10 +148,13 @@
     <Compile Include="Ledger\ILedgerBookFactory.cs" />
     <Compile Include="Ledger\IReconciliationBuilder.cs" />
     <Compile Include="Ledger\IReconciliationConsistency.cs" />
+    <Compile Include="Ledger\IReconciliationManager.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
     <Compile Include="Ledger\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
+    <Compile Include="Ledger\ReconciliationManager.cs" />
+    <Compile Include="Ledger\ReconciliationResult.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />

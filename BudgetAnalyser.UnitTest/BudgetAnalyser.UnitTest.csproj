@@ -223,7 +223,7 @@
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />
-    <Compile Include="Services\LedgerServiceTest.cs" />
+    <Compile Include="Services\ReconciliationManagerTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />

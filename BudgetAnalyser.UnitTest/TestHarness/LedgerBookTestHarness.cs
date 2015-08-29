@@ -18,14 +18,13 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
         }
 
-        public Func<LedgerEntryLine> ReconcileOverride { get; set; }
+        public Func<ReconciliationResult> ReconcileOverride { get; set; }
 
-        internal override LedgerEntryLine Reconcile(
+        internal override ReconciliationResult Reconcile(
             DateTime reconciliationDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
-            ToDoCollection toDoList = null,
-            StatementModel statement = null)
+            StatementModel statement)
         {
             return ReconcileOverride?.Invoke();
         }
