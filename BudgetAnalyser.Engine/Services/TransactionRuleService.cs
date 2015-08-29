@@ -147,6 +147,7 @@ namespace BudgetAnalyser.Engine.Services
         public bool Match(IEnumerable<Transaction> transactions)
         {
             bool matchesMade = this.matchmaker.Match(transactions, MatchingRules);
+            this.logger.LogInfo(l => "TransactionRuleService: Removing any SingleUseRules that have been used.");
             foreach (SingleUseMatchingRule rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
             {
                 if (rule.MatchCount > 0)

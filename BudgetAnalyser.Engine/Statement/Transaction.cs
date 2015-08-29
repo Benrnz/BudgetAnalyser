@@ -12,9 +12,6 @@ namespace BudgetAnalyser.Engine.Statement
         Justification = "IComparable is implemented for sorting only. One transactions is not considered < or > than another. Also Equals is not overiden.")]
     public class Transaction : INotifyPropertyChanged, IComparable, ICloneable
     {
-        public const string AmountPropertyName = "Amount";
-        public const string BucketPropertyName = "BudgetBucket";
-        public const string DatePropertyName = "Date";
         private BudgetBucket budgetBucket;
         private Account doNotUseAccount;
         private decimal doNotUseAmount;

@@ -344,9 +344,9 @@ namespace BudgetAnalyser.Engine.Statement
         {
             switch (propertyChangedEventArgs.PropertyName)
             {
-                case Transaction.AmountPropertyName:
-                case Transaction.BucketPropertyName:
-                case Transaction.DatePropertyName:
+                case nameof(Transaction.Amount):
+                case nameof(Transaction.BudgetBucket):
+                case nameof(Transaction.Date):
                     this.changeHash = Guid.NewGuid();
                     break;
             }

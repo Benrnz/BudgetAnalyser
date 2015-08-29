@@ -301,7 +301,7 @@ namespace BudgetAnalyser.Engine.Matching
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code, Description, Amount);
+            return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code, Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
         }
 
         [NotifyPropertyChangedInvocator]
