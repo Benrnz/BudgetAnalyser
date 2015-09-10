@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             var collection = new BudgetCollectionDto
             {
                 Budgets = new List<BudgetModelDto> { testData1, testData2 },
-                FileName = "Foo.xml"
+                StorageKey = "Foo.xml"
             };
 
             string serialised = XamlServices.Save(collection);

@@ -17,6 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal const string MatchedPrefix = "Matched ";
         private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+" };
         private readonly ILogger logger;
+        private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
         private LedgerEntryLine newReconciliationLine;
 
         public ReconciliationBuilder([NotNull] ILogger logger)
@@ -31,12 +32,11 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public LedgerEntryLine CreateNewMonthlyReconciliation(
+        public ReconciliationResult CreateNewMonthlyReconciliation(
             DateTime reconciliationDateExclusive,
             IEnumerable<BankBalance> bankBalances,
             BudgetModel budget,
-            StatementModel statement,
-            ToDoCollection toDoList)
+            StatementModel statement)
         {
             if (bankBalances == null)
             {
@@ -53,11 +53,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(statement));
             }
 
-            if (toDoList == null)
-            {
-                throw new ArgumentNullException(nameof(toDoList));
-            }
-
             if (LedgerBook == null)
             {
                 throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");
@@ -66,11 +61,11 @@ namespace BudgetAnalyser.Engine.Ledger
             try
             {
                 this.newReconciliationLine = new LedgerEntryLine(reconciliationDateExclusive, bankBalances);
-                AddNew(budget, statement, CalculateDateForReconcile(LedgerBook, reconciliationDateExclusive), toDoList);
+                AddNew(budget, statement, CalculateDateForReconcile(LedgerBook, reconciliationDateExclusive));
 
-                CreateToDoForAnyOverdrawnSurplusBalance(toDoList);
+                CreateToDoForAnyOverdrawnSurplusBalance();
 
-                return this.newReconciliationLine;
+                return new ReconciliationResult { Reconciliation = this.newReconciliationLine, Tasks = this.toDoList };
             }
             finally
             {
@@ -204,7 +199,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return reference.ToString().Substring(0, 7);
         }
 
-        private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate, ToDoCollection toDoList)
+        private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
         {
             var adjustmentsMade = false;
             foreach (Transaction futureTransaction in statement.AllTransactions
@@ -217,7 +212,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (adjustmentsMade)
             {
-                toDoList.Add(new ToDoTask("Check auto-generated balance adjustments for future transactions.", true));
+                this.toDoList.Add(new ToDoTask("Check auto-generated balance adjustments for future transactions.", true));
             }
         }
 
@@ -233,15 +228,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The date of the previous ledger line. This is used to include transactions from the
         ///     Statement starting from this date and including this date.
         /// </param>
-        /// <param name="toDoList">
-        ///     The task list that will have tasks added to it to remind the user to perform transfers and
-        ///     payments etc.
-        /// </param>
         private void AddNew(
             BudgetModel budget,
             StatementModel statement,
-            DateTime startDateIncl,
-            ToDoCollection toDoList)
+            DateTime startDateIncl)
         {
             if (!this.newReconciliationLine.IsNew)
             {
@@ -274,9 +264,9 @@ namespace BudgetAnalyser.Engine.Ledger
                 }
 
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(budget, ledgerBucket, reconciliationDate, toDoList);
+                List<LedgerTransaction> transactions = IncludeBudgetedAmount(budget, ledgerBucket, reconciliationDate);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions, toDoList);
+                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
                 newEntry.SetTransactionsForReconciliation(transactions, reconciliationDate);
 
                 entries.Add(newEntry);
@@ -284,13 +274,13 @@ namespace BudgetAnalyser.Engine.Ledger
 
             this.newReconciliationLine.SetNewLedgerEntries(entries);
 
-            CreateBalanceAdjustmentTasksIfRequired(toDoList);
+            CreateBalanceAdjustmentTasksIfRequired();
             if (statement != null)
             {
-                AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate, toDoList);
+                AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate);
             }
 
-            CreateTasksToTransferFundsIfPaidFromDifferentAccount(filteredStatementTransactions, toDoList);
+            CreateTasksToTransferFundsIfPaidFromDifferentAccount(filteredStatementTransactions);
         }
 
         /// <summary>
@@ -299,8 +289,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private void AutoMatchTransactionsAlreadyInPreviousPeriod(
             List<Transaction> transactions,
             LedgerEntry previousLedgerEntry,
-            List<LedgerTransaction> newLedgerTransactions,
-            ToDoCollection toDoList)
+            List<LedgerTransaction> newLedgerTransactions)
         {
             List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
             var checkMatchedTxns = new List<LedgerTransaction>();
@@ -347,7 +336,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 IEnumerable<LedgerTransaction> unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
                 foreach (LedgerTransaction txn in unmatchedTxns)
                 {
-                    toDoList.Add(
+                    this.toDoList.Add(
                         new ToDoTask(
                             string.Format(
                                 CultureInfo.CurrentCulture,
@@ -361,9 +350,9 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private void CreateBalanceAdjustmentTasksIfRequired(ToDoCollection toDoList)
+        private void CreateBalanceAdjustmentTasksIfRequired()
         {
-            List<TransferTask> transferTasks = toDoList.OfType<TransferTask>().ToList();
+            List<TransferTask> transferTasks = this.toDoList.OfType<TransferTask>().ToList();
             foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
@@ -383,7 +372,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private void CreateTasksToTransferFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions, ToDoCollection toDoList)
+        private void CreateTasksToTransferFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions)
         {
             var syncRoot = new object();
             Dictionary<BudgetBucket, Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
@@ -438,7 +427,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 if (matchingTransferTransaction == null)
                 {
                     // No matching transaction exists - therefore the transaction is a payment.
-                    toDoList.Add(transferTask);
+                    this.toDoList.Add(transferTask);
                 }
             }
         }
@@ -447,11 +436,11 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     An overdrawn surplus balance is not valid, and indicates that one or more ledger buckets have been overdrawn.  A
         ///     transfer probably needs to be manually done by the user.
         /// </summary>
-        private void CreateToDoForAnyOverdrawnSurplusBalance(ToDoCollection toDoList)
+        private void CreateToDoForAnyOverdrawnSurplusBalance()
         {
             foreach (BankBalance surplusBalance in this.newReconciliationLine.SurplusBalances.Where(s => s.Balance < 0))
             {
-                toDoList.Add(
+                this.toDoList.Add(
                     new ToDoTask(
                         string.Format(
                             CultureInfo.CurrentCulture,
@@ -462,7 +451,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate, ToDoCollection toDoList)
+        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
         {
             Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
@@ -490,7 +479,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
                     Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
-                    toDoList.Add(
+                    this.toDoList.Add(
                         new TransferTask(
                             string.Format(
                                 CultureInfo.CurrentCulture,

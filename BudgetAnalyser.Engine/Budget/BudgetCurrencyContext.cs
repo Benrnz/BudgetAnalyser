@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string FileName => BudgetCollection.FileName;
+        public string FileName => BudgetCollection.StorageKey;
         public virtual BudgetModel Model { get; }
     }
 }

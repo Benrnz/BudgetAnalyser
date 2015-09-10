@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// </summary>
         public double Checksum { get; set; }
 
-        public string FileName { get; set; }
+        public string StorageKey { get; set; }
 
         /// <summary>
         ///     The ledger to Bucket mapping for when a new reconciliation creates a new instances of LedgerEntry's.

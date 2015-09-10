@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
@@ -18,29 +17,29 @@ using Rees.TestUtilities;
 namespace BudgetAnalyser.UnitTest.Services
 {
     [TestClass]
-    public class LedgerServiceTest
+    public class ReconciliationManagerTest
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
 
         private IBudgetBucketRepository bucketRepo;
-        private Mock<ILedgerBookRepository> mockLedgerRepo;
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
-        private LedgerService subject;
+        private ReconciliationManager subject;
         private IBudgetCurrencyContext testDataBudgetContext;
         private BudgetCollection testDataBudgets;
 
         private LedgerBook testDataLedgerBook;
         private StatementModel testDataStatement;
-        private ToDoCollection testDataToDoList;
+        private IList<ToDoTask> testDataToDoList;
+        private IEnumerable<BankBalance> currentBankBalances;
 
         [TestMethod]
         public void MonthEndReconciliation_ShouldCreateSingleUseMatchingRulesForTransferToDos()
         {
             // Artifically create a transfer to do task when the reconciliation method is invoked on the LedgerBook.
             // Remember: the subject here is the LedgerService not the LedgerBook.
-            ((LedgerBookTestHarness)this.subject.LedgerBook).ReconcileOverride = () =>
+            ((LedgerBookTestHarness)this.testDataLedgerBook).ReconcileOverride = () =>
             {
                 this.testDataToDoList.Add(
                     new TransferTask(string.Empty, true, true)
@@ -49,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.Services
                         Amount = 12.22M,
                         BucketCode = StatementModelTestData.CarMtcBucket.Code
                     });
-                return new LedgerEntryLine(ReconcileDate, new List<BankBalance>());
+                return new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, this.currentBankBalances), Tasks = this.testDataToDoList };
             };
 
             // Expect a call to the Rule service to create the single use rule for the transfer.
@@ -65,24 +64,16 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestInitialize]
         public void TestIntialise()
         {
-            this.mockLedgerRepo = new Mock<ILedgerBookRepository>();
             this.mockRuleService = new Mock<ITransactionRuleService>(MockBehavior.Strict);
             this.mockReconciliationConsistency = new Mock<IReconciliationConsistency>();
             this.bucketRepo = new BucketBucketRepoAlwaysFind();
             this.testDataBudgets = BudgetModelTestData.CreateCollectionWith1And2();
             this.testDataBudgetContext = new BudgetCurrencyContext(this.testDataBudgets, this.testDataBudgets.CurrentActiveBudget);
             this.testDataStatement = StatementModelTestData.TestData5();
-            this.testDataToDoList = new ToDoCollection();
-            this.subject = new LedgerService(this.mockLedgerRepo.Object, new InMemoryAccountTypeRepository(), new FakeLogger(), this.mockRuleService.Object, this.mockReconciliationConsistency.Object);
+            this.testDataToDoList = new List<ToDoTask>();
+            this.subject = new ReconciliationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
 
-            // Inject the preconfigured LedgerBook into the Ledger Service.
-            PrivateAccessor.SetProperty(
-                this.subject,
-                nameof(this.subject.LedgerBook),
-                LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object)));
-
-            // Inject the preconfigured to do list into the Ledger Service.
-            PrivateAccessor.SetProperty(this.subject, nameof(this.subject.ReconciliationToDoList), this.testDataToDoList);
+            this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
 
             this.mockReconciliationConsistency.Setup(m => m.EnsureConsistency(It.IsAny<LedgerBook>())).Returns(new Mock<IDisposable>().Object);
         }
@@ -98,7 +89,7 @@ namespace BudgetAnalyser.UnitTest.Services
         [ExpectedException(typeof(ValidationWarningException))]
         public void Reconcile_ShouldThrow_GivenTestData1AndNoStatementModelTransactions()
         {
-            this.testDataStatement = new StatementModel(new FakeLogger());
+            this.testDataStatement = new StatementModel(new FakeLogger()) { StorageKey = "C:\\Foo.xml" };
             Act(new DateTime(2013, 10, 15));
         }
 
@@ -145,24 +136,25 @@ namespace BudgetAnalyser.UnitTest.Services
 
         private void Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
         {
-            IEnumerable<BankBalance> balances = bankBalances ?? NextReconcileBankBalance;
+            this.currentBankBalances = bankBalances ?? NextReconcileBankBalance;
 
-            var ledgerBookTestHarness = (LedgerBookTestHarness)this.subject.LedgerBook;
+            var ledgerBookTestHarness = (LedgerBookTestHarness)this.testDataLedgerBook;
             if (ledgerBookTestHarness.ReconcileOverride == null)
             {
-                ledgerBookTestHarness.ReconcileOverride = () => new LedgerEntryLine(ReconcileDate, balances);
+                ledgerBookTestHarness.ReconcileOverride = () => new ReconciliationResult { Reconciliation = new LedgerEntryLine(ReconcileDate, this.currentBankBalances), Tasks = this.testDataToDoList };
             }
 
             this.subject.MonthEndReconciliation(
+                this.testDataLedgerBook,
                 reconciliationDate ?? ReconcileDate,
-                balances,
+                this.currentBankBalances,
                 this.testDataBudgetContext,
                 this.testDataStatement);
         }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)
         {
-            this.testDataLedgerBook = LedgerBookTestData.TestData5();
+            this.testDataLedgerBook = LedgerBookTestData.TestData5(() => new LedgerBookTestHarness(new Mock<IReconciliationBuilder>().Object));
             this.testDataBudgets = new BudgetCollection(new[] { BudgetModelTestData.CreateTestData5() });
             this.testDataBudgetContext = new BudgetCurrencyContext(this.testDataBudgets, this.testDataBudgets.CurrentActiveBudget);
             this.testDataStatement = statementModelTestData ?? StatementModelTestData.TestData5();

@@ -3,7 +3,7 @@ THIS FILE MUST BE KEPT IN SYNC WITH BudgetAnalyser.UnitTest.TestData.LedgerBookT
 It is used in conjunction with that C# test class for unit testing.
 -->
 <LedgerBookDto Checksum="2728.88"
-               FileName=""
+               StorageKey=""
                Modified="2013-12-29T15:31:03.5480436+13:00"
                Name="Demo LedgerBook"
                xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine"

@@ -207,7 +207,7 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        public string TruncatedFileName => Budgets.FileName.TruncateLeft(100, true);
+        public string TruncatedFileName => Budgets.StorageKey.TruncateLeft(100, true);
 
         protected virtual string PromptUserForLastModifiedComment()
         {

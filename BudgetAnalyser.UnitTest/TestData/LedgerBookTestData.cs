@@ -24,7 +24,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Name = "Test Data 1 Book",
                 Modified = new DateTime(2013, 12, 16),
-                FileName = "C:\\Folder\\book1.xml"
+                StorageKey = "C:\\Folder\\book1.xml"
             };
 
             LedgerEntryLine line = CreateLine(new DateTime(2013, 06, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2500) }, "Lorem ipsum");
@@ -133,7 +133,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Name = "Test Data 2 Book",
                 Modified = new DateTime(2013, 12, 16),
-                FileName = "C:\\Folder\\book1.xml"
+                StorageKey = "C:\\Folder\\book1.xml"
             };
 
             var list = new List<LedgerEntryLine>
@@ -250,7 +250,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Name = "Smith Budget 2014",
                 Modified = new DateTime(2013, 12, 22),
-                FileName = @"C:\Foo\SmithLedger2014.xml"
+                StorageKey = @"C:\Foo\SmithLedger2014.xml"
             };
 
             var list = new List<LedgerEntryLine>
@@ -342,7 +342,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Name = "Test Data 4 Book",
                 Modified = new DateTime(2013, 12, 16),
-                FileName = "C:\\Folder\\book1.xml"
+                StorageKey = "C:\\Folder\\book1.xml"
             };
 
             var list = new List<LedgerEntryLine>
@@ -475,7 +475,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             }
             book.Name = "Test Data 5 Book";
             book.Modified = new DateTime(2013, 12, 16);
-            book.FileName = "C:\\Folder\\book5.xml";
+            book.StorageKey = "C:\\Folder\\book5.xml";
 
             var list = new List<LedgerEntryLine>
             {

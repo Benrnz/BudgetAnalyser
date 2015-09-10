@@ -23,11 +23,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Creates a new monthly reconciliation the the given <see cref="LedgerBook" /> for the current month.
         /// </summary>
         /// <returns>A newly created and populated <see cref="LedgerEntryLine" />.</returns>
-        LedgerEntryLine CreateNewMonthlyReconciliation(
+        ReconciliationResult CreateNewMonthlyReconciliation(
             DateTime reconciliationDateExclusive,
             [NotNull] IEnumerable<BankBalance> bankBalances,
             [NotNull] BudgetModel budget,
-            [NotNull] StatementModel statement,
-            [NotNull] ToDoCollection toDoList);
+            [NotNull] StatementModel statement);
     }
 }

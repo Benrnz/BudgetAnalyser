@@ -17,7 +17,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void ShouldMapFileName()
         {
-            Assert.AreEqual(@"C:\Folder\FooBook3.xml", Result.FileName);
+            Assert.AreEqual(@"C:\Folder\FooBook3.xml", Result.StorageKey);
         }
 
         [TestMethod]

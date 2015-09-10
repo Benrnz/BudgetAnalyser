@@ -95,8 +95,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void ShouldMapFileName()
         {
             LedgerBook result = ArrangeAndAct();
-            Assert.AreEqual(TestData.FileName, result.FileName);
-            Assert.IsNotNull(result.FileName);
+            Assert.AreEqual(TestData.StorageKey, result.StorageKey);
+            Assert.IsNotNull(result.StorageKey);
         }
 
         [TestMethod]

@@ -71,7 +71,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void ShouldMapFileName()
         {
-            Assert.AreEqual(TestData.FileName, Result.FileName);
+            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
         }
 
         [TestMethod]

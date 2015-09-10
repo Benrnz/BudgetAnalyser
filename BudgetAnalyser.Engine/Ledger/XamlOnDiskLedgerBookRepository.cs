@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             LedgerBook book = this.ledgerBookFactory.CreateNew();
             book.Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ');
-            book.FileName = storageKey;
+            book.StorageKey = storageKey;
             book.Modified = DateTime.Now;
 
             await SaveAsync(book, storageKey);
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new DataFormatException(string.Format(CultureInfo.CurrentCulture, "The specified file {0} is not of type Data-Ledger-Book", storageKey));
             }
 
-            dataEntity.FileName = storageKey;
+            dataEntity.StorageKey = storageKey;
             LedgerBook book = this.dataToDomainMapper.Map(dataEntity);
 
             var messages = new StringBuilder();
@@ -134,8 +134,8 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
-            book.FileName = storageKey;
-            dataEntity.FileName = storageKey;
+            book.StorageKey = storageKey;
+            dataEntity.StorageKey = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
 
             await SaveDtoToDiskAsync(dataEntity);
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(dataEntity));
             }
 
-            await WriteToDiskAsync(dataEntity.FileName, Serialise(dataEntity));
+            await WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity));
         }
 
         protected virtual string Serialise(LedgerBookDto dataEntity)

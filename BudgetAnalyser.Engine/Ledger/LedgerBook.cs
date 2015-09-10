@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Ledger
             this.reconciliations = new List<LedgerEntryLine>();
         }
 
-        public string FileName { get; internal set; }
+        public string StorageKey { get; internal set; }
 
         /// <summary>
         ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" />
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(validationMessages));
             }
 
-            if (string.IsNullOrWhiteSpace(FileName))
+            if (string.IsNullOrWhiteSpace(StorageKey))
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture, "A ledger book must have a file name.");
                 return false;
@@ -112,22 +112,16 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     ledger book.
         /// </param>
         /// <param name="budget">The current budget.</param>
-        /// <param name="toDoList">
-        ///     The task list that will have tasks added to it to remind the user to perform transfers and
-        ///     payments etc.
-        /// </param>
         /// <param name="statement">The currently loaded statement.</param>
-        /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
-        internal virtual LedgerEntryLine Reconcile(
+        internal virtual ReconciliationResult Reconcile(
             DateTime reconciliationDate,
             IEnumerable<BankBalance> currentBankBalances,
             BudgetModel budget,
-            ToDoCollection toDoList,
             StatementModel statement)
         {
-            LedgerEntryLine newLine = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement, toDoList);
-            this.reconciliations.Insert(0, newLine);
-            return newLine;
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement);
+            this.reconciliations.Insert(0, newRecon.Reconciliation);
+            return newRecon;
         }
 
         /// <summary>
