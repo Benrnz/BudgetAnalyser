@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Ledger
             this.reconciliations = new List<LedgerEntryLine>();
         }
 
-        public string FileName { get; internal set; }
+        public string StorageKey { get; internal set; }
 
         /// <summary>
         ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" />
@@ -60,7 +60,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(validationMessages));
             }
 
-            if (string.IsNullOrWhiteSpace(FileName))
+            if (string.IsNullOrWhiteSpace(StorageKey))
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture, "A ledger book must have a file name.");
                 return false;

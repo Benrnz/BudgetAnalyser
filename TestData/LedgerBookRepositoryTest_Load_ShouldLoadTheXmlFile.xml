@@ -1,5 +1,5 @@
 ﻿<LedgerBookDto Checksum="8435.06"
-               FileName="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml"
+               StorageKey="C:\Development\Brees_Unfuddle\Rees Budget Accounts\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml"
                Modified="2013-12-16" Name="Test Data 2 Book"
                xmlns="clr-namespace:BudgetAnalyser.Engine.Ledger.Data;assembly=BudgetAnalyser.Engine"
                xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"

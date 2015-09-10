@@ -13,7 +13,7 @@ namespace BudgetAnalyser.UnitTest.Helper
         public static void Output(this LedgerBook book, bool outputTransactions = false)
         {
             Console.WriteLine("Name: {0}", book.Name);
-            Console.WriteLine("Filename: {0}", book.FileName);
+            Console.WriteLine("Filename: {0}", book.StorageKey);
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
             var ledgerOrder = new Dictionary<BudgetBucket, int>();
@@ -77,7 +77,7 @@ namespace BudgetAnalyser.UnitTest.Helper
         public static void Output(this LedgerBookDto book, bool outputTransactions = false)
         {
             Console.WriteLine("Name: {0}", book.Name);
-            Console.WriteLine("Filename: {0}", book.FileName);
+            Console.WriteLine("Filename: {0}", book.StorageKey);
             Console.WriteLine("Modified: {0}", book.Modified);
             Console.Write("Date        ");
             foreach (string ledger in book.Reconciliations.SelectMany(l => l.Entries.Select(e => e.BucketCode)))

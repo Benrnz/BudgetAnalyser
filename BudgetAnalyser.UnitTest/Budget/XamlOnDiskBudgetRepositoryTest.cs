@@ -25,7 +25,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
             BudgetCollection collection = await subject.CreateNewAndSaveAsync(filename);
-            Assert.AreEqual(filename, collection.FileName);
+            Assert.AreEqual(filename, collection.StorageKey);
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName);
 
-            Assert.AreEqual(TestDataConstants.BudgetCollectionTestDataFileName, collection.FileName);
+            Assert.AreEqual(TestDataConstants.BudgetCollectionTestDataFileName, collection.StorageKey);
         }
 
         [TestMethod]
@@ -187,7 +187,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName);
 
-            Assert.AreEqual(TestDataConstants.DemoBudgetFileName, collection.FileName);
+            Assert.AreEqual(TestDataConstants.DemoBudgetFileName, collection.StorageKey);
             Assert.AreEqual(1, collection.Count);
         }
 
@@ -199,7 +199,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
             BudgetCollection collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName);
 
-            Assert.AreEqual(TestDataConstants.EmptyBudgetFileName, collection.FileName);
+            Assert.AreEqual(TestDataConstants.EmptyBudgetFileName, collection.StorageKey);
             Assert.AreEqual(1, collection.Count);
         }
 

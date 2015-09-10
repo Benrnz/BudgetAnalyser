@@ -26,7 +26,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Modified = new DateTime(2013, 12, 14),
                 Name = "Test Budget Ledger Book 1",
-                FileName = "C:\\Folder\\FooBook.xml"
+                StorageKey = "C:\\Folder\\FooBook.xml"
             };
 
             var lines = new List<LedgerEntryLineDto>();
@@ -208,7 +208,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Modified = new DateTime(2013, 12, 14),
                 Name = "Test Budget Ledger Book 2",
-                FileName = "C:\\Folder\\FooBook2.xml"
+                StorageKey = "C:\\Folder\\FooBook2.xml"
             };
 
             var lines = new List<LedgerEntryLineDto>();
@@ -394,7 +394,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 Modified = new DateTime(2013, 12, 14),
                 Name = "Test Budget Ledger Book 3",
-                FileName = "C:\\Folder\\FooBook3.xml"
+                StorageKey = "C:\\Folder\\FooBook3.xml"
             };
 
             var lines = new List<LedgerEntryLineDto>();

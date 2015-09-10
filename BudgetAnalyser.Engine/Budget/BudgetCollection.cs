@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string FileName { get; set; }
+        public string StorageKey { get; set; }
         internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
         public void Add([NotNull] BudgetModel item)

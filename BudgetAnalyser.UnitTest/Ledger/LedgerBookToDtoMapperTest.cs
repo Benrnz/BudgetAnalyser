@@ -15,7 +15,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void FilenameShouldBeMapped()
         {
             LedgerBookDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.FileName, result.FileName);
+            Assert.AreEqual(TestData.StorageKey, result.StorageKey);
         }
 
         [TestMethod]

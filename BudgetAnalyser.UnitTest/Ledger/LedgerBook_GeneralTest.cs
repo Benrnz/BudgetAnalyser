@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             {
                 Name = "Foo",
                 Modified = new DateTime(2011, 12, 4),
-                FileName = @"C:\TestLedgerBook.xml"
+                StorageKey = @"C:\TestLedgerBook.xml"
             };
             LedgerEntryLine result = this.subject.UnlockMostRecentLine();
 

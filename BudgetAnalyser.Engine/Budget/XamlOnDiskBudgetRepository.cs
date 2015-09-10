@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             this.currentBudgetCollection = new BudgetCollection(new[] { newBudget })
             {
-                FileName = storageKey
+                StorageKey = storageKey
             };
 
             this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetBucketRepository.Initialise(correctDataFormat.Buckets);
 
             BudgetCollection budgetCollection = this.toDomainMapper.Map(correctDataFormat);
-            budgetCollection.FileName = storageKey;
+            budgetCollection.StorageKey = storageKey;
             this.currentBudgetCollection = budgetCollection;
             return budgetCollection;
         }
@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Engine.Budget
             BudgetCollectionDto dataFormat = this.toDtoMapper.Map(this.currentBudgetCollection);
 
             string serialised = Serialise(dataFormat);
-            await WriteToDisk(dataFormat.FileName, serialised);
+            await WriteToDisk(dataFormat.StorageKey, serialised);
         }
 
         protected virtual bool FileExists(string fileName)

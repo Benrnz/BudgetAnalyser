@@ -230,7 +230,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
             }
 
-            await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.FileName);
+            await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.StorageKey);
             EventHandler handler = Saved;
             handler?.Invoke(this, EventArgs.Empty);
         }

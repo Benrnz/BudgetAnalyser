@@ -131,7 +131,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Reconcile_ShouldInsertLastestInFront_GivenTestData1()
         {
             ReconciliationResult result = Act();
-            Assert.AreEqual(result, this.subject.Reconciliations.First());
+            Assert.AreEqual(this.subject.Reconciliations.First(), result.Reconciliation);
         }
 
         [TestMethod]

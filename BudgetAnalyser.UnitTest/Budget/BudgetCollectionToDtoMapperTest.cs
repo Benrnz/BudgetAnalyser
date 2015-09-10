@@ -21,7 +21,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void EffectiveFromShouldBeMapped()
         {
             BudgetCollectionDto result = ArrangeAndAct();
-            Assert.AreEqual(TestData.FileName, result.FileName);
+            Assert.AreEqual(TestData.StorageKey, result.StorageKey);
         }
 
         [TestMethod]

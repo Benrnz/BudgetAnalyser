@@ -35,7 +35,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerBook book = await subject.LoadAsync(TestDataConstants.DemoLedgerBookFileName);
             predeserialiseDto.Output(true);
 
-            await subject.SaveAsync(book, book.FileName);
+            await subject.SaveAsync(book, book.StorageKey);
 
             reserialisedDto.Output(true);
 

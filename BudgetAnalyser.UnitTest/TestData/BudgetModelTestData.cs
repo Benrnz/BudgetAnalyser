@@ -29,7 +29,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     CreateTestData1(),
                     CreateTestData2()
                 });
-            collection.FileName = @"C:\Temp\Foo.xaml";
+            collection.StorageKey = @"C:\Temp\Foo.xaml";
             return collection;
         }
 
