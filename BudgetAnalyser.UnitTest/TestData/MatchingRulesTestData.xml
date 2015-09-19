@@ -24,7 +24,7 @@
                        Description="2Degrees Ness" LastMatch="2014-05-30T18:34:42.7482083+12:00" MatchCount="9"
                        RuleId="ca9f10a0-6a7d-4604-a743-e52130675d2b" />
   <bem:MatchingRuleDto Amount="{x:Null}" Reference1="{x:Null}" Reference2="{x:Null}" Reference3="{x:Null}"
-                       TransactionType="{x:Null}" BucketCode="JOURNAL" Created="2014-04-23T17:37:26.3698596+12:00"
+                       TransactionType="{x:Null}" BucketCode="PAYCC" Created="2014-04-23T17:37:26.3698596+12:00"
                        Description="4367-****-****-3221" LastMatch="2014-05-30T18:34:42.7462225+12:00" MatchCount="10"
                        RuleId="a8153c89-aeb8-4955-9ed3-6a847fe45f39" />
   <bem:MatchingRuleDto Amount="{x:Null}" Reference1="{x:Null}" Reference2="{x:Null}" Reference3="{x:Null}"

@@ -5,7 +5,7 @@
         SpentMonthlyExpense,
         SavedUpForExpense,
         Surplus,
-        Journal,
+        PayCreditCard,
         Income,
         SavingsCommitment,
         FixedBudgetProject

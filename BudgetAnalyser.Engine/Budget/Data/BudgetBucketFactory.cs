@@ -12,9 +12,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
             {
                 case BucketDtoType.Income:
                     return new IncomeBudgetBucket();
-                case BucketDtoType.Journal:
+                case BucketDtoType.PayCreditCard:
                 case BucketDtoType.Surplus:
-                    throw new NotSupportedException("You may not create multiple instances of the Journal or Surplus buckets.");
+                    throw new NotSupportedException("You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
                 case BucketDtoType.SavedUpForExpense:
                     return new SavedUpForExpenseBucket();
                 case BucketDtoType.SavingsCommitment:
@@ -50,9 +50,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 return BucketDtoType.Surplus;
             }
 
-            if (bucket is JournalBucket)
+            if (bucket is PayCreditCardBucket)
             {
-                return BucketDtoType.Journal;
+                return BucketDtoType.PayCreditCard;
             }
 
             if (bucket is SavedUpForExpenseBucket)

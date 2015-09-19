@@ -194,7 +194,7 @@
     <Compile Include="Budget\IBudgetRepository.cs" />
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
-    <Compile Include="Budget\JournalBucket.cs" />
+    <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />

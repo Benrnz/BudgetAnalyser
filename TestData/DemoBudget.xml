@@ -13,8 +13,8 @@
                        Type="Income" />
       <BudgetBucketDto Active="True" Code="INSHOME" Description="Home and Contents Insurance"
                        Type="SpentMonthlyExpense" />
-      <BudgetBucketDto Active="True" Code="JOURNAL" Description="A special bucket to allocate internal transfers."
-                       Type="Journal" />
+      <BudgetBucketDto Active="True" Code="PAYCC" Description="A special bucket to allocate internal transfers."
+                       Type="PayCreditCard" />
       <BudgetBucketDto Active="True" Code="RENT" Description="Rent for my bachelor pad" Type="SpentMonthlyExpense" />
       <BudgetBucketDto Active="True" Code="SALARY" Description="Salary from Lawn Mowing business" Type="Income" />
       <BudgetBucketDto Active="True" Code="SURPLUS"

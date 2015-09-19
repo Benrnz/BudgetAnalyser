@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var adjustmentsMade = false;
             foreach (Transaction futureTransaction in statement.AllTransactions
-                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is JournalBucket)))
+                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is PayCreditCardBucket)))
             {
                 adjustmentsMade = true;
                 this.newReconciliationLine.BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
@@ -381,7 +381,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             List<Transaction> debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
-            // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
+            // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transfered from the stored-in account.
             var proposedTasks = new List<Tuple<Transaction, TransferTask>>();
             Parallel.ForEach(
                 debitAccountTransactionsOnly.Where(t => t.Amount < 0).ToList(),

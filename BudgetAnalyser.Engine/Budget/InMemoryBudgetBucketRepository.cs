@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Budget
             lock (this.syncRoot)
             {
                 this.lookupTable = buckets
-                    .Where(dto => dto.Type != BucketDtoType.Journal && dto.Type != BucketDtoType.Surplus)
+                    .Where(dto => dto.Type != BucketDtoType.PayCreditCard && dto.Type != BucketDtoType.Surplus)
                     .Select(dto => this.mapper.Map(dto))
                     .Distinct()
                     .ToDictionary(e => e.Code, e => e);
@@ -196,7 +196,7 @@ namespace BudgetAnalyser.Engine.Budget
         {
             SurplusBucket = new SurplusBucket();
             AddBucket(SurplusBucket);
-            AddBucket(new JournalBucket(JournalBucket.JournalCode, "A special bucket to allocate internal transfers."));
+            AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode, "A special bucket to allocate internal transfers."));
         }
     }
 }

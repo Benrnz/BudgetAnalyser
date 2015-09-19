@@ -49,9 +49,9 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public void BuildShouldThrowGivenJournal()
+        public void BuildShouldThrowGivenPayCreditCard()
         {
-            Subject.Build(BucketDtoType.Journal);
+            Subject.Build(BucketDtoType.PayCreditCard);
             Assert.Fail();
         }
 
@@ -70,9 +70,9 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        public void SerialiseTypeShouldReturnJournalGivenJournalBucket()
+        public void SerialiseTypeShouldReturnPayCreditCardGivenPayCreditCardBucket()
         {
-            Assert.AreEqual(BucketDtoType.Journal, Subject.SerialiseType(new JournalBucket()));
+            Assert.AreEqual(BucketDtoType.PayCreditCard, Subject.SerialiseType(new PayCreditCardBucket()));
         }
 
         [TestMethod]

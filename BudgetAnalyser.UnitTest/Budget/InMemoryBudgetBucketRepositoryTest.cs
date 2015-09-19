@@ -16,13 +16,13 @@ namespace BudgetAnalyser.UnitTest.Budget
         private bool concurrencyFail;
 
         [TestMethod]
-        public void AfterInitialiseJournalBucketShouldExist()
+        public void AfterInitialisePayCreditCardBucketShouldExist()
         {
             InMemoryBudgetBucketRepository subject = CreateSubject();
             subject.Initialise(new List<BudgetBucketDto>());
 
-            Assert.IsTrue(subject.IsValidCode(JournalBucket.JournalCode));
-            Assert.IsInstanceOfType(subject.GetByCode(JournalBucket.JournalCode), typeof(JournalBucket));
+            Assert.IsTrue(subject.IsValidCode(PayCreditCardBucket.PayCreditCardCode));
+            Assert.IsInstanceOfType(subject.GetByCode(PayCreditCardBucket.PayCreditCardCode), typeof(PayCreditCardBucket));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             InMemoryBudgetBucketRepository subject = Arrange();
 
-            subject.GetOrCreateNew(null, () => new JournalBucket());
+            subject.GetOrCreateNew(null, () => new PayCreditCardBucket());
 
             Assert.Fail();
         }
@@ -171,7 +171,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void InitialiseShouldPopulate9Buckets()
         {
             InMemoryBudgetBucketRepository subject = Arrange();
-            int expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and Journal are added automatically.
+            int expected = CreateBudgetBucketDtoTestData().Count() + 2; // Surplus and PayCreditCard are added automatically.
             Assert.AreEqual(expected, subject.Buckets.Count());
         }
 
