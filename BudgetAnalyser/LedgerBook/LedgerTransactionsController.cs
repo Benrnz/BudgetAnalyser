@@ -183,7 +183,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private bool CanExecuteAddTransactionCommand()
         {
-            return !IsReadOnly;
+            return !IsReadOnly & InBalanceAdjustmentMode;
         }
 
         private bool CanExecuteDeleteTransactionCommand(LedgerTransaction arg)
