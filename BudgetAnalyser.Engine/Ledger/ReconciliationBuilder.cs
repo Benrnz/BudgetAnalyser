@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
@@ -15,7 +14,6 @@ namespace BudgetAnalyser.Engine.Ledger
     internal class ReconciliationBuilder : IReconciliationBuilder
     {
         internal const string MatchedPrefix = "Matched ";
-        private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+" };
         private readonly ILogger logger;
         private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
         private LedgerEntryLine newReconciliationLine;
@@ -183,20 +181,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return new List<LedgerTransaction>();
-        }
-
-        private static string IssueTransactionReferenceNumber()
-        {
-            var reference = new StringBuilder();
-            do
-            {
-                reference.Append(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-                foreach (string disallowedChar in DisallowedChars)
-                {
-                    reference.Replace(disallowedChar, string.Empty);
-                }
-            } while (reference.Length < 8);
-            return reference.ToString().Substring(0, 7);
         }
 
         private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
@@ -394,7 +378,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
                     if (t.Account != ledgerAccount)
                     {
-                        string reference = IssueTransactionReferenceNumber();
+                        string reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
                         lock (syncRoot)
                         {
                             proposedTasks.Add(
@@ -475,7 +459,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             budgetedExpense.Bucket.Active
                                 ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
                                 : "Warning! Bucket has been disabled.",
-                        AutoMatchingReference = IssueTransactionReferenceNumber()
+                        AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
                     Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;

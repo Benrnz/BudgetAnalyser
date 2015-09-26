@@ -226,6 +226,7 @@
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LedgerBook\TransferFundsController.cs" />
     <Compile Include="LedgerBook\TransferFundsView.xaml.cs">
       <DependentUpon>TransferFundsView.xaml</DependentUpon>
     </Compile>
@@ -366,6 +367,7 @@
       <DependentUpon>StatementUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPrompts.cs" />
+    <Compile Include="ValidationRules\GreaterThanZeroRule.cs" />
     <Page Include="Budget\BudgetBucketUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

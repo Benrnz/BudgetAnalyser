@@ -150,6 +150,7 @@
     <Compile Include="Ledger\IReconciliationConsistency.cs" />
     <Compile Include="Ledger\IReconciliationManager.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
+    <Compile Include="Ledger\LedgerForTransferFunds.cs" />
     <Compile Include="Ledger\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="NewZealandPublicHolidays.cs" />
+    <Compile Include="ReferenceNumberGenerator.cs" />
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />
     <Compile Include="Reports\BurnDownCharts.cs" />
     <Compile Include="Reports\BurnDownChartsBuilder.cs" />

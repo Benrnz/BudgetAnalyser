@@ -158,6 +158,7 @@ namespace BudgetAnalyser
             uiContext.SplitTransactionController = container.Resolve<SplitTransactionController>();
             uiContext.EditingTransactionController = container.Resolve<EditingTransactionController>();
             uiContext.StatementControllerNavigation = container.Resolve<StatementControllerNavigation>();
+            uiContext.TransferFundsController = container.Resolve<TransferFundsController>();
         }
     }
 }
