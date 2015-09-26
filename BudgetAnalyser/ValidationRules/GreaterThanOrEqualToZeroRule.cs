@@ -3,7 +3,10 @@ using System.Windows.Controls;
 
 namespace BudgetAnalyser.ValidationRules
 {
-    public class GreaterThanZeroRule : ValidationRule
+    /// <summary>
+    /// Ensures the value is 0 or greater.
+    /// </summary>
+    public class GreaterThanOrEqualToZeroRule : ValidationRule
     {
         /// <summary>
         /// When overridden in a derived class, performs validation checks on a value.
@@ -19,7 +22,7 @@ namespace BudgetAnalyser.ValidationRules
                 double i;
                 if (double.TryParse(value.ToString(), out i))
                 {
-                    if (i > 0) return new ValidationResult(true, null);
+                    if (i >= 0) return new ValidationResult(true, null);
                 }
             }
 

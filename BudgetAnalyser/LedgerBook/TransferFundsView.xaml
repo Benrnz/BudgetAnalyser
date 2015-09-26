@@ -71,7 +71,8 @@
                          UpdateSourceTrigger="PropertyChanged"
                          StringFormat="C">
                     <Binding.ValidationRules>
-                        <validationRules:GreaterThanZeroRule ValidationStep="RawProposedValue" />
+                        <validationRules:GreaterThanOrEqualToZeroRule ValidationStep="RawProposedValue" />
+                        <validationRules:NotEqualToZeroRule ValidationStep="RawProposedValue" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

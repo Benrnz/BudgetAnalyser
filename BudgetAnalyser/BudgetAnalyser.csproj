@@ -367,7 +367,8 @@
       <DependentUpon>StatementUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPrompts.cs" />
-    <Compile Include="ValidationRules\GreaterThanZeroRule.cs" />
+    <Compile Include="ValidationRules\NotEqualToZeroRule.cs" />
+    <Compile Include="ValidationRules\GreaterThanOrEqualToZeroRule.cs" />
     <Page Include="Budget\BudgetBucketUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
