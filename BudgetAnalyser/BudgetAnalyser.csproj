@@ -226,6 +226,9 @@
     <Compile Include="LedgerBook\ShowSurplusBalancesUserControl.xaml.cs">
       <DependentUpon>ShowSurplusBalancesUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LedgerBook\TransferFundsView.xaml.cs">
+      <DependentUpon>TransferFundsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PersistenceOperationCommands.cs" />
     <Compile Include="PersistenceOperations.cs" />
     <Compile Include="ScratchPad.xaml.cs">
@@ -412,6 +415,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="LedgerBook\BankBalanceUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LedgerBook\TransferFundsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

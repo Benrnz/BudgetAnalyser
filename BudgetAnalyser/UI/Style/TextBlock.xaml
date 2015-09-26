@@ -37,6 +37,13 @@
                 Value="2,2,10,2" />
     </Style>
 
+    <Style x:Key="TextBlock.LabelRightAlignedStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource TextBlock.LabelStyle}">
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+    </Style>
+
     <Style x:Key="TextBlock.TransactionStyle"
            TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource {x:Type TextBlock}}">
