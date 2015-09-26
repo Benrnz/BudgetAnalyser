@@ -57,6 +57,38 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="Button.Round.Add"
+           BasedOn="{StaticResource Button.Round.Base}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="40"
+                          Width="40">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 Stroke="{StaticResource Brush.Button.Stroke}"
+                                 StrokeThickness="4"
+                                 VerticalAlignment="Center"
+                                 Width="40" />
+                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
+                                   FontFamily="Segoe UI"
+                                   FontWeight="Bold"
+                                   FontSize="38"
+                                   Margin="1,-8,0,0"
+                                   HorizontalAlignment="Center"
+                                   Text="+"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ToolTip"
+                Value="New" />
+    </Style>
+
     <Style x:Key="Button.Round.All"
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource Button.Round.Base}">
@@ -192,25 +224,6 @@
                 Value="True" />
     </Style>
 
-    <Style x:Key="Button.Round.SmallCross"
-           BasedOn="{StaticResource Button.Round.Cross}"
-           TargetType="Button">
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="ToolTip"
-                Value="Remove" />
-        <Setter Property="LayoutTransform">
-            <Setter.Value>
-                <ScaleTransform CenterX="0.5"
-                                CenterY="0.5"
-                                ScaleX="0.5"
-                                ScaleY="0.5" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="Button.Round.Info"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
@@ -313,7 +326,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="Button.Round.Add"
+    <Style x:Key="Button.Round.Lock"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
         <Setter Property="Template">
@@ -329,20 +342,36 @@
                                  StrokeThickness="4"
                                  VerticalAlignment="Center"
                                  Width="40" />
-                        <TextBlock Foreground="{StaticResource Brush.Button.Glyph}"
-                                   FontFamily="Segoe UI"
-                                   FontWeight="Bold"
-                                   FontSize="38"
-                                   Margin="1,-8,0,0"
-                                   HorizontalAlignment="Center"
-                                   Text="+"
-                                   VerticalAlignment="Center" />
+                        <Image RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="0.5"
+                                                ScaleY="0.5" />
+                            </Image.RenderTransform>
+                            <Image.Source>
+                                <DrawingImage>
+                                    <DrawingImage.Drawing>
+                                        <DrawingGroup Opacity="1">
+                                            <DrawingGroup.Children>
+                                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
+                                                                 Pen="{x:Null}">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="Nonzero"
+                                                                      Figures="M 296.00,224.00l-8.00,0.00 l0.00-96.00 c0.00-52.935-43.065-96.00-96.00-96.00l-64.00,0.00 c-52.935,0.00-96.00,43.065-96.00,96.00l0.00,96.00 l-8.00,0.00 c-13.20,0.00-24.00,10.80-24.00,24.00l0.00,240.00 c0.00,13.20, 10.80,24.00, 24.00,24.00l 272.00,0.00 c 13.20,0.00, 24.00-10.80, 24.00-24.00L 320.00,248.00 C 320.00,234.80, 309.20,224.00, 296.00,224.00z M 192.00,448.00l-64.00,0.00 l 13.92-69.60 C 133.516,372.634, 128.00,362.963, 128.00,352.00c0.00-17.673, 14.327-32.00, 32.00-32.00c 17.673,0.00, 32.00,14.327, 32.00,32.00c0.00,10.963-5.516,20.634-13.92,26.40L 192.00,448.00 z M 224.00,224.00L 96.00,224.00 l0.00-96.00 c0.00-17.645, 14.355-32.00, 32.00-32.00l 64.00,0.00 c 17.645,0.00, 32.00,14.355, 32.00,32.00L 224.00,224.00 z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup.Children>
+                                        </DrawingGroup>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Source>
+                        </Image>
+
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="ToolTip"
-                Value="New" />
+                Value="Unlock" />
     </Style>
 
     <Style x:Key="Button.Round.Minus"
@@ -610,6 +639,25 @@
         </Setter>
     </Style>
 
+    <Style x:Key="Button.Round.SmallCross"
+           BasedOn="{StaticResource Button.Round.Cross}"
+           TargetType="Button">
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="Remove" />
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform CenterX="0.5"
+                                CenterY="0.5"
+                                ScaleX="0.5"
+                                ScaleY="0.5" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="Button.Round.Smiley"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
@@ -666,7 +714,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="Button.Round.Lock"
+    <Style x:Key="Button.Round.SquareLoop"
            BasedOn="{StaticResource Button.Round.Base}"
            TargetType="{x:Type Button}">
         <Setter Property="Template">
@@ -692,11 +740,25 @@
                                     <DrawingImage.Drawing>
                                         <DrawingGroup Opacity="1">
                                             <DrawingGroup.Children>
+                                                <DrawingGroup Opacity="1">
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="{x:Null}">
+                                                            <GeometryDrawing.Pen>
+                                                                <Pen Brush="#FFDA9890"
+                                                                     Thickness="1" />
+                                                            </GeometryDrawing.Pen>
+                                                            <GeometryDrawing.Geometry>
+                                                                <PathGeometry FillRule="Nonzero"
+                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
+                                                            </GeometryDrawing.Geometry>
+                                                        </GeometryDrawing>
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
                                                 <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
                                                                  Pen="{x:Null}">
                                                     <GeometryDrawing.Geometry>
                                                         <PathGeometry FillRule="Nonzero"
-                                                                      Figures="M 296.00,224.00l-8.00,0.00 l0.00-96.00 c0.00-52.935-43.065-96.00-96.00-96.00l-64.00,0.00 c-52.935,0.00-96.00,43.065-96.00,96.00l0.00,96.00 l-8.00,0.00 c-13.20,0.00-24.00,10.80-24.00,24.00l0.00,240.00 c0.00,13.20, 10.80,24.00, 24.00,24.00l 272.00,0.00 c 13.20,0.00, 24.00-10.80, 24.00-24.00L 320.00,248.00 C 320.00,234.80, 309.20,224.00, 296.00,224.00z M 192.00,448.00l-64.00,0.00 l 13.92-69.60 C 133.516,372.634, 128.00,362.963, 128.00,352.00c0.00-17.673, 14.327-32.00, 32.00-32.00c 17.673,0.00, 32.00,14.327, 32.00,32.00c0.00,10.963-5.516,20.634-13.92,26.40L 192.00,448.00 z M 224.00,224.00L 96.00,224.00 l0.00-96.00 c0.00-17.645, 14.355-32.00, 32.00-32.00l 64.00,0.00 c 17.645,0.00, 32.00,14.355, 32.00,32.00L 224.00,224.00 z" />
+                                                                      Figures="M448,224L512,224 512,416 128,416 128,512 0,384 128,256 128,352 448,352 448,224z M384,0L512,128 384,256 384,160 64,160 64,288 0,288 0,96 384,96 384,0z" />
                                                     </GeometryDrawing.Geometry>
                                                 </GeometryDrawing>
                                             </DrawingGroup.Children>
@@ -710,8 +772,48 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="Button.Round.TransferFunds"
+        	BasedOn="{StaticResource Button.Round.Base}"
+        	TargetType="{x:Type Button}">
         <Setter Property="ToolTip"
-                Value="Unlock" />
+        		Value="Transfer Funds" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}"
+        						Height="40"
+        						HorizontalAlignment="Center"
+        						Stroke="{StaticResource Brush.Button.Stroke}"
+        						StrokeThickness="4"
+        						VerticalAlignment="Center"
+        						Width="40" />
+                        <Path Data="M0.00,288.00c0.00,76.462, 33.524,145.092, 86.675,192.00l 42.333-48.00C 89.145,396.818, 64.00,345.348, 64.00,288.00c0.00-106.038, 85.965-192.00, 192.00-192.00 c 53.021,0.00, 101.019,21.493, 135.765,56.239L 320.00,224.00l 192.00,0.00 L 512.00,32.00 l-74.985,74.989C 390.688,60.66, 326.693,32.00, 256.00,32.00 C 114.615,32.00,0.00,146.615,0.00,288.00z"
+        						Fill="{StaticResource Brush.Button.Glyph}"
+        						Height="15"
+        						HorizontalAlignment="Left"
+        						Margin="8,12,0,0"
+        						Stretch="Uniform"
+        						Stroke="{StaticResource Brush.Button.Glyph}"
+        						StrokeThickness="1"
+        						VerticalAlignment="Top"
+        						Width="15" />
+                        <Path Data="M 240.00,32.00C 107.452,32.00,0.00,139.452,0.00,272.00c0.00,132.549, 107.452,240.00, 240.00,240.00c 132.549,0.00, 240.00-107.451, 240.00-240.00 C 480.00,139.452, 372.549,32.00, 240.00,32.00z M 240.00,464.00c-106.039,0.00-192.00-85.961-192.00-192.00c0.00-106.039, 85.961-192.00, 192.00-192.00 c 106.039,0.00, 192.00,85.961, 192.00,192.00C 432.00,378.039, 346.039,464.00, 240.00,464.00zM 256.00,256.00l0.00-64.00 l 64.00,0.00 l0.00-32.00 l-64.00,0.00 l0.00-32.00 l-32.00,0.00 l0.00,32.00 l-64.00,0.00 l0.00,128.00 l 64.00,0.00 l0.00,64.00 l-64.00,0.00 l0.00,32.00 l 64.00,0.00 l0.00,32.00 l 32.00,0.00 l0.00-32.00 l 64.00,0.00 l 0.001,0.00 L 320.00,256.00L 256.00,256.00 z M 224.00,256.00l-32.00,0.00 l0.00-64.00 l 32.00,0.00 L 224.00,256.00 z M 288.001,352.00L 256.00,352.00 l0.00-64.00 l 32.001,0.00 L 288.001,352.00 z"
+        						Fill="{StaticResource Brush.Button.Glyph}"
+        						Height="10"
+        						HorizontalAlignment="Left"
+        						Margin="22,18,0,0"
+        						Stretch="Uniform"
+        						Stroke="{StaticResource Brush.Button.Glyph}"
+        						StrokeThickness="0.5"
+        						VerticalAlignment="Top"
+        						Width="15" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="Button.Round.Unlock"
@@ -774,66 +876,6 @@
         </Setter>
         <Setter Property="ToolTip"
                 Value="Unlock" />
-    </Style>
-
-    <Style x:Key="Button.Round.SquareLoop"
-           BasedOn="{StaticResource Button.Round.Base}"
-           TargetType="{x:Type Button}">
-        <Setter Property="Template">
-            <Setter.Value>
-
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid Height="40"
-                          Width="40">
-                        <Ellipse Fill="{TemplateBinding Background}"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 Stroke="{StaticResource Brush.Button.Stroke}"
-                                 StrokeThickness="4"
-                                 VerticalAlignment="Center"
-                                 Width="40" />
-                        <Image RenderTransformOrigin="0.5,0.5">
-                            <Image.RenderTransform>
-                                <ScaleTransform ScaleX="0.5"
-                                                ScaleY="0.5" />
-                            </Image.RenderTransform>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <DrawingGroup Opacity="1">
-                                            <DrawingGroup.Children>
-                                                <DrawingGroup Opacity="1">
-                                                    <DrawingGroup.Children>
-                                                        <GeometryDrawing Brush="{x:Null}">
-                                                            <GeometryDrawing.Pen>
-                                                                <Pen Brush="#FFDA9890"
-                                                                     Thickness="1" />
-                                                            </GeometryDrawing.Pen>
-                                                            <GeometryDrawing.Geometry>
-                                                                <PathGeometry FillRule="Nonzero"
-                                                                              Figures="M0,0L512,0 512,512 0,512 0,0z" />
-                                                            </GeometryDrawing.Geometry>
-                                                        </GeometryDrawing>
-                                                    </DrawingGroup.Children>
-                                                </DrawingGroup>
-                                                <GeometryDrawing Brush="{StaticResource Brush.Button.Glyph}"
-                                                                 Pen="{x:Null}">
-                                                    <GeometryDrawing.Geometry>
-                                                        <PathGeometry FillRule="Nonzero"
-                                                                      Figures="M448,224L512,224 512,416 128,416 128,512 0,384 128,256 128,352 448,352 448,224z M384,0L512,128 384,256 384,160 64,160 64,288 0,288 0,96 384,96 384,0z" />
-                                                    </GeometryDrawing.Geometry>
-                                                </GeometryDrawing>
-                                            </DrawingGroup.Children>
-                                        </DrawingGroup>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
 </ResourceDictionary>
