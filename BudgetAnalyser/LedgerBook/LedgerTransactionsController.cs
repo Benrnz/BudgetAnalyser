@@ -60,7 +60,7 @@ namespace BudgetAnalyser.LedgerBook
         public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
         [UsedImplicitly]
-        public ICommand AddTransactionCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, () => IsAddTransactionAllowed);
+        public ICommand AddBalanceAdjustmentCommand => new RelayCommand(OnAddNewTransactionCommandExecuted, () => IsAddBalanceAdjustmentAllowed & !IsReadOnly);
 
         [UsedImplicitly]
         public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
@@ -75,7 +75,7 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.doNotUseIsReadOnly = value;
                 RaisePropertyChanged();
-                RaisePropertyChanged(() => IsAddTransactionAllowed);
+                RaisePropertyChanged(() => IsAddBalanceAdjustmentAllowed);
             }
         }
 
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public bool IsAddTransactionAllowed => !IsReadOnly & InBalanceAdjustmentMode;
+        public bool IsAddBalanceAdjustmentAllowed => InBalanceAdjustmentMode;
 
         public Account NewTransactionAccount
         {
