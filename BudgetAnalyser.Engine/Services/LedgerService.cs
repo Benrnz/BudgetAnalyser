@@ -253,6 +253,16 @@ namespace BudgetAnalyser.Engine.Services
             return LedgerBook.AddLedger(bucket, storeInThisAccount);
         }
 
+        /// <summary>
+        ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is unlocked.
+        ///     This is usually used during reconciliation.
+        /// </summary>
+        /// <param name="transferDetails">The details of the requested transfer.</param>
+        public void TransferFunds(TransferFundsCommand transferDetails)
+        {
+            throw new NotImplementedException();
+        }
+
         public LedgerEntryLine UnlockCurrentMonth()
         {
             return LedgerBook.UnlockMostRecentLine();
