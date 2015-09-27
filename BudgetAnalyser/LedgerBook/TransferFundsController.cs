@@ -15,30 +15,20 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class TransferFundsController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
     {
-        private readonly IBudgetBucketRepository bucketRepository;
         private Guid dialogCorrelationId;
         private string doNotUseAutoMatchingReference;
         private bool doNotUseBankTransferRequired;
         private Account doNotUseFromAccount;
-        private LedgerForTransferFunds doNotUseSelectedFromLedgerBucket;
-        private LedgerForTransferFunds doNotUseSelectedToLedgerBucket;
+        private LedgerBucket doNotUseSelectedFromLedgerBucket;
+        private LedgerBucket doNotUseSelectedToLedgerBucket;
         private Account doNotUseToAccount;
 
-        private BudgetBucket fromLedger;
-        private List<LedgerBucket> ledgers;
-        private BudgetBucket toLedger;
-
-        public TransferFundsController([NotNull] IMessenger messenger, [NotNull] IBudgetBucketRepository bucketRepository)
+        public TransferFundsController([NotNull] IMessenger messenger)
         {
             if (messenger == null)
             {
                 throw new ArgumentNullException(nameof(messenger));
             }
-            if (bucketRepository == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepository));
-            }
-            this.bucketRepository = bucketRepository;
             MessengerInstance = messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
@@ -99,31 +89,29 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public IEnumerable<LedgerForTransferFunds> LedgerBuckets { get; private set; }
+        public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; }
 
         public string Narrative { get; set; }
 
-        public LedgerForTransferFunds SelectedFromLedgerBucket
+        public LedgerBucket SelectedFromLedgerBucket
         {
             get { return this.doNotUseSelectedFromLedgerBucket; }
             set
             {
                 this.doNotUseSelectedFromLedgerBucket = value;
                 RaisePropertyChanged();
-                FromAccount = SelectedFromLedgerBucket?.Account;
-                this.fromLedger = SyncLedger(SelectedFromLedgerBucket);
+                FromAccount = SelectedFromLedgerBucket?.StoredInAccount;
             }
         }
 
-        public LedgerForTransferFunds SelectedToLedgerBucket
+        public LedgerBucket SelectedToLedgerBucket
         {
             get { return this.doNotUseSelectedToLedgerBucket; }
             set
             {
                 this.doNotUseSelectedToLedgerBucket = value;
                 RaisePropertyChanged();
-                ToAccount = SelectedToLedgerBucket?.Account;
-                this.toLedger = SyncLedger(SelectedToLedgerBucket);
+                ToAccount = SelectedToLedgerBucket?.StoredInAccount;
             }
         }
 
@@ -140,18 +128,10 @@ namespace BudgetAnalyser.LedgerBook
 
         public decimal TransferAmount { get; set; }
 
-        public void ShowDialog(IEnumerable<LedgerBucket> ledgerBuckets, IEnumerable<Account> ledgerAccounts)
+        public void ShowDialog(IEnumerable<LedgerBucket> ledgerBuckets)
         {
             Reset();
-            this.ledgers = ledgerBuckets.ToList();
-            List<LedgerForTransferFunds> ledgersList =
-                this.ledgers.Select(l => new LedgerForTransferFunds { Key = l.BudgetBucket.Code, Account = l.StoredInAccount, DisplayName = l.BudgetBucket.ToString() }).ToList();
-            foreach (Account account in ledgerAccounts)
-            {
-                ledgersList.Insert(0, new LedgerForTransferFunds { Key = SurplusBucket.SurplusCode, Account = account, DisplayName = $"Surplus in {account.Name}" });
-            }
-
-            LedgerBuckets = ledgersList;
+            LedgerBuckets = ledgerBuckets.ToList();
             this.dialogCorrelationId = Guid.NewGuid();
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.SaveCancel)
             {
@@ -192,7 +172,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (FromAccount == ToAccount)
             {
-                if (this.fromLedger is SurplusBucket && this.toLedger is SurplusBucket)
+                if (SelectedFromLedgerBucket.BudgetBucket is SurplusBucket && SelectedToLedgerBucket.BudgetBucket is SurplusBucket)
                 {
                     valid = false;
                 }
@@ -211,6 +191,15 @@ namespace BudgetAnalyser.LedgerBook
             if (message.Response == ShellDialogButton.Cancel) return;
 
             // TODO do the transfer
+            var transferCommand = new TransferFundsCommand
+            {
+                AutoMatchingReference = AutoMatchingReference,
+                FromLedger = SelectedFromLedgerBucket,
+                ToLedger = SelectedToLedgerBucket,
+                Narrative = Narrative,
+                TransferAmount = TransferAmount,
+                BankTransferRequired = BankTransferRequired,
+            };
 
             Reset();
         }
@@ -225,17 +214,6 @@ namespace BudgetAnalyser.LedgerBook
             SelectedFromLedgerBucket = null;
             SelectedToLedgerBucket = null;
             TransferAmount = 0;
-        }
-
-        private BudgetBucket SyncLedger(LedgerForTransferFunds selectedBucket)
-        {
-            if (selectedBucket == null) return null;
-            if (selectedBucket.Key == SurplusBucket.SurplusCode)
-            {
-                return this.bucketRepository.SurplusBucket;
-            }
-
-            return this.ledgers.Single(l => l.BudgetBucket.Code == selectedBucket.Key).BudgetBucket;
         }
     }
 }

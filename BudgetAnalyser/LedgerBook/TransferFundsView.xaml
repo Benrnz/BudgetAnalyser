@@ -6,12 +6,16 @@
     <!-- DataContext: TransferFundsController -->
     <UserControl.Resources>
         <DataTemplate x:Key="LedgerViewModelTemplate"
-                      DataType="ledger:LedgerForTransferFunds">
-            <Border Background="{StaticResource Brush.ModernTile.Background1}"
+                      DataType="ledger:LedgerBucket">
+            <Border Background="{StaticResource Brush.TileBackground}"
                     CornerRadius="3"
+                    Padding="3"
                     Margin="2">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding DisplayName}" />
+                    <ContentPresenter Content="{Binding StoredInAccount}"
+                                      Width="80" 
+                                      Margin="2,2,10,2"/>
+                    <TextBlock Text="{Binding BudgetBucket.Code}" />
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -38,34 +42,31 @@
                    Text="From:" />
         <ComboBox Grid.Column="1"
                   Grid.Row="0"
+                  Height="40"
                   ItemsSource="{Binding LedgerBuckets}"
                   ItemTemplate="{StaticResource LedgerViewModelTemplate}"
                   SelectedItem="{Binding SelectedFromLedgerBucket}"
                   ToolTip="{Binding SelectedFromLedgerBucket}" />
-        <ContentPresenter Content="{Binding FromAccount}"
-                          Grid.Column="2"
-                          Grid.Row="0"
-                          Width="80" />
         <TextBlock Grid.Column="0"
                    Grid.Row="1"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
                    Text="To:" />
         <ComboBox Grid.Column="1"
                   Grid.Row="1"
+                  Height="40"
                   ItemTemplate="{StaticResource LedgerViewModelTemplate}"
                   ItemsSource="{Binding LedgerBuckets}"
                   SelectedItem="{Binding SelectedToLedgerBucket}"
                   ToolTip="{Binding SelectedToLedgerBucket}" />
-        <ContentPresenter Content="{Binding ToAccount}"
-                          Grid.Column="2"
-                          Grid.Row="1"
-                          Width="80" />
         <TextBlock Grid.Column="0"
                    Grid.Row="3"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
                    Text="Amount:" />
         <TextBox Grid.Column="1"
-                 Grid.Row="3">
+                 Grid.ColumnSpan="2"
+                 Grid.Row="3"
+                 MaxWidth="120"
+                 HorizontalAlignment="Left">
             <TextBox.Text>
                 <Binding Path="TransferAmount"
                          UpdateSourceTrigger="PropertyChanged"

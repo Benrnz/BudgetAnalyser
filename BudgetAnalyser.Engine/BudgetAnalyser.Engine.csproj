@@ -159,6 +159,7 @@
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />
+    <Compile Include="Ledger\TransferFundsCommand.cs" />
     <Compile Include="Ledger\TransferTask.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />

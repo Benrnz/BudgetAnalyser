@@ -21,7 +21,7 @@ namespace BudgetAnalyser.ValidationRules
             if (value != null)
             {
                 double i;
-                if (double.TryParse(value.ToString(), out i))
+                if (double.TryParse(value.ToString(), NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, cultureInfo, out i))
                 {
                     if (Math.Abs(i) > 0.0001) return new ValidationResult(true, null);
                 }

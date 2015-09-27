@@ -31,8 +31,6 @@ namespace BudgetAnalyser.Engine.Ledger
             this.reconciliations = new List<LedgerEntryLine>();
         }
 
-        public string StorageKey { get; internal set; }
-
         /// <summary>
         ///     A mapping of Budget Buckets to Bank Accounts used to create the next instances of the <see cref="LedgerEntry" />
         ///     class
@@ -51,6 +49,20 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             get { return this.reconciliations; }
             [UsedImplicitly] private set { this.reconciliations = value.ToList(); }
+        }
+
+        public string StorageKey { get; internal set; }
+
+        public IEnumerable<LedgerBucket> LedgersAvailableForTransfer()
+        {
+            List<LedgerBucket> ledgers = Ledgers.ToList();
+            IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
+            foreach (Account account in accounts)
+            {
+                ledgers.Insert(0, new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = account });
+            }
+
+            return ledgers;
         }
 
         public bool Validate([NotNull] StringBuilder validationMessages)

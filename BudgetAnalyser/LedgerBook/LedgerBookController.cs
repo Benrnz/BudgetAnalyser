@@ -405,7 +405,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnTransferFundsCommandExecuted()
         {
-            this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.Ledgers, ViewModel.LedgerBook.Ledgers.Select(l => l.StoredInAccount).Distinct());
+            this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.LedgersAvailableForTransfer());
         }
 
         private void OnUnlockLedgerLineCommandExecuted()

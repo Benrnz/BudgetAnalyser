@@ -127,4 +127,11 @@
         <Setter Property="Margin"
                 Value="6,2,6,2" />
     </Style>
+
+    <Style x:Key="TextBlock.ValidationError"
+           BasedOn="{StaticResource {x:Type TextBlock}}"
+           TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource Brush.ImportantHighlightLight}"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+    </Style>
 </ResourceDictionary>

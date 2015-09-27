@@ -23,6 +23,18 @@
         <Setter Property="BorderBrush" Value="{StaticResource Brush.ControlBorder}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Placeholder for the TextBox itself -->
+                            <AdornedElementPlaceholder x:Name="textBox" />
+                            <TextBlock Text="{Binding [0].ErrorContent}"
+                                       Style="{StaticResource TextBlock.ValidationError}" />
+                        </StackPanel>
+                    </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="TextBox.ReadOnly"
