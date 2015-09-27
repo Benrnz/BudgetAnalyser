@@ -405,7 +405,14 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnTransferFundsCommandExecuted()
         {
+            this.uiContext.TransferFundsController.TransferFundsRequested += OnTransferFundsRequested;
             this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.LedgersAvailableForTransfer());
+        }
+
+        private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
+        {
+            this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
+            // TODO transfer the funds...
         }
 
         private void OnUnlockLedgerLineCommandExecuted()

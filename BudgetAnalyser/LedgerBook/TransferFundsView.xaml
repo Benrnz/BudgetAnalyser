@@ -45,8 +45,8 @@
                   Height="40"
                   ItemsSource="{Binding LedgerBuckets}"
                   ItemTemplate="{StaticResource LedgerViewModelTemplate}"
-                  SelectedItem="{Binding SelectedFromLedgerBucket}"
-                  ToolTip="{Binding SelectedFromLedgerBucket}" />
+                  SelectedItem="{Binding TransferFundsDto.FromLedger}"
+                  ToolTip="{Binding TransferFundsDto.FromLedger}" />
         <TextBlock Grid.Column="0"
                    Grid.Row="1"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
@@ -56,8 +56,8 @@
                   Height="40"
                   ItemTemplate="{StaticResource LedgerViewModelTemplate}"
                   ItemsSource="{Binding LedgerBuckets}"
-                  SelectedItem="{Binding SelectedToLedgerBucket}"
-                  ToolTip="{Binding SelectedToLedgerBucket}" />
+                  SelectedItem="{Binding TransferFundsDto.ToLedger}"
+                  ToolTip="{Binding TransferFundsDto.ToLedger}" />
         <TextBlock Grid.Column="0"
                    Grid.Row="3"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
@@ -68,7 +68,7 @@
                  MaxWidth="120"
                  HorizontalAlignment="Left">
             <TextBox.Text>
-                <Binding Path="TransferAmount"
+                <Binding Path="TransferFundsDto.TransferAmount"
                          UpdateSourceTrigger="PropertyChanged"
                          StringFormat="C">
                     <Binding.ValidationRules>
@@ -85,22 +85,22 @@
         <TextBox Grid.Column="1"
                  Grid.Row="4"
                  Grid.ColumnSpan="2"
-                 Text="{Binding Narrative}" />
+                 Text="{Binding TransferFundsDto.Narrative}" />
         <TextBlock Grid.Column="0"
                    Grid.Row="5"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
                    Text="Auto-Matching Reference:"
-                   Visibility="{Binding BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}" />
+                   Visibility="{Binding TransferFundsDto.BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}" />
         <TextBox Grid.Column="1"
                  Grid.Row="5"
                  Style="{StaticResource TextBox.ReadOnly}"
-                 Text="{Binding AutoMatchingReference, Mode=OneWay}"
-                 Visibility="{Binding BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}" />
+                 Text="{Binding TransferFundsDto.AutoMatchingReference, Mode=OneWay}"
+                 Visibility="{Binding TransferFundsDto.BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}" />
         <StackPanel Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Grid.Row="6"
                     Orientation="Horizontal"
-                    Visibility="{Binding BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}">
+                    Visibility="{Binding TransferFundsDto.BankTransferRequired, Converter={StaticResource Converter.BoolToVis2}}">
             <ContentControl Height="35"
                             Template="{StaticResource WarningImage}" />
             <CheckBox IsChecked="{Binding BankTransferConfirmed}"
