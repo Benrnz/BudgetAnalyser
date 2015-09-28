@@ -274,6 +274,7 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
     <Compile Include="AutoMapperConfigurationTest.cs" />
+    <Compile Include="ReferenceNumberGeneratorTest.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -42,20 +42,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void DuplicateReferenceNumberTest()
-        {
-            // ReSharper disable once CollectionNeverQueried.Local
-            var duplicateCheck = new Dictionary<string, string>();
-            for (var i = 0; i < 1000; i++)
-            {
-                var result = PrivateAccessor.InvokeStaticFunction<string>(typeof(ReconciliationBuilder), "IssueTransactionReferenceNumber");
-                Console.WriteLine(result);
-                Assert.IsNotNull(result);
-                duplicateCheck.Add(result, result);
-            }
-        }
-
-        [TestMethod]
         public void OutputTestData5()
         {
             LedgerBookTestData.TestData5().Output(true);

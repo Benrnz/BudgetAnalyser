@@ -260,7 +260,13 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="transferDetails">The details of the requested transfer.</param>
         public void TransferFunds(TransferFundsCommand transferDetails)
         {
-            throw new NotImplementedException();
+            var line = LedgerBook.Reconciliations.FirstOrDefault();
+            if (line == null)
+            {
+                throw new InvalidOperationException("There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
+            }
+
+            this.reconciliationManager.TransferFunds(transferDetails, line);
         }
 
         public LedgerEntryLine UnlockCurrentMonth()

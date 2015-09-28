@@ -44,5 +44,10 @@ namespace BudgetAnalyser.Engine.Ledger
             [NotNull] IBudgetCurrencyContext budgetContext,
             [NotNull] StatementModel statement,
             bool ignoreWarnings = false);
+
+        /// <summary>
+        ///     Performs a funds transfer for the given ledger entry line.
+        /// </summary>
+        void TransferFunds([NotNull] TransferFundsCommand transferDetails, [NotNull] LedgerEntryLine ledgerEntryLine);
     }
 }
