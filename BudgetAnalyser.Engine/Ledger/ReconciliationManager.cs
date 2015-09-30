@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Ledger
             var sourceTransaction = new CreditLedgerTransaction
             {
                 Amount = -transferDetails.TransferAmount,
-                AutoMatchingReference = transferDetails.AutoMatchingReference,
+                AutoMatchingReference = transferDetails.AutoMatchingReference, 
                 Date = ledgerEntryLine.Date,
                 Narrative = transferDetails.Narrative
             };
