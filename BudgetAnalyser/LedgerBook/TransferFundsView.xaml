@@ -25,7 +25,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -83,9 +83,14 @@
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"
                    Text="Narrative:" />
         <TextBox Grid.Column="1"
-                 Grid.Row="4"
-                 Grid.ColumnSpan="2"
-                 Text="{Binding TransferFundsDto.Narrative}" />
+                 Grid.Row="4">
+            <Binding Path="TransferFundsDto.Narrative"
+                     UpdateSourceTrigger="PropertyChanged">
+                <Binding.ValidationRules>
+                    <validationRules:NotNullOrBlankRule ValidationStep="RawProposedValue" />
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
         <TextBlock Grid.Column="0"
                    Grid.Row="5"
                    Style="{StaticResource TextBlock.LabelRightAlignedStyle}"

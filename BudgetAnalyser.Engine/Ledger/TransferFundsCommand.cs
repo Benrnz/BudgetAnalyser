@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -66,7 +65,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public bool IsValid()
         {
-            bool valid = FromLedger != null
+            bool valid = Narrative.IsSomething()
+                         && FromLedger != null
                          && ToLedger != null
                          && FromLedger != ToLedger
                          && TransferAmount > 0.0001M;
