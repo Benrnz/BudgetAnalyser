@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ledger="clr-namespace:BudgetAnalyser.Engine.Ledger;assembly=BudgetAnalyser.Engine"
-             xmlns:validationRules="clr-namespace:BudgetAnalyser.ValidationRules">
+             xmlns:validationRules="clr-namespace:Rees.Wpf.ValidationRules;assembly=Rees.Wpf">
     <!-- DataContext: TransferFundsController -->
     <UserControl.Resources>
         <DataTemplate x:Key="LedgerViewModelTemplate"
@@ -25,7 +25,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -87,7 +87,7 @@
             <Binding Path="TransferFundsDto.Narrative"
                      UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
-                    <validationRules:NotNullOrBlankRule ValidationStep="RawProposedValue" />
+                    <validationRules:StringNotNullAndNotBlankRule ValidationStep="RawProposedValue" />
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
