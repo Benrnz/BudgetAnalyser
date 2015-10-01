@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal bool IsNew { get; private set; }
 
-        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative)
+        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative, Account account)
         {
             if (!IsNew)
             {
@@ -150,7 +150,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("The balance adjustment amount cannot be zero.", nameof(adjustment));
             }
 
-            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment };
+            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment, BankAccount = account };
 
             this.bankBalanceAdjustments.Add(newAdjustment);
             return newAdjustment;

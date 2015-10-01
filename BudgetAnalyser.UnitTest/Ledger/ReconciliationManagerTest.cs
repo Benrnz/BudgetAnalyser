@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.TestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Services
+namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
     public class ReconciliationManagerTest

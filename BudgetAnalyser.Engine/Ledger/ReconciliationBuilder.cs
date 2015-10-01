@@ -190,8 +190,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is PayCreditCardBucket)))
             {
                 adjustmentsMade = true;
-                this.newReconciliationLine.BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
-                    .WithAccount(futureTransaction.Account);
+                this.newReconciliationLine.BalanceAdjustment(
+                    -futureTransaction.Amount, 
+                    "Remove future transaction for " + futureTransaction.Date.ToShortDateString(),
+                    futureTransaction.Account);
             }
 
             if (adjustmentsMade)
@@ -342,8 +344,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
                     -grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts from income account. ")
-                    .WithAccount(grouping.Key);
+                    "Adjustment for moving budgeted amounts from income account. ",
+                    grouping.Key);
             }
 
             foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
@@ -351,8 +353,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
                     grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts to destination account. ")
-                    .WithAccount(grouping.Key);
+                    "Adjustment for moving budgeted amounts to destination account. ",
+                    grouping.Key);
             }
         }
 

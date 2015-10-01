@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", nameof(entryLine));
             }
 
-            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative).WithAccount(account);
+            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
             adjustmentTransaction.Date = entryLine.Date;
             return adjustmentTransaction;
         }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rees.TestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Ledger
 {
@@ -230,7 +230,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void Reconcile_WithStatementWithBalanceAdjustment599ShouldHaveSurplus1014_GivenTestData1()
         {
             ReconciliationResult result = Act();
-            result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement");
+            result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement", new ChequeAccount("Chq"));
             this.subject.Output(true);
             Assert.AreEqual(1014.47M, result.Reconciliation.CalculatedSurplus);
         }

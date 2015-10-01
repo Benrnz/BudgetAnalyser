@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 // No need for a source transaction, but need a Balance Adjustment when Bank Transfer is required.
                 if (transferDetails.BankTransferRequired)
                 {
-                    ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative);
+                    ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
                 }
             }
             else
@@ -173,7 +173,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 // No need for a destination transaction, but need a Balance Adjustment when Bank Transfer is required.
                 if (transferDetails.BankTransferRequired)
                 {
-                    ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative);
+                    ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
                 }
             }
             else

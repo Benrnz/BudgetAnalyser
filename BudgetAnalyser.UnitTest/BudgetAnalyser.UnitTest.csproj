@@ -196,6 +196,8 @@
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBucketTest.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest.cs" />
     <Compile Include="Ledger\TransferFundsCommandTest.cs" />
     <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
     <Compile Include="Matching\DtoToMatchingRuleMapperTest.cs" />
@@ -224,7 +226,6 @@
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />
-    <Compile Include="Services\ReconciliationManagerTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
