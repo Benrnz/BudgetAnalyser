@@ -87,6 +87,72 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
         }
 
+        [TestMethod]
+        public void TransferFunds_ShouldDecreaseChqBalance_GivenTransferFromChqSurplusToSavSavings()
+        {
+            var transferDetails = new TransferFundsCommand
+            {
+                FromLedger = this.surplusChqLedger,
+                ToLedger = this.insHomeSavLedger,
+                TransferAmount = 22.00M,
+                Narrative = "Testing 123",
+            };
+
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+                + this.testDataEntryLine.BankBalanceAdjustments
+                    .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                    .Sum(a => a.Amount);
+            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance
+                + this.testDataEntryLine.BankBalanceAdjustments
+                    .Where(a => a.BankAccount == StatementModelTestData.ChequeAccount)
+                    .Sum(a => a.Amount);
+
+            Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
+        }
+
+        [TestMethod]
+        public void TransferFunds_ShouldIncreaseSavInsHome_GivenTransferFromChqSurplusToSavSavings()
+        {
+            var transferDetails = new TransferFundsCommand
+            {
+                FromLedger = this.surplusChqLedger,
+                ToLedger = this.insHomeSavLedger,
+                TransferAmount = 22.00M,
+                Narrative = "Testing 123",
+            };
+
+            var beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
+            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            var afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.insHomeSavLedger).Balance;
+
+            Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
+        }
+
+        [TestMethod]
+        public void TransferFunds_ShouldIncreaseSavBalance_GivenTransferFromChqSurplusToSavSavings()
+        {
+            var transferDetails = new TransferFundsCommand
+            {
+                FromLedger = this.surplusChqLedger,
+                ToLedger = this.insHomeSavLedger,
+                TransferAmount = 22.00M,
+                Narrative = "Testing 123",
+            };
+
+            var beforeBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+                + this.testDataEntryLine.BankBalanceAdjustments
+                    .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                    .Sum(a => a.Amount);   
+            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            var afterBalance = this.testDataEntryLine.BankBalances.First(b => b.Account == StatementModelTestData.SavingsAccount).Balance
+                + this.testDataEntryLine.BankBalanceAdjustments
+                    .Where(a => a.BankAccount == StatementModelTestData.SavingsAccount)
+                    .Sum(a => a.Amount);
+
+            Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
+        }
+
         private void Act()
         {
             //this.subject.TransferFunds();

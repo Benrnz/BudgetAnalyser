@@ -154,29 +154,21 @@ namespace BudgetAnalyser.Engine.Ledger
                 Narrative = transferDetails.Narrative
             };
 
-            if (transferDetails.FromLedger.BudgetBucket is SurplusBucket)
+            if (transferDetails.BankTransferRequired)
             {
-                // No need for a source transaction, but need a Balance Adjustment when Bank Transfer is required.
-                if (transferDetails.BankTransferRequired)
-                {
-                    ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
-                }
+                ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
+                ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
             }
-            else
+
+            // No need for a source transaction, but need a Balance Adjustment when Bank Transfer is required.
+            if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
                 LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
                 ledgerEntry.AddTransaction(sourceTransaction);
             }
 
-            if (transferDetails.ToLedger.BudgetBucket is SurplusBucket)
-            {
-                // No need for a destination transaction, but need a Balance Adjustment when Bank Transfer is required.
-                if (transferDetails.BankTransferRequired)
-                {
-                    ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
-                }
-            }
-            else
+            // No need for a destination transaction, but need a Balance Adjustment when Bank Transfer is required.
+            if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
                 LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
                 ledgerEntry.AddTransaction(destinationTransaction);
