@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.ShellDialog;
+using GalaSoft.MvvmLight.Messaging;
+using Rees.Wpf;
+
+namespace BudgetAnalyser.LedgerBook
+{
+    [AutoRegisterWithIoC(SingleInstance = true)]
+    public class TransferFundsController : ControllerBase, IShellDialogToolTips, IShellDialogInteractivity
+    {
+        private Guid dialogCorrelationId;
+
+        public TransferFundsController([NotNull] IMessenger messenger)
+        {
+            if (messenger == null)
+            {
+                throw new ArgumentNullException(nameof(messenger));
+            }
+            MessengerInstance = messenger;
+            MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
+        }
+
+        public event EventHandler TransferFundsRequested;
+
+        public string ActionButtonToolTip => "Save and action the transfer.";
+
+        public bool BankTransferConfirmed { get; set; }
+
+        /// <summary>
+        ///     Will be called to ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteCancelButton => true;
+
+        /// <summary>
+        ///     Will be called to ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteOkButton => false;
+
+        /// <summary>
+        ///     Will be called to ascertain the availability of the button.
+        /// </summary>
+        public bool CanExecuteSaveButton => IsOkToSave();
+
+        public string CloseButtonToolTip => "Cancel the transfer.";
+
+        public IEnumerable<LedgerBucket> LedgerBuckets { get; private set; }
+
+        public TransferFundsCommand TransferFundsDto { get; set; }
+
+        public void ShowDialog(IEnumerable<LedgerBucket> ledgerBuckets)
+        {
+            Reset();
+            TransferFundsDto = new TransferFundsCommand();
+            LedgerBuckets = ledgerBuckets.ToList();
+            this.dialogCorrelationId = Guid.NewGuid();
+            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.LedgerBook, this, ShellDialogType.SaveCancel)
+            {
+                CorrelationId = this.dialogCorrelationId,
+                Title = "Transfer Funds"
+            };
+            MessengerInstance.Send(dialogRequest);
+        }
+
+        private bool IsOkToSave()
+        {
+            if (!TransferFundsDto.IsValid()) return false;
+            if (TransferFundsDto.BankTransferRequired)
+                return BankTransferConfirmed;
+
+            return true;
+        }
+
+        private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
+        {
+            if (!message.IsItForMe(this.dialogCorrelationId))
+            {
+                return;
+            }
+
+            if (message.Response == ShellDialogButton.Cancel)
+            {
+                Reset();
+                return;
+            }
+
+            TransferFundsRequested?.Invoke(this, EventArgs.Empty);
+            Reset();
+        }
+
+        private void Reset()
+        {
+            TransferFundsDto = null;
+            BankTransferConfirmed = false;
+            LedgerBuckets = null;
+        }
+    }
+}

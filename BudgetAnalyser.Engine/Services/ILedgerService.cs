@@ -95,6 +95,13 @@ namespace BudgetAnalyser.Engine.Services
         LedgerBucket TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] Account storeInThisAccount);
 
         /// <summary>
+        ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is unlocked.
+        ///     This is usually used during reconciliation.
+        /// </summary>
+        /// <param name="transferDetails">The details of the requested transfer.</param>
+        void TransferFunds([NotNull] TransferFundsCommand transferDetails);
+
+        /// <summary>
         ///     Unlocks the current month after it has been saved and locked.
         /// </summary>
         LedgerEntryLine UnlockCurrentMonth();

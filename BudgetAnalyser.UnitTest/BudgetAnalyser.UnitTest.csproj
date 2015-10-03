@@ -114,8 +114,8 @@
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.29\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.30\lib\net46\Rees.UserInteraction.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -196,6 +196,9 @@
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBucketTest.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
+    <Compile Include="Ledger\TransferFundsCommandTest.cs" />
     <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
     <Compile Include="Matching\DtoToMatchingRuleMapperTest.cs" />
     <Compile Include="Matching\MatchingRuleTest.cs" />
@@ -223,7 +226,6 @@
     <Compile Include="Services\TransactionManagerServiceTest.cs" />
     <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
     <Compile Include="Services\TransactionRuleServiceTest.cs" />
-    <Compile Include="Services\ReconciliationManagerTest.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
@@ -274,6 +276,7 @@
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
     <Compile Include="AutoMapperConfigurationTest.cs" />
+    <Compile Include="ReferenceNumberGeneratorTest.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -293,7 +296,9 @@
     <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax">
       <Link>TestData\BudgetAnalyserDemo.bax</Link>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
@@ -12,6 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
+    // ReSharper disable once InconsistentNaming
     public class LedgerBook_GeneralTest
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
@@ -19,13 +21,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private LedgerBook subject;
         private BudgetModel testDataBudget;
         private StatementModel testDataStatement;
-        private ToDoCollection testDataToDoList;
 
         [TestInitialize]
         public void TestInitialise()
         {
             this.testDataStatement = StatementModelTestData.TestData1();
-            this.testDataToDoList = new ToDoCollection();
             this.testDataBudget = BudgetModelTestData.CreateTestData1();
             this.subject = LedgerBookTestData.TestData1();
         }
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_AddAdjustment_Output()
         {
             ReconciliationResult result = Act(this.subject, this.testDataBudget);
-            result.Reconciliation.BalanceAdjustment(101M, "foo dar far");
+            result.Reconciliation.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
 
             this.subject.Output();
         }
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_AddAdjustment_ShouldAddToAdjustmentCollection()
         {
             ReconciliationResult result = Act(this.subject, this.testDataBudget);
-            result.Reconciliation.BalanceAdjustment(101M, "foo dar far");
+            result.Reconciliation.BalanceAdjustment(101M, "foo dar far", new ChequeAccount("Chq"));
 
             Assert.AreEqual(1, result.Reconciliation.BankBalanceAdjustments.Count());
         }
@@ -83,7 +83,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         public void UsingTestData1_AddAdjustment_ShouldAffectLedgerBalance()
         {
             ReconciliationResult result = Act(this.subject, this.testDataBudget);
-            result.Reconciliation.BalanceAdjustment(-101M, "foo dar far");
+            result.Reconciliation.BalanceAdjustment(-101M, "foo dar far", new ChequeAccount("Chq"));
 
             Assert.AreEqual(1749.50M, result.Reconciliation.LedgerBalance);
         }

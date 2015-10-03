@@ -78,6 +78,7 @@ namespace BudgetAnalyser
         public SplitTransactionController SplitTransactionController { get; set; }
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
+        public TransferFundsController TransferFundsController { get; set; }
         public UserPrompts UserPrompts { get; }
 
         private List<ControllerBase> DiscoverAllControllers()

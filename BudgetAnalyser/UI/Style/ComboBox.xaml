@@ -333,13 +333,15 @@
                 Value="{StaticResource BudgetBucketComboItemStyle}" />
         <Setter Property="VerticalAlignment"
                 Value="Top" />
+        <Setter Property="Width"
+                Value="130" />
     </Style>
 
     <Style x:Key="ComboBox.Account"
            BasedOn="{StaticResource {x:Type ComboBox}}"
            TargetType="ComboBox">
         <Setter Property="Width"
-                Value="120" />
+                Value="130" />
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>

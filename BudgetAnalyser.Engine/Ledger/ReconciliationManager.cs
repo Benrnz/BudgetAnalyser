@@ -113,6 +113,68 @@ namespace BudgetAnalyser.Engine.Ledger
             return recon;
         }
 
+        /// <summary>
+        ///     Performs a funds transfer for the given ledger entry line.
+        /// </summary>
+        public void TransferFunds(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
+        {
+            if (transferDetails == null)
+            {
+                throw new ArgumentNullException(nameof(transferDetails));
+            }
+
+            if (ledgerEntryLine == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerEntryLine));
+            }
+
+            if (!transferDetails.IsValid())
+            {
+                throw new InvalidOperationException("Code Error: The transfer command is in an invalid state, this should be resolved in the UI.");
+            }
+
+            PerformBankTransfer(transferDetails, ledgerEntryLine);
+        }
+
+        private static void PerformBankTransfer(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
+        {
+            var sourceTransaction = new CreditLedgerTransaction
+            {
+                Amount = -transferDetails.TransferAmount,
+                AutoMatchingReference = transferDetails.AutoMatchingReference, 
+                Date = ledgerEntryLine.Date,
+                Narrative = transferDetails.Narrative
+            };
+
+            var destinationTransaction = new CreditLedgerTransaction
+            {
+                Amount = transferDetails.TransferAmount,
+                AutoMatchingReference = transferDetails.AutoMatchingReference,
+                Date = ledgerEntryLine.Date,
+                Narrative = transferDetails.Narrative
+            };
+
+            if (transferDetails.BankTransferRequired)
+            {
+                ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
+                ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
+            }
+
+            // No need for a source transaction for surplus ledger.
+            if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
+            {
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
+                ledgerEntry.AddTransaction(sourceTransaction);
+            }
+
+            // No need for a destination transaction for surplus ledger.
+            if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
+            {
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
+                ledgerEntry.AddTransaction(destinationTransaction);
+            }
+        }
+
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement)
         {

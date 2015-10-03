@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
@@ -15,7 +14,6 @@ namespace BudgetAnalyser.Engine.Ledger
     internal class ReconciliationBuilder : IReconciliationBuilder
     {
         internal const string MatchedPrefix = "Matched ";
-        private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+" };
         private readonly ILogger logger;
         private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
         private LedgerEntryLine newReconciliationLine;
@@ -185,29 +183,17 @@ namespace BudgetAnalyser.Engine.Ledger
             return new List<LedgerTransaction>();
         }
 
-        private static string IssueTransactionReferenceNumber()
-        {
-            var reference = new StringBuilder();
-            do
-            {
-                reference.Append(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-                foreach (string disallowedChar in DisallowedChars)
-                {
-                    reference.Replace(disallowedChar, string.Empty);
-                }
-            } while (reference.Length < 8);
-            return reference.ToString().Substring(0, 7);
-        }
-
         private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
         {
             var adjustmentsMade = false;
             foreach (Transaction futureTransaction in statement.AllTransactions
-                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is JournalBucket)))
+                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is PayCreditCardBucket)))
             {
                 adjustmentsMade = true;
-                this.newReconciliationLine.BalanceAdjustment(-futureTransaction.Amount, "Remove future transaction for " + futureTransaction.Date.ToShortDateString())
-                    .WithAccount(futureTransaction.Account);
+                this.newReconciliationLine.BalanceAdjustment(
+                    -futureTransaction.Amount, 
+                    "Remove future transaction for " + futureTransaction.Date.ToShortDateString(),
+                    futureTransaction.Account);
             }
 
             if (adjustmentsMade)
@@ -358,8 +344,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
                     -grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts from income account. ")
-                    .WithAccount(grouping.Key);
+                    "Adjustment for moving budgeted amounts from income account. ",
+                    grouping.Key);
             }
 
             foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
@@ -367,8 +353,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
                     grouping.Sum(t => t.Amount),
-                    "Adjustment for moving budgeted amounts to destination account. ")
-                    .WithAccount(grouping.Key);
+                    "Adjustment for moving budgeted amounts to destination account. ",
+                    grouping.Key);
             }
         }
 
@@ -381,7 +367,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             List<Transaction> debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
-            // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be journaled from the stored-in account.
+            // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transfered from the stored-in account.
             var proposedTasks = new List<Tuple<Transaction, TransferTask>>();
             Parallel.ForEach(
                 debitAccountTransactionsOnly.Where(t => t.Amount < 0).ToList(),
@@ -394,7 +380,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
                     if (t.Account != ledgerAccount)
                     {
-                        string reference = IssueTransactionReferenceNumber();
+                        string reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
                         lock (syncRoot)
                         {
                             proposedTasks.Add(
@@ -475,7 +461,7 @@ namespace BudgetAnalyser.Engine.Ledger
                             budgetedExpense.Bucket.Active
                                 ? "Budget amount must be transferred into this account with a bank transfer, use the reference number for the transfer."
                                 : "Warning! Bucket has been disabled.",
-                        AutoMatchingReference = IssueTransactionReferenceNumber()
+                        AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
                     Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;

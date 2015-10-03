@@ -9,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return new List<string>
             {
                 "VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,5287889576422253805,2012-08-20T00:00:00.0000000                                                    ",
-                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,JOURNAL,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
+                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,PAYCC,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
                 "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,4e6bad3b-89c7-458c-a993-38859da68b54,                                       ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,55f94f77-601b-4808-ab38-b71cd5f4d6f7,                     ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,144.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,1c4d9d4c-46de-4c39-a2f4-293beb646cc8,                      ",
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return new List<string>
             {
                 "VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,-3141538081309485159,2012-08-20T00:00:00.0000000                                                   ",
-                "Direct Credit,Smith A B & J S,,,,ABCDEFG,2012-08-15T00:00:00.0000000,JOURNAL,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
+                "Direct Credit,Smith A B & J S,,,,ABCDEFG,2012-08-15T00:00:00.0000000,PAYCC,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
                 "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,4e6bad3b-89c7-458c-a993-38859da68b54,                                       ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,55f94f77-601b-4808-ab38-b71cd5f4d6f7,                     ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,144.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,1c4d9d4c-46de-4c39-a2f4-293beb646cc8,                      ",
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return new List<string>
             {
                 "VersionHash,11111111-2222-3333-4444-55555555,TransactionCheckSum,6704009528804600641,2012-08-20T00:00:00.0000000                                                        ",
-                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,JOURNAL,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
+                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,PAYCC,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
                 "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,4e6bad3b-89c7-458c-a993-38859da68b54,                                       ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,55f94f77-601b-4808-ab38-b71cd5f4d6f7,                     ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,144.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,1c4d9d4c-46de-4c39-a2f4-293beb646cc8,                      ",
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return new List<string>
             {
                 "VersionHash,15955E20-A2CC-4C69-AD42-94D84377FC0C,TransactionCheckSum,6704009528804600641,2012-08-20T00:00:00.0000000                                                    ",
-                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,JOURNAL,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
+                "Direct Credit,Smith A B & J S,,,,3474.02,2012-08-15T00:00:00.0000000,PAYCC,CHEQUE,7f78bd65-017e-4337-9459-7e5dfa447d66,                                               ",
                 "Salary,Ipayroll Limite,Acme Inc,,Ipayroll,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,4e6bad3b-89c7-458c-a993-38859da68b54,                                       ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,3000.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,55f94f77-601b-4808-ab38-b71cd5f4d6f7,                     ",
                 "Direct Credit,Acme Inc Ltd      Dl,Salary,Acme Inc,Acme Inc,144.00,2012-08-15T00:00:00.0000000,INCOME,CHEQUE,1c4d9d4c-46de-4c39-a2f4-293beb646cc8,                      ",

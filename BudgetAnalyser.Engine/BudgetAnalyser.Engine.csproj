@@ -102,8 +102,8 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.29\lib\net451\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.30\lib\net46\Rees.UserInteraction.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -150,6 +150,7 @@
     <Compile Include="Ledger\IReconciliationConsistency.cs" />
     <Compile Include="Ledger\IReconciliationManager.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
+    <Compile Include="Ledger\LedgerForTransferFunds.cs" />
     <Compile Include="Ledger\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
     <Compile Include="Ledger\ToDoTaskType.cs" />
+    <Compile Include="Ledger\TransferFundsCommand.cs" />
     <Compile Include="Ledger\TransferTask.cs" />
     <Compile Include="MagicMapper.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
@@ -194,7 +196,7 @@
     <Compile Include="Budget\IBudgetRepository.cs" />
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
-    <Compile Include="Budget\JournalBucket.cs" />
+    <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="NewZealandPublicHolidays.cs" />
+    <Compile Include="ReferenceNumberGenerator.cs" />
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />
     <Compile Include="Reports\BurnDownCharts.cs" />
     <Compile Include="Reports\BurnDownChartsBuilder.cs" />
@@ -366,7 +369,9 @@
   <ItemGroup>
     <None Include="Budget\BudgetBuckets.cd" />
     <None Include="Ledger\LedgerBook.cd" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

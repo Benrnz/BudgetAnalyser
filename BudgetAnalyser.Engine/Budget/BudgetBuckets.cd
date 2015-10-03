@@ -22,11 +22,11 @@
       <FileName>Budget\IncomeBudgetBucket.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BudgetAnalyser.Engine.Budget.JournalBucket" Collapsed="true">
+  <Class Name="BudgetAnalyser.Engine.Budget.PayCreditCardBucket" Collapsed="true">
     <Position X="2.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Budget\JournalBucket.cs</FileName>
+      <FileName>Budget\PayCreditCardBucket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BudgetAnalyser.Engine.Budget.SavedUpForExpenseBucket" Collapsed="true">

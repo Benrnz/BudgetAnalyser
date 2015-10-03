@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
@@ -14,10 +14,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.TestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Services
+namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class ReconciliationManagerTest
+    // ReSharper disable once InconsistentNaming
+    public class ReconciliationManagerTest_Reconcile
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);

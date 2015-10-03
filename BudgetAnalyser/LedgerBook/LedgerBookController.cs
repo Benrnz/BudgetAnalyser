@@ -126,6 +126,9 @@ namespace BudgetAnalyser.LedgerBook
         public ReconciliationToDoListController ToDoListController => this.uiContext.ReconciliationToDoListController;
 
         [UsedImplicitly]
+        public ICommand TransferFundsCommand => new RelayCommand(OnTransferFundsCommandExecuted, CanExecuteTransferFundsCommand);
+
+        [UsedImplicitly]
         public ICommand UnlockLedgerLineCommand => new RelayCommand(OnUnlockLedgerLineCommandExecuted, CanExecuteUnlockLedgerLineCommand);
 
         public LedgerBookViewModel ViewModel => FileOperations.ViewModel;
@@ -181,6 +184,11 @@ namespace BudgetAnalyser.LedgerBook
         {
             return parameter != null
                    && (!string.IsNullOrWhiteSpace(parameter.Remarks) || parameter == ViewModel.NewLedgerLine);
+        }
+
+        private bool CanExecuteTransferFundsCommand()
+        {
+            return CanExecuteNewReconciliationCommand() && ViewModel.NewLedgerLine != null;
         }
 
         private bool CanExecuteUnlockLedgerLineCommand()
@@ -393,6 +401,18 @@ namespace BudgetAnalyser.LedgerBook
         private void OnStatementReadyMessageReceived(StatementReadyMessage message)
         {
             ViewModel.CurrentStatement = message.StatementModel;
+        }
+
+        private void OnTransferFundsCommandExecuted()
+        {
+            this.uiContext.TransferFundsController.TransferFundsRequested += OnTransferFundsRequested;
+            this.uiContext.TransferFundsController.ShowDialog(ViewModel.LedgerBook.LedgersAvailableForTransfer());
+        }
+
+        private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
+        {
+            this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
+            this.ledgerService.TransferFunds(this.uiContext.TransferFundsController.TransferFundsDto);
         }
 
         private void OnUnlockLedgerLineCommandExecuted()

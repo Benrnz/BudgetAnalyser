@@ -134,5 +134,8 @@
         <longTermSpendingLineGraph:LongTermSpendingGraph />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type ledgerBook:TransferFundsController}">
+        <ledgerBook:TransferFundsView />
+    </DataTemplate>
 
 </ResourceDictionary>

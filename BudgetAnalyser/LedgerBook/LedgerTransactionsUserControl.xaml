@@ -35,11 +35,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button Command="{Binding AddTransactionCommand}"
+            <Button Command="{Binding AddBalanceAdjustmentCommand}"
                     HorizontalAlignment="Left"
                     Style="{StaticResource Button.Round.Add}"
-                    ToolTip="Add new transaction"
-                    Visibility="{Binding IsReadOnly, Converter={StaticResource Converter.NotBoolToVis}}" />
+                    ToolTip="Add new balance adjustment"
+                    Visibility="{Binding IsAddBalanceAdjustmentAllowed, Converter={StaticResource Converter.BoolToVis}}" />
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

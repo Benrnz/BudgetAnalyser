@@ -80,6 +80,8 @@
         <StackPanel Orientation="Horizontal">
             <Button Command="{x:Static budgetAnalyser:PersistenceOperationCommands.SaveDatabaseCommand}"
                     Style="{StaticResource Button.Round.Save}" />
+            <Button Command="{Binding TransferFundsCommand}"
+                    Style="{StaticResource Button.Round.TransferFunds}" />
             <Button Style="{StaticResource Button.Round.PlusR}"
                     ToolTip="Add new reconciliation"
                     Command="{Binding AddNewReconciliationCommand}" />

@@ -12,17 +12,43 @@
     </Style>
 
     <Style TargetType="TextBox">
-        <Setter Property="MinWidth" Value="130" />
-        <Setter Property="Margin" Value="2" />
-        <Setter Property="MinHeight" Value="30" />
-        <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="Background" Value="{StaticResource Brush.TileBackgroundAlternate}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush.Text.Default}" />
-        <Setter Property="Padding" Value="3" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="BorderBrush" Value="{StaticResource Brush.ControlBorder}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinWidth"
+                Value="130" />
+        <Setter Property="Margin"
+                Value="2" />
+        <Setter Property="MinHeight"
+                Value="30" />
+        <Setter Property="TextWrapping"
+                Value="NoWrap" />
+        <Setter Property="Background"
+                Value="{StaticResource Brush.TileBackgroundAlternate}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource Brush.Text.Default}" />
+        <Setter Property="Padding"
+                Value="3" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource Brush.ControlBorder}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Placeholder for the TextBox itself -->
+                        <AdornedElementPlaceholder x:Name="textBox" />
+                        <TextBlock Text="*"
+                                   Style="{StaticResource TextBlock.ValidationError}"/>
+                        <TextBlock Text="{Binding [0].ErrorContent}"
+                                   Style="{StaticResource TextBlock.ValidationError}"
+                                   ToolTip="{Binding [0].ErrorContent}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="TextBox.ReadOnly"

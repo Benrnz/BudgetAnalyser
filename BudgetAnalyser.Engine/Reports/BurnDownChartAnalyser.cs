@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Reports
 
         private static decimal GetBudgetModelTotalForBucket(BudgetModel budgetModel, BudgetBucket bucket)
         {
-            if (bucket is JournalBucket)
+            if (bucket is PayCreditCardBucket)
             {
                 // Ignore
                 return 0;

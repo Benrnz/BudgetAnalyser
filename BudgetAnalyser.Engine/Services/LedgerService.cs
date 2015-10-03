@@ -114,7 +114,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Ledger Entry Line provided does not exist in the current Ledger Book.", nameof(entryLine));
             }
 
-            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative).WithAccount(account);
+            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
             adjustmentTransaction.Date = entryLine.Date;
             return adjustmentTransaction;
         }
@@ -251,6 +251,22 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return LedgerBook.AddLedger(bucket, storeInThisAccount);
+        }
+
+        /// <summary>
+        ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is unlocked.
+        ///     This is usually used during reconciliation.
+        /// </summary>
+        /// <param name="transferDetails">The details of the requested transfer.</param>
+        public void TransferFunds(TransferFundsCommand transferDetails)
+        {
+            var line = LedgerBook.Reconciliations.FirstOrDefault();
+            if (line == null)
+            {
+                throw new InvalidOperationException("There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
+            }
+
+            this.reconciliationManager.TransferFunds(transferDetails, line);
         }
 
         public LedgerEntryLine UnlockCurrentMonth()

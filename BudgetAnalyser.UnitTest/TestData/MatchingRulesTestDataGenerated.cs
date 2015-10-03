@@ -97,7 +97,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
                 {
                     Amount = null,
-                    BucketCode = "JOURNAL",
+                    BucketCode = "PAYCC",
                     Created = new DateTime(2014, 4, 23),
                     Description = "4367-****-****-3221",
                     LastMatch = new DateTime(2014, 5, 30),
