@@ -8,7 +8,7 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class MetaTest
     {
-        private const int ExpectedMinimumTests = 823;
+        private const int ExpectedMinimumTests = 836;
 
         [TestMethod]
         public void ListAllTests()

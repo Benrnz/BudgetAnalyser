@@ -12,6 +12,26 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private TransferFundsCommand subject;
 
         [TestMethod]
+        public void IsValid_ShouldBeFalse_GivenBlankNarrative()
+        {
+            this.subject = new TransferFundsCommand
+            {
+                FromLedger = new LedgerBucket
+                {
+                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    StoredInAccount = StatementModelTestData.ChequeAccount
+                },
+                ToLedger = new LedgerBucket
+                {
+                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    StoredInAccount = StatementModelTestData.ChequeAccount
+                },
+                Narrative = "",
+                TransferAmount = 0M
+            };
+        }
+
+        [TestMethod]
         public void IsValid_ShouldBeFalse_GivenLedgersAreTheBothSurplusForSameAccount()
         {
             this.subject = new TransferFundsCommand
@@ -93,6 +113,26 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void IsValid_ShouldBeFalse_GivenNullNarrative()
+        {
+            this.subject = new TransferFundsCommand
+            {
+                FromLedger = new LedgerBucket
+                {
+                    BudgetBucket = StatementModelTestData.PhoneBucket,
+                    StoredInAccount = StatementModelTestData.ChequeAccount
+                },
+                ToLedger = new LedgerBucket
+                {
+                    BudgetBucket = StatementModelTestData.InsHomeBucket,
+                    StoredInAccount = StatementModelTestData.ChequeAccount
+                },
+                Narrative = null,
+                TransferAmount = 0M
+            };
+        }
+
+        [TestMethod]
         public void IsValid_ShouldBeFalse_GivenNullToLedger()
         {
             this.subject = new TransferFundsCommand
@@ -152,46 +192,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             };
 
             Assert.IsFalse(this.subject.IsValid());
-        }
-
-        [TestMethod]
-        public void IsValid_ShouldBeFalse_GivenNullNarrative()
-        {
-            this.subject = new TransferFundsCommand
-            {
-                FromLedger = new LedgerBucket
-                {
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount
-                },
-                ToLedger = new LedgerBucket
-                {
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount
-                },
-                Narrative = null,
-                TransferAmount = 0M
-            };
-        }
-
-        [TestMethod]
-        public void IsValid_ShouldBeFalse_GivenBlankNarrative()
-        {
-            this.subject = new TransferFundsCommand
-            {
-                FromLedger = new LedgerBucket
-                {
-                    BudgetBucket = StatementModelTestData.PhoneBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount
-                },
-                ToLedger = new LedgerBucket
-                {
-                    BudgetBucket = StatementModelTestData.InsHomeBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount
-                },
-                Narrative = "",
-                TransferAmount = 0M
-            };
         }
 
         [TestMethod]
