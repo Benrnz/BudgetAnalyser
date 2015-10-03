@@ -160,14 +160,14 @@ namespace BudgetAnalyser.Engine.Ledger
                 ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
             }
 
-            // No need for a source transaction, but need a Balance Adjustment when Bank Transfer is required.
+            // No need for a source transaction for surplus ledger.
             if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
                 LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
                 ledgerEntry.AddTransaction(sourceTransaction);
             }
 
-            // No need for a destination transaction, but need a Balance Adjustment when Bank Transfer is required.
+            // No need for a destination transaction for surplus ledger.
             if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
                 LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);

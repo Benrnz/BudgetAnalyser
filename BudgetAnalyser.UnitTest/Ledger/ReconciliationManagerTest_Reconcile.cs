@@ -17,7 +17,8 @@ using Rees.TestUtilities;
 namespace BudgetAnalyser.UnitTest.Ledger
 {
     [TestClass]
-    public class ReconciliationManagerTest
+    // ReSharper disable once InconsistentNaming
+    public class ReconciliationManagerTest_Reconcile
     {
         private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 2050M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
