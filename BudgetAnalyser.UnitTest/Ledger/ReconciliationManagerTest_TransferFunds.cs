@@ -152,10 +152,5 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
         }
-
-        private void Act()
-        {
-            //this.subject.TransferFunds();
-        }
     }
 }
