@@ -102,7 +102,7 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.30\lib\net46\Rees.UserInteraction.Contracts.dll</HintPath>
+      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.40\lib\net46\Rees.UserInteraction.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
