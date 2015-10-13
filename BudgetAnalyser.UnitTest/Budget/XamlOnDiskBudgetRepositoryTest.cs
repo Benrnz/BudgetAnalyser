@@ -10,7 +10,7 @@ using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Rees.TestUtilities;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {

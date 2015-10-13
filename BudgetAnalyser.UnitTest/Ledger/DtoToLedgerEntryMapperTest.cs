@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rees.TestUtilities;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Ledger
 {

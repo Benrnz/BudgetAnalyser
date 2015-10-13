@@ -3,7 +3,7 @@ using AutoMapper;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rees.TestUtilities;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Budget
 {

@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestHarness;
-using Rees.TestUtilities;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
