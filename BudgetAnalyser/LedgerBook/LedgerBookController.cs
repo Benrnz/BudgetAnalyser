@@ -413,6 +413,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
             this.ledgerService.TransferFunds(this.uiContext.TransferFundsController.TransferFundsDto);
+            RaiseLedgerBookUpdated();
         }
 
         private void OnUnlockLedgerLineCommandExecuted()
