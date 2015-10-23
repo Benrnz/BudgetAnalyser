@@ -251,6 +251,7 @@
     <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
     <Compile Include="TestData\BudgetBucketTestData.cs" />
     <Compile Include="TestData\BudgetModelTestData.cs" />
+    <Compile Include="TestData\LedgerBookBuilder.cs" />
     <Compile Include="TestData\LedgerBookDtoTestData.cs" />
     <Compile Include="TestData\LedgerBookTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestData.cs" />

@@ -24,7 +24,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                 ledgerOrder.Add(ledger.BudgetBucket, index++);
             }
 
-            Console.Write("Surplus    BankBalances             Adjustments LedgerBalance");
+            Console.Write("Surplus    BankBalances    Adjusts LedgerBalance");
             Console.WriteLine();
             Console.WriteLine("==============================================================================================================================================");
 
@@ -48,8 +48,8 @@ namespace BudgetAnalyser.UnitTest.Helper
                     string balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
                     Console.Write(balanceText.PadLeft(13).TruncateLeft(13));
                 }
-                Console.Write(line.TotalBalanceAdjustments.ToString("N").PadRight(13));
-                Console.Write(line.LedgerBalance.ToString("N").PadRight(9));
+                Console.Write(line.TotalBalanceAdjustments.ToString("N").PadLeft(9).TruncateLeft(9));
+                Console.Write(line.LedgerBalance.ToString("N").PadLeft(13).TruncateLeft(13));
                 Console.WriteLine();
 
                 if (outputTransactions)

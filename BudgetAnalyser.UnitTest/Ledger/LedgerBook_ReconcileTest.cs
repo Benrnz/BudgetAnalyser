@@ -25,6 +25,16 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private IEnumerable<ToDoTask> testDataToDoList;
 
         [TestMethod]
+        public void CompareObjectMotherTestData1ToBuilderTestData1()
+        {
+            var book = new LedgerBookBuilder().TestData1().Build();
+            book.Output(true);
+
+            book = LedgerBookTestData.TestData1();
+            book.Output(true);
+        }
+
+        [TestMethod]
         public void AddLedger_ShouldAddToLedgersCollection_GivenTestData1()
         {
             this.subject.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
