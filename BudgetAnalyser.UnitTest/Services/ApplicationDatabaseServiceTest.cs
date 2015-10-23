@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Rees.TestUtilities;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Services
 {
