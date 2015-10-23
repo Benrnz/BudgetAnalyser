@@ -144,7 +144,8 @@ namespace BudgetAnalyser.Engine.Ledger
                         decimal adjustmentAmount = -NetAmount;
                         if (adjustmentAmount + Balance < budgetAmountTransaction.Amount)
                         {
-                            adjustmentAmount += budgetAmountTransaction.Amount - (adjustmentAmount + Balance);
+                            adjustmentAmount = budgetAmountTransaction.Amount - (Balance + newTransactions.Sum(t => t.Amount));
+                            Balance = budgetAmountTransaction.Amount;
                         }
                         zeroingTransaction = new CreditLedgerTransaction
                         {
