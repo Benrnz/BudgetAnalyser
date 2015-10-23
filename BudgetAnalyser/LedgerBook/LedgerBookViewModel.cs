@@ -10,6 +10,7 @@ namespace BudgetAnalyser.LedgerBook
         private IBudgetCurrencyContext doNotUseCurrentBudget;
         private StatementModel doNotUseCurrentStatement;
         private Engine.Ledger.LedgerBook ledgerBook;
+        private LedgerEntryLine doNotUseNewLedgerLine;
 
         public Engine.Ledger.LedgerBook LedgerBook
         {
@@ -52,6 +53,14 @@ namespace BudgetAnalyser.LedgerBook
         ///     This variable is used to contain the newly added ledger line when doing a new reconciliation. When this is non-null
         ///     it also indicates the ledger row can be edited.
         /// </summary>
-        internal LedgerEntryLine NewLedgerLine { get; set; }
+        public LedgerEntryLine NewLedgerLine
+        {
+            get { return this.doNotUseNewLedgerLine; }
+            set
+            {
+                this.doNotUseNewLedgerLine = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

@@ -200,7 +200,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                this.ledgerService.MonthEndReconciliation(
+                ViewModel.NewLedgerLine = this.ledgerService.MonthEndReconciliation(
                     this.uiContext.AddLedgerReconciliationController.Date,
                     this.uiContext.AddLedgerReconciliationController.BankBalances,
                     ViewModel.CurrentBudget,
