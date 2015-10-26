@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Engine.Widgets
                     builder.AppendFormat(CultureInfo.CurrentCulture, ", {0}", date);
                 }
 
-                if (builder[0] == ',')
+                if (builder.Length > 0 && builder[0] == ',')
                 {
                     builder.Remove(0, 1);
                     builder.Remove(0, 1);
