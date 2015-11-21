@@ -191,7 +191,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        private void FinaliseSplitTransaction(ShellDialogResponseMessage message)
+        private async Task FinaliseSplitTransaction(ShellDialogResponseMessage message)
         {
             if (message.Response == ShellDialogButton.Save)
             {
@@ -204,6 +204,7 @@ namespace BudgetAnalyser.Statement
 
                 ViewModel.TriggerRefreshTotalsRow();
                 FileOperations.NotifyOfEdit();
+                await FileOperations.SyncWithServiceAsync();
             }
         }
 
@@ -312,7 +313,7 @@ namespace BudgetAnalyser.Statement
             FileOperations.ViewModel.Dirty = false;
         }
 
-        private void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
+        private async void OnShellDialogResponseMessageReceived(ShellDialogResponseMessage message)
         {
             if (!message.IsItForMe(this.shellDialogCorrelationId))
             {
@@ -325,7 +326,7 @@ namespace BudgetAnalyser.Statement
             }
             else if (message.Content is SplitTransactionController)
             {
-                FinaliseSplitTransaction(message);
+                await FinaliseSplitTransaction(message);
             }
 
             this.shellDialogCorrelationId = Guid.Empty;
