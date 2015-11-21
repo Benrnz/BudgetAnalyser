@@ -218,11 +218,7 @@ namespace BudgetAnalyser.LedgerBook
             }
             catch (ValidationWarningException ex)
             {
-                bool? result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
-                if (result == null || !result.Value)
-                {
-                    return;
-                }
+                if (!ProceedAfterReconciliationValidationWarning(ex)) return;
 
                 FinaliseAddingReconciliation(true);
             }
@@ -230,6 +226,12 @@ namespace BudgetAnalyser.LedgerBook
             {
                 this.messageBox.Show(ex, "Unable to add new reconciliation.");
             }
+        }
+
+        private bool ProceedAfterReconciliationValidationWarning(ValidationWarningException ex)
+        {
+            bool? result = this.questionBox.Show("Warning", "Warning: {0}\nDo you wish to proceed?", ex.Message);
+            return result != null && result.Value;
         }
 
         private void OnAddNewLedgerCommandExecuted()
@@ -259,6 +261,15 @@ namespace BudgetAnalyser.LedgerBook
 
         private void OnAddNewReconciliationCommandExecuted()
         {
+            try
+            {
+                this.ledgerService.BeforeReconciliationValidation(ViewModel.LedgerBook, ViewModel.CurrentStatement);
+            }
+            catch (ValidationWarningException ex)
+            {
+                if (!ProceedAfterReconciliationValidationWarning(ex)) return;
+            }
+
             this.uiContext.AddLedgerReconciliationController.Complete += OnAddReconciliationComplete;
             this.uiContext.AddLedgerReconciliationController.ShowCreateDialog(ViewModel.LedgerBook);
         }

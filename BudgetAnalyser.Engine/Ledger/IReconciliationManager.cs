@@ -49,5 +49,14 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Performs a funds transfer for the given ledger entry line.
         /// </summary>
         void TransferFunds([NotNull] TransferFundsCommand transferDetails, [NotNull] LedgerEntryLine ledgerEntryLine);
+
+        /// <summary>
+        ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to
+        ///     transactions imported in the current month.
+        ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a
+        ///     new <see cref="ValidationWarningException" />
+        ///     is thrown; otherwise the method returns.
+        /// </summary>
+        void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement);
     }
 }

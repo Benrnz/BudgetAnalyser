@@ -136,12 +136,59 @@ namespace BudgetAnalyser.Engine.Ledger
             PerformBankTransfer(transferDetails, ledgerEntryLine);
         }
 
+        /// <summary>
+        ///     Examines the ledger book's most recent reconciliation looking for transactions waiting to be matched to
+        ///     transactions imported in the current month.
+        ///     If any transactions are found, the statement is then examined to see if the transactions appear, if they do not a
+        ///     new <see cref="ValidationWarningException" />
+        ///     is thrown; otherwise the method returns.
+        /// </summary>
+        public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
+        {
+            LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
+            if (lastLine == null)
+            {
+                return;
+            }
+
+            List<LedgerTransaction> unmatchedTxns = lastLine.Entries
+                .SelectMany(e => e.Transactions)
+                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix, StringComparison.Ordinal))
+                .ToList();
+
+            if (unmatchedTxns.None())
+            {
+                return;
+            }
+
+            List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+            foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
+            {
+                IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference);
+                if (statementTxns.None())
+                {
+                    this.logger.LogWarning(
+                        l =>
+                            l.Format(
+                                "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
+                                ledgerTransaction));
+                    throw new ValidationWarningException(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
+                            ledgerTransaction.Id,
+                            ledgerTransaction.AutoMatchingReference,
+                            ledgerTransaction.Amount));
+                }
+            }
+        }
+
         private static void PerformBankTransfer(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
         {
             var sourceTransaction = new CreditLedgerTransaction
             {
                 Amount = -transferDetails.TransferAmount,
-                AutoMatchingReference = transferDetails.AutoMatchingReference, 
+                AutoMatchingReference = transferDetails.AutoMatchingReference,
                 Date = ledgerEntryLine.Date,
                 Narrative = transferDetails.Narrative
             };
@@ -224,46 +271,6 @@ namespace BudgetAnalyser.Engine.Ledger
             ValidateAgainstUncategorisedTransactions(startDate, reconciliationDate, statement);
 
             ValidateAgainstOrphanedAutoMatchingTransactions(ledgerBook, statement);
-        }
-
-        private void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
-        {
-            LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
-            if (lastLine == null)
-            {
-                return;
-            }
-
-            List<LedgerTransaction> unmatchedTxns = lastLine.Entries
-                .SelectMany(e => e.Transactions)
-                .Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference) && !t.AutoMatchingReference.StartsWith(ReconciliationBuilder.MatchedPrefix, StringComparison.Ordinal))
-                .ToList();
-
-            if (unmatchedTxns.None())
-            {
-                return;
-            }
-
-            List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
-            foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
-            {
-                IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet, ledgerTransaction.AutoMatchingReference);
-                if (statementTxns.None())
-                {
-                    this.logger.LogWarning(
-                        l =>
-                            l.Format(
-                                "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found. {0}",
-                                ledgerTransaction));
-                    throw new ValidationWarningException(
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
-                            ledgerTransaction.Id,
-                            ledgerTransaction.AutoMatchingReference,
-                            ledgerTransaction.Amount));
-                }
-            }
         }
 
         private void ValidateAgainstUncategorisedTransactions(DateTime startDate, DateTime reconciliationDate, StatementModel statement)

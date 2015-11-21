@@ -58,6 +58,16 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public ToDoCollection ReconciliationToDoList { get; private set; }
 
+        /// <summary>
+        ///     An optional validation method the UI can call before invoking <see cref="ILedgerService.MonthEndReconciliation" /> to test for
+        ///     validation warnings.
+        ///     If validation fails a new <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
+        /// </summary>
+        public void BeforeReconciliationValidation(LedgerBook book, StatementModel model)
+        {
+            this.reconciliationManager.ValidateAgainstOrphanedAutoMatchingTransactions(book, model);
+        }
+
         public void CancelBalanceAdjustment(LedgerEntryLine entryLine, Guid transactionId)
         {
             if (entryLine == null)

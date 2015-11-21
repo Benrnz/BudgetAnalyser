@@ -22,6 +22,13 @@ namespace BudgetAnalyser.Engine.Services
         ToDoCollection ReconciliationToDoList { get; }
 
         /// <summary>
+        ///     An optional validation method the UI can call before invoking <see cref="MonthEndReconciliation" /> to test for
+        ///     validation warnings.
+        ///     If validation fails a new <see cref="ValidationWarningException" /> is thrown; otherwise the method returns.
+        /// </summary>
+        void BeforeReconciliationValidation(LedgerBook book, StatementModel model);
+
+        /// <summary>
         ///     Cancels an existing balance adjustment transaction that already exists in the Ledger Entry Line.
         ///     The Ledger Entry Line must exist in the current Ledger Book.
         /// </summary>
@@ -95,7 +102,8 @@ namespace BudgetAnalyser.Engine.Services
         LedgerBucket TrackNewBudgetBucket([NotNull] ExpenseBucket bucket, [NotNull] Account storeInThisAccount);
 
         /// <summary>
-        ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is unlocked.
+        ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is
+        ///     unlocked.
         ///     This is usually used during reconciliation.
         /// </summary>
         /// <param name="transferDetails">The details of the requested transfer.</param>
