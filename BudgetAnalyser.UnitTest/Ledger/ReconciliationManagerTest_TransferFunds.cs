@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -18,6 +19,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private LedgerBucket phNetChqLedger;
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
+        private Mock<IBudgetBucketRepository> mockBucketRepo;
         private ReconciliationManager subject;
         private LedgerBucket surplusChqLedger;
         private LedgerEntryLine testDataEntryLine;
@@ -26,7 +28,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestIntialise()
         {
-            this.mockRuleService = new Mock<ITransactionRuleService>(MockBehavior.Strict);
+            this.mockBucketRepo = new Mock<IBudgetBucketRepository>();
+            this.mockRuleService = new Mock<ITransactionRuleService>();
             this.mockReconciliationConsistency = new Mock<IReconciliationConsistency>();
             this.subject = new ReconciliationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
 
@@ -37,6 +40,29 @@ namespace BudgetAnalyser.UnitTest.Ledger
             this.surplusChqLedger = new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = StatementModelTestData.ChequeAccount };
             this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.InsHomeBucket);
             this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.PhoneBucket);
+        }
+
+        [TestMethod]
+        public void TransferFunds_ShouldCreateAutoMatchingRule_GivenTransferFromChqSurplusToSavingsInsHome()
+        {
+            var transferFundsData = new TransferFundsCommand
+            {
+                AutoMatchingReference = "FooTest12345",
+                BankTransferRequired = true,
+                FromLedger = LedgerBookTestData.SurplusLedger,
+                Narrative = "Save excess for November",
+                ToLedger = LedgerBookTestData.HouseInsLedgerSavingsAccount,
+                TransferAmount = 200M
+            };
+
+            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(transferFundsData.FromLedger.BudgetBucket.Code, null, new[] { "FooTest12345" }, null, -200, true))
+                .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object));
+            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(transferFundsData.ToLedger.BudgetBucket.Code, null, new[] { "FooTest12345" }, null, 200, true))
+                .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object));
+
+            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
+
+            this.mockRuleService.VerifyAll();
         }
 
         [TestMethod]

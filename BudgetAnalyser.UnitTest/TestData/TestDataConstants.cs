@@ -25,6 +25,7 @@
         public const string RegoBucketCode = "REGO";
         public const string RentBucketCode = "RENT";
         public const string SavingsAccountName = "SAVINGS";
+        public const string SavingsBucketCode = "SAVINGS";
         public const string VisaAccountName = "VISA";
         public const string WaterBucketCode = "WATER";
     }

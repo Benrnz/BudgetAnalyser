@@ -9,13 +9,14 @@ using BudgetAnalyser.UnitTest.TestHarness;
 namespace BudgetAnalyser.UnitTest.TestData
 {
     /// <summary>
-    /// Trialing a Fluent Builder pattern instead of a Object Mother pattern
+    ///     Trialing a Fluent Builder pattern instead of a Object Mother pattern
     /// </summary>
     public class LedgerBookBuilder
     {
         private readonly List<LedgerBucket> ledgerBuckets = new List<LedgerBucket>();
         private readonly Dictionary<LedgerBucket, decimal> openingBalances = new Dictionary<LedgerBucket, decimal>();
         private readonly List<LedgerEntryLine> reconciliations = new List<LedgerEntryLine>();
+        private bool lockWhenFinished = true;
         private IEnumerable<BankBalance> tempBankBalances;
         private DateTime tempReconDate;
 
@@ -38,7 +39,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             book.SetReconciliations(this.reconciliations);
 
-            return LedgerBookTestData.Finalise(book);
+            return LedgerBookTestData.Finalise(book, this.lockWhenFinished);
         }
 
         public LedgerBookBuilder TestData1()
@@ -47,7 +48,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             Name = "Test Data 1 Book";
             StorageKey = @"C:\Folder\book1.xml";
             Modified = new DateTime(2013, 12, 16);
-            this.WithLedger(new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"))
+            WithLedger(new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"))
                 .WithLedger(new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone and Internet"))
                 .WithLedger(new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power bills"))
                 .WithReconciliation(
@@ -153,6 +154,12 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             var reconBuilder = new ReconciliationTestDataBuilder(this);
             return reconBuilder;
+        }
+
+        public LedgerBookBuilder WithUnlockFlagSet()
+        {
+            this.lockWhenFinished = false;
+            return this;
         }
 
         private void SetReconciliation(IReadOnlyDictionary<LedgerBucket, IEnumerable<LedgerTransaction>> ledgerTransactions, string remarks)

@@ -183,45 +183,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private static void PerformBankTransfer(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
-        {
-            var sourceTransaction = new CreditLedgerTransaction
-            {
-                Amount = -transferDetails.TransferAmount,
-                AutoMatchingReference = transferDetails.AutoMatchingReference,
-                Date = ledgerEntryLine.Date,
-                Narrative = transferDetails.Narrative
-            };
-
-            var destinationTransaction = new CreditLedgerTransaction
-            {
-                Amount = transferDetails.TransferAmount,
-                AutoMatchingReference = transferDetails.AutoMatchingReference,
-                Date = ledgerEntryLine.Date,
-                Narrative = transferDetails.Narrative
-            };
-
-            if (transferDetails.BankTransferRequired)
-            {
-                ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
-                ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
-            }
-
-            // No need for a source transaction for surplus ledger.
-            if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
-            {
-                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
-                ledgerEntry.AddTransaction(sourceTransaction);
-            }
-
-            // No need for a destination transaction for surplus ledger.
-            if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
-            {
-                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
-                ledgerEntry.AddTransaction(destinationTransaction);
-            }
-        }
-
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement)
         {
@@ -248,6 +209,59 @@ namespace BudgetAnalyser.Engine.Ledger
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
                 throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToShortDateString());
+            }
+        }
+
+        private void PerformBankTransfer(TransferFundsCommand transferDetails, LedgerEntryLine ledgerEntryLine)
+        {
+            var sourceTransaction = new CreditLedgerTransaction
+            {
+                Amount = -transferDetails.TransferAmount,
+                AutoMatchingReference = transferDetails.AutoMatchingReference,
+                Date = ledgerEntryLine.Date,
+                Narrative = transferDetails.Narrative
+            };
+
+            var destinationTransaction = new CreditLedgerTransaction
+            {
+                Amount = transferDetails.TransferAmount,
+                AutoMatchingReference = transferDetails.AutoMatchingReference,
+                Date = ledgerEntryLine.Date,
+                Narrative = transferDetails.Narrative
+            };
+
+            if (transferDetails.BankTransferRequired)
+            {
+                ledgerEntryLine.BalanceAdjustment(-transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.FromLedger.StoredInAccount);
+                ledgerEntryLine.BalanceAdjustment(transferDetails.TransferAmount, transferDetails.Narrative, transferDetails.ToLedger.StoredInAccount);
+                this.transactionRuleService.CreateNewSingleUseRule(
+                    transferDetails.FromLedger.BudgetBucket.Code,
+                    null,
+                    new[] { transferDetails.AutoMatchingReference },
+                    null,
+                    -transferDetails.TransferAmount,
+                    true);
+                this.transactionRuleService.CreateNewSingleUseRule(
+                    transferDetails.ToLedger.BudgetBucket.Code,
+                    null,
+                    new[] { transferDetails.AutoMatchingReference },
+                    null,
+                    transferDetails.TransferAmount,
+                    true);
+            }
+
+            // No need for a source transaction for surplus ledger.
+            if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
+            {
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
+                ledgerEntry.AddTransaction(sourceTransaction);
+            }
+
+            // No need for a destination transaction for surplus ledger.
+            if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
+            {
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
+                ledgerEntry.AddTransaction(destinationTransaction);
             }
         }
 

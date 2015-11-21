@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestHarness;
@@ -11,15 +10,52 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     internal static class LedgerBookTestData
     {
+        static LedgerBookTestData()
+        {
+            ChequeAccount = StatementModelTestData.ChequeAccount;
+            SavingsAccount = StatementModelTestData.SavingsAccount;
+            RatesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
+            PowerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
+            PhoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
+            WaterLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
+            HouseInsLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
+            HouseInsLedgerSavingsAccount = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = SavingsAccount };
+            CarInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
+            LifeInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
+            CarMtcLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
+            RegoLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
+            HairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
+            ClothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
+            DocLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
+            SurplusLedger = new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = ChequeAccount };
+            SavingsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings") };
+        }
+
+        public static LedgerBucket CarInsLedger { get; }
+        public static LedgerBucket CarMtcLedger { get; }
+
+        public static Engine.BankAccount.Account ChequeAccount { get; }
+        public static LedgerBucket ClothesLedger { get; }
+        public static LedgerBucket DocLedger { get; }
+        public static LedgerBucket HairLedger { get; }
+        public static LedgerBucket HouseInsLedger { get; }
+
+        public static LedgerBucket HouseInsLedgerSavingsAccount { get; }
+        public static LedgerBucket LifeInsLedger { get; }
+        public static LedgerBucket PhoneLedger { get; }
+        public static LedgerBucket PowerLedger { get; }
+        public static LedgerBucket RatesLedger { get; }
+        public static LedgerBucket RegoLedger { get; }
+        public static Engine.BankAccount.Account SavingsAccount { get; }
+        public static LedgerBucket SavingsLedger { get; }
+        public static LedgerBucket SurplusLedger { get; }
+        public static LedgerBucket WaterLedger { get; }
+
         /// <summary>
         ///     A Test LedgerBook with data populated for June, July and August 2013.  Also includes some debit transactions.
         /// </summary>
         public static LedgerBook TestData1()
         {
-            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-
             var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 1 Book",
@@ -32,19 +68,19 @@ namespace BudgetAnalyser.UnitTest.TestData
                 line,
                 new List<LedgerEntry>
                 {
-                    CreateLedgerEntry(hairLedger).SetTransactionsForTesting(
+                    CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                         new List<LedgerTransaction>
                         {
                             new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
                             new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
                         }),
-                    CreateLedgerEntry(powerLedger).SetTransactionsForTesting(
+                    CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                         new List<LedgerTransaction>
                         {
                             new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                             new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
                         }),
-                    CreateLedgerEntry(phoneLedger).SetTransactionsForTesting(
+                    CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                         new List<LedgerTransaction>
                         {
                             new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -63,18 +99,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 CreateLine(new DateTime(2013, 07, 15), new[] { new BankBalance(StatementModelTestData.ChequeAccount, 3700) }, "dolor amet set").SetEntriesForTesting(
                     new List<LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -93,18 +129,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                     "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                         new List<LedgerEntry>
                         {
-                            CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                                 }),
-                            CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                     new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" }
                                 }),
-                            CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -125,10 +161,6 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData2()
         {
-            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-
             var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 2 Book",
@@ -142,19 +174,19 @@ namespace BudgetAnalyser.UnitTest.TestData
                     new List
                         <LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
                             }),
-                        CreateLedgerEntry(powerLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -172,18 +204,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                     new List
                         <LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -201,18 +233,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                     new List<LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -233,19 +265,6 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData3()
         {
-            var ratesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
-            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-            var waterLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
-            var houseInsLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
-            var carInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
-            var lifeInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
-            var carMtcLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
-            var regoLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
-            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var clothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
-            var docLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
-
             var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Smith Budget 2014",
@@ -259,62 +278,62 @@ namespace BudgetAnalyser.UnitTest.TestData
                     new List
                         <LedgerEntry>
                     {
-                        CreateLedgerEntry(ratesLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(RatesLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 573M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(powerLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 200M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(phoneLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 215M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(waterLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(WaterLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 50M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(houseInsLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(HouseInsLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 100M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(carInsLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(CarInsLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 421M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(lifeInsLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(LifeInsLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 1626M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(carMtcLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(CarMtcLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 163M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(regoLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(RegoLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 434.73M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(hairLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 105M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(clothesLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(ClothesLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 403.56M, Narrative = "Opening ledger balance" }
                             }),
-                        CreateLedgerEntry(docLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(DocLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new CreditLedgerTransaction { Amount = 292.41M, Narrative = "Opening ledger balance" }
@@ -334,10 +353,6 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData4()
         {
-            var hairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            var powerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            var phoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-
             var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
             {
                 Name = "Test Data 4 Book",
@@ -351,19 +366,19 @@ namespace BudgetAnalyser.UnitTest.TestData
                     new List
                         <LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
                             }),
-                        CreateLedgerEntry(powerLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -381,18 +396,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                     new List
                         <LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -410,18 +425,18 @@ namespace BudgetAnalyser.UnitTest.TestData
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                     new List<LedgerEntry>
                     {
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -442,28 +457,6 @@ namespace BudgetAnalyser.UnitTest.TestData
         /// </summary>
         public static LedgerBook TestData5(Func<LedgerBook> ctor = null)
         {
-            ChequeAccount chequeAccount = StatementModelTestData.ChequeAccount;
-            SavingsAccount savingsAccount = StatementModelTestData.SavingsAccount;
-            var hairLedger = new LedgerBucket
-            {
-                BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."),
-                StoredInAccount = chequeAccount
-            };
-            var powerLedger = new LedgerBucket
-            {
-                BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power "),
-                StoredInAccount = chequeAccount
-            };
-            var phoneLedger = new LedgerBucket
-            {
-                BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"),
-                StoredInAccount = chequeAccount
-            };
-            var insLedger = new LedgerBucket
-            {
-                BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Home insurance"),
-                StoredInAccount = savingsAccount
-            };
             LedgerBook book;
             if (ctor != null)
             {
@@ -481,29 +474,29 @@ namespace BudgetAnalyser.UnitTest.TestData
             {
                 CreateLine(
                     new DateTime(2013, 06, 15),
-                    new[] { new BankBalance(chequeAccount, 2800), new BankBalance(savingsAccount, 300) },
+                    new[] { new BankBalance(ChequeAccount, 2800), new BankBalance(SavingsAccount, 300) },
                     "Lorem ipsum")
                     .SetEntriesForTesting(
                         new List<LedgerEntry>
                         {
-                            CreateLedgerEntry(insLedger).SetTransactionsForTesting(
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "IbEMWG7" }
                                 }),
-                            CreateLedgerEntry(hairLedger).SetTransactionsForTesting(
+                            CreateLedgerEntry(HairLedger).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" },
                                     new CreditLedgerTransaction { Amount = -45M, Narrative = "Hair cut" }
                                 }),
-                            CreateLedgerEntry(powerLedger).SetTransactionsForTesting(
+                            CreateLedgerEntry(PowerLedger).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                     new CreditLedgerTransaction { Amount = -123.56M, Narrative = "Power bill" }
                                 }),
-                            CreateLedgerEntry(phoneLedger).SetTransactionsForTesting(
+                            CreateLedgerEntry(PhoneLedger).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -520,27 +513,27 @@ namespace BudgetAnalyser.UnitTest.TestData
             list.Add(
                 CreateLine(
                     new DateTime(2013, 07, 15),
-                    new[] { new BankBalance(chequeAccount, 4000), new BankBalance(savingsAccount, 600) },
+                    new[] { new BankBalance(ChequeAccount, 4000), new BankBalance(SavingsAccount, 600) },
                     "dolor amet set").SetEntriesForTesting(
                         new List<LedgerEntry>
                         {
-                            CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(HouseInsLedgerSavingsAccount, previousInsEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "9+1R06x" }
                                 }),
-                            CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                                 }),
-                            CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                     new CreditLedgerTransaction { Amount = -145.56M, Narrative = "Power bill" }
                                 }),
-                            CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                            CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                                 new List<LedgerTransaction>
                                 {
                                     new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
@@ -555,34 +548,34 @@ namespace BudgetAnalyser.UnitTest.TestData
 
             LedgerEntryLine line = CreateLine(
                 new DateTime(2013, 08, 15),
-                new[] { new BankBalance(chequeAccount, 3050), new BankBalance(savingsAccount, 1000) },
+                new[] { new BankBalance(ChequeAccount, 3050), new BankBalance(SavingsAccount, 1000) },
                 "The quick brown fox jumped over the lazy dog").SetEntriesForTesting(
                     new List<LedgerEntry>
                     {
-                        CreateLedgerEntry(insLedger, previousInsEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HouseInsLedgerSavingsAccount, previousInsEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 300M, Narrative = "Budgeted amount", AutoMatchingReference = "agkT9kC" }
                             }),
-                        CreateLedgerEntry(hairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(HairLedger, previousHairEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 55M, Narrative = "Budgeted amount" }
                             }),
-                        CreateLedgerEntry(powerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PowerLedger, previousPowerEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 140M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -98.56M, Narrative = "Power bill" }
                             }),
-                        CreateLedgerEntry(phoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
+                        CreateLedgerEntry(PhoneLedger, previousPhoneEntry.Balance).SetTransactionsForTesting(
                             new List<LedgerTransaction>
                             {
                                 new BudgetCreditLedgerTransaction { Amount = 95M, Narrative = "Budgeted amount" },
                                 new CreditLedgerTransaction { Amount = -67.43M, Narrative = "Pay phones" }
                             })
                     });
-            line.BalanceAdjustment(-550, "Credit card payment yet to go out.", chequeAccount);
+            line.BalanceAdjustment(-550, "Credit card payment yet to go out.", ChequeAccount);
             list.Add(line);
 
             book.SetReconciliations(list);
@@ -590,31 +583,26 @@ namespace BudgetAnalyser.UnitTest.TestData
             return Finalise(book);
         }
 
-        private static LedgerEntry CreateLedgerEntry(LedgerBucket ledger, decimal balance = 0)
-        {
-            return new LedgerEntry { LedgerBucket = ledger, Balance = balance };
-        }
-
-        private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
-        {
-            var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
-            return line;
-        }
-
         /// <summary>
         ///     Makes sure that the IsNew property on LedgerBook EntryLines is not set to true, as it will be when they are newly
         ///     created.
         ///     Also ensures the StoredInAccount property for each ledger is set.
         /// </summary>
-        internal static LedgerBook Finalise(LedgerBook book)
+        internal static LedgerBook Finalise(LedgerBook book, bool unlock = false)
         {
             var ledgers = new Dictionary<BudgetBucket, LedgerBucket>();
             foreach (LedgerEntryLine line in book.Reconciliations)
             {
-                PrivateAccessor.SetProperty(line, "IsNew", false);
+                if (!unlock)
+                {
+                    PrivateAccessor.SetProperty(line, "IsNew", false);
+                }
                 foreach (LedgerEntry entry in line.Entries)
                 {
-                    PrivateAccessor.SetField(entry, "isNew", false);
+                    if (!unlock)
+                    {
+                        PrivateAccessor.SetField(entry, "isNew", false);
+                    }
                     if (entry.LedgerBucket.StoredInAccount == null)
                     {
                         entry.LedgerBucket.StoredInAccount = StatementModelTestData.ChequeAccount;
@@ -642,6 +630,17 @@ namespace BudgetAnalyser.UnitTest.TestData
             decimal newBalance = entry.Balance + entry.NetAmount;
             entry.Balance = newBalance < 0 ? 0 : newBalance;
             return entry;
+        }
+
+        private static LedgerEntry CreateLedgerEntry(LedgerBucket ledger, decimal balance = 0)
+        {
+            return new LedgerEntry { LedgerBucket = ledger, Balance = balance };
+        }
+
+        private static LedgerEntryLine CreateLine(DateTime date, IEnumerable<BankBalance> bankBalances, string remarks)
+        {
+            var line = new LedgerEntryLine(date, bankBalances) { Remarks = remarks };
+            return line;
         }
     }
 }
