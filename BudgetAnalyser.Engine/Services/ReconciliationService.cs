@@ -132,6 +132,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
+            // The To Do Collection persistence is managed by the ApplicationDatabaseService.
             ReconciliationToDoList = applicationDatabase.LedgerReconciliationToDoCollection;
             return Task.CompletedTask;
         }
