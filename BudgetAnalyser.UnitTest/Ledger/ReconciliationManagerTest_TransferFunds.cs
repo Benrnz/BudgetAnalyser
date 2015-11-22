@@ -43,6 +43,29 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void TransferFunds_ShouldNotCreateAutoMatchingRule_GivenTransferFromChqSurplusToChqHairCut()
+        {
+            var transferFundsData = new TransferFundsCommand
+            {
+                AutoMatchingReference = "FooTest12345",
+                BankTransferRequired = false,
+                FromLedger = LedgerBookTestData.SurplusLedger,
+                Narrative = "Save excess for November",
+                ToLedger = LedgerBookTestData.HairLedger,
+                TransferAmount = 400M
+            };
+
+            bool success = true;
+            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), null, new[] { "FooTest12345" }, null, It.IsAny<decimal>(), true))
+                .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object))
+                .Callback(() => success = false);
+
+            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
+
+            Assert.IsTrue(success);
+        }
+
+        [TestMethod]
         public void TransferFunds_ShouldCreateAutoMatchingRule_GivenTransferFromChqSurplusToSavingsInsHome()
         {
             var transferFundsData = new TransferFundsCommand
