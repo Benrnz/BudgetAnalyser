@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace BudgetAnalyser.LedgerBook
     public class LedgerTransactionsController : ControllerBase
     {
         private readonly ILedgerService ledgerService;
+        private readonly IReconciliationService reconService;
         private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntry doNotUseLedgerEntry;
@@ -36,7 +38,7 @@ namespace BudgetAnalyser.LedgerBook
         private bool wasChanged;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
-        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
+        public LedgerTransactionsController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService, [NotNull] IReconciliationService reconService)
         {
             if (uiContext == null)
             {
@@ -48,7 +50,13 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
+            if (reconService == null)
+            {
+                throw new ArgumentNullException(nameof(reconService));
+            }
+
             this.ledgerService = ledgerService;
+            this.reconService = reconService;
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
             Reset();
@@ -65,8 +73,8 @@ namespace BudgetAnalyser.LedgerBook
         [UsedImplicitly]
         public ICommand DeleteTransactionCommand => new RelayCommand<LedgerTransaction>(OnDeleteTransactionCommandExecuted, CanExecuteDeleteTransactionCommand);
 
-        public bool InBalanceAdjustmentMode => LedgerEntry == null;
-        public bool InLedgerEntryMode => LedgerEntry != null;
+        public bool InBalanceAdjustmentMode { get; private set; }
+        public bool InLedgerEntryMode { get; private set; }
 
         public bool IsReadOnly
         {
@@ -153,15 +161,17 @@ namespace BudgetAnalyser.LedgerBook
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
         /// </summary>
-        public void ShowDialog(LedgerEntry ledgerEntry, bool isNew)
+        public void ShowDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry, bool isNew)
         {
             if (ledgerEntry == null)
             {
                 return;
             }
 
+            InBalanceAdjustmentMode = false;
+            InLedgerEntryMode = true;
             LedgerEntry = ledgerEntry;
-            this.entryLine = null;
+            this.entryLine = ledgerEntryLine;
             ShownTransactions = new ObservableCollection<LedgerTransaction>(LedgerEntry.Transactions);
             Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerBucket.BudgetBucket.Code);
             ShowDialogCommon(isNew);
@@ -177,6 +187,8 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
+            InBalanceAdjustmentMode = true;
+            InLedgerEntryMode = false;
             LedgerEntry = null;
             this.entryLine = ledgerEntryLine;
             ShownTransactions = new ObservableCollection<LedgerTransaction>(ledgerEntryLine.BankBalanceAdjustments);
@@ -219,13 +231,13 @@ namespace BudgetAnalyser.LedgerBook
             if (InLedgerEntryMode)
             {
                 this.wasChanged = true;
-                this.ledgerService.RemoveTransaction(LedgerEntry, transaction.Id);
+                this.reconService.RemoveTransaction(LedgerEntry, transaction.Id);
                 ShownTransactions.Remove(transaction);
             }
             else if (InBalanceAdjustmentMode)
             {
                 this.wasChanged = true;
-                this.ledgerService.CancelBalanceAdjustment(this.entryLine, transaction.Id);
+                this.reconService.CancelBalanceAdjustment(this.entryLine, transaction.Id);
                 ShownTransactions.Remove(transaction);
             }
 
@@ -323,7 +335,7 @@ namespace BudgetAnalyser.LedgerBook
 
         private void SaveBalanceAdjustment()
         {
-            LedgerTransaction newTransaction = this.ledgerService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
+            LedgerTransaction newTransaction = this.reconService.CreateBalanceAdjustment(this.entryLine, NewTransactionAmount, NewTransactionNarrative, NewTransactionAccount);
             ShownTransactions.Add(newTransaction);
             this.wasChanged = true;
             RaisePropertyChanged(() => TransactionsTotal);
@@ -333,7 +345,8 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                LedgerTransaction newTransaction = this.ledgerService.CreateLedgerTransaction(LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
+                Debug.Assert(this.entryLine != null);
+                LedgerTransaction newTransaction = this.reconService.CreateLedgerTransaction(this.entryLine, LedgerEntry, NewTransactionAmount, NewTransactionNarrative);
                 ShownTransactions.Add(newTransaction);
             }
             catch (ArgumentException)

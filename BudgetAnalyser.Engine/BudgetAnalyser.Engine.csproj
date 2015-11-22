@@ -255,6 +255,7 @@
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
     <Compile Include="Services\DashboardService.cs" />
+    <Compile Include="Services\IReconciliationService.cs" />
     <Compile Include="Services\ISupportsModelPersistence.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Services\LedgerService.cs" />
     <Compile Include="Services\LongTermSpendingChartService.cs" />
     <Compile Include="Services\OverallPerformanceChartService.cs" />
+    <Compile Include="Services\ReconciliationService.cs" />
     <Compile Include="Services\TransactionManagerService.cs" />
     <Compile Include="Services\TransactionRuleService.cs" />
     <Compile Include="Services\ValidatingEventArgs.cs" />

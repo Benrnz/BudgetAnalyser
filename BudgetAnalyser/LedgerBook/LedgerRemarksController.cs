@@ -11,25 +11,25 @@ namespace BudgetAnalyser.LedgerBook
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class LedgerRemarksController : ControllerBase
     {
-        private readonly ILedgerService ledgerService;
+        private readonly IReconciliationService reconciliationService;
         private Guid dialogCorrelationId;
         private bool doNotUseIsReadOnly;
         private LedgerEntryLine doNotUseLedgerEntryLine;
         private string doNotUseRemarks;
 
-        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] ILedgerService ledgerService)
+        public LedgerRemarksController([NotNull] UiContext uiContext, [NotNull] IReconciliationService reconciliationService)
         {
-            this.ledgerService = ledgerService;
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (ledgerService == null)
+            if (reconciliationService == null)
             {
-                throw new ArgumentNullException(nameof(ledgerService));
+                throw new ArgumentNullException(nameof(reconciliationService));
             }
 
+            this.reconciliationService = reconciliationService;
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
         }
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.LedgerBook
 
             if (!IsReadOnly)
             {
-                this.ledgerService.UpdateRemarks(LedgerEntryLine, Remarks);
+                this.reconciliationService.UpdateRemarks(LedgerEntryLine, Remarks);
             }
 
             LedgerEntryLine = null;

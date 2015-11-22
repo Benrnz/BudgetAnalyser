@@ -20,6 +20,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly IUserInputBox inputBox;
         private readonly ILedgerService ledgerService;
+        private readonly IReconciliationService reconService;
         private readonly IUserMessageBox messageBox;
         private readonly NewWindowViewLoader newWindowViewLoader;
         private readonly IUserQuestionBoxYesNo questionBox;
@@ -33,6 +34,7 @@ namespace BudgetAnalyser.LedgerBook
             [NotNull] LedgerBookControllerFileOperations fileOperations,
             [NotNull] LedgerBookGridBuilderFactory uiBuilder,
             [NotNull] ILedgerService ledgerService,
+            [NotNull] IReconciliationService reconService,
             [NotNull] NewWindowViewLoader newWindowViewLoader)
         {
             if (uiContext == null)
@@ -55,6 +57,11 @@ namespace BudgetAnalyser.LedgerBook
                 throw new ArgumentNullException(nameof(ledgerService));
             }
 
+            if (reconService == null)
+            {
+                throw new ArgumentNullException(nameof(reconService));
+            }
+
             if (newWindowViewLoader == null)
             {
                 throw new ArgumentNullException(nameof(newWindowViewLoader));
@@ -62,6 +69,7 @@ namespace BudgetAnalyser.LedgerBook
 
             this.uiBuilder = uiBuilder;
             this.ledgerService = ledgerService;
+            this.reconService = reconService;
             this.newWindowViewLoader = newWindowViewLoader;
             this.messageBox = uiContext.UserPrompts.MessageBox;
             this.questionBox = uiContext.UserPrompts.YesNoBox;
@@ -200,7 +208,8 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                ViewModel.NewLedgerLine = this.ledgerService.MonthEndReconciliation(
+                ViewModel.NewLedgerLine = this.reconService.MonthEndReconciliation(
+                    ViewModel.LedgerBook,
                     this.uiContext.AddLedgerReconciliationController.Date,
                     this.uiContext.AddLedgerReconciliationController.BankBalances,
                     ViewModel.CurrentBudget,
@@ -210,9 +219,9 @@ namespace BudgetAnalyser.LedgerBook
                 FileOperations.ReconciliationChangesWillNeedToBeSaved();
                 NumberOfMonthsToShow++;
                 RaiseLedgerBookUpdated();
-                if (this.ledgerService.ReconciliationToDoList.Any())
+                if (this.reconService.ReconciliationToDoList.Any())
                 {
-                    ToDoListController.Load(this.ledgerService.ReconciliationToDoList);
+                    ToDoListController.Load(this.reconService.ReconciliationToDoList);
                     this.newWindowViewLoader.Show(ToDoListController);
                 }
             }
@@ -260,7 +269,7 @@ namespace BudgetAnalyser.LedgerBook
         {
             try
             {
-                this.ledgerService.BeforeReconciliationValidation(ViewModel.LedgerBook, ViewModel.CurrentStatement);
+                this.reconService.BeforeReconciliationValidation(ViewModel.LedgerBook, ViewModel.CurrentStatement);
             }
             catch (ValidationWarningException ex)
             {
@@ -387,7 +396,7 @@ namespace BudgetAnalyser.LedgerBook
             if (ledgerEntry != null)
             {
                 bool isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
-                this.uiContext.LedgerTransactionsController.ShowDialog(ledgerEntry, isNew);
+                this.uiContext.LedgerTransactionsController.ShowDialog(ViewModel.NewLedgerLine, ledgerEntry, isNew);
             }
             else if (bankBalanceAdjustments != null)
             {
@@ -423,7 +432,7 @@ namespace BudgetAnalyser.LedgerBook
         private void OnTransferFundsRequested(object sender, EventArgs eventArgs)
         {
             this.uiContext.TransferFundsController.TransferFundsRequested -= OnTransferFundsRequested;
-            this.ledgerService.TransferFunds(this.uiContext.TransferFundsController.TransferFundsDto);
+            this.reconService.TransferFunds(ViewModel.NewLedgerLine, this.uiContext.TransferFundsController.TransferFundsDto);
             RaiseLedgerBookUpdated();
             FileOperations.ReconciliationChangesWillNeedToBeSaved();
         }
@@ -440,7 +449,7 @@ namespace BudgetAnalyser.LedgerBook
                 return;
             }
 
-            ViewModel.NewLedgerLine = this.ledgerService.UnlockCurrentMonth();
+            ViewModel.NewLedgerLine = this.reconService.UnlockCurrentMonth(ViewModel.LedgerBook);
             FileOperations.Dirty = true;
         }
 
