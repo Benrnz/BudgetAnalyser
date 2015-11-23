@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
             }
 
-            return previousLedgerEntry.Transactions.Where(t => !t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix));
+            return previousLedgerEntry.Transactions.Where(t => t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix));
         }
 
         public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestHarness;
 
@@ -48,78 +47,78 @@ namespace BudgetAnalyser.UnitTest.TestData
             Name = "Test Data 1 Book";
             StorageKey = @"C:\Folder\book1.xml";
             Modified = new DateTime(2013, 12, 16);
-            WithLedger(new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts"))
-                .WithLedger(new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Phone and Internet"))
-                .WithLedger(new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power bills"))
-                .WithReconciliation(
+            IncludeLedger(LedgerBookTestData.HairLedger)
+                .IncludeLedger(LedgerBookTestData.PhoneLedger)
+                .IncludeLedger(LedgerBookTestData.PowerLedger)
+                .AppendReconciliation(
                     new DateTime(2013, 6, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 2500))
-                .WithEntries(
+                .WithReconciliationEntries(
                     entryBuilder =>
                     {
                         entryBuilder
-                            .ForLedger(TestDataConstants.HairBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.HairLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(55M)
                                         .WithCredit(-45M, "Hair cut"));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PhoneBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PhoneLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(95M)
                                         .WithCredit(-86.43M, "Pay phones"));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PowerBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PowerLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(140M)
                                         .WithCredit(-123.56M, "Power bill"));
                     })
-                .WithReconciliation(
+                .AppendReconciliation(
                     new DateTime(2013, 7, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 3700))
-                .WithEntries(
+                .WithReconciliationEntries(
                     entryBuilder =>
                     {
                         entryBuilder
-                            .ForLedger(TestDataConstants.HairBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.HairLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(55M));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PhoneBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PhoneLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(95M)
                                         .WithCredit(-66.43M, "Pay phones"));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PowerBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PowerLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(140M)
                                         .WithCredit(-145.56M, "Power bill"));
                     })
-                .WithReconciliation(
+                .AppendReconciliation(
                     new DateTime(2013, 8, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 2950))
-                .WithEntries(
+                .WithReconciliationEntries(
                     entryBuilder =>
                     {
                         entryBuilder
-                            .ForLedger(TestDataConstants.HairBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.HairLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(55M));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PhoneBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PhoneLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(95M)
                                         .WithCredit(-67.43M, "Pay phones"));
                         entryBuilder
-                            .ForLedger(TestDataConstants.PowerBucketCode)
-                            .WithTransactions(
+                            .WithLedger(LedgerBookTestData.PowerLedger)
+                            .AppendTransactions(
                                 txnBuilder =>
                                     txnBuilder.WithBudgetCredit(140M)
                                         .WithCredit(-98.56M, "Power bill"));
@@ -128,26 +127,25 @@ namespace BudgetAnalyser.UnitTest.TestData
             return this;
         }
 
-        public LedgerBookBuilder WithLedger(ExpenseBucket bucket, decimal openingBalance = 0, Engine.BankAccount.Account account = null)
+        public LedgerBookBuilder IncludeLedger(LedgerBucket ledger, decimal openingBalance = 0)
         {
-            if (this.ledgerBuckets.Any(b => b.BudgetBucket.Code == bucket.Code))
+            if (this.ledgerBuckets.Any(b => b.BudgetBucket.Code == ledger.BudgetBucket.Code))
             {
                 throw new DuplicateNameException("Ledger Bucket already exists in collection.");
             }
 
-            if (account == null)
+            if (ledger.StoredInAccount == null)
             {
-                account = StatementModelTestData.ChequeAccount;
+                ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
             }
 
-            var ledger = new LedgerBucket { BudgetBucket = bucket, StoredInAccount = account };
             this.ledgerBuckets.Add(ledger);
             this.openingBalances.Add(ledger, openingBalance);
 
             return this;
         }
 
-        public ReconciliationTestDataBuilder WithReconciliation(DateTime reconDate, params BankBalance[] bankBalances)
+        public ReconciliationTestDataBuilder AppendReconciliation(DateTime reconDate, params BankBalance[] bankBalances)
         {
             this.tempBankBalances = bankBalances;
             this.tempReconDate = reconDate;
@@ -162,7 +160,7 @@ namespace BudgetAnalyser.UnitTest.TestData
             return this;
         }
 
-        private void SetReconciliation(IReadOnlyDictionary<LedgerBucket, IEnumerable<LedgerTransaction>> ledgerTransactions, string remarks)
+        private void SetReconciliation(IReadOnlyDictionary<LedgerBucket, SpecificLedgerEntryTestDataBuilder> ledgers, string remarks)
         {
             var recon = new LedgerEntryLine(this.tempReconDate, this.tempBankBalances) { Remarks = remarks };
             LedgerEntryLine previousRecon = Reconciliations.OrderByDescending(r => r.Date).FirstOrDefault();
@@ -185,7 +183,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                     LedgerBucket = ledgerBucket,
                     Balance = openingBalance
                 };
-                entry.SetTransactionsForTesting(ledgerTransactions[ledgerBucket].ToList());
+                entry.SetTransactionsForTesting(ledgers[ledgerBucket].Transactions.ToList());
                 entries.Add(entry);
             }
 
@@ -195,38 +193,48 @@ namespace BudgetAnalyser.UnitTest.TestData
 
         public class LedgerEntryTestDataBuilder
         {
-            private readonly Dictionary<LedgerBucket, IEnumerable<LedgerTransaction>> ledgerTransactions = new Dictionary<LedgerBucket, IEnumerable<LedgerTransaction>>();
-            private string nextLedgerCode;
+            private readonly Dictionary<LedgerBucket, SpecificLedgerEntryTestDataBuilder> ledgers = new Dictionary<LedgerBucket, SpecificLedgerEntryTestDataBuilder>();
 
             public LedgerEntryTestDataBuilder(IEnumerable<LedgerBucket> ledgers)
             {
                 foreach (LedgerBucket ledgerBucket in ledgers)
                 {
-                    this.ledgerTransactions.Add(ledgerBucket, new List<LedgerTransaction>());
+                    this.ledgers.Add(ledgerBucket, new SpecificLedgerEntryTestDataBuilder(this));
                 }
             }
 
-            public IReadOnlyDictionary<LedgerBucket, IEnumerable<LedgerTransaction>> LedgerTransactions => this.ledgerTransactions;
+            public IReadOnlyDictionary<LedgerBucket, SpecificLedgerEntryTestDataBuilder> Ledgers => this.ledgers;
 
-            public LedgerEntryTestDataBuilder ForLedger(string ledgerCode)
+            public SpecificLedgerEntryTestDataBuilder WithLedger(LedgerBucket ledger)
             {
-                this.nextLedgerCode = ledgerCode;
-                return this;
+                return this.ledgers[ledger];
+            }
+        }
+
+        public class SpecificLedgerEntryTestDataBuilder
+        {
+            private List<LedgerTransaction> ledgerTransactions;
+            private readonly LedgerEntryTestDataBuilder entryBuilder;
+
+            public SpecificLedgerEntryTestDataBuilder(LedgerEntryTestDataBuilder entryBuilder)
+            {
+                this.entryBuilder = entryBuilder;
             }
 
-            public LedgerEntryTestDataBuilder ForLedger(LedgerBucket ledger)
-            {
-                this.nextLedgerCode = ledger.BudgetBucket.Code;
-                return this;
-            }
+            public IEnumerable<LedgerTransaction> Transactions => this.ledgerTransactions;
 
-            public LedgerEntryTestDataBuilder WithTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
+            public LedgerEntryTestDataBuilder AppendTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
             {
                 var txnBuilder = new TransactionTestDataBuilder();
                 transactionsCreator(txnBuilder);
-                LedgerBucket ledger = this.ledgerTransactions.Keys.Single(l => l.BudgetBucket.Code == this.nextLedgerCode);
-                this.ledgerTransactions[ledger] = txnBuilder.Transactions;
-                return this;
+                this.ledgerTransactions = txnBuilder.Transactions.ToList();
+                return this.entryBuilder;
+            }
+
+            public LedgerEntryTestDataBuilder HasNoTransactions()
+            {
+                this.ledgerTransactions = new List<LedgerTransaction>();
+                return this.entryBuilder;
             }
         }
 
@@ -240,11 +248,11 @@ namespace BudgetAnalyser.UnitTest.TestData
                 this.bookBuilder = bookBuilder;
             }
 
-            public LedgerBookBuilder WithEntries(Action<LedgerEntryTestDataBuilder> createEntries)
+            public LedgerBookBuilder WithReconciliationEntries(Action<LedgerEntryTestDataBuilder> createEntries)
             {
                 var entryBuilder = new LedgerEntryTestDataBuilder(this.bookBuilder.LedgerBuckets);
                 createEntries(entryBuilder);
-                this.bookBuilder.SetReconciliation(entryBuilder.LedgerTransactions, this.remarks);
+                this.bookBuilder.SetReconciliation(entryBuilder.Ledgers, this.remarks);
                 return this.bookBuilder;
             }
 
