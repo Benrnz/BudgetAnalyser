@@ -7,6 +7,9 @@ using BudgetAnalyser.UnitTest.TestHarness;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {
+    /// <summary>
+    /// Use this class to extract statement testdata from a csv file and then generate the corresponding StatementModel in CSharp.
+    /// </summary>
     public static class StatementModelTestDataGenerator
     {
         public static void GenerateCSharp(string fileName, DateTime beginDate, DateTime endDate)

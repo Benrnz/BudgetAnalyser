@@ -90,9 +90,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal beginningOfMonthBalance = entryLine.CalculatedSurplus;
+            var autoMatchLedgerTransactions = ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList();
             decimal transactionTotal = statement.Transactions
                 .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1) && t.BudgetBucket is SurplusBucket)
-                .Sum(t => t.Amount);
+                .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions))
+                .Sum(txn => txn.Amount);
+
             beginningOfMonthBalance += transactionTotal;
 
             // Find any ledgers that are overpsent and subtract them from the Surplus total.  This is actually what is happening when you overspend a ledger, it spills over and spend Surplus.

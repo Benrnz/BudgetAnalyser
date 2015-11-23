@@ -30,6 +30,28 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntryLine recon, bool includeMatchedTransactions = false)
+        {
+            return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
+        }
+
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry previousLedgerEntry, bool includeMatchedTransactions = false)
+        {
+            if (includeMatchedTransactions)
+            {
+                return previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
+            }
+
+            return previousLedgerEntry.Transactions.Where(t => t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix));
+        }
+
+        public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
+        {
+            return
+                ledgerTransactions.Any(
+                    l => l.AutoMatchingReference == statementTransaction.Reference1 || l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
+        }
+
         public ReconciliationResult CreateNewMonthlyReconciliation(
             DateTime reconciliationDateExclusive,
             IEnumerable<BankBalance> bankBalances,
@@ -191,7 +213,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 adjustmentsMade = true;
                 this.newReconciliationLine.BalanceAdjustment(
-                    -futureTransaction.Amount, 
+                    -futureTransaction.Amount,
                     "Remove future transaction for " + futureTransaction.Date.ToShortDateString(),
                     futureTransaction.Account);
             }
@@ -277,7 +299,7 @@ namespace BudgetAnalyser.Engine.Ledger
             LedgerEntry previousLedgerEntry,
             List<LedgerTransaction> newLedgerTransactions)
         {
-            List<LedgerTransaction> ledgerAutoMatchTransactions = previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference)).ToList();
+            List<LedgerTransaction> ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
             var checkMatchedTxns = new List<LedgerTransaction>();
             var checkMatchCount = 0;
             foreach (LedgerTransaction lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
