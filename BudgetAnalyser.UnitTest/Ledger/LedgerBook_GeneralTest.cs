@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -16,7 +15,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     // ReSharper disable once InconsistentNaming
     public class LedgerBook_GeneralTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
+        private static readonly BankBalance NextReconcileBankBalance = new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M);
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
         private LedgerBook subject;
         private BudgetModel testDataBudget;
@@ -160,7 +159,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private ReconciliationResult Act(LedgerBook book, BudgetModel budget)
         {
-            return book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, this.testDataStatement);
+            return book.Reconcile(NextReconcileDate, budget, this.testDataStatement, NextReconcileBankBalance);
         }
     }
 }

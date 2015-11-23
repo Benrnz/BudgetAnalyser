@@ -17,7 +17,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBook_ReconcileTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
+        private static readonly BankBalance[] NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
         private LedgerBook subject;
         private BudgetModel testDataBudget;
@@ -254,9 +254,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
 
-        private ReconciliationResult Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
+        private ReconciliationResult Act(DateTime? reconciliationDate = null, BankBalance[] bankBalances = null)
         {
-            return this.subject.Reconcile(reconciliationDate ?? ReconcileDate, bankBalances ?? NextReconcileBankBalance, this.testDataBudget, this.testDataStatement);
+            return this.subject.Reconcile(reconciliationDate ?? ReconcileDate, this.testDataBudget, this.testDataStatement, bankBalances ?? NextReconcileBankBalance);
         }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)

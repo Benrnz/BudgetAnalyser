@@ -52,11 +52,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     l => l.AutoMatchingReference == statementTransaction.Reference1 || l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
         }
 
-        public ReconciliationResult CreateNewMonthlyReconciliation(
-            DateTime reconciliationDateExclusive,
-            IEnumerable<BankBalance> bankBalances,
-            BudgetModel budget,
-            StatementModel statement)
+        public ReconciliationResult CreateNewMonthlyReconciliation(DateTime reconciliationDateExclusive, BudgetModel budget, StatementModel statement, params BankBalance[] bankBalances)
         {
             if (bankBalances == null)
             {

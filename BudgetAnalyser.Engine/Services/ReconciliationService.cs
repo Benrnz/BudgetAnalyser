@@ -140,12 +140,12 @@ namespace BudgetAnalyser.Engine.Services
         public LedgerEntryLine MonthEndReconciliation(
             LedgerBook ledgerBook,
             DateTime reconciliationDate,
-            IEnumerable<BankBalance> balances,
             IBudgetCurrencyContext budgetContext,
             StatementModel statement,
-            bool ignoreWarnings = false)
+            bool ignoreWarnings,
+            params BankBalance[] balances)
         {
-            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate, balances, budgetContext, statement);
+            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate, budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
             return reconResult.Reconciliation;

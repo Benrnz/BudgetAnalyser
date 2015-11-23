@@ -211,10 +211,10 @@ namespace BudgetAnalyser.LedgerBook
                 ViewModel.NewLedgerLine = this.reconService.MonthEndReconciliation(
                     ViewModel.LedgerBook,
                     this.uiContext.AddLedgerReconciliationController.Date,
-                    this.uiContext.AddLedgerReconciliationController.BankBalances,
                     ViewModel.CurrentBudget,
                     ViewModel.CurrentStatement,
-                    ignoreWarnings);
+                    ignoreWarnings, 
+                    this.uiContext.AddLedgerReconciliationController.BankBalances.Cast<BankBalance>().ToArray());
 
                 FileOperations.ReconciliationChangesWillNeedToBeSaved();
                 NumberOfMonthsToShow++;

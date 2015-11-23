@@ -119,19 +119,15 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
         ///     reconciliation which is the end date for the period.
         /// </param>
+        /// <param name="budget">The current budget.</param>
+        /// <param name="statement">The currently loaded statement.</param>
         /// <param name="currentBankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
-        /// <param name="budget">The current budget.</param>
-        /// <param name="statement">The currently loaded statement.</param>
-        internal virtual ReconciliationResult Reconcile(
-            DateTime reconciliationDate,
-            IEnumerable<BankBalance> currentBankBalances,
-            BudgetModel budget,
-            StatementModel statement)
+        internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget, StatementModel statement, params BankBalance[] currentBankBalances)
         {
-            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement);
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
             this.reconciliations.Insert(0, newRecon.Reconciliation);
             return newRecon;
         }

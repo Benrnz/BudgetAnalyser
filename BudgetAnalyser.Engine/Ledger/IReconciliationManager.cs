@@ -18,13 +18,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
         ///     reconciliation which is the end date for the period.
         /// </param>
+        /// <param name="budgetContext">The current budget.</param>
+        /// <param name="statement">The currently loaded statement.</param>
+        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <param name="currentBankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
-        /// <param name="budgetContext">The current budget.</param>
-        /// <param name="statement">The currently loaded statement.</param>
-        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="ArgumentException">
         ///     Thrown when the <paramref name="budgetContext" /> is in an invalid state, ie the
         ///     supplied budget is not active.
@@ -40,10 +40,10 @@ namespace BudgetAnalyser.Engine.Ledger
         ReconciliationResult MonthEndReconciliation(
             [NotNull] LedgerBook ledgerBook,
             DateTime reconciliationDate,
-            [NotNull] IEnumerable<BankBalance> currentBankBalances,
             [NotNull] IBudgetCurrencyContext budgetContext,
             [NotNull] StatementModel statement,
-            bool ignoreWarnings = false);
+            bool ignoreWarnings,
+            [NotNull] params BankBalance[] currentBankBalances);
 
         /// <summary>
         ///     Performs a funds transfer for the given ledger entry line.
