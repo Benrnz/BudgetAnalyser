@@ -16,10 +16,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
     public class ReconciliationManagerTest_TransferFunds
     {
         private LedgerBucket insHomeSavLedger;
-        private LedgerBucket phNetChqLedger;
+        private Mock<IBudgetBucketRepository> mockBucketRepo;
         private Mock<IReconciliationConsistency> mockReconciliationConsistency;
         private Mock<ITransactionRuleService> mockRuleService;
-        private Mock<IBudgetBucketRepository> mockBucketRepo;
+        private LedgerBucket phNetChqLedger;
         private ReconciliationManager subject;
         private LedgerBucket surplusChqLedger;
         private LedgerEntryLine testDataEntryLine;
@@ -40,29 +40,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             this.surplusChqLedger = new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = StatementModelTestData.ChequeAccount };
             this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.InsHomeBucket);
             this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.PhoneBucket);
-        }
-
-        [TestMethod]
-        public void TransferFunds_ShouldNotCreateAutoMatchingRule_GivenTransferFromChqSurplusToChqHairCut()
-        {
-            var transferFundsData = new TransferFundsCommand
-            {
-                AutoMatchingReference = "FooTest12345",
-                BankTransferRequired = false,
-                FromLedger = LedgerBookTestData.SurplusLedger,
-                Narrative = "Save excess for November",
-                ToLedger = LedgerBookTestData.HairLedger,
-                TransferAmount = 400M
-            };
-
-            bool success = true;
-            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), null, new[] { "FooTest12345" }, null, It.IsAny<decimal>(), true))
-                .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object))
-                .Callback(() => success = false);
-
-            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
-
-            Assert.IsTrue(success);
         }
 
         [TestMethod]
@@ -113,6 +90,24 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void TransferFunds_ShouldDecreaseChqSurplus_GivenTransferFromChqSurplusToChqCarMtc()
+        {
+            var transferDetails = new TransferFundsCommand
+            {
+                FromLedger = this.surplusChqLedger,
+                ToLedger = this.phNetChqLedger,
+                TransferAmount = 22.00M,
+                Narrative = "Testing 123"
+            };
+
+            decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
+
+            Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
+        }
+
+        [TestMethod]
         public void TransferFunds_ShouldDecreaseChqSurplus_GivenTransferFromChqSurplusToSavingsInsHome()
         {
             var transferDetails = new TransferFundsCommand
@@ -128,6 +123,24 @@ namespace BudgetAnalyser.UnitTest.Ledger
             decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
 
             Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
+        }
+
+        [TestMethod]
+        public void TransferFunds_ShouldIncreaseChqCarMtc_GivenTransferFromChqSurplusToChqCarMtc()
+        {
+            var transferDetails = new TransferFundsCommand
+            {
+                FromLedger = this.surplusChqLedger,
+                ToLedger = this.phNetChqLedger,
+                TransferAmount = 22.00M,
+                Narrative = "Testing 123"
+            };
+
+            decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
+            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
+            decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
+
+            Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
         }
 
         [TestMethod]
@@ -172,8 +185,28 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
         }
 
+        [TestMethod]
+        public void TransferFunds_ShouldNotCreateAutoMatchingRule_GivenTransferFromChqSurplusToChqHairCut()
+        {
+            var transferFundsData = new TransferFundsCommand
+            {
+                AutoMatchingReference = "FooTest12345",
+                BankTransferRequired = false,
+                FromLedger = LedgerBookTestData.SurplusLedger,
+                Narrative = "Save excess for November",
+                ToLedger = LedgerBookTestData.HairLedger,
+                TransferAmount = 400M
+            };
 
+            var success = true;
+            this.mockRuleService.Setup(m => m.CreateNewSingleUseRule(It.IsAny<string>(), null, new[] { "FooTest12345" }, null, It.IsAny<decimal>(), true))
+                .Returns(new SingleUseMatchingRule(this.mockBucketRepo.Object))
+                .Callback(() => success = false);
 
+            this.subject.TransferFunds(transferFundsData, this.testDataEntryLine);
+
+            Assert.IsTrue(success);
+        }
 
 
         [TestMethod]
@@ -201,24 +234,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void TransferFunds_ShouldDecreaseChqSurplus_GivenTransferFromChqSurplusToChqCarMtc()
-        {
-            var transferDetails = new TransferFundsCommand
-            {
-                FromLedger = this.surplusChqLedger,
-                ToLedger = this.phNetChqLedger,
-                TransferAmount = 22.00M,
-                Narrative = "Testing 123"
-            };
-
-            decimal beforeBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.SurplusBalances.First(b => b.Account == StatementModelTestData.ChequeAccount).Balance;
-
-            Assert.AreEqual(beforeBalance - transferDetails.TransferAmount, afterBalance);
-        }
-
-        [TestMethod]
         public void TransferFunds_ShouldNotIncreaseSavBalance_GivenTransferFromChqSurplusToChqCarMtc()
         {
             var transferDetails = new TransferFundsCommand
@@ -241,27 +256,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             Assert.AreEqual(beforeBalance, afterBalance);
         }
-
-        [TestMethod]
-        public void TransferFunds_ShouldIncreaseChqCarMtc_GivenTransferFromChqSurplusToChqCarMtc()
-        {
-            var transferDetails = new TransferFundsCommand
-            {
-                FromLedger = this.surplusChqLedger,
-                ToLedger = this.phNetChqLedger,
-                TransferAmount = 22.00M,
-                Narrative = "Testing 123"
-            };
-
-            decimal beforeBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
-            this.subject.TransferFunds(transferDetails, this.testDataEntryLine);
-            decimal afterBalance = this.testDataEntryLine.Entries.First(e => e.LedgerBucket == this.phNetChqLedger).Balance;
-
-            Assert.AreEqual(beforeBalance + transferDetails.TransferAmount, afterBalance);
-        }
-
-
-
 
 
         [TestMethod]

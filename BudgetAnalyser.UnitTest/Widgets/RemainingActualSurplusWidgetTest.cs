@@ -64,14 +64,14 @@ namespace BudgetAnalyser.UnitTest.Widgets
                 .AppendReconciliation(
                     new DateTime(2015, 10, 20),
                     new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
-                    .WithReconciliationEntries(
-                        entryBuilder =>
-                        {
-                            entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
-                            entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
-                            entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
-                                .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateTime(2015, 10, 20), "automatchref12"); });
-                        })
+                .WithReconciliationEntries(
+                    entryBuilder =>
+                    {
+                        entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                        entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                        entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateTime(2015, 10, 20), "automatchref12"); });
+                    })
                 .Build();
         }
 
