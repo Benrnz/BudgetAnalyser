@@ -23,7 +23,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         public static readonly VisaAccount VisaAccount = new VisaAccount(TestDataConstants.VisaAccountName);
 
         /// <summary>
-        ///     Statement Model with transactions between 15/07/2013 and 14/09/2014
+        ///     Statement Model with transactions between 15/07/2013 and 14/09/2013
         /// </summary>
         public static StatementModel TestData1()
         {
