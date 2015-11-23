@@ -54,7 +54,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 .WithReconciliation(
                     new DateTime(2013, 6, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 2500))
-                .WithLedgerEntries(
+                .WithEntries(
                     entryBuilder =>
                     {
                         entryBuilder
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 .WithReconciliation(
                     new DateTime(2013, 7, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 3700))
-                .WithLedgerEntries(
+                .WithEntries(
                     entryBuilder =>
                     {
                         entryBuilder
@@ -103,7 +103,7 @@ namespace BudgetAnalyser.UnitTest.TestData
                 .WithReconciliation(
                     new DateTime(2013, 8, 15),
                     new BankBalance(StatementModelTestData.ChequeAccount, 2950))
-                .WithLedgerEntries(
+                .WithEntries(
                     entryBuilder =>
                     {
                         entryBuilder
@@ -214,6 +214,12 @@ namespace BudgetAnalyser.UnitTest.TestData
                 return this;
             }
 
+            public LedgerEntryTestDataBuilder ForLedger(LedgerBucket ledger)
+            {
+                this.nextLedgerCode = ledger.BudgetBucket.Code;
+                return this;
+            }
+
             public LedgerEntryTestDataBuilder WithTransactions(Action<TransactionTestDataBuilder> transactionsCreator)
             {
                 var txnBuilder = new TransactionTestDataBuilder();
@@ -234,11 +240,16 @@ namespace BudgetAnalyser.UnitTest.TestData
                 this.bookBuilder = bookBuilder;
             }
 
-            public LedgerBookBuilder WithLedgerEntries(Action<LedgerEntryTestDataBuilder> createEntries)
+            public LedgerBookBuilder WithEntries(Action<LedgerEntryTestDataBuilder> createEntries)
             {
                 var entryBuilder = new LedgerEntryTestDataBuilder(this.bookBuilder.LedgerBuckets);
                 createEntries(entryBuilder);
                 this.bookBuilder.SetReconciliation(entryBuilder.LedgerTransactions, this.remarks);
+                return this.bookBuilder;
+            }
+
+            public LedgerBookBuilder WithNoEntries()
+            {
                 return this.bookBuilder;
             }
 

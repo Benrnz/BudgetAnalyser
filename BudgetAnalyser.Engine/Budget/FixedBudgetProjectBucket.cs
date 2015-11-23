@@ -6,11 +6,20 @@ namespace BudgetAnalyser.Engine.Budget
 {
     public class FixedBudgetProjectBucket : SurplusBucket
     {
+        private const string ProjectCodeTemplate = "{0}.{1}";
+        public static readonly string ProjectCodeTemplateWithPrefix;
+
+        static FixedBudgetProjectBucket()
+        {
+            ProjectCodeTemplateWithPrefix = string.Format(ProjectCodeTemplate, SurplusCode, "{0}");
+        }
+
         public FixedBudgetProjectBucket(string code, string description, decimal fixedBudgetAmount)
             : base(CreateCode(code), description)
         {
             FixedBudgetAmount = fixedBudgetAmount;
             Created = DateTime.Now;
+
         }
 
         /// <summary>
@@ -34,7 +43,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(subCode));
             }
 
-            return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", SurplusCode, subCode.ToUpperInvariant());
+            return string.Format(CultureInfo.InvariantCulture, ProjectCodeTemplateWithPrefix, subCode.ToUpperInvariant());
         }
 
         /// <summary>
