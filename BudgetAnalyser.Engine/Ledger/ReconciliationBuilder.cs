@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
             if (transactions.Any())
             {
-                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
                     t =>
                     {
                         if (t.Amount < 0)

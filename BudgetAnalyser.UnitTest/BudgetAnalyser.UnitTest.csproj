@@ -179,6 +179,7 @@
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
+    <Compile Include="Helper\BudgetModelHelper.cs" />
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="TestData\MatchingRulesTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestDataGenerated.cs" />
     <Compile Include="TestData\MatchingRulesTestDataGenerator.cs" />
+    <Compile Include="TestData\StatementModelBuilder.cs" />
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
