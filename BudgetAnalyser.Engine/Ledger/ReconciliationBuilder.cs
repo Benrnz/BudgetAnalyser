@@ -256,11 +256,11 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 LedgerBucket ledgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
-                LedgerBucket bookLedgerDefaults = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
-                if (previousLedgerEntry.LedgerBucket.StoredInAccount != bookLedgerDefaults.StoredInAccount)
+                LedgerBucket currentLedger = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                if (previousLedgerEntry.LedgerBucket.StoredInAccount != currentLedger.StoredInAccount)
                 {
                     // Check to see if a ledger has been moved into a new default account since last reconciliation.
-                    ledgerBucket = bookLedgerDefaults;
+                    ledgerBucket = currentLedger;
                 }
                 else
                 {

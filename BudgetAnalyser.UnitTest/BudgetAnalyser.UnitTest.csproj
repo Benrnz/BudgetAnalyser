@@ -206,7 +206,7 @@
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBucketTest.cs" />
-    <Compile Include="Ledger\ReconciliationBuilderTest.cs" />
+    <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
     <Compile Include="Ledger\TransferFundsCommandTest.cs" />

@@ -9,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     public class StatementModelBuilder
     {
-        private StatementModel model;
+        private StatementModel model = new StatementModel(new FakeLogger());
         private readonly List<Transaction> additionalTransactions = new List<Transaction>();
 
         public StatementModelBuilder TestData1()
