@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         #region Should Add Compensating Transaction
         [TestMethod]
         [Description("Test case 5")]
-        public void SpentMonthlyLedgers_ShouldCreateRemoveExcessTransaction_GivenClosingBalanceIsGreaterThanBudgetAmountAndOpeningBalance()
+        public void ShouldCreateRemoveExcessTransaction_GivenClosingBalanceIsGreaterThanBudgetAmountAndOpeningBalance()
         {
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -53,8 +53,24 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        [Description("Test case 5.1")]
+        public void ShouldCreateRemoveExcessTransaction_GivenClosingBalanceIsGreaterThanOpeningBalanceAndNoBudgetAmount()
+        {
+            this.subject.Balance = 0;
+            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
+            var testInput = new List<LedgerTransaction>
+            {
+                new CreditLedgerTransaction { Amount = 1M, Date = new DateTime(2013, 9, 11) }
+            };
+            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            OutputLedgerTransactions();
+
+            Assert.AreEqual(2, this.subject.Transactions.Count());
+        }
+
+        [TestMethod]
         [Description("Test case 3")]
-        public void SpentMonthlyLedgers_ShouldCreateSupplementTransaction_GivenClosingBalanceIsLessThanBudgetAmountAndLessThanOrEqualToOpeningBalance()
+        public void ShouldCreateSupplementTransaction_GivenClosingBalanceIsLessThanBudgetAmountAndLessThanOrEqualToOpeningBalance()
         {
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -71,7 +87,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 4")]
-        public void SpentMonthlyLedgers_ShouldCreateSupplementTransaction_GivenClosingBalanceIsLessThanBudgetAmountAndLessThanOpeningBalance()
+        public void ShouldCreateSupplementTransaction_GivenClosingBalanceIsLessThanBudgetAmountAndLessThanOpeningBalance()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -91,7 +107,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         #region Should NOT Add Compensating Transaction
         [TestMethod]
         [Description("Test case 2 - no budget amount allocated at all")]
-        public void SpentMonthlyLedgers_ShouldNotCreateSupplementTransaction_GivenClosingBalanceIsLessThanOpeningBalanceAndNoBudgetAmount()
+        public void ShouldNotCreateSupplementTransaction_GivenClosingBalanceIsLessThanOpeningBalanceAndNoBudgetAmount()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -107,7 +123,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 2.1 - budget amount == closing balance")]
-        public void SpentMonthlyLedgers_ShouldNotCreateSupplementTransaction_GivenClosingBalanceIsLessThanOpeningBalanceAndBudgetAmountEqualsClosingBalance()
+        public void ShouldNotCreateSupplementTransaction_GivenClosingBalanceIsLessThanOpeningBalanceAndBudgetAmountEqualsClosingBalance()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -125,7 +141,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 8")]
-        public void SpentMonthlyLedgers_ShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToOpeningBalanceAndBudget()
+        public void ShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToOpeningBalanceAndBudget()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -141,7 +157,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 7")]
-        public void zzSpentMonthlyLedgers_ShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToBudgetAndNoWithdrawals()
+        public void zzShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToBudgetAndNoWithdrawals()
         {
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -157,7 +173,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test Case 6")]
-        public void SpentMonthlyLedgers_ShouldNotAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndTransactionsEqualise()
+        public void ShouldNotAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndTransactionsEqualise()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -174,8 +190,25 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
+        [Description("Test Case 6.1")]
+        public void ShouldNotAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndNoBudgetAmount()
+        {
+            this.subject.Balance = 1;
+            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
+            var testInput = new List<LedgerTransaction>
+            {
+                new CreditLedgerTransaction { Amount = 1, Date = new DateTime(2013, 9, 11) },
+                new CreditLedgerTransaction { Amount = -1, Date = new DateTime(2013, 9, 11) }
+            };
+            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            OutputLedgerTransactions();
+
+            Assert.AreEqual(2, this.subject.Transactions.Count());
+        }
+
+        [TestMethod]
         [Description("Test case 1")]
-        public void SpentMonthlyLedgers_ShouldNotAddCompensatingTransaction_GivenOpeningBalanceAndClosingBalanceAndBudgetAreAllZero()
+        public void ShouldNotAddCompensatingTransaction_GivenOpeningBalanceAndClosingBalanceAndBudgetAreAllZero()
         {
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -191,7 +224,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 5.1 Budget amount > Opening Balance (aka Previous Balance)")]
-        public void zzSpentMonthlyLedgers_ShouldOnlyRemoveExcessUpToBudgetAmount_GivenBudgetAmountIsGreaterThanOpeningBalance()
+        public void zzShouldOnlyRemoveExcessUpToBudgetAmount_GivenBudgetAmountIsGreaterThanOpeningBalance()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -208,7 +241,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 5.2 Opening Balance > Budget amount")]
-        public void SpentMonthlyLedgers_ShouldOnlyRemoveExcessUpToOpeningBalance_GivenOpeningBalanceIsGreaterThanBudgetAmount()
+        public void ShouldOnlyRemoveExcessUpToOpeningBalance_GivenOpeningBalanceIsGreaterThanBudgetAmount()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -228,7 +261,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         #region Test for correct values for 'supplement' transactions
         [TestMethod]
         [Description("Test case 2.1 Closing Balance 25 < Opening Balance 125 && Opening Balance 125 > Budget Amount 100. Closing balance cannot be less than budget amount")]
-        public void SpentMonthlyLedgers_ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanOpeningBalanceAndGreaterThanBudgetAmount()
+        public void ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanOpeningBalanceAndGreaterThanBudgetAmount()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -245,7 +278,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 4.1 Closing Balance 50 < Opening Balance && Opening Balance == Budget Amount 125. Closing balance cannot be less than budget amount")]
-        public void SpentMonthlyLedgers_ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanOpeningBalanceAndEqualToBudgetAmount()
+        public void ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanOpeningBalanceAndEqualToBudgetAmount()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -262,7 +295,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 3.1 Closing Balance < Budget Amount 200 && Budget Amount 200 > Opening Balance 125. Closing balance cannot be less than budget amount")]
-        public void SpentMonthlyLedgers_ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanBudgetAmountAndBudgetAmountIsGreaterThanOpeningBalance()
+        public void ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanBudgetAmountAndBudgetAmountIsGreaterThanOpeningBalance()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
