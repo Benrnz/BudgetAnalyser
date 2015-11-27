@@ -34,6 +34,39 @@ namespace BudgetAnalyser.UnitTest.Ledger
         private DateTime reconciliationDate;
         private LedgerEntry subject;
 
+        [TestMethod]
+        public void ShouldSupplementToZero_GivenNoBudgetAmountAndClosingBalanceIsLessThanZero()
+        {
+            this.subject.Balance = 100;
+            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
+            var testInput = new List<LedgerTransaction>
+            {
+                new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
+            };
+            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+
+            OutputLedgerTransactions();
+
+            Assert.AreEqual(0M, this.subject.Balance);
+        }
+
+        [TestMethod]
+        public void ShouldSupplementUpToBudgetAmount_GivenClosingBalanceIsLessThanOpeningBalanceAndLessThanBudgetAmount()
+        {
+            this.subject.Balance = 100;
+            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
+            var testInput = new List<LedgerTransaction>
+            {
+                new BudgetCreditLedgerTransaction { Amount = 201M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
+                new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
+            };
+            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+
+            OutputLedgerTransactions();
+
+            Assert.AreEqual(201M, this.subject.Balance);
+        }
+
         #region Should Add Compensating Transaction
         [TestMethod]
         [Description("Test case 5")]

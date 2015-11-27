@@ -165,6 +165,7 @@ namespace BudgetAnalyser.Engine.Ledger
                                 Amount = -(Balance + NetAmount),
                                 Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
                             };
+                            Balance = 0;
                         }
                         else
                         {
