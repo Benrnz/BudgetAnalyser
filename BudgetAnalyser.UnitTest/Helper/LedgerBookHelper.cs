@@ -60,7 +60,7 @@ namespace BudgetAnalyser.UnitTest.Helper
                     break;
                 }
                 // Only two bank balances are shown in the test output at this stage.
-                string balanceText = string.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
+                string balanceText = String.Format("{0} {1} ", bankBalance.Account.Name.Truncate(1), bankBalance.Balance.ToString("N"));
                 Console.Write(balanceText.PadLeft(13).TruncateLeft(13));
             }
             Console.Write(line.TotalBalanceAdjustments.ToString("N").PadLeft(9).TruncateLeft(9));
@@ -139,6 +139,17 @@ namespace BudgetAnalyser.UnitTest.Helper
             Console.Write("Surplus    BankBalances    Adjusts LedgerBalance");
             Console.WriteLine();
             Console.WriteLine("==============================================================================================================================================");
+        }
+
+        public static void Output(this LedgerEntry instance)
+        {
+            Console.WriteLine($"Ledger Entry Transactions. ============================================");
+            foreach (LedgerTransaction transaction in instance.Transactions)
+            {
+                Console.WriteLine($"{transaction.Date:d} {transaction.Narrative} {transaction.Amount:F2}");
+            }
+            Console.WriteLine("----------------------------------------------------------------------------------------");
+            Console.WriteLine($"{instance.Transactions.Count()} transactions. NetAmount: {instance.NetAmount:F2} ClosingBalance: {instance.Balance:F2}");
         }
     }
 }
