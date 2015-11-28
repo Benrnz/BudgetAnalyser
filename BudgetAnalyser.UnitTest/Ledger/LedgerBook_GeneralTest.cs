@@ -131,14 +131,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1558()
+        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1623()
         {
             ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
             LedgerEntry entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
             this.subject.Output();
-            Assert.AreEqual(1558.47M, entryLine.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1623.18M, entryLine.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
