@@ -158,11 +158,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Reconcile_ShouldResultIn1613_GivenTestData1()
+        public void Reconcile_ShouldResultIn1678_GivenTestData1()
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1613.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1678.18M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -225,7 +225,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1613.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1678.18M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -233,7 +233,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(64.71M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
+            Assert.AreEqual(0M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
         }
 
         [TestMethod]
@@ -242,7 +242,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             ReconciliationResult result = Act();
             result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement", new ChequeAccount("Chq"));
             this.subject.Output(true);
-            Assert.AreEqual(1014.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1079.18M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestInitialize]

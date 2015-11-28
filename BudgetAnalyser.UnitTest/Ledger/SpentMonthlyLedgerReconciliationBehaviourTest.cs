@@ -53,7 +53,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldRemoveExcessToZero_GivenNetDifferenceOfZeroAndNoBudgetAmount()
+        public void zzShouldRemoveExcessToZero_GivenNetDifferenceOfZeroAndNoBudgetAmount()
         {
             this.subject.Balance = 100;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -201,7 +201,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test Case 6.1")]
-        public void ShouldAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndNoBudgetAmount()
+        public void zzShouldAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndNoBudgetAmount()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
