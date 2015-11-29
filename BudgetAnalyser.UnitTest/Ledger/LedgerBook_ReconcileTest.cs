@@ -159,7 +159,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1678.18M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -222,7 +222,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1678.18M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -239,7 +239,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             ReconciliationResult result = Act();
             result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement", new ChequeAccount("Chq"));
             this.subject.Output(true);
-            Assert.AreEqual(1079.18M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(956.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestInitialize]
