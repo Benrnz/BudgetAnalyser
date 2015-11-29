@@ -16,12 +16,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger()
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger()
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -36,12 +36,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SurplusLedger
                 {
                     BudgetBucket = new SurplusBucket(),
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SurplusLedger
                 {
                     BudgetBucket = new SurplusBucket(),
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -56,7 +56,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void IsValid_ShouldBeFalse_GivenLedgersAreTheSame()
         {
-            var ledger = new LedgerBucket
+            var ledger = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.InsHomeBucket,
                 StoredInAccount = StatementModelTestData.ChequeAccount
@@ -77,12 +77,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             this.subject = new TransferFundsCommand
             {
                 FromLedger = null,
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -117,12 +117,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -137,7 +137,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -155,12 +155,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -177,12 +177,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -199,12 +199,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SurplusLedger
                 {
                     BudgetBucket = new SurplusBucket(),
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.CarMtcBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -221,12 +221,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
@@ -243,12 +243,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.SavingsAccount
@@ -265,12 +265,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             this.subject = new TransferFundsCommand
             {
-                FromLedger = new LedgerBucket
+                FromLedger = new SpentMonthlyLedger
                 {
                     BudgetBucket = StatementModelTestData.PhoneBucket,
                     StoredInAccount = StatementModelTestData.ChequeAccount
                 },
-                ToLedger = new LedgerBucket
+                ToLedger = new SavedUpForLedger
                 {
                     BudgetBucket = StatementModelTestData.InsHomeBucket,
                     StoredInAccount = StatementModelTestData.SavingsAccount

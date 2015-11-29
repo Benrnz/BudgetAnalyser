@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine.Services
@@ -14,11 +15,13 @@ namespace BudgetAnalyser.Engine.Services
     public class LedgerService : ILedgerService, ISupportsModelPersistence
     {
         private readonly IAccountTypeRepository accountTypeRepository;
+        private readonly ILegderBucketFactory ledgerBucketFactory;
         private readonly ILedgerBookRepository ledgerRepository;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
-            [NotNull] IAccountTypeRepository accountTypeRepository)
+            [NotNull] IAccountTypeRepository accountTypeRepository,
+            [NotNull] ILegderBucketFactory ledgerBucketFactory)
         {
             if (ledgerRepository == null)
             {
@@ -30,8 +33,14 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
+            if (ledgerBucketFactory == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBucketFactory));
+            }
+
             this.ledgerRepository = ledgerRepository;
             this.accountTypeRepository = accountTypeRepository;
+            this.ledgerBucketFactory = ledgerBucketFactory;
         }
 
         public event EventHandler Closed;
@@ -136,7 +145,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(storeInThisAccount));
             }
 
-            return LedgerBook.AddLedger(bucket, storeInThisAccount);
+            var newLedger = this.ledgerBucketFactory.Build(bucket.Code);
+            newLedger.StoredInAccount = storeInThisAccount;
+            return LedgerBook.AddLedger(newLedger);
         }
 
         public bool ValidateModel(StringBuilder messages)

@@ -13,29 +13,26 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void DictionaryTest()
         {
-            var instance1 = new LedgerBucket
-            {
-                BudgetBucket = StatementModelTestData.HairBucket,
-                StoredInAccount = new ChequeAccount("Foo1")
-            };
+            LedgerBucket instance1 = LedgerBookTestData.HairLedger;
 
             var dictionary = new Dictionary<LedgerBucket, LedgerBucket>
             {
                 { instance1, instance1 }
             };
 
-            var instance2 = new LedgerBucket
+            LedgerBucket instance2 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.HairBucket,
-                StoredInAccount = new ChequeAccount("Foo1")
+                StoredInAccount = LedgerBookTestData.ChequeAccount
             };
 
+            // Should already contain this, its the same code.
             Assert.IsTrue(dictionary.ContainsKey(instance2));
 
-            var instance3 = new LedgerBucket
+            LedgerBucket instance3 = new SavedUpForLedger
             {
-                BudgetBucket = new SpentMonthlyExpenseBucket("HAIRCUT", "Foo bar"),
-                StoredInAccount = new ChequeAccount("Foo1")
+                BudgetBucket = new SavedUpForExpenseBucket("HAIRCUT", "Foo bar"),
+                StoredInAccount = LedgerBookTestData.ChequeAccount
             };
 
             Assert.IsTrue(dictionary.ContainsKey(instance3));
@@ -47,12 +44,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var bucket1 = new SpentMonthlyExpenseBucket("Foo1", "Foo bar");
             var bucket2 = new SpentMonthlyExpenseBucket("Foo1", "Foo bar");
 
-            var instance1 = new LedgerBucket
+            var instance1 = new SpentMonthlyLedger
             {
                 BudgetBucket = bucket1,
                 StoredInAccount = StatementModelTestData.SavingsAccount
             };
-            var instance2 = new LedgerBucket
+            var instance2 = new SpentMonthlyLedger
             {
                 BudgetBucket = bucket2,
                 StoredInAccount = StatementModelTestData.SavingsAccount
@@ -64,12 +61,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void TwoInstancesWithSameBucketAndAccountAreEqual()
         {
-            var instance1 = new LedgerBucket
+            var instance1 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = StatementModelTestData.SavingsAccount
             };
-            var instance2 = new LedgerBucket
+            var instance2 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = StatementModelTestData.SavingsAccount
@@ -84,12 +81,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
             var account1 = new SavingsAccount("Foo");
             var account2 = new SavingsAccount("Foo");
 
-            var instance1 = new LedgerBucket
+            var instance1 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = account1
             };
-            var instance2 = new LedgerBucket
+            var instance2 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = account2
@@ -101,12 +98,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void TwoInstancesWithSameBucketAndNullAccountAreEqual()
         {
-            var instance1 = new LedgerBucket
+            var instance1 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = null
             };
-            var instance2 = new LedgerBucket
+            var instance2 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = null
@@ -118,12 +115,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestMethod]
         public void TwoInstancesWithSameBucketAndNullAccountHaveTheSameHashCode()
         {
-            var instance1 = new LedgerBucket
+            var instance1 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = null
             };
-            var instance2 = new LedgerBucket
+            var instance2 = new SavedUpForLedger
             {
                 BudgetBucket = StatementModelTestData.CarMtcBucket,
                 StoredInAccount = null

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
@@ -12,12 +14,24 @@ namespace BudgetAnalyser.Engine.Ledger
     ///     Bank Account in which it is stored.
     /// </summary>
     [DebuggerDisplay("Ledger({BudgetBucket})")]
-    public class LedgerBucket
+    public abstract class LedgerBucket
     {
+        private BudgetBucket budgetBucket;
+        protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
+        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than monthly budget amount";
+
         /// <summary>
         ///     Gets or sets the Budget Bucket this ledger column is tracking.
         /// </summary>
-        public BudgetBucket BudgetBucket { get; internal set; }
+        public BudgetBucket BudgetBucket
+        {
+            get { return this.budgetBucket; }
+            internal set
+            {
+                ValidateBucketSet(value);
+                this.budgetBucket = value;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the Account in which this ledger's funds are stored.
@@ -71,6 +85,10 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             return string.Format(CultureInfo.CurrentCulture, "Ledger Bucket {0}", BudgetBucket);
         }
+
+        public abstract void ReconciliationBehaviour(List<LedgerTransaction> newTransactions, DateTime reconciliationDate, decimal openingBalance);
+
+        public abstract void ValidateBucketSet(BudgetBucket bucket);
 
         protected bool Equals([CanBeNull] LedgerBucket other)
         {

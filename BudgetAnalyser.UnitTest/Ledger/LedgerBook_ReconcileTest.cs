@@ -29,26 +29,23 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             var book = new LedgerBookBuilder().TestData1().Build();
             book.Output(true);
-
-            book = LedgerBookTestData.TestData1();
-            book.Output(true);
         }
 
         [TestMethod]
         public void AddLedger_ShouldAddToLedgersCollection_GivenTestData1()
         {
-            this.subject.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
+            this.subject.AddLedger(LedgerBookTestData.RatesLedger);
 
-            Assert.IsTrue(this.subject.Ledgers.Any(l => l.BudgetBucket.Code == "FOO"));
+            Assert.IsTrue(this.subject.Ledgers.Any(l => l.BudgetBucket == LedgerBookTestData.RatesLedger.BudgetBucket));
         }
 
         [TestMethod]
         public void AddLedger_ShouldBeIncludedInNextReconcile_GivenTestData1()
         {
-            this.subject.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
+            this.subject.AddLedger(LedgerBookTestData.RatesLedger);
             ReconciliationResult result = Act();
 
-            Assert.IsTrue(result.Reconciliation.Entries.Any(e => e.LedgerBucket.BudgetBucket.Code == "FOO"));
+            Assert.IsTrue(result.Reconciliation.Entries.Any(e => e.LedgerBucket == LedgerBookTestData.RatesLedger));
         }
 
         [TestMethod]

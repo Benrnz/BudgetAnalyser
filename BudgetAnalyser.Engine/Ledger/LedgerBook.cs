@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Ledger
             IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
             foreach (Account account in accounts)
             {
-                ledgers.Insert(0, new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = account });
+                ledgers.Insert(0, new SurplusLedger { StoredInAccount = account });
             }
 
             return ledgers;
@@ -97,15 +97,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, Account storeInThisAccount)
+        internal LedgerBucket AddLedger(LedgerBucket newLedger)
         {
-            if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
+            if (this.ledgersColumns.Any(l => l.BudgetBucket == newLedger.BudgetBucket))
             {
                 // Ledger already exists in this ledger book.
                 return null;
             }
 
-            var newLedger = new LedgerBucket { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount };
             this.ledgersColumns.Add(newLedger);
             return newLedger;
         }

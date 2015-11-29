@@ -4,7 +4,6 @@ using System.Linq;
 using AutoMapper;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -12,17 +11,17 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     internal class LedgerAutoMapperConfiguration : ILocalAutoMapperConfiguration
     {
         private readonly IAccountTypeRepository accountTypeRepo;
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly ILedgerBookFactory ledgerBookFactory;
+        private readonly ILegderBucketFactory ledgerBucketFactory;
         private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly ILogger logger;
 
         public LedgerAutoMapperConfiguration(
             [NotNull] ILedgerTransactionFactory ledgerTransactionFactory,
             [NotNull] IAccountTypeRepository accountTypeRepo,
-            [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger,
-            [NotNull] ILedgerBookFactory ledgerBookFactory)
+            [NotNull] ILedgerBookFactory ledgerBookFactory,
+            [NotNull] ILegderBucketFactory ledgerBucketFactory)
         {
             if (ledgerTransactionFactory == null)
             {
@@ -34,21 +33,21 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 throw new ArgumentNullException(nameof(accountTypeRepo));
             }
 
-            if (bucketRepo == null)
-            {
-                throw new ArgumentNullException(nameof(bucketRepo));
-            }
-
             if (logger == null)
             {
                 throw new ArgumentNullException(nameof(logger));
             }
 
+            if (ledgerBucketFactory == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBucketFactory));
+            }
+
             this.ledgerTransactionFactory = ledgerTransactionFactory;
             this.accountTypeRepo = accountTypeRepo;
-            this.bucketRepo = bucketRepo;
             this.logger = logger;
             this.ledgerBookFactory = ledgerBookFactory;
+            this.ledgerBucketFactory = ledgerBucketFactory;
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Simple Automapper expressions artificially inflating cyclomatic complexity")]
@@ -87,18 +86,20 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledger => ledger.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerBucketDto, LedgerBucket>()
-                .ForMember(ledger => ledger.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BucketCode)))
-                .ForMember(ledger => ledger.StoredInAccount, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.StoredInAccount)));
+                .ConstructUsing(dto => this.ledgerBucketFactory.Build(dto.BucketCode))
+                .ForMember(ledger => ledger.BudgetBucket, m => m.Ignore());
+                //.ForMember(ledger => ledger.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BucketCode)))
+                //.ForMember(ledger => ledger.StoredInAccount, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.StoredInAccount)));
 
             Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
                 .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code))
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerEntryDto, LedgerEntry>()
+                .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)))
                 .ForMember(
                     entry => entry.LedgerBucket,
-                    m => m.MapFrom(dto => new LedgerBucket { BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode), StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
-                .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)));
+                    m => m.MapFrom(dto => this.ledgerBucketFactory.Build(dto.BucketCode))); //, StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));

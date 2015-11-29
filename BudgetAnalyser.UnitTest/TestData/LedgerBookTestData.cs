@@ -14,21 +14,22 @@ namespace BudgetAnalyser.UnitTest.TestData
         {
             ChequeAccount = StatementModelTestData.ChequeAccount;
             SavingsAccount = StatementModelTestData.SavingsAccount;
-            RatesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates ") };
-            PowerLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power ") };
-            PhoneLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar") };
-            WaterLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar") };
-            HouseInsLedger = new LedgerBucket { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar") };
-            HouseInsLedgerSavingsAccount = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = SavingsAccount };
-            CarInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar") };
-            LifeInsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar") };
-            CarMtcLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar") };
-            RegoLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, "") };
-            HairLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow.") };
-            ClothesLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", "") };
-            DocLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, "") };
-            SurplusLedger = new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = ChequeAccount };
-            SavingsLedger = new LedgerBucket { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings") };
+            RatesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RatesBucketCode, "Rates "), StoredInAccount = ChequeAccount };
+            PowerLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PowerBucketCode, "Power "), StoredInAccount = ChequeAccount };
+            PhoneLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.PhoneBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            WaterLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.WaterBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            HouseInsLedger = new SpentMonthlyLedger { BudgetBucket = new SpentMonthlyExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            HouseInsLedgerSavingsAccount = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.InsuranceHomeBucketCode, "Poo bar"), StoredInAccount = SavingsAccount };
+            CarInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSCAR", "Poo bar"), StoredInAccount = ChequeAccount };
+            LifeInsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("INSLIFE", "Poo bar"), StoredInAccount = ChequeAccount };
+            CarMtcLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.CarMtcBucketCode, "Poo bar"), StoredInAccount = ChequeAccount };
+            RegoLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.RegoBucketCode, ""), StoredInAccount = ChequeAccount };
+            HairLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.HairBucketCode, "Hair cuts wheelbarrow."), StoredInAccount = ChequeAccount };
+            ClothesLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket("CLOTHES", ""), StoredInAccount = ChequeAccount };
+            DocLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.DoctorBucketCode, ""), StoredInAccount = ChequeAccount };
+            SurplusLedger = new SurplusLedger { StoredInAccount = ChequeAccount };
+            SavingsSurplusLedger = new SurplusLedger { StoredInAccount = SavingsAccount };
+            SavingsLedger = new SavedUpForLedger { BudgetBucket = new SavedUpForExpenseBucket(TestDataConstants.SavingsBucketCode, "Savings"), StoredInAccount = ChequeAccount };
         }
 
         public static LedgerBucket CarInsLedger { get; }
@@ -49,6 +50,7 @@ namespace BudgetAnalyser.UnitTest.TestData
         public static Engine.BankAccount.Account SavingsAccount { get; }
         public static LedgerBucket SavingsLedger { get; }
         public static LedgerBucket SurplusLedger { get; }
+        public static LedgerBucket SavingsSurplusLedger { get; }
         public static LedgerBucket WaterLedger { get; }
 
         /// <summary>
