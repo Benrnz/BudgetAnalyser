@@ -137,8 +137,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
             LedgerEntry entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
-            this.subject.Output();
-            Assert.AreEqual(1623.18M, entryLine.Reconciliation.CalculatedSurplus);
+            this.subject.Output(true);
+            Assert.AreEqual(1500.50M, entryLine.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
