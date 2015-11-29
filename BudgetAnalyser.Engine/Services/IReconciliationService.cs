@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Unlocks the current month after it has been saved and locked.
         /// </summary>
-        LedgerEntryLine UnlockCurrentMonth(LedgerBook ledgerBook);
+        LedgerEntryLine UnlockCurrentMonth([NotNull] LedgerBook ledgerBook);
 
         /// <summary>
         ///     Updates the remarks for the given Ledger Entry Line.

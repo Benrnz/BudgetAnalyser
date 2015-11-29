@@ -7,12 +7,7 @@ namespace BudgetAnalyser.Engine.Budget
     public class FixedBudgetProjectBucket : SurplusBucket
     {
         private const string ProjectCodeTemplate = "{0}.{1}";
-        public static readonly string ProjectCodeTemplateWithPrefix;
-
-        static FixedBudgetProjectBucket()
-        {
-            ProjectCodeTemplateWithPrefix = string.Format(ProjectCodeTemplate, SurplusCode, "{0}");
-        }
+        public static readonly string ProjectCodeTemplateWithPrefix = string.Format(ProjectCodeTemplate, SurplusCode, "{0}");
 
         public FixedBudgetProjectBucket(string code, string description, decimal fixedBudgetAmount)
             : base(CreateCode(code), description)

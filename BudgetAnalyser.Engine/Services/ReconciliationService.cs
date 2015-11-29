@@ -105,6 +105,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry, decimal amount, string narrative)
         {
+            if (reconciliation == null)
+            {
+                throw new ArgumentNullException(nameof(reconciliation));
+            }
+
             if (ledgerEntry == null)
             {
                 throw new ArgumentNullException(nameof(ledgerEntry));
@@ -209,6 +214,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public LedgerEntryLine UnlockCurrentMonth(LedgerBook ledgerBook)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
+
             return ledgerBook.UnlockMostRecentLine();
         }
 

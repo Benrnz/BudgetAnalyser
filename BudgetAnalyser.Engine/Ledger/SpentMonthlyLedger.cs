@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Ledger
             throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
         }
 
-        public override void ReconciliationBehaviour(List<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
             var netAmount = transactions.Sum(t => t.Amount);
             var closingBalance = openingBalance + netAmount;

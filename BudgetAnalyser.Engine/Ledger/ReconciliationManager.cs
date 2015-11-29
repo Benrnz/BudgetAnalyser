@@ -145,6 +145,16 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement));
+            }
+
             LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
             if (lastLine == null)
             {

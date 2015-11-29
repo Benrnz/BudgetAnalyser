@@ -141,11 +141,11 @@
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\Data\DtoToToDoCollectionMapper.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
-    <Compile Include="Ledger\Data\ILegderBucketFactory.cs" />
+    <Compile Include="Ledger\Data\ILedgerBucketFactory.cs" />
     <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
-    <Compile Include="Ledger\Data\LegderBucketFactory.cs" />
+    <Compile Include="Ledger\Data\LedgerBucketFactory.cs" />
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
     <Compile Include="Ledger\ILedgerBookFactory.cs" />

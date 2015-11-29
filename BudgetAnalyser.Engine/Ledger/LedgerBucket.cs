@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Format(CultureInfo.CurrentCulture, "Ledger Bucket {0}", BudgetBucket);
         }
 
-        public abstract void ReconciliationBehaviour(List<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
+        public abstract void ReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         public abstract void ValidateBucketSet(BudgetBucket bucket);
 

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger
             BudgetBucket = new SurplusBucket();
         }
 
-        public override void ReconciliationBehaviour(List<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
             // Nothing special to do here for Surplus.
         }

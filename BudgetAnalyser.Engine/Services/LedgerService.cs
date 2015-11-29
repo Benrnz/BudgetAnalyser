@@ -15,13 +15,13 @@ namespace BudgetAnalyser.Engine.Services
     public class LedgerService : ILedgerService, ISupportsModelPersistence
     {
         private readonly IAccountTypeRepository accountTypeRepository;
-        private readonly ILegderBucketFactory ledgerBucketFactory;
+        private readonly ILedgerBucketFactory ledgerBucketFactory;
         private readonly ILedgerBookRepository ledgerRepository;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILegderBucketFactory ledgerBucketFactory)
+            [NotNull] ILedgerBucketFactory ledgerBucketFactory)
         {
             if (ledgerRepository == null)
             {

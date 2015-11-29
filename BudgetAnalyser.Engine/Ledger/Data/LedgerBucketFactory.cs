@@ -5,11 +5,11 @@ using BudgetAnalyser.Engine.Budget;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     [AutoRegisterWithIoC]
-    public class LegderBucketFactory : ILegderBucketFactory
+    public class LedgerBucketFactory : ILedgerBucketFactory
     {
         private readonly IBudgetBucketRepository bucketRepo;
 
-        public LegderBucketFactory([NotNull] IBudgetBucketRepository bucketRepo)
+        public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (bucketRepo == null)
             {

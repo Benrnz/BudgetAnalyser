@@ -7,8 +7,13 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class SavedUpForLedger : LedgerBucket
     {
-        public override void ReconciliationBehaviour(List<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
+            if (transactions == null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+
             LedgerTransaction zeroingTransaction = null;
             var netAmount = transactions.Sum(t => t.Amount);
 

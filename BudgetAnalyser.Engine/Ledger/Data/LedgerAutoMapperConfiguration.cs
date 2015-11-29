@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     {
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly ILedgerBookFactory ledgerBookFactory;
-        private readonly ILegderBucketFactory ledgerBucketFactory;
+        private readonly ILedgerBucketFactory ledgerBucketFactory;
         private readonly ILedgerTransactionFactory ledgerTransactionFactory;
         private readonly ILogger logger;
 
@@ -21,7 +21,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             [NotNull] IAccountTypeRepository accountTypeRepo,
             [NotNull] ILogger logger,
             [NotNull] ILedgerBookFactory ledgerBookFactory,
-            [NotNull] ILegderBucketFactory ledgerBucketFactory)
+            [NotNull] ILedgerBucketFactory ledgerBucketFactory)
         {
             if (ledgerTransactionFactory == null)
             {
