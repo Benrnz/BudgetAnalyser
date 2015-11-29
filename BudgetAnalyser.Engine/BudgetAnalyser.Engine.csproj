@@ -136,6 +136,7 @@
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
     <Compile Include="IDataChangeDetection.cs" />
     <Compile Include="IEnumerableExtension.cs" />
+    <Compile Include="ListExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\Data\DtoToToDoCollectionMapper.cs" />

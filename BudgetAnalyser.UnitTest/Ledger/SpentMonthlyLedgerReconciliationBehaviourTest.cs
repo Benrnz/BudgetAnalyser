@@ -102,22 +102,6 @@ namespace BudgetAnalyser.UnitTest.Ledger
             Assert.AreEqual(201M, this.subject.Balance);
         }
 
-        [TestMethod]
-        public void StatusQuo_TemporaryTest()
-        {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
-            var testInput = new List<LedgerTransaction>
-            {
-                new BudgetCreditLedgerTransaction { Amount = 175M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
-                new CreditLedgerTransaction { Amount = -75M, Date = new DateTime(2013, 9, 11) }
-            };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
-
-            Assert.AreEqual(125M, this.subject.Balance);
-            Assert.AreEqual(3, this.subject.Transactions.Count());
-        }
-
         [TestInitialize]
         public void TestInitialise()
         {
