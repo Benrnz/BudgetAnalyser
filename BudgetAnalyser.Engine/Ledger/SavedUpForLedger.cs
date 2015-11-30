@@ -48,7 +48,7 @@ namespace BudgetAnalyser.Engine.Ledger
             if (bucket is SavedUpForExpenseBucket) return;
             if (bucket is SavingsCommitmentBucket) return;
 
-            throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets can be used with an instance of Saved-Up-For-Ledger.");
+            throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.");
         }
     }
 }
