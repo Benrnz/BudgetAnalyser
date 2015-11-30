@@ -26,6 +26,7 @@ namespace BudgetAnalyser.UnitTest.Helper
             }
 
             Console.WriteLine("=====================================================================================================================================");
+            Console.WriteLine($"Total Transactions: {instance.AllTransactions.Count()}");
             Console.WriteLine();
         }
     }

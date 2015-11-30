@@ -291,6 +291,7 @@
     <Compile Include="BudgetAnalyserLog4NetLoggerTest.cs" />
     <Compile Include="AutoMapperConfigurationTest.cs" />
     <Compile Include="ReferenceNumberGeneratorTest.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidgetTest.cs" />
     <Compile Include="Widgets\RemainingActualSurplusWidgetTest.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>

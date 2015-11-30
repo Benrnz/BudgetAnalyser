@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
@@ -15,6 +16,18 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC]
     public class LedgerCalculation
     {
+        private readonly ILogger logger;
+
+        public LedgerCalculation()
+        {
+            this.logger = new NullLogger();
+        }
+
+        public LedgerCalculation(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>
         ///     A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers" />. This method
         ///     is called multiple times over a short period to build a burn down report.
@@ -91,10 +104,33 @@ namespace BudgetAnalyser.Engine.Ledger
 
             decimal beginningOfMonthBalance = entryLine.CalculatedSurplus;
             var autoMatchLedgerTransactions = ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList();
-            decimal transactionTotal = statement.Transactions
+            this.logger.LogInfo(
+                l =>
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
+                    foreach (var txn in autoMatchLedgerTransactions)
+                    {
+                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
+                    }
+                    return builder.ToString();
+                });
+            var query = statement.Transactions
                 .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1) && t.BudgetBucket is SurplusBucket)
-                .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions))
-                .Sum(txn => txn.Amount);
+                .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
+            this.logger.LogInfo(
+                l =>
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Statement Transactions found that are 'SURPLUS' and not 'Auto-Matching-Transactions':");
+                    foreach (var txn in query)
+                    {
+                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
+                    }
+                    return builder.ToString();
+                });
+            decimal transactionTotal = query.Sum(txn => txn.Amount);
+            this.logger.LogInfo(l => l.Format("Total Surplus Transactions {0:F2}", transactionTotal));
 
             beginningOfMonthBalance += transactionTotal;
 
