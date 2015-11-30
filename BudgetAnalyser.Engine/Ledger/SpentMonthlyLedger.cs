@@ -30,15 +30,7 @@ namespace BudgetAnalyser.Engine.Ledger
             // Supplement
             if (closingBalance < budgetTransaction.Amount || closingBalance < openingBalance)
             {
-                //if (openingBalance > budgetTransaction.Amount)
-                //{
-                //    transactions.AddIfSomething(SupplementToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
-                //}
-                //else
-                //{
-                    transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
-                //}
-
+                transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
                 return;
             }
 
@@ -54,17 +46,6 @@ namespace BudgetAnalyser.Engine.Ledger
                     transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
                 }
             } 
-        }
-
-        private static LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
-        {
-            if (openingBalance - closingBalance == 0) return null;
-            return new CreditLedgerTransaction
-            {
-                Amount = openingBalance - closingBalance,
-                Date = reconciliationDate,
-                Narrative = SupplementLessThanBudgetText,
-            };
         }
 
         private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
