@@ -35,9 +35,9 @@ namespace BudgetAnalyser.UnitTest
                                 new LedgerAutoMapperConfiguration(
                                     new LedgerTransactionFactory(),
                                     new InMemoryAccountTypeRepository(),
-                                    new BucketBucketRepoAlwaysFind(),
                                     new FakeLogger(),
-                                    new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger()))),
+                                    new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())),
+                                    new LedgerBucketFactory(new BucketBucketRepoAlwaysFind())),
                                 new MatchingAutoMapperConfiguration(new MatchingRuleFactory(new BucketBucketRepoAlwaysFind())),
                                 new StatementAutoMapperConfiguration(new InMemoryTransactionTypeRepository(), new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new FakeLogger()),
                                 new ApplicationAutoMapperConfiguration()

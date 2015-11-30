@@ -25,8 +25,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void Comparable_HairBucketIsLessThanPower()
         {
-            SpentMonthlyExpenseBucket hairBucket = StatementModelTestData.HairBucket;
-            SpentMonthlyExpenseBucket powerBucket = StatementModelTestData.PowerBucket;
+            var hairBucket = StatementModelTestData.HairBucket;
+            var powerBucket = StatementModelTestData.PowerBucket;
 
             Assert.IsTrue(hairBucket.CompareTo(powerBucket) < 0);
         }
@@ -43,7 +43,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestMethod]
         public void Comparable_PhoneBucketIsGreaterThanHair()
         {
-            SpentMonthlyExpenseBucket hairBucket = StatementModelTestData.HairBucket;
+            var hairBucket = StatementModelTestData.HairBucket;
             SpentMonthlyExpenseBucket phoneBucket = StatementModelTestData.PhoneBucket;
 
             Assert.IsTrue(phoneBucket.CompareTo(hairBucket) > 0);

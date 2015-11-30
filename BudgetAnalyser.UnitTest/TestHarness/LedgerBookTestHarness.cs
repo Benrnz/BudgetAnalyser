@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -20,11 +19,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public Func<ReconciliationResult> ReconcileOverride { get; set; }
 
-        internal override ReconciliationResult Reconcile(
-            DateTime reconciliationDate,
-            IEnumerable<BankBalance> currentBankBalances,
-            BudgetModel budget,
-            StatementModel statement)
+        internal override ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget, StatementModel statement, params BankBalance[] currentBankBalances)
         {
             return ReconcileOverride?.Invoke();
         }

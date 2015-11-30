@@ -148,9 +148,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
             this.subject.MonthEndReconciliation(
                 this.testDataLedgerBook,
                 reconciliationDate ?? ReconcileDate,
-                this.currentBankBalances,
                 this.testDataBudgetContext,
-                this.testDataStatement);
+                this.testDataStatement,
+                false,
+                this.currentBankBalances.ToArray());
         }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)

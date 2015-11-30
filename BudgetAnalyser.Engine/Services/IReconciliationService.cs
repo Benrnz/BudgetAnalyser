@@ -50,21 +50,21 @@ namespace BudgetAnalyser.Engine.Services
         ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
         ///     reconciliation which is the end date for the period.
         /// </param>
+        /// <param name="budgetContext">The current budget context.</param>
+        /// <param name="statement">The currently loaded statement.</param>
+        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <param name="balances">
         ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
-        /// <param name="budgetContext">The current budget context.</param>
-        /// <param name="statement">The currently loaded statement.</param>
-        /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>
         LedgerEntryLine MonthEndReconciliation(
             [NotNull] LedgerBook ledgerBook,
             DateTime reconciliationDate,
-            [NotNull] IEnumerable<BankBalance> balances,
             [NotNull] IBudgetCurrencyContext budgetContext,
             [NotNull] StatementModel statement,
-            bool ignoreWarnings = false);
+            bool ignoreWarnings,
+            [NotNull] params BankBalance[] balances);
 
         /// <summary>
         ///     Removes the transaction from the specified Ledger Entry.
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Unlocks the current month after it has been saved and locked.
         /// </summary>
-        LedgerEntryLine UnlockCurrentMonth(LedgerBook ledgerBook);
+        LedgerEntryLine UnlockCurrentMonth([NotNull] LedgerBook ledgerBook);
 
         /// <summary>
         ///     Updates the remarks for the given Ledger Entry Line.

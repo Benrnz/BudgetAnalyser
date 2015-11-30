@@ -44,10 +44,10 @@ namespace BudgetAnalyser.Engine.Ledger
         public ReconciliationResult MonthEndReconciliation(
             LedgerBook ledgerBook,
             DateTime reconciliationDate,
-            IEnumerable<BankBalance> currentBankBalances,
             IBudgetCurrencyContext budgetContext,
             StatementModel statement,
-            bool ignoreWarnings = false)
+            bool ignoreWarnings,
+            params BankBalance[] currentBankBalances)
         {
             if (ledgerBook == null)
             {
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Ledger
             ReconciliationResult recon;
             using (this.reconciliationConsistency.EnsureConsistency(ledgerBook))
             {
-                recon = ledgerBook.Reconcile(reconciliationDate, currentBankBalances, budgetContext.Model, statement);
+                recon = ledgerBook.Reconcile(reconciliationDate, budgetContext.Model, statement, currentBankBalances);
             }
 
             // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
@@ -145,6 +145,16 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public void ValidateAgainstOrphanedAutoMatchingTransactions(LedgerBook ledgerBook, StatementModel statement)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement));
+            }
+
             LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
             if (lastLine == null)
             {

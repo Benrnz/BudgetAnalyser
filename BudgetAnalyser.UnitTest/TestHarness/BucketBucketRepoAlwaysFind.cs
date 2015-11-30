@@ -16,7 +16,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public override BudgetBucket GetByCode(string code)
         {
-            if (code.StartsWith("I"))
+            if (code.StartsWith("INCOME"))
             {
                 return GetOrCreateNew(code, () => new IncomeBudgetBucket(code, code));
             }

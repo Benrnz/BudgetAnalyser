@@ -17,7 +17,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     [TestClass]
     public class LedgerBook_ReconcileTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
+        private static readonly BankBalance[] NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
         private static readonly DateTime ReconcileDate = new DateTime(2013, 09, 15);
         private LedgerBook subject;
         private BudgetModel testDataBudget;
@@ -29,26 +29,23 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             var book = new LedgerBookBuilder().TestData1().Build();
             book.Output(true);
-
-            book = LedgerBookTestData.TestData1();
-            book.Output(true);
         }
 
         [TestMethod]
         public void AddLedger_ShouldAddToLedgersCollection_GivenTestData1()
         {
-            this.subject.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
+            this.subject.AddLedger(LedgerBookTestData.RatesLedger);
 
-            Assert.IsTrue(this.subject.Ledgers.Any(l => l.BudgetBucket.Code == "FOO"));
+            Assert.IsTrue(this.subject.Ledgers.Any(l => l.BudgetBucket == LedgerBookTestData.RatesLedger.BudgetBucket));
         }
 
         [TestMethod]
         public void AddLedger_ShouldBeIncludedInNextReconcile_GivenTestData1()
         {
-            this.subject.AddLedger(new SavedUpForExpenseBucket("FOO", "Foo bar"), null);
+            this.subject.AddLedger(LedgerBookTestData.RatesLedger);
             ReconciliationResult result = Act();
 
-            Assert.IsTrue(result.Reconciliation.Entries.Any(e => e.LedgerBucket.BudgetBucket.Code == "FOO"));
+            Assert.IsTrue(result.Reconciliation.Entries.Any(e => e.LedgerBucket == LedgerBookTestData.RatesLedger));
         }
 
         [TestMethod]
@@ -158,11 +155,11 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Reconcile_ShouldResultIn1613_GivenTestData1()
+        public void Reconcile_ShouldResultIn1678_GivenTestData1()
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1613.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -225,7 +222,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(1613.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(1555.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -233,7 +230,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         {
             ReconciliationResult result = Act();
             this.subject.Output(true);
-            Assert.AreEqual(64.71M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
+            Assert.AreEqual(0M, result.Reconciliation.Entries.Single(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PhoneBucketCode).Balance);
         }
 
         [TestMethod]
@@ -242,7 +239,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             ReconciliationResult result = Act();
             result.Reconciliation.BalanceAdjustment(-599M, "Visa pmt not yet in statement", new ChequeAccount("Chq"));
             this.subject.Output(true);
-            Assert.AreEqual(1014.47M, result.Reconciliation.CalculatedSurplus);
+            Assert.AreEqual(956.50M, result.Reconciliation.CalculatedSurplus);
         }
 
         [TestInitialize]
@@ -254,9 +251,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
 
-        private ReconciliationResult Act(DateTime? reconciliationDate = null, IEnumerable<BankBalance> bankBalances = null)
+        private ReconciliationResult Act(DateTime? reconciliationDate = null, BankBalance[] bankBalances = null)
         {
-            return this.subject.Reconcile(reconciliationDate ?? ReconcileDate, bankBalances ?? NextReconcileBankBalance, this.testDataBudget, this.testDataStatement);
+            return this.subject.Reconcile(reconciliationDate ?? ReconcileDate, this.testDataBudget, this.testDataStatement, bankBalances ?? NextReconcileBankBalance);
         }
 
         private void ActOnTestData5(StatementModel statementModelTestData = null)

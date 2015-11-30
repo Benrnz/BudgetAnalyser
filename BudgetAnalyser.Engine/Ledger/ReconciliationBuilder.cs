@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return previousLedgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
             }
 
-            return previousLedgerEntry.Transactions.Where(t => t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix));
+            return previousLedgerEntry.Transactions.Where(t => t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
         }
 
         public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
@@ -52,11 +52,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     l => l.AutoMatchingReference == statementTransaction.Reference1 || l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
         }
 
-        public ReconciliationResult CreateNewMonthlyReconciliation(
-            DateTime reconciliationDateExclusive,
-            IEnumerable<BankBalance> bankBalances,
-            BudgetModel budget,
-            StatementModel statement)
+        public ReconciliationResult CreateNewMonthlyReconciliation(DateTime reconciliationDateExclusive, BudgetModel budget, StatementModel statement, params BankBalance[] bankBalances)
         {
             if (bankBalances == null)
             {
@@ -178,7 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
             List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
             if (transactions.Any())
             {
-                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select<Transaction, LedgerTransaction>(
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
                     t =>
                     {
                         if (t.Amount < 0)
@@ -260,11 +256,11 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 LedgerBucket ledgerBucket;
                 decimal openingBalance = previousLedgerEntry.Balance;
-                LedgerBucket bookLedgerDefaults = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
-                if (previousLedgerEntry.LedgerBucket.StoredInAccount != bookLedgerDefaults.StoredInAccount)
+                LedgerBucket currentLedger = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                if (previousLedgerEntry.LedgerBucket.StoredInAccount != currentLedger.StoredInAccount)
                 {
                     // Check to see if a ledger has been moved into a new default account since last reconciliation.
-                    ledgerBucket = bookLedgerDefaults;
+                    ledgerBucket = currentLedger;
                 }
                 else
                 {

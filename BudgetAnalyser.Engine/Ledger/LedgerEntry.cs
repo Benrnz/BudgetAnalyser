@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -81,6 +80,10 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
         }
 
+        /// <summary>
+        /// Used for persistence only.  Don't use during Reconciliation.
+        /// </summary>
+        /// <param name="newTransaction"></param>
         internal void AddTransaction([NotNull] LedgerTransaction newTransaction)
         {
             if (newTransaction == null)
@@ -114,7 +117,8 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
+        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions. <see cref="AddTransaction"/> must not be called in conjunction with this.
+        ///     This is used for reconciliation only.
         ///     Also performs some automated actions:
         ///     + Transfers to Surplus any remaining amount for Spent Monthly Buckets.
         ///     + Transfers from Surplus any overdrawn amount for Spent Monthly Buckets.
@@ -126,102 +130,14 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </param>
         internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions, DateTime reconciliationDate)
         {
-            const string supplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
+            if (this.transactions.Any())
+            {
+                throw new InvalidOperationException("Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
+            }
 
+            LedgerBucket.ReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
-            LedgerTransaction zeroingTransaction = null;
-            if (LedgerBucket.BudgetBucket is SpentMonthlyExpenseBucket && NetAmount != 0)
-            {
-                // SpentMonthly ledgers automatically zero their balance. They dont accumulate nor can they be negative.
-                // The balance does not need to be updated, it will always remain the same as the previous closing balance.
-                if (NetAmount < 0)
-                {
-                    BudgetCreditLedgerTransaction budgetAmountTransaction = newTransactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
-                    if (budgetAmountTransaction != null)
-                    {
-                        // Ledger is still overdrawn despite having a budgeted amount transfered into this ledger bucket. Create a zeroing transaction so the sum total of all txns = 0.
-                        // This way the ledger closing balance will be equal to the previous ledger closing balance.
-                        decimal adjustmentAmount = -NetAmount;
-                        if (adjustmentAmount + Balance < budgetAmountTransaction.Amount)
-                        {
-                            adjustmentAmount = budgetAmountTransaction.Amount - (Balance + newTransactions.Sum(t => t.Amount));
-                            Balance = budgetAmountTransaction.Amount;
-                        }
-                        zeroingTransaction = new CreditLedgerTransaction
-                        {
-                            Date = reconciliationDate,
-                            Amount = adjustmentAmount,
-                            Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
-                        };
-                    }
-                    else
-                    {
-                        if (Balance + NetAmount < 0)
-                        {
-                            // This ledger does not have a monthly budgeted amount, so if all funds are gone, it must be zeroed.
-                            zeroingTransaction = new CreditLedgerTransaction
-                            {
-                                Date = reconciliationDate,
-                                Amount = -(Balance + NetAmount),
-                                Narrative = "SpentMonthlyLedger: " + supplementOverdrawnText
-                            };
-                        }
-                        else
-                        {
-                            // Some of the funds accumulated in this ledger have been spent, but a positive closing balance remains.
-                            Balance += NetAmount;
-                        }
-                    }
-                }
-                else
-                {
-                    zeroingTransaction = new CreditLedgerTransaction
-                    {
-                        Date = reconciliationDate,
-                        Amount = -NetAmount,
-                        Narrative = "SpentMonthlyLedger: automatically zeroing the credit remainder"
-                    };
-                }
-
-                if (zeroingTransaction != null)
-                {
-                    this.transactions.Add(zeroingTransaction);
-                }
-            }
-            else
-            {
-                // All other ledgers can accumulate a balance but cannot be negative.
-                decimal newBalance = Balance + NetAmount;
-                LedgerTransaction budgetedAmount = this.transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
-                if (budgetedAmount != null && newBalance < budgetedAmount.Amount)
-                {
-                    // This ledger has a monthly budgeted amount and the balance has resulted in a balance less than the monthly budgeted amount, supplement from surplus to equal budgeted amount.
-                    // While there is a monthly amount the balance should not drop below this amount.
-                    zeroingTransaction = new CreditLedgerTransaction
-                    {
-                        Date = reconciliationDate,
-                        Amount = budgetedAmount.Amount - newBalance,
-                        Narrative = newBalance < 0 ? supplementOverdrawnText : "Automatically supplementing shortfall so balance is not less than monthly budget amount"
-                    };
-                    this.transactions.Add(zeroingTransaction);
-                    Balance += NetAmount;
-                }
-                else if (newBalance < 0)
-                {
-                    zeroingTransaction = new CreditLedgerTransaction
-                    {
-                        Date = reconciliationDate,
-                        Amount = -newBalance,
-                        Narrative = supplementOverdrawnText
-                    };
-                    this.transactions.Add(zeroingTransaction);
-                    Balance = 0;
-                }
-                else
-                {
-                    Balance = newBalance;
-                }
-            }
+            Balance += NetAmount;
         }
 
         internal void Unlock()

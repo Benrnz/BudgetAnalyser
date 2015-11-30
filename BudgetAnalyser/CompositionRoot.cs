@@ -127,6 +127,7 @@ namespace BudgetAnalyser
         ///     other controllers.  All controllers are single instances.
         /// </summary>
         /// <param name="container">The newly created (and short lived) IoC container used to instantiate objects.</param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Composition Root Pattern - pull all abstract wiring into one place")]
         private void ConstructUiContext(IContainer container)
         {
             var uiContext = container.Resolve<UiContext>();

@@ -11,17 +11,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private LedgerBucketDto Result { get; set; }
 
-        private LedgerBucket TestData
-        {
-            get
-            {
-                return new LedgerBucket
-                {
-                    BudgetBucket = StatementModelTestData.RegoBucket,
-                    StoredInAccount = StatementModelTestData.ChequeAccount
-                };
-            }
-        }
+        private LedgerBucket TestData => LedgerBookTestData.RegoLedger;
 
         [TestMethod]
         public void ShouldMapBankAccount()

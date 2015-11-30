@@ -179,6 +179,7 @@
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="GlobalFilterCriteriaTest.cs" />
+    <Compile Include="Helper\BudgetModelHelper.cs" />
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
@@ -205,6 +206,8 @@
     <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
     <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
     <Compile Include="Ledger\LedgerBucketTest.cs" />
+    <Compile Include="Ledger\SavedUpForLedgerReconciliationBehaviourTest.cs" />
+    <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
     <Compile Include="Ledger\TransferFundsCommandTest.cs" />
@@ -261,6 +264,7 @@
     <Compile Include="TestData\MatchingRulesTestData.cs" />
     <Compile Include="TestData\MatchingRulesTestDataGenerated.cs" />
     <Compile Include="TestData\MatchingRulesTestDataGenerator.cs" />
+    <Compile Include="TestData\StatementModelBuilder.cs" />
     <Compile Include="TestData\StatementModelTestData.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
     <Compile Include="TestData\StatementModelTestDataGenerator.cs" />

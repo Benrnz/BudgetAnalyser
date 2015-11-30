@@ -37,7 +37,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
             this.testDataEntryLine = this.testDataLedgerBook.Reconciliations.First();
             this.testDataEntryLine.Unlock();
 
-            this.surplusChqLedger = new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = StatementModelTestData.ChequeAccount };
+            this.surplusChqLedger = new SurplusLedger { StoredInAccount = StatementModelTestData.ChequeAccount };
             this.insHomeSavLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.InsHomeBucket);
             this.phNetChqLedger = this.testDataLedgerBook.Ledgers.Single(l => l.BudgetBucket == StatementModelTestData.PhoneBucket);
         }

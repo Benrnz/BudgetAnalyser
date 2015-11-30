@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -16,7 +15,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
     // ReSharper disable once InconsistentNaming
     public class LedgerBook_GeneralTest
     {
-        private static readonly IEnumerable<BankBalance> NextReconcileBankBalance = new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M) };
+        private static readonly BankBalance NextReconcileBankBalance = new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M);
         private static readonly DateTime NextReconcileDate = new DateTime(2013, 09, 15);
         private LedgerBook subject;
         private BudgetModel testDataBudget;
@@ -132,14 +131,14 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1558()
+        public void UsingTestData1_RemoveTransactionShouldGiveSurplus1623()
         {
             ReconciliationResult entryLine = Act(this.subject, this.testDataBudget);
             LedgerEntry entry = entryLine.Reconciliation.Entries.First();
             entry.RemoveTransaction(entry.Transactions.First(t => t is CreditLedgerTransaction).Id);
 
-            this.subject.Output();
-            Assert.AreEqual(1558.47M, entryLine.Reconciliation.CalculatedSurplus);
+            this.subject.Output(true);
+            Assert.AreEqual(1500.50M, entryLine.Reconciliation.CalculatedSurplus);
         }
 
         [TestMethod]
@@ -160,7 +159,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private ReconciliationResult Act(LedgerBook book, BudgetModel budget)
         {
-            return book.Reconcile(NextReconcileDate, NextReconcileBankBalance, budget, this.testDataStatement);
+            return book.Reconcile(NextReconcileDate, budget, this.testDataStatement, NextReconcileBankBalance);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Ledger
             IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
             foreach (Account account in accounts)
             {
-                ledgers.Insert(0, new LedgerBucket { BudgetBucket = new SurplusBucket(), StoredInAccount = account });
+                ledgers.Insert(0, new SurplusLedger { StoredInAccount = account });
             }
 
             return ledgers;
@@ -97,15 +97,14 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        internal LedgerBucket AddLedger(ExpenseBucket budgetBucket, Account storeInThisAccount)
+        internal LedgerBucket AddLedger(LedgerBucket newLedger)
         {
-            if (this.ledgersColumns.Any(l => l.BudgetBucket == budgetBucket))
+            if (this.ledgersColumns.Any(l => l.BudgetBucket == newLedger.BudgetBucket))
             {
                 // Ledger already exists in this ledger book.
                 return null;
             }
 
-            var newLedger = new LedgerBucket { BudgetBucket = budgetBucket, StoredInAccount = storeInThisAccount };
             this.ledgersColumns.Add(newLedger);
             return newLedger;
         }
@@ -119,19 +118,15 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     from that date. This date is different to the "Reconciliation-Date" that appears next to the resulting
         ///     reconciliation which is the end date for the period.
         /// </param>
+        /// <param name="budget">The current budget.</param>
+        /// <param name="statement">The currently loaded statement.</param>
         /// <param name="currentBankBalances">
         ///     The bank balances as at the reconciliation date to include in this new single line of the
         ///     ledger book.
         /// </param>
-        /// <param name="budget">The current budget.</param>
-        /// <param name="statement">The currently loaded statement.</param>
-        internal virtual ReconciliationResult Reconcile(
-            DateTime reconciliationDate,
-            IEnumerable<BankBalance> currentBankBalances,
-            BudgetModel budget,
-            StatementModel statement)
+        internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget, StatementModel statement, params BankBalance[] currentBankBalances)
         {
-            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, currentBankBalances, budget, statement);
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
             this.reconciliations.Insert(0, newRecon.Reconciliation);
             return newRecon;
         }

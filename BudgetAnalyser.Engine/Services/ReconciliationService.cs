@@ -105,6 +105,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry, decimal amount, string narrative)
         {
+            if (reconciliation == null)
+            {
+                throw new ArgumentNullException(nameof(reconciliation));
+            }
+
             if (ledgerEntry == null)
             {
                 throw new ArgumentNullException(nameof(ledgerEntry));
@@ -140,12 +145,12 @@ namespace BudgetAnalyser.Engine.Services
         public LedgerEntryLine MonthEndReconciliation(
             LedgerBook ledgerBook,
             DateTime reconciliationDate,
-            IEnumerable<BankBalance> balances,
             IBudgetCurrencyContext budgetContext,
             StatementModel statement,
-            bool ignoreWarnings = false)
+            bool ignoreWarnings,
+            params BankBalance[] balances)
         {
-            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate, balances, budgetContext, statement);
+            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate, budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
             return reconResult.Reconciliation;
@@ -209,6 +214,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public LedgerEntryLine UnlockCurrentMonth(LedgerBook ledgerBook)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
+
             return ledgerBook.UnlockMostRecentLine();
         }
 
