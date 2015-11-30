@@ -27,20 +27,22 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
+            // Supplement
             if (closingBalance < budgetTransaction.Amount || closingBalance < openingBalance)
             {
-                if (openingBalance > budgetTransaction.Amount)
-                {
-                    transactions.AddIfSomething(SupplementToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
-                }
-                else
-                {
+                //if (openingBalance > budgetTransaction.Amount)
+                //{
+                //    transactions.AddIfSomething(SupplementToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
+                //}
+                //else
+                //{
                     transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
-                }
+                //}
 
                 return;
             }
 
+            // Remove-excess
             if (closingBalance > openingBalance || closingBalance > budgetTransaction.Amount)
             {
                 if (openingBalance > budgetTransaction.Amount)

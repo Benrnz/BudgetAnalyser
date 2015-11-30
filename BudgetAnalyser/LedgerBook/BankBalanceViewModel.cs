@@ -13,6 +13,7 @@ namespace BudgetAnalyser.LedgerBook
     {
         private readonly LedgerEntryLine line;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "It is validated.")]
         public BankBalanceViewModel([CanBeNull] LedgerEntryLine line, [NotNull] BankBalance balance) : base(balance.Account, balance.Balance)
         {
             if (balance == null)

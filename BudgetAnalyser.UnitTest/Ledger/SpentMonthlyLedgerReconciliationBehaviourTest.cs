@@ -53,7 +53,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void zzShouldRemoveExcessToZero_GivenNetDifferenceOfZeroAndNoBudgetAmount()
+        public void ShouldRemoveExcessToZero_GivenNetDifferenceOfZeroAndNoBudgetAmount()
         {
             this.subject.Balance = 100;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test Case 6.1")]
-        public void zzShouldAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndNoBudgetAmount()
+        public void ShouldAddCompensatingTransaction_GivenOpeningBalanceEqualsClosingBalanceAndNoBudgetAmount()
         {
             this.subject.Balance = 1;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -256,7 +256,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 7")]
-        public void zzShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToBudgetAndNoWithdrawals()
+        public void ShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToBudgetAndNoWithdrawals()
         {
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
@@ -307,7 +307,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         [TestMethod]
         [Description("Test case 5.1 Budget amount > Opening Balance (aka Previous Balance)")]
-        public void zzShouldOnlyRemoveExcessUpToBudgetAmount_GivenBudgetAmountIsGreaterThanOpeningBalance()
+        public void ShouldOnlyRemoveExcessUpToBudgetAmount_GivenBudgetAmountIsGreaterThanOpeningBalance()
         {
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
@@ -357,7 +357,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
             this.subject.Output();
 
-            Assert.AreEqual(OpeningBalance, this.subject.Balance);
+            Assert.AreEqual(100M, this.subject.Balance);
         }
 
         [TestMethod]
