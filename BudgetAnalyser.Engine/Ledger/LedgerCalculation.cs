@@ -16,6 +16,14 @@ namespace BudgetAnalyser.Engine.Ledger
     [AutoRegisterWithIoC]
     public class LedgerCalculation
     {
+        /// <summary>
+        ///     A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers" />. This method
+        ///     is called multiple times over a short period to build a burn down report.
+        ///     I did consider using a MemoryCache here, but I don't like the fact it is IDisposable.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, object> CalculationsCache = new ConcurrentDictionary<string, object>();
+
+        private static DateTime CacheLastUpdated;
         private readonly ILogger logger;
 
         public LedgerCalculation()
@@ -28,14 +36,33 @@ namespace BudgetAnalyser.Engine.Ledger
             this.logger = logger;
         }
 
-        /// <summary>
-        ///     A temporary cache with a short timeout to store results from <see cref="CalculateOverspentLedgers" />. This method
-        ///     is called multiple times over a short period to build a burn down report.
-        ///     I did consider using a MemoryCache here, but I don't like the fact it is IDisposable.
-        /// </summary>
-        private static readonly ConcurrentDictionary<string, object> CalculationsCache = new ConcurrentDictionary<string, object>();
+        public virtual decimal CalculateCurrentMonthBucketSpend([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement, [NotNull] string bucketCode)
+        {
+            CheckCacheForCleanUp();
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
 
-        private static DateTime CacheLastUpdated;
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement));
+            }
+
+            if (bucketCode.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(bucketCode));
+            }
+
+            LedgerEntryLine entryLine = LocateApplicableLedgerLine(ledgerBook, filter);
+            decimal transactionTotal = CalculateTransactionTotal(filter, statement, entryLine, bucketCode);
+            return transactionTotal;
+        }
 
         public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances(
             [NotNull] LedgerBook ledgerBook,
@@ -103,34 +130,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal beginningOfMonthBalance = entryLine.CalculatedSurplus;
-            var autoMatchLedgerTransactions = ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList();
-            this.logger.LogInfo(
-                l =>
-                {
-                    var builder = new StringBuilder();
-                    builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
-                    foreach (var txn in autoMatchLedgerTransactions)
-                    {
-                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
-                    }
-                    return builder.ToString();
-                });
-            var query = statement.Transactions
-                .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1) && t.BudgetBucket is SurplusBucket)
-                .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
-            this.logger.LogInfo(
-                l =>
-                {
-                    var builder = new StringBuilder();
-                    builder.AppendLine("Statement Transactions found that are 'SURPLUS' and not 'Auto-Matching-Transactions':");
-                    foreach (var txn in query)
-                    {
-                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
-                    }
-                    return builder.ToString();
-                });
-            decimal transactionTotal = query.Sum(txn => txn.Amount);
-            this.logger.LogInfo(l => l.Format("Total Surplus Transactions {0:F2}", transactionTotal));
+            decimal transactionTotal = CalculateTransactionTotal(filter, statement, entryLine, SurplusBucket.SurplusCode);
 
             beginningOfMonthBalance += transactionTotal;
 
@@ -318,6 +318,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         private static IEnumerable<ReportTransaction> FoundInOverSpentLedgerCache(StatementModel statement, LedgerBook ledger, DateTime beginDate)
+
         {
             string keyString = BuildCacheKey(statement, ledger, beginDate);
             object item;
@@ -398,6 +399,49 @@ namespace BudgetAnalyser.Engine.Ledger
                         });
                 }
             }
+        }
+
+        private decimal CalculateTransactionTotal([NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement, [CanBeNull] LedgerEntryLine entryLine, string bucketCode)
+        {
+            List<LedgerTransaction> autoMatchLedgerTransactions = ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList();
+            this.logger.LogInfo(
+                l =>
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Ledger Transactions found that are 'Auto-Matching-Transactions':");
+                    foreach (LedgerTransaction txn in autoMatchLedgerTransactions)
+                    {
+                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Narrative}  {txn.AutoMatchingReference}");
+                    }
+                    return builder.ToString();
+                });
+            IEnumerable<Transaction> query = statement.Transactions
+                .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1))
+                .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
+            if (bucketCode == SurplusBucket.SurplusCode)
+            {
+                // This is to allow inclusion of special Surplus bucket subclasses. (IE: Special Project Surplus buckets)
+                query = query.Where(t => t.BudgetBucket is SurplusBucket);
+            }
+            else
+            {
+                query = query.Where(t => t.BudgetBucket.Code == bucketCode);
+            }
+                
+            this.logger.LogInfo(
+                l =>
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine($"Statement Transactions found that are '{bucketCode}' and not 'Auto-Matching-Transactions':");
+                    foreach (Transaction txn in query)
+                    {
+                        builder.AppendLine($"{txn.Date:d}   {txn.Amount:F2}  {txn.Description}  {txn.Account}");
+                    }
+                    return builder.ToString();
+                });
+            decimal transactionTotal = query.Sum(txn => txn.Amount);
+            this.logger.LogInfo(l => l.Format("Total Transactions {0:F2}", transactionTotal));
+            return transactionTotal;
         }
     }
 }

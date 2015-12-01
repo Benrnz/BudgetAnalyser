@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
@@ -18,14 +17,18 @@ namespace BudgetAnalyser.UnitTest.Widgets
     [TestClass]
     public class RemainingSurplusWidgetTest
     {
+        private IBudgetCurrencyContext budgetTestData;
         private GlobalFilterCriteria criteriaTestData;
+        private LedgerBook ledgerBookTestData;
         private StatementModel statementTestData;
         private RemainingSurplusWidget subject;
-        private IBudgetCurrencyContext budgetTestData;
+        private LedgerCalculation ledgerCalculation;
+        private BucketBucketRepoAlwaysFind bucketRepo;
 
         [TestMethod]
         public void OutputTestData()
         {
+            this.ledgerBookTestData.Output(true);
             this.budgetTestData.Output();
             this.statementTestData.Output(DateTime.MinValue);
         }
@@ -33,6 +36,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
         [TestInitialize]
         public void TestInitialise()
         {
+            this.bucketRepo = new BucketBucketRepoAlwaysFind();
             this.subject = new RemainingSurplusWidget();
             this.criteriaTestData = new GlobalFilterCriteria
             {
@@ -41,22 +45,46 @@ namespace BudgetAnalyser.UnitTest.Widgets
             };
 
             StatementModelTestDataForThisTest.AccountTypeRepo = new InMemoryAccountTypeRepository();
-            StatementModelTestDataForThisTest.BudgetBucketRepo = new BucketBucketRepoAlwaysFind();
+            StatementModelTestDataForThisTest.BudgetBucketRepo = this.bucketRepo;
             this.statementTestData = StatementModelTestDataForThisTest.TestDataGenerated();
 
-            var budgetModel = BudgetModelTestData.CreateTestData1();
-            this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel),  budgetModel);
+            BudgetModel budgetModel = BudgetModelTestData.CreateTestData1();
+            this.budgetTestData = new BudgetCurrencyContext(new BudgetCollection(budgetModel), budgetModel);
+
+            this.ledgerBookTestData = new LedgerBookBuilder
+            {
+                StorageKey = "RemainingSurplusWidgetTest.xml",
+                Modified = new DateTime(2015, 11, 23),
+                Name = "Smith Budget 2015"
+            }
+                .IncludeLedger(LedgerBookTestData.PhoneLedger, 130M)
+                .IncludeLedger(LedgerBookTestData.CarMtcLedger, 90M)
+                .IncludeLedger(LedgerBookTestData.PowerLedger)
+                .AppendReconciliation(
+                    new DateTime(2015, 10, 20),
+                    new BankBalance(LedgerBookTestData.ChequeAccount, 4502.75M))
+                .WithReconciliationEntries(
+                    entryBuilder =>
+                    {
+                        entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger).HasNoTransactions();
+                        entryBuilder.WithLedger(LedgerBookTestData.CarMtcLedger).HasNoTransactions();
+                        entryBuilder.WithLedger(LedgerBookTestData.PowerLedger)
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(3000M, "Oct Savings", new DateTime(2015, 10, 20), "automatchref12"); });
+                    })
+                .Build();
+
+            this.ledgerCalculation = new LedgerCalculation(new FakeLogger());
         }
 
         [TestMethod]
         public void Update_ShouldExcludeAutoMatchedTransactionsInCalculation()
         {
-            this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, new BucketBucketRepoAlwaysFind());
+            this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
 
             // Starting Surplus is: 1175.00
             // Total Surplus transactions are: -835.69
             // Resulting Balance = 339.31
-            Assert.AreEqual(339.31M, this.subject.Value);
+            Assert.AreEqual(339.31, this.subject.Value);
         }
 
         private static class StatementModelTestDataForThisTest
@@ -154,7 +182,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
                         Reference3 = "",
                         TransactionType = new NamedTransaction("Credit Transfer")
                     },
- 
                     new Transaction
                     {
                         Account = AccountTypeRepo.GetByKey("VISA"),
@@ -168,7 +195,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
                         Reference3 = "",
                         TransactionType = new NamedTransaction("Credit Card Debit")
                     },
-                 
                     new Transaction
                     {
                         Account = AccountTypeRepo.GetByKey("VISA"),
@@ -234,7 +260,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
                         Reference3 = "kjhgjklshgjsh",
                         TransactionType = new NamedTransaction("Atm Debit")
                     },
-                
                     new Transaction
                     {
                         Account = AccountTypeRepo.GetByKey("VISA"),
@@ -248,7 +273,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
                         Reference3 = "",
                         TransactionType = new NamedTransaction("Credit Card Debit")
                     },
-                    
                     new Transaction
                     {
                         Account = AccountTypeRepo.GetByKey("VISA"),
@@ -327,7 +351,6 @@ namespace BudgetAnalyser.UnitTest.Widgets
                         Reference3 = "",
                         TransactionType = new NamedTransaction("Credit Card Debit")
                     },
-                   
                     new Transaction
                     {
                         Account = AccountTypeRepo.GetByKey("VISA"),
