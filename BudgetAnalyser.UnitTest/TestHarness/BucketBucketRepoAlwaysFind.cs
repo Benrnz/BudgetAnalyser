@@ -38,5 +38,11 @@ namespace BudgetAnalyser.UnitTest.TestHarness
         {
             InitialiseMandatorySpecialBuckets();
         }
+
+        public BucketBucketRepoAlwaysFind WithSurplusAdded()
+        {
+            GetOrCreateNew(SurplusBucket.Code, () => SurplusBucket);
+            return this;
+        }
     }
 }

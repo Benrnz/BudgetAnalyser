@@ -141,8 +141,6 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(code));
             }
 
-            if (code == SurplusBucket.Code) return true;
-
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());
         }
 

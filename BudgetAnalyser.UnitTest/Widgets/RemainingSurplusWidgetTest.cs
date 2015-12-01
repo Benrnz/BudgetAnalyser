@@ -36,7 +36,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
         [TestInitialize]
         public void TestInitialise()
         {
-            this.bucketRepo = new BucketBucketRepoAlwaysFind();
+            this.bucketRepo = new BucketBucketRepoAlwaysFind().WithSurplusAdded();
             this.subject = new RemainingSurplusWidget();
             this.criteriaTestData = new GlobalFilterCriteria
             {
