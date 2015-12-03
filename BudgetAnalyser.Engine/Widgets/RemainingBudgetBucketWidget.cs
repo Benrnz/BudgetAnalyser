@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Security.AccessControl;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -16,21 +16,33 @@ namespace BudgetAnalyser.Engine.Widgets
     {
         private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
-        private StatementModel statement;
 
         protected RemainingBudgetBucketWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
-            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
-            RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
+            Dependencies = new[]
+            {
+                typeof(IBudgetCurrencyContext),
+                typeof(StatementModel),
+                typeof(GlobalFilterCriteria),
+                typeof(IBudgetBucketRepository),
+                typeof(LedgerBook),
+                typeof(LedgerCalculation)
+            };
+            RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
+            RemainingBudgetToolTip = "Remaining Balance for period is {0:C}";
             this.standardStyle = "WidgetStandardStyle3";
+            BucketCode = "<NOT SET>";
         }
 
-        protected string BucketCode { get; set; }
+        public string BucketCode { get; set; }
         protected IBudgetCurrencyContext Budget { get; private set; }
         protected string DependencyMissingToolTip { get; set; }
         protected GlobalFilterCriteria Filter { get; private set; }
+        protected LedgerBook LedgerBook { get; private set; }
+        protected LedgerCalculation LedgerCalculation { get; private set; }
         protected string RemainingBudgetToolTip { get; set; }
+        protected StatementModel Statement { get; private set; }
 
         public override void Update([NotNull] params object[] input)
         {
@@ -46,11 +58,11 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Budget = (IBudgetCurrencyContext)input[0];
-            this.statement = (StatementModel)input[1];
+            Statement = (StatementModel)input[1];
             Filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];
-            var ledgerBook = (LedgerBook)input[4];
-            var ledgerCalculation = (LedgerCalculation)input[5];
+            LedgerBook = (LedgerBook)input[4];
+            LedgerCalculation = (LedgerCalculation)input[5];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -60,9 +72,16 @@ namespace BudgetAnalyser.Engine.Widgets
 
             SetAdditionalDependencies(input);
 
-            if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null || ledgerCalculation == null || ledgerBook == null)
+            if (Statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null || LedgerCalculation == null || LedgerBook == null)
             {
                 Enabled = false;
+                return;
+            }
+
+            if (Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value) != 1)
+            {
+                Enabled = false;
+                ToolTip = DesignedForOneMonthOnly;
                 return;
             }
 
@@ -71,18 +90,18 @@ namespace BudgetAnalyser.Engine.Widgets
                                   * Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
             Maximum = Convert.ToDouble(totalBudget);
 
-            decimal totalSpend = ledgerCalculation.CalculateCurrentMonthBucketSpend(ledgerBook, Filter, this.statement, BucketCode);
+            decimal totalSpend = LedgerCalculation.CalculateCurrentMonthBucketSpend(LedgerBook, Filter, Statement, BucketCode);
 
-            decimal remainingBudget = totalBudget + totalSpend;
-            if (remainingBudget < 0)
+            decimal remainingBalance = totalBudget + totalSpend;
+            if (remainingBalance < 0)
             {
-                remainingBudget = 0;
+                remainingBalance = 0;
             }
 
-            Value = Convert.ToDouble(remainingBudget);
-            ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBudget);
+            Value = Convert.ToDouble(remainingBalance);
+            ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance);
 
-            if (remainingBudget < 0.2M * totalBudget)
+            if (remainingBalance < 0.2M * totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
@@ -94,7 +113,19 @@ namespace BudgetAnalyser.Engine.Widgets
 
         protected virtual decimal MonthlyBudgetAmount()
         {
-            return Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+            Debug.Assert(Filter.BeginDate != null);
+            Debug.Assert(Filter.EndDate != null);
+
+            decimal monthlyBudget = Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+            decimal totalBudgetedAmount = monthlyBudget;
+            LedgerEntryLine ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
+
+            if (LedgerBook == null || ledgerLine == null || ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
+            {
+                return totalBudgetedAmount;
+            }
+
+            return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
         }
 
         protected virtual void SetAdditionalDependencies(object[] input)
