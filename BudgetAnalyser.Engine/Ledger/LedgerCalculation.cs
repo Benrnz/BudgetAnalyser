@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using BudgetAnalyser.Engine.Annotations;
@@ -59,8 +60,13 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(bucketCode));
             }
 
+            if (filter.BeginDate == null)
+            {
+                return 0;
+            }
+
             LedgerEntryLine entryLine = LocateApplicableLedgerLine(ledgerBook, filter);
-            decimal transactionTotal = CalculateTransactionTotal(filter, statement, entryLine, bucketCode);
+            decimal transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, statement, entryLine, bucketCode);
             return transactionTotal;
         }
 
@@ -131,7 +137,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             decimal beginningOfMonthBalance = entryLine.CalculatedSurplus;
-            decimal transactionTotal = CalculateTransactionTotal(filter, statement, entryLine, SurplusBucket.SurplusCode);
+            decimal transactionTotal = CalculateTransactionTotal(filter.BeginDate.Value, statement, entryLine, SurplusBucket.SurplusCode);
 
             beginningOfMonthBalance += transactionTotal;
 
@@ -285,7 +291,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return keyString;
         }
 
-        private static Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
+        private Dictionary<BudgetBucket, decimal> CalculateLedgersBalanceSummary(LedgerBook ledgerBook, DateTime beginDate, StatementModel statement)
         {
             DateTime endDate = beginDate.AddMonths(1).AddDays(-1);
             List<Transaction> transactions = statement.Transactions.Where(t => t.Date < beginDate.AddMonths(1)).ToList();
@@ -299,8 +305,8 @@ namespace BudgetAnalyser.Engine.Ledger
             var ledgersSummary = new Dictionary<BudgetBucket, decimal>();
             foreach (LedgerEntry entry in currentLegderLine.Entries)
             {
-                IEnumerable<Transaction> transactionsSubset = transactions.Where(t => t.BudgetBucket == entry.LedgerBucket.BudgetBucket);
-                decimal balance = entry.Balance + transactionsSubset.Sum(t => t.Amount);
+                var closingBalance = CalculateTransactionTotal(beginDate, statement, currentLegderLine, entry.LedgerBucket.BudgetBucket.Code);
+                decimal balance = entry.Balance + closingBalance;
                 ledgersSummary.Add(entry.LedgerBucket.BudgetBucket, balance);
             }
 
@@ -402,7 +408,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private decimal CalculateTransactionTotal([NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement, [CanBeNull] LedgerEntryLine entryLine, string bucketCode)
+        private decimal CalculateTransactionTotal(DateTime beginDate, [NotNull] StatementModel statement, [CanBeNull] LedgerEntryLine entryLine, string bucketCode)
         {
             List<LedgerTransaction> autoMatchLedgerTransactions = ReconciliationBuilder.FindAutoMatchingTransactions(entryLine, true).ToList();
             this.logger.LogInfo(
@@ -417,7 +423,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     return builder.ToString();
                 });
             IEnumerable<Transaction> query = statement.Transactions
-                .Where(t => t.Date < filter.BeginDate.Value.AddMonths(1))
+                .Where(t => t.Date < beginDate.AddMonths(1))
                 .Where(txn => !ReconciliationBuilder.IsAutoMatchingTransaction(txn, autoMatchLedgerTransactions));
             if (bucketCode == SurplusBucket.SurplusCode)
             {
