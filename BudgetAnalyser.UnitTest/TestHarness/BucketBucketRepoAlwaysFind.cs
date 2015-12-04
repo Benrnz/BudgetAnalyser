@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 
@@ -10,7 +11,7 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public BucketBucketRepoAlwaysFind() : base(new BasicMapperFake<BudgetBucketDto, BudgetBucket>())
         {
-            SurplusBucket = new SurplusBucket();
+            InitialiseMandatorySpecialBuckets();
             this.projectPrefix = string.Format(FixedBudgetProjectBucket.ProjectCodeTemplateWithPrefix, string.Empty);
         }
 
@@ -39,10 +40,9 @@ namespace BudgetAnalyser.UnitTest.TestHarness
             InitialiseMandatorySpecialBuckets();
         }
 
-        public BucketBucketRepoAlwaysFind WithSurplusAdded()
+        public override bool IsValidCode(string code)
         {
-            GetOrCreateNew(SurplusBucket.Code, () => SurplusBucket);
-            return this;
+            return true;
         }
     }
 }

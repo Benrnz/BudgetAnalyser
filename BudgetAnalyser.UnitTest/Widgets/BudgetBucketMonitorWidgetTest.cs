@@ -1,8 +1,5 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
@@ -39,7 +36,7 @@ namespace BudgetAnalyser.UnitTest.Widgets
             this.subject = new BudgetBucketMonitorWidget();
             this.subject.BucketCode = StatementModelTestData.PhoneBucket.Code;
 
-            this.bucketRepo = new BucketBucketRepoAlwaysFind().WithSurplusAdded();
+            this.bucketRepo = new BucketBucketRepoAlwaysFind();
             this.criteriaTestData = new GlobalFilterCriteria
             {
                 BeginDate = new DateTime(2015, 10, 20),
@@ -129,10 +126,10 @@ namespace BudgetAnalyser.UnitTest.Widgets
         {
             this.subject.Update(this.budgetTestData, this.statementTestData, this.criteriaTestData, this.bucketRepo, this.ledgerBookTestData, this.ledgerCalculation);
 
-            // Starting Phone Balance is Budget Amount: 120.00
+            // Starting Phone Balance is Budget Amount: 150.00
             // Total Phone Statement transactions are: -20.00
-            // Resulting Balance = 100.00
-            Assert.AreEqual(100.00, this.subject.Value);
+            // Resulting Balance = 130.00
+            Assert.AreEqual(130.00, this.subject.Value);
         }
     }
 }

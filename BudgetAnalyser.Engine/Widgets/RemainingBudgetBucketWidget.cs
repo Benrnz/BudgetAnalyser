@@ -86,8 +86,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            decimal totalBudget = MonthlyBudgetAmount()
-                                  * Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
+            decimal totalBudget = MonthlyBudgetAmount();
             Maximum = Convert.ToDouble(totalBudget);
 
             decimal totalSpend = LedgerCalculation.CalculateCurrentMonthBucketSpend(LedgerBook, Filter, Statement, BucketCode);

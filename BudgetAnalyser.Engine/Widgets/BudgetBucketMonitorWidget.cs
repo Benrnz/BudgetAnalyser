@@ -43,7 +43,6 @@ namespace BudgetAnalyser.Engine.Widgets
             if (!Enabled)
             {
                 ToolTip = this.disabledToolTip;
-                return;
             }
         }
     }

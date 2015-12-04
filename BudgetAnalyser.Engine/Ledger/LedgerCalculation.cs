@@ -91,6 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return ledgers;
             }
 
+            // TODO need unit test here to check for automatch transactions in the statement. (Issue80)
             Dictionary<BudgetBucket, decimal> ledgersSummary = CalculateLedgersBalanceSummary(ledgerBook, filter.BeginDate.Value, statement);
 
             // Check Surplus
