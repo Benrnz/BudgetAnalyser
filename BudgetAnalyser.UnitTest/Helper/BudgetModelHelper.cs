@@ -7,10 +7,30 @@ namespace BudgetAnalyser.UnitTest.Helper
 {
     public static class BudgetModelHelper
     {
-        public static void Output(this BudgetModel instance)
+        public static void Output(this IBudgetCurrencyContext instance)
         {
             Console.WriteLine();
-            Console.WriteLine($"Budget Model: '{instance.Name}' EffectiveFrom: {instance.EffectiveFrom}");
+            Console.WriteLine($"Budget Currency Context: {instance.FileName} Budget Name: {instance.Model.Name} Effective From: {instance.Model.EffectiveFrom:d} Effective Until: {instance.EffectiveUntil:d}");
+            if (instance.BudgetActive)
+            {
+                Console.WriteLine("Budget is ACTIVE.");
+            } else if (instance.BudgetArchived)
+            {
+                Console.WriteLine("Budget is ARCHIVED.");
+            } else if (instance.BudgetInFuture)
+            {
+                Console.WriteLine("Budget is FUTURE.");
+            }
+            instance.Model.Output(false);
+        }
+
+        public static void Output(this BudgetModel instance, bool includeTitle = true)
+        {
+            if (includeTitle)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Budget Model: '{instance.Name}' EffectiveFrom: {instance.EffectiveFrom}");
+            }
             Console.WriteLine(@"    Incomes                      Expenses");
             Console.WriteLine(@"    ==================================================================");
             int incomeIndex = 0;

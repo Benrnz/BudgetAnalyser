@@ -30,8 +30,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntryLine recon, bool includeMatchedTransactions = false)
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
         {
+            if (recon == null) return new List<LedgerTransaction>();
             return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
         }
 

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Security.AccessControl;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widgets
@@ -19,7 +21,7 @@ namespace BudgetAnalyser.Engine.Widgets
         protected RemainingBudgetBucketWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
-            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository) };
+            Dependencies = new[] { typeof(IBudgetCurrencyContext), typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(IBudgetBucketRepository), typeof(LedgerBook), typeof(LedgerCalculation) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             this.standardStyle = "WidgetStandardStyle3";
         }
@@ -47,6 +49,8 @@ namespace BudgetAnalyser.Engine.Widgets
             this.statement = (StatementModel)input[1];
             Filter = (GlobalFilterCriteria)input[2];
             this.bucketRepository = (IBudgetBucketRepository)input[3];
+            var ledgerBook = (LedgerBook)input[4];
+            var ledgerCalculation = (LedgerCalculation)input[5];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -56,7 +60,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             SetAdditionalDependencies(input);
 
-            if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null)
+            if (this.statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null || Filter.EndDate == null || ledgerCalculation == null || ledgerBook == null)
             {
                 Enabled = false;
                 return;
@@ -67,8 +71,9 @@ namespace BudgetAnalyser.Engine.Widgets
                                   * Filter.BeginDate.Value.DurationInMonths(Filter.EndDate.Value);
             Maximum = Convert.ToDouble(totalBudget);
 
-            // Debit transactions are negative so normally the total spend will be a negative number.
-            decimal remainingBudget = totalBudget + this.statement.Transactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
+            decimal totalSpend = ledgerCalculation.CalculateCurrentMonthBucketSpend(ledgerBook, Filter, this.statement, BucketCode);
+
+            decimal remainingBudget = totalBudget + totalSpend;
             if (remainingBudget < 0)
             {
                 remainingBudget = 0;
