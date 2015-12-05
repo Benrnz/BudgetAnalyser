@@ -4,6 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +16,88 @@ namespace BudgetAnalyser.UnitTest.Ledger
     {
         private LedgerCalculation Subject { get; set; }
         private LedgerBook TestData { get; set; }
+
+        private static LedgerBook CreateLedgerBookTestData()
+        {
+            return new LedgerBookBuilder
+            {
+                StorageKey = "BudgetBucketMonitorWidgetTest.xml",
+                Modified = new DateTime(2015, 11, 23),
+                Name = "Smith Budget 2015"
+            }
+                .IncludeLedger(LedgerBookTestData.PhoneLedger, 50M)
+                .IncludeLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount, 200M)
+                .AppendReconciliation(
+                    new DateTime(2015, 10, 20),
+                    new BankBalance(LedgerBookTestData.ChequeAccount, 2000M),
+                    new BankBalance(LedgerBookTestData.SavingsAccount, 1000M))
+                .WithReconciliationEntries(
+                    entryBuilder =>
+                    {
+                        entryBuilder.WithLedger(LedgerBookTestData.PhoneLedger)
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                        entryBuilder.WithLedger(LedgerBookTestData.HouseInsLedgerSavingsAccount)
+                            .AppendTransactions(txnBuilder => { txnBuilder.WithCredit(-100, "Foo", new DateTime(2015, 10, 20), "automatchref12"); });
+                    })
+                .Build();
+        }
+
+        private static StatementModel CreateStatementTestData()
+        {
+            return new StatementModelBuilder()
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.SavingsAccount,
+                        Amount = -100M,
+                        BudgetBucket = StatementModelTestData.InsHomeBucket,
+                        Date = new DateTime(2015, 10, 19),
+                        Reference1 = "automatchref12",
+                    })
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.ChequeAccount,
+                        Amount = 100M,
+                        BudgetBucket = StatementModelTestData.PhoneBucket,
+                        Date = new DateTime(2015, 10, 19),
+                        Reference1 = "automatchref12",
+                    })
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.SavingsAccount,
+                        Amount = -10M,
+                        BudgetBucket = StatementModelTestData.InsHomeBucket,
+                        Date = new DateTime(2015, 10, 1),
+                        Reference1 = "Foo"
+                    })
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.ChequeAccount,
+                        Amount = -20M,
+                        BudgetBucket = StatementModelTestData.PhoneBucket,
+                        Date = new DateTime(2015, 10, 1),
+                        Reference1 = "Foo"
+                    })
+                .Build();
+        }
+
+        [TestMethod]
+        public void CalculateCurrentMonthLedgerBalances_ShouldNotCountAutomatchTransactions_GivenAutoMatchTransactions()
+        {
+            var result = Subject.CalculateCurrentMonthLedgerBalances(
+                CreateLedgerBookTestData(), 
+                new GlobalFilterCriteria
+                {
+                    BeginDate = new DateTime(2015, 10, 20),
+                    EndDate = new DateTime(2015, 11, 19)
+                }, 
+                CreateStatementTestData());
+
+            Assert.AreEqual(90M, result[LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket]);
+        }
 
         [TestMethod]
         public void CalculateOverSpentLedgersShouldReturnEmptyGivenNoLedgerLineForGivenDate()
