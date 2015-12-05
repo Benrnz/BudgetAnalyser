@@ -60,7 +60,6 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(account));
             }
 
-            // TODO add generic UI to let user classify columns.
             return await this.importerRepository.ImportAsync(storageKey, account);
         }
 
@@ -71,7 +70,6 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new FileNotFoundException("storageKey");
             }
 
-            // TODO add generic UI to let user classify columns.
             return await this.statementModelRepository.LoadAsync(storageKey);
         }
 

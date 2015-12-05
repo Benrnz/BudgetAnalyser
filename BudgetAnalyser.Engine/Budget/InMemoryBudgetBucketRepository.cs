@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Budget
             return null;
         }
 
-        public BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory)
+        public virtual BudgetBucket GetOrCreateNew(string code, Func<BudgetBucket> factory)
         {
             if (code == null)
             {
@@ -97,14 +97,14 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             string upperCode = code.ToUpperInvariant();
-            if (IsValidCode(upperCode))
+            if (ContainsKeyInternal(upperCode))
             {
                 return this.lookupTable[upperCode];
             }
 
             lock (this.syncRoot)
             {
-                if (IsValidCode(upperCode))
+                if (ContainsKeyInternal(upperCode))
                 {
                     return this.lookupTable[upperCode];
                 }
@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(code));
             }
 
-            return this.lookupTable.ContainsKey(code.ToUpperInvariant());
+            return ContainsKeyInternal(code);
         }
 
         /// <summary>
@@ -190,6 +190,11 @@ namespace BudgetAnalyser.Engine.Budget
 
                 this.lookupTable.Add(bucket.Code, bucket);
             }
+        }
+
+        protected bool ContainsKeyInternal(string code)
+        {
+            return this.lookupTable.ContainsKey(code.ToUpperInvariant());
         }
 
         protected void InitialiseMandatorySpecialBuckets()
