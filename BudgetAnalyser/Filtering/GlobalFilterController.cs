@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
@@ -21,31 +18,21 @@ namespace BudgetAnalyser.Filtering
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class GlobalFilterController : ControllerBase, IShellDialogToolTips
     {
-        private readonly IDashboardService dashboardService;
         private readonly IUserMessageBox userMessageBox;
         private Guid dialogCorrelationId;
         private string doNotUseAccountTypeSummary;
         private GlobalFilterCriteria doNotUseCriteria;
         private string doNotUseDateSummaryLine1;
         private string doNotUseDateSummaryLine2;
-        private Account doNotUseSelectedAccount;
-        private FilterMode filterMode;
 
         public GlobalFilterController(
-            [NotNull] UiContext uiContext,
-            [NotNull] IDashboardService dashboardService)
+            [NotNull] UiContext uiContext)
         {
             if (uiContext == null)
             {
                 throw new ArgumentNullException(nameof(uiContext));
             }
 
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
-            }
-
-            this.dashboardService = dashboardService;
             this.userMessageBox = uiContext.UserPrompts.MessageBox;
             this.doNotUseCriteria = new GlobalFilterCriteria();
 
@@ -59,11 +46,10 @@ namespace BudgetAnalyser.Filtering
             MessengerInstance.Register<RequestFilterChangeMessage>(this, OnGlobalFilterChangeRequested);
         }
 
-        public IEnumerable<Account> Accounts { [UsedImplicitly] get; private set; }
-
         public string AccountTypeSummary
         {
-            [UsedImplicitly] get { return this.doNotUseAccountTypeSummary; }
+            [UsedImplicitly]
+            get { return this.doNotUseAccountTypeSummary; }
             private set
             {
                 this.doNotUseAccountTypeSummary = value;
@@ -97,7 +83,8 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine1
         {
-            [UsedImplicitly] get { return this.doNotUseDateSummaryLine1; }
+            [UsedImplicitly]
+            get { return this.doNotUseDateSummaryLine1; }
             private set
             {
                 this.doNotUseDateSummaryLine1 = value;
@@ -107,7 +94,8 @@ namespace BudgetAnalyser.Filtering
 
         public string DateSummaryLine2
         {
-            [UsedImplicitly] get { return this.doNotUseDateSummaryLine2; }
+            [UsedImplicitly]
+            get { return this.doNotUseDateSummaryLine2; }
             private set
             {
                 this.doNotUseDateSummaryLine2 = value;
@@ -115,49 +103,14 @@ namespace BudgetAnalyser.Filtering
             }
         }
 
-        public bool IsAccountFilterView => this.filterMode == FilterMode.Account;
-        public bool IsDateFilterView => this.filterMode == FilterMode.Dates;
-
-        public Account SelectedAccount
-        {
-            get { return this.doNotUseSelectedAccount; }
-
-            set
-            {
-                this.doNotUseSelectedAccount = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public void PromptUserForAccountType()
-        {
-            this.dialogCorrelationId = Guid.NewGuid();
-            this.filterMode = FilterMode.Account;
-
-            Accounts = this.dashboardService.FilterableAccountTypes();
-
-            SelectedAccount = Criteria.Account;
-            var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
-            {
-                CorrelationId = this.dialogCorrelationId,
-                Title = "Global Filters - Account"
-            };
-            RaisePropertyChanged(() => IsAccountFilterView);
-            RaisePropertyChanged(() => IsDateFilterView);
-            MessengerInstance.Send(dialogRequest);
-        }
-
         public void PromptUserForDates()
         {
-            this.filterMode = FilterMode.Dates;
             this.dialogCorrelationId = Guid.NewGuid();
             var dialogRequest = new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
-                Title = "Global Filters - Date Range"
+                Title = "Global Date Filter"
             };
-            RaisePropertyChanged(() => IsAccountFilterView);
-            RaisePropertyChanged(() => IsDateFilterView);
             MessengerInstance.Send(dialogRequest);
         }
 
@@ -185,7 +138,6 @@ namespace BudgetAnalyser.Filtering
 
             Criteria = new GlobalFilterCriteria
             {
-                Account = filterState.Account,
                 BeginDate = filterState.BeginDate,
                 EndDate = filterState.EndDate
             };
@@ -208,7 +160,6 @@ namespace BudgetAnalyser.Filtering
             {
                 BeginDate = noCriteria ? null : Criteria.BeginDate,
                 EndDate = noCriteria ? null : Criteria.EndDate,
-                Account = noCriteria ? null : Criteria.Account
             };
 
             message.PersistThisModel(filterState);
@@ -230,17 +181,8 @@ namespace BudgetAnalyser.Filtering
 
         private void OnClearCommandExecute()
         {
-            switch (this.filterMode)
-            {
-                case FilterMode.Dates:
-                    Criteria.BeginDate = null;
-                    Criteria.EndDate = null;
-                    break;
-
-                case FilterMode.Account:
-                    Criteria.Account = null;
-                    break;
-            }
+            Criteria.BeginDate = null;
+            Criteria.EndDate = null;
         }
 
         private void OnGlobalFilterChangeRequested(RequestFilterChangeMessage message)
@@ -259,11 +201,6 @@ namespace BudgetAnalyser.Filtering
             if (!message.IsItForMe(this.dialogCorrelationId))
             {
                 return;
-            }
-
-            if (this.filterMode == FilterMode.Account)
-            {
-                Criteria.Account = SelectedAccount;
             }
 
             var validationMessages = new StringBuilder();
@@ -286,12 +223,6 @@ namespace BudgetAnalyser.Filtering
             if (message.Widget is DateFilterWidget)
             {
                 PromptUserForDates();
-                return;
-            }
-
-            if (message.Widget is AccountFilterWidget)
-            {
-                PromptUserForAccountType();
             }
         }
 
@@ -320,11 +251,6 @@ namespace BudgetAnalyser.Filtering
             if (Criteria.EndDate != null)
             {
                 DateSummaryLine2 = string.Format(CultureInfo.CurrentCulture, "up until: {0:d}", Criteria.EndDate.Value);
-            }
-
-            if (Criteria.Account != null)
-            {
-                AccountTypeSummary = "Filtered by " + Criteria.Account.Name;
             }
         }
     }

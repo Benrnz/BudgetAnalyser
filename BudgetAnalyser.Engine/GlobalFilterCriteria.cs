@@ -3,13 +3,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine
 {
     public class GlobalFilterCriteria : INotifyPropertyChanged, IModelValidate, IDataChangeDetection
     {
-        private Account doNotUseAccount;
         private DateTime? doNotUseBeginDate;
         private bool doNotUseCleared;
         private DateTime? doNotUseEndDate;
@@ -20,18 +18,6 @@ namespace BudgetAnalyser.Engine
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public Account Account
-        {
-            get { return this.doNotUseAccount; }
-
-            set
-            {
-                this.doNotUseAccount = value;
-                OnPropertyChanged();
-                CheckConsistency();
-            }
-        }
 
         public DateTime? BeginDate
         {
@@ -69,8 +55,7 @@ namespace BudgetAnalyser.Engine
         {
             unchecked
             {
-                int hashCode = this.doNotUseAccount?.GetHashCode() ?? 0;
-                hashCode = (hashCode * 397) ^ this.doNotUseBeginDate.GetHashCode();
+                int hashCode = this.doNotUseBeginDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
                 hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
                 return hashCode;
@@ -132,8 +117,7 @@ namespace BudgetAnalyser.Engine
             }
 
             if (BeginDate == null
-                && EndDate == null
-                && Account == null)
+                && EndDate == null)
             {
                 Cleared = true;
             }

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid x:Name="MainContainer">
-        <Grid Visibility="{Binding IsDateFilterView, Converter={StaticResource Converter.BoolToVis}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -73,30 +72,6 @@
                     For reporting you can choose any date range you like.
                 </Run>
             </TextBlock>
-        </Grid>
-        <Grid Visibility="{Binding IsAccountFilterView, Converter={StaticResource Converter.BoolToVis}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="400" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Account:" />
-            <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding Accounts}"
-                      Margin="3"
-                      SelectedItem="{Binding SelectedAccount}"
-                      Style="{StaticResource ComboBox.Account}" />
-            <StackPanel Grid.Column="2"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                <Button Command="{Binding ClearCommand}"
-                        Style="{StaticResource Button.Round.Clear}" />
-            </StackPanel>
-        </Grid>
     </Grid>
 
 </UserControl>

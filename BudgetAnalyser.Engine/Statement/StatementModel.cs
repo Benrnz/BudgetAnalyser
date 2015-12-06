@@ -320,10 +320,6 @@ namespace BudgetAnalyser.Engine.Statement
                 query = query.Where(t => t.Date <= criteria.EndDate.Value);
             }
 
-            if (criteria.Account != null)
-            {
-                query = query.Where(t => t.Account == criteria.Account);
-            }
             return query;
         }
 
