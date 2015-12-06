@@ -100,11 +100,9 @@ namespace BudgetAnalyser.UnitTest.Budget
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void SerialiseTypeShouldThrowGivenFixedBudgetProject()
         {
-            Subject.SerialiseType(new FixedBudgetProjectBucket("Foo", "Foobar", 1000));
-            Assert.Fail();
+            Assert.AreEqual(BucketDtoType.FixedBudgetProject, Subject.SerialiseType(new FixedBudgetProjectBucket("Foo", "Foobar", 1000)));
         }
 
         [TestMethod]

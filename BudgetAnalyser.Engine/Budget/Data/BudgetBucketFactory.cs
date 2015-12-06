@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
             if (bucket is FixedBudgetProjectBucket)
             {
-                throw new NotSupportedException();
+                return BucketDtoType.FixedBudgetProject;
             }
 
             if (bucket is SurplusBucket)
