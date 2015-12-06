@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Used for persistence only.  Don't use during Reconciliation.
+        ///     Used for persistence only.  Don't use during Reconciliation.
         /// </summary>
         /// <param name="newTransaction"></param>
         internal void AddTransaction([NotNull] LedgerTransaction newTransaction)
@@ -92,7 +92,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            decimal newBalance = Balance + (newTransaction.Amount);
+            decimal newBalance = Balance + newTransaction.Amount;
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -117,7 +117,8 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions. <see cref="AddTransaction"/> must not be called in conjunction with this.
+        ///     Called by <see cref="LedgerBook.Reconcile" />. Sets up this new Entry with transactions.
+        ///     <see cref="AddTransaction" /> must not be called in conjunction with this.
         ///     This is used for reconciliation only.
         ///     Also performs some automated actions:
         ///     + Transfers to Surplus any remaining amount for Spent Monthly Buckets.

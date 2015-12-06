@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine.Annotations;
@@ -27,7 +28,7 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)

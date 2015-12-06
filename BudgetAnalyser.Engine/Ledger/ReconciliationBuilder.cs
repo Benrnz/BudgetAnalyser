@@ -32,13 +32,19 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
         {
-            if (recon == null) return new List<LedgerTransaction>();
+            if (recon == null)
+            {
+                return new List<LedgerTransaction>();
+            }
             return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
         }
 
         public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)
         {
-            if (ledgerEntry == null) return new List<LedgerTransaction>();
+            if (ledgerEntry == null)
+            {
+                return new List<LedgerTransaction>();
+            }
             if (includeMatchedTransactions)
             {
                 return ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));

@@ -145,7 +145,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(storeInThisAccount));
             }
 
-            var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
+            LedgerBucket newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
             return LedgerBook.AddLedger(newLedger);
         }
 

@@ -69,6 +69,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return book;
         }
 
+        // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
         private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
         {
             if (this.cachedLedgers.ContainsKey(ledger.BudgetBucket.Code))

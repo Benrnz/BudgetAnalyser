@@ -18,7 +18,10 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public override void ValidateBucketSet(BudgetBucket bucket)
         {
-            if (bucket is SurplusBucket) return;
+            if (bucket is SurplusBucket)
+            {
+                return;
+            }
 
             throw new NotSupportedException("Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.");
         }

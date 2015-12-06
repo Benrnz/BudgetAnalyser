@@ -8,8 +8,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     [AutoRegisterWithIoC]
     public class LedgerBucketFactory : ILedgerBucketFactory
     {
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly IAccountTypeRepository accountRepo;
+        private readonly IBudgetBucketRepository bucketRepo;
 
         public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] IAccountTypeRepository accountRepo)
         {
@@ -29,13 +29,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public LedgerBucket Build(string bucketCode, string accountName)
         {
-            var account = this.accountRepo.GetByKey(accountName);
+            Account account = this.accountRepo.GetByKey(accountName);
             return Build(bucketCode, account);
         }
 
         public LedgerBucket Build(string bucketCode, Account account)
         {
-            var bucket = this.bucketRepo.GetByCode(bucketCode);
+            BudgetBucket bucket = this.bucketRepo.GetByCode(bucketCode);
             if (bucket is SavedUpForExpenseBucket)
             {
                 return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };

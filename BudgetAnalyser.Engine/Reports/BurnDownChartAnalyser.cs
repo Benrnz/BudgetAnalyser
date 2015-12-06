@@ -103,7 +103,7 @@ namespace BudgetAnalyser.Engine.Reports
             var iteration = 0;
             foreach (DateTime day in datesOfTheMonth)
             {
-                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - (average * iteration++), Date = day });
+                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - average * iteration++, Date = day });
             }
         }
 

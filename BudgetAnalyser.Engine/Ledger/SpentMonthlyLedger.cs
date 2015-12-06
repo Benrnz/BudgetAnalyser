@@ -7,18 +7,11 @@ namespace BudgetAnalyser.Engine.Ledger
 {
     public class SpentMonthlyLedger : LedgerBucket
     {
-        public override void ValidateBucketSet(BudgetBucket bucket)
-        {
-            if (bucket is SpentMonthlyExpenseBucket) return;
-
-            throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
-        }
-
         public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
-            var netAmount = transactions.Sum(t => t.Amount);
-            var closingBalance = openingBalance + netAmount;
-            var budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
+            decimal netAmount = transactions.Sum(t => t.Amount);
+            decimal closingBalance = openingBalance + netAmount;
+            BudgetCreditLedgerTransaction budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
 
             if (budgetTransaction == null)
             {
@@ -45,50 +38,72 @@ namespace BudgetAnalyser.Engine.Ledger
                 {
                     transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
                 }
-            } 
+            }
+        }
+
+        public override void ValidateBucketSet(BudgetBucket bucket)
+        {
+            if (bucket is SpentMonthlyExpenseBucket)
+            {
+                return;
+            }
+
+            throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
         }
 
         private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
-            if (closingBalance - budgetAmount == 0) return null;
+            if (closingBalance - budgetAmount == 0)
+            {
+                return null;
+            }
             return new CreditLedgerTransaction
             {
                 Amount = -(closingBalance - budgetAmount),
                 Date = reconciliationDate,
-                Narrative = SupplementLessThanBudgetText,
+                Narrative = SupplementLessThanBudgetText
             };
         }
 
         private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
-            if (closingBalance - openingBalance == 0) return null;
+            if (closingBalance - openingBalance == 0)
+            {
+                return null;
+            }
             return new CreditLedgerTransaction
             {
                 Amount = -(closingBalance - openingBalance),
                 Date = reconciliationDate,
-                Narrative = RemoveExcessText,
+                Narrative = RemoveExcessText
             };
         }
 
         private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
         {
-            if (budgetAmount - closingBalance == 0) return null;
+            if (budgetAmount - closingBalance == 0)
+            {
+                return null;
+            }
             return new CreditLedgerTransaction
             {
                 Amount = budgetAmount - closingBalance,
                 Date = reconciliationDate,
-                Narrative = SupplementLessThanBudgetText,
+                Narrative = SupplementLessThanBudgetText
             };
         }
 
         private static CreditLedgerTransaction SupplementToZero(decimal closingBalance, DateTime reconciliationDate)
         {
-            if (closingBalance == 0) return null;
+            if (closingBalance == 0)
+            {
+                return null;
+            }
             return new CreditLedgerTransaction
             {
                 Amount = 0 - closingBalance,
                 Date = reconciliationDate,
-                Narrative = RemoveExcessNoBudgetAmountText,
+                Narrative = RemoveExcessNoBudgetAmountText
             };
         }
     }

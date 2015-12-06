@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Budget
         public BudgetCollection CreateNew()
         {
             var budget = new BudgetModel();
-            this.currentBudgetCollection = new BudgetCollection(new[] { budget });
+            this.currentBudgetCollection = new BudgetCollection(budget);
             this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
             return this.currentBudgetCollection;
         }
@@ -63,7 +63,7 @@ namespace BudgetAnalyser.Engine.Budget
                 Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ')
             };
 
-            this.currentBudgetCollection = new BudgetCollection(new[] { newBudget })
+            this.currentBudgetCollection = new BudgetCollection(newBudget)
             {
                 StorageKey = storageKey
             };

@@ -16,11 +16,11 @@ namespace BudgetAnalyser.Engine.Ledger
     [DebuggerDisplay("Ledger({BudgetBucket})")]
     public abstract class LedgerBucket
     {
-        private BudgetBucket budgetBucket;
-        protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
-        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than monthly budget amount";
         protected const string RemoveExcessNoBudgetAmountText = "Automatically removing excess funds down to zero given there is no budget amount for this ledger";
         protected const string RemoveExcessText = "Automatically removing excess funds.";
+        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than monthly budget amount";
+        protected const string SupplementOverdrawnText = "Automatically supplementing overdrawn balance from surplus";
+        private BudgetBucket budgetBucket;
 
         /// <summary>
         ///     Gets or sets the Budget Bucket this ledger column is tracking.
@@ -77,6 +77,8 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        public abstract void ReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
+
         /// <summary>
         ///     Returns a string that represents the current object.
         /// </summary>
@@ -87,8 +89,6 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             return string.Format(CultureInfo.CurrentCulture, "Ledger Bucket {0}", BudgetBucket);
         }
-
-        public abstract void ReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         public abstract void ValidateBucketSet(BudgetBucket bucket);
 
