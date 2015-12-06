@@ -82,9 +82,10 @@ namespace BudgetAnalyser.Engine.Services
 
         public CustomBurnDownChartsV1 PreparePersistentStateData()
         {
+            var charts = this.chartsBuilder.CustomCharts ?? new List<CustomAggregateBurnDownGraph>();
             return new CustomBurnDownChartsV1
             {
-                Charts = this.chartsBuilder.CustomCharts.ToList()
+                Charts = charts.ToList()
             };
         }
 
