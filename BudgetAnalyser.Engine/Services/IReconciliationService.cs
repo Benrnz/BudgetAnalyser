@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;

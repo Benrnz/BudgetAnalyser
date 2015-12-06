@@ -21,8 +21,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// </summary>
         public double Checksum { get; set; }
 
-        public string StorageKey { get; set; }
-
         /// <summary>
         ///     The ledger to Bucket mapping for when a new reconciliation creates a new instances of LedgerEntry's.
         /// </summary>
@@ -38,5 +36,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
         public List<LedgerEntryLineDto> Reconciliations { get; set; }
+
+        public string StorageKey { get; set; }
     }
 }

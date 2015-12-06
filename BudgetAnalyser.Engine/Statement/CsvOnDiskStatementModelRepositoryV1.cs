@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new KeyNotFoundException(ex.Message, ex);
             }
 
-            if (!(await IsStatementModelAsync(storageKey)))
+            if (!await IsStatementModelAsync(storageKey))
             {
                 throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }

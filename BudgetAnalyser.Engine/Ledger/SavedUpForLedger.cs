@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerTransaction zeroingTransaction = null;
-            var netAmount = transactions.Sum(t => t.Amount);
+            decimal netAmount = transactions.Sum(t => t.Amount);
 
             // This ledger can accumulate a balance but cannot be negative.
             decimal closingBalance = openingBalance + netAmount;
@@ -40,13 +40,22 @@ namespace BudgetAnalyser.Engine.Ledger
                     Narrative = SupplementOverdrawnText
                 };
             }
-            if (zeroingTransaction != null) transactions.Add(zeroingTransaction);
+            if (zeroingTransaction != null)
+            {
+                transactions.Add(zeroingTransaction);
+            }
         }
 
         public override void ValidateBucketSet(BudgetBucket bucket)
         {
-            if (bucket is SavedUpForExpenseBucket) return;
-            if (bucket is SavingsCommitmentBucket) return;
+            if (bucket is SavedUpForExpenseBucket)
+            {
+                return;
+            }
+            if (bucket is SavingsCommitmentBucket)
+            {
+                return;
+            }
 
             throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.");
         }

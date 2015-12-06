@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -14,7 +12,6 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ILedgerService : INotifyDatabaseChanges, IServiceFoundation
     {
-        #region LedgerBook
         LedgerBook LedgerBook { get; }
 
         /// <summary>
@@ -48,6 +45,6 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="line">The line.</param>
         void RemoveReconciliation([NotNull] LedgerEntryLine line);
-        #endregion
+
     }
 }

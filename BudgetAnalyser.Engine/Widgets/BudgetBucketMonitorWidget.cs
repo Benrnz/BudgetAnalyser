@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -14,7 +8,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private readonly string disabledToolTip;
         private string doNotUseId;
 
-        public BudgetBucketMonitorWidget() 
+        public BudgetBucketMonitorWidget()
         {
             this.disabledToolTip = "Either a Statement, Budget, or a Filter are not present, or the Bucket Code is not valid, remaining budget cannot be calculated.";
         }

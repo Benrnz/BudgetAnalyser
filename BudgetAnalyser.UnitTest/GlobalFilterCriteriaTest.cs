@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.BankAccount;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.UnitTest
@@ -9,7 +8,6 @@ namespace BudgetAnalyser.UnitTest
     [TestClass]
     public class GlobalFilterCriteriaTest
     {
-        private readonly VisaAccount testVisaAccount = new VisaAccount("Visa");
         private readonly StringBuilder validationMessages = new StringBuilder();
 
         [TestMethod]
@@ -102,15 +100,6 @@ namespace BudgetAnalyser.UnitTest
         }
 
         [TestMethod]
-        public void ValidateShouldReturnFalseGivenAccountAndNoDates()
-        {
-            // Currently not valid to specify an account filter without dates.  Dates are always mandatory when filtering.
-            var subject = new GlobalFilterCriteria { Account = this.testVisaAccount };
-            Assert.IsFalse(subject.Cleared);
-            Assert.IsFalse(subject.Validate(this.validationMessages));
-        }
-
-        [TestMethod]
         public void ValidateShouldReturnFalseGivenBeginDateIsNull()
         {
             var subject = new GlobalFilterCriteria { BeginDate = new DateTime(), EndDate = DateTime.Now };
@@ -161,7 +150,6 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                Account = null,
                 BeginDate = null,
                 EndDate = null
             };
@@ -171,7 +159,6 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                Account = null,
                 BeginDate = new DateTime(2014, 1, 20),
                 EndDate = new DateTime(2014, 2, 19)
             };
@@ -181,19 +168,8 @@ namespace BudgetAnalyser.UnitTest
         {
             return new GlobalFilterCriteria
             {
-                Account = this.testVisaAccount,
                 BeginDate = new DateTime(2014, 1, 20),
                 EndDate = new DateTime(2014, 2, 19)
-            };
-        }
-
-        private GlobalFilterCriteria CreateSubject_VisaFilterOnly()
-        {
-            return new GlobalFilterCriteria
-            {
-                Account = this.testVisaAccount,
-                BeginDate = null,
-                EndDate = null
             };
         }
     }

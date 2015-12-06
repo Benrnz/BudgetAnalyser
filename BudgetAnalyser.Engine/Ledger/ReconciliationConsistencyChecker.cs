@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Annotations;
 
@@ -26,8 +27,8 @@ namespace BudgetAnalyser.Engine.Ledger
             this.check1 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
+        [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
         public void Dispose()
         {
             this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - this.ledgerBook.Reconciliations.First().CalculatedSurplus;

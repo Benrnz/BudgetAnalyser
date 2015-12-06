@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class DtoToLedgerBookMapper : MagicMapper<LedgerBookDto, LedgerBook>
     {
         private readonly IAccountTypeRepository accountRepo;
-        private readonly Dictionary<LedgerBucket, LedgerBucket> cachedLedgers = new Dictionary<LedgerBucket, LedgerBucket>();
+        private readonly Dictionary<string, LedgerBucket> cachedLedgers = new Dictionary<string, LedgerBucket>();
 
         public DtoToLedgerBookMapper([NotNull] IAccountTypeRepository accountRepo)
         {
@@ -51,6 +51,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 foreach (LedgerEntry entry in line.Entries)
                 {
+                    // Ensure the ledger bucker is the same instance as listed in the book.Legders;
+                    entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, true);
                     if (entry.LedgerBucket.StoredInAccount == null)
                     {
                         entry.LedgerBucket.StoredInAccount = this.accountRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
@@ -67,14 +69,21 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return book;
         }
 
-        private void GetOrAddFromCache(LedgerBucket key)
+        // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
+        private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
         {
-            if (this.cachedLedgers.ContainsKey(key))
+            if (this.cachedLedgers.ContainsKey(ledger.BudgetBucket.Code))
             {
-                return;
+                return this.cachedLedgers[ledger.BudgetBucket.Code];
             }
 
-            this.cachedLedgers.Add(key, key);
+            if (throwIfNotFound)
+            {
+                throw new IndexOutOfRangeException($"Ledger Bucket {ledger.BudgetBucket.Code} not found in cache.");
+            }
+
+            this.cachedLedgers.Add(ledger.BudgetBucket.Code, ledger);
+            return ledger;
         }
     }
 }

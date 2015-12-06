@@ -201,9 +201,10 @@ namespace BudgetAnalyser.Engine.Services
 
         public WidgetsApplicationStateV1 PreparePersistentStateData()
         {
+            IEnumerable<WidgetGroup> widgetStates = WidgetGroups?.ToList() ?? new List<WidgetGroup>();
             return new WidgetsApplicationStateV1
             {
-                WidgetStates = WidgetGroups.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList()
+                WidgetStates = widgetStates.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList()
             };
         }
 

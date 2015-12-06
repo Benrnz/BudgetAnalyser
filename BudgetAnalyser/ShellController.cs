@@ -9,6 +9,7 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
@@ -116,7 +117,12 @@ namespace BudgetAnalyser
             }
 
             this.initialised = true;
-            IList<IPersistent> rehydratedModels = this.statePersistence.Load().ToList();
+            IList<IPersistent> rehydratedModels = this.statePersistence.Load()?.ToList();
+
+            if (rehydratedModels == null || rehydratedModels.None())
+            {
+                rehydratedModels = CreateNewDefaultApplicationState();
+            }
 
             // Create a distinct list of sequences.
             IEnumerable<int> sequences = rehydratedModels.Select(persistentModel => persistentModel.LoadSequence).OrderBy(s => s).Distinct();
@@ -190,6 +196,17 @@ namespace BudgetAnalyser
             }
 
             return false;
+        }
+
+        private static IList<IPersistent> CreateNewDefaultApplicationState()
+        {
+            // Widget persistent state object is required to draw the widgets, even the ones that should be there by default.
+            // The widgets must be drawn so a user can open or create a new file. 
+            var appState = new List<IPersistent>
+            {
+                new WidgetsApplicationStateV1()
+            };
+            return appState;
         }
 
         private async void OnApplicationStateLoaded([NotNull] ApplicationStateLoadedMessage message)

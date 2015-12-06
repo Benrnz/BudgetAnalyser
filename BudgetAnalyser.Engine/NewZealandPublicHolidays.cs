@@ -113,7 +113,7 @@ namespace BudgetAnalyser.Engine
                     int h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
                     int i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
 
-                    int day = i - ((year + year / 4 + i + 2 - century + century / 4) % 7) + 28;
+                    int day = i - (year + year / 4 + i + 2 - century + century / 4) % 7 + 28;
                     var month = 3;
 
                     if (day > 31)

@@ -14,7 +14,6 @@ namespace BudgetAnalyser.Engine.Budget
         {
             FixedBudgetAmount = fixedBudgetAmount;
             Created = DateTime.Now;
-
         }
 
         /// <summary>
