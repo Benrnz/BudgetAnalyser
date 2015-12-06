@@ -58,7 +58,7 @@ namespace BudgetAnalyser.UnitTest.Budget
             PrivateAccessor.SetProperty(this.testData, "Created", this.testDataCreatedDate);
 
             // When the buckets are mapped they are mapped using their base class, not their concrete type FixedBudgetProjectBucket.
-            this.result = Mapper.Map<BudgetBucketDto>(this.testData);
+            this.result = Mapper.Map<FixedBudgetBucketDto>(this.testData);
         }
     }
 }
