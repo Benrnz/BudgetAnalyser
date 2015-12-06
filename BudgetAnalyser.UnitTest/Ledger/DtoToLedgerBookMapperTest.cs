@@ -100,24 +100,12 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void ShouldMapLedgerBucketAndDefaultToChequeIfNull()
+        [ExpectedException(typeof(IndexOutOfRangeException))]
+        public void ShouldThrow_GivenLedgerBucketListIsEmptyInDto()
         {
             TestData.Ledgers.Clear();
-            LedgerBook result = ArrangeAndAct();
-            Assert.IsFalse(result.Reconciliations.SelectMany(e => e.Entries).Any(e => e.LedgerBucket == null));
-        }
-
-        [TestMethod]
-        public void ShouldMapLedgerBucketsAutoPopulateLedgersCollection()
-        {
-            TestData.Ledgers.Clear();
-            LedgerBook result = ArrangeAndAct();
-            foreach (LedgerBucket ledger in result.Ledgers)
-            {
-                Console.WriteLine("Ledger Column: {0} {1} {2}", ledger.BudgetBucket.Code, ledger.StoredInAccount.Name, ledger.GetHashCode());
-            }
-
-            Assert.AreEqual(3, result.Ledgers.Count());
+            ArrangeAndAct();
+            Assert.Fail();
         }
 
         [TestMethod]
