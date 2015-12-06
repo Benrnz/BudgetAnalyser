@@ -86,10 +86,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(dto => dto.StoredInAccount, m => m.MapFrom(ledger => ledger.StoredInAccount.Name));
 
             Mapper.CreateMap<LedgerBucketDto, LedgerBucket>()
-                .ConstructUsing(dto => this.ledgerBucketFactory.Build(dto.BucketCode))
-                .ForMember(ledger => ledger.BudgetBucket, m => m.Ignore());
-                //.ForMember(ledger => ledger.BudgetBucket, m => m.MapFrom(dto => this.bucketRepo.GetByCode(dto.BucketCode)))
-                //.ForMember(ledger => ledger.StoredInAccount, m => m.MapFrom(dto => this.accountTypeRepo.GetByKey(dto.StoredInAccount)));
+                .ConvertUsing(dto => this.ledgerBucketFactory.Build(dto.BucketCode, dto.StoredInAccount));
 
             Mapper.CreateMap<LedgerEntry, LedgerEntryDto>()
                 .ForMember(dto => dto.BucketCode, m => m.MapFrom(ledgerEntry => ledgerEntry.LedgerBucket.BudgetBucket.Code))
@@ -99,7 +96,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 .ForMember(entry => entry.Transactions, m => m.MapFrom(dto => dto.Transactions.OrderByDescending(t => t.TransactionType)))
                 .ForMember(
                     entry => entry.LedgerBucket,
-                    m => m.MapFrom(dto => this.ledgerBucketFactory.Build(dto.BucketCode))); //, StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount) }))
+                    m => m.MapFrom(dto => this.ledgerBucketFactory.Build(dto.BucketCode, dto.StoredInAccount))); 
 
             Mapper.CreateMap<LedgerEntryLineDto, LedgerEntryLine>()
                 .ForMember(line => line.IsNew, m => m.MapFrom(dto => false));
