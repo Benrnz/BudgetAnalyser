@@ -71,8 +71,7 @@ namespace BudgetAnalyser.Statement
 
         /// <summary>
         ///     Gets or sets the bucket filter.
-        ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a
-        ///     bucket.
+        ///     This is a string filter on the bucket code plus blank for all, and "[Uncatergorised]" for anything without a bucket.
         ///     Only relevant when the view is displaying transactions by date.  The filter is hidden when shown in GroupByBucket
         ///     mode.
         /// </summary>

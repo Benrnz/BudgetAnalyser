@@ -100,7 +100,7 @@ namespace BudgetAnalyser.UnitTest.Ledger
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void ShouldThrow_GivenLedgerBucketListIsEmptyInDto()
         {
             TestData.Ledgers.Clear();

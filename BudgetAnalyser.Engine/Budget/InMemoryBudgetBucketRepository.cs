@@ -192,6 +192,7 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Already validated upstream")]
         protected bool ContainsKeyInternal(string code)
         {
             return this.lookupTable.ContainsKey(code.ToUpperInvariant());

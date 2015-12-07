@@ -8,6 +8,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -89,6 +90,67 @@ namespace BudgetAnalyser.UnitTest.Services
         public void FilterableBuckets_ShouldContainUncatergorised_GivenAnyBucketList()
         {
             Assert.IsTrue(this.subject.FilterableBuckets().Any(b => b == TransactionManagerService.UncategorisedFilter));
+        }
+
+        [TestMethod]
+        public void FilterByBucket_ShouldReturnAllBuckets_GivenNullBucketCode()
+        {
+            Arrange();
+
+            var result = this.subject.FilterByBucket(null);
+
+            Assert.AreEqual(10, result.Count());
+        }
+
+        [TestMethod]
+        public void FilterByBucket_ShouldReturnAllBuckets_GivenEmptyBucketCode()
+        {
+            Arrange();
+
+            var result = this.subject.FilterByBucket(string.Empty);
+
+            Assert.AreEqual(10, result.Count());
+        }
+
+        [TestMethod]
+        public void FilterByBucket_ShouldReturn3Buckets_GivenIncomeBucketCode()
+        {
+            Arrange();
+
+            var result = this.subject.FilterByBucket(StatementModelTestData.IncomeBucket.Code);
+
+            Assert.AreEqual(3, result.Count());
+        }
+
+        [TestMethod]
+        public void FilterByBucket_ShouldReturnAllBuckets_GivenSurplusBucketCode()
+        {
+            var model2 = new StatementModelBuilder()
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.ChequeAccount,
+                        Amount = -255.65M,
+                        BudgetBucket = StatementModelTestData.SurplusBucket,
+                        Date = new DateTime(2013, 9, 10),
+                    })
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.ChequeAccount,
+                        Amount = -1000M,
+                        BudgetBucket = new FixedBudgetProjectBucket("FOO", "Bar", 2000M),
+                        Date = new DateTime(2013, 9, 9)
+                    })
+                .Merge(this.testData)
+                .Build();
+            this.testData = model2;
+            Arrange();
+
+            var result = this.subject.FilterByBucket(SurplusBucket.SurplusCode);
+
+            this.testData.Output(DateTime.MinValue);
+            Assert.AreEqual(2, result.Count());
         }
 
         [TestMethod]

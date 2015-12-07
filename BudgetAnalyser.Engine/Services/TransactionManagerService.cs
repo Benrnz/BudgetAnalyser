@@ -163,6 +163,11 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
         {
+            //var bucket = this.bucketRepository.GetByCode(bucketCode);
+            //if (bucket == null)
+            //{
+            //}
+
             this.transactions = new ObservableCollection<Transaction>(
                 StatementModel.Transactions
                     .Where(t => MatchTransactionBucket(t, bucketCode)));

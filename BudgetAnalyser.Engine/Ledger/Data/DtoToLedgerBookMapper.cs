@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
             if (throwIfNotFound)
             {
-                throw new IndexOutOfRangeException($"Ledger Bucket {ledger.BudgetBucket.Code} not found in cache.");
+                throw new ArgumentException($"Ledger Bucket {ledger.BudgetBucket.Code} not found in cache.");
             }
 
             this.cachedLedgers.Add(ledger.BudgetBucket.Code, ledger);
