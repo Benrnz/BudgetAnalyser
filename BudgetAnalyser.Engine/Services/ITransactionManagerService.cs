@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
         ///     only return transactions without a bucket classification.
         /// </param>
-        ObservableCollection<Transaction> FilterByBucket(string bucketCode);
+        ObservableCollection<Transaction> FilterByBucket([CanBeNull] string bucketCode);
 
         /// <summary>
         ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction

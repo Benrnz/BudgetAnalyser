@@ -163,10 +163,21 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
         {
-            this.transactions = new ObservableCollection<Transaction>(
-                StatementModel.Transactions
-                    .Where(t => MatchTransactionBucket(t, bucketCode)));
-            return this.transactions;
+            if (bucketCode == UncategorisedFilter)
+            {
+                return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket == null));
+            }
+
+            BudgetBucket bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
+
+            if (bucket == null)
+            {
+                return new ObservableCollection<Transaction>(StatementModel.Transactions);
+            }
+
+            var paternityTest = new BudgetBucketPaternity();
+            return this.transactions = new ObservableCollection<Transaction>(
+                StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
         }
 
         public ObservableCollection<Transaction> FilterBySearchText(string searchText)
@@ -392,21 +403,6 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetHash = this.budgetCollection.GetHashCode();
             return allTransactionHaveABucket;
-        }
-
-        private static bool MatchTransactionBucket(Transaction t, string bucketCode)
-        {
-            if (bucketCode.IsNothing())
-            {
-                return true;
-            }
-
-            if (bucketCode == UncategorisedFilter)
-            {
-                return t.BudgetBucket == null;
-            }
-
-            return t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode;
         }
 
         private static bool MatchTransactionText(Transaction t, string textFilter)

@@ -126,6 +126,7 @@
     <Compile Include="BankAccount\VisaAccount.cs" />
     <Compile Include="ApplicationDataType.cs" />
     <Compile Include="Budget\BucketComparer.cs" />
+    <Compile Include="Budget\BudgetBucketPaternity.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />

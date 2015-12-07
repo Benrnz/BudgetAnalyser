@@ -36,5 +36,11 @@ namespace BudgetAnalyser.UnitTest.TestData
             this.additionalTransactions.Add(transaction);
             return this;
         }
+
+        public StatementModelBuilder Merge(StatementModel anotherStatementModel)
+        {
+            this.model.Merge(anotherStatementModel);
+            return this;
+        }
     }
 }
