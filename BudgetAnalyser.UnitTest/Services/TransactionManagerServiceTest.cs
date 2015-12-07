@@ -22,6 +22,7 @@ namespace BudgetAnalyser.UnitTest.Services
     {
         private readonly ApplicationDatabase testAppDb = new ApplicationDatabase();
         private Mock<IBudgetBucketRepository> mockBudgetBucketRepo;
+        private IBudgetBucketRepository budgetBucketRepo; // By default set to return mockBudgetBucketRepo.Object;
         private Mock<IStatementRepository> mockStatementRepo;
         private TransactionManagerService subject;
         private StatementModel testData;
@@ -95,6 +96,7 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestMethod]
         public void FilterByBucket_ShouldReturnAllBuckets_GivenNullBucketCode()
         {
+            this.budgetBucketRepo = new BucketBucketRepoAlwaysFind();
             Arrange();
 
             var result = this.subject.FilterByBucket(null);
@@ -105,6 +107,7 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestMethod]
         public void FilterByBucket_ShouldReturnAllBuckets_GivenEmptyBucketCode()
         {
+            this.budgetBucketRepo = new BucketBucketRepoAlwaysFind();
             Arrange();
 
             var result = this.subject.FilterByBucket(string.Empty);
@@ -115,6 +118,7 @@ namespace BudgetAnalyser.UnitTest.Services
         [TestMethod]
         public void FilterByBucket_ShouldReturn3Buckets_GivenIncomeBucketCode()
         {
+            this.budgetBucketRepo = new BucketBucketRepoAlwaysFind();
             Arrange();
 
             var result = this.subject.FilterByBucket(StatementModelTestData.IncomeBucket.Code);
@@ -123,7 +127,7 @@ namespace BudgetAnalyser.UnitTest.Services
         }
 
         [TestMethod]
-        public void FilterByBucket_ShouldReturnAllBuckets_GivenSurplusBucketCode()
+        public void FilterByBucket_ShouldReturn2Buckets_GivenSurplusBucketCode()
         {
             var model2 = new StatementModelBuilder()
                 .AppendTransaction(
@@ -145,12 +149,36 @@ namespace BudgetAnalyser.UnitTest.Services
                 .Merge(this.testData)
                 .Build();
             this.testData = model2;
+            this.budgetBucketRepo = new BucketBucketRepoAlwaysFind();
             Arrange();
 
             var result = this.subject.FilterByBucket(SurplusBucket.SurplusCode);
 
             this.testData.Output(DateTime.MinValue);
             Assert.AreEqual(2, result.Count());
+        }
+
+        [TestMethod]
+        public void FilterByBucket_ShouldReturn1Bucket_GivenUncatergorisedCode()
+        {
+            var model2 = new StatementModelBuilder()
+                .AppendTransaction(
+                    new Transaction
+                    {
+                        Account = StatementModelTestData.ChequeAccount,
+                        Amount = -255.65M,
+                        BudgetBucket = null,
+                        Date = new DateTime(2013, 9, 10),
+                    })
+                .Merge(this.testData)
+                .Build();
+            this.testData = model2;
+            Arrange();
+
+            var result = this.subject.FilterByBucket(TransactionManagerService.UncategorisedFilter);
+
+            this.testData.Output(DateTime.MinValue);
+            Assert.AreEqual(1, result.Count());
         }
 
         [TestMethod]
@@ -373,6 +401,7 @@ namespace BudgetAnalyser.UnitTest.Services
                 .Setup(m => m.Buckets)
                 .Returns(BudgetBucketTestData.BudgetModelTestData1Buckets);
 
+            this.budgetBucketRepo = this.mockBudgetBucketRepo.Object;
             Arrange();
         }
 
@@ -411,7 +440,7 @@ namespace BudgetAnalyser.UnitTest.Services
 
         private TransactionManagerService CreateSubject()
         {
-            return new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, new FakeLogger());
+            return new TransactionManagerService(this.budgetBucketRepo, this.mockStatementRepo.Object, new FakeLogger());
         }
     }
 }

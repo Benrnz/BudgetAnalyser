@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 
@@ -17,6 +18,8 @@ namespace BudgetAnalyser.UnitTest.TestHarness
 
         public override BudgetBucket GetByCode(string code)
         {
+            if (code.IsNothing()) return null;
+
             if (code.StartsWith("INCOME"))
             {
                 return GetOrCreateNew(code, () => new IncomeBudgetBucket(code, code));
