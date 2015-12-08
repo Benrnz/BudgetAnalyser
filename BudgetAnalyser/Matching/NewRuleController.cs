@@ -20,6 +20,7 @@ namespace BudgetAnalyser.Matching
     {
         private readonly IUserMessageBox messageBoxService;
         private readonly ITransactionRuleService rulesService;
+        private readonly IBudgetBucketRepository bucketRepo;
         private decimal doNotUseAmount;
         private bool doNotUseAndChecked;
         private string doNotUseDescription;
@@ -38,7 +39,8 @@ namespace BudgetAnalyser.Matching
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
-            [NotNull] ITransactionRuleService rulesService)
+            [NotNull] ITransactionRuleService rulesService,
+            [NotNull] IBudgetBucketRepository bucketRepo)
         {
             if (uiContext == null)
             {
@@ -50,7 +52,13 @@ namespace BudgetAnalyser.Matching
                 throw new ArgumentNullException(nameof(rulesService));
             }
 
+            if (bucketRepo == null)
+            {
+                throw new ArgumentNullException(nameof(bucketRepo));
+            }
+
             this.rulesService = rulesService;
+            this.bucketRepo = bucketRepo;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
 
@@ -154,7 +162,7 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public IEnumerable<MatchingRule> SimilarRules { get; private set; }
+        public IEnumerable<SimilarMatchedRule> SimilarRules { get; private set; }
         public bool SimilarRulesExist { get; private set; }
         public string Title => "New Matching Rule for: " + Bucket;
 
@@ -247,7 +255,7 @@ namespace BudgetAnalyser.Matching
 
         public void ShowDialog(IEnumerable<MatchingRule> allRules)
         {
-            SimilarRules = allRules.ToList();
+            SimilarRules = allRules.Select(r => new SimilarMatchedRule(this.bucketRepo, r)).ToList();
             UpdateSimilarRules();
 
             this.shellDialogCorrelationId = Guid.NewGuid();
@@ -304,12 +312,31 @@ namespace BudgetAnalyser.Matching
 
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
             ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
-            view.Filter = item => this.rulesService.IsRuleSimilar((MatchingRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
+            view.Filter = FilterSimilarRules;
 
             SimilarRulesExist = !view.IsEmpty;
             RaisePropertyChanged(() => SimilarRulesExist);
             RaisePropertyChanged(() => SimilarRules);
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
+        }
+
+        private bool FilterSimilarRules(object item)
+        {
+            var similarRule = (SimilarMatchedRule)item;
+
+            bool[] matchedBy;
+            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
+            {
+                similarRule.AmountMatched = matchedBy[0];
+                similarRule.DescriptionMatched = matchedBy[1];
+                similarRule.Reference1Matched = matchedBy[2];
+                similarRule.Reference2Matched = matchedBy[3];
+                similarRule.Reference3Matched = matchedBy[4];
+                similarRule.TransactionTypeMatched = matchedBy[5];
+                return true;
+            }
+
+            return false;
         }
     }
 }

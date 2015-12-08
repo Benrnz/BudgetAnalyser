@@ -211,6 +211,12 @@ namespace BudgetAnalyser.Engine.Matching
             return Equals((MatchingRule)obj);
         }
 
+        protected void AllowSubclassAccess(string bucketCode, Guid ruleId)
+        {
+            BucketCode = bucketCode;
+            RuleId = ruleId;
+        }
+
         public override int GetHashCode()
         {
             // ReSharper disable once NonReadonlyMemberInGetHashCode - Property setter is used by Persistence only
