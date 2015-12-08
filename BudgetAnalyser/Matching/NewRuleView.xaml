@@ -116,6 +116,7 @@
                                 <ColumnDefinition SharedSizeGroup="Col3" />
                                 <ColumnDefinition SharedSizeGroup="Col4" />
                                 <ColumnDefinition SharedSizeGroup="Col5" />
+                                <ColumnDefinition SharedSizeGroup="Col6" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0"
                                        Text="Description" />
@@ -127,6 +128,8 @@
                                        Text="Reference3" />
                             <TextBlock Grid.Column="4"
                                        Text="Amount" />
+                            <TextBlock Grid.Column="5"
+                                       Text="Transaction Type" />
                         </Grid>
                         <ItemsControl Grid.Row="1"
                                       ItemsSource="{Binding SimilarRules}">
@@ -148,6 +151,7 @@
                                             <ColumnDefinition SharedSizeGroup="Col3" />
                                             <ColumnDefinition SharedSizeGroup="Col4" />
                                             <ColumnDefinition SharedSizeGroup="Col5" />
+                                            <ColumnDefinition SharedSizeGroup="Col6" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Description}" />
                                         <TextBlock Grid.Column="1"
@@ -158,6 +162,8 @@
                                                    Text="{Binding Reference3}" />
                                         <TextBlock Grid.Column="4"
                                                    Text="{Binding Amount, StringFormat=C}" />
+                                        <TextBlock Grid.Column="5"
+                                                   Text="{Binding TransactionType}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

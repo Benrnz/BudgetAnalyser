@@ -99,10 +99,10 @@ namespace BudgetAnalyser.Engine.Services
             return rule;
         }
 
-        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionTypeName)
+        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionType)
         {
             if (rule == null)
-            {
+            { 
                 throw new ArgumentNullException(nameof(rule));
             }
 
@@ -111,12 +111,17 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(references));
             }
 
-            return amount == rule.Amount
-                   || IsEqualButNotBlank(description, rule.Description)
-                   || IsEqualButNotBlank(references[0], rule.Reference1)
-                   || IsEqualButNotBlank(references[1], rule.Reference2)
-                   || IsEqualButNotBlank(references[2], rule.Reference3)
-                   || IsEqualButNotBlank(transactionTypeName, rule.TransactionType);
+            var match = amount == rule.Amount;
+            if (match) this.logger.LogInfo(l => l.Format("Rule Matched based on: {0} == {1}", rule.Amount, amount));
+
+            match |= IsEqualButNotBlank(description, rule.Description)
+                     || IsEqualButNotBlank(references[0], rule.Reference1)
+                     || IsEqualButNotBlank(references[1], rule.Reference2)
+                     || IsEqualButNotBlank(references[2], rule.Reference3)
+                     || IsEqualButNotBlank(transactionType, rule.TransactionType);
+
+            if (match) this.logger.LogInfo(l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
+            return match;
         }
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
@@ -229,14 +234,16 @@ namespace BudgetAnalyser.Engine.Services
             return Path.Combine(path, "MatchingRules.xml");
         }
 
-        private static bool IsEqualButNotBlank(string operand1, string operand2)
+        private bool IsEqualButNotBlank(string operand1, string operand2)
         {
             if (string.IsNullOrWhiteSpace(operand1) || string.IsNullOrWhiteSpace(operand2))
             {
                 return false;
             }
 
-            return operand1 == operand2;
+            var match = operand1 == operand2;
+            if (match) this.logger.LogInfo(l => l.Format("Rule Matched based on: {0} == {1}", operand2, operand1));
+            return match;
         }
 
         private void AddRule(MatchingRule ruleToAdd)

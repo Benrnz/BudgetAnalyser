@@ -34,6 +34,7 @@ namespace BudgetAnalyser.Matching
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
+        private ILogger logger;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -51,6 +52,7 @@ namespace BudgetAnalyser.Matching
 
             this.rulesService = rulesService;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
+            this.logger = uiContext.Logger;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
@@ -300,12 +302,14 @@ namespace BudgetAnalyser.Matching
                 return;
             }
 
+            this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
             ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
             view.Filter = item => this.rulesService.IsRuleSimilar((MatchingRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
 
             SimilarRulesExist = !view.IsEmpty;
             RaisePropertyChanged(() => SimilarRulesExist);
             RaisePropertyChanged(() => SimilarRules);
+            this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
         }
     }
 }
