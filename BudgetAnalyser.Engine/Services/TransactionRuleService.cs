@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.Services
             return rule;
         }
 
-        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionType, out bool[] matchedBy)
+        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionType, bool and, out bool[] matchedBy)
         {
             if (rule == null)
             { 
@@ -113,27 +113,34 @@ namespace BudgetAnalyser.Engine.Services
 
             var matchedByResults = new bool[6];
             var match = amount == rule.Amount;
+            matchedByResults[0] = match;
+            matchedByResults[1] = IsEqualButNotBlank(description, rule.Description);
+            matchedByResults[2] = IsEqualButNotBlank(references[0], rule.Reference1);
+            matchedByResults[3] = IsEqualButNotBlank(references[1], rule.Reference2);
+            matchedByResults[4] = IsEqualButNotBlank(references[2], rule.Reference3);
+            matchedByResults[5] = IsEqualButNotBlank(transactionType, rule.TransactionType);
             if (match)
             {
                 this.logger.LogInfo(l => l.Format("Rule Matched based on: {0} == {1}", rule.Amount, amount));
-                matchedByResults[0] = true;
             }
 
-            matchedByResults[1] = IsEqualButNotBlank(description, rule.Description);
-            match |= matchedByResults[1];
+            if (and)
+            {
+                match &= matchedByResults[1];
+                match &= matchedByResults[2];
+                match &= matchedByResults[3];
+                match &= matchedByResults[4];
+                match &= matchedByResults[5];
+            }
+            else
+            {
+                match |= matchedByResults[1];
+                match |= matchedByResults[2];
+                match |= matchedByResults[3];
+                match |= matchedByResults[4];
+                match |= matchedByResults[5];
+            }
 
-            matchedByResults[2] = IsEqualButNotBlank(references[0], rule.Reference1);
-            match |= matchedByResults[2];
-
-            matchedByResults[3] = IsEqualButNotBlank(references[1], rule.Reference2);
-            match |= matchedByResults[3];
-
-            matchedByResults[4] = IsEqualButNotBlank(references[2], rule.Reference3);
-            match |= matchedByResults[4];
-
-            matchedByResults[5] = IsEqualButNotBlank(transactionType, rule.TransactionType);
-            match |= matchedByResults[5];
-            
             if (match) this.logger.LogInfo(l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
             matchedBy = matchedByResults;
             return match;
