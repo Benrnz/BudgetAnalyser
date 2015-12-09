@@ -98,6 +98,19 @@ namespace BudgetAnalyser.Matching
             }
         }
 
+        public int SortOrder
+        {
+            get
+            {
+                return (AmountMatched ? 100 : 0)
+                       + (DescriptionMatched ? 90 : 0)
+                       + (Reference1Matched ? 70 : 0)
+                       + (Reference2Matched ? 60 : 0)
+                       + (Reference3Matched ? 50 : 0)
+                       + (TransactionTypeMatched ? 10 : 0);
+            }
+        }
+
         public bool TransactionTypeMatched
         {
             get { return this.doNotUseTransactionTypeMatched; }

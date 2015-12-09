@@ -313,6 +313,7 @@ namespace BudgetAnalyser.Matching
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
             ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
             view.Filter = FilterSimilarRules;
+            view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
             SimilarRulesExist = !view.IsEmpty;
             RaisePropertyChanged(() => SimilarRulesExist);

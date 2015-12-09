@@ -112,18 +112,18 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var matchedByResults = new bool[6];
-            var match = amount == rule.Amount;
-            matchedByResults[0] = match;
+            matchedByResults[0] = amount == rule.Amount; 
             matchedByResults[1] = IsEqualButNotBlank(description, rule.Description);
             matchedByResults[2] = IsEqualButNotBlank(references[0], rule.Reference1);
             matchedByResults[3] = IsEqualButNotBlank(references[1], rule.Reference2);
             matchedByResults[4] = IsEqualButNotBlank(references[2], rule.Reference3);
             matchedByResults[5] = IsEqualButNotBlank(transactionType, rule.TransactionType);
-            if (match)
+            if (matchedByResults[0])
             {
                 this.logger.LogInfo(l => l.Format("Rule Matched based on: {0} == {1}", rule.Amount, amount));
             }
 
+            bool match = matchedByResults[0];
             match |= matchedByResults[1];
             match |= matchedByResults[2];
             match |= matchedByResults[3];
