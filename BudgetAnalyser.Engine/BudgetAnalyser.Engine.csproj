@@ -128,6 +128,7 @@
     <Compile Include="Budget\BucketComparer.cs" />
     <Compile Include="Budget\BudgetBucketPaternity.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
+    <Compile Include="Budget\Data\DtoToFixedBudgetBucketMapper.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
