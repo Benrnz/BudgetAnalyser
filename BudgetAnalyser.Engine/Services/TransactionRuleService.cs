@@ -99,10 +99,10 @@ namespace BudgetAnalyser.Engine.Services
             return rule;
         }
 
-        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionType, bool and, out bool[] matchedBy)
+        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionType, out bool[] matchedBy)
         {
             if (rule == null)
-            { 
+            {
                 throw new ArgumentNullException(nameof(rule));
             }
 
@@ -124,22 +124,11 @@ namespace BudgetAnalyser.Engine.Services
                 this.logger.LogInfo(l => l.Format("Rule Matched based on: {0} == {1}", rule.Amount, amount));
             }
 
-            if (and)
-            {
-                match &= matchedByResults[1];
-                match &= matchedByResults[2];
-                match &= matchedByResults[3];
-                match &= matchedByResults[4];
-                match &= matchedByResults[5];
-            }
-            else
-            {
-                match |= matchedByResults[1];
-                match |= matchedByResults[2];
-                match |= matchedByResults[3];
-                match |= matchedByResults[4];
-                match |= matchedByResults[5];
-            }
+            match |= matchedByResults[1];
+            match |= matchedByResults[2];
+            match |= matchedByResults[3];
+            match |= matchedByResults[4];
+            match |= matchedByResults[5];
 
             if (match) this.logger.LogInfo(l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
             matchedBy = matchedByResults;

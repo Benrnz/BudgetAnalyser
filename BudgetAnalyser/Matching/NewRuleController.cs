@@ -326,7 +326,7 @@ namespace BudgetAnalyser.Matching
             var similarRule = (SimilarMatchedRule)item;
 
             bool[] matchedBy;
-            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, similarRule.And, out matchedBy))
+            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
             {
                 similarRule.AmountMatched = matchedBy[0];
                 similarRule.DescriptionMatched = matchedBy[1];
