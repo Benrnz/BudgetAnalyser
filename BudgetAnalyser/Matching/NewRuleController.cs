@@ -335,7 +335,13 @@ namespace BudgetAnalyser.Matching
                 similarRule.Reference2Matched = matchedBy[3];
                 similarRule.Reference3Matched = matchedBy[4];
                 similarRule.TransactionTypeMatched = matchedBy[5];
-                return true;
+
+                return (UseAmount && similarRule.AmountMatched)
+                    || (UseDescription && similarRule.DescriptionMatched)
+                    || (UseReference1 && similarRule.Reference1Matched) 
+                    || (UseReference2 && similarRule.Reference2Matched)
+                    || (UseReference3 && similarRule.Reference3Matched)
+                    || (UseTransactionType && similarRule.TransactionTypeMatched);
             }
 
             return false;
