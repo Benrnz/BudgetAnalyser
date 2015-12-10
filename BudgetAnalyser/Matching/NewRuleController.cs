@@ -18,9 +18,10 @@ namespace BudgetAnalyser.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class NewRuleController : ControllerBase, IInitializableController, IShellDialogInteractivity, IShellDialogToolTips
     {
+        private readonly IBudgetBucketRepository bucketRepo;
+        private readonly ILogger logger;
         private readonly IUserMessageBox messageBoxService;
         private readonly ITransactionRuleService rulesService;
-        private readonly IBudgetBucketRepository bucketRepo;
         private decimal doNotUseAmount;
         private bool doNotUseAndChecked;
         private string doNotUseDescription;
@@ -30,12 +31,12 @@ namespace BudgetAnalyser.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
         private bool doNotUseUseAmount;
+        private bool doNotUseUseDescription;
         private bool doNotUseUseReference1;
         private bool doNotUseUseReference2;
         private bool doNotUseUseReference3;
         private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
-        private ILogger logger;
 
         public NewRuleController(
             [NotNull] UiContext uiContext,
@@ -187,10 +188,20 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseUseAmount = value;
                 RaisePropertyChanged();
+                RefreshSimilarRules();
             }
         }
 
-        public bool UseDescription { get; set; }
+        public bool UseDescription
+        {
+            get { return this.doNotUseUseDescription; }
+            set
+            {
+                this.doNotUseUseDescription = value;
+                RaisePropertyChanged();
+                RefreshSimilarRules();
+            }
+        }
 
         public bool UseReference1
         {
@@ -200,6 +211,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseUseReference1 = value;
                 RaisePropertyChanged();
+                RefreshSimilarRules();
             }
         }
 
@@ -211,6 +223,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseUseReference2 = value;
                 RaisePropertyChanged();
+                RefreshSimilarRules();
             }
         }
 
@@ -222,6 +235,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseUseReference3 = value;
                 RaisePropertyChanged();
+                RefreshSimilarRules();
             }
         }
 
@@ -234,6 +248,7 @@ namespace BudgetAnalyser.Matching
             {
                 this.doNotUseUseTransactionType = value;
                 RaisePropertyChanged();
+                RefreshSimilarRules();
             }
         }
 
@@ -265,6 +280,31 @@ namespace BudgetAnalyser.Matching
                 Title = Title
             };
             MessengerInstance.Send(dialogRequest);
+        }
+
+        private bool FilterSimilarRules(object item)
+        {
+            var similarRule = (SimilarMatchedRule)item;
+
+            bool[] matchedBy;
+            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
+            {
+                similarRule.AmountMatched = matchedBy[0];
+                similarRule.DescriptionMatched = matchedBy[1];
+                similarRule.Reference1Matched = matchedBy[2];
+                similarRule.Reference2Matched = matchedBy[3];
+                similarRule.Reference3Matched = matchedBy[4];
+                similarRule.TransactionTypeMatched = matchedBy[5];
+
+                return (UseAmount && similarRule.AmountMatched)
+                       || (UseDescription && similarRule.DescriptionMatched)
+                       || (UseReference1 && similarRule.Reference1Matched)
+                       || (UseReference2 && similarRule.Reference2Matched)
+                       || (UseReference3 && similarRule.Reference3Matched)
+                       || (UseTransactionType && similarRule.TransactionTypeMatched);
+            }
+
+            return false;
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -302,6 +342,12 @@ namespace BudgetAnalyser.Matching
             handler?.Invoke(this, EventArgs.Empty);
         }
 
+        private void RefreshSimilarRules()
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
+            view?.Refresh();
+        }
+
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Reviewed, acceptable here.")]
         private void UpdateSimilarRules()
         {
@@ -319,32 +365,6 @@ namespace BudgetAnalyser.Matching
             RaisePropertyChanged(() => SimilarRulesExist);
             RaisePropertyChanged(() => SimilarRules);
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules2: Rules.Count() = {0}", SimilarRules.Count()));
-            
-        }
-
-        private bool FilterSimilarRules(object item)
-        {
-            var similarRule = (SimilarMatchedRule)item;
-
-            bool[] matchedBy;
-            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
-            {
-                similarRule.AmountMatched = matchedBy[0];
-                similarRule.DescriptionMatched = matchedBy[1];
-                similarRule.Reference1Matched = matchedBy[2];
-                similarRule.Reference2Matched = matchedBy[3];
-                similarRule.Reference3Matched = matchedBy[4];
-                similarRule.TransactionTypeMatched = matchedBy[5];
-
-                return (UseAmount && similarRule.AmountMatched)
-                    || (UseDescription && similarRule.DescriptionMatched)
-                    || (UseReference1 && similarRule.Reference1Matched) 
-                    || (UseReference2 && similarRule.Reference2Matched)
-                    || (UseReference3 && similarRule.Reference3Matched)
-                    || (UseTransactionType && similarRule.TransactionTypeMatched);
-            }
-
-            return false;
         }
     }
 }

@@ -198,7 +198,7 @@
                                         <TextBlock Grid.Column="4"
                                                    Text="{Binding Amount, StringFormat=C}" />
                                         <Border Grid.Column="5"
-                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                Background="Green"
                                                 CornerRadius="2"
                                                 Margin="2"
                                                 Visibility="{Binding TransactionTypeMatched, Converter={StaticResource Converter.BoolToVis}}" />
