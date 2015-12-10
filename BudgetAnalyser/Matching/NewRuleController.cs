@@ -76,9 +76,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseAmount) return;
                 this.doNotUseAmount = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
@@ -106,9 +107,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseDescription) return;
                 this.doNotUseDescription = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
@@ -133,9 +135,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseReference1) return;
                 this.doNotUseReference1 = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
@@ -145,9 +148,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseReference2) return;
                 this.doNotUseReference2 = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
@@ -157,9 +161,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseReference3) return;
                 this.doNotUseReference3 = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
@@ -173,9 +178,10 @@ namespace BudgetAnalyser.Matching
 
             set
             {
+                if (value == this.doNotUseTransactionType) return;
                 this.doNotUseTransactionType = value;
                 RaisePropertyChanged();
-                UpdateSimilarRules();
+                RefreshSimilarRules();
             }
         }
 
