@@ -289,19 +289,19 @@ namespace BudgetAnalyser.Matching
             bool[] matchedBy;
             if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
             {
-                similarRule.AmountMatched = matchedBy[0];
-                similarRule.DescriptionMatched = matchedBy[1];
-                similarRule.Reference1Matched = matchedBy[2];
-                similarRule.Reference2Matched = matchedBy[3];
-                similarRule.Reference3Matched = matchedBy[4];
-                similarRule.TransactionTypeMatched = matchedBy[5];
+                similarRule.AmountMatched = matchedBy[0] && UseAmount;
+                similarRule.DescriptionMatched = matchedBy[1] && UseDescription;
+                similarRule.Reference1Matched = matchedBy[2] && UseReference1;
+                similarRule.Reference2Matched = matchedBy[3] && UseReference2;
+                similarRule.Reference3Matched = matchedBy[4] && UseReference3;
+                similarRule.TransactionTypeMatched = matchedBy[5] && UseTransactionType;
 
-                return (UseAmount && similarRule.AmountMatched)
-                       || (UseDescription && similarRule.DescriptionMatched)
-                       || (UseReference1 && similarRule.Reference1Matched)
-                       || (UseReference2 && similarRule.Reference2Matched)
-                       || (UseReference3 && similarRule.Reference3Matched)
-                       || (UseTransactionType && similarRule.TransactionTypeMatched);
+                return similarRule.AmountMatched
+                       || similarRule.DescriptionMatched
+                       || similarRule.Reference1Matched
+                       || similarRule.Reference2Matched
+                       || similarRule.Reference3Matched
+                       || similarRule.TransactionTypeMatched;
             }
 
             return false;
