@@ -231,7 +231,6 @@
     <Compile Include="LedgerBook\TransferFundsView.xaml.cs">
       <DependentUpon>TransferFundsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Matching\SimilarMatchedRule.cs" />
     <Compile Include="PersistenceOperationCommands.cs" />
     <Compile Include="PersistenceOperations.cs" />
     <Compile Include="ScratchPad.xaml.cs">

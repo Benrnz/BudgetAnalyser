@@ -22,20 +22,8 @@ namespace BudgetAnalyser.Matching
         private readonly ILogger logger;
         private readonly IUserMessageBox messageBoxService;
         private readonly ITransactionRuleService rulesService;
-        private decimal doNotUseAmount;
         private bool doNotUseAndChecked;
-        private string doNotUseDescription;
         private bool doNotUseOrChecked;
-        private string doNotUseReference1;
-        private string doNotUseReference2;
-        private string doNotUseReference3;
-        private string doNotUseTransactionType;
-        private bool doNotUseUseAmount;
-        private bool doNotUseUseDescription;
-        private bool doNotUseUseReference1;
-        private bool doNotUseUseReference2;
-        private bool doNotUseUseReference3;
-        private bool doNotUseUseTransactionType;
         private Guid shellDialogCorrelationId;
 
         public NewRuleController(
@@ -70,18 +58,7 @@ namespace BudgetAnalyser.Matching
         public event EventHandler RuleCreated;
         public string ActionButtonToolTip => "Save the new rule.";
 
-        public decimal Amount
-        {
-            get { return this.doNotUseAmount; }
-
-            set
-            {
-                if (value == this.doNotUseAmount) return;
-                this.doNotUseAmount = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
+        public DecimalCriteria Amount { get; set; }
 
         public bool AndChecked
         {
@@ -98,21 +75,10 @@ namespace BudgetAnalyser.Matching
         public BudgetBucket Bucket { get; set; }
         public bool CanExecuteCancelButton => true;
         public bool CanExecuteOkButton => false;
-        public bool CanExecuteSaveButton => UseAmount || UseDescription || UseReference1 || UseReference2 || UseReference3 || UseTransactionType;
+        public bool CanExecuteSaveButton => Amount.Applicable || Description.Applicable || Reference1.Applicable || Reference2.Applicable || Reference3.Applicable || TransactionType.Applicable;
         public string CloseButtonToolTip => "Cancel";
 
-        public string Description
-        {
-            get { return this.doNotUseDescription; }
-
-            set
-            {
-                if (value == this.doNotUseDescription) return;
-                this.doNotUseDescription = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
+        public StringCriteria Description { get; set; }
 
         public MatchingRule NewRule { get; set; }
 
@@ -129,149 +95,60 @@ namespace BudgetAnalyser.Matching
             }
         }
 
-        public string Reference1
-        {
-            get { return this.doNotUseReference1; }
+        public StringCriteria Reference1 { get; set; }
 
-            set
-            {
-                if (value == this.doNotUseReference1) return;
-                this.doNotUseReference1 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
+        public StringCriteria Reference2 { get; set; }
 
-        public string Reference2
-        {
-            get { return this.doNotUseReference2; }
-
-            set
-            {
-                if (value == this.doNotUseReference2) return;
-                this.doNotUseReference2 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public string Reference3
-        {
-            get { return this.doNotUseReference3; }
-
-            set
-            {
-                if (value == this.doNotUseReference3) return;
-                this.doNotUseReference3 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
+        public StringCriteria Reference3 { get; set; }
 
         public IEnumerable<SimilarMatchedRule> SimilarRules { get; private set; }
         public bool SimilarRulesExist { get; private set; }
         public string Title => "New Matching Rule for: " + Bucket;
 
-        public string TransactionType
-        {
-            get { return this.doNotUseTransactionType; }
-
-            set
-            {
-                if (value == this.doNotUseTransactionType) return;
-                this.doNotUseTransactionType = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseAmount
-        {
-            get { return this.doNotUseUseAmount; }
-
-            [UsedImplicitly]
-            set
-            {
-                this.doNotUseUseAmount = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseDescription
-        {
-            get { return this.doNotUseUseDescription; }
-            set
-            {
-                this.doNotUseUseDescription = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseReference1
-        {
-            get { return this.doNotUseUseReference1; }
-
-            set
-            {
-                this.doNotUseUseReference1 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseReference2
-        {
-            get { return this.doNotUseUseReference2; }
-
-            set
-            {
-                this.doNotUseUseReference2 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseReference3
-        {
-            get { return this.doNotUseUseReference3; }
-
-            set
-            {
-                this.doNotUseUseReference3 = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
-
-        public bool UseTransactionType
-        {
-            get { return this.doNotUseUseTransactionType; }
-
-            [UsedImplicitly]
-            set
-            {
-                this.doNotUseUseTransactionType = value;
-                RaisePropertyChanged();
-                RefreshSimilarRules();
-            }
-        }
+        public StringCriteria TransactionType { get; set; }
 
         public void Initialize()
         {
-            UseDescription = true;
-            UseReference1 = false;
-            UseReference2 = false;
-            UseReference3 = false;
-            Description = null;
-            Reference1 = null;
-            Reference2 = null;
-            Reference3 = null;
             SimilarRules = null;
             AndChecked = true;
-
             NewRule = null;
+            if (Description != null)
+            {
+                Description.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+            if (Reference1 != null)
+            {
+                Reference1.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+            if (Reference2 != null)
+            {
+                Reference2.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+            if (Reference3 != null)
+            {
+                Reference3.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+            if (Amount != null)
+            {
+                Amount.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+            if (TransactionType != null)
+            {
+                TransactionType.PropertyChanged -= OnCriteriaValuePropertyChanged;
+            }
+
+            Description = new StringCriteria { Applicable = true };
+            Description.PropertyChanged += OnCriteriaValuePropertyChanged;
+            Reference1 = new StringCriteria();
+            Reference1.PropertyChanged += OnCriteriaValuePropertyChanged;
+            Reference2 = new StringCriteria();
+            Reference2.PropertyChanged += OnCriteriaValuePropertyChanged;
+            Reference3 = new StringCriteria();
+            Reference3.PropertyChanged += OnCriteriaValuePropertyChanged;
+            Amount = new DecimalCriteria();
+            Amount.PropertyChanged += OnCriteriaValuePropertyChanged;
+            TransactionType = new StringCriteria();
+            TransactionType.PropertyChanged += OnCriteriaValuePropertyChanged;
         }
 
         public void ShowDialog(IEnumerable<MatchingRule> allRules)
@@ -288,29 +165,9 @@ namespace BudgetAnalyser.Matching
             MessengerInstance.Send(dialogRequest);
         }
 
-        private bool FilterSimilarRules(object item)
+        private void OnCriteriaValuePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var similarRule = (SimilarMatchedRule)item;
-
-            bool[] matchedBy;
-            if (this.rulesService.IsRuleSimilar(similarRule, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType, out matchedBy))
-            {
-                similarRule.AmountMatched = matchedBy[0] && UseAmount;
-                similarRule.DescriptionMatched = matchedBy[1] && UseDescription;
-                similarRule.Reference1Matched = matchedBy[2] && UseReference1;
-                similarRule.Reference2Matched = matchedBy[3] && UseReference2;
-                similarRule.Reference3Matched = matchedBy[4] && UseReference3;
-                similarRule.TransactionTypeMatched = matchedBy[5] && UseTransactionType;
-
-                return similarRule.AmountMatched
-                       || similarRule.DescriptionMatched
-                       || similarRule.Reference1Matched
-                       || similarRule.Reference2Matched
-                       || similarRule.Reference3Matched
-                       || similarRule.TransactionTypeMatched;
-            }
-
-            return false;
+            RefreshSimilarRules();
         }
 
         private void OnShellDialogResponseReceived(ShellDialogResponseMessage message)
@@ -333,15 +190,15 @@ namespace BudgetAnalyser.Matching
 
             NewRule = this.rulesService.CreateNewRule(
                 Bucket.Code,
-                UseDescription ? Description : null,
+                Description.Applicable ? Description.Value : null,
                 new[]
                 {
-                    UseReference1 ? Reference1 : null,
-                    UseReference2 ? Reference2 : null,
-                    UseReference3 ? Reference3 : null
+                    Reference1.Applicable ? Reference1.Value : null,
+                    Reference2.Applicable ? Reference2.Value : null,
+                    Reference3.Applicable ? Reference3.Value : null
                 },
-                UseTransactionType ? TransactionType : null,
-                UseAmount ? (decimal?)Amount : null,
+                TransactionType.Applicable ? TransactionType.Value : null,
+                Amount.Applicable ? Amount.Value : null,
                 AndChecked);
 
             EventHandler handler = RuleCreated;
@@ -364,7 +221,7 @@ namespace BudgetAnalyser.Matching
 
             this.logger.LogInfo(l => l.Format("UpdateSimilarRules1: Rules.Count() = {0}", SimilarRules.Count()));
             ICollectionView view = CollectionViewSource.GetDefaultView(SimilarRules);
-            view.Filter = FilterSimilarRules;
+            view.Filter = item => this.rulesService.IsRuleSimilar((SimilarMatchedRule)item, Amount, Description, new[] { Reference1, Reference2, Reference3 }, TransactionType);
             view.SortDescriptions.Add(new SortDescription(nameof(SimilarMatchedRule.SortOrder), ListSortDirection.Descending));
 
             SimilarRulesExist = !view.IsEmpty;

@@ -1,8 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Matching;
 
-namespace BudgetAnalyser.Matching
+namespace BudgetAnalyser.Engine.Matching
 {
     /// <summary>
     ///     Used for the purpose of showing similar rules as a check when creating a new rule.
