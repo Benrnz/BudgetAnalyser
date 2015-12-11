@@ -244,7 +244,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         {
             if (bucketRepo == null)
             {
-                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
+                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(), new DtoToFixedBudgetBucketMapper());
             }
 
             return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);

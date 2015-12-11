@@ -16,17 +16,26 @@ namespace BudgetAnalyser.Engine.Budget
     public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     {
         private readonly BasicMapper<BudgetBucketDto, BudgetBucket> mapper;
+        private readonly BasicMapper<FixedBudgetBucketDto, FixedBudgetProjectBucket> fixedProjectMapper;
         private readonly object syncRoot = new object();
         private Dictionary<string, BudgetBucket> lookupTable = new Dictionary<string, BudgetBucket>();
 
-        public InMemoryBudgetBucketRepository([NotNull] BasicMapper<BudgetBucketDto, BudgetBucket> mapper)
+        public InMemoryBudgetBucketRepository(
+            [NotNull] BasicMapper<BudgetBucketDto, BudgetBucket> mapper,
+            [NotNull] BasicMapper<FixedBudgetBucketDto, FixedBudgetProjectBucket> fixedProjectMapper)
         {
             if (mapper == null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
 
+            if (fixedProjectMapper == null)
+            {
+                throw new ArgumentNullException(nameof(fixedProjectMapper));
+            }
+
             this.mapper = mapper;
+            this.fixedProjectMapper = fixedProjectMapper;
         }
 
         public virtual IEnumerable<BudgetBucket> Buckets => this.lookupTable.Values.OrderBy(b => b.Code).ToList();
@@ -126,12 +135,21 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 this.lookupTable = buckets
                     .Where(dto => dto.Type != BucketDtoType.PayCreditCard && dto.Type != BucketDtoType.Surplus)
-                    .Select(dto => this.mapper.Map(dto))
+                    .Select(SelectMapperAndMap)
                     .Distinct()
                     .ToDictionary(e => e.Code, e => e);
 
                 InitialiseMandatorySpecialBuckets();
             }
+        }
+
+        private BudgetBucket SelectMapperAndMap(BudgetBucketDto dto)
+        {
+            if (dto is FixedBudgetBucketDto)
+            {
+                return this.fixedProjectMapper.Map((FixedBudgetBucketDto)dto);
+            }
+            return this.mapper.Map(dto);
         }
 
         public virtual bool IsValidCode(string code)

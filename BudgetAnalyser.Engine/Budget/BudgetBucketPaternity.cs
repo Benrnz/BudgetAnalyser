@@ -9,6 +9,7 @@
     /// </summary>
     public class BudgetBucketPaternity
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "I prefer instance classes over static for ease of testing and extension")]
         public bool OfSameBucketFamily(BudgetBucket bucket1, BudgetBucket bucket2)
         {
             if (bucket1 is SurplusBucket && bucket2 is SurplusBucket)

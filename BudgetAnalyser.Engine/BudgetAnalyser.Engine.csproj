@@ -128,6 +128,7 @@
     <Compile Include="Budget\BucketComparer.cs" />
     <Compile Include="Budget\BudgetBucketPaternity.cs" />
     <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
+    <Compile Include="Budget\Data\DtoToFixedBudgetBucketMapper.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
     <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="MainApplicationStateModelV1.cs" />
+    <Compile Include="Matching\CriteriaT.cs" />
     <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
+    <Compile Include="Matching\SimilarMatchedRule.cs" />
     <Compile Include="Matching\SingleUseMatchingRule.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="Persistence\ApplicationAutoMapperConfiguration.cs" />

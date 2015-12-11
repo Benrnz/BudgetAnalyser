@@ -103,7 +103,7 @@ namespace BudgetAnalyser.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowGivenNullMapper()
         {
-            new InMemoryBudgetBucketRepository(null);
+            new InMemoryBudgetBucketRepository(null, null);
             Assert.Fail();
         }
 
@@ -281,7 +281,7 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private InMemoryBudgetBucketRepository CreateSubject()
         {
-            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper());
+            return new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(), new DtoToFixedBudgetBucketMapper());
         }
 
         private void ThreadSafetyCheckOneThread(object subject)

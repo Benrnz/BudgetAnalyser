@@ -9,7 +9,7 @@ namespace BudgetAnalyser.UnitTest.Budget
     {
         private const string TestDataCode = "FOO";
         private BudgetBucket result;
-        private BudgetBucketDto testData;
+        private FixedBudgetBucketDto testData;
 
         [TestMethod]
         public void ShouldMapCode()
@@ -50,7 +50,7 @@ namespace BudgetAnalyser.UnitTest.Budget
                 Description = "Foo bar tiddle-de-dum",
                 FixedBudgetAmount = 2000
             };
-            var subject = new DtoToBudgetBucketMapper();
+            var subject = new DtoToFixedBudgetBucketMapper();
             this.result = subject.Map(this.testData);
         }
     }

@@ -99,24 +99,44 @@ namespace BudgetAnalyser.Engine.Services
             return rule;
         }
 
-        public bool IsRuleSimilar(MatchingRule rule, decimal amount, string description, string[] references, string transactionTypeName)
+        public bool IsRuleSimilar(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
         {
-            if (rule == null)
+            IsSimilarRulePreconditions(rule, amount, description, references, transactionType);
+
+            var matchedByResults = new bool[6];
+            matchedByResults[0] = amount.IsEqualButNotBlank(rule.Amount);
+            matchedByResults[1] = description.IsEqualButNotBlank(rule.Description);
+            matchedByResults[2] = references[0].IsEqualButNotBlank(rule.Reference1);
+            matchedByResults[3] = references[1].IsEqualButNotBlank(rule.Reference2);
+            matchedByResults[4] = references[2].IsEqualButNotBlank(rule.Reference3);
+            matchedByResults[5] = transactionType.IsEqualButNotBlank(rule.TransactionType);
+
+            bool match = matchedByResults[0];
+            match |= matchedByResults[1];
+            match |= matchedByResults[2];
+            match |= matchedByResults[3];
+            match |= matchedByResults[4];
+            match |= matchedByResults[5];
+
+            if (match)
             {
-                throw new ArgumentNullException(nameof(rule));
+                this.logger.LogInfo(l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
+                rule.AmountMatched = matchedByResults[0] && amount.Applicable;
+                rule.DescriptionMatched = matchedByResults[1] && description.Applicable;
+                rule.Reference1Matched = matchedByResults[2] && references[0].Applicable;
+                rule.Reference2Matched = matchedByResults[3] && references[1].Applicable;
+                rule.Reference3Matched = matchedByResults[4] && references[2].Applicable;
+                rule.TransactionTypeMatched = matchedByResults[5] && transactionType.Applicable;
+
+                return rule.AmountMatched
+                       || rule.DescriptionMatched
+                       || rule.Reference1Matched
+                       || rule.Reference2Matched
+                       || rule.Reference3Matched
+                       || rule.TransactionTypeMatched;
             }
 
-            if (references == null)
-            {
-                throw new ArgumentNullException(nameof(references));
-            }
-
-            return amount == rule.Amount
-                   || IsEqualButNotBlank(description, rule.Description)
-                   || IsEqualButNotBlank(references[0], rule.Reference1)
-                   || IsEqualButNotBlank(references[1], rule.Reference2)
-                   || IsEqualButNotBlank(references[2], rule.Reference3)
-                   || IsEqualButNotBlank(transactionTypeName, rule.TransactionType);
+            return false;
         }
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
@@ -229,14 +249,32 @@ namespace BudgetAnalyser.Engine.Services
             return Path.Combine(path, "MatchingRules.xml");
         }
 
-        private static bool IsEqualButNotBlank(string operand1, string operand2)
+        private static void IsSimilarRulePreconditions(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
         {
-            if (string.IsNullOrWhiteSpace(operand1) || string.IsNullOrWhiteSpace(operand2))
+            if (rule == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(rule));
             }
 
-            return operand1 == operand2;
+            if (amount == null)
+            {
+                throw new ArgumentNullException(nameof(amount));
+            }
+
+            if (description == null)
+            {
+                throw new ArgumentNullException(nameof(description));
+            }
+
+            if (references == null)
+            {
+                throw new ArgumentNullException(nameof(references));
+            }
+
+            if (transactionType == null)
+            {
+                throw new ArgumentNullException(nameof(transactionType));
+            }
         }
 
         private void AddRule(MatchingRule ruleToAdd)

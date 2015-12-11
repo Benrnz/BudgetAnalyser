@@ -1,6 +1,12 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Matching.NewRuleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:matching="clr-namespace:BudgetAnalyser.Matching"
+             xmlns:converters="clr-namespace:BudgetAnalyser.Converters"
+             xmlns:matching1="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine">
+    <UserControl.Resources>
+        <converters:BoolToAndConverter x:Key="Converter.BoolToAnd"/>
+    </UserControl.Resources>
     <!-- DataContext = NewRuleController -->
     <ScrollViewer>
         <Grid>
@@ -45,47 +51,47 @@
                 </StackPanel>
             </GroupBox>
             <CheckBox Grid.Row="1"
-                      IsChecked="{Binding UseDescription}"
+                      IsChecked="{Binding Description.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="1"
                      Margin="2"
-                     Text="{Binding Description}" />
+                     Text="{Binding Description.Value, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="2"
-                      IsChecked="{Binding UseReference1}"
+                      IsChecked="{Binding Reference1.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="2"
                      Margin="2"
-                     Text="{Binding Reference1}" />
+                     Text="{Binding Reference1.Value, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="3"
-                      IsChecked="{Binding UseReference2}"
+                      IsChecked="{Binding Reference2.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="3"
                      Margin="2"
-                     Text="{Binding Reference2}" />
+                     Text="{Binding Reference2.Value, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="4"
-                      IsChecked="{Binding UseReference3}"
+                      IsChecked="{Binding Reference3.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="4"
                      Margin="2"
-                     Text="{Binding Reference3}" />
+                     Text="{Binding Reference3.Value, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="5"
-                      IsChecked="{Binding UseAmount}"
+                      IsChecked="{Binding Amount.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="5"
                      Margin="2"
-                     Text="{Binding Amount, StringFormat=C}" />
+                     Text="{Binding Amount.Value, StringFormat=C, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox Grid.Row="6"
-                      IsChecked="{Binding UseTransactionType}"
+                      IsChecked="{Binding TransactionType.Applicable}"
                       Margin="2" />
             <TextBox Grid.Column="1"
                      Grid.Row="6"
                      Margin="2"
-                     Text="{Binding TransactionType}" />
+                     Text="{Binding TransactionType.Value, Delay=300, UpdateSourceTrigger=PropertyChanged}" />
 
             <StackPanel Grid.ColumnSpan="2"
                         Grid.Row="7"
@@ -116,6 +122,8 @@
                                 <ColumnDefinition SharedSizeGroup="Col3" />
                                 <ColumnDefinition SharedSizeGroup="Col4" />
                                 <ColumnDefinition SharedSizeGroup="Col5" />
+                                <ColumnDefinition SharedSizeGroup="Col6" />
+                                <ColumnDefinition SharedSizeGroup="Col7" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0"
                                        Text="Description" />
@@ -127,12 +135,16 @@
                                        Text="Reference3" />
                             <TextBlock Grid.Column="4"
                                        Text="Amount" />
+                            <TextBlock Grid.Column="5"
+                                       Text="Transaction Type" />
+                            <TextBlock Grid.Column="6"
+                                       Text="AND / OR" />
                         </Grid>
                         <ItemsControl Grid.Row="1"
                                       ItemsSource="{Binding SimilarRules}">
                             <ItemsControl.ItemTemplate>
 
-                                <DataTemplate>
+                                <DataTemplate DataType="matching1:SimilarMatchedRule">
                                     <Grid Background="{StaticResource Brush.TileBackground}"
                                           Margin="2">
                                         <Grid.Resources>
@@ -140,6 +152,8 @@
                                                    BasedOn="{StaticResource {x:Type TextBlock}}">
                                                 <Setter Property="FontSize"
                                                         Value="14" />
+                                                <Setter Property="Margin"
+                                                        Value="4,2,4,2" />
                                             </Style>
                                         </Grid.Resources>
                                         <Grid.ColumnDefinitions>
@@ -148,16 +162,51 @@
                                             <ColumnDefinition SharedSizeGroup="Col3" />
                                             <ColumnDefinition SharedSizeGroup="Col4" />
                                             <ColumnDefinition SharedSizeGroup="Col5" />
+                                            <ColumnDefinition SharedSizeGroup="Col6" />
+                                            <ColumnDefinition SharedSizeGroup="Col7" />
                                         </Grid.ColumnDefinitions>
+                                        <Border Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding DescriptionMatched, Converter={StaticResource Converter.BoolToVis}}"/>
                                         <TextBlock Text="{Binding Description}" />
+                                        <Border Grid.Column="1"
+                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding Reference1Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="1"
                                                    Text="{Binding Reference1}" />
+                                        <Border Grid.Column="2"
+                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding Reference2Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="2"
                                                    Text="{Binding Reference2}" />
+                                        <Border Grid.Column="3"
+                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding Reference3Matched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="3"
                                                    Text="{Binding Reference3}" />
+                                        <Border Grid.Column="4"
+                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding AmountMatched, Converter={StaticResource Converter.BoolToVis}}" />
                                         <TextBlock Grid.Column="4"
                                                    Text="{Binding Amount, StringFormat=C}" />
+                                        <Border Grid.Column="5"
+                                                Background="{StaticResource Brush.ImportantHighlightLight}"
+                                                CornerRadius="2"
+                                                Margin="2"
+                                                Visibility="{Binding TransactionTypeMatched, Converter={StaticResource Converter.BoolToVis}}" />
+                                        <TextBlock Grid.Column="5"
+                                                   Text="{Binding TransactionType}" />
+                                        <TextBlock Grid.Column="6"
+                                                   Text="{Binding And, Converter={StaticResource Converter.BoolToAnd}}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

@@ -182,6 +182,7 @@
     <Compile Include="Budget\DialogResponseEventArgs.cs" />
     <Compile Include="ConcurrentMessenger.cs" />
     <Compile Include="Converters\BucketToColourConverter.cs" />
+    <Compile Include="Converters\BoolToAndConverter.cs" />
     <Compile Include="Converters\BucketToVisibilityConverter.cs" />
     <Compile Include="Converters\BudgetBucketToStringConverter.cs" />
     <Compile Include="Converters\BudgetNameViewModelConverter.cs" />

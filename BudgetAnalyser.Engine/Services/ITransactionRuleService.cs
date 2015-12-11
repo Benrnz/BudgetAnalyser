@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
@@ -67,7 +68,12 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="references">The references.</param>
         /// <param name="transactionTypeName">Name of the transaction type.</param>
         /// <returns>True, if the data is similar to the rule, otherwise false.</returns>
-        bool IsRuleSimilar([NotNull] MatchingRule rule, decimal amount, string description, [NotNull] string[] references, string transactionTypeName);
+        bool IsRuleSimilar(
+            [NotNull] SimilarMatchedRule rule, 
+            [NotNull] DecimalCriteria amount,
+            [NotNull] StringCriteria description, 
+            [NotNull] StringCriteria[] references,
+            [NotNull] StringCriteria transactionTypeName);
 
         /// <summary>
         ///     Matches the specified transactions using the provided rules.

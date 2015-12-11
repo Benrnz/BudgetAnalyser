@@ -204,12 +204,12 @@ namespace BudgetAnalyser.Matching
 
             NewRuleController.Initialize();
             NewRuleController.Bucket = transaction.BudgetBucket;
-            NewRuleController.Description = transaction.Description;
-            NewRuleController.Reference1 = transaction.Reference1;
-            NewRuleController.Reference2 = transaction.Reference2;
-            NewRuleController.Reference3 = transaction.Reference3;
-            NewRuleController.TransactionType = transaction.TransactionType.Name;
-            NewRuleController.Amount = transaction.Amount;
+            NewRuleController.Description.Value = transaction.Description;
+            NewRuleController.Reference1.Value = transaction.Reference1;
+            NewRuleController.Reference2.Value = transaction.Reference2;
+            NewRuleController.Reference3.Value = transaction.Reference3;
+            NewRuleController.TransactionType.Value = transaction.TransactionType.Name;
+            NewRuleController.Amount.Value = transaction.Amount;
             NewRuleController.AndChecked = true;
             NewRuleController.ShowDialog(Rules);
 
