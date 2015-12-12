@@ -11,6 +11,7 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "There are no native resources to clean up. Unnecessary complexity.")]
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
     {
         private readonly ILogger logger;
@@ -22,6 +23,8 @@ namespace BudgetAnalyser.Engine.Statement
         private Guid changeHash;
 
         private GlobalFilterCriteria currentFilter;
+        // Track whether Dispose has been called. 
+        private bool disposed;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
         private IEnumerable<Transaction> doNotUseTransactions;
@@ -40,6 +43,17 @@ namespace BudgetAnalyser.Engine.Statement
             this.changeHash = Guid.NewGuid();
             AllTransactions = new List<Transaction>();
             Transactions = new List<Transaction>();
+        }
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
+        ///     This destructor will run only if the Dispose method does not get called.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~StatementModel()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            Dispose(false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -118,20 +132,29 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        ///     Implement IDisposable.
+        ///     Do not make this method virtual.
+        ///     A derived class should not be able to override this method
         /// </summary>
         public void Dispose()
         {
-            UnsubscribeToTransactionChangedEvents();
+            Dispose(true);
+
+            // Take this instance off the Finalization queue 
+            // to prevent finalization code for this object 
+            // from executing a second time. 
+            GC.SuppressFinalize(this);
         }
 
         public long SignificantDataChangeHash()
         {
+            ThrowIfDisposed();
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
         }
 
         internal virtual void Filter(GlobalFilterCriteria criteria)
         {
+            ThrowIfDisposed();
             if (criteria == null)
             {
                 this.changeHash = Guid.NewGuid();
@@ -172,6 +195,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <returns>Returns this instance, to allow chaining.</returns>
         internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
         {
+            ThrowIfDisposed();
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
             List<Transaction> listOfTransactions;
@@ -201,8 +225,10 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not
         ///     changed.
         /// </summary>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Ok here. This methods creates the instance for use elsewhere.")]
         internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
         {
+            ThrowIfDisposed();
             if (additionalModel == null)
             {
                 throw new ArgumentNullException(nameof(additionalModel));
@@ -211,7 +237,7 @@ namespace BudgetAnalyser.Engine.Statement
             var combinedModel = new StatementModel(this.logger)
             {
                 LastImport = additionalModel.LastImport,
-                StorageKey = StorageKey,
+                StorageKey = StorageKey
             };
 
             List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
@@ -221,6 +247,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket, [NotNull] BudgetBucket reassignmentBucket)
         {
+            ThrowIfDisposed();
             if (bucket == null)
             {
                 throw new ArgumentNullException(nameof(bucket));
@@ -239,6 +266,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal virtual void RemoveTransaction([NotNull] Transaction transaction)
         {
+            ThrowIfDisposed();
             if (transaction == null)
             {
                 throw new ArgumentNullException(nameof(transaction));
@@ -257,6 +285,7 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] BudgetBucket splinterBucket1,
             [NotNull] BudgetBucket splinterBucket2)
         {
+            ThrowIfDisposed();
             if (originalTransaction == null)
             {
                 throw new ArgumentNullException(nameof(originalTransaction));
@@ -304,6 +333,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
         {
+            ThrowIfDisposed();
             if (this.duplicates != null)
             {
                 return this.duplicates; // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
@@ -323,9 +353,24 @@ namespace BudgetAnalyser.Engine.Statement
             return this.duplicates;
         }
 
+        /// <summary>
+        ///     Allows derivatives to customise dispose logic.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                UnsubscribeToTransactionChangedEvents();
+            }
+
+            this.disposed = true;
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            ThrowIfDisposed();
             PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -371,6 +416,14 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException(nameof(StatementModel));
+            }
         }
 
         private void UnsubscribeToTransactionChangedEvents()

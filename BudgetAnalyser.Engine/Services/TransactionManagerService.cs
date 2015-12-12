@@ -228,8 +228,8 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-            var combinedModel = StatementModel.Merge(additionalModel);
-            var duplicates = combinedModel.ValidateAgainstDuplicates();
+            StatementModel combinedModel = StatementModel.Merge(additionalModel);
+            IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {
                 throw new TransactionsAlreadyImportedException();
@@ -269,13 +269,6 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             NewDataAvailable();
-        }
-
-        private void NewDataAvailable()
-        {
-            ResetTransactionsCollection();
-            EventHandler handler = NewDataSourceAvailable;
-            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
@@ -460,6 +453,13 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return false;
+        }
+
+        private void NewDataAvailable()
+        {
+            ResetTransactionsCollection();
+            EventHandler handler = NewDataSourceAvailable;
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void ResetTransactionsCollection()

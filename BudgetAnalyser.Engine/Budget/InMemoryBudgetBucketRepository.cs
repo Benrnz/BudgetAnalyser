@@ -145,9 +145,10 @@ namespace BudgetAnalyser.Engine.Budget
 
         private BudgetBucket SelectMapperAndMap(BudgetBucketDto dto)
         {
-            if (dto is FixedBudgetBucketDto)
+            var source = dto as FixedBudgetBucketDto;
+            if (source != null)
             {
-                return this.fixedProjectMapper.Map((FixedBudgetBucketDto)dto);
+                return this.fixedProjectMapper.Map(source);
             }
             return this.mapper.Map(dto);
         }

@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Annotations;
+﻿using System;
+using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Matching
@@ -15,8 +16,13 @@ namespace BudgetAnalyser.Engine.Matching
         private bool doNotUseReference3Matched;
         private bool doNotUseTransactionTypeMatched;
 
-        public SimilarMatchedRule([NotNull] IBudgetBucketRepository bucketRepository, MatchingRule rule) : base(bucketRepository)
+        public SimilarMatchedRule([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] MatchingRule rule) : base(bucketRepository)
         {
+            if (rule == null)
+            {
+                throw new ArgumentNullException(nameof(rule));
+            }
+
             Amount = rule.Amount;
             And = rule.And;
             Description = rule.Description;
