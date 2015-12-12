@@ -76,6 +76,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Will be thrown if the bank extract cannot be located using the given
         ///     <paramref name="storageKey" />
         /// </exception>
+        /// <exception cref="TransactionsAlreadyImportedException">Will be thrown if the supplied file has already been imported.</exception>
         Task ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey,
             [NotNull] Account account);

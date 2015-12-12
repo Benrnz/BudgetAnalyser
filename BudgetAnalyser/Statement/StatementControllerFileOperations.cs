@@ -107,6 +107,10 @@ namespace BudgetAnalyser.Statement
             {
                 FileCannotBeLoaded(ex);
             }
+            catch (TransactionsAlreadyImportedException ex)
+            {
+                FileCannotBeLoaded(ex);
+            }
             finally
             {
                 this.loadFileController.Reset();
@@ -149,7 +153,7 @@ namespace BudgetAnalyser.Statement
 
         private void FileCannotBeLoaded(Exception ex)
         {
-            this.messageBox.Show("The file cannot be loaded.\n" + ex.Message);
+            this.messageBox.Show("The file was not loaded.\n" + ex.Message);
         }
 
         /// <summary>
