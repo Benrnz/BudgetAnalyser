@@ -272,7 +272,7 @@ namespace BudgetAnalyser.Engine.Ledger
             long key;
             unchecked
             {
-                key = dependency1.GetHashCode() * dependency2.GetHashCode() * dependentDate.GetHashCode();
+                key = dependency1?.GetHashCode() ?? 1 * dependency2?.GetHashCode() ?? 1 * dependentDate.GetHashCode();
             }
 
             string keyString = key.ToString(CultureInfo.InvariantCulture);

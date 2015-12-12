@@ -327,6 +327,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
+            if (AllTransactions == null) AllTransactions = new List<Transaction>();
             List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
             AllTransactions = mergedTransactions;
             this.duplicates = null;
@@ -360,7 +361,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void UnsubscribeToTransactionChangedEvents()
         {
-            if (AllTransactions == null)
+            if (AllTransactions == null || AllTransactions.None())
             {
                 return;
             }

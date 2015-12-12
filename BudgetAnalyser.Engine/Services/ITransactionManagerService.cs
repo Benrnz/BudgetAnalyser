@@ -68,6 +68,7 @@ namespace BudgetAnalyser.Engine.Services
 
         /// <summary>
         ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
+        ///     This method should not be used without a <see cref="StatementModel"/> loaded.
         ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
