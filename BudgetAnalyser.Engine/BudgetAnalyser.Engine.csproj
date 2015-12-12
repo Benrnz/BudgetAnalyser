@@ -300,6 +300,7 @@
     <Compile Include="Statement\StatementApplicationStateV1.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\StatementRepository.cs" />
+    <Compile Include="Statement\TransactionsAlreadyImportedException.cs" />
     <Compile Include="Statement\UnexpectedIndexException.cs" />
     <Compile Include="Statement\Transaction.cs" />
     <Compile Include="Statement\TransactionGroupedByBucket.cs" />
