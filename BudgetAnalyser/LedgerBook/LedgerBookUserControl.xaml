@@ -4,7 +4,7 @@
              xmlns:budgetAnalyser="clr-namespace:BudgetAnalyser"
              Background="{StaticResource Brush.MainBackground}"
              DataContextChanged="OnDataContextChanged">
-
+<!-- DataContext: LedgerBookController -->
     <UserControl.Resources>
 
         <Style TargetType="Hyperlink">
@@ -125,8 +125,8 @@
                        ToolTip="Last modified date and time" />
             <TextBlock Grid.Column="1"
                        Style="{StaticResource TextBlock.Paragraph}"
-                       Text="{Binding ViewModel.LedgerBook.FileName}"
-                       ToolTip="{Binding ViewModel.LedgerBook.FileName}" />
+                       Text="{Binding ViewModel.LedgerBook.StorageKey}"
+                       ToolTip="{Binding ViewModel.LedgerBook.StorageKey}" />
             <Border BorderBrush="{StaticResource Brush.ControlBorder}"
                     BorderThickness="2"
                     CornerRadius="3"
