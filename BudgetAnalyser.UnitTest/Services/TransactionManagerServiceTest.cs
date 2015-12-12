@@ -208,7 +208,7 @@ namespace BudgetAnalyser.UnitTest.Services
         {
             this.mockStatementRepo
                 .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.BankAccount.Account>()))
-                .Returns(Task.FromResult(StatementModelTestData.TestData2()))
+                .Returns(Task.FromResult(StatementModelTestData.TestData3()))
                 .Verifiable();
 
             await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
@@ -239,6 +239,26 @@ namespace BudgetAnalyser.UnitTest.Services
         public async Task ImportAndMergeBankStatement_ShouldThrow_GivenNullAccount()
         {
             await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(TransactionsAlreadyImportedException))]
+        public async Task ImportAndMergeBankStatement_ShouldThrow_GivenAlreadyImported()
+        {
+            this.testData = new StatementModelBuilder()
+                .TestData2()
+                .Build();
+
+            Arrange();
+
+            this.mockStatementRepo
+                .Setup(m => m.ImportBankStatementAsync(It.IsAny<string>(), It.IsAny<Engine.BankAccount.Account>()))
+                .Returns(Task.FromResult(StatementModelTestData.TestData2()))
+                .Verifiable();
+
+            await this.subject.ImportAndMergeBankStatementAsync("Sticky Bag.csv", StatementModelTestData.ChequeAccount);
+
             Assert.Fail();
         }
 

@@ -9,12 +9,12 @@ namespace BudgetAnalyser.UnitTest.TestData
 {
     public class StatementModelBuilder
     {
-        private StatementModel model = new StatementModel(new FakeLogger());
         private readonly List<Transaction> additionalTransactions = new List<Transaction>();
+        private StatementModel model = new StatementModel(new FakeLogger());
 
-        public StatementModelBuilder TestData1()
+        public StatementModelBuilder AppendTransaction(Transaction transaction)
         {
-            this.model = StatementModelTestData.TestData1();
+            this.additionalTransactions.Add(transaction);
             return this;
         }
 
@@ -25,21 +25,27 @@ namespace BudgetAnalyser.UnitTest.TestData
                 return this.model;
             }
 
-            var privateMergeMethods = this.model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).Where(m => m.Name == "Merge");
-            var privateMergeMethod = privateMergeMethods.First(m => m.IsPrivate);
+            IEnumerable<MethodInfo> privateMergeMethods = this.model.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).Where(m => m.Name == "Merge");
+            MethodInfo privateMergeMethod = privateMergeMethods.First(m => m.IsPrivate);
             privateMergeMethod.Invoke(this.model, new object[] { this.additionalTransactions });
             return this.model;
-        }
-
-        public StatementModelBuilder AppendTransaction(Transaction transaction)
-        {
-            this.additionalTransactions.Add(transaction);
-            return this;
         }
 
         public StatementModelBuilder Merge(StatementModel anotherStatementModel)
         {
             this.model.Merge(anotherStatementModel);
+            return this;
+        }
+
+        public StatementModelBuilder TestData1()
+        {
+            this.model = StatementModelTestData.TestData1();
+            return this;
+        }
+
+        public StatementModelBuilder TestData2()
+        {
+            this.model = StatementModelTestData.TestData2();
             return this;
         }
     }

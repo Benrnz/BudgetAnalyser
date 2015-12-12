@@ -221,8 +221,18 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(account));
             }
 
+            if (StatementModel == null)
+            {
+                throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+            }
+
             StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
             StatementModel.Merge(additionalModel);
+            var duplicates = StatementModel.ValidateAgainstDuplicates();
+            if (duplicates.Count() == additionalModel.AllTransactions.Count())
+            {
+                throw new TransactionsAlreadyImportedException();
+            }
         }
 
         public void Initialise(StatementApplicationStateV1 stateData)
