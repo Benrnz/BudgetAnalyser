@@ -11,7 +11,8 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
-    public class StatementModel : INotifyPropertyChanged, IDataChangeDetection
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "There are no native resources to clean up. Unnecessary complexity.")]
+    public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
     {
         private readonly ILogger logger;
 
@@ -22,6 +23,8 @@ namespace BudgetAnalyser.Engine.Statement
         private Guid changeHash;
 
         private GlobalFilterCriteria currentFilter;
+        // Track whether Dispose has been called. 
+        private bool disposed;
         private List<Transaction> doNotUseAllTransactions;
         private int doNotUseDurationInMonths;
         private IEnumerable<Transaction> doNotUseTransactions;
@@ -40,6 +43,17 @@ namespace BudgetAnalyser.Engine.Statement
             this.changeHash = Guid.NewGuid();
             AllTransactions = new List<Transaction>();
             Transactions = new List<Transaction>();
+        }
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
+        ///     This destructor will run only if the Dispose method does not get called.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~StatementModel()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            Dispose(false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -117,13 +131,30 @@ namespace BudgetAnalyser.Engine.Statement
             return minDate.DurationInMonths(maxDate);
         }
 
+        /// <summary>
+        ///     Implement IDisposable.
+        ///     Do not make this method virtual.
+        ///     A derived class should not be able to override this method
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Take this instance off the Finalization queue 
+            // to prevent finalization code for this object 
+            // from executing a second time. 
+            GC.SuppressFinalize(this);
+        }
+
         public long SignificantDataChangeHash()
         {
+            ThrowIfDisposed();
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
         }
 
         internal virtual void Filter(GlobalFilterCriteria criteria)
         {
+            ThrowIfDisposed();
             if (criteria == null)
             {
                 this.changeHash = Guid.NewGuid();
@@ -164,6 +195,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <returns>Returns this instance, to allow chaining.</returns>
         internal virtual StatementModel LoadTransactions(IEnumerable<Transaction> transactions)
         {
+            ThrowIfDisposed();
             UnsubscribeToTransactionChangedEvents();
             this.changeHash = Guid.NewGuid();
             List<Transaction> listOfTransactions;
@@ -180,8 +212,7 @@ namespace BudgetAnalyser.Engine.Statement
             AllTransactions = Transactions;
             if (listOfTransactions.Any())
             {
-                this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
-                DurationInMonths = CalculateDuration(null, Transactions);
+                UpdateDuration();
             }
 
             this.duplicates = null;
@@ -190,20 +221,33 @@ namespace BudgetAnalyser.Engine.Statement
             return this;
         }
 
-        internal virtual void Merge([NotNull] StatementModel additionalModel)
+        /// <summary>
+        ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not
+        ///     changed.
+        /// </summary>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Ok here. This methods creates the instance for use elsewhere.")]
+        internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
         {
+            ThrowIfDisposed();
             if (additionalModel == null)
             {
                 throw new ArgumentNullException(nameof(additionalModel));
             }
 
-            LastImport = additionalModel.LastImport;
+            var combinedModel = new StatementModel(this.logger)
+            {
+                LastImport = additionalModel.LastImport,
+                StorageKey = StorageKey
+            };
 
-            Merge(additionalModel.AllTransactions);
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
+            combinedModel.LoadTransactions(mergedTransactions);
+            return combinedModel;
         }
 
         internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket, [NotNull] BudgetBucket reassignmentBucket)
         {
+            ThrowIfDisposed();
             if (bucket == null)
             {
                 throw new ArgumentNullException(nameof(bucket));
@@ -222,6 +266,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         internal virtual void RemoveTransaction([NotNull] Transaction transaction)
         {
+            ThrowIfDisposed();
             if (transaction == null)
             {
                 throw new ArgumentNullException(nameof(transaction));
@@ -240,6 +285,7 @@ namespace BudgetAnalyser.Engine.Statement
             [NotNull] BudgetBucket splinterBucket1,
             [NotNull] BudgetBucket splinterBucket2)
         {
+            ThrowIfDisposed();
             if (originalTransaction == null)
             {
                 throw new ArgumentNullException(nameof(originalTransaction));
@@ -266,16 +312,28 @@ namespace BudgetAnalyser.Engine.Statement
 
             if (splinterAmount1 + splinterAmount2 != originalTransaction.Amount)
             {
-                throw new InvalidOperationException("The two new amounts do not add up to the original transaction value.");
+                throw new ArgumentException("The two new amounts do not add up to the original transaction value.");
             }
 
             RemoveTransaction(originalTransaction);
 
-            Merge(new[] { splinterTransaction1, splinterTransaction2 });
+            this.changeHash = Guid.NewGuid();
+            if (AllTransactions == null)
+            {
+                AllTransactions = new List<Transaction>();
+            }
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
+            AllTransactions = mergedTransactions;
+            splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
+            splinterTransaction2.PropertyChanged += OnTransactionPropertyChanged;
+            this.duplicates = null;
+            UpdateDuration();
+            Filter(this.currentFilter);
         }
 
         internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
         {
+            ThrowIfDisposed();
             if (this.duplicates != null)
             {
                 return this.duplicates; // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
@@ -295,9 +353,24 @@ namespace BudgetAnalyser.Engine.Statement
             return this.duplicates;
         }
 
+        /// <summary>
+        ///     Allows derivatives to customise dispose logic.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                UnsubscribeToTransactionChangedEvents();
+            }
+
+            this.disposed = true;
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            ThrowIfDisposed();
             PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -323,20 +396,6 @@ namespace BudgetAnalyser.Engine.Statement
             return query;
         }
 
-        private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
-        {
-            UnsubscribeToTransactionChangedEvents();
-            this.changeHash = Guid.NewGuid();
-            if (AllTransactions == null) AllTransactions = new List<Transaction>();
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
-            AllTransactions = mergedTransactions;
-            this.duplicates = null;
-            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
-            DurationInMonths = this.fullDuration;
-            Filter(this.currentFilter);
-            SubscribeToTransactionChangedEvents();
-        }
-
         private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             switch (propertyChangedEventArgs.PropertyName)
@@ -359,6 +418,14 @@ namespace BudgetAnalyser.Engine.Statement
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
         }
 
+        private void ThrowIfDisposed()
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException(nameof(StatementModel));
+            }
+        }
+
         private void UnsubscribeToTransactionChangedEvents()
         {
             if (AllTransactions == null || AllTransactions.None())
@@ -367,6 +434,12 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
+        }
+
+        private void UpdateDuration()
+        {
+            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
+            DurationInMonths = CalculateDuration(null, Transactions);
         }
     }
 }

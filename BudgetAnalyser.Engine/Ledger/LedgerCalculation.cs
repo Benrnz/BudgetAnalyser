@@ -423,7 +423,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
             else
             {
-                query = query.Where(t => t.BudgetBucket.Code == bucketCode);
+                query = query.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == bucketCode);
             }
 
             this.logger.LogInfo(

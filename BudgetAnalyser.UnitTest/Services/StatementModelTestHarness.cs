@@ -21,9 +21,10 @@ namespace BudgetAnalyser.UnitTest.Services
             FilterByCriteriaWasCalled++;
         }
 
-        internal override void Merge(StatementModel additionalModel)
+        internal override StatementModel Merge(StatementModel additionalModel)
         {
             MergeWasCalled++;
+            return this;
         }
 
         internal override void RemoveTransaction(Transaction transaction)

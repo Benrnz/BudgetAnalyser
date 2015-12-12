@@ -99,9 +99,9 @@ namespace BudgetAnalyser.Engine.Services
             return rule;
         }
 
-        public bool IsRuleSimilar(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
+        public bool IsRuleSimilar(SimilarMatchedRule rule, DecimalCriteria amount, StringCriteria description, StringCriteria[] references, StringCriteria transactionTypeName)
         {
-            IsSimilarRulePreconditions(rule, amount, description, references, transactionType);
+            IsSimilarRulePreconditions(rule, amount, description, references, transactionTypeName);
 
             var matchedByResults = new bool[6];
             matchedByResults[0] = amount.IsEqualButNotBlank(rule.Amount);
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Services
             matchedByResults[2] = references[0].IsEqualButNotBlank(rule.Reference1);
             matchedByResults[3] = references[1].IsEqualButNotBlank(rule.Reference2);
             matchedByResults[4] = references[2].IsEqualButNotBlank(rule.Reference3);
-            matchedByResults[5] = transactionType.IsEqualButNotBlank(rule.TransactionType);
+            matchedByResults[5] = transactionTypeName.IsEqualButNotBlank(rule.TransactionType);
 
             bool match = matchedByResults[0];
             match |= matchedByResults[1];
@@ -126,7 +126,7 @@ namespace BudgetAnalyser.Engine.Services
                 rule.Reference1Matched = matchedByResults[2] && references[0].Applicable;
                 rule.Reference2Matched = matchedByResults[3] && references[1].Applicable;
                 rule.Reference3Matched = matchedByResults[4] && references[2].Applicable;
-                rule.TransactionTypeMatched = matchedByResults[5] && transactionType.Applicable;
+                rule.TransactionTypeMatched = matchedByResults[5] && transactionTypeName.Applicable;
 
                 return rule.AmountMatched
                        || rule.DescriptionMatched
