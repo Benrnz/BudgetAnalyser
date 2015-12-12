@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Statement
 {
-    public class StatementModel : INotifyPropertyChanged, IDataChangeDetection
+    public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
     {
         private readonly ILogger logger;
 
@@ -117,6 +117,14 @@ namespace BudgetAnalyser.Engine.Statement
             return minDate.DurationInMonths(maxDate);
         }
 
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            UnsubscribeToTransactionChangedEvents();
+        }
+
         public long SignificantDataChangeHash()
         {
             return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
@@ -180,8 +188,7 @@ namespace BudgetAnalyser.Engine.Statement
             AllTransactions = Transactions;
             if (listOfTransactions.Any())
             {
-                this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
-                DurationInMonths = CalculateDuration(null, Transactions);
+                UpdateDuration();
             }
 
             this.duplicates = null;
@@ -190,16 +197,26 @@ namespace BudgetAnalyser.Engine.Statement
             return this;
         }
 
-        internal virtual void Merge([NotNull] StatementModel additionalModel)
+        /// <summary>
+        ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not
+        ///     changed.
+        /// </summary>
+        internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
         {
             if (additionalModel == null)
             {
                 throw new ArgumentNullException(nameof(additionalModel));
             }
 
-            LastImport = additionalModel.LastImport;
+            var combinedModel = new StatementModel(this.logger)
+            {
+                LastImport = additionalModel.LastImport,
+                StorageKey = StorageKey,
+            };
 
-            Merge(additionalModel.AllTransactions);
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
+            combinedModel.LoadTransactions(mergedTransactions);
+            return combinedModel;
         }
 
         internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket, [NotNull] BudgetBucket reassignmentBucket)
@@ -266,12 +283,23 @@ namespace BudgetAnalyser.Engine.Statement
 
             if (splinterAmount1 + splinterAmount2 != originalTransaction.Amount)
             {
-                throw new InvalidOperationException("The two new amounts do not add up to the original transaction value.");
+                throw new ArgumentException("The two new amounts do not add up to the original transaction value.");
             }
 
             RemoveTransaction(originalTransaction);
 
-            Merge(new[] { splinterTransaction1, splinterTransaction2 });
+            this.changeHash = Guid.NewGuid();
+            if (AllTransactions == null)
+            {
+                AllTransactions = new List<Transaction>();
+            }
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
+            AllTransactions = mergedTransactions;
+            splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
+            splinterTransaction2.PropertyChanged += OnTransactionPropertyChanged;
+            this.duplicates = null;
+            UpdateDuration();
+            Filter(this.currentFilter);
         }
 
         internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
@@ -323,20 +351,6 @@ namespace BudgetAnalyser.Engine.Statement
             return query;
         }
 
-        private void Merge([NotNull] IEnumerable<Transaction> additionalTransactions)
-        {
-            UnsubscribeToTransactionChangedEvents();
-            this.changeHash = Guid.NewGuid();
-            if (AllTransactions == null) AllTransactions = new List<Transaction>();
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalTransactions).ToList();
-            AllTransactions = mergedTransactions;
-            this.duplicates = null;
-            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), mergedTransactions);
-            DurationInMonths = this.fullDuration;
-            Filter(this.currentFilter);
-            SubscribeToTransactionChangedEvents();
-        }
-
         private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             switch (propertyChangedEventArgs.PropertyName)
@@ -367,6 +381,12 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
+        }
+
+        private void UpdateDuration()
+        {
+            this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
+            DurationInMonths = CalculateDuration(null, Transactions);
         }
     }
 }

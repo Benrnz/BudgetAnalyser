@@ -121,6 +121,7 @@ namespace BudgetAnalyser.Engine.Services
         public void Close()
         {
             this.transactions = new ObservableCollection<Transaction>();
+            StatementModel?.Dispose();
             StatementModel = null;
             this.budgetCollection = null;
             this.budgetHash = 0;
@@ -227,12 +228,16 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-            StatementModel.Merge(additionalModel);
-            var duplicates = StatementModel.ValidateAgainstDuplicates();
+            var combinedModel = StatementModel.Merge(additionalModel);
+            var duplicates = combinedModel.ValidateAgainstDuplicates();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {
                 throw new TransactionsAlreadyImportedException();
             }
+
+            StatementModel.Dispose();
+            StatementModel = combinedModel;
+            NewDataAvailable();
         }
 
         public void Initialise(StatementApplicationStateV1 stateData)
@@ -253,6 +258,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
+            StatementModel?.Dispose();
             try
             {
                 StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
@@ -262,8 +268,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
             }
 
-            ResetTransactionsCollection();
+            NewDataAvailable();
+        }
 
+        private void NewDataAvailable()
+        {
+            ResetTransactionsCollection();
             EventHandler handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
         }
