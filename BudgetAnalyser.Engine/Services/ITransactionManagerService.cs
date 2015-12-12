@@ -68,6 +68,7 @@ namespace BudgetAnalyser.Engine.Services
 
         /// <summary>
         ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
+        ///     This method should not be used without a <see cref="StatementModel"/> loaded.
         ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
@@ -75,6 +76,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Will be thrown if the bank extract cannot be located using the given
         ///     <paramref name="storageKey" />
         /// </exception>
+        /// <exception cref="TransactionsAlreadyImportedException">Will be thrown if the supplied file has already been imported.</exception>
         Task ImportAndMergeBankStatementAsync(
             [NotNull] string storageKey,
             [NotNull] Account account);
