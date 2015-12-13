@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public override void Update([NotNull] params object[] input)
         {
             base.Update(input);
-
+            DetailedText = BucketCode;
             if (!Enabled)
             {
                 ToolTip = this.disabledToolTip;
