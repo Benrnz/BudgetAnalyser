@@ -3,6 +3,14 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -1538,6 +1546,14 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -3163,6 +3179,14 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -4760,6 +4784,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -6390,6 +6422,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -7987,6 +8027,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -9617,6 +9665,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
+      "JetBrains.Annotations/10.0.0": {
+        "compile": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.10, )",
@@ -11215,6 +11271,22 @@
     }
   },
   "libraries": {
+    "JetBrains.Annotations/10.0.0": {
+      "sha512": "vyadsDFnDDbR2NK3P++l9AA5ogM+cWlj8kQl8NV9m+LZyEYxjQndZZL/noqb5g8pYpCNellecxtVFdUZ979UWg==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "JetBrains.Annotations.nuspec",
+        "lib/net20/JetBrains.Annotations.dll",
+        "lib/net20/JetBrains.Annotations.xml",
+        "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll",
+        "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.xml",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/JetBrains.Annotations.PCL328.dll",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/JetBrains.Annotations.PCL328.xml",
+        "package/services/metadata/core-properties/c6cfc38082154b4cb0a67d2c21f2e054.psmdcp"
+      ]
+    },
     "Microsoft.CSharp/4.0.0": {
       "sha512": "oWqeKUxHXdK6dL2CFjgMcaBISbkk+AqEg+yvJHE4DElNzS4QaTsCflgkkqZwVlWby1Dg9zo9n+iCAMFefFdJ/A==",
       "type": "Package",
@@ -14566,6 +14638,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "JetBrains.Annotations >= 10.0.0",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
     ],
     "UAP,Version=v10.0": []

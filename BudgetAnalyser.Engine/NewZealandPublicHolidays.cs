@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace BudgetAnalyser.Engine
 {
+    /// <summary>
+    ///     A calaculator that will list New Zealand holidays.
+    /// </summary>
     public static class NewZealandPublicHolidays
     {
         private static readonly List<Holiday> HolidayTemplates = new List<Holiday>
@@ -22,11 +25,18 @@ namespace BudgetAnalyser.Engine
             new DayClosestMondayToHoliday { Name = "Auckland Anniversary", Month = 1, CloseToDate = 29 }
         };
 
+        /// <summary>
+        ///     Calculate and list New Zealand holidays between two dates.
+        /// </summary>
         public static IEnumerable<DateTime> CalculateHolidays(DateTime start, DateTime end)
         {
             return CalculateHolidaysVerbose(start, end).Select(t => t.Item2);
         }
 
+        /// <summary>
+        ///     Calculate and list New Zealand holidays between two dates.
+        ///     The return collection contains labeled holidays and their dates.
+        /// </summary>
         public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
         {
             var holidays = new Dictionary<DateTime, string>();

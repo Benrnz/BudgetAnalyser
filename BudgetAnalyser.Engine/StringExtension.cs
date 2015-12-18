@@ -42,11 +42,19 @@ namespace BudgetAnalyser.Engine
             return "a";
         }
 
+        /// <summary>
+        ///     Returns true if the string is null, whitespace or empty.
+        ///     Equivelant to IsNullOrWhiteSpace
+        /// </summary>
         public static bool IsNothing(this string instance)
         {
             return string.IsNullOrWhiteSpace(instance);
         }
 
+        /// <summary>
+        ///     Returns true if the string is not null, not whitespace, and not empty.
+        ///     The direct opporsite of <see cref="IsNothing"/>
+        /// </summary>
         public static bool IsSomething(this string instance)
         {
             return !string.IsNullOrWhiteSpace(instance);
