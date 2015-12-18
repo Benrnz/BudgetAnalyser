@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
 [assembly: AssemblyProduct("BudgetAnalyser.Engine")]
-[assembly: AssemblyCopyright("Rees.biz Copyright ©  2013")]
+[assembly: AssemblyCopyright("Rees.biz Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -37,8 +37,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("2.01.0")]
-[assembly: AssemblyFileVersion("2.01.0")]
+[assembly: AssemblyVersion("3.01.0")]
+[assembly: AssemblyFileVersion("3.01.0")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.UnitTest")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]
 [assembly: CLSCompliant(false)]
