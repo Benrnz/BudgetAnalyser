@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <param name="instance">The instance to add.</param>
         /// <returns>
         ///     Either the
-        ///     <param name="instance" />
+        ///     <paramref name="instance" />
         ///     or if the key already exists in the repository a reference to the existing <see cref="Account" />.
         /// </returns>
         Account Add(string key, Account instance);

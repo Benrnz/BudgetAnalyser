@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.BankAccount
 {
@@ -16,6 +16,9 @@ namespace BudgetAnalyser.Engine.BankAccount
     {
         private readonly ConcurrentDictionary<string, Account> repository = new ConcurrentDictionary<string, Account>(8, 5);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryAccountTypeRepository"/> class.
+        /// </summary>
         public InMemoryAccountTypeRepository()
         {
             // Populate the repository with the known list of account I want for now.
@@ -36,7 +39,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <param name="instance">The instance to add.</param>
         /// <returns>
         ///     Either the
-        ///     <param name="instance" />
+        ///     <paramref name="instance" />
         ///     or if the key already exists in the repository a reference to the existing <see cref="Account" />.
         /// </returns>
         public Account Add([NotNull] string key, [NotNull] Account instance)
