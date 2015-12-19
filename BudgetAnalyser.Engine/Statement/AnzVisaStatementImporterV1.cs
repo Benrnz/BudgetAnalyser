@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -19,6 +19,13 @@ namespace BudgetAnalyser.Engine.Statement
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnzVisaStatementImporterV1"/> class.
+        /// </summary>
+        /// <param name="importUtilities">The import utilities.</param>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public AnzVisaStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
         {
             if (importUtilities == null)
@@ -126,11 +133,17 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
+        /// <summary>
+        /// Reads the lines from the file asynchronous;y.
+        /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
+        /// <summary>
+        /// Reads a chunk of text asynchronously.
+        /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
@@ -164,7 +177,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (TransactionTypes.ContainsKey(stringType))
             {
                 NamedTransaction cachedTransactionType = TransactionTypes[stringType];
-                amount *= cachedTransactionType.Sign;
+                amount *= -1;
                 return cachedTransactionType;
             }
 
@@ -173,7 +186,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (stringType == "D")
             {
                 fullTypeText = "Credit Card Debit";
-                transactionType = new NamedTransaction(fullTypeText, -1);
+                transactionType = new NamedTransaction(fullTypeText);
             }
             else if (stringType == "C")
             {
@@ -186,7 +199,7 @@ namespace BudgetAnalyser.Engine.Statement
                 transactionType = new NamedTransaction(fullTypeText);
             }
 
-            amount *= transactionType.Sign;
+            amount *= -1;
             TransactionTypes.Add(stringType, transactionType);
             return transactionType;
         }

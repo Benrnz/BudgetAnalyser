@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -20,8 +20,17 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         Task CreateNewAndSaveAsync([NotNull] string storageKey);
 
+        /// <summary>
+        /// Determines whether the provided <paramref name="storageKey"/> is refering to a statement model.
+        /// </summary>
         Task<bool> IsStatementModelAsync([NotNull] string storageKey);
+        /// <summary>
+        /// Loads the <see cref="StatementModel"/>.
+        /// </summary>
         Task<StatementModel> LoadAsync([NotNull] string storageKey);
+        /// <summary>
+        /// Saves the <see cref="StatementModel"/>.
+        /// </summary>
         Task SaveAsync([NotNull] StatementModel model, [NotNull] string storageKey);
     }
 }

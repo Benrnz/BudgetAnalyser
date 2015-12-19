@@ -4,19 +4,26 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    /// <summary>
+    ///     A set of utilities used when importing bank data
+    /// </summary>
     [AutoRegisterWithIoC]
     public class BankImportUtilities
     {
         private readonly ILogger logger;
         private CultureInfo locale;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BankImportUtilities"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public BankImportUtilities([NotNull] ILogger logger)
         {
             if (logger == null)

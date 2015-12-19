@@ -6,11 +6,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    /// <summary>
+    ///     A collection of bank statement transactions that have been imported.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="BudgetAnalyser.Engine.IDataChangeDetection" />
+    /// <seealso cref="System.IDisposable" />
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "There are no native resources to clean up. Unnecessary complexity.")]
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
     {
@@ -31,6 +37,11 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatementModel"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
@@ -56,8 +67,14 @@ namespace BudgetAnalyser.Engine.Statement
             Dispose(false);
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Gets all transactions ignoring any filters.
+        /// </summary>
         public IEnumerable<Transaction> AllTransactions
         {
             get { return this.doNotUseAllTransactions; }
@@ -69,6 +86,9 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        /// Gets the duration in months of the current <see cref="Transactions"/> collection.
+        /// </summary>
         public int DurationInMonths
         {
             get { return this.doNotUseDurationInMonths; }
@@ -80,7 +100,13 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="StatementModel"/> has an active filtered.
+        /// </summary>
         public bool Filtered { get; private set; }
+        /// <summary>
+        /// Gets the last imported date and time.
+        /// </summary>
         public DateTime LastImport { get; internal set; }
 
         /// <summary>
@@ -88,6 +114,9 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public string StorageKey { get; set; }
 
+        /// <summary>
+        /// Gets the filtered transactions.
+        /// </summary>
         public IEnumerable<Transaction> Transactions
         {
             get { return this.doNotUseTransactions; }
@@ -146,6 +175,10 @@ namespace BudgetAnalyser.Engine.Statement
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Calcuates a hash that represents a data state for the current instance.  When the data state changes the hash will
+        /// change.
+        /// </summary>
         public long SignificantDataChangeHash()
         {
             ThrowIfDisposed();
@@ -301,8 +334,8 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
-            var splinterTransaction1 = (Transaction)originalTransaction.Clone();
-            var splinterTransaction2 = (Transaction)originalTransaction.Clone();
+            var splinterTransaction1 = originalTransaction.Clone();
+            var splinterTransaction2 = originalTransaction.Clone();
 
             splinterTransaction1.Amount = splinterAmount1;
             splinterTransaction2.Amount = splinterAmount2;
@@ -367,6 +400,10 @@ namespace BudgetAnalyser.Engine.Statement
             this.disposed = true;
         }
 
+        /// <summary>
+        /// Called when a property is changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

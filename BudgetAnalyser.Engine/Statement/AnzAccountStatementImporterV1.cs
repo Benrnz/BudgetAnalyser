@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -19,6 +19,11 @@ namespace BudgetAnalyser.Engine.Statement
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnzAccountStatementImporterV1"/> class.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public AnzAccountStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
         {
             if (importUtilities == null)
@@ -143,11 +148,17 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
+        /// <summary>
+        /// Reads the lines from the file asynchronously.
+        /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
+        /// <summary>
+        /// Reads a chunk of text asynchronously.
+        /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
             using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))

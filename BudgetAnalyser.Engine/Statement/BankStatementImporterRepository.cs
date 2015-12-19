@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -16,6 +16,11 @@ namespace BudgetAnalyser.Engine.Statement
     {
         private readonly IEnumerable<IBankStatementImporter> importers;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BankStatementImporterRepository"/> class.
+        /// </summary>
+        /// <param name="importers">The importers.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public BankStatementImporterRepository([NotNull] IEnumerable<IBankStatementImporter> importers)
         {
             // ReSharper disable PossibleMultipleEnumeration

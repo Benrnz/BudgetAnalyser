@@ -6,25 +6,35 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement.Data;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    /// <summary>
+    ///     A repository for the <see cref="StatementModel"/> backed by Csv on local disk storage.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
-        private readonly BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper;
-        private readonly BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper;
+        private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper;
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CsvOnDiskStatementModelRepositoryV1"/> class.
+        /// </summary>
+        /// <param name="importUtilities">The import utilities.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The dto to domain mapper.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public CsvOnDiskStatementModelRepositoryV1(
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILogger logger,
-            [NotNull] BasicMapper<TransactionSetDto, StatementModel> dtoToDomainMapper,
-            [NotNull] BasicMapper<StatementModel, TransactionSetDto> domainToDtoMapper)
+            [NotNull] IDtoMapper<TransactionSetDto, StatementModel> mapper)
         {
             if (importUtilities == null)
             {
@@ -36,22 +46,23 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(logger));
             }
 
-            if (dtoToDomainMapper == null)
+            if (mapper == null)
             {
-                throw new ArgumentNullException(nameof(dtoToDomainMapper));
-            }
-
-            if (domainToDtoMapper == null)
-            {
-                throw new ArgumentNullException(nameof(domainToDtoMapper));
+                throw new ArgumentNullException(nameof(mapper));
             }
 
             this.importUtilities = importUtilities;
             this.logger = logger;
-            this.dtoToDomainMapper = dtoToDomainMapper;
-            this.domainToDtoMapper = domainToDtoMapper;
+            this.mapper = mapper;
         }
 
+        /// <summary>
+        /// Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />. Any
+        /// existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
+        /// to
+        /// load the new <see cref="StatementModel" />.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -63,6 +74,10 @@ namespace BudgetAnalyser.Engine.Statement
             await SaveAsync(newStatement, storageKey);
         }
 
+        /// <summary>
+        /// Determines whether the provided <paramref name="storageKey" /> is refering to a statement model.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<bool> IsStatementModelAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -80,6 +95,12 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
+        /// <summary>
+        /// Loads the <see cref="StatementModel" />.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
+        /// <exception cref="System.NotSupportedException">The CSV file is not supported by this version of the Budget Analyser.</exception>
         public async Task<StatementModel> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -113,7 +134,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             ValidateChecksumIntegrity(transactionSet);
 
-            return this.dtoToDomainMapper.Map(transactionSet);
+            return this.mapper.ToModel(transactionSet);
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
@@ -129,7 +150,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            TransactionSetDto transactionSet = this.domainToDtoMapper.Map(model);
+            TransactionSetDto transactionSet = this.mapper.ToDto(model);
             transactionSet.VersionHash = VersionHash;
             transactionSet.StorageKey = storageKey;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
@@ -186,16 +207,21 @@ namespace BudgetAnalyser.Engine.Statement
                     }
 
                     await writer.FlushAsync();
-                    writer.Close();
                 }
             }
         }
 
+        /// <summary>
+        /// Reads the lines from the file asynchronously.
+        /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
+        /// <summary>
+        /// Reads the lines from the file asynchronously.
+        /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             var responseList = new List<string>();
