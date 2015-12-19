@@ -3,7 +3,8 @@
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    ///     A null logger for use with classes that require an instance of a logger but the usage doesn't require creating a log file.
+    ///     A null logger for use with classes that require an instance of a logger but the usage doesn't require creating a
+    ///     log file.
     /// </summary>
     public class NullLogger : ILogger
     {

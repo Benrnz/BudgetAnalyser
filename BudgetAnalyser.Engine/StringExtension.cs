@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     public static class StringExtension
     {
-        private static readonly char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
+        private static readonly char[] Vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};
 
         /// <summary>
         ///     Returns the appropriate 'An' or 'A' prefix for the given string.  The given string is not included
@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine
                 return instance;
             }
 
-            bool useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
+            var useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
 
             if (properCase && useAn)
             {
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         ///     Returns true if the string is not null, not whitespace, and not empty.
-        ///     The direct opporsite of <see cref="IsNothing"/>
+        ///     The direct opporsite of <see cref="IsNothing" />
         /// </summary>
         public static bool IsSomething(this string instance)
         {

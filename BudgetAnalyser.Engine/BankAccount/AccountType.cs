@@ -7,22 +7,22 @@
     public enum AccountType
     {
         /// <summary>
-        /// A general or common account. Ie: Cheque or Transaction account.
+        ///     A general or common account. Ie: Cheque or Transaction account.
         /// </summary>
         General,
 
         /// <summary>
-        /// A credit card account. Ie: Visa, Mastercard etc
+        ///     A credit card account. Ie: Visa, Mastercard etc
         /// </summary>
         CreditCard,
 
         /// <summary>
-        /// A loan account that tracks an amount owing.
+        ///     A loan account that tracks an amount owing.
         /// </summary>
         Loan,
 
         /// <summary>
-        /// A savings account such as a high interest account.
+        ///     A savings account such as a high interest account.
         /// </summary>
         Savings
     }

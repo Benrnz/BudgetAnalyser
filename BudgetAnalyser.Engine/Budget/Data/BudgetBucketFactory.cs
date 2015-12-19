@@ -1,5 +1,5 @@
 using System;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
@@ -14,7 +14,8 @@ namespace BudgetAnalyser.Engine.Budget.Data
                     return new IncomeBudgetBucket();
                 case BucketDtoType.PayCreditCard:
                 case BucketDtoType.Surplus:
-                    throw new NotSupportedException("You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
+                    throw new NotSupportedException(
+                        "You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
                 case BucketDtoType.SavedUpForExpense:
                     return new SavedUpForExpenseBucket();
                 case BucketDtoType.SavingsCommitment:

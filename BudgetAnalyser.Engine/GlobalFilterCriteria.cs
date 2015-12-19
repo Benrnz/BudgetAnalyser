@@ -23,11 +23,6 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         ///     The earliest date to include in filtered data when this criteria is applied. This is inclusive of the date.
         /// </summary>
         public DateTime? BeginDate
@@ -70,7 +65,8 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
-        ///     Calculates a hash that will represents a data state for this criteria. Different criteria, will result in a different hash.
+        ///     Calculates a hash that will represents a data state for this criteria. Different criteria, will result in a
+        ///     different hash.
         /// </summary>
         public long SignificantDataChangeHash()
         {
@@ -123,13 +119,9 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
-        ///     Raise the property change event.
+        ///     Occurs when a property value changes.
         /// </summary>
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void CheckConsistency()
         {
@@ -157,6 +149,15 @@ namespace BudgetAnalyser.Engine
             {
                 EndDate = BeginDate.Value.AddDays(1);
             }
+        }
+
+        /// <summary>
+        ///     Raise the property change event.
+        /// </summary>
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

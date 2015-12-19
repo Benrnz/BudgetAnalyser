@@ -12,17 +12,17 @@ namespace BudgetAnalyser.Engine
     {
         private static readonly List<Holiday> HolidayTemplates = new List<Holiday>
         {
-            new FixedDateHoliday { Name = "New Years Day", Day = 1, Month = 1, MondayiseIfOnWeekend = true },
-            new FixedDateHoliday { Name = "New Years Holiday", Day = 2, Month = 1, MondayiseIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Waitangi Day", Day = 6, Month = 2, MondayiseIfOnWeekend = true },
-            new EasterHoliday { Name = "Good Friday", Day = DayOfWeek.Friday },
-            new EasterHoliday { Name = "Easter Monday", Day = DayOfWeek.Monday },
-            new FixedDateHoliday { Name = "ANZAC Day", Day = 25, Month = 4, MondayiseIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Christmas Day", Day = 25, Month = 12, MondayiseIfOnWeekend = true },
-            new FixedDateHoliday { Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true },
-            new IndexDayHoliday { Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0 },
-            new IndexDayHoliday { Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3 },
-            new DayClosestMondayToHoliday { Name = "Auckland Anniversary", Month = 1, CloseToDate = 29 }
+            new FixedDateHoliday {Name = "New Years Day", Day = 1, Month = 1, MondayiseIfOnWeekend = true},
+            new FixedDateHoliday {Name = "New Years Holiday", Day = 2, Month = 1, MondayiseIfOnWeekend = true},
+            new FixedDateHoliday {Name = "Waitangi Day", Day = 6, Month = 2, MondayiseIfOnWeekend = true},
+            new EasterHoliday {Name = "Good Friday", Day = DayOfWeek.Friday},
+            new EasterHoliday {Name = "Easter Monday", Day = DayOfWeek.Monday},
+            new FixedDateHoliday {Name = "ANZAC Day", Day = 25, Month = 4, MondayiseIfOnWeekend = true},
+            new FixedDateHoliday {Name = "Christmas Day", Day = 25, Month = 12, MondayiseIfOnWeekend = true},
+            new FixedDateHoliday {Name = "Boxing Day", Day = 26, Month = 12, MondayiseIfOnWeekend = true},
+            new IndexDayHoliday {Name = "Queen's Birthday", Day = DayOfWeek.Monday, Month = 6, Index = 0},
+            new IndexDayHoliday {Name = "Labor Day", Day = DayOfWeek.Monday, Month = 10, Index = 3},
+            new DayClosestMondayToHoliday {Name = "Auckland Anniversary", Month = 1, CloseToDate = 29}
         };
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace BudgetAnalyser.Engine
         public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
         {
             var holidays = new Dictionary<DateTime, string>();
-            foreach (Holiday holidayTemplate in HolidayTemplates)
+            foreach (var holidayTemplate in HolidayTemplates)
             {
-                DateTime proposedDate = holidayTemplate.CalculateDate(start, end);
+                var proposedDate = holidayTemplate.CalculateDate(start, end);
 
                 if (holidays.ContainsKey(proposedDate))
                 {
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                for (int year = start.Year; year <= end.Year; year++)
+                for (var year = start.Year; year <= end.Year; year++)
                 {
                     var proposed = new DateTime(year, Month, CloseToDate);
                     switch (proposed.DayOfWeek)
@@ -101,7 +101,8 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                    "Cannot find a suitable date between {0} and {1}", start, end));
             }
         }
 
@@ -114,16 +115,16 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                for (int year = start.Year; year <= end.Year; year++)
+                for (var year = start.Year; year <= end.Year; year++)
                 {
                     // first calculate Easter Sunday
 
-                    int goldenNumber = year % 19;
-                    int century = year / 100;
-                    int h = (century - century / 4 - (8 * century + 13) / 25 + 19 * goldenNumber + 15) % 30;
-                    int i = h - h / 28 * (1 - h / 28 * (29 / (h + 1)) * ((21 - goldenNumber) / 11));
+                    var goldenNumber = year%19;
+                    var century = year/100;
+                    var h = (century - century/4 - (8*century + 13)/25 + 19*goldenNumber + 15)%30;
+                    var i = h - h/28*(1 - h/28*(29/(h + 1))*((21 - goldenNumber)/11));
 
-                    int day = i - (year + year / 4 + i + 2 - century + century / 4) % 7 + 28;
+                    var day = i - (year + year/4 + i + 2 - century + century/4)%7 + 28;
                     var month = 3;
 
                     if (day > 31)
@@ -157,7 +158,8 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                    "Cannot find a suitable date between {0} and {1}", start, end));
             }
         }
 
@@ -173,8 +175,8 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                DateTime proposed = DateTime.MinValue;
-                for (int year = start.Year; year <= end.Year; year++)
+                var proposed = DateTime.MinValue;
+                for (var year = start.Year; year <= end.Year; year++)
                 {
                     proposed = new DateTime(year, Month, Day);
                     if (proposed >= start && proposed <= end)
@@ -183,7 +185,8 @@ namespace BudgetAnalyser.Engine
                     }
                 }
 
-                if (MondayiseIfOnWeekend && (proposed.DayOfWeek == DayOfWeek.Saturday || proposed.DayOfWeek == DayOfWeek.Sunday))
+                if (MondayiseIfOnWeekend &&
+                    (proposed.DayOfWeek == DayOfWeek.Saturday || proposed.DayOfWeek == DayOfWeek.Sunday))
                 {
                     do
                     {
@@ -193,7 +196,8 @@ namespace BudgetAnalyser.Engine
 
                 if (proposed < DateTime.MinValue.AddMonths(1))
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                        "Cannot find a suitable date between {0} and {1}", start, end));
                 }
 
                 return proposed;
@@ -218,16 +222,17 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                for (int year = start.Year; year <= end.Year; year++)
+                for (var year = start.Year; year <= end.Year; year++)
                 {
-                    DateTime proposed = ProposeDate(year);
+                    var proposed = ProposeDate(year);
                     if (proposed >= start && proposed <= end)
                     {
                         return proposed;
                     }
                 }
 
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot find a suitable date between {0} and {1}", start, end));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                    "Cannot find a suitable date between {0} and {1}", start, end));
             }
 
             private DateTime ProposeDate(int year)

@@ -14,21 +14,27 @@ namespace BudgetAnalyser.Engine.BankAccount
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class InMemoryAccountTypeRepository : IAccountTypeRepository
     {
-        private readonly ConcurrentDictionary<string, Account> repository = new ConcurrentDictionary<string, Account>(8, 5);
+        private readonly ConcurrentDictionary<string, Account> repository = new ConcurrentDictionary<string, Account>(
+            8, 5);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryAccountTypeRepository"/> class.
+        ///     Initializes a new instance of the <see cref="InMemoryAccountTypeRepository" /> class.
         /// </summary>
         public InMemoryAccountTypeRepository()
         {
             // Populate the repository with the known list of account I want for now.
             // In a more advanced implementation these would be loaded into the repository when the StatementModel is loaded using 
             // the AccountTypes actively used by it.
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque, new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Visa, new VisaAccount(AccountTypeRepositoryConstants.Visa));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Savings, new SavingsAccount(AccountTypeRepositoryConstants.Savings));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Mastercard, new MastercardAccount(AccountTypeRepositoryConstants.Mastercard));
-            this.repository.TryAdd(AccountTypeRepositoryConstants.Amex, new AmexAccount(AccountTypeRepositoryConstants.Amex));
+            this.repository.TryAdd(AccountTypeRepositoryConstants.Cheque,
+                new ChequeAccount(AccountTypeRepositoryConstants.Cheque));
+            this.repository.TryAdd(AccountTypeRepositoryConstants.Visa,
+                new VisaAccount(AccountTypeRepositoryConstants.Visa));
+            this.repository.TryAdd(AccountTypeRepositoryConstants.Savings,
+                new SavingsAccount(AccountTypeRepositoryConstants.Savings));
+            this.repository.TryAdd(AccountTypeRepositoryConstants.Mastercard,
+                new MastercardAccount(AccountTypeRepositoryConstants.Mastercard));
+            this.repository.TryAdd(AccountTypeRepositoryConstants.Amex,
+                new AmexAccount(AccountTypeRepositoryConstants.Amex));
         }
 
         /// <summary>
@@ -64,7 +70,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <returns>The found account or null.</returns>
         public Account Find(Predicate<Account> criteria)
         {
-            KeyValuePair<string, Account>[] copy = this.repository.ToArray();
+            var copy = this.repository.ToArray();
             return copy.FirstOrDefault(x => criteria(x.Value)).Value;
         }
 

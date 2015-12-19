@@ -8,7 +8,11 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     public static class ReferenceNumberGenerator
     {
-        private static readonly string[] DisallowedChars = { "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-", "+" };
+        private static readonly string[] DisallowedChars =
+        {
+            "\\", "{", "}", "[", "]", "^", "=", "/", ";", ".", ",", "-",
+            "+"
+        };
 
         /// <summary>
         ///     Create a small concise reference number thats 8 characters long.
@@ -19,7 +23,7 @@ namespace BudgetAnalyser.Engine
             do
             {
                 reference.Append(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
-                foreach (string disallowedChar in DisallowedChars)
+                foreach (var disallowedChar in DisallowedChars)
                 {
                     reference.Replace(disallowedChar, string.Empty);
                 }

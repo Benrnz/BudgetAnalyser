@@ -5,7 +5,7 @@ using System.Linq;
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    ///     An extension class for <see cref="IEnumerable{T}"/>
+    ///     An extension class for <see cref="IEnumerable{T}" />
     /// </summary>
     public static class EnumerableExtension
     {
@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static double SafeAverage<T>(this IEnumerable<T> instance, Func<T, double> selector)
         {
-            List<T> copy = instance.ToList();
+            var copy = instance.ToList();
             if (copy.None())
             {
                 return 0;
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static decimal SafeAverage<T>(this IEnumerable<T> instance, Func<T, decimal> selector)
         {
-            List<T> copy = instance.ToList();
+            var copy = instance.ToList();
             if (copy.None())
             {
                 return 0;

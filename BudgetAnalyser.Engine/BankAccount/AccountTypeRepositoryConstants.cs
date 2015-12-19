@@ -6,27 +6,27 @@
     public static class AccountTypeRepositoryConstants
     {
         /// <summary>
-        /// The account code for an Amex credit card account.
+        ///     The account code for an Amex credit card account.
         /// </summary>
         public const string Amex = "AMEX";
 
         /// <summary>
-        /// The account code for an Cheque credit card account.
+        ///     The account code for an Cheque credit card account.
         /// </summary>
         public const string Cheque = "CHEQUE";
 
         /// <summary>
-        /// The account code for an Mastercard credit card account.
+        ///     The account code for an Mastercard credit card account.
         /// </summary>
         public const string Mastercard = "MASTERCARD";
 
         /// <summary>
-        /// The account code for an Savings credit card account.
+        ///     The account code for an Savings credit card account.
         /// </summary>
         public const string Savings = "SAVINGS";
 
         /// <summary>
-        /// The account code for an Visa credit card account.
+        ///     The account code for an Visa credit card account.
         /// </summary>
         public const string Visa = "VISA";
     }

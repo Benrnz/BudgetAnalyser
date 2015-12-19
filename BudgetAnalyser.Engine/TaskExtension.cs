@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine
 {
     /// <summary>
-    ///     An extension to the <see cref="Task"/> and <see cref="IEnumerable{Task}"/> types.
+    ///     An extension to the <see cref="Task" /> and <see cref="IEnumerable{T}" /> types.
     /// </summary>
     public static class TaskExtension
     {

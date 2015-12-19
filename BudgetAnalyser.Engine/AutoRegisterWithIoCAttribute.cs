@@ -14,6 +14,7 @@ namespace BudgetAnalyser.Engine
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public sealed class AutoRegisterWithIoCAttribute : Attribute
     {
+        // TODO Reassess how to do IoC.
         /// <summary>
         ///     Optional, register as a named instance by specifying a name here. If no name is specified then the class is
         ///     registered as a default instance. If a name
