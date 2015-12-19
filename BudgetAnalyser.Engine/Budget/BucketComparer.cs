@@ -9,6 +9,9 @@ namespace BudgetAnalyser.Engine.Budget
     /// </summary>
     public class SurplusAgnosticBucketComparer : IEqualityComparer<BudgetBucket>
     {
+        /// <summary>
+        ///     Compares two budget buckets, and returns true if they are considered the same.
+        /// </summary>
         public bool Equals(BudgetBucket x, BudgetBucket y)
         {
             if (x == null || y == null)

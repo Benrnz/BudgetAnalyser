@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget.Data;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -29,7 +29,8 @@ namespace BudgetAnalyser.Engine.Budget
         /// <param name="description">The description.</param>
         /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
         /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
-        FixedBudgetProjectBucket CreateNewFixedBudgetProject([NotNull] string bucketCode, [NotNull] string description, decimal fixedBudgetAmount);
+        FixedBudgetProjectBucket CreateNewFixedBudgetProject([NotNull] string bucketCode, [NotNull] string description,
+            decimal fixedBudgetAmount);
 
         /// <summary>
         ///     Gets a bucket by its code.

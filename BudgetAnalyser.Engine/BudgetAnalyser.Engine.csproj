@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="Budget\BudgetBuckets.cd" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -124,8 +125,14 @@
     <Compile Include="BankAccount\SavingsAccount.cs" />
     <Compile Include="BankAccount\VisaAccount.cs" />
     <Compile Include="Budget\BillToPayExpenseBucket.cs" />
+    <Compile Include="Budget\BucketComparer.cs" />
     <Compile Include="Budget\BudgetBucket.cs" />
+    <Compile Include="Budget\BudgetBucketPaternity.cs" />
+    <Compile Include="Budget\BudgetCollection.cs" />
+    <Compile Include="Budget\BudgetCurrencyContext.cs" />
+    <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
+    <Compile Include="Budget\BudgetModel.cs" />
     <Compile Include="Budget\Data\BucketDtoType.cs" />
     <Compile Include="Budget\Data\BudgetBucketDto.cs" />
     <Compile Include="Budget\Data\BudgetBucketFactory.cs" />
@@ -135,21 +142,28 @@
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\Data\IBudgetBucketFactory.cs" />
     <Compile Include="Budget\Data\IncomeDto.cs" />
+    <Compile Include="Budget\DateTimeDescendingOrder.cs" />
     <Compile Include="Budget\Expense.cs" />
     <Compile Include="Budget\ExpenseBucket.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
+    <Compile Include="Budget\IBudgetBucketRepository.cs" />
+    <Compile Include="Budget\IBudgetCurrencyContext.cs" />
+    <Compile Include="Budget\IBudgetRepository.cs" />
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
     <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
     <Compile Include="Budget\SavingsCommitmentBucket.cs" />
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IDataChangeDetection.cs" />
+    <Compile Include="IDtoMapper.cs" />
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="ILocalAutoMapperConfiguration.cs" />
     <Compile Include="ILogger.cs" />

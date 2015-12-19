@@ -3,6 +3,14 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -207,6 +215,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -1546,6 +1562,14 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -1793,6 +1817,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -3179,6 +3211,14 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -3412,6 +3452,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -4784,6 +4832,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -5036,6 +5092,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -6422,6 +6486,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -6655,6 +6727,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -8027,6 +8107,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -8279,6 +8367,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -9665,6 +9761,14 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll": {}
+        }
+      },
       "JetBrains.Annotations/10.0.0": {
         "compile": {
           "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll": {}
@@ -9898,6 +10002,14 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
+        }
+      },
+      "Portable.Xaml/0.6.1": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -11271,6 +11383,20 @@
     }
   },
   "libraries": {
+    "Autofac/3.5.2": {
+      "sha512": "pGR5LjY8T/16x6SkJNd7u6EjQnE4C7JS0BZJ7Yl7pt313gIUZ/2ZnPSOIM5eaIA7ArxaudlyyLvAT4ayX5UJ/A==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "Autofac.nuspec",
+        "lib/net40/Autofac.dll",
+        "lib/net40/Autofac.xml",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.dll",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Autofac.xml",
+        "package/services/metadata/core-properties/14b288cae4b6435c88f25cef31d271e1.psmdcp"
+      ]
+    },
     "JetBrains.Annotations/10.0.0": {
       "sha512": "vyadsDFnDDbR2NK3P++l9AA5ogM+cWlj8kQl8NV9m+LZyEYxjQndZZL/noqb5g8pYpCNellecxtVFdUZ979UWg==",
       "type": "Package",
@@ -11938,6 +12064,21 @@
         "ref/net46/Microsoft.Win32.Primitives.dll",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._"
+      ]
+    },
+    "Portable.Xaml/0.6.1": {
+      "sha512": "Vwkvy7My9pMNy/aTStLjuBgXmskheuYQIFFKHRIUOkAhIatEFVpJvrdoFBQ9C+UK6XqXy+I0rXupOn4PQAxeyw==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "lib/dotnet/Portable.Xaml.dll",
+        "lib/portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
+        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
+        "lib/Xamarin.Mac/Portable.Xaml.dll",
+        "LICENSE.txt",
+        "package/services/metadata/core-properties/7d85099798444a30b3c4f3817fc5172f.psmdcp",
+        "Portable.Xaml.nuspec"
       ]
     },
     "System.AppContext/4.0.0": {
@@ -14638,8 +14779,10 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "Autofac >= 3.5.2",
       "JetBrains.Annotations >= 10.0.0",
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
+      "Portable.Xaml >= 0.6.1"
     ],
     "UAP,Version=v10.0": []
   }
