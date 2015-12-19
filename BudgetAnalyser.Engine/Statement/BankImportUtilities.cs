@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.logger = logger;
-            this.locale = Thread.CurrentThread.CurrentCulture;
+            this.locale = CultureInfo.CurrentCulture;
         }
 
         internal virtual void AbortIfFileDoesntExist(string fileName)
