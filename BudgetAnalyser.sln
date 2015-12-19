@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{F4DD4C2E-44D2-4FB5-AFB3-CC7F42314DF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.UnitTest", "BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj", "{41EBD90D-02DA-4480-8229-FD2E038169DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,26 @@ Global
 		{F4DD4C2E-44D2-4FB5-AFB3-CC7F42314DF5}.Release|x64.Build.0 = Release|x64
 		{F4DD4C2E-44D2-4FB5-AFB3-CC7F42314DF5}.Release|x86.ActiveCfg = Release|x86
 		{F4DD4C2E-44D2-4FB5-AFB3-CC7F42314DF5}.Release|x86.Build.0 = Release|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|ARM.Build.0 = Debug|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|ARM.Deploy.0 = Debug|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x64.ActiveCfg = Debug|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x64.Build.0 = Debug|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x64.Deploy.0 = Debug|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x86.ActiveCfg = Debug|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x86.Build.0 = Debug|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Debug|x86.Deploy.0 = Debug|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|Any CPU.ActiveCfg = Release|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|ARM.ActiveCfg = Release|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|ARM.Build.0 = Release|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|ARM.Deploy.0 = Release|ARM
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x64.ActiveCfg = Release|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x64.Build.0 = Release|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x64.Deploy.0 = Release|x64
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.ActiveCfg = Release|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.Build.0 = Release|x86
+		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
