@@ -137,6 +137,12 @@ namespace BudgetAnalyser.Engine.Statement
             return this.mapper.ToModel(transactionSet);
         }
 
+        /// <summary>
+        /// Saves the <see cref="StatementModel" />.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        /// <exception cref="BudgetAnalyser.Engine.Statement.StatementModelChecksumException"></exception>
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
         public async Task SaveAsync(StatementModel model, string storageKey)
         {

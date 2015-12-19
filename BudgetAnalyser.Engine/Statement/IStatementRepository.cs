@@ -16,10 +16,9 @@ namespace BudgetAnalyser.Engine.Statement
     public interface IStatementRepository
     {
         /// <summary>
-        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <see cref="storageKey" />. Any
+        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />. Any
         ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to
-        ///     load the new collection.
+        ///     to load the new collection.
         /// </summary>
         Task CreateNewAndSaveAsync(string storageKey);
 
