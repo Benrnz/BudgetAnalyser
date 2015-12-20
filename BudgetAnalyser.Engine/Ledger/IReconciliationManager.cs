@@ -1,11 +1,11 @@
 using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    public interface IReconciliationManager
+    internal interface IReconciliationManager
     {
         /// <summary>
         ///     Creates a new LedgerEntryLine for a <see cref="LedgerBook" /> to begin reconciliation.

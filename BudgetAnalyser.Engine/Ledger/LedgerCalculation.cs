@@ -5,14 +5,16 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A calculator that performs common calculations on a Ledger Book.
+    /// </summary>
     [AutoRegisterWithIoC]
     public class LedgerCalculation
     {
@@ -26,16 +28,27 @@ namespace BudgetAnalyser.Engine.Ledger
         private static DateTime CacheLastUpdated;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LedgerCalculation"/> class.
+        /// </summary>
         public LedgerCalculation()
         {
             this.logger = new NullLogger();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LedgerCalculation"/> class.
+        /// </summary>
         public LedgerCalculation(ILogger logger)
         {
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Calculates the current month bucket spend.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public virtual decimal CalculateCurrentMonthBucketSpend([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement, [NotNull] string bucketCode)
         {
             CheckCacheForCleanUp();
@@ -69,6 +82,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return transactionTotal;
         }
 
+        /// <summary>
+        /// Calculates the current month ledger balances.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public virtual IDictionary<BudgetBucket, decimal> CalculateCurrentMonthLedgerBalances(
             [NotNull] LedgerBook ledgerBook,
             [NotNull] GlobalFilterCriteria filter,
@@ -106,6 +124,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledgersSummary;
         }
 
+        /// <summary>
+        /// Calculates the current month surplus balance.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public virtual decimal CalculateCurrentMonthSurplusBalance([NotNull] LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement)
         {
             CheckCacheForCleanUp();
@@ -233,6 +256,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 .FirstOrDefault();
         }
 
+        /// <summary>
+        /// Locates the applicable ledger line.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, [NotNull] GlobalFilterCriteria filter)
         {
             CheckCacheForCleanUp();
@@ -256,6 +283,9 @@ namespace BudgetAnalyser.Engine.Ledger
             return LocateLedgerEntryLine(ledgerBook, filter.BeginDate.Value, filter.EndDate.Value);
         }
 
+        /// <summary>
+        /// Locates the applicable ledger line.
+        /// </summary>
         public virtual LedgerEntryLine LocateApplicableLedgerLine(LedgerBook ledgerBook, DateTime beginDate)
         {
             CheckCacheForCleanUp();
@@ -285,14 +315,12 @@ namespace BudgetAnalyser.Engine.Ledger
             if (wasLastUsed.Minutes > 2 && CacheLastUpdated != default(DateTime))
             {
                 CacheLastUpdated = default(DateTime);
-                Thread.MemoryBarrier();
                 CalculationsCache.Clear();
             }
         }
 
         private static object GetOrAddFromCache(string cacheKey, Func<object> factory)
         {
-            Thread.MemoryBarrier();
             var wrappedFactory = new Func<object>(
                 () =>
                 {

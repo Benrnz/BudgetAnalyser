@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {

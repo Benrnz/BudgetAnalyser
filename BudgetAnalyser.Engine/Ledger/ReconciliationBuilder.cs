@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -218,7 +218,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 adjustmentsMade = true;
                 this.newReconciliationLine.BalanceAdjustment(
                     -futureTransaction.Amount,
-                    "Remove future transaction for " + futureTransaction.Date.ToShortDateString(),
+                    "Remove future transaction for " + futureTransaction.Date.ToString("d"),
                     futureTransaction.Account);
             }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -16,6 +16,10 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly LedgerBook ledgerBook;
         private decimal check2;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReconciliationConsistencyChecker"/> class.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public ReconciliationConsistencyChecker([NotNull] LedgerBook book)
         {
             if (book == null)
@@ -27,6 +31,10 @@ namespace BudgetAnalyser.Engine.Ledger
             this.check1 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus);
         }
 
+        /// <summary>
+        /// Used in this case to perform finalising logic to check consistency of reconciliation changes.
+        /// </summary>
+        /// <exception cref="CorruptedLedgerBookException">Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.</exception>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
         [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
         public void Dispose()

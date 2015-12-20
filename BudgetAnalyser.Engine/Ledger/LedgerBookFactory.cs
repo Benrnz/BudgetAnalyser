@@ -1,5 +1,5 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {

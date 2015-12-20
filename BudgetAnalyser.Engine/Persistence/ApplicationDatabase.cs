@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
@@ -15,6 +15,9 @@ namespace BudgetAnalyser.Engine.Persistence
     /// </summary>
     public class ApplicationDatabase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationDatabase"/> class.
+        /// </summary>
         public ApplicationDatabase()
         {
             LedgerReconciliationToDoCollection = new ToDoCollection();
@@ -56,8 +59,14 @@ namespace BudgetAnalyser.Engine.Persistence
         /// </summary>
         public string StatementModelStorageKey { get; [UsedImplicitly] private set; }
 
+        /// <summary>
+        /// Gets the storage path that identifies this budget analyser file.
+        /// </summary>
         protected virtual string StoragePath => Path.GetDirectoryName(FileName);
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
         public void Close()
         {
             BudgetCollectionStorageKey = null;
@@ -68,6 +77,9 @@ namespace BudgetAnalyser.Engine.Persistence
             StatementModelStorageKey = null;
         }
 
+        /// <summary>
+        /// Builds and returns the full filename and path.
+        /// </summary>
         public virtual string FullPath(string fileName)
         {
             return Path.Combine(StoragePath, fileName);

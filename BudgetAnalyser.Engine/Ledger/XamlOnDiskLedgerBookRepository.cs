@@ -5,35 +5,40 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xaml;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A repository for Ledger Books that persists to local disk in Xaml format.
+    /// </summary>
+    /// <seealso cref="ILedgerBookRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
     {
-        private readonly BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper;
-        private readonly BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper;
+        private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
         private readonly BankImportUtilities importUtilities;
         private readonly ILedgerBookFactory ledgerBookFactory;
 
-        public XamlOnDiskLedgerBookRepository(
-            [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
-            [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XamlOnDiskLedgerBookRepository"/> class.
+        /// </summary>
+        /// <param name="mapper">The data to domain mapper.</param>
+        /// <param name="importUtilities">The import utilities.</param>
+        /// <param name="ledgerBookFactory">The ledger book factory.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        internal XamlOnDiskLedgerBookRepository(
+            [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILedgerBookFactory ledgerBookFactory)
         {
-            if (dataToDomainMapper == null)
+            if (mapper == null)
             {
-                throw new ArgumentNullException(nameof(dataToDomainMapper));
-            }
-
-            if (domainToDataMapper == null)
-            {
-                throw new ArgumentNullException(nameof(domainToDataMapper));
+                throw new ArgumentNullException(nameof(mapper));
             }
 
             if (importUtilities == null)
@@ -46,12 +51,17 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(ledgerBookFactory));
             }
 
-            this.dataToDomainMapper = dataToDomainMapper;
-            this.domainToDataMapper = domainToDataMapper;
+            this.mapper = mapper;
             this.importUtilities = importUtilities;
             this.ledgerBookFactory = ledgerBookFactory;
         }
 
+        /// <summary>
+        /// Creates a new empty <see cref="LedgerBook" /> at the location indicated by the <paramref name="storageKey" />. Any
+        /// existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
+        /// to load the new <see cref="LedgerBook" />.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -68,6 +78,16 @@ namespace BudgetAnalyser.Engine.Ledger
             return await LoadAsync(storageKey);
         }
 
+        /// <summary>
+        /// Loads the asynchronous.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">Data file can not be found:  + storageKey</exception>
+        /// <exception cref="DataFormatException">
+        /// Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.
+        /// or
+        /// The Ledger Book has been tampered with, checksum should be  + calculatedChecksum
+        /// </exception>
         public async Task<LedgerBook> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -96,7 +116,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             dataEntity.StorageKey = storageKey;
-            LedgerBook book = this.dataToDomainMapper.Map(dataEntity);
+            LedgerBook book = this.mapper.ToModel(dataEntity);
 
             var messages = new StringBuilder();
             if (!book.Validate(messages))
@@ -121,6 +141,12 @@ namespace BudgetAnalyser.Engine.Ledger
             return book;
         }
 
+        /// <summary>
+        /// Saves the Ledger Book to the location indicated by the storage key. Any existing Ledger Book at that location will
+        /// be overwritten.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public async Task SaveAsync(LedgerBook book, string storageKey)
         {
             if (book == null)
@@ -133,7 +159,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            LedgerBookDto dataEntity = this.domainToDataMapper.Map(book);
+            LedgerBookDto dataEntity = this.mapper.ToDto(book);
             book.StorageKey = storageKey;
             dataEntity.StorageKey = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
@@ -141,11 +167,19 @@ namespace BudgetAnalyser.Engine.Ledger
             await SaveDtoToDiskAsync(dataEntity);
         }
 
+        /// <summary>
+        /// Loads the xaml as string.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
         protected virtual string LoadXamlAsString(string fileName)
         {
             return File.ReadAllText(fileName);
         }
 
+        /// <summary>
+        /// Loads the xaml from disk asynchronous.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
         protected virtual async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
         {
             object result = null;
@@ -153,6 +187,11 @@ namespace BudgetAnalyser.Engine.Ledger
             return result as LedgerBookDto;
         }
 
+        /// <summary>
+        /// Saves the dto to disk asynchronous.
+        /// </summary>
+        /// <param name="dataEntity">The data entity.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
@@ -163,6 +202,11 @@ namespace BudgetAnalyser.Engine.Ledger
             await WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity));
         }
 
+        /// <summary>
+        /// Serialises the specified data entity.
+        /// </summary>
+        /// <param name="dataEntity">The data entity.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         protected virtual string Serialise(LedgerBookDto dataEntity)
         {
             if (dataEntity == null)
@@ -173,11 +217,19 @@ namespace BudgetAnalyser.Engine.Ledger
             return XamlServices.Save(dataEntity);
         }
 
+        /// <summary>
+        /// Writes to disk asynchronous.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="data">The data.</param>
         protected virtual async Task WriteToDiskAsync(string fileName, string data)
         {
-            using (var file = new StreamWriter(fileName, false))
+            using (var stream = new FileStream(fileName, FileMode.Create))
             {
-                await file.WriteAsync(data);
+                using (var file = new StreamWriter(stream))
+                {
+                    await file.WriteAsync(data);
+                }
             }
         }
 

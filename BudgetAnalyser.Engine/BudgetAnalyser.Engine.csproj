@@ -108,6 +108,7 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="Budget\BudgetBuckets.cd" />
+    <None Include="Ledger\LedgerBook.cd" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +173,7 @@
     <Compile Include="Ledger\BankBalance.cs" />
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
     <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
+    <Compile Include="Ledger\CorruptedLedgerBookException.cs" />
     <Compile Include="Ledger\CreditLedgerTransaction.cs" />
     <Compile Include="Ledger\Data\BankBalanceDto.cs" />
     <Compile Include="Ledger\Data\ILedgerBucketFactory.cs" />
@@ -184,18 +186,32 @@
     <Compile Include="Ledger\Data\LedgerTransactionDto.cs" />
     <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
+    <Compile Include="Ledger\ILedgerBookFactory.cs" />
+    <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\IReconciliationBuilder.cs" />
+    <Compile Include="Ledger\IReconciliationConsistency.cs" />
+    <Compile Include="Ledger\IReconciliationManager.cs" />
     <Compile Include="Ledger\LedgerBook.cs" />
+    <Compile Include="Ledger\LedgerBookFactory.cs" />
     <Compile Include="Ledger\LedgerBucket.cs" />
+    <Compile Include="Ledger\LedgerCalculation.cs" />
     <Compile Include="Ledger\LedgerEntry.cs" />
     <Compile Include="Ledger\LedgerEntryLine.cs" />
     <Compile Include="Ledger\LedgerTransaction.cs" />
+    <Compile Include="Ledger\ReconciliationBuilder.cs" />
+    <Compile Include="Ledger\ReconciliationConsistency.cs" />
+    <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
+    <Compile Include="Ledger\ReconciliationManager.cs" />
     <Compile Include="Ledger\ReconciliationResult.cs" />
     <Compile Include="Ledger\SavedUpForLedger.cs" />
     <Compile Include="Ledger\SpentMonthlyLedger.cs" />
     <Compile Include="Ledger\SurplusLedger.cs" />
     <Compile Include="Ledger\ToDoCollection.cs" />
     <Compile Include="Ledger\TodoTask.cs" />
+    <Compile Include="Ledger\ToDoTaskType.cs" />
+    <Compile Include="Ledger\TransferFundsCommand.cs" />
+    <Compile Include="Ledger\TransferTask.cs" />
+    <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
     <Compile Include="ListExtension.cs" />
     <Compile Include="Matching\CriteriaT.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
@@ -212,9 +228,17 @@
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepository.cs" />
     <Compile Include="NewZealandPublicHolidays.cs" />
     <Compile Include="NullLogger.cs" />
+    <Compile Include="Persistence\ApplicationDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="ReferenceNumberGenerator.cs" />
+    <Compile Include="Reports\ReportTransaction.cs" />
+    <Compile Include="Services\AdditionalInformationRequestedEventArgs.cs" />
+    <Compile Include="Services\INotifyDatabaseChanges.cs" />
+    <Compile Include="Services\IServiceFoundation.cs" />
+    <Compile Include="Services\ISupportsModelPersistence.cs" />
+    <Compile Include="Services\ITransactionRuleService.cs" />
+    <Compile Include="Services\ValidatingEventArgs.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />
     <Compile Include="Statement\BankImportUtilities.cs" />

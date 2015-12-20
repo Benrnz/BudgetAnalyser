@@ -2,7 +2,7 @@ using System;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
-    public interface IReconciliationConsistency
+    internal interface IReconciliationConsistency
     {
         IDisposable EnsureConsistency(LedgerBook book);
     }

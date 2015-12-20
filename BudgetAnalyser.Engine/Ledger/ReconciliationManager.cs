@@ -5,10 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -218,7 +218,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
-                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToShortDateString());
+                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToString("d"));
             }
         }
 
