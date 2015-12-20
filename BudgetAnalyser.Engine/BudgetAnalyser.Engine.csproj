@@ -229,6 +229,10 @@
     <Compile Include="NewZealandPublicHolidays.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="Persistence\ApplicationDatabase.cs" />
+    <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
+    <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
+    <Compile Include="Persistence\StorageBranch.cs" />
+    <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
     <Compile Include="ReferenceNumberGenerator.cs" />
