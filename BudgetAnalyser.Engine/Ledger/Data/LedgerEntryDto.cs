@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -9,6 +9,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     /// </summary>
     public class LedgerEntryDto
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LedgerEntryDto"/> class.
+        /// </summary>
         public LedgerEntryDto()
         {
             Transactions = new List<LedgerTransactionDto>();
@@ -31,6 +34,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// </summary>
         public string StoredInAccount { get; [UsedImplicitly] set; }
 
+        /// <summary>
+        /// Gets or sets the transactions.
+        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
         public List<LedgerTransactionDto> Transactions { get; set; }

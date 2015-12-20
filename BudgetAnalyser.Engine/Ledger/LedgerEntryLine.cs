@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -93,6 +93,9 @@ namespace BudgetAnalyser.Engine.Ledger
         [UsedImplicitly]
         public DateTime Date { get; internal set; }
 
+        /// <summary>
+        /// Gets the entries for all the Ledger Buckets.
+        /// </summary>
         public IEnumerable<LedgerEntry> Entries
         {
             get { return this.entries; }
@@ -104,6 +107,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal LedgerBalance => TotalBankBalance + TotalBalanceAdjustments;
 
+        /// <summary>
+        /// Gets the user remarks for this reconciliation.
+        /// </summary>
         public string Remarks { get; internal set; }
 
         /// <summary>
@@ -122,6 +128,9 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        /// <summary>
+        /// Gets the calculated total balance adjustments.
+        /// </summary>
         public decimal TotalBalanceAdjustments => BankBalanceAdjustments.Sum(a => a.Amount);
 
         /// <summary>

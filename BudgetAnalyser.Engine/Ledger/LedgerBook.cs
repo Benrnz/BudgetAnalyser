@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     The top level ledger object. Primarily it contains groupings of all reconciliations performed to date.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.IModelValidate" />
     public class LedgerBook : IModelValidate
     {
         private readonly IReconciliationBuilder reconciliationBuilder;
@@ -20,7 +24,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor,
         ///     not the IoC system.
         /// </summary>
-        public LedgerBook([NotNull] IReconciliationBuilder reconciliationBuilder)
+        internal LedgerBook([NotNull] IReconciliationBuilder reconciliationBuilder)
         {
             if (reconciliationBuilder == null)
             {
@@ -42,17 +46,32 @@ namespace BudgetAnalyser.Engine.Ledger
             internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
         }
 
+        /// <summary>
+        /// Gets the last modified date.
+        /// </summary>
         public DateTime Modified { get; internal set; }
+        /// <summary>
+        /// Gets the name of this ledger book.
+        /// </summary>
         public string Name { get; internal set; }
 
+        /// <summary>
+        /// Gets the monthly reconciliations collection.
+        /// </summary>
         public IEnumerable<LedgerEntryLine> Reconciliations
         {
             get { return this.reconciliations; }
             [UsedImplicitly] private set { this.reconciliations = value.ToList(); }
         }
 
+        /// <summary>
+        /// Gets the storage key that uniquely identifies this ledger book for storage purposes.
+        /// </summary>
         public string StorageKey { get; internal set; }
 
+        /// <summary>
+        /// Lists all the Ledgers available for transfer funds to and from.
+        /// </summary>
         public IEnumerable<LedgerBucket> LedgersAvailableForTransfer()
         {
             List<LedgerBucket> ledgers = Ledgers.ToList();
@@ -65,6 +84,15 @@ namespace BudgetAnalyser.Engine.Ledger
             return ledgers;
         }
 
+        /// <summary>
+        /// Validate the instance and populate any warnings and errors into the <paramref name="validationMessages" /> string
+        /// builder.
+        /// </summary>
+        /// <param name="validationMessages">A non-null string builder that will be appended to for any messages.</param>
+        /// <returns>
+        /// If the instance is in an invalid state it will return false, otherwise it returns true.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool Validate([NotNull] StringBuilder validationMessages)
         {
             if (validationMessages == null)

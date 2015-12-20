@@ -1,12 +1,16 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    /// <summary>
+    ///     A factory to create <see cref="LedgerBucket"/>s from minimaly persisted storage data.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Ledger.Data.ILedgerBucketFactory" />
     [AutoRegisterWithIoC]
-    public class LedgerBucketFactory : ILedgerBucketFactory
+    internal class LedgerBucketFactory : ILedgerBucketFactory
     {
         private readonly IAccountTypeRepository accountRepo;
         private readonly IBudgetBucketRepository bucketRepo;

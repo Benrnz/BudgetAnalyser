@@ -2,7 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    public interface ILedgerBucketFactory
+    internal interface ILedgerBucketFactory
     {
         LedgerBucket Build(string bucketCode, string accountName);
         LedgerBucket Build(string bucketCode, Account account);

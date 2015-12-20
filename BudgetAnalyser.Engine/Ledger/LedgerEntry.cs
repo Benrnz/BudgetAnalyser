@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -67,6 +68,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
+        /// <summary>
+        /// Gets the transactions collection for this entry.
+        /// </summary>
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
         /// <summary>

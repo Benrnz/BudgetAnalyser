@@ -5,8 +5,15 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A Ledger Bucket that does not allow funds to accumulate at the end of the month. Any excess funds if not spent, will be transfered to Surplus.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerBucket" />
     public class SpentMonthlyLedger : LedgerBucket
     {
+        /// <summary>
+        /// Allows ledger bucket specific behaviour during reconciliation.
+        /// </summary>
         public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
             decimal netAmount = transactions.Sum(t => t.Amount);
@@ -41,7 +48,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public override void ValidateBucketSet(BudgetBucket bucket)
+        /// <summary>
+        /// Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.</exception>
+        protected override void ValidateBucketSet(BudgetBucket bucket)
         {
             if (bucket is SpentMonthlyExpenseBucket)
             {

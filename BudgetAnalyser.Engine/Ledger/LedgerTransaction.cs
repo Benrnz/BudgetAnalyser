@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Globalization;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A transaction inside a Ledger Bucket. These may map to a bank transaction but not necessarily. (IE: the user can create their own <see cref="LedgerTransaction"/>s).
+    /// </summary>
     public abstract class LedgerTransaction
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LedgerTransaction"/> class.
+        /// </summary>
         protected LedgerTransaction()
         {
             Id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LedgerTransaction"/> class.
+        /// </summary>
         protected LedgerTransaction(Guid id)
         {
             Id = id;
@@ -46,6 +55,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public Guid Id { get; internal set; }
 
+        /// <summary>
+        /// Gets the transaction narrative.
+        /// </summary>
         public string Narrative { get; internal set; }
 
         /// <summary>
