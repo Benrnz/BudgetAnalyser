@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
+    /// <summary>
+    ///     Surfaces all Dashboard functionality.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Services.IServiceFoundation" />
     public interface IDashboardService : IServiceFoundation
     {
         /// <summary>
@@ -57,7 +61,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
         /// <param name="storedState">The persisted widget application state data object.</param>
-        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationStateV1 storedState);
+        ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] object storedState);
 
         /// <summary>
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
@@ -74,7 +78,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.
         /// </summary>
-        WidgetsApplicationStateV1 PreparePersistentStateData();
+        object PreparePersistentStateData();
 
         /// <summary>
         ///     Removes a multi-instance widget from the widget groups.
@@ -87,5 +91,10 @@ namespace BudgetAnalyser.Engine.Services
         ///     Makes all widgets visible.
         /// </summary>
         void ShowAllWidgets();
+
+        /// <summary>
+        /// Gets the list of supported widget dependency types.
+        /// </summary>
+        IEnumerable<Type> SupportedWidgetDependencyTypes { get; }
     }
 }

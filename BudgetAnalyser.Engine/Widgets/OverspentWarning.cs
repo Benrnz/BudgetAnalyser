@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -20,6 +20,9 @@ namespace BudgetAnalyser.Engine.Widgets
     {
         private decimal tolerance;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OverspentWarning"/> class.
+        /// </summary>
         public OverspentWarning()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -27,9 +30,13 @@ namespace BudgetAnalyser.Engine.Widgets
             DetailedText = "Overspent";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
-            Tolerance = 10;
+            Tolerance = 10; // By default must be overspent by 10 dollars to be considered overspent.
         }
 
+        /// <summary>
+        /// Gets or sets the tolerance dollar value.
+        /// By default must be overspent by 10 dollars to be considered overspent.
+        /// </summary>
         public decimal Tolerance
         {
             get { return this.tolerance; }
@@ -38,6 +45,10 @@ namespace BudgetAnalyser.Engine.Widgets
 
         internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

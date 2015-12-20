@@ -2,17 +2,24 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    /// A savings goal widget to monitor a <see cref="SavingsCommitmentBucket"/>
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
     public class SavingsGoalWidget : ProgressBarWidget
     {
         private readonly string standardStyle;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SavingsGoalWidget"/> class.
+        /// </summary>
         public SavingsGoalWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -23,6 +30,10 @@ namespace BudgetAnalyser.Engine.Widgets
             Name = "Save Goal";
         }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

@@ -2,8 +2,15 @@
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    ///     A widget to monitor the remaining budgeted surplus as compared to the current budget surplus figure. (Not the actual surplus from the ledger book).
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.RemainingBudgetBucketWidget" />
     public class RemainingSurplusWidget : RemainingBudgetBucketWidget
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemainingSurplusWidget"/> class.
+        /// </summary>
         public RemainingSurplusWidget()
         {
             DetailedText = "Budgeted Surplus";
@@ -13,6 +20,9 @@ namespace BudgetAnalyser.Engine.Widgets
             BucketCode = SurplusBucket.SurplusCode;
         }
 
+        /// <summary>
+        /// Monthlies the budget amount.
+        /// </summary>
         protected override decimal MonthlyBudgetAmount()
         {
             return Budget.Model.Surplus;

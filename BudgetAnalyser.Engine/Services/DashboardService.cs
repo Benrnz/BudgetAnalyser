@@ -6,18 +6,18 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class DashboardService : IDashboardService
+    internal class DashboardService : IDashboardService
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
@@ -83,6 +83,8 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
+
+        public IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
 
         /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
@@ -160,8 +162,9 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(object storedState)
         {
+            // TODO This used to accept a strongly typed state object for Dashboard state persistence.
             if (storedState == null)
             {
                 throw new ArgumentNullException(nameof(storedState));
@@ -199,8 +202,9 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public WidgetsApplicationStateV1 PreparePersistentStateData()
+        public object PreparePersistentStateData()
         {
+            // TODO this used to return a strongly typed object for Dashboard state persistence.
             IEnumerable<WidgetGroup> widgetStates = WidgetGroups?.ToList() ?? new List<WidgetGroup>();
             return new WidgetsApplicationStateV1
             {

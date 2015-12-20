@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Globalization;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    ///     Monitors the number of days since bank statement data was last imported.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
     public class DaysSinceLastImport : Widget
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DaysSinceLastImport"/> class.
+        /// </summary>
         public DaysSinceLastImport()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -17,6 +24,10 @@ namespace BudgetAnalyser.Engine.Widgets
             Clickable = true;
         }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

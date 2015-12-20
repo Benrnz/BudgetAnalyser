@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -36,6 +36,10 @@ namespace BudgetAnalyser.Engine.Widgets
             ToolTip = "Counts the number of refreshes recieved by any widget as well as refreshing every 10 seconds.";
         }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

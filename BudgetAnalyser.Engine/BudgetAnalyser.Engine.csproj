@@ -254,6 +254,7 @@
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />
     <Compile Include="Reports\SeriesData.cs" />
     <Compile Include="Services\AdditionalInformationRequestedEventArgs.cs" />
+    <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\INotifyDatabaseChanges.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
     <Compile Include="Services\ISupportsModelPersistence.cs" />
@@ -285,6 +286,31 @@
     <Compile Include="StringExtension.cs" />
     <Compile Include="TaskExtension.cs" />
     <Compile Include="ValidationWarningException.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
+    <Compile Include="Widgets\CurrentFileWidget.cs" />
+    <Compile Include="Widgets\DateFilterWidget.cs" />
+    <Compile Include="Widgets\DaysSinceLastImport.cs" />
+    <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
+    <Compile Include="Widgets\IUserDefinedWidget.cs" />
+    <Compile Include="Widgets\IWidgetRepository.cs" />
+    <Compile Include="Widgets\IWidgetWithAdditionalImage.cs" />
+    <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
+    <Compile Include="Widgets\NewFileWidget.cs" />
+    <Compile Include="Widgets\OverspentWarning.cs" />
+    <Compile Include="Widgets\ProgressBarWidget.cs" />
+    <Compile Include="Widgets\ReflectionWidgetRepository.cs" />
+    <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
+    <Compile Include="Widgets\RemainingBudgetBucketWidget.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidget.cs" />
+    <Compile Include="Widgets\SavingsGoalWidget.cs" />
+    <Compile Include="Widgets\SurprisePaymentWidget.cs" />
+    <Compile Include="Widgets\SurprisePaymentWidgetPersistentState.cs" />
+    <Compile Include="Widgets\TimedUpdateCounterWidget.cs" />
+    <Compile Include="Widgets\WeeklyOrFortnightly.cs" />
+    <Compile Include="Widgets\Widget.cs" />
+    <Compile Include="Widgets\WidgetGroup.cs" />
+    <Compile Include="Widgets\WidgetPersistentState.cs" />
+    <Compile Include="Widgets\WidgetSize.cs" />
     <EmbeddedResource Include="Properties\BudgetAnalyser.Engine.rd.xml" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

@@ -2,21 +2,25 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    ///     Use this widget class for hard coded budget bucket widgets.
+    /// Use this widget base class for widgets that monitor budget bucket spend.
     /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
     public abstract class RemainingBudgetBucketWidget : ProgressBarWidget
     {
         private readonly string standardStyle;
         private IBudgetBucketRepository bucketRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemainingBudgetBucketWidget"/> class.
+        /// </summary>
         protected RemainingBudgetBucketWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
@@ -35,15 +39,43 @@ namespace BudgetAnalyser.Engine.Widgets
             BucketCode = "<NOT SET>";
         }
 
+        /// <summary>
+        /// Gets or sets the bucket code.
+        /// </summary>
         public string BucketCode { get; set; }
+        /// <summary>
+        /// Gets the budget model.
+        /// </summary>
         protected IBudgetCurrencyContext Budget { get; private set; }
+        /// <summary>
+        /// Gets or sets the dependency missing tool tip.
+        /// </summary>
         protected string DependencyMissingToolTip { get; set; }
+        /// <summary>
+        /// Gets the global filter.
+        /// </summary>
         protected GlobalFilterCriteria Filter { get; private set; }
+        /// <summary>
+        /// Gets the ledger book model.
+        /// </summary>
         protected LedgerBook LedgerBook { get; private set; }
+        /// <summary>
+        /// Gets the ledger calculator.
+        /// </summary>
         protected LedgerCalculation LedgerCalculation { get; private set; }
+        /// <summary>
+        /// Gets or sets the remaining budget tool tip.
+        /// </summary>
         protected string RemainingBudgetToolTip { get; set; }
+        /// <summary>
+        /// Gets the statement model.
+        /// </summary>
         protected StatementModel Statement { get; private set; }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)
@@ -110,6 +142,9 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        /// <summary>
+        /// Calculates the monthly budget amount.
+        /// </summary>
         protected virtual decimal MonthlyBudgetAmount()
         {
             Debug.Assert(Filter.BeginDate != null);
@@ -127,6 +162,9 @@ namespace BudgetAnalyser.Engine.Widgets
             return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
         }
 
+        /// <summary>
+        /// Provides an optional means to include additional dependencies.
+        /// </summary>
         protected virtual void SetAdditionalDependencies(object[] input)
         {
         }

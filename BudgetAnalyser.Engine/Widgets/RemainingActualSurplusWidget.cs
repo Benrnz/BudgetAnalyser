@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Globalization;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    ///     Monitors the remaining surplus against the actual available surplus funds available this month from the current ledger book.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
     public class RemainingActualSurplusWidget : ProgressBarWidget
     {
         private readonly string standardStyle;
@@ -14,6 +18,9 @@ namespace BudgetAnalyser.Engine.Widgets
         private LedgerCalculation ledgerCalculator;
         private StatementModel statement;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemainingActualSurplusWidget"/> class.
+        /// </summary>
         public RemainingActualSurplusWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
@@ -23,6 +30,10 @@ namespace BudgetAnalyser.Engine.Widgets
             this.standardStyle = "WidgetStandardStyle3";
         }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)

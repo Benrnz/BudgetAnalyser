@@ -27,6 +27,9 @@ namespace BudgetAnalyser.Engine.Widgets
         private GlobalFilterCriteria filter;
         private int multiplier = 1;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SurprisePaymentWidget"/> class.
+        /// </summary>
         public SurprisePaymentWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -39,8 +42,14 @@ namespace BudgetAnalyser.Engine.Widgets
             ImageResourceName2 = "OctWarningImage";
         }
 
+        /// <summary>
+        /// Gets the bucket code.
+        /// </summary>
         public string BucketCode => Id;
 
+        /// <summary>
+        /// Gets or sets the frequency of the expected payment.
+        /// </summary>
         public WeeklyOrFortnightly Frequency
         {
             get { return this.doNotUseFrequency; }
@@ -51,6 +60,9 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        /// <summary>
+        /// Gets or sets a unique identifier for the widget. This is required for persistence purposes.
+        /// </summary>
         public string Id
         {
             get { return this.doNotUseId; }
@@ -61,9 +73,18 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        /// <summary>
+        /// Gets or sets the start payment date.
+        /// </summary>
         public DateTime StartPaymentDate { get; set; }
+        /// <summary>
+        /// Gets the type of the widget. Optionally allows the implementation to override the widget type description used in the user interface.
+        /// </summary>
         public Type WidgetType => GetType();
 
+        /// <summary>
+        /// Initialises the widget and optionally offers it some state and a logger.
+        /// </summary>
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
             var myState = (SurprisePaymentWidgetPersistentState)state;
@@ -72,6 +93,10 @@ namespace BudgetAnalyser.Engine.Widgets
             this.diagLogger = logger;
         }
 
+        /// <summary>
+        /// Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
         public override void Update(params object[] input)
         {
