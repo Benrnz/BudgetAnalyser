@@ -159,6 +159,7 @@
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
