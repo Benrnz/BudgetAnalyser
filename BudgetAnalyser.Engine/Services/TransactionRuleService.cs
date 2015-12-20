@@ -2,18 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
+    /// <summary>
+    ///     Implements top level transaction rules functionality.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Services.ITransactionRuleService" />
+    /// <seealso cref="BudgetAnalyser.Engine.Services.ISupportsModelPersistence" />
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
+    internal class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
     {
         private readonly ILogger logger;
         private readonly IMatchmaker matchmaker;
@@ -245,7 +251,8 @@ namespace BudgetAnalyser.Engine.Services
 
         protected virtual string BuildDefaultFileName()
         {
-            string path = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            string path = storageFolder.Path;
             return Path.Combine(path, "MatchingRules.xml");
         }
 

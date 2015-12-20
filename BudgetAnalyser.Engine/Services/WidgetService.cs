@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -24,6 +24,13 @@ namespace BudgetAnalyser.Engine.Services
         private readonly ILogger logger;
         private readonly IWidgetRepository widgetRepo;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WidgetService"/> class.
+        /// </summary>
+        /// <param name="widgetRepo">The widget repository.</param>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public WidgetService([NotNull] IWidgetRepository widgetRepo, [NotNull] ILogger logger)
         {
             if (widgetRepo == null)
@@ -40,6 +47,10 @@ namespace BudgetAnalyser.Engine.Services
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Prepares the widgets.
+        /// </summary>
+        /// <param name="storedStates">The stored application state for widgets.</param>
         public IEnumerable<WidgetGroup> PrepareWidgets(IEnumerable<WidgetPersistentState> storedStates)
         {
             if (storedStates != null)
