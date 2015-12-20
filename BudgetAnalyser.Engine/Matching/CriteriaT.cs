@@ -7,22 +7,20 @@ namespace BudgetAnalyser.Engine.Matching
     /// <summary>
     ///     A class used to store a criteria value when creating a new <see cref="MatchingRule" />.
     /// </summary>
-    /// <typeparam name="T">The type used to contain the value to match. Can be a class or a struct. A Null value indicates there is no criteria present.</typeparam>
-    public abstract class Criteria<T> : INotifyPropertyChanged 
+    /// <typeparam name="T">
+    ///     The type used to contain the value to match. Can be a class or a struct. A Null value indicates
+    ///     there is no criteria present.
+    /// </typeparam>
+    public abstract class Criteria<T> : INotifyPropertyChanged
     {
         private bool doNotUseApplicable;
         private T doNotUseValue;
 
         /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Criteria{T}"/> will be applied as criteria.
+        ///     Gets or sets a value indicating whether this <see cref="Criteria{T}" /> will be applied as criteria.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if applicable; otherwise, <c>false</c> and will not be used in matching.
+        ///     <c>true</c> if applicable; otherwise, <c>false</c> and will not be used in matching.
         /// </value>
         public bool Applicable
         {
@@ -39,7 +37,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets the criteria value.
+        ///     Gets or sets the criteria value.
         /// </summary>
         public T Value
         {
@@ -56,12 +54,17 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Determines whether the value is equal to the <paramref name="operand2"/> but not niether can be blank or null.
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Determines whether the value is equal to the <paramref name="operand2" /> but not niether can be blank or null.
         /// </summary>
         public abstract bool IsEqualButNotBlank(T operand2);
 
         /// <summary>
-        /// Called when a property is changed.
+        ///     Called when a property is changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
@@ -72,13 +75,13 @@ namespace BudgetAnalyser.Engine.Matching
     }
 
     /// <summary>
-    /// A string criteria value.
+    ///     A string criteria value.
     /// </summary>
     /// <seealso cref="string" />
     public class StringCriteria : Criteria<string>
     {
         /// <summary>
-        /// Determines whether the value is equal to the <paramref name="operand2"/> but not niether can be blank or null.
+        ///     Determines whether the value is equal to the <paramref name="operand2" /> but not niether can be blank or null.
         /// </summary>
         public override bool IsEqualButNotBlank(string operand2)
         {
@@ -87,19 +90,19 @@ namespace BudgetAnalyser.Engine.Matching
                 return false;
             }
 
-            bool match = Value == operand2;
+            var match = Value == operand2;
             return match;
         }
     }
 
     /// <summary>
-    /// A decimal criteria value.
+    ///     A decimal criteria value.
     /// </summary>
     /// <seealso cref="decimal" />
     public class DecimalCriteria : Criteria<decimal?>
     {
         /// <summary>
-        /// Determines whether the value is equal to the <paramref name="operand2"/> but not niether can be blank or null.
+        ///     Determines whether the value is equal to the <paramref name="operand2" /> but not niether can be blank or null.
         /// </summary>
         public override bool IsEqualButNotBlank(decimal? operand2)
         {

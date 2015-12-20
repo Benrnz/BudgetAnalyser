@@ -8,9 +8,11 @@ namespace BudgetAnalyser.Engine.Reports
     public class OverallPerformanceBudgetResult
     {
         /// <summary>
-        /// Gets the analysis list.
+        ///     Gets the analysis list.
         /// </summary>
         public IEnumerable<BucketPerformanceResult> Analyses => AnalysesList;
+
+        internal IList<BucketPerformanceResult> AnalysesList { get; set; }
 
         /// <summary>
         ///     Gets the average spend per month based on statement transaction data over a period of time.
@@ -24,21 +26,23 @@ namespace BudgetAnalyser.Engine.Reports
         public decimal AverageSurplus { get; internal set; }
 
         /// <summary>
-        /// Gets the calculated duration in months.
+        ///     Gets the calculated duration in months.
         /// </summary>
         public int DurationInMonths { get; internal set; }
+
         /// <summary>
-        /// Gets the calculated overall performance rating.
+        ///     Gets the calculated overall performance rating.
         /// </summary>
         public decimal OverallPerformance { get; internal set; }
+
         /// <summary>
-        /// Gets the calculated total budget expenses.
+        ///     Gets the calculated total budget expenses.
         /// </summary>
         public decimal TotalBudgetExpenses { get; internal set; }
+
         /// <summary>
-        /// Gets a calculated value indicating whether this analysis spans multiple budgets.
+        ///     Gets a calculated value indicating whether this analysis spans multiple budgets.
         /// </summary>
         public bool UsesMultipleBudgets { get; internal set; }
-        internal IList<BucketPerformanceResult> AnalysesList { get; set; }
     }
 }

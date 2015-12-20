@@ -12,19 +12,19 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
-    ///     A repository for the <see cref="StatementModel"/> backed by Csv on local disk storage.
+    ///     A repository for the <see cref="StatementModel" /> backed by Csv on local disk storage.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
-        private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper;
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
+        private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CsvOnDiskStatementModelRepositoryV1"/> class.
+        ///     Initializes a new instance of the <see cref="CsvOnDiskStatementModelRepositoryV1" /> class.
         /// </summary>
         /// <param name="importUtilities">The import utilities.</param>
         /// <param name="logger">The logger.</param>
@@ -57,10 +57,11 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />. Any
-        /// existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        /// to
-        /// load the new <see cref="StatementModel" />.
+        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />.
+        ///     Any
+        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
+        ///     to
+        ///     load the new <see cref="StatementModel" />.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public async Task CreateNewAndSaveAsync(string storageKey)
@@ -70,12 +71,12 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
+            var newStatement = new StatementModel(this.logger) {StorageKey = storageKey};
             await SaveAsync(newStatement, storageKey);
         }
 
         /// <summary>
-        /// Determines whether the provided <paramref name="storageKey" /> is refering to a statement model.
+        ///     Determines whether the provided <paramref name="storageKey" /> is refering to a statement model.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<bool> IsStatementModelAsync(string storageKey)
@@ -86,7 +87,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.importUtilities.AbortIfFileDoesntExist(storageKey);
-            List<string> allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
+            var allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
             if (!VersionCheck(allLines))
             {
                 return false;
@@ -96,7 +97,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Loads the <see cref="StatementModel" />.
+        ///     Loads the <see cref="StatementModel" />.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
@@ -122,15 +123,16 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
-            List<string> allLines = (await ReadLinesAsync(storageKey)).ToList();
-            long totalLines = allLines.LongCount();
+            var allLines = (await ReadLinesAsync(storageKey)).ToList();
+            var totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
-                return new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
+                return
+                    new StatementModel(this.logger) {StorageKey = storageKey}.LoadTransactions(new List<Transaction>());
             }
 
-            List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
-            TransactionSetDto transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
+            var transactions = ReadTransactions(totalLines, allLines);
+            var transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
 
             ValidateChecksumIntegrity(transactionSet);
 
@@ -138,12 +140,13 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Saves the <see cref="StatementModel" />.
+        ///     Saves the <see cref="StatementModel" />.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         /// <exception cref="BudgetAnalyser.Engine.Statement.StatementModelChecksumException"></exception>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
+            Justification = "Stream and StreamWriter are designed with this pattern in mind")]
         public async Task SaveAsync(StatementModel model, string storageKey)
         {
             if (model == null)
@@ -156,7 +159,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            TransactionSetDto transactionSet = this.mapper.ToDto(model);
+            var transactionSet = this.mapper.ToDto(model);
             transactionSet.VersionHash = VersionHash;
             transactionSet.StorageKey = storageKey;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
@@ -170,13 +173,15 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            using (var stream = new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous))
+            using (
+                var stream = new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096,
+                    FileOptions.Asynchronous))
             {
                 using (var writer = new StreamWriter(stream))
                 {
                     WriteHeader(writer, transactionSet);
 
-                    foreach (TransactionDto transaction in transactionSet.Transactions)
+                    foreach (var transaction in transactionSet.Transactions)
                     {
                         var line = new StringBuilder();
                         line.Append(transaction.TransactionType);
@@ -217,8 +222,45 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
+        private static long CalculateTransactionCheckSum(TransactionSetDto setDto)
+        {
+            long txnCheckSum = 37; // prime
+            unchecked
+            {
+                txnCheckSum *= 397; // also prime 
+                foreach (var txn in setDto.Transactions)
+                {
+                    txnCheckSum += (long) txn.Amount*100;
+                    txnCheckSum *= 829;
+                }
+            }
+
+            return txnCheckSum;
+        }
+
+        private TransactionSetDto CreateTransactionSet(string fileName, List<string> allLines,
+            List<TransactionDto> transactions)
+        {
+            var header = allLines[0];
+            if (string.IsNullOrWhiteSpace(header))
+            {
+                throw new DataFormatException("The Budget Analyser file does not have a valid header row.");
+            }
+
+            var headerSplit = header.Split(',');
+            var transactionSet = new TransactionSetDto
+            {
+                Checksum = this.importUtilities.FetchLong(headerSplit, 3),
+                StorageKey = fileName,
+                LastImport = this.importUtilities.FetchDate(headerSplit, 4),
+                Transactions = transactions,
+                VersionHash = this.importUtilities.FetchString(headerSplit, 1)
+            };
+            return transactionSet;
+        }
+
         /// <summary>
-        /// Reads the lines from the file asynchronously.
+        ///     Reads the lines from the file asynchronously.
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
@@ -226,18 +268,18 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Reads the lines from the file asynchronously.
+        ///     Reads the lines from the file asynchronously.
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             var responseList = new List<string>();
-            using (StreamReader reader = File.OpenText(fileName))
+            using (var reader = File.OpenText(fileName))
             {
                 try
                 {
                     for (var index = 0; index < lines; index++)
                     {
-                        string line = await reader.ReadLineAsync();
+                        var line = await reader.ReadLineAsync();
                         if (string.IsNullOrWhiteSpace(line))
                         {
                             break;
@@ -255,76 +297,18 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        private static long CalculateTransactionCheckSum(TransactionSetDto setDto)
-        {
-            long txnCheckSum = 37; // prime
-            unchecked
-            {
-                txnCheckSum *= 397; // also prime 
-                foreach (TransactionDto txn in setDto.Transactions)
-                {
-                    txnCheckSum += (long)txn.Amount * 100;
-                    txnCheckSum *= 829;
-                }
-            }
-
-            return txnCheckSum;
-        }
-
-        private static bool VersionCheck(List<string> allLines)
-        {
-            string firstLine = allLines[0];
-            string[] split = firstLine.Split(',');
-            if (split.Length != 5)
-            {
-                return false;
-            }
-
-            if (split[1] != VersionHash)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
-        {
-            writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum, setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
-        }
-
-        private TransactionSetDto CreateTransactionSet(string fileName, List<string> allLines, List<TransactionDto> transactions)
-        {
-            string header = allLines[0];
-            if (string.IsNullOrWhiteSpace(header))
-            {
-                throw new DataFormatException("The Budget Analyser file does not have a valid header row.");
-            }
-
-            string[] headerSplit = header.Split(',');
-            var transactionSet = new TransactionSetDto
-            {
-                Checksum = this.importUtilities.FetchLong(headerSplit, 3),
-                StorageKey = fileName,
-                LastImport = this.importUtilities.FetchDate(headerSplit, 4),
-                Transactions = transactions,
-                VersionHash = this.importUtilities.FetchString(headerSplit, 1)
-            };
-            return transactionSet;
-        }
-
         private List<TransactionDto> ReadTransactions(long totalLines, List<string> allLines)
         {
             var transactions = new List<TransactionDto>();
             for (var index = 1; index < totalLines; index++)
             {
-                string line = allLines[index];
+                var line = allLines[index];
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
                 }
 
-                string[] split = line.Split(',');
+                var split = line.Split(',');
                 TransactionDto transaction;
                 try
                 {
@@ -344,17 +328,21 @@ namespace BudgetAnalyser.Engine.Statement
                 }
                 catch (InvalidDataException ex)
                 {
-                    throw new DataFormatException("The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
+                    throw new DataFormatException(
+                        "The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
-                    throw new DataFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
+                    throw new DataFormatException(
+                        "The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
                 }
 
                 if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
                 {
                     // Do not check for Amount == 0 here, sometimes memo transactions can appear with 0.00 or null amounts; which are valid.
-                    throw new DataFormatException("The Budget Analyser file does not contain the correct data type for Date and/or Id in row " + index + 1);
+                    throw new DataFormatException(
+                        "The Budget Analyser file does not contain the correct data type for Date and/or Id in row " +
+                        index + 1);
                 }
 
                 transactions.Add(transaction);
@@ -365,12 +353,15 @@ namespace BudgetAnalyser.Engine.Statement
 
         private void ValidateChecksumIntegrity(TransactionSetDto transactionSet)
         {
-            long calcTxnCheckSum = CalculateTransactionCheckSum(transactionSet);
+            var calcTxnCheckSum = CalculateTransactionCheckSum(transactionSet);
             // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
             if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
             {
                 this.logger.LogError(
-                    l => l.Format("BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}", transactionSet.Checksum, calcTxnCheckSum));
+                    l =>
+                        l.Format(
+                            "BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}",
+                            transactionSet.Checksum, calcTxnCheckSum));
                 throw new StatementModelChecksumException(
                     calcTxnCheckSum.ToString(CultureInfo.InvariantCulture),
                     string.Format(
@@ -379,6 +370,29 @@ namespace BudgetAnalyser.Engine.Statement
                         calcTxnCheckSum,
                         transactionSet.Checksum));
             }
+        }
+
+        private static bool VersionCheck(List<string> allLines)
+        {
+            var firstLine = allLines[0];
+            var split = firstLine.Split(',');
+            if (split.Length != 5)
+            {
+                return false;
+            }
+
+            if (split[1] != VersionHash)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
+        {
+            writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum,
+                setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
         }
     }
 }

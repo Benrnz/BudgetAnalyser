@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Ledger
     public class BankBalance
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BankBalance"/> class.
+        ///     Initializes a new instance of the <see cref="BankBalance" /> class.
         /// </summary>
         public BankBalance(Account account, decimal balance)
         {
@@ -17,11 +17,12 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets the account.
+        ///     Gets the account.
         /// </summary>
         public Account Account { get; private set; }
+
         /// <summary>
-        /// Gets the balance.
+        ///     Gets the balance.
         /// </summary>
         public decimal Balance { get; private set; }
     }

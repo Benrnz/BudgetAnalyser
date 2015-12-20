@@ -17,12 +17,13 @@ namespace BudgetAnalyser.Engine.Matching
         private bool doNotUseTransactionTypeMatched;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimilarMatchedRule"/> class.
+        ///     Initializes a new instance of the <see cref="SimilarMatchedRule" /> class.
         /// </summary>
         /// <param name="bucketRepository">The bucket repository.</param>
         /// <param name="rule">The rule.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SimilarMatchedRule([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] MatchingRule rule) : base(bucketRepository)
+        public SimilarMatchedRule([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] MatchingRule rule)
+            : base(bucketRepository)
         {
             if (rule == null)
             {
@@ -40,7 +41,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the amount property was used to match.
+        ///     Gets or sets a value indicating whether the amount property was used to match.
         /// </summary>
         public bool AmountMatched
         {
@@ -57,7 +58,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the description property was used to match.
+        ///     Gets or sets a value indicating whether the description property was used to match.
         /// </summary>
         public bool DescriptionMatched
         {
@@ -74,7 +75,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether reference1 property was used to match.
+        ///     Gets or sets a value indicating whether reference1 property was used to match.
         /// </summary>
         public bool Reference1Matched
         {
@@ -91,7 +92,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether reference2 property was used to match.
+        ///     Gets or sets a value indicating whether reference2 property was used to match.
         /// </summary>
         public bool Reference2Matched
         {
@@ -108,7 +109,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether reference3 property was used to match.
+        ///     Gets or sets a value indicating whether reference3 property was used to match.
         /// </summary>
         public bool Reference3Matched
         {
@@ -125,7 +126,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets the sort order.
+        ///     Gets the sort order.
         /// </summary>
         public int SortOrder
         {
@@ -141,7 +142,7 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the transaction type property was used to match.
+        ///     Gets or sets a value indicating whether the transaction type property was used to match.
         /// </summary>
         public bool TransactionTypeMatched
         {

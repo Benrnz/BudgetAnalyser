@@ -8,15 +8,17 @@ namespace BudgetAnalyser.Engine.Reports
     public class ReportTransaction
     {
         /// <summary>
-        /// Gets or sets the transaction amount.
+        ///     Gets or sets the transaction amount.
         /// </summary>
         public decimal Amount { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction date.
+        ///     Gets or sets the transaction date.
         /// </summary>
         public DateTime Date { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction narrative.
+        ///     Gets or sets the transaction narrative.
         /// </summary>
         public string Narrative { get; set; }
     }

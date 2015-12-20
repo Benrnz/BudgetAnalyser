@@ -56,6 +56,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     new <see cref="ValidationWarningException" />
         ///     is thrown; otherwise the method returns.
         /// </summary>
-        void ValidateAgainstOrphanedAutoMatchingTransactions([NotNull] LedgerBook ledgerBook, [NotNull] StatementModel statement);
+        void ValidateAgainstOrphanedAutoMatchingTransactions([NotNull] LedgerBook ledgerBook,
+            [NotNull] StatementModel statement);
     }
 }

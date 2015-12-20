@@ -9,14 +9,14 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     internal class LedgerTransactionFactory : ILedgerTransactionFactory
     {
         /// <summary>
-        /// Builds the specified transaction type name.
+        ///     Builds the specified transaction type name.
         /// </summary>
         /// <param name="transactionTypeName">Name of the transaction type.</param>
         /// <param name="id">The identifier.</param>
         /// <exception cref="DataFormatException">Invalid transaction type encountered:  + transactionTypeName</exception>
         public LedgerTransaction Build(string transactionTypeName, Guid id)
         {
-            Type type = Type.GetType(transactionTypeName);
+            var type = Type.GetType(transactionTypeName);
             if (type == null)
             {
                 throw new DataFormatException("Invalid transaction type encountered: " + transactionTypeName);

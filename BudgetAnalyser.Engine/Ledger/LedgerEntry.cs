@@ -69,20 +69,9 @@ namespace BudgetAnalyser.Engine.Ledger
         public decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
         /// <summary>
-        /// Gets the transactions collection for this entry.
+        ///     Gets the transactions collection for this entry.
         /// </summary>
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
-
-        /// <summary>
-        ///     Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        ///     A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
-        }
 
         /// <summary>
         ///     Used for persistence only.  Don't use during Reconciliation.
@@ -96,7 +85,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            decimal newBalance = Balance + newTransaction.Amount;
+            var newBalance = Balance + newTransaction.Amount;
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -109,10 +98,11 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!this.isNew)
             {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException(
+                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
+            var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.transactions.Remove(txn);
@@ -133,16 +123,29 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The reconciliation date - this is used to give automatically created transactions a
         ///     date.
         /// </param>
-        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions, DateTime reconciliationDate)
+        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions,
+            DateTime reconciliationDate)
         {
             if (this.transactions.Any())
             {
-                throw new InvalidOperationException("Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
+                throw new InvalidOperationException(
+                    "Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
             }
 
             LedgerBucket.ReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
             Balance += NetAmount;
+        }
+
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
         }
 
         internal void Unlock()
@@ -161,13 +164,15 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (LedgerBucket.BudgetBucket == null)
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                    "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
                 result = false;
             }
 
             if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                    "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
                 result = false;
             }
 

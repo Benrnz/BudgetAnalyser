@@ -6,8 +6,8 @@
     public class StorageBranch
     {
         /// <summary>
-        /// Gets or sets the source text that uniquely identifies the source object.
-        /// For example: a path and file name or a database key.
+        ///     Gets or sets the source text that uniquely identifies the source object.
+        ///     For example: a path and file name or a database key.
         /// </summary>
         public string Source { get; set; }
     }

@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     internal interface ILedgerTransactionFactory
     {
         /// <summary>
-        /// Builds the specified transaction.
+        ///     Builds the specified transaction.
         /// </summary>
         LedgerTransaction Build(string transactionTypeName, Guid id);
     }

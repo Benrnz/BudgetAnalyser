@@ -10,14 +10,14 @@ namespace BudgetAnalyser.Engine.Reports
     public class ReportTransactionWithRunningBalance : ReportTransaction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReportTransactionWithRunningBalance"/> class.
+        ///     Initializes a new instance of the <see cref="ReportTransactionWithRunningBalance" /> class.
         /// </summary>
         public ReportTransactionWithRunningBalance()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReportTransactionWithRunningBalance"/> class.
+        ///     Initializes a new instance of the <see cref="ReportTransactionWithRunningBalance" /> class.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         /// <summary>
-        /// Gets or sets the running balance.
+        ///     Gets or sets the running balance.
         /// </summary>
         public decimal Balance { get; set; }
     }

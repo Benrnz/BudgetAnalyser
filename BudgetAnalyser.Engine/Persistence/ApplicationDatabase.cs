@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Persistence
     public class ApplicationDatabase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationDatabase"/> class.
+        ///     Initializes a new instance of the <see cref="ApplicationDatabase" /> class.
         /// </summary>
         public ApplicationDatabase()
         {
@@ -60,12 +60,12 @@ namespace BudgetAnalyser.Engine.Persistence
         public string StatementModelStorageKey { get; [UsedImplicitly] private set; }
 
         /// <summary>
-        /// Gets the storage path that identifies this budget analyser file.
+        ///     Gets the storage path that identifies this budget analyser file.
         /// </summary>
         protected virtual string StoragePath => Path.GetDirectoryName(FileName);
 
         /// <summary>
-        /// Closes this instance.
+        ///     Closes this instance.
         /// </summary>
         public void Close()
         {
@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Persistence
         }
 
         /// <summary>
-        /// Builds and returns the full filename and path.
+        ///     Builds and returns the full filename and path.
         /// </summary>
         public virtual string FullPath(string fileName)
         {

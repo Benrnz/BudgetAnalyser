@@ -14,11 +14,12 @@ namespace BudgetAnalyser.Engine.Services
     public interface ITransactionRuleService : INotifyDatabaseChanges, IServiceFoundation
     {
         /// <summary>
-        /// Gets the matching rules for data binding in the UI.
+        ///     Gets the matching rules for data binding in the UI.
         /// </summary>
         ObservableCollection<MatchingRule> MatchingRules { get; }
+
         /// <summary>
-        /// Gets the matching rules grouped by bucket.
+        ///     Gets the matching rules grouped by bucket.
         /// </summary>
         ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
@@ -74,9 +75,9 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="transactionTypeName">Name of the transaction type.</param>
         /// <returns>True, if the data is similar to the rule, otherwise false.</returns>
         bool IsRuleSimilar(
-            [NotNull] SimilarMatchedRule rule, 
+            [NotNull] SimilarMatchedRule rule,
             [NotNull] DecimalCriteria amount,
-            [NotNull] StringCriteria description, 
+            [NotNull] StringCriteria description,
             [NotNull] StringCriteria[] references,
             [NotNull] StringCriteria transactionTypeName);
 

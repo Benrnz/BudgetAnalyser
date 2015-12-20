@@ -29,12 +29,16 @@ namespace BudgetAnalyser.Engine.Reports
                 GraphName = "Bucket Balance History"
             };
 
-            var series = new SeriesData { Description = "The actual bank balance of the Ledger Bucket over time.", SeriesName = "Balance" };
+            var series = new SeriesData
+            {
+                Description = "The actual bank balance of the Ledger Bucket over time.",
+                SeriesName = "Balance"
+            };
             GraphData.SeriesList.Add(series);
 
-            foreach (LedgerEntryLine reconciliation in book.Reconciliations.Take(24).Reverse())
+            foreach (var reconciliation in book.Reconciliations.Take(24).Reverse())
             {
-                LedgerEntry entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
+                var entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
                 var plot = new DatedGraphPlot
                 {
                     Date = reconciliation.Date,

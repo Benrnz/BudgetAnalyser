@@ -6,11 +6,12 @@
     public enum WidgetSize
     {
         /// <summary>
-        /// Small
+        ///     Small
         /// </summary>
         Small,
+
         /// <summary>
-        /// Medium
+        ///     Medium
         /// </summary>
         Medium
     }

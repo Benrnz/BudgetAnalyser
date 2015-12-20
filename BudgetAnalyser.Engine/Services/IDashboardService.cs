@@ -16,6 +16,11 @@ namespace BudgetAnalyser.Engine.Services
     public interface IDashboardService : IServiceFoundation
     {
         /// <summary>
+        ///     Gets the list of supported widget dependency types.
+        /// </summary>
+        IEnumerable<Type> SupportedWidgetDependencyTypes { get; }
+
+        /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
         ///     Duplicates are not allowed in the collection and will not be added.
         /// </summary>
@@ -38,7 +43,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="description">The description.</param>
         /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
         /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
-        Widget CreateNewFixedBudgetMonitorWidget([NotNull] string bucketCode, [NotNull] string description, decimal fixedBudgetAmount);
+        Widget CreateNewFixedBudgetMonitorWidget([NotNull] string bucketCode, [NotNull] string description,
+            decimal fixedBudgetAmount);
 
         /// <summary>
         ///     Creates the new surprise payment monitor widget. This is a widget that shows which months require extra payments
@@ -48,7 +54,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="bucketCode">The bucket code.</param>
         /// <param name="paymentDate">The payment date.</param>
         /// <param name="frequency">The frequency.</param>
-        Widget CreateNewSurprisePaymentMonitorWidget([NotNull] string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency);
+        Widget CreateNewSurprisePaymentMonitorWidget([NotNull] string bucketCode, DateTime paymentDate,
+            WeeklyOrFortnightly frequency);
 
         /// <summary>
         ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).
@@ -67,7 +74,8 @@ namespace BudgetAnalyser.Engine.Services
         ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
         /// </summary>
         /// <typeparam name="T">The type to register if not the actual concrete type.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Preferred method of passing type parameter")]
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+            Justification = "Preferred method of passing type parameter")]
         void NotifyOfDependencyChange<T>([CanBeNull] object dependency);
 
         /// <summary>
@@ -84,17 +92,13 @@ namespace BudgetAnalyser.Engine.Services
         ///     Removes a multi-instance widget from the widget groups.
         /// </summary>
         /// <param name="widgetToRemove">The widget to remove.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Justification = "Preferred spelling")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
+            Justification = "Preferred spelling")]
         void RemoveUserDefinedWidget(IUserDefinedWidget widgetToRemove);
 
         /// <summary>
         ///     Makes all widgets visible.
         /// </summary>
         void ShowAllWidgets();
-
-        /// <summary>
-        /// Gets the list of supported widget dependency types.
-        /// </summary>
-        IEnumerable<Type> SupportedWidgetDependencyTypes { get; }
     }
 }

@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Engine.Matching
     public class RulesGroupedByBucket
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RulesGroupedByBucket"/> class.
+        ///     Initializes a new instance of the <see cref="RulesGroupedByBucket" /> class.
         /// </summary>
         /// <param name="bucket">The bucket.</param>
         /// <param name="rules">The rules.</param>
@@ -36,15 +36,17 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        /// Gets the bucket for this group.
+        ///     Gets the bucket for this group.
         /// </summary>
         public BudgetBucket Bucket { get; }
+
         /// <summary>
-        /// Gets the rules that match to this bucket.
+        ///     Gets the rules that match to this bucket.
         /// </summary>
         public ObservableCollection<MatchingRule> Rules { get; }
+
         /// <summary>
-        /// Gets the number of rules in this group.
+        ///     Gets the number of rules in this group.
         /// </summary>
         public int RulesCount => Rules.Count();
     }

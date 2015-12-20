@@ -6,12 +6,13 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A transaction inside a Ledger Bucket. These may map to a bank transaction but not necessarily. (IE: the user can create their own <see cref="LedgerTransaction"/>s).
+    ///     A transaction inside a Ledger Bucket. These may map to a bank transaction but not necessarily. (IE: the user can
+    ///     create their own <see cref="LedgerTransaction" />s).
     /// </summary>
     public abstract class LedgerTransaction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedgerTransaction"/> class.
+        ///     Initializes a new instance of the <see cref="LedgerTransaction" /> class.
         /// </summary>
         protected LedgerTransaction()
         {
@@ -19,7 +20,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedgerTransaction"/> class.
+        ///     Initializes a new instance of the <see cref="LedgerTransaction" /> class.
         /// </summary>
         protected LedgerTransaction(Guid id)
         {
@@ -56,7 +57,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public Guid Id { get; internal set; }
 
         /// <summary>
-        /// Gets the transaction narrative.
+        ///     Gets the transaction narrative.
         /// </summary>
         public string Narrative { get; internal set; }
 
@@ -68,7 +69,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0} ({1:N} {2} {3} {4})", GetType().Name, Amount, Narrative, AutoMatchingReference, Id);
+            return string.Format(CultureInfo.InvariantCulture, "{0} ({1:N} {2} {3} {4})", GetType().Name, Amount,
+                Narrative, AutoMatchingReference, Id);
         }
 
         internal virtual LedgerTransaction WithAmount(decimal amount)

@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger
     public class SurplusLedger : LedgerBucket
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SurplusLedger"/> class.
+        ///     Initializes a new instance of the <see cref="SurplusLedger" /> class.
         /// </summary>
         public SurplusLedger()
         {
@@ -19,17 +19,22 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Allows ledger bucket specific behaviour during reconciliation.
+        ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
+            decimal openingBalance)
         {
             // Nothing special to do here for Surplus.
         }
 
         /// <summary>
-        /// Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between <see cref="BudgetBucket"/>s and <see cref="LedgerBucket"/>s.
+        ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
+        ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
         /// </summary>
-        /// <exception cref="System.NotSupportedException">Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.</exception>
+        /// <exception cref="System.NotSupportedException">
+        ///     Invalid budget bucket used, only the Surplus bucket can be used with an
+        ///     instance of Surplus-Ledger.
+        /// </exception>
         protected override void ValidateBucketSet(BudgetBucket bucket)
         {
             if (bucket is SurplusBucket)
@@ -37,7 +42,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            throw new NotSupportedException("Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.");
+            throw new NotSupportedException(
+                "Invalid budget bucket used, only the Surplus bucket can be used with an instance of Surplus-Ledger.");
         }
     }
 }

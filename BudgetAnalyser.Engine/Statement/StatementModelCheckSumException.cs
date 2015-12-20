@@ -10,14 +10,14 @@ namespace BudgetAnalyser.Engine.Statement
     public class StatementModelChecksumException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatementModelChecksumException"/> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         public StatementModelChecksumException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatementModelChecksumException"/> class.
+        ///     Initializes a new instance of the <see cref="StatementModelChecksumException" /> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the file checksum hash.
+        ///     Gets the file checksum hash.
         /// </summary>
         public string FileChecksum { get; }
     }

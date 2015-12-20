@@ -16,17 +16,20 @@ namespace BudgetAnalyser.Engine.Widgets
     public abstract class Widget : INotifyPropertyChanged
     {
         /// <summary>
-        /// A constant for displaying the error message: The designed for one month only
+        ///     A constant for displaying the error message: The designed for one month only
         /// </summary>
         protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
+
         /// <summary>
-        /// A constant for the standard widget style
+        ///     A constant for the standard widget style
         /// </summary>
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
+
         /// <summary>
-        /// A constant for the warning widget style
+        ///     A constant for the warning widget style
         /// </summary>
         protected const string WidgetWarningStyle = "WidgetWarningStyle";
+
         private string doNotUseCategory;
         private bool doNotUseClickable;
         private string doNotUseColour;
@@ -44,7 +47,8 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     Constructs a new instance of the <see cref="Widget" /> class.
         ///     All widgets must have a parameterless constructor. This is the constructor that will be used to create all widgets.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Reviewed, ok here")]
         protected Widget()
         {
             Name = GetType().Name;
@@ -58,20 +62,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Occurs when the colour style has changed.
-        /// </summary>
-        public event EventHandler ColourStyleChanged;
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// Occurs when the widget style has changed.
-        /// </summary>
-        public event EventHandler WidgetStyleChanged;
-
-        /// <summary>
-        /// Gets or sets the grouping category.
+        ///     Gets or sets the grouping category.
         /// </summary>
         public string Category
         {
@@ -84,7 +75,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Widget"/> is clickable.
+        ///     Gets or sets a value indicating whether this <see cref="Widget" /> is clickable.
         /// </summary>
         public bool Clickable
         {
@@ -97,14 +88,14 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the name of the colour style.
+        ///     Gets or sets the name of the colour style.
         /// </summary>
         public string ColourStyleName
         {
             get { return this.doNotUseColour; }
             protected set
             {
-                bool changed = value != this.doNotUseColour;
+                var changed = value != this.doNotUseColour;
                 this.doNotUseColour = value;
                 OnPropertyChanged();
                 if (changed)
@@ -115,12 +106,13 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the dependencies for this widget to function. See <see cref="IDashboardService.SupportedWidgetDependencyTypes"/> for a full list of supported dependency types.
+        ///     Gets or sets the dependencies for this widget to function. See
+        ///     <see cref="IDashboardService.SupportedWidgetDependencyTypes" /> for a full list of supported dependency types.
         /// </summary>
         public IEnumerable<Type> Dependencies { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the detailed text to show in the widget UI tile.
+        ///     Gets or sets the detailed text to show in the widget UI tile.
         /// </summary>
         public string DetailedText
         {
@@ -133,7 +125,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Widget"/> is enabled, showing data, and clickable.
+        ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
         /// </summary>
         public virtual bool Enabled
         {
@@ -146,7 +138,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the name of the image resource used by this widget.
+        ///     Gets or sets the name of the image resource used by this widget.
         /// </summary>
         public string ImageResourceName
         {
@@ -159,7 +151,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the secondary image resource name.
+        ///     Gets or sets the secondary image resource name.
         /// </summary>
         public string ImageResourceName2
         {
@@ -172,7 +164,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the large main number used on the widget UI tile.
+        ///     Gets or sets the large main number used on the widget UI tile.
         /// </summary>
         public string LargeNumber
         {
@@ -185,64 +177,22 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the name of the widget.
+        ///     Gets or sets the name of the widget.
         /// </summary>
         public string Name { get; protected set; }
+
         /// <summary>
-        /// Gets or sets the recommended time interval update.
+        ///     Gets or sets the recommended time interval update.
         /// </summary>
         public TimeSpan? RecommendedTimeIntervalUpdate { get; protected set; }
+
         /// <summary>
-        /// Gets or sets the sequence used to order the widgets in the UI.
+        ///     Gets or sets the sequence used to order the widgets in the UI.
         /// </summary>
         public int Sequence { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the tool tip.
-        /// </summary>
-        public string ToolTip
-        {
-            get { return this.doNotUseToolTip; }
-            protected set
-            {
-                this.doNotUseToolTip = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Widget"/> is visibile. Ie: Has the user opted to hide this widget.
-        /// </summary>
-        public bool Visibility
-        {
-            get { return this.doNotUseVisibility; }
-            set
-            {
-                this.doNotUseVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the widget style name.
-        /// </summary>
-        public string WidgetStyle
-        {
-            get { return this.doNotUseWidgetStyle; }
-            protected set
-            {
-                bool changed = value != this.doNotUseWidgetStyle;
-                this.doNotUseWidgetStyle = value;
-                OnPropertyChanged();
-                if (changed)
-                {
-                    WidgetStyleChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the relative widget size.
+        ///     Gets or sets the relative widget size.
         /// </summary>
         protected WidgetSize Size
         {
@@ -255,24 +205,79 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Updates the widget with new input.
+        ///     Gets or sets the tool tip.
         /// </summary>
-        public abstract void Update(params object[] input);
+        public string ToolTip
+        {
+            get { return this.doNotUseToolTip; }
+            protected set
+            {
+                this.doNotUseToolTip = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
-        /// Called when a property has changed.
+        ///     Gets or sets a value indicating whether this <see cref="Widget" /> is visibile. Ie: Has the user opted to hide this
+        ///     widget.
+        /// </summary>
+        public bool Visibility
+        {
+            get { return this.doNotUseVisibility; }
+            set
+            {
+                this.doNotUseVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the widget style name.
+        /// </summary>
+        public string WidgetStyle
+        {
+            get { return this.doNotUseWidgetStyle; }
+            protected set
+            {
+                var changed = value != this.doNotUseWidgetStyle;
+                this.doNotUseWidgetStyle = value;
+                OnPropertyChanged();
+                if (changed)
+                {
+                    WidgetStyleChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Occurs when the colour style has changed.
+        /// </summary>
+        public event EventHandler ColourStyleChanged;
+
+        /// <summary>
+        ///     Called when a property has changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
-        /// Validates the updated input to ensure it is compliant with this widget dependency requirements.
-        /// Called from <see cref="Update"/>
+        ///     Updates the widget with new input.
+        /// </summary>
+        public abstract void Update(params object[] input);
+
+        /// <summary>
+        ///     Validates the updated input to ensure it is compliant with this widget dependency requirements.
+        ///     Called from <see cref="Update" />
         /// </summary>
         protected bool ValidateUpdateInput(object[] input)
         {
@@ -281,16 +286,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 return false;
             }
 
-            List<Type> dependencies = Dependencies.ToList();
+            var dependencies = Dependencies.ToList();
             if (dependencies.Count() > input.Length)
             {
                 return false;
             }
 
             int index = 0, nullCount = 0;
-            foreach (Type dependencyType in Dependencies)
+            foreach (var dependencyType in Dependencies)
             {
-                object dependencyInstance = input[index++];
+                var dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.
@@ -311,5 +316,10 @@ namespace BudgetAnalyser.Engine.Widgets
 
             return true;
         }
+
+        /// <summary>
+        ///     Occurs when the widget style has changed.
+        /// </summary>
+        public event EventHandler WidgetStyleChanged;
     }
 }

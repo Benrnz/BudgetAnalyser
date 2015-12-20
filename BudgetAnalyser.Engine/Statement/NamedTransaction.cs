@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Engine.Statement
         private readonly string name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NamedTransaction"/> class.
+        ///     Initializes a new instance of the <see cref="NamedTransaction" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -24,13 +24,13 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.name = name;
-            
+
             // TODO remove Sign
             // Sign = sign;
         }
 
         /// <summary>
-        /// Gets the transaction type name.
+        ///     Gets the transaction type name.
         /// </summary>
         public override string Name => this.name;
 
@@ -40,10 +40,10 @@ namespace BudgetAnalyser.Engine.Statement
         //public decimal Sign { get; private set; }
 
         /// <summary>
-        /// Returns a hash code for this instance.
+        ///     Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

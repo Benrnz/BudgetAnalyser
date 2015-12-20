@@ -9,14 +9,16 @@ namespace BudgetAnalyser.Engine.Reports
     public class CustomAggregateBurnDownGraph
     {
         /// <summary>
-        /// Gets or sets the bucket codes.
+        ///     Gets or sets the bucket codes.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+            Justification = "Required for serialisation")]
         public List<string> BucketIds { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
     }

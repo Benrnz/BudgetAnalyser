@@ -8,23 +8,27 @@ namespace BudgetAnalyser.Engine.Statement.Data
     public class TransactionDto
     {
         /// <summary>
-        /// Gets or sets the account code.
+        ///     Gets or sets the account code.
         /// </summary>
         public string Account { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction amount, debits are negative.
+        ///     Gets or sets the transaction amount, debits are negative.
         /// </summary>
         public decimal Amount { get; set; }
+
         /// <summary>
-        /// Gets or sets the budget bucket code.
+        ///     Gets or sets the budget bucket code.
         /// </summary>
         public string BudgetBucketCode { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction date.
+        ///     Gets or sets the transaction date.
         /// </summary>
         public DateTime Date { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction description.
+        ///     Gets or sets the transaction description.
         /// </summary>
         public string Description { get; set; }
 
@@ -35,19 +39,22 @@ namespace BudgetAnalyser.Engine.Statement.Data
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the transaction reference1.
+        ///     Gets or sets the transaction reference1.
         /// </summary>
         public string Reference1 { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction reference2.
+        ///     Gets or sets the transaction reference2.
         /// </summary>
         public string Reference2 { get; set; }
+
         /// <summary>
-        /// Gets or sets the transaction reference3.
+        ///     Gets or sets the transaction reference3.
         /// </summary>
         public string Reference3 { get; set; }
+
         /// <summary>
-        /// Gets or sets the type code of the transaction.
+        ///     Gets or sets the type code of the transaction.
         /// </summary>
         public string TransactionType { get; set; }
     }

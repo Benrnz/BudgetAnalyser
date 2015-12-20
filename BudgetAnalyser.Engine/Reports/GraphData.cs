@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.Reports
     public class GraphData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GraphData"/> class.
+        ///     Initializes a new instance of the <see cref="GraphData" /> class.
         /// </summary>
         public GraphData()
         {

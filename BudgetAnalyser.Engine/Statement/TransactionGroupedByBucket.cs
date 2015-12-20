@@ -10,19 +10,20 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Statement
 {
     /// <summary>
-    ///     A set of grouped <see cref="Transaction"/>s with aggregated summary information.
+    ///     A set of grouped <see cref="Transaction" />s with aggregated summary information.
     /// </summary>
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class TransactionGroupedByBucket : INotifyPropertyChanged
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionGroupedByBucket"/> class.
+        ///     Initializes a new instance of the <see cref="TransactionGroupedByBucket" /> class.
         /// </summary>
         /// <param name="transactions">The transactions.</param>
         /// <param name="groupByThisBucket">The group by this bucket.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public TransactionGroupedByBucket([NotNull] IEnumerable<Transaction> transactions, [NotNull] BudgetBucket groupByThisBucket)
+        public TransactionGroupedByBucket([NotNull] IEnumerable<Transaction> transactions,
+            [NotNull] BudgetBucket groupByThisBucket)
         {
             if (transactions == null)
             {
@@ -35,16 +36,13 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             Bucket = groupByThisBucket;
-            Transactions = new ObservableCollection<Transaction>(transactions.Where(t => t.BudgetBucket == groupByThisBucket).OrderBy(t => t.Date));
+            Transactions =
+                new ObservableCollection<Transaction>(
+                    transactions.Where(t => t.BudgetBucket == groupByThisBucket).OrderBy(t => t.Date));
         }
 
         /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Gets the average debit amount.
+        ///     Gets the average debit amount.
         /// </summary>
         public decimal AverageDebit
         {
@@ -66,24 +64,27 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the bucket the transactions are grouped by.
+        ///     Gets the bucket the transactions are grouped by.
         /// </summary>
         public BudgetBucket Bucket { get; private set; }
+
         /// <summary>
-        /// Gets a value indicating whether this group has any transactions.
+        ///     Gets a value indicating whether this group has any transactions.
         /// </summary>
         public bool HasTransactions => Transactions != null && Transactions.Any();
+
         /// <summary>
-        /// Gets the latest transaction date.
+        ///     Gets the latest transaction date.
         /// </summary>
         public DateTime MaxTransactionDate => Transactions.Max(t => t.Date);
+
         /// <summary>
-        /// Gets the earliest transaction date.
+        ///     Gets the earliest transaction date.
         /// </summary>
         public DateTime MinTransactionDate => Transactions.Min(t => t.Date);
 
         /// <summary>
-        /// Gets the total count of transations in the group.
+        ///     Gets the total count of transations in the group.
         /// </summary>
         public decimal TotalCount
         {
@@ -99,7 +100,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the total credits of all transactions in the group.
+        ///     Gets the total credits of all transactions in the group.
         /// </summary>
         public decimal TotalCredits
         {
@@ -115,7 +116,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the total debits of all transactions in the group.
+        ///     Gets the total debits of all transactions in the group.
         /// </summary>
         public decimal TotalDebits
         {
@@ -131,16 +132,33 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the total difference between all credits and debits.
+        ///     Gets the total difference between all credits and debits.
         /// </summary>
         public decimal TotalDifference => TotalCredits + TotalDebits;
+
         /// <summary>
-        /// Gets the grouped transactions.
+        ///     Gets the grouped transactions.
         /// </summary>
         public ObservableCollection<Transaction> Transactions { get; }
 
         /// <summary>
-        /// Triggers a refresh of the totals row.
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Called when a property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        ///     Triggers a refresh of the totals row.
         /// </summary>
         public void TriggerRefreshTotalsRow()
         {
@@ -152,17 +170,6 @@ namespace BudgetAnalyser.Engine.Statement
             OnPropertyChanged(nameof(HasTransactions));
             OnPropertyChanged(nameof(MinTransactionDate));
             OnPropertyChanged(nameof(MaxTransactionDate));
-        }
-
-        /// <summary>
-        /// Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

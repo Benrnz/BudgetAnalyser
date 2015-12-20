@@ -17,13 +17,14 @@ namespace BudgetAnalyser.Engine.Widgets
         IUserDefinedWidget Create(string widgetType, string id);
 
         /// <summary>
-        /// Gets all the available widgets.
+        ///     Gets all the available widgets.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Prefered term in repository")]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Prefered term in repository")]
         IEnumerable<Widget> GetAll();
 
         /// <summary>
-        /// Removes the specified widget.
+        ///     Removes the specified widget.
         /// </summary>
         void Remove(IUserDefinedWidget widget);
     }

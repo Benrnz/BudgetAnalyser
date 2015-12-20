@@ -22,13 +22,13 @@ namespace BudgetAnalyser.Engine.Widgets
             Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[]
             {
-                typeof(StatementModel),
-                typeof(BudgetCollection),
-                typeof(IBudgetCurrencyContext),
-                typeof(LedgerBook),
-                typeof(IBudgetBucketRepository),
-                typeof(GlobalFilterCriteria),
-                typeof(LedgerCalculation)
+                typeof (StatementModel),
+                typeof (BudgetCollection),
+                typeof (IBudgetCurrencyContext),
+                typeof (LedgerBook),
+                typeof (IBudgetBucketRepository),
+                typeof (GlobalFilterCriteria),
+                typeof (LedgerCalculation)
             };
             RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(10);
             DetailedText = "Refresh Count";
@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Updates the widget with new input.
+        ///     Updates the widget with new input.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)

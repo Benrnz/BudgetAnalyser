@@ -9,34 +9,40 @@ namespace BudgetAnalyser.Engine.Widgets
     public class WidgetGroup
     {
         /// <summary>
-        /// A constant for the global filter section name
+        ///     A constant for the global filter section name
         /// </summary>
         public const string GlobalFilterSectionName = "Global Filter";
+
         /// <summary>
-        /// A constant for the monthly tracking section name
+        ///     A constant for the monthly tracking section name
         /// </summary>
         public const string MonthlyTrackingSectionName = "Monthly Tracking";
+
         /// <summary>
-        /// A constant for the overview section name
+        ///     A constant for the overview section name
         /// </summary>
         public const string OverviewSectionName = "Overview";
+
         /// <summary>
-        /// A constant for the projects section name
+        ///     A constant for the projects section name
         /// </summary>
         public const string ProjectsSectionName = "Projects";
+
         /// <summary>
-        /// Gets or sets the group heading.
+        ///     Gets or sets the group heading.
         /// </summary>
         public string Heading { get; set; }
+
         /// <summary>
-        /// Gets or sets the sequence.
+        ///     Gets or sets the sequence.
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        /// Gets or sets the widgets in this group.
+        ///     Gets or sets the widgets in this group.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for UI Binding.")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "Required for UI Binding.")]
         public ObservableCollection<Widget> Widgets { get; set; }
     }
 }

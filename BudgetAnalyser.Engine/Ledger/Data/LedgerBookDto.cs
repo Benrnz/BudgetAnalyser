@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class LedgerBookDto
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedgerBookDto"/> class.
+        ///     Initializes a new instance of the <see cref="LedgerBookDto" /> class.
         /// </summary>
         public LedgerBookDto()
         {
@@ -27,30 +27,35 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// <summary>
         ///     The ledger to Bucket mapping for when a new reconciliation creates a new instances of LedgerEntry's.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member", Target = "BudgetAnalyser.Engine.Ledger.Data.LedgerBookDto.#Ledgers",
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member",
+            Target = "BudgetAnalyser.Engine.Ledger.Data.LedgerBookDto.#Ledgers",
             Justification = "Required for serialisation")]
         [UsedImplicitly]
         public List<LedgerBucketDto> Ledgers { get; set; }
 
         /// <summary>
-        /// Gets or sets the last modified date.
+        ///     Gets or sets the last modified date.
         /// </summary>
         public DateTime Modified { get; set; }
+
         /// <summary>
-        /// Gets or sets the ledger book name.
+        ///     Gets or sets the ledger book name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the reconciliations collection.
+        ///     Gets or sets the reconciliations collection.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+            Justification = "Required for serialisation")]
         public List<LedgerEntryLineDto> Reconciliations { get; set; }
 
         /// <summary>
-        /// Gets or sets the storage key.
+        ///     Gets or sets the storage key.
         /// </summary>
         public string StorageKey { get; set; }
     }

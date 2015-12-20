@@ -13,22 +13,25 @@ namespace BudgetAnalyser.Engine.Statement
     public interface IVersionedStatementModelRepository
     {
         /// <summary>
-        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />. Any
+        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />.
+        ///     Any
         ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
         ///     to load the new <see cref="StatementModel" />.
         /// </summary>
         Task CreateNewAndSaveAsync([NotNull] string storageKey);
 
         /// <summary>
-        /// Determines whether the provided <paramref name="storageKey"/> is refering to a statement model.
+        ///     Determines whether the provided <paramref name="storageKey" /> is refering to a statement model.
         /// </summary>
         Task<bool> IsStatementModelAsync([NotNull] string storageKey);
+
         /// <summary>
-        /// Loads the <see cref="StatementModel"/>.
+        ///     Loads the <see cref="StatementModel" />.
         /// </summary>
         Task<StatementModel> LoadAsync([NotNull] string storageKey);
+
         /// <summary>
-        /// Saves the <see cref="StatementModel"/>.
+        ///     Saves the <see cref="StatementModel" />.
         /// </summary>
         Task SaveAsync([NotNull] StatementModel model, [NotNull] string storageKey);
     }

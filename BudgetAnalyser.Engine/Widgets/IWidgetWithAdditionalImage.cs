@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Widgets
     public interface IWidgetWithAdditionalImage : INotifyPropertyChanged
     {
         /// <summary>
-        /// Gets or sets the secondary image resource name.
+        ///     Gets or sets the secondary image resource name.
         /// </summary>
         [UsedImplicitly]
         string ImageResourceName2 { get; set; }

@@ -3,7 +3,8 @@
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     A Ledger transactions that represents a credit value with a positive number and debit values with a negative number.
+    ///     A Ledger transactions that represents a credit value with a positive number and debit values with a negative
+    ///     number.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerTransaction" />
     public class CreditLedgerTransaction : LedgerTransaction

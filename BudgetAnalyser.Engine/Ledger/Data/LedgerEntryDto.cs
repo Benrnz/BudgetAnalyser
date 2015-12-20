@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     public class LedgerEntryDto
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LedgerEntryDto"/> class.
+        ///     Initializes a new instance of the <see cref="LedgerEntryDto" /> class.
         /// </summary>
         public LedgerEntryDto()
         {
@@ -35,10 +35,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         public string StoredInAccount { get; [UsedImplicitly] set; }
 
         /// <summary>
-        /// Gets or sets the transactions.
+        ///     Gets or sets the transactions.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+            Justification = "Required for serialisation")]
         public List<LedgerTransactionDto> Transactions { get; set; }
     }
 }

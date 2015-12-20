@@ -17,7 +17,9 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class LedgerEntryLine
     {
-        private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments = new List<BankBalanceAdjustmentTransaction>();
+        private List<BankBalanceAdjustmentTransaction> bankBalanceAdjustments =
+            new List<BankBalanceAdjustmentTransaction>();
+
         private List<BankBalance> bankBalancesList;
         private List<LedgerEntry> entries = new List<LedgerEntry>();
 
@@ -50,7 +52,8 @@ namespace BudgetAnalyser.Engine.Ledger
             this.bankBalancesList = bankBalances.ToList();
             if (this.bankBalancesList.None())
             {
-                throw new ArgumentException("There are no bank balances in the collection provided.", nameof(bankBalances));
+                throw new ArgumentException("There are no bank balances in the collection provided.",
+                    nameof(bankBalances));
             }
         }
 
@@ -94,7 +97,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public DateTime Date { get; internal set; }
 
         /// <summary>
-        /// Gets the entries for all the Ledger Buckets.
+        ///     Gets the entries for all the Ledger Buckets.
         /// </summary>
         public IEnumerable<LedgerEntry> Entries
         {
@@ -103,12 +106,21 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
+        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
+        ///     loading from file.
+        ///     This variable is intentionally not persisted.
+        ///     AutoMapper always sets this to false.
+        ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
+        /// </summary>
+        internal bool IsNew { get; private set; }
+
+        /// <summary>
         ///     Gets the grand total ledger balance. This includes a total of all accounts and all balance adjustments.
         /// </summary>
         public decimal LedgerBalance => TotalBankBalance + TotalBalanceAdjustments;
 
         /// <summary>
-        /// Gets the user remarks for this reconciliation.
+        ///     Gets the user remarks for this reconciliation.
         /// </summary>
         public string Remarks { get; internal set; }
 
@@ -120,16 +132,22 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             get
             {
-                IEnumerable<BankBalance> adjustedBalances = BankBalances.Select(b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
-                IEnumerable<BankBalance> results = Entries.GroupBy(
+                var adjustedBalances =
+                    BankBalances.Select(
+                        b => new BankBalance(b.Account, b.Balance + TotalBankBalanceAdjustmentForAccount(b.Account)));
+                var results = Entries.GroupBy(
                     e => e.LedgerBucket.StoredInAccount,
                     (accountType, ledgerEntries) => new BankBalance(accountType, ledgerEntries.Sum(e => e.Balance)));
-                return adjustedBalances.Select(a => new BankBalance(a.Account, a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
+                return
+                    adjustedBalances.Select(
+                        a =>
+                            new BankBalance(a.Account,
+                                a.Balance - results.Where(r => r.Account == a.Account).Sum(r => r.Balance)));
             }
         }
 
         /// <summary>
-        /// Gets the calculated total balance adjustments.
+        ///     Gets the calculated total balance adjustments.
         /// </summary>
         public decimal TotalBalanceAdjustments => BankBalanceAdjustments.Sum(a => a.Amount);
 
@@ -138,20 +156,13 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal TotalBankBalance => this.bankBalancesList.Sum(b => b.Balance);
 
-        /// <summary>
-        ///     A variable to keep track if this is a newly created entry for a new reconciliation as opposed to creation from
-        ///     loading from file.
-        ///     This variable is intentionally not persisted.
-        ///     AutoMapper always sets this to false.
-        ///     When a LedgerBook is saved the whole book is reloaded which will set this to false.
-        /// </summary>
-        internal bool IsNew { get; private set; }
-
-        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative, Account account)
+        internal BankBalanceAdjustmentTransaction BalanceAdjustment(decimal adjustment, string narrative,
+            Account account)
         {
             if (!IsNew)
             {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException(
+                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             if (adjustment == 0)
@@ -159,7 +170,12 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("The balance adjustment amount cannot be zero.", nameof(adjustment));
             }
 
-            var newAdjustment = new BankBalanceAdjustmentTransaction { Narrative = narrative, Amount = adjustment, BankAccount = account };
+            var newAdjustment = new BankBalanceAdjustmentTransaction
+            {
+                Narrative = narrative,
+                Amount = adjustment,
+                BankAccount = account
+            };
 
             this.bankBalanceAdjustments.Add(newAdjustment);
             return newAdjustment;
@@ -169,14 +185,33 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!IsNew)
             {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException(
+                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            BankBalanceAdjustmentTransaction txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
+            var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.bankBalanceAdjustments.Remove(txn);
             }
+        }
+
+        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine,
+            [NotNull] LedgerBucket ledgerBucket)
+        {
+            if (ledgerBucket == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBucket));
+            }
+
+            if (previousLine == null)
+            {
+                return 0;
+            }
+
+            var previousEntry =
+                previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
+            return previousEntry?.Balance ?? 0;
         }
 
         /// <summary>
@@ -188,10 +223,15 @@ namespace BudgetAnalyser.Engine.Ledger
             Entries = ledgerEntries.ToList();
         }
 
+        private decimal TotalBankBalanceAdjustmentForAccount(Account account)
+        {
+            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
+        }
+
         internal void Unlock()
         {
             IsNew = true;
-            foreach (LedgerEntry entry in Entries)
+            foreach (var entry in Entries)
             {
                 entry.Unlock();
             }
@@ -219,48 +259,31 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (Entries.None())
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                    "The Ledger Entry does not contain any entries, either delete it or add entries.");
                 result = false;
             }
 
-            decimal totalLedgers = Entries.Sum(e => e.Balance);
+            var totalLedgers = Entries.Sum(e => e.Balance);
             if (totalLedgers + CalculatedSurplus - LedgerBalance != 0)
             {
                 result = false;
                 validationMessages.Append("All ledgers + surplus + balance adjustments does not equal balance.");
             }
 
-            foreach (LedgerEntry ledgerEntry in Entries)
+            foreach (var ledgerEntry in Entries)
             {
-                if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
+                if (
+                    !ledgerEntry.Validate(validationMessages,
+                        FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
-                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                        "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
                     result = false;
                 }
             }
 
             return result;
-        }
-
-        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine, [NotNull] LedgerBucket ledgerBucket)
-        {
-            if (ledgerBucket == null)
-            {
-                throw new ArgumentNullException(nameof(ledgerBucket));
-            }
-
-            if (previousLine == null)
-            {
-                return 0;
-            }
-
-            LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
-            return previousEntry?.Balance ?? 0;
-        }
-
-        private decimal TotalBankBalanceAdjustmentForAccount(Account account)
-        {
-            return BankBalanceAdjustments.Where(a => a.BankAccount == account).Sum(a => a.Amount);
         }
     }
 }

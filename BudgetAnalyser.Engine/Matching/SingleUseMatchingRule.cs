@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Matching
     public class SingleUseMatchingRule : MatchingRule
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SingleUseMatchingRule"/> class.
+        ///     Initializes a new instance of the <see cref="SingleUseMatchingRule" /> class.
         /// </summary>
         /// <param name="bucketRepository">The bucket repository.</param>
         public SingleUseMatchingRule([NotNull] IBudgetBucketRepository bucketRepository) : base(bucketRepository)

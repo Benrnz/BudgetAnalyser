@@ -30,37 +30,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
-        {
-            if (recon == null)
-            {
-                return new List<LedgerTransaction>();
-            }
-            return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
-        }
-
-        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)
-        {
-            if (ledgerEntry == null)
-            {
-                return new List<LedgerTransaction>();
-            }
-            if (includeMatchedTransactions)
-            {
-                return ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
-            }
-
-            return ledgerEntry.Transactions.Where(t => t.AutoMatchingReference.IsSomething() && !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
-        }
-
-        public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
-        {
-            return
-                ledgerTransactions.Any(
-                    l => l.AutoMatchingReference == statementTransaction.Reference1 || l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
-        }
-
-        public ReconciliationResult CreateNewMonthlyReconciliation(DateTime reconciliationDateExclusive, BudgetModel budget, StatementModel statement, params BankBalance[] bankBalances)
+        public ReconciliationResult CreateNewMonthlyReconciliation(DateTime reconciliationDateExclusive,
+            BudgetModel budget, StatementModel statement, params BankBalance[] bankBalances)
         {
             if (bankBalances == null)
             {
@@ -79,7 +50,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (LedgerBook == null)
             {
-                throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");
+                throw new ArgumentException(
+                    "The Ledger Book property cannot be null. You must set this prior to calling this method.");
             }
 
             try
@@ -89,7 +61,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
                 CreateToDoForAnyOverdrawnSurplusBalance();
 
-                return new ReconciliationResult { Reconciliation = this.newReconciliationLine, Tasks = this.toDoList };
+                return new ReconciliationResult {Reconciliation = this.newReconciliationLine, Tasks = this.toDoList};
             }
             finally
             {
@@ -97,123 +69,14 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        /// <summary>
-        ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
-        ///     between the start date and the reconciliation date specified (today or pay day). The start date should start from
-        ///     the previous ledger entry line or
-        ///     one month prior if no records exist.
-        /// </summary>
-        /// <param name="ledgerBook">The Ledger Book to find the date for</param>
-        /// <param name="reconciliationDate">The chosen reconciliation date from the user</param>
-        internal static DateTime CalculateDateForReconcile(LedgerBook ledgerBook, DateTime reconciliationDate)
-        {
-            if (ledgerBook.Reconciliations.Any())
-            {
-                return ledgerBook.Reconciliations.First().Date;
-            }
-
-            DateTime startDateIncl = reconciliationDate.AddMonths(-1);
-            return startDateIncl;
-        }
-
-        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
-        {
-            IOrderedEnumerable<Transaction> txns = transactions.Where(
-                t =>
-                    t.Reference1.TrimEndSafely() == autoMatchingReference
-                    || t.Reference2.TrimEndSafely() == autoMatchingReference
-                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
-                .OrderBy(t => t.Amount);
-            return txns;
-        }
-
-        private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
-        {
-            var ledgersAndBalances = new List<LedgerEntry>();
-            LedgerEntryLine previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
-            if (previousLine == null)
-            {
-                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry { Balance = 0, LedgerBucket = ledger });
-            }
-
-            foreach (LedgerBucket ledger in parentLedgerBook.Ledgers)
-            {
-                // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
-                LedgerEntry previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
-
-                // Its important to use the ledger column value from the book level map, not from the previous entry. The user
-                // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
-                if (previousEntry == null)
-                {
-                    // Indicates a new ledger column has been added to the book starting this month.
-                    ledgersAndBalances.Add(new LedgerEntry { Balance = 0, LedgerBucket = ledger });
-                }
-                else
-                {
-                    ledgersAndBalances.Add(previousEntry);
-                }
-            }
-
-            return ledgersAndBalances;
-        }
-
-        private static string ExtractNarrative(Transaction t)
-        {
-            if (!string.IsNullOrWhiteSpace(t.Description))
-            {
-                return t.Description;
-            }
-
-            if (t.TransactionType != null)
-            {
-                return t.TransactionType.ToString();
-            }
-
-            return string.Empty;
-        }
-
-        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
-        {
-            if (filteredStatementTransactions.None())
-            {
-                return new List<LedgerTransaction>();
-            }
-
-            List<Transaction> transactions = filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
-            if (transactions.Any())
-            {
-                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
-                    t =>
-                    {
-                        if (t.Amount < 0)
-                        {
-                            return new CreditLedgerTransaction(t.Id)
-                            {
-                                Amount = t.Amount,
-                                Narrative = ExtractNarrative(t),
-                                Date = t.Date
-                            };
-                        }
-
-                        return new CreditLedgerTransaction(t.Id)
-                        {
-                            Amount = t.Amount,
-                            Narrative = ExtractNarrative(t),
-                            Date = t.Date
-                        };
-                    });
-
-                return newLedgerTransactions.ToList();
-            }
-
-            return new List<LedgerTransaction>();
-        }
-
         private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
         {
             var adjustmentsMade = false;
-            foreach (Transaction futureTransaction in statement.AllTransactions
-                .Where(t => t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate && !(t.BudgetBucket is PayCreditCardBucket)))
+            foreach (var futureTransaction in statement.AllTransactions
+                .Where(
+                    t =>
+                        t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate &&
+                        !(t.BudgetBucket is PayCreditCardBucket)))
             {
                 adjustmentsMade = true;
                 this.newReconciliationLine.BalanceAdjustment(
@@ -247,24 +110,27 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (!this.newReconciliationLine.IsNew)
             {
-                throw new InvalidOperationException("Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
+                throw new InvalidOperationException(
+                    "Cannot add a new entry to an existing Ledger Line, only new Ledger Lines can have new entries added.");
             }
 
-            DateTime reconciliationDate = this.newReconciliationLine.Date;
+            var reconciliationDate = this.newReconciliationLine.Date;
             // Date filter must include the start date, which goes back to and includes the previous ledger date up to the date of this ledger line, but excludes this ledger date.
             // For example if this is a reconciliation for the 20/Feb then the start date is 20/Jan and the finish date is 20/Feb. So transactions pulled from statement are between
             // 20/Jan (inclusive) and 19/Feb (inclusive).
-            List<Transaction> filteredStatementTransactions = statement?.AllTransactions.Where(t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList()
-                                                              ?? new List<Transaction>();
+            var filteredStatementTransactions = statement?.AllTransactions.Where(
+                t => t.Date >= startDateIncl && t.Date < reconciliationDate).ToList()
+                                                ?? new List<Transaction>();
 
-            IEnumerable<LedgerEntry> previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
+            var previousLedgerBalances = CompileLedgersAndBalances(LedgerBook);
 
             var entries = new List<LedgerEntry>();
-            foreach (LedgerEntry previousLedgerEntry in previousLedgerBalances)
+            foreach (var previousLedgerEntry in previousLedgerBalances)
             {
                 LedgerBucket ledgerBucket;
-                decimal openingBalance = previousLedgerEntry.Balance;
-                LedgerBucket currentLedger = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                var openingBalance = previousLedgerEntry.Balance;
+                var currentLedger =
+                    LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
                 if (previousLedgerEntry.LedgerBucket.StoredInAccount != currentLedger.StoredInAccount)
                 {
                     // Check to see if a ledger has been moved into a new default account since last reconciliation.
@@ -275,10 +141,11 @@ namespace BudgetAnalyser.Engine.Ledger
                     ledgerBucket = previousLedgerEntry.LedgerBucket;
                 }
 
-                var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
-                List<LedgerTransaction> transactions = IncludeBudgetedAmount(budget, ledgerBucket, reconciliationDate);
+                var newEntry = new LedgerEntry(true) {Balance = openingBalance, LedgerBucket = ledgerBucket};
+                var transactions = IncludeBudgetedAmount(budget, ledgerBucket, reconciliationDate);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
+                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry,
+                    transactions);
                 newEntry.SetTransactionsForReconciliation(transactions, reconciliationDate);
 
                 entries.Add(newEntry);
@@ -303,10 +170,10 @@ namespace BudgetAnalyser.Engine.Ledger
             LedgerEntry previousLedgerEntry,
             List<LedgerTransaction> newLedgerTransactions)
         {
-            List<LedgerTransaction> ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
+            var ledgerAutoMatchTransactions = FindAutoMatchingTransactions(previousLedgerEntry).ToList();
             var checkMatchedTxns = new List<LedgerTransaction>();
             var checkMatchCount = 0;
-            foreach (LedgerTransaction lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
+            foreach (var lastMonthLedgerTransaction in ledgerAutoMatchTransactions)
             {
                 this.logger.LogInfo(
                     l =>
@@ -315,23 +182,34 @@ namespace BudgetAnalyser.Engine.Ledger
                             ledgerAutoMatchTransactions.Count(),
                             previousLedgerEntry.LedgerBucket.BudgetBucket.Code));
 
-                LedgerTransaction ledgerTxn = lastMonthLedgerTransaction;
-                foreach (Transaction matchingStatementTransaction in TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
+                var ledgerTxn = lastMonthLedgerTransaction;
+                foreach (
+                    var matchingStatementTransaction in
+                        TransactionsToAutoMatch(transactions, lastMonthLedgerTransaction.AutoMatchingReference))
                 {
-                    this.logger.LogInfo(l => l.Format("Ledger Reconciliation - AutoMatching - Matched {0} ==> {1}", ledgerTxn, matchingStatementTransaction));
+                    this.logger.LogInfo(
+                        l =>
+                            l.Format("Ledger Reconciliation - AutoMatching - Matched {0} ==> {1}", ledgerTxn,
+                                matchingStatementTransaction));
                     ledgerTxn.Id = matchingStatementTransaction.Id;
                     if (!ledgerTxn.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal))
                     {
                         // There will be two statement transactions but only one ledger transaction to match to.
                         checkMatchCount++;
-                        ledgerTxn.AutoMatchingReference = string.Format(CultureInfo.InvariantCulture, "{0}{1}", MatchedPrefix, ledgerTxn.AutoMatchingReference);
+                        ledgerTxn.AutoMatchingReference = string.Format(CultureInfo.InvariantCulture, "{0}{1}",
+                            MatchedPrefix, ledgerTxn.AutoMatchingReference);
                         checkMatchedTxns.Add(ledgerTxn);
                     }
 
-                    LedgerTransaction duplicateTransaction = newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
+                    var duplicateTransaction =
+                        newLedgerTransactions.FirstOrDefault(t => t.Id == matchingStatementTransaction.Id);
                     if (duplicateTransaction != null)
                     {
-                        this.logger.LogInfo(l => l.Format("Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}", duplicateTransaction));
+                        this.logger.LogInfo(
+                            l =>
+                                l.Format(
+                                    "Ledger Reconciliation - Removing Duplicate Ledger transaction after auto-matching: {0}",
+                                    duplicateTransaction));
                         newLedgerTransactions.Remove(duplicateTransaction);
                     }
                 }
@@ -345,8 +223,8 @@ namespace BudgetAnalyser.Engine.Ledger
                             "Ledger Reconciliation - WARNING {0} ledger transactions appear to be waiting to be automatched, but not statement transactions were found. {1}",
                             ledgerAutoMatchTransactions.Count(),
                             ledgerAutoMatchTransactions.First().AutoMatchingReference));
-                IEnumerable<LedgerTransaction> unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
-                foreach (LedgerTransaction txn in unmatchedTxns)
+                var unmatchedTxns = ledgerAutoMatchTransactions.Except(checkMatchedTxns);
+                foreach (var txn in unmatchedTxns)
                 {
                     this.toDoList.Add(
                         new ToDoTask(
@@ -362,10 +240,60 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        /// <summary>
+        ///     When creating a new reconciliation a start date is required to be able to search a statement for transactions
+        ///     between the start date and the reconciliation date specified (today or pay day). The start date should start from
+        ///     the previous ledger entry line or
+        ///     one month prior if no records exist.
+        /// </summary>
+        /// <param name="ledgerBook">The Ledger Book to find the date for</param>
+        /// <param name="reconciliationDate">The chosen reconciliation date from the user</param>
+        internal static DateTime CalculateDateForReconcile(LedgerBook ledgerBook, DateTime reconciliationDate)
+        {
+            if (ledgerBook.Reconciliations.Any())
+            {
+                return ledgerBook.Reconciliations.First().Date;
+            }
+
+            var startDateIncl = reconciliationDate.AddMonths(-1);
+            return startDateIncl;
+        }
+
+        private static IEnumerable<LedgerEntry> CompileLedgersAndBalances(LedgerBook parentLedgerBook)
+        {
+            var ledgersAndBalances = new List<LedgerEntry>();
+            var previousLine = parentLedgerBook.Reconciliations.FirstOrDefault();
+            if (previousLine == null)
+            {
+                return parentLedgerBook.Ledgers.Select(ledger => new LedgerEntry {Balance = 0, LedgerBucket = ledger});
+            }
+
+            foreach (var ledger in parentLedgerBook.Ledgers)
+            {
+                // Ledger Columns from a previous are not necessarily equal if the StoredInAccount has changed.
+                var previousEntry =
+                    previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledger.BudgetBucket);
+
+                // Its important to use the ledger column value from the book level map, not from the previous entry. The user
+                // could have moved the ledger to a different account and so, the ledger column value in the book level map will be different.
+                if (previousEntry == null)
+                {
+                    // Indicates a new ledger column has been added to the book starting this month.
+                    ledgersAndBalances.Add(new LedgerEntry {Balance = 0, LedgerBucket = ledger});
+                }
+                else
+                {
+                    ledgersAndBalances.Add(previousEntry);
+                }
+            }
+
+            return ledgersAndBalances;
+        }
+
         private void CreateBalanceAdjustmentTasksIfRequired()
         {
-            List<TransferTask> transferTasks = this.toDoList.OfType<TransferTask>().ToList();
-            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
+            var transferTasks = this.toDoList.OfType<TransferTask>().ToList();
+            foreach (var grouping in transferTasks.GroupBy(t => t.SourceAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -374,7 +302,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     grouping.Key);
             }
 
-            foreach (IGrouping<Account, TransferTask> grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
+            foreach (var grouping in transferTasks.GroupBy(t => t.DestinationAccount, tasks => tasks))
             {
                 // Rather than create a task, just do it
                 this.newReconciliationLine.BalanceAdjustment(
@@ -387,11 +315,12 @@ namespace BudgetAnalyser.Engine.Ledger
         private void CreateTasksToTransferFundsIfPaidFromDifferentAccount(IEnumerable<Transaction> transactions)
         {
             var syncRoot = new object();
-            Dictionary<BudgetBucket, Account> ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
+            var ledgerBuckets = this.newReconciliationLine.Entries.Select(e => e.LedgerBucket)
                 .Distinct()
                 .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
 
-            List<Transaction> debitAccountTransactionsOnly = transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+            var debitAccountTransactionsOnly =
+                transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
             // Amount < 0: This is because we are only interested in looking for debit transactions against a different account. These transactions will need to be transfered from the stored-in account.
             var proposedTasks = new List<Tuple<Transaction, TransferTask>>();
@@ -403,10 +332,10 @@ namespace BudgetAnalyser.Engine.Ledger
                     {
                         return;
                     }
-                    Account ledgerAccount = ledgerBuckets[t.BudgetBucket];
+                    var ledgerAccount = ledgerBuckets[t.BudgetBucket];
                     if (t.Account != ledgerAccount)
                     {
-                        string reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
+                        var reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
                         lock (syncRoot)
                         {
                             proposedTasks.Add(
@@ -426,11 +355,11 @@ namespace BudgetAnalyser.Engine.Ledger
                     }
                 });
             // Now check to ensure the detected transactions themselves are not one side of a journal style transfer.
-            foreach (Tuple<Transaction, TransferTask> tuple in proposedTasks)
+            foreach (var tuple in proposedTasks)
             {
-                Transaction suspectedPaymentTransaction = tuple.Item1;
-                TransferTask transferTask = tuple.Item2;
-                Transaction matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(
+                var suspectedPaymentTransaction = tuple.Item1;
+                var transferTask = tuple.Item2;
+                var matchingTransferTransaction = debitAccountTransactionsOnly.FirstOrDefault(
                     t => t.Amount == -suspectedPaymentTransaction.Amount
                          && t.Date == suspectedPaymentTransaction.Date
                          && t.BudgetBucket == suspectedPaymentTransaction.BudgetBucket
@@ -450,7 +379,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         private void CreateToDoForAnyOverdrawnSurplusBalance()
         {
-            foreach (BankBalance surplusBalance in this.newReconciliationLine.SurplusBalances.Where(s => s.Balance < 0))
+            foreach (var surplusBalance in this.newReconciliationLine.SurplusBalances.Where(s => s.Balance < 0))
             {
                 this.toDoList.Add(
                     new ToDoTask(
@@ -463,9 +392,55 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
+        private static string ExtractNarrative(Transaction t)
         {
-            Expense budgetedExpense = currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
+            if (!string.IsNullOrWhiteSpace(t.Description))
+            {
+                return t.Description;
+            }
+
+            if (t.TransactionType != null)
+            {
+                return t.TransactionType.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon,
+            bool includeMatchedTransactions = false)
+        {
+            if (recon == null)
+            {
+                return new List<LedgerTransaction>();
+            }
+            return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
+        }
+
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry,
+            bool includeMatchedTransactions = false)
+        {
+            if (ledgerEntry == null)
+            {
+                return new List<LedgerTransaction>();
+            }
+            if (includeMatchedTransactions)
+            {
+                return ledgerEntry.Transactions.Where(t => !string.IsNullOrWhiteSpace(t.AutoMatchingReference));
+            }
+
+            return
+                ledgerEntry.Transactions.Where(
+                    t =>
+                        t.AutoMatchingReference.IsSomething() &&
+                        !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
+        }
+
+        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket,
+            DateTime reconciliationDate)
+        {
+            var budgetedExpense =
+                currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
             var transactions = new List<LedgerTransaction>();
             if (budgetedExpense != null)
             {
@@ -475,7 +450,8 @@ namespace BudgetAnalyser.Engine.Ledger
                     budgetedAmount = new BudgetCreditLedgerTransaction
                     {
                         Amount = budgetedExpense.Bucket.Active ? budgetedExpense.Amount : 0,
-                        Narrative = budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
+                        Narrative =
+                            budgetedExpense.Bucket.Active ? "Budgeted Amount" : "Warning! Bucket has been disabled."
                     };
                 }
                 else
@@ -490,7 +466,8 @@ namespace BudgetAnalyser.Engine.Ledger
                         AutoMatchingReference = ReferenceNumberGenerator.IssueTransactionReferenceNumber()
                     };
                     // TODO Maybe the budget should know which account the incomes go into, perhaps mapped against each income?
-                    Account salaryAccount = this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
+                    var salaryAccount =
+                        this.newReconciliationLine.BankBalances.Single(b => b.Account.IsSalaryAccount).Account;
                     this.toDoList.Add(
                         new TransferTask(
                             string.Format(
@@ -515,6 +492,67 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return transactions;
+        }
+
+        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry,
+            ICollection<Transaction> filteredStatementTransactions)
+        {
+            if (filteredStatementTransactions.None())
+            {
+                return new List<LedgerTransaction>();
+            }
+
+            var transactions =
+                filteredStatementTransactions.Where(t => t.BudgetBucket == newEntry.LedgerBucket.BudgetBucket).ToList();
+            if (transactions.Any())
+            {
+                IEnumerable<LedgerTransaction> newLedgerTransactions = transactions.Select(
+                    t =>
+                    {
+                        if (t.Amount < 0)
+                        {
+                            return new CreditLedgerTransaction(t.Id)
+                            {
+                                Amount = t.Amount,
+                                Narrative = ExtractNarrative(t),
+                                Date = t.Date
+                            };
+                        }
+
+                        return new CreditLedgerTransaction(t.Id)
+                        {
+                            Amount = t.Amount,
+                            Narrative = ExtractNarrative(t),
+                            Date = t.Date
+                        };
+                    });
+
+                return newLedgerTransactions.ToList();
+            }
+
+            return new List<LedgerTransaction>();
+        }
+
+        public static bool IsAutoMatchingTransaction(Transaction statementTransaction,
+            IEnumerable<LedgerTransaction> ledgerTransactions)
+        {
+            return
+                ledgerTransactions.Any(
+                    l =>
+                        l.AutoMatchingReference == statementTransaction.Reference1 ||
+                        l.AutoMatchingReference == $"{MatchedPrefix}{statementTransaction.Reference1}");
+        }
+
+        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions,
+            string autoMatchingReference)
+        {
+            var txns = transactions.Where(
+                t =>
+                    t.Reference1.TrimEndSafely() == autoMatchingReference
+                    || t.Reference2.TrimEndSafely() == autoMatchingReference
+                    || t.Reference3.TrimEndSafely() == autoMatchingReference)
+                .OrderBy(t => t.Amount);
+            return txns;
         }
     }
 }

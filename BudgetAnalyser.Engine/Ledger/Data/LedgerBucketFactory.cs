@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
     /// <summary>
-    ///     A factory to create <see cref="LedgerBucket"/>s from minimaly persisted storage data.
+    ///     A factory to create <see cref="LedgerBucket" />s from minimaly persisted storage data.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Ledger.Data.ILedgerBucketFactory" />
     [AutoRegisterWithIoC]
@@ -15,7 +15,8 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         private readonly IAccountTypeRepository accountRepo;
         private readonly IBudgetBucketRepository bucketRepo;
 
-        public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] IAccountTypeRepository accountRepo)
+        public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo,
+            [NotNull] IAccountTypeRepository accountRepo)
         {
             if (bucketRepo == null)
             {
@@ -33,29 +34,30 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public LedgerBucket Build(string bucketCode, string accountName)
         {
-            Account account = this.accountRepo.GetByKey(accountName);
+            var account = this.accountRepo.GetByKey(accountName);
             return Build(bucketCode, account);
         }
 
         public LedgerBucket Build(string bucketCode, Account account)
         {
-            BudgetBucket bucket = this.bucketRepo.GetByCode(bucketCode);
+            var bucket = this.bucketRepo.GetByCode(bucketCode);
             if (bucket is SavedUpForExpenseBucket)
             {
-                return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
+                return new SavedUpForLedger {BudgetBucket = bucket, StoredInAccount = account};
             }
 
             if (bucket is SpentMonthlyExpenseBucket)
             {
-                return new SpentMonthlyLedger { BudgetBucket = bucket, StoredInAccount = account };
+                return new SpentMonthlyLedger {BudgetBucket = bucket, StoredInAccount = account};
             }
 
             if (bucket is SavingsCommitmentBucket)
             {
-                return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
+                return new SavedUpForLedger {BudgetBucket = bucket, StoredInAccount = account};
             }
 
-            throw new NotSupportedException($"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
+            throw new NotSupportedException(
+                $"Unsupported budget bucket {bucketCode} with type {bucket.GetType().Name}, found in ledger book");
         }
     }
 }

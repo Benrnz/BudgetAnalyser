@@ -10,20 +10,22 @@ namespace BudgetAnalyser.Engine.Reports
     public class BurnDownChartAnalyserResult
     {
         /// <summary>
-        /// A constant for the balance series name
+        ///     A constant for the balance series name
         /// </summary>
         public const string BalanceSeriesName = "Balance Line";
+
         /// <summary>
-        /// A constant for the budget series name
+        ///     A constant for the budget series name
         /// </summary>
         public const string BudgetSeriesName = "Budget Line";
+
         /// <summary>
-        /// A constant for the zero series name
+        ///     A constant for the zero series name
         /// </summary>
         public const string ZeroSeriesName = "Zero Line";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BurnDownChartAnalyserResult"/> class.
+        ///     Initializes a new instance of the <see cref="BurnDownChartAnalyserResult" /> class.
         /// </summary>
         public BurnDownChartAnalyserResult()
         {
@@ -31,7 +33,7 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         /// <summary>
-        /// Gets the chart title.
+        ///     Gets the chart title.
         /// </summary>
         public string ChartTitle { get; internal set; }
 
@@ -41,10 +43,10 @@ namespace BudgetAnalyser.Engine.Reports
         public GraphData GraphLines { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is custom aggregate chart.
+        ///     Gets a value indicating whether this instance is custom aggregate chart.
         /// </summary>
         /// <value>
-        /// <c>true</c> if this instance is custom aggregate chart; otherwise, <c>false</c>.
+        ///     <c>true</c> if this instance is custom aggregate chart; otherwise, <c>false</c>.
         /// </value>
         public bool IsCustomAggregateChart { get; internal set; }
 

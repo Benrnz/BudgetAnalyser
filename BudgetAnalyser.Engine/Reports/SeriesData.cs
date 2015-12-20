@@ -15,18 +15,13 @@ namespace BudgetAnalyser.Engine.Reports
         private bool doNotUseVisible;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SeriesData"/> class.
+        ///     Initializes a new instance of the <see cref="SeriesData" /> class.
         /// </summary>
         public SeriesData()
         {
             PlotsList = new List<DatedGraphPlot>();
             Visible = true;
         }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     The description of the series, typically used in the tool tip for a graph line.
@@ -39,9 +34,11 @@ namespace BudgetAnalyser.Engine.Reports
         public decimal MinimumValue => PlotsList.Min(p => p.Amount);
 
         /// <summary>
-        /// Gets the plot points.
+        ///     Gets the plot points.
         /// </summary>
         public IEnumerable<DatedGraphPlot> Plots => PlotsList;
+
+        internal IList<DatedGraphPlot> PlotsList { get; }
 
         /// <summary>
         ///     The name of the series, typically used in the graph legend.
@@ -62,12 +59,15 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
-        internal IList<DatedGraphPlot> PlotsList { get; }
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

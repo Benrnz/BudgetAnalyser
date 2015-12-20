@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     An object to encapsulate all necessary data to perform a transfer operation in a <see cref="LedgerEntry"/>.
+    ///     An object to encapsulate all necessary data to perform a transfer operation in a <see cref="LedgerEntry" />.
     /// </summary>
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public class TransferFundsCommand : INotifyPropertyChanged
@@ -15,16 +15,12 @@ namespace BudgetAnalyser.Engine.Ledger
         private bool doNotUseBankTransferRequired;
         private LedgerBucket doNotUseFromLedger;
         private LedgerBucket doNotUseToLedger;
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Gets or sets the automatic matching reference.
+        ///     Gets or sets the automatic matching reference.
         /// </summary>
         /// <value>
-        /// The automatic matching reference.
+        ///     The automatic matching reference.
         /// </value>
         public string AutoMatchingReference
         {
@@ -37,8 +33,9 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a bank transfer is required.
-        /// Used to highlight to the user in the UI that a bank transfer needs to be performed for this transfer to be complete.
+        ///     Gets or sets a value indicating whether a bank transfer is required.
+        ///     Used to highlight to the user in the UI that a bank transfer needs to be performed for this transfer to be
+        ///     complete.
         /// </summary>
         public bool BankTransferRequired
         {
@@ -55,7 +52,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets or sets the source ledger to transfer from.
+        ///     Gets or sets the source ledger to transfer from.
         /// </summary>
         public LedgerBucket FromLedger
         {
@@ -69,12 +66,12 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets or sets the transfer narrative. This will be used on both transactions.
+        ///     Gets or sets the transfer narrative. This will be used on both transactions.
         /// </summary>
         public string Narrative { get; set; }
 
         /// <summary>
-        /// Gets or sets the destination ledger to transfer into.
+        ///     Gets or sets the destination ledger to transfer into.
         /// </summary>
         public LedgerBucket ToLedger
         {
@@ -88,20 +85,25 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Gets or sets the transfer amount.
+        ///     Gets or sets the transfer amount.
         /// </summary>
         public decimal TransferAmount { get; set; }
 
         /// <summary>
-        /// Returns true if the transfer is valid.
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Returns true if the transfer is valid.
         /// </summary>
         public bool IsValid()
         {
-            bool valid = Narrative.IsSomething()
-                         && FromLedger != null
-                         && ToLedger != null
-                         && FromLedger != ToLedger
-                         && TransferAmount > 0.0001M;
+            var valid = Narrative.IsSomething()
+                        && FromLedger != null
+                        && ToLedger != null
+                        && FromLedger != ToLedger
+                        && TransferAmount > 0.0001M;
             if (!valid)
             {
                 return false;
@@ -123,7 +125,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Called when a property has changed.
+        ///     Called when a property has changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]

@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    ///     A fixed budget project monitor widget.  Used to monitor spend for a <see cref="FixedBudgetProjectBucket"/>.
+    ///     A fixed budget project monitor widget.  Used to monitor spend for a <see cref="FixedBudgetProjectBucket" />.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.ProgressBarWidget" />
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.IUserDefinedWidget" />
@@ -22,12 +22,12 @@ namespace BudgetAnalyser.Engine.Widgets
         private string doNotUseId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FixedBudgetMonitorWidget"/> class.
+        ///     Initializes a new instance of the <see cref="FixedBudgetMonitorWidget" /> class.
         /// </summary>
         public FixedBudgetMonitorWidget()
         {
             Category = WidgetGroup.ProjectsSectionName;
-            Dependencies = new[] { typeof(StatementModel), typeof(IBudgetBucketRepository) };
+            Dependencies = new[] {typeof (StatementModel), typeof (IBudgetBucketRepository)};
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle1";
 
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the bucket code.
+        ///     Gets or sets the bucket code.
         /// </summary>
         public string BucketCode
         {
@@ -52,7 +52,12 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets a unique identifier for the widget. This is required for persistence purposes.
+        ///     Gets the statement model.
+        /// </summary>
+        public StatementModel Statement { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
         /// </summary>
         public string Id
         {
@@ -66,23 +71,20 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets the statement model.
-        /// </summary>
-        public StatementModel Statement { get; private set; }
-        /// <summary>
-        /// Gets the type of the widget. Optionally allows the implementation to override the widget type description used in the user interface.
+        ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
+        ///     the user interface.
         /// </summary>
         public Type WidgetType => GetType();
 
         /// <summary>
-        /// Initialises the widget and optionally offers it some state and a logger.
+        ///     Initialises the widget and optionally offers it some state and a logger.
         /// </summary>
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
         }
 
         /// <summary>
-        /// Updates the widget with new input.
+        ///     Updates the widget with new input.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
@@ -99,8 +101,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            Statement = (StatementModel)input[0];
-            this.bucketRepository = (IBudgetBucketRepository)input[1];
+            Statement = (StatementModel) input[0];
+            this.bucketRepository = (IBudgetBucketRepository) input[1];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -117,19 +119,22 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = true;
-            var bucket = (FixedBudgetProjectBucket)this.bucketRepository.GetByCode(BucketCode);
-            decimal totalBudget = bucket.FixedBudgetAmount;
+            var bucket = (FixedBudgetProjectBucket) this.bucketRepository.GetByCode(BucketCode);
+            var totalBudget = bucket.FixedBudgetAmount;
             Maximum = Convert.ToDouble(totalBudget);
 
             // Debit transactions are negative so normally the total spend will be a negative number.
-            decimal totalSpend = Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode).Sum(t => t.Amount);
-            decimal remainingBudget = totalBudget + totalSpend;
+            var totalSpend =
+                Statement.AllTransactions.Where(t => t.BudgetBucket != null && t.BudgetBucket.Code == BucketCode)
+                    .Sum(t => t.Amount);
+            var remainingBudget = totalBudget + totalSpend;
 
             Value = Convert.ToDouble(remainingBudget);
-            ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description, remainingBudget, totalSpend);
+            ToolTip = string.Format(CultureInfo.CurrentCulture, this.remainingBudgetToolTip, bucket.Description,
+                remainingBudget, totalSpend);
             DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
-            if (remainingBudget < 0.1M * totalBudget)
+            if (remainingBudget < 0.1M*totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }

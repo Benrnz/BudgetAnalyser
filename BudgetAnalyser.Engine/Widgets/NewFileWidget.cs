@@ -11,12 +11,12 @@ namespace BudgetAnalyser.Engine.Widgets
     public class NewFileWidget : Widget
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewFileWidget"/> class.
+        ///     Initializes a new instance of the <see cref="NewFileWidget" /> class.
         /// </summary>
         public NewFileWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] { typeof(ApplicationDatabase) };
+            Dependencies = new[] {typeof (ApplicationDatabase)};
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
             Clickable = true;
@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Updates the widget with new input.
+        ///     Updates the widget with new input.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)

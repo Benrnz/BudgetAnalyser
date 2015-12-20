@@ -3,7 +3,7 @@
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    /// A base class for any widget that wants to show a progress bar to represent a comparison bar graph.
+    ///     A base class for any widget that wants to show a progress bar to represent a comparison bar graph.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
     public abstract class ProgressBarWidget : Widget
@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Widgets
         private double doNotUseValue;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
+        ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
         /// </summary>
         public override bool Enabled
         {
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the maximum value.
+        ///     Gets or sets the maximum value.
         /// </summary>
         public double Maximum
         {
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the minimum value.
+        ///     Gets or sets the minimum value.
         /// </summary>
         public double Minimum
         {
@@ -64,9 +64,10 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether progress bar is visible.
+        ///     Gets or sets a value indicating whether progress bar is visible.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for Data binding")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Required for Data binding")]
         public bool ProgressBarVisibility
         {
             get { return this.doNotUseProgressBarVisibility; }
@@ -78,7 +79,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Gets or sets the graph value.
+        ///     Gets or sets the graph value.
         /// </summary>
         public double Value
         {

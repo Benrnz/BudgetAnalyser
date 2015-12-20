@@ -42,13 +42,13 @@ namespace BudgetAnalyser.Engine.Matching
                 {
                     if (transaction.BudgetBucket?.Code == null)
                     {
-                        foreach (MatchingRule rule in rules.ToList())
+                        foreach (var rule in rules.ToList())
                         {
                             if (rule.Match(transaction))
                             {
                                 transaction.BudgetBucket = rule.Bucket;
                                 matchesOccured = true;
-                                Transaction loggedTransaction = transaction;
+                                var loggedTransaction = transaction;
                                 this.logger.LogInfo(
                                     l =>
                                         l.Format(

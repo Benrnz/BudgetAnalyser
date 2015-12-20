@@ -15,16 +15,19 @@ namespace BudgetAnalyser.Engine.Matching
         IEnumerable<MatchingRule> CreateNew();
 
         /// <summary>
-        ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the <paramref name="storageKey" />. Any existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method to load the new collection.
+        ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the
+        ///     <paramref name="storageKey" />. Any existing data at this location will be overwritten. After this is complete, use
+        ///     the <see cref="LoadAsync" /> method to load the new collection.
         /// </summary>
         Task CreateNewAndSaveAsync([NotNull] string storageKey);
 
         /// <summary>
-        /// Loads the rules collection from persistent storage.
+        ///     Loads the rules collection from persistent storage.
         /// </summary>
         Task<IEnumerable<MatchingRule>> LoadAsync([NotNull] string storageKey);
+
         /// <summary>
-        /// Saves the rules collection to persistent storage.
+        ///     Saves the rules collection to persistent storage.
         /// </summary>
         Task SaveAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey);
     }

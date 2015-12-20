@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private decimal check2;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReconciliationConsistencyChecker"/> class.
+        ///     Initializes a new instance of the <see cref="ReconciliationConsistencyChecker" /> class.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public ReconciliationConsistencyChecker([NotNull] LedgerBook book)
@@ -32,17 +32,24 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        /// Used in this case to perform finalising logic to check consistency of reconciliation changes.
+        ///     Used in this case to perform finalising logic to check consistency of reconciliation changes.
         /// </summary>
-        /// <exception cref="CorruptedLedgerBookException">Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.</exception>
-        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Allowed here, using syntax only")]
-        [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly", Justification = "Not required here, using syntax only")]
+        /// <exception cref="CorruptedLedgerBookException">
+        ///     Code Error: The previous dated entries have changed, this is not
+        ///     allowed. Data is corrupt.
+        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations",
+            Justification = "Allowed here, using syntax only")]
+        [SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly",
+            Justification = "Not required here, using syntax only")]
         public void Dispose()
         {
-            this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) - this.ledgerBook.Reconciliations.First().CalculatedSurplus;
+            this.check2 = this.ledgerBook.Reconciliations.Sum(e => e.CalculatedSurplus) -
+                          this.ledgerBook.Reconciliations.First().CalculatedSurplus;
             if (this.check1 != this.check2)
             {
-                throw new CorruptedLedgerBookException("Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
+                throw new CorruptedLedgerBookException(
+                    "Code Error: The previous dated entries have changed, this is not allowed. Data is corrupt.");
             }
         }
     }

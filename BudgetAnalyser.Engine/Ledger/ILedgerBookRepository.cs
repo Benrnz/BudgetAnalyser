@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         Task<LedgerBook> CreateNewAndSaveAsync([NotNull] string storageKey);
 
         /// <summary>
-        /// Loads the Ledger Book from persistent storage.
+        ///     Loads the Ledger Book from persistent storage.
         /// </summary>
         Task<LedgerBook> LoadAsync([NotNull] string storageKey);
 

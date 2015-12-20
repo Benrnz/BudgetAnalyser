@@ -17,7 +17,8 @@ namespace BudgetAnalyser.Engine.Statement
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     /// <seealso cref="BudgetAnalyser.Engine.IDataChangeDetection" />
     /// <seealso cref="System.IDisposable" />
-    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "There are no native resources to clean up. Unnecessary complexity.")]
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
+        Justification = "There are no native resources to clean up. Unnecessary complexity.")]
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable
     {
         private readonly ILogger logger;
@@ -38,11 +39,12 @@ namespace BudgetAnalyser.Engine.Statement
         private int fullDuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatementModel"/> class.
+        ///     Initializes a new instance of the <see cref="StatementModel" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here. Required for binding")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Reviewed, ok here. Required for binding")]
         public StatementModel([NotNull] ILogger logger)
         {
             if (logger == null)
@@ -57,23 +59,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
-        ///     This destructor will run only if the Dispose method does not get called.
-        ///     Do not provide destructors in types derived from this class.
-        /// </summary>
-        ~StatementModel()
-        {
-            // Do not re-create Dispose clean-up code here. 
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Gets all transactions ignoring any filters.
+        ///     Gets all transactions ignoring any filters.
         /// </summary>
         public IEnumerable<Transaction> AllTransactions
         {
@@ -87,7 +73,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets the duration in months of the current <see cref="Transactions"/> collection.
+        ///     Gets the duration in months of the current <see cref="Transactions" /> collection.
         /// </summary>
         public int DurationInMonths
         {
@@ -101,11 +87,12 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="StatementModel"/> has an active filtered.
+        ///     Gets a value indicating whether this <see cref="StatementModel" /> has an active filtered.
         /// </summary>
         public bool Filtered { get; private set; }
+
         /// <summary>
-        /// Gets the last imported date and time.
+        ///     Gets the last imported date and time.
         /// </summary>
         public DateTime LastImport { get; internal set; }
 
@@ -115,7 +102,7 @@ namespace BudgetAnalyser.Engine.Statement
         public string StorageKey { get; set; }
 
         /// <summary>
-        /// Gets the filtered transactions.
+        ///     Gets the filtered transactions.
         /// </summary>
         public IEnumerable<Transaction> Transactions
         {
@@ -130,6 +117,57 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
+        ///     Calcuates a hash that represents a data state for the current instance.  When the data state changes the hash will
+        ///     change.
+        /// </summary>
+        public long SignificantDataChangeHash()
+        {
+            ThrowIfDisposed();
+            return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
+        }
+
+        /// <summary>
+        ///     Implement IDisposable.
+        ///     Do not make this method virtual.
+        ///     A derived class should not be able to override this method
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Take this instance off the Finalization queue 
+            // to prevent finalization code for this object 
+            // from executing a second time. 
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared)
+            {
+                return AllTransactions.ToList();
+            }
+
+            var query = AllTransactions;
+            if (criteria.BeginDate != null)
+            {
+                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
+            }
+
+            if (criteria.EndDate != null)
+            {
+                query = query.Where(t => t.Date <= criteria.EndDate.Value);
+            }
+
+            return query;
+        }
+
+        /// <summary>
         ///     Calculates the duration in months from the beginning of the period to the end.
         /// </summary>
         /// <param name="criteria">
@@ -139,7 +177,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <param name="transactions">The list of transactions to use to determine duration.</param>
         public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            List<Transaction> list = transactions.ToList();
+            var list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
             if (criteria != null && !criteria.Cleared)
@@ -161,28 +199,17 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
-        ///     Implement IDisposable.
-        ///     Do not make this method virtual.
-        ///     A derived class should not be able to override this method
+        ///     Allows derivatives to customise dispose logic.
         /// </summary>
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            Dispose(true);
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                UnsubscribeToTransactionChangedEvents();
+            }
 
-            // Take this instance off the Finalization queue 
-            // to prevent finalization code for this object 
-            // from executing a second time. 
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Calcuates a hash that represents a data state for the current instance.  When the data state changes the hash will
-        /// change.
-        /// </summary>
-        public long SignificantDataChangeHash()
-        {
-            ThrowIfDisposed();
-            return BitConverter.ToInt64(this.changeHash.ToByteArray(), 8);
+            this.disposed = true;
         }
 
         internal virtual void Filter(GlobalFilterCriteria criteria)
@@ -213,12 +240,23 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            IEnumerable<Transaction> query = BaseFilterQuery(criteria);
+            var query = BaseFilterQuery(criteria);
 
             Transactions = query.ToList();
             DurationInMonths = CalculateDuration(criteria, Transactions);
             this.duplicates = null;
             Filtered = true;
+        }
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
+        ///     This destructor will run only if the Dispose method does not get called.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~StatementModel()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            Dispose(false);
         }
 
         /// <summary>
@@ -258,7 +296,8 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Merges the provided model with this one and returns a new combined model. This model or the supplied one are not
         ///     changed.
         /// </summary>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Ok here. This methods creates the instance for use elsewhere.")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Ok here. This methods creates the instance for use elsewhere.")]
         internal virtual StatementModel Merge([NotNull] StatementModel additionalModel)
         {
             ThrowIfDisposed();
@@ -273,12 +312,37 @@ namespace BudgetAnalyser.Engine.Statement
                 StorageKey = StorageKey
             };
 
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
+            var mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
             combinedModel.LoadTransactions(mergedTransactions);
             return combinedModel;
         }
 
-        internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket, [NotNull] BudgetBucket reassignmentBucket)
+        /// <summary>
+        ///     Called when a property is changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            ThrowIfDisposed();
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case nameof(Transaction.Amount):
+                case nameof(Transaction.BudgetBucket):
+                case nameof(Transaction.Date):
+                    this.changeHash = Guid.NewGuid();
+                    break;
+            }
+        }
+
+        internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket,
+            [NotNull] BudgetBucket reassignmentBucket)
         {
             ThrowIfDisposed();
             if (bucket == null)
@@ -291,7 +355,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(reassignmentBucket));
             }
 
-            foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
+            foreach (var transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
             {
                 transaction.BudgetBucket = reassignmentBucket;
             }
@@ -355,94 +419,14 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 AllTransactions = new List<Transaction>();
             }
-            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
+            var mergedTransactions =
+                AllTransactions.ToList().Merge(new[] {splinterTransaction1, splinterTransaction2}).ToList();
             AllTransactions = mergedTransactions;
             splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
             splinterTransaction2.PropertyChanged += OnTransactionPropertyChanged;
             this.duplicates = null;
             UpdateDuration();
             Filter(this.currentFilter);
-        }
-
-        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
-        {
-            ThrowIfDisposed();
-            if (this.duplicates != null)
-            {
-                return this.duplicates; // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
-            }
-
-            List<IGrouping<int, Transaction>> query = Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t).Where(group => group.Count() > 1).AsParallel().ToList();
-            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
-            query.ForEach(
-                duplicate =>
-                {
-                    foreach (Transaction txn in duplicate)
-                    {
-                        txn.IsSuspectedDuplicate = true;
-                    }
-                });
-            this.duplicates = query;
-            return this.duplicates;
-        }
-
-        /// <summary>
-        ///     Allows derivatives to customise dispose logic.
-        /// </summary>
-        protected virtual void Dispose(bool disposing)
-        {
-            // Check to see if Dispose has already been called. 
-            if (!this.disposed)
-            {
-                UnsubscribeToTransactionChangedEvents();
-            }
-
-            this.disposed = true;
-        }
-
-        /// <summary>
-        /// Called when a property is changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            ThrowIfDisposed();
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
-        {
-            if (criteria.Cleared)
-            {
-                return AllTransactions.ToList();
-            }
-
-            IEnumerable<Transaction> query = AllTransactions;
-            if (criteria.BeginDate != null)
-            {
-                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
-            }
-
-            if (criteria.EndDate != null)
-            {
-                query = query.Where(t => t.Date <= criteria.EndDate.Value);
-            }
-
-            return query;
-        }
-
-        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case nameof(Transaction.Amount):
-                case nameof(Transaction.BudgetBucket):
-                case nameof(Transaction.Date):
-                    this.changeHash = Guid.NewGuid();
-                    break;
-            }
         }
 
         private void SubscribeToTransactionChangedEvents()
@@ -452,7 +436,8 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
+            Parallel.ForEach(AllTransactions,
+                transaction => { transaction.PropertyChanged += OnTransactionPropertyChanged; });
         }
 
         private void ThrowIfDisposed()
@@ -470,13 +455,41 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            Parallel.ForEach(AllTransactions, transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
+            Parallel.ForEach(AllTransactions,
+                transaction => { transaction.PropertyChanged -= OnTransactionPropertyChanged; });
         }
 
         private void UpdateDuration()
         {
             this.fullDuration = CalculateDuration(new GlobalFilterCriteria(), AllTransactions);
             DurationInMonths = CalculateDuration(null, Transactions);
+        }
+
+        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
+        {
+            ThrowIfDisposed();
+            if (this.duplicates != null)
+            {
+                return this.duplicates;
+                    // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
+            }
+
+            var query =
+                Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t)
+                    .Where(group => group.Count() > 1)
+                    .AsParallel()
+                    .ToList();
+            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            query.ForEach(
+                duplicate =>
+                {
+                    foreach (var txn in duplicate)
+                    {
+                        txn.IsSuspectedDuplicate = true;
+                    }
+                });
+            this.duplicates = query;
+            return this.duplicates;
         }
     }
 }

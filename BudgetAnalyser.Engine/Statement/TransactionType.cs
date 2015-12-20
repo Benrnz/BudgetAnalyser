@@ -9,15 +9,15 @@ namespace BudgetAnalyser.Engine.Statement
     public abstract class TransactionType
     {
         /// <summary>
-        /// Gets the transaction type name.
+        ///     Gets the transaction type name.
         /// </summary>
         public abstract string Name { get; }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
