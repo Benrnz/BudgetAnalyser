@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
@@ -14,12 +14,18 @@ namespace BudgetAnalyser.Engine.Reports
     {
         private bool doNotUseVisible;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SeriesData"/> class.
+        /// </summary>
         public SeriesData()
         {
             PlotsList = new List<DatedGraphPlot>();
             Visible = true;
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -32,6 +38,9 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public decimal MinimumValue => PlotsList.Min(p => p.Amount);
 
+        /// <summary>
+        /// Gets the plot points.
+        /// </summary>
         public IEnumerable<DatedGraphPlot> Plots => PlotsList;
 
         /// <summary>

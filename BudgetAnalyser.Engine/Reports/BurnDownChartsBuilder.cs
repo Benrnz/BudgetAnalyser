@@ -2,18 +2,28 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class BurnDownChartsBuilder
+    /// <summary>
+    ///     An builder to compile and collate data for the burn down charts.
+    /// </summary>
+    internal class BurnDownChartsBuilder
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly Func<IBurnDownChartAnalyser> chartAnalyserFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BurnDownChartsBuilder"/> class.
+        /// </summary>
+        /// <param name="budgetBucketRepository">The budget bucket repository.</param>
+        /// <param name="chartAnalyserFactory">The chart analyser factory.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public BurnDownChartsBuilder([NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] Func<IBurnDownChartAnalyser> chartAnalyserFactory)
         {
             if (budgetBucketRepository == null)

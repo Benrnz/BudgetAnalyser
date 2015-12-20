@@ -7,6 +7,9 @@ namespace BudgetAnalyser.Engine.Reports
     /// </summary>
     public class OverallPerformanceBudgetResult
     {
+        /// <summary>
+        /// Gets the analysis list.
+        /// </summary>
         public IEnumerable<BucketPerformanceResult> Analyses => AnalysesList;
 
         /// <summary>
@@ -20,9 +23,21 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         public decimal AverageSurplus { get; internal set; }
 
+        /// <summary>
+        /// Gets the calculated duration in months.
+        /// </summary>
         public int DurationInMonths { get; internal set; }
+        /// <summary>
+        /// Gets the calculated overall performance rating.
+        /// </summary>
         public decimal OverallPerformance { get; internal set; }
+        /// <summary>
+        /// Gets the calculated total budget expenses.
+        /// </summary>
         public decimal TotalBudgetExpenses { get; internal set; }
+        /// <summary>
+        /// Gets a calculated value indicating whether this analysis spans multiple budgets.
+        /// </summary>
         public bool UsesMultipleBudgets { get; internal set; }
         internal IList<BucketPerformanceResult> AnalysesList { get; set; }
     }

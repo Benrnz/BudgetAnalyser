@@ -9,13 +9,34 @@ namespace BudgetAnalyser.Engine.Reports
     /// </summary>
     public class BucketPerformanceResult
     {
+        /// <summary>
+        /// Gets the calculated average spend.
+        /// </summary>
         public decimal AverageSpend { get; internal set; }
+        /// <summary>
+        /// Gets the calculated balance.
+        /// </summary>
         public decimal Balance { get; internal set; }
+        /// <summary>
+        /// Gets the bucket.
+        /// </summary>
         public BudgetBucket Bucket { get; internal set; }
+        /// <summary>
+        /// Gets the budget amount.
+        /// </summary>
         public decimal Budget { get; internal set; }
+        /// <summary>
+        /// Gets the calculated budget compared to average.
+        /// </summary>
         public string BudgetComparedToAverage { get; internal set; }
+        /// <summary>
+        /// Gets the calculated budget total.
+        /// </summary>
         public decimal BudgetTotal { get; internal set; }
 
+        /// <summary>
+        /// Gets the calculated percentage.
+        /// </summary>
         public double Percent
         {
             get
@@ -28,6 +49,9 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
+        /// <summary>
+        /// Gets the summary.
+        /// </summary>
         public string Summary
         {
             get
@@ -56,6 +80,9 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
+        /// <summary>
+        /// Gets the calculated total spent.
+        /// </summary>
         public decimal TotalSpent { get; internal set; }
     }
 }

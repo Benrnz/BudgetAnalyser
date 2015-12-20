@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
     [AutoRegisterWithIoC]
-    public class BurnDownChartAnalyser : IBurnDownChartAnalyser
+    internal class BurnDownChartAnalyser : IBurnDownChartAnalyser
     {
         private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BurnDownChartAnalyser"/> class.
+        /// </summary>
+        /// <param name="ledgerCalculator">The ledger calculator.</param>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public BurnDownChartAnalyser([NotNull] LedgerCalculation ledgerCalculator, [NotNull] ILogger logger)
         {
             if (ledgerCalculator == null)

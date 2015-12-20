@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class OverallPerformanceBudgetAnalyser
+    /// <summary>
+    /// A analyser class to build report data for the overall performance report.
+    /// </summary>
+    internal class OverallPerformanceBudgetAnalyser
     {
         private readonly IBudgetBucketRepository bucketRepository;
 

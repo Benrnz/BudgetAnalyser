@@ -9,9 +9,18 @@ namespace BudgetAnalyser.Engine.Reports
     /// </summary>
     public class DatedGraphPlot
     {
+        /// <summary>
+        /// Gets or sets the amount to plot on the axis
+        /// </summary>
         public decimal Amount { get; set; }
+        /// <summary>
+        /// Gets or sets the date to plot on the axis.
+        /// </summary>
         public DateTime Date { get; set; }
 
+        /// <summary>
+        /// Gets the month to help group the <see cref="Date"/>s into months.
+        /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Ok for now, only english is supported")]
         public string Month => Date.ToString("MMM yy");
     }

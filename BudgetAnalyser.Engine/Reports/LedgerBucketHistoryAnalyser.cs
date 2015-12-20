@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Ledger;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class LedgerBucketHistoryAnalyser
+    internal class LedgerBucketHistoryAnalyser
     {
         [UsedImplicitly]
         public SeriesData BalanceLine => GraphData.Series.FirstOrDefault();
