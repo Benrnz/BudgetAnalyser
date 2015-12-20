@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine.Reports
                 {
                     var budgetedTotal = CalculateBudgetedTotalAmount(beginDate, b => b.Surplus, budgets, result);
                     var perMonthBudget = budgetedTotal/result.DurationInMonths;
-                        // Calc an average in case multiple budgets are used and the budgeted amounts are different.
+                    // Calc an average in case multiple budgets are used and the budgeted amounts are different.
                     var surplusAnalysis = new BucketPerformanceResult
                     {
                         Bucket = bucket,

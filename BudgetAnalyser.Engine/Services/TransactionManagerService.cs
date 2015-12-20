@@ -14,7 +14,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A service to manipulate and manage transactions and statements.
+    ///     A service to manipulate and manage transactions and statements.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Services.ITransactionManagerService" />
     /// <seealso cref="BudgetAnalyser.Engine.Services.ISupportsModelPersistence" />
@@ -22,9 +22,10 @@ namespace BudgetAnalyser.Engine.Services
     internal class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
     {
         /// <summary>
-        /// A constant to refer to uncategorised transactions for filtering purposes. Used in the filter drop down list.
+        ///     A constant to refer to uncategorised transactions for filtering purposes. Used in the filter drop down list.
         /// </summary>
         public const string UncategorisedFilter = "[Uncategorised Only]";
+
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly ILogger logger;
         private readonly IStatementRepository statementRepository;
@@ -34,7 +35,7 @@ namespace BudgetAnalyser.Engine.Services
         private ObservableCollection<Transaction> transactions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionManagerService"/> class.
+        ///     Initializes a new instance of the <see cref="TransactionManagerService" /> class.
         /// </summary>
         /// <param name="bucketRepository">The bucket repository.</param>
         /// <param name="statementRepository">The statement repository.</param>
@@ -67,31 +68,160 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Occurs when the underlying storage for transactions is closed.
-        /// This allows the UI to update and clear accordingly.
-        /// Opening and closing files is controlled centrally, not by this service.
+        ///     Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType => ApplicationDataType.Transactions;
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        /// </summary>
+        public int LoadSequence => 10;
+
+        /// <summary>
+        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            this.transactions = new ObservableCollection<Transaction>();
+            StatementModel?.Dispose();
+            StatementModel = null;
+            this.budgetCollection = null;
+            this.budgetHash = 0;
+            var handler = Closed;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        ///     Create a new <see cref="StatementModel" />.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.StatementModelStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(applicationDatabase));
+            }
+
+            await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
+            await LoadAsync(applicationDatabase);
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="DataFormatException">Statement Model data is corrupt and has been tampered with. Unable to load.</exception>
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException(nameof(applicationDatabase));
+            }
+
+            StatementModel?.Dispose();
+            try
+            {
+                StatementModel =
+                    await
+                        this.statementRepository.LoadAsync(
+                            applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
+            }
+            catch (StatementModelChecksumException ex)
+            {
+                throw new DataFormatException(
+                    "Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
+            }
+
+            NewDataAvailable();
+        }
+
+        /// <summary>
+        ///     Saves the application database asynchronously. This may be called using a background worker thread.
+        /// </summary>
+        /// <param name="contextObjects">
+        ///     The optional context objects that may have been populated by implementations of the
+        ///     <see cref="SavePreview" /> method call.
+        /// </param>
+        /// <exception cref="ValidationWarningException">
+        ///     Unable to save transactions at this time, some data is invalid.  +
+        ///     messages
+        /// </exception>
+        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        {
+            if (StatementModel == null)
+            {
+                return;
+            }
+
+            var handler = Saving;
+            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
+
+            var messages = new StringBuilder();
+            if (!ValidateModel(messages))
+            {
+                throw new ValidationWarningException(
+                    "Unable to save transactions at this time, some data is invalid. " + messages);
+            }
+
+            await this.statementRepository.SaveAsync(StatementModel);
+            var savedHandler = Saved;
+            savedHandler?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        ///     Called before Save is called. This will be called on the UI Thread.
+        ///     Objects can optionally add some context data that will be passed to the <see cref="SaveAsync" /> method call.
+        ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
+        ///     this
+        ///     can't be done during save as it may not be called using the UI Thread.
+        /// </summary>
+        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        {
+        }
+
+        /// <summary>
+        ///     Validates the model owned by the service.
+        /// </summary>
+        public bool ValidateModel(StringBuilder messages)
+        {
+            var handler = Validating;
+            handler?.Invoke(this, new ValidatingEventArgs());
+
+            // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
+            return true;
+        }
+
+        /// <summary>
+        ///     Occurs when the underlying storage for transactions is closed.
+        ///     This allows the UI to update and clear accordingly.
+        ///     Opening and closing files is controlled centrally, not by this service.
         /// </summary>
         public event EventHandler Closed;
+
         /// <summary>
-        /// Occurs when a new data source has been loaded and is now available for use.
+        ///     Occurs when a new data source has been loaded and is now available for use.
         /// </summary>
         public event EventHandler NewDataSourceAvailable;
+
         /// <summary>
-        /// Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
+        ///     Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
         /// </summary>
         public event EventHandler Saved;
+
         /// <summary>
-        /// Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
+        ///     Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
         /// </summary>
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+
         /// <summary>
-        /// Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
-        /// information with its service.
+        ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
+        ///     information with its service.
         /// </summary>
         public event EventHandler<ValidatingEventArgs> Validating;
 
         /// <summary>
-        /// Gets the calculated average debit.
+        ///     Gets the calculated average debit.
         /// </summary>
         public decimal AverageDebit
         {
@@ -107,20 +237,12 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Gets the type of the data the implementation deals with.
-        /// </summary>
-        public ApplicationDataType DataType => ApplicationDataType.Transactions;
-        /// <summary>
-        /// Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        /// </summary>
-        public int LoadSequence => 10;
-        /// <summary>
-        /// Gets the statement model.
+        ///     Gets the statement model.
         /// </summary>
         public StatementModel StatementModel { get; private set; }
 
         /// <summary>
-        /// Gets the calculated total count.
+        ///     Gets the calculated total count.
         /// </summary>
         public decimal TotalCount
         {
@@ -136,7 +258,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Gets the calculated total credits.
+        ///     Gets the calculated total credits.
         /// </summary>
         public decimal TotalCredits
         {
@@ -152,7 +274,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Gets the calculated total debits.
+        ///     Gets the calculated total debits.
         /// </summary>
         public decimal TotalDebits
         {
@@ -168,7 +290,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Clears the bucket and text filters.
+        ///     Clears the bucket and text filters.
         /// </summary>
         public ObservableCollection<Transaction> ClearBucketAndTextFilters()
         {
@@ -177,39 +299,12 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
-        public void Close()
-        {
-            this.transactions = new ObservableCollection<Transaction>();
-            StatementModel?.Dispose();
-            StatementModel = null;
-            this.budgetCollection = null;
-            this.budgetHash = 0;
-            EventHandler handler = Closed;
-            handler?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Create a new <see cref="StatementModel"/>.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase.StatementModelStorageKey.IsNothing())
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            await this.statementRepository.CreateNewAndSaveAsync(applicationDatabase.StatementModelStorageKey);
-            await LoadAsync(applicationDatabase);
-        }
-
-        /// <summary>
-        /// Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for displaying in the UI. Each individual duplicate transactions will be flagged by the <see cref="Transaction.IsSuspectedDuplicate" /> property.
+        ///     Detects duplicate transactions in the current <see cref="StatementModel" /> and returns a summary string for
+        ///     displaying in the UI. Each individual duplicate transactions will be flagged by the
+        ///     <see cref="Transaction.IsSuspectedDuplicate" /> property.
         /// </summary>
         /// <returns>
-        /// A textual summary of duplicates found. Null if none are detected or no statement is loaded.
+        ///     A textual summary of duplicates found. Null if none are detected or no statement is loaded.
         /// </returns>
         public string DetectDuplicateTransactions()
         {
@@ -218,41 +313,49 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            List<IGrouping<int, Transaction>> duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
+            var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
             return duplicates.Any()
-                ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!", duplicates.Sum(group => group.Count()))
+                ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
+                    duplicates.Sum(group => group.Count()))
                 : null;
         }
 
         /// <summary>
-        /// Provides a list of buckets for display purposes for filtering the transactions shown. This list will include a blank item to represent no filtering, and a [Uncategorised] to represent a filter to show only transactions with no bucket allocation.
+        ///     Provides a list of buckets for display purposes for filtering the transactions shown. This list will include a
+        ///     blank item to represent no filtering, and a [Uncategorised] to represent a filter to show only transactions with no
+        ///     bucket allocation.
         /// </summary>
         /// <returns>
-        /// A string list of bucket codes.
+        ///     A string list of bucket codes.
         /// </returns>
         public IEnumerable<string> FilterableBuckets()
         {
             return this.bucketRepository.Buckets
                 .Where(b => b.Active)
                 .Select(b => b.Code)
-                .Union(new[] { string.Empty, UncategorisedFilter })
+                .Union(new[] {string.Empty, UncategorisedFilter})
                 .OrderBy(b => b);
         }
 
         /// <summary>
-        /// Returns a filtered list of <see cref="Transaction" />s by bucket code.
+        ///     Returns a filtered list of <see cref="Transaction" />s by bucket code.
         /// </summary>
-        /// <param name="bucketCode">The bucket code as text. This can be null or return all, and
-        /// <see cref="TransactionManagerService.UncategorisedFilter" /> to
-        /// only return transactions without a bucket classification.</param>
+        /// <param name="bucketCode">
+        ///     The bucket code as text. This can be null or return all, and
+        ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
+        ///     only return transactions without a bucket classification.
+        /// </param>
         public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
         {
             if (bucketCode == UncategorisedFilter)
             {
-                return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket == null));
+                return
+                    this.transactions =
+                        new ObservableCollection<Transaction>(
+                            StatementModel.Transactions.Where(t => t.BudgetBucket == null));
             }
 
-            BudgetBucket bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
+            var bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
 
             if (bucket == null)
             {
@@ -265,8 +368,8 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
-        /// fields are searched: Description, Reference1, Reference2, Reference3.
+        ///     Returns a filtered list of <see cref="Transaction" />s using the provided search text.  All following transaction
+        ///     fields are searched: Description, Reference1, Reference2, Reference3.
         /// </summary>
         /// <param name="searchText">The search text. Minimum 3 characters.</param>
         public ObservableCollection<Transaction> FilterBySearchText(string searchText)
@@ -289,7 +392,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Filters the transactions using the filter object provided.
+        ///     Filters the transactions using the filter object provided.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public void FilterTransactions(GlobalFilterCriteria criteria)
@@ -303,13 +406,16 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
-        /// This method should not be used without a <see cref="StatementModel" /> loaded.
-        /// It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
+        ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
+        ///     This method should not be used without a <see cref="StatementModel" /> loaded.
+        ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        /// <exception cref="System.InvalidOperationException">There are no transactions loaded, you must first load an existing file or create a new one.</exception>
+        /// <exception cref="System.InvalidOperationException">
+        ///     There are no transactions loaded, you must first load an existing
+        ///     file or create a new one.
+        /// </exception>
         /// <exception cref="BudgetAnalyser.Engine.Statement.TransactionsAlreadyImportedException"></exception>
         public async Task ImportAndMergeBankStatementAsync(string storageKey, Account account)
         {
@@ -325,12 +431,13 @@ namespace BudgetAnalyser.Engine.Services
 
             if (StatementModel == null)
             {
-                throw new InvalidOperationException("There are no transactions loaded, you must first load an existing file or create a new one.");
+                throw new InvalidOperationException(
+                    "There are no transactions loaded, you must first load an existing file or create a new one.");
             }
 
-            StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-            StatementModel combinedModel = StatementModel.Merge(additionalModel);
-            IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates();
+            var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
+            var combinedModel = StatementModel.Merge(additionalModel);
+            var duplicates = combinedModel.ValidateAgainstDuplicates();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {
                 throw new TransactionsAlreadyImportedException();
@@ -342,11 +449,11 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Parses and loads the persisted state data from the provided object.
+        ///     Parses and loads the persisted state data from the provided object.
         /// </summary>
         /// <param name="stateData">The state data loaded from persistent storage.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public void Initialise(StatementApplicationStateV1 stateData)
+        public void Initialise(StatementApplicationState stateData)
         {
             if (stateData == null)
             {
@@ -358,32 +465,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="DataFormatException">Statement Model data is corrupt and has been tampered with. Unable to load.</exception>
-        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            StatementModel?.Dispose();
-            try
-            {
-                StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
-            }
-            catch (StatementModelChecksumException ex)
-            {
-                throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
-            }
-
-            NewDataAvailable();
-        }
-
-        /// <summary>
-        /// Populates a collection grouped by bucket with date sorted transactions contained in each group.
+        ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.
         /// </summary>
         /// <param name="groupByBucket">True if the UI is currently showing the transactions grouped by bucket, false if not.</param>
         public IEnumerable<TransactionGroupedByBucket> PopulateGroupByBucketCollection(bool groupByBucket)
@@ -392,13 +474,13 @@ namespace BudgetAnalyser.Engine.Services
             if (StatementModel == null)
             {
                 // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
-                return new TransactionGroupedByBucket[] { };
+                return new TransactionGroupedByBucket[] {};
             }
 
             if (this.sortedByBucket)
             {
                 // SortByBucket == true so group and sort by bucket.
-                IEnumerable<TransactionGroupedByBucket> query = StatementModel.Transactions
+                var query = StatementModel.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucket(group, group.Key));
@@ -406,22 +488,22 @@ namespace BudgetAnalyser.Engine.Services
             }
             // When viewing transactions by date, databinding pulls data directly from the StatementModel.
             // As for the GroupByBucket Collection this can be cleared.
-            return new TransactionGroupedByBucket[] { };
+            return new TransactionGroupedByBucket[] {};
         }
 
         /// <summary>
-        /// Prepares the persistent state data to save to storage.
+        ///     Prepares the persistent state data to save to storage.
         /// </summary>
-        public StatementApplicationStateV1 PreparePersistentStateData()
+        public StatementApplicationState PreparePersistentStateData()
         {
-            return new StatementApplicationStateV1
+            return new StatementApplicationState
             {
                 SortByBucket = this.sortedByBucket
             };
         }
 
         /// <summary>
-        /// Removes the provided transaction from the currently loaded Budget Analyser Statement.
+        ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.
         /// </summary>
         /// <param name="transactionToRemove">The transaction to remove.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -436,50 +518,13 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Saves the application database asynchronously. This may be called using a background worker thread.
-        /// </summary>
-        /// <param name="contextObjects">The optional context objects that may have been populated by implementations of the
-        /// <see cref="SavePreview" /> method call.</param>
-        /// <exception cref="ValidationWarningException">Unable to save transactions at this time, some data is invalid.  + messages</exception>
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
-        {
-            if (StatementModel == null)
-            {
-                return;
-            }
-
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
-            handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
-
-            var messages = new StringBuilder();
-            if (!ValidateModel(messages))
-            {
-                throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
-            }
-
-            await this.statementRepository.SaveAsync(StatementModel);
-            EventHandler savedHandler = Saved;
-            savedHandler?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Called before Save is called. This will be called on the UI Thread.
-        /// Objects can optionally add some context data that will be passed to the <see cref="SaveAsync" /> method call.
-        /// This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
-        /// this
-        /// can't be done during save as it may not be called using the UI Thread.
-        /// </summary>
-        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
-        {
-        }
-
-        /// <summary>
-        /// Splits the provided transaction into two. The provided transactions is removed, and two new transactions are created. Both transactions must add up to the existing transaction amount.
+        ///     Splits the provided transaction into two. The provided transactions is removed, and two new transactions are
+        ///     created. Both transactions must add up to the existing transaction amount.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2, BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+        public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2,
+            BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
         {
             if (originalTransaction == null)
             {
@@ -505,29 +550,19 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Validates the model owned by the service.
+        ///     Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets
+        ///     used by the transactions
+        ///     exist in the budgets.  This is performed asynchronously.
+        ///     This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
         /// </summary>
-        public bool ValidateModel(StringBuilder messages)
-        {
-            EventHandler<ValidatingEventArgs> handler = Validating;
-            handler?.Invoke(this, new ValidatingEventArgs());
-
-            // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
-            return true;
-        }
-
-        /// <summary>
-        /// Validates the currently loaded <see cref="StatementModel" /> against the provided budgets and ensures all buckets
-        /// used by the transactions
-        /// exist in the budgets.  This is performed asynchronously.
-        /// This method can be called when a budget is loaded or changed or when a new Budget Analyser Statement is loaded.
-        /// </summary>
-        /// <param name="budgets">The current budgets. This must be provided at least once. It can be omitted when
-        /// calling this method after the statement model has changed if the budget was previously provided.</param>
+        /// <param name="budgets">
+        ///     The current budgets. This must be provided at least once. It can be omitted when
+        ///     calling this method after the statement model has changed if the budget was previously provided.
+        /// </param>
         /// <returns>
-        /// A task that will result in true if all buckets used, are present in the budgets, otherwise false.
-        /// If false, this indicates that some transactions may have their bucket allocation removed possibly resulting in
-        /// unintended data loss.
+        ///     A task that will result in true if all buckets used, are present in the budgets, otherwise false.
+        ///     If false, this indicates that some transactions may have their bucket allocation removed possibly resulting in
+        ///     unintended data loss.
         /// </returns>
         /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<bool> ValidateWithCurrentBudgetsAsync(BudgetCollection budgets = null)
@@ -554,7 +589,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var allBuckets = new List<BudgetBucket>(this.bucketRepository.Buckets.OrderBy(b => b.Code));
-            bool allTransactionHaveABucket = await Task.Run(
+            var allTransactionHaveABucket = await Task.Run(
                 () =>
                 {
                     return StatementModel.AllTransactions
@@ -563,11 +598,14 @@ namespace BudgetAnalyser.Engine.Services
                         .All(
                             t =>
                             {
-                                bool bucketExists = allBuckets.Contains(t.BudgetBucket);
+                                var bucketExists = allBuckets.Contains(t.BudgetBucket);
                                 if (!bucketExists)
                                 {
                                     t.BudgetBucket = null;
-                                    this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
+                                    this.logger.LogWarning(
+                                        l =>
+                                            l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date,
+                                                t.BudgetBucket));
                                 }
                                 return bucketExists;
                             });
@@ -617,13 +655,15 @@ namespace BudgetAnalyser.Engine.Services
         private void NewDataAvailable()
         {
             ResetTransactionsCollection();
-            EventHandler handler = NewDataSourceAvailable;
+            var handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void ResetTransactionsCollection()
         {
-            this.transactions = StatementModel == null ? new ObservableCollection<Transaction>() : new ObservableCollection<Transaction>(StatementModel.Transactions);
+            this.transactions = StatementModel == null
+                ? new ObservableCollection<Transaction>()
+                : new ObservableCollection<Transaction>(StatementModel.Transactions);
         }
     }
 }

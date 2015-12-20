@@ -214,6 +214,7 @@
     <Compile Include="Ledger\TransferTask.cs" />
     <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
     <Compile Include="ListExtension.cs" />
+    <Compile Include="MainApplicationState.cs" />
     <Compile Include="Matching\CriteriaT.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\SingleUseMatchingRuleDto.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Persistence\ApplicationDatabase.cs" />
     <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
     <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
+    <Compile Include="Persistence\IPersistent.cs" />
     <Compile Include="Persistence\StorageBranch.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Reports\BurnDownCharts.cs" />
     <Compile Include="Reports\BurnDownChartsBuilder.cs" />
     <Compile Include="Reports\CustomAggregateBurnDownGraph.cs" />
+    <Compile Include="Reports\CustomBurnDownChartApplicationState.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\IBurnDownChartAnalyser.cs" />
@@ -296,6 +299,8 @@
     <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\IVersionedStatementModelRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
+    <Compile Include="Statement\PersistentFiltersApplicationState.cs" />
+    <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
     <Compile Include="Statement\StatementRepository.cs" />
@@ -332,6 +337,7 @@
     <Compile Include="Widgets\Widget.cs" />
     <Compile Include="Widgets\WidgetGroup.cs" />
     <Compile Include="Widgets\WidgetPersistentState.cs" />
+    <Compile Include="Widgets\WidgetsApplicationState.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
     <EmbeddedResource Include="Properties\BudgetAnalyser.Engine.rd.xml" />
   </ItemGroup>

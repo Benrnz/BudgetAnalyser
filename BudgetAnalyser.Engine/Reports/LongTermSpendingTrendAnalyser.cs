@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Engine.Reports
                 // Find appropriate month on that bucket graph line
                 var monthData = series.PlotsList.Single(s => s.Date == currentMonth);
                 monthData.Amount = Math.Abs(subTotal.Value);
-                    // Negate because all debits are stored as negative. Graph lines will look better as positive values.
+                // Negate because all debits are stored as negative. Graph lines will look better as positive values.
             }
         }
     }

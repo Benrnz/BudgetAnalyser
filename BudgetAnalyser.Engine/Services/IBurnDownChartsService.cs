@@ -27,7 +27,8 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="ledgerBookModel">The current ledger book model.</param>
         /// <param name="criteria">The global filter criteria.</param>
         /// <returns>An object that contains all compiled information for the charts including the chart data itself.</returns>
-        BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, GlobalFilterCriteria criteria);
+        BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel,
+            GlobalFilterCriteria criteria);
 
         /// <summary>
         ///     Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.
@@ -51,13 +52,13 @@ namespace BudgetAnalyser.Engine.Services
         ///     Loads the persisted state data.
         /// </summary>
         /// <param name="persistedStateData">The persisted state data.</param>
-        void LoadPersistedStateData([NotNull] CustomBurnDownChartsV1 persistedStateData);
+        void LoadPersistedStateData([NotNull] CustomBurnDownChartApplicationState persistedStateData);
 
         /// <summary>
         ///     Prepares the persistent state data.
         /// </summary>
         /// <returns></returns>
-        CustomBurnDownChartsV1 PreparePersistentStateData();
+        CustomBurnDownChartApplicationState PreparePersistentStateData();
 
         /// <summary>
         ///     Removes a custom chart from the charts.

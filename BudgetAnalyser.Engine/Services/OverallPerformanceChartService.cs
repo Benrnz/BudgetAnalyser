@@ -21,7 +21,8 @@ namespace BudgetAnalyser.Engine.Services
             this.analyser = analyser;
         }
 
-        public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets, GlobalFilterCriteria criteria)
+        public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets,
+            GlobalFilterCriteria criteria)
         {
             if (statementModel == null)
             {

@@ -1,4 +1,4 @@
-﻿using Rees.UserInteraction.Contracts;
+﻿using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Engine
 {
@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine
     ///     The stored application state for the Main view.
     ///     This is saved when the application exits.
     /// </summary>
-    public class MainApplicationStateModelV1 : IPersistent
+    public class MainApplicationState : IPersistent
     {
         /// <summary>
         ///     Gets or sets a string that indicates where the budget analyser stores its data.

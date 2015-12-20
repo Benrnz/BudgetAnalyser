@@ -471,7 +471,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (this.duplicates != null)
             {
                 return this.duplicates;
-                    // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
+                // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
             }
 
             var query =

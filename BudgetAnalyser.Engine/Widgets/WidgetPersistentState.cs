@@ -15,5 +15,7 @@
         ///     Gets or sets the type of the widget.
         /// </summary>
         public string WidgetType { get; set; }
+
+        // TODO This state persistence is being misued currently.  Custom monitor widgets should be saved with model data not state persistence.
     }
 }

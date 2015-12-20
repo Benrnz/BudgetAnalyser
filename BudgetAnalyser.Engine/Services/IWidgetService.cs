@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Services
     public interface IWidgetService
     {
         /// <summary>
-        /// Arranges the widgets into groups for display in the UI.
+        ///     Arranges the widgets into groups for display in the UI.
         /// </summary>
         /// <param name="storedStates">The stored states.</param>
         IEnumerable<WidgetGroup> PrepareWidgets([CanBeNull] IEnumerable<WidgetPersistentState> storedStates);

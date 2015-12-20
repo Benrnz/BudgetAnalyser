@@ -65,8 +65,6 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<ValidatingEventArgs> Validating;
         public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
-        public ApplicationDataType DataType => ApplicationDataType.Budget;
-        public int LoadSequence => 5;
 
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {
@@ -77,19 +75,24 @@ namespace BudgetAnalyser.Engine.Services
 
             if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
             {
-                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", nameof(newBudgetEffectiveFrom));
+                throw new ArgumentException(
+                    "The effective date of the new budget must be later than the other budget.",
+                    nameof(newBudgetEffectiveFrom));
             }
 
             if (newBudgetEffectiveFrom <= DateTime.Today)
             {
-                throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
+                throw new ArgumentException("The effective date of the new budget must be a future date.",
+                    nameof(newBudgetEffectiveFrom));
             }
 
             var validationMessages = new StringBuilder();
             if (!sourceBudget.Validate(validationMessages))
             {
                 throw new ValidationWarningException(
-                    string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}", validationMessages));
+                    string.Format(CultureInfo.CurrentCulture,
+                        "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}",
+                        validationMessages));
             }
 
             var newBudget = new BudgetModel
@@ -101,7 +104,8 @@ namespace BudgetAnalyser.Engine.Services
 
             if (!newBudget.Validate(validationMessages))
             {
-                throw new InvalidOperationException("New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
+                throw new InvalidOperationException(
+                    "New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
             }
 
             Budgets.Add(newBudget);
@@ -109,10 +113,27 @@ namespace BudgetAnalyser.Engine.Services
             return newBudget;
         }
 
+        public void UpdateIncomesAndExpenses(
+            [NotNull] BudgetModel model,
+            IEnumerable<Income> allIncomes,
+            IEnumerable<Expense> allExpenses)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            // Copy view model bound data back into model.
+            model.Update(allIncomes, allExpenses);
+        }
+
+        public ApplicationDataType DataType => ApplicationDataType.Budget;
+        public int LoadSequence => 5;
+
         public void Close()
         {
             CreateNewBudgetCollection();
-            EventHandler handler = Closed;
+            var handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -134,8 +155,11 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
-            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
-            EventHandler handler = NewDataSourceAvailable;
+            Budgets =
+                await
+                    this.budgetRepository.LoadAsync(
+                        applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
+            var handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
 
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
@@ -149,18 +173,19 @@ namespace BudgetAnalyser.Engine.Services
             if (Budgets.Validate(messages))
             {
                 await this.budgetRepository.SaveAsync();
-                EventHandler savedHandler = Saved;
+                var savedHandler = Saved;
                 savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
-            this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
+            this.logger.LogWarning(
+                l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
             throw new ValidationWarningException("Unable to save Budget:\n" + messages);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
         {
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
+            var handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
             handler?.Invoke(this, args);
 
@@ -176,23 +201,9 @@ namespace BudgetAnalyser.Engine.Services
             }
         }
 
-        public void UpdateIncomesAndExpenses(
-            [NotNull] BudgetModel model,
-            IEnumerable<Income> allIncomes,
-            IEnumerable<Expense> allExpenses)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            // Copy view model bound data back into model.
-            model.Update(allIncomes, allExpenses);
-        }
-
         public bool ValidateModel(StringBuilder messages)
         {
-            EventHandler<ValidatingEventArgs> handler = Validating;
+            var handler = Validating;
             var args = new ValidatingEventArgs();
             handler?.Invoke(this, args);
 
@@ -227,13 +238,13 @@ namespace BudgetAnalyser.Engine.Services
         private void EnsureAllBucketsUsedAreInBucketRepo()
         {
             // Make sure all buckets are in the bucket repo.
-            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+            var buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
                 .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
                 .Distinct();
 
-            foreach (BudgetBucket budgetBucket in buckets)
+            foreach (var budgetBucket in buckets)
             {
-                BudgetBucket copyOfBucket = budgetBucket;
+                var copyOfBucket = budgetBucket;
                 BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
             }
         }

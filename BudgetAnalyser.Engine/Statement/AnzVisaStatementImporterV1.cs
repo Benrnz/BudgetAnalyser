@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             this.importUtilities = importUtilities;
             this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
-                // ANZ importers are NZ specific at this stage.
+            // ANZ importers are NZ specific at this stage.
             this.logger = logger;
         }
 
