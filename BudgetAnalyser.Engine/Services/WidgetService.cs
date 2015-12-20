@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service class to retrieve and prepare the Widgets and arrange them in a grouped fashion for display in the UI.
     /// </summary>
     [AutoRegisterWithIoC]
-    public class WidgetService : IWidgetService
+    internal class WidgetService : IWidgetService
     {
         private static readonly Dictionary<string, int> GroupSequence = new Dictionary<string, int>
         {

@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -15,7 +15,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     This class is stateful and is intended to be used as a single instance.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
+    internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly IDashboardService dashboardService;

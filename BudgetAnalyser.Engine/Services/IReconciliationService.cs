@@ -1,9 +1,9 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <param name="balances">
-        ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
+        ///     The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>

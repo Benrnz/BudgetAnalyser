@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -12,6 +12,9 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ILedgerService : INotifyDatabaseChanges, IServiceFoundation
     {
+        /// <summary>
+        /// Gets the ledger book model.
+        /// </summary>
         LedgerBook LedgerBook { get; }
 
         /// <summary>

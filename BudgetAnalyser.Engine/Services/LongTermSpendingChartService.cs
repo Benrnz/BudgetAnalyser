@@ -1,12 +1,12 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC]
-    public class LongTermSpendingChartService : ILongTermSpendingChartService
+    internal class LongTermSpendingChartService : ILongTermSpendingChartService
     {
         private readonly LongTermSpendingTrendAnalyser analyser;
 

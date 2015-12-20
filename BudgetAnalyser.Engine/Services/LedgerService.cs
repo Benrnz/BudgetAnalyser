@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerService : ILedgerService, ISupportsModelPersistence
+    internal class LedgerService : ILedgerService, ISupportsModelPersistence
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBucketFactory ledgerBucketFactory;

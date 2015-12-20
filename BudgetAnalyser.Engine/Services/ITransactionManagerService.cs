@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -15,10 +15,25 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
     {
+        /// <summary>
+        /// Gets the calculated average debit.
+        /// </summary>
         decimal AverageDebit { get; }
+        /// <summary>
+        /// Gets the statement model.
+        /// </summary>
         StatementModel StatementModel { get; }
+        /// <summary>
+        /// Gets the calculated total count.
+        /// </summary>
         decimal TotalCount { get; }
+        /// <summary>
+        /// Gets the calculated total credits.
+        /// </summary>
         decimal TotalCredits { get; }
+        /// <summary>
+        /// Gets calculated the total debits.
+        /// </summary>
         decimal TotalDebits { get; }
 
         /// <summary>

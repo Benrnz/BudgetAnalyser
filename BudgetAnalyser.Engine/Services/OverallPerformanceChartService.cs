@@ -1,13 +1,13 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC]
-    public class OverallPerformanceChartService : IOverallPerformanceChartService
+    internal class OverallPerformanceChartService : IOverallPerformanceChartService
     {
         private readonly OverallPerformanceBudgetAnalyser analyser;
 

@@ -1,6 +1,6 @@
-﻿using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Reports;
+﻿using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {

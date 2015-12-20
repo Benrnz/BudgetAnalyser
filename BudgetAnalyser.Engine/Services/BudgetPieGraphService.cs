@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to prepare and present data ready for convenient consumption by the Budget Pie Graph.
     /// </summary>
     [AutoRegisterWithIoC]
-    public class BudgetPieGraphService : IBudgetPieGraphService
+    internal class BudgetPieGraphService : IBudgetPieGraphService
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
 
