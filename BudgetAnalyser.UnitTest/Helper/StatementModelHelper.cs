@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
@@ -9,11 +10,11 @@ namespace BudgetAnalyser.UnitTest.Helper
     {
         public static void Output(this StatementModel instance, DateTime startDate)
         {
-            Console.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
-            Console.WriteLine("=====================================================================================================================================");
+            Debug.WriteLine("Date       Description     Bucket     Reference1      Reference2          Amount Account         Id");
+            Debug.WriteLine("=====================================================================================================================================");
             foreach (Transaction transaction in instance.AllTransactions.Where(t => t.Date >= startDate).OrderBy(t => t.Date))
             {
-                Console.WriteLine(
+                Debug.WriteLine(
                     "{0} {1} {2} {3} {4} {5} {6} {7}",
                     transaction.Date.ToString("d-MMM-yy").PadRight(10),
                     transaction.Description.Truncate(15).PadRight(15),
@@ -25,9 +26,9 @@ namespace BudgetAnalyser.UnitTest.Helper
                     transaction.Id);
             }
 
-            Console.WriteLine("=====================================================================================================================================");
-            Console.WriteLine($"Total Transactions: {instance.AllTransactions.Count()}");
-            Console.WriteLine();
+            Debug.WriteLine("=====================================================================================================================================");
+            Debug.WriteLine($"Total Transactions: {instance.AllTransactions.Count()}");
+            Debug.WriteLine(string.Empty);
         }
     }
 }

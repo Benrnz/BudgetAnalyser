@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Xaml;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.UnitTest.Helper
 {

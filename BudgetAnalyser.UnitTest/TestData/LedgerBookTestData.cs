@@ -4,7 +4,6 @@ using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.UnitTest.TestHarness;
-using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.TestData
 {

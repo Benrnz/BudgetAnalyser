@@ -8,8 +8,10 @@ using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.UnitTest.Helper;
 using BudgetAnalyser.UnitTest.TestData;
 using BudgetAnalyser.UnitTest.TestHarness;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Portable.Xaml;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.UnitTest.Budget

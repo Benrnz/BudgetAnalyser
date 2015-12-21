@@ -14779,7 +14779,8 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
+      "Portable.Xaml >= 0.6.1"
     ],
     "UAP,Version=v10.0": []
   }
