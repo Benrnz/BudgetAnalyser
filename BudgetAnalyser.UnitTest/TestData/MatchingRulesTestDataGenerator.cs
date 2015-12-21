@@ -1,100 +1,101 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.Engine.Matching.Data;
+//using System;
+//using System.Collections.Generic;
+//using System.Diagnostics;
+//using System.Linq;
+//using BudgetAnalyser.Engine.Budget;
+//using BudgetAnalyser.Engine.Budget.Data;
+//using BudgetAnalyser.Engine.Matching;
+//using BudgetAnalyser.Engine.Matching.Data;
 
-namespace BudgetAnalyser.UnitTest.TestData
-{
-    public static class MatchingRulesTestDataGenerator
-    {
-        public static void ConvertToDomainAndGenerateCSharp(IEnumerable<MatchingRuleDto> dataRules)
-        {
-            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(), new DtoToFixedBudgetBucketMapper());
+//namespace BudgetAnalyser.UnitTest.TestData
+//{
+//    public static class MatchingRulesTestDataGenerator
+//    {
+//        public static void ConvertToDomainAndGenerateCSharp(IEnumerable<MatchingRuleDto> dataRules)
+//        {
+//            var bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(), new DtoToFixedBudgetBucketMapper());
 
-            var mapper = new DtoToMatchingRuleMapper();
+//            var mapper = new DtoToMatchingRuleMapper();
 
-            List<MatchingRule> domainRules = dataRules.Select(mapper.Map).ToList();
+//            List<MatchingRule> domainRules = dataRules.Select(mapper.Map).ToList();
 
-            Console.WriteLine(@"
-/// <summary> THIS CODE IS GENERATED  </summary>
-[GeneratedCode(""MatchingRulesTestData.ConvertToDomainAndGenerateCSharp"", ""{0}"")]
-public static IEnumerable<MatchingRule> TestData999()
-{{
-    return new List<MatchingRule>
-        {{", DateTime.Now);
+//            Debug.WriteLine(@"
+///// <summary> THIS CODE IS GENERATED  </summary>
+//[GeneratedCode(""MatchingRulesTestData.ConvertToDomainAndGenerateCSharp"", ""{0}"")]
+//public static IEnumerable<MatchingRule> TestData999()
+//{{
+//    return new List<MatchingRule>
+//        {{", DateTime.Now);
 
-            foreach (MatchingRule rule in domainRules)
-            {
-                Console.WriteLine(@"
-            new MatchingRule(BucketRepo)");
-                Console.WriteLine(@"
-                {");
-                Console.WriteLine(@"
-                    Amount = {0},", NullDecimalOrValue(rule.Amount));
-                Console.WriteLine(@"
-                    BucketCode = ""{0}"",", rule.BucketCode);
-                Console.WriteLine(@"
-                    Created = new DateTime({0}, {1}, {2}),", rule.Created.Year, rule.Created.Month, rule.Created.Day);
-                Console.WriteLine(@"
-                    Description = {0},", NullStringOrQuotedValue(rule.Description));
-                Console.WriteLine(@"
-                    LastMatch = {0},", NullDateTimeOrValue(rule.LastMatch));
-                Console.WriteLine(@"
-                    MatchCount = {0},", rule.MatchCount);
-                Console.WriteLine(@"
-                    Reference1 = {0},", NullStringOrQuotedValue(rule.Reference1));
-                Console.WriteLine(@"
-                    Reference2 = {0},", NullStringOrQuotedValue(rule.Reference2));
-                Console.WriteLine(@"
-                    Reference3 = {0},", NullStringOrQuotedValue(rule.Reference3));
-                Console.WriteLine(@"
-                    RuleId = new Guid(""{0}""),", rule.RuleId);
-                Console.WriteLine(@"
-                    TransactionType = {0},", NullStringOrQuotedValue(rule.TransactionType));
-
-
-                Console.WriteLine(@"
-                },"); // Close new Rule initialiser
-            }
+//            foreach (MatchingRule rule in domainRules)
+//            {
+//                Debug.WriteLine(@"
+//            new MatchingRule(BucketRepo)");
+//                Debug.WriteLine(@"
+//                {");
+//                Debug.WriteLine(@"
+//                    Amount = {0},", NullDecimalOrValue(rule.Amount));
+//                Debug.WriteLine(@"
+//                    BucketCode = ""{0}"",", rule.BucketCode);
+//                Debug.WriteLine(@"
+//                    Created = new DateTime({0}, {1}, {2}),", rule.Created.Year, rule.Created.Month, rule.Created.Day);
+//                Debug.WriteLine(@"
+//                    Description = {0},", NullStringOrQuotedValue(rule.Description));
+//                Debug.WriteLine(@"
+//                    LastMatch = {0},", NullDateTimeOrValue(rule.LastMatch));
+//                Debug.WriteLine(@"
+//                    MatchCount = {0},", rule.MatchCount);
+//                Debug.WriteLine(@"
+//                    Reference1 = {0},", NullStringOrQuotedValue(rule.Reference1));
+//                Debug.WriteLine(@"
+//                    Reference2 = {0},", NullStringOrQuotedValue(rule.Reference2));
+//                Debug.WriteLine(@"
+//                    Reference3 = {0},", NullStringOrQuotedValue(rule.Reference3));
+//                Debug.WriteLine(@"
+//                    RuleId = new Guid(""{0}""),", rule.RuleId);
+//                Debug.WriteLine(@"
+//                    TransactionType = {0},", NullStringOrQuotedValue(rule.TransactionType));
 
 
-            Console.WriteLine(@"
-        };"); // Close new List Initialiser
-            Console.WriteLine(@"
-    }"); // Close Method
-        }
+//                Debug.WriteLine(@"
+//                },"); // Close new Rule initialiser
+//            }
 
-        private static string NullDateTimeOrValue(DateTime? date)
-        {
-            if (date == null)
-            {
-                return "null";
-            }
 
-            return string.Format("new DateTime({0}, {1}, {2})", date.Value.Year, date.Value.Month, date.Value.Day);
-        }
+//            Debug.WriteLine(@"
+//        };"); // Close new List Initialiser
+//            Debug.WriteLine(@"
+//    }"); // Close Method
+//        }
 
-        private static string NullDecimalOrValue(decimal? amount)
-        {
-            if (amount == null)
-            {
-                return "null";
-            }
+//        private static string NullDateTimeOrValue(DateTime? date)
+//        {
+//            if (date == null)
+//            {
+//                return "null";
+//            }
 
-            return string.Format("{0}M", amount);
-        }
+//            return string.Format("new DateTime({0}, {1}, {2})", date.Value.Year, date.Value.Month, date.Value.Day);
+//        }
 
-        private static string NullStringOrQuotedValue(string description)
-        {
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                return "null";
-            }
+//        private static string NullDecimalOrValue(decimal? amount)
+//        {
+//            if (amount == null)
+//            {
+//                return "null";
+//            }
 
-            return string.Format("\"{0}\"", description);
-        }
-    }
-}
+//            return string.Format("{0}M", amount);
+//        }
+
+//        private static string NullStringOrQuotedValue(string description)
+//        {
+//            if (string.IsNullOrWhiteSpace(description))
+//            {
+//                return "null";
+//            }
+
+//            return string.Format("\"{0}\"", description);
+//        }
+//    }
+//}
