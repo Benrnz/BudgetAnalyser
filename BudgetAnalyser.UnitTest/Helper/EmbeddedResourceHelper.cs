@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
+using BudgetAnalyser.UnitTest.TestHarness;
 using Portable.Xaml;
 
 namespace BudgetAnalyser.UnitTest.Helper
@@ -26,7 +28,7 @@ namespace BudgetAnalyser.UnitTest.Helper
 
         public static IEnumerable<string> ExtractString(string resourceName)
         {
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            using (Stream stream = typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
                 {
@@ -45,7 +47,7 @@ namespace BudgetAnalyser.UnitTest.Helper
 
         public static string ExtractText(string resourceName, bool outputText = false)
         {
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            using (Stream stream = typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
                 {
@@ -72,7 +74,7 @@ namespace BudgetAnalyser.UnitTest.Helper
 
         private static void ShowAllEmbeddedResources()
         {
-            Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
+            typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
         }
     }
 }

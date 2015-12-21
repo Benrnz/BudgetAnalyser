@@ -91,9 +91,9 @@
   <ItemGroup>
     <!--A reference to the entire .Net Framework and Windows SDK are automatically included-->
     <None Include="project.json" />
-    <None Include="TestData\AnzChequeCsvFileExportFormat.csv" />
-    <None Include="TestData\AnzVisaCsvFileExportFormat.csv" />
-    <None Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
+    <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
     <SDKReference Include="MSTestFramework.Universal, Version=$(UnitTestPlatformVersion)" />
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
@@ -105,6 +105,7 @@
     <Compile Include="Account\VisaAccountTest.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="Helper\BudgetModelHelper.cs" />
+    <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -146,8 +147,8 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="TestData\BudgetCollectionTestData.xml" />
-    <Content Include="TestData\MatchingRulesTestData.xml" />
+    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
+    <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
