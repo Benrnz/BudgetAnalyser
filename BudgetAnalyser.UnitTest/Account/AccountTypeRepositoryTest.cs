@@ -1,6 +1,6 @@
 ﻿using System;
 using BudgetAnalyser.Engine.BankAccount;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace BudgetAnalyser.UnitTest.Account
 {
@@ -22,12 +22,10 @@ namespace BudgetAnalyser.UnitTest.Account
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void AddingEmptyKeyEntryShouldThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            subject.Add(string.Empty, CreateTestData());
-            Assert.Fail();
+            Assert.ThrowsException<ArgumentNullException>(() => subject.Add(string.Empty, CreateTestData()));
         }
 
         [TestMethod]
@@ -40,21 +38,19 @@ namespace BudgetAnalyser.UnitTest.Account
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullEntryShouldThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            subject.Add(Key1, null);
-            Assert.Fail();
+            
+            Assert.ThrowsException<ArgumentNullException>(() => subject.Add(Key1, null));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void AddingNullKeyEntryShouldThrow()
         {
             InMemoryAccountTypeRepository subject = CreateSubject();
-            subject.Add(null, CreateTestData());
-            Assert.Fail();
+            
+            Assert.ThrowsException<ArgumentNullException>(() => subject.Add(null, CreateTestData()));
         }
 
         [TestMethod]

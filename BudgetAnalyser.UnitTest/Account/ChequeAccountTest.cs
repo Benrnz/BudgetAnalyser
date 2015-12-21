@@ -1,5 +1,5 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace BudgetAnalyser.UnitTest.Account
 {
