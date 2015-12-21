@@ -225,6 +225,14 @@
           "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.0, )",
@@ -1825,6 +1833,14 @@
         },
         "runtime": {
           "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -3460,6 +3476,14 @@
         },
         "runtime": {
           "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -5102,6 +5126,14 @@
           "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.0, )",
@@ -6735,6 +6767,14 @@
         },
         "runtime": {
           "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -8377,6 +8417,14 @@
           "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.0, )",
@@ -10010,6 +10058,14 @@
         },
         "runtime": {
           "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.UnitTestUtilities/1.1.5": {
+        "compile": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -12079,6 +12135,20 @@
         "LICENSE.txt",
         "package/services/metadata/core-properties/7d85099798444a30b3c4f3817fc5172f.psmdcp",
         "Portable.Xaml.nuspec"
+      ]
+    },
+    "Rees.UnitTestUtilities/1.1.5": {
+      "sha512": "xooxvSwgX667cnk9yQc41jKDvDDQzD6pPx1x8C7klw7NvJnBG+7K7GlDrbacFS47dmejDl9X22op6Efr5FmqFg==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "lib/net46/Rees.UnitTestUtilities.dll",
+        "lib/net46/Rees.UnitTestUtilities.XML",
+        "lib/uap10.0/Rees.UnitTestUtilities.PCL.dll",
+        "lib/uap10.0/Rees.UnitTestUtilities.PCL.XML",
+        "package/services/metadata/core-properties/9dfb7751fdb9430290fd13498a3933e6.psmdcp",
+        "Rees.UnitTestUtilities.nuspec"
       ]
     },
     "System.AppContext/4.0.0": {
@@ -14780,7 +14850,8 @@
   "projectFileDependencyGroups": {
     "": [
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
-      "Portable.Xaml >= 0.6.1"
+      "Portable.Xaml >= 0.6.1",
+      "Rees.UnitTestUtilities >= 1.1.5"
     ],
     "UAP,Version=v10.0": []
   }

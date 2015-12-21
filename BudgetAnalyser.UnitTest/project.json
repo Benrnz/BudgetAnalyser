@@ -1,7 +1,8 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
-    "Portable.Xaml": "0.6.1"
+    "Portable.Xaml": "0.6.1",
+    "Rees.UnitTestUtilities": "1.1.5"
   },
   "frameworks": {
     "uap10.0": {}

@@ -108,7 +108,6 @@
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
-    <Compile Include="PrivateAccessorStub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
