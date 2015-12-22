@@ -1,0 +1,41 @@
+﻿using System.Linq;
+using AutoMapper;
+using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.UnitTest.Helper;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace BudgetAnalyser.UnitTest.Budget
+{
+    [TestClass]
+    public class DtoToBudgetCollectionAutoMapperTest
+    {
+        private BudgetCollection Result { get; set; }
+        private BudgetCollectionDto TestData { get; set; }
+
+        [TestMethod]
+        public void ShouldMapBudgetsCorrectly()
+        {
+            Assert.AreEqual(TestData.Budgets.Sum(b => b.Expenses.Sum(e => e.Amount)), Result.Sum(b => b.Expenses.Sum(e => e.Amount)));
+        }
+
+        [TestMethod]
+        public void ShouldMapFileName()
+        {
+            Assert.AreEqual(TestData.StorageKey, Result.StorageKey);
+        }
+
+        [TestMethod]
+        public void ShouldMapSameNumberOfBudgets()
+        {
+            Assert.AreEqual(TestData.Budgets.Count, Result.Count);
+        }
+
+        [TestInitialize]
+        public void TestInitialise()
+        {
+            TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
+            Result = Mapper.Map<BudgetCollection>(TestData);
+        }
+    }
+}
