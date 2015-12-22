@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{F4DD4C2E-44D2-4FB5-AFB3-CC7F42314DF5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.UnitTest", "BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj", "{41EBD90D-02DA-4480-8229-FD2E038169DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +56,22 @@ Global
 		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.ActiveCfg = Release|x86
 		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.Build.0 = Release|x86
 		{41EBD90D-02DA-4480-8229-FD2E038169DC}.Release|x86.Deploy.0 = Release|x86
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|ARM.Build.0 = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|x64.Build.0 = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Debug|x86.Build.0 = Debug|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|ARM.ActiveCfg = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|ARM.Build.0 = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|x64.ActiveCfg = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|x64.Build.0 = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|x86.ActiveCfg = Release|Any CPU
+		{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

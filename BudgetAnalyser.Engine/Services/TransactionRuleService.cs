@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
@@ -24,6 +23,7 @@ namespace BudgetAnalyser.Engine.Services
         private readonly ILogger logger;
         private readonly IMatchmaker matchmaker;
         private readonly IMatchingRuleFactory ruleFactory;
+        private readonly IEnvironmentFolders environmentFolders;
         private readonly IMatchingRuleRepository ruleRepository;
         private string rulesStorageKey;
 
@@ -31,7 +31,8 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IMatchingRuleRepository ruleRepository,
             [NotNull] ILogger logger,
             [NotNull] IMatchmaker matchmaker,
-            [NotNull] IMatchingRuleFactory ruleFactory)
+            [NotNull] IMatchingRuleFactory ruleFactory, 
+            [NotNull] IEnvironmentFolders environmentFolders)
         {
             if (ruleRepository == null)
             {
@@ -53,10 +54,13 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(ruleFactory));
             }
 
+            if (environmentFolders == null) throw new ArgumentNullException(nameof(environmentFolders));
+
             this.ruleRepository = ruleRepository;
             this.logger = logger;
             this.matchmaker = matchmaker;
             this.ruleFactory = ruleFactory;
+            this.environmentFolders = environmentFolders;
             MatchingRules = new ObservableCollection<MatchingRule>();
             MatchingRulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
         }
@@ -303,8 +307,7 @@ namespace BudgetAnalyser.Engine.Services
 
         protected virtual string BuildDefaultFileName()
         {
-            var storageFolder = ApplicationData.Current.LocalFolder;
-            var path = storageFolder.Path;
+            var path = this.environmentFolders.ApplicationDataFolder();
             return Path.Combine(path, "MatchingRules.xml");
         }
 

@@ -156,7 +156,7 @@
     <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
+    <ProjectReference Include="..\BudgetAnalyser.Engine2\BudgetAnalyser.Engine2.csproj">
       <Project>{f4dd4c2e-44d2-4fb5-afb3-cc7f42314df5}</Project>
       <Name>BudgetAnalyser.Engine</Name>
     </ProjectReference>
