@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
