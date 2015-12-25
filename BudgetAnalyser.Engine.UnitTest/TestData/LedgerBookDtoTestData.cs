@@ -4,7 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     internal static class LedgerBookDtoTestData
     {

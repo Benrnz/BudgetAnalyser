@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using BudgetAnalyser.Engine.Matching.Data;
-using BudgetAnalyser.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.Helper;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public static class MatchingRulesTestData
     {

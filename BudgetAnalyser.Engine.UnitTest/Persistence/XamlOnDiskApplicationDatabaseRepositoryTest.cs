@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Persistence
+namespace BudgetAnalyser.Engine.UnitTest.Persistence
 {
     [TestClass]
     public class XamlOnDiskApplicationDatabaseRepositoryTest

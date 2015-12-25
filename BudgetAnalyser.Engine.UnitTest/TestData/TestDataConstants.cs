@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.UnitTest.TestData
+﻿namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public static class TestDataConstants
     {

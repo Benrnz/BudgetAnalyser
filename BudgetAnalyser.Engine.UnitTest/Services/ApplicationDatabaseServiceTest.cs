@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Services
+namespace BudgetAnalyser.Engine.UnitTest.Services
 {
     [TestClass]
     public class ApplicationDatabaseServiceTest

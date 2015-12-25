@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper
 {
     public static class BudgetModelHelper
     {

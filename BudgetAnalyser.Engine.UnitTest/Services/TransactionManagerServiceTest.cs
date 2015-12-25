@@ -8,14 +8,14 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.UnitTest.Helper;
-using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Services
+namespace BudgetAnalyser.Engine.UnitTest.Services
 {
     [TestClass]
     public class TransactionManagerServiceTest

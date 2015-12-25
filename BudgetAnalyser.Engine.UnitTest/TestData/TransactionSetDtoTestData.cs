@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Statement.Data;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public static class TransactionSetDtoTestData
     {

@@ -1,11 +1,11 @@
 ﻿using System;
-using AutoMapper;
+
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class FixedBudgetProjectBucketToDtoMapperTest

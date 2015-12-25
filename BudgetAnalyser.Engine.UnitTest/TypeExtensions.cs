@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.Engine.UnitTest
 {
     public static class TypeExtensions
     {

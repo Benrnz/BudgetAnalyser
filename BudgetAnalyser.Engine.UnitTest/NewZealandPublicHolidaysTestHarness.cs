@@ -4,7 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.Engine.UnitTest
 {
     public class NewZealandPublicHolidaysTestHarness
     {

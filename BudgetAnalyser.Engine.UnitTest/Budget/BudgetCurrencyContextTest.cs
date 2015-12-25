@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class BudgetCurrencyContextTest

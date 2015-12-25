@@ -7,7 +7,7 @@
 //using BudgetAnalyser.Engine.Matching;
 //using BudgetAnalyser.Engine.Matching.Data;
 
-//namespace BudgetAnalyser.UnitTest.TestData
+//namespace BudgetAnalyser.Engine.UnitTest.TestData
 //{
 //    public static class MatchingRulesTestDataGenerator
 //    {

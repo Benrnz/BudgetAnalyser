@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     internal static class LedgerBookTestData
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using BudgetAnalyser.Engine.Matching;
-using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Matching
+namespace BudgetAnalyser.Engine.UnitTest.Matching
 {
     [TestClass]
     public class MatchmakerTest

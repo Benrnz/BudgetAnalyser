@@ -4,12 +4,12 @@ using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UserInteraction.Contracts;
 
-namespace BudgetAnalyser.UnitTest.Reports
+namespace BudgetAnalyser.Engine.UnitTest.Reports
 {
     [TestClass]
     public class LongTermSpendingTrendAnalyserTest

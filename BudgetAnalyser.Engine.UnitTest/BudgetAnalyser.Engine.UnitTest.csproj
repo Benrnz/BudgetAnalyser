@@ -70,12 +70,77 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
+    <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetCollectionTest.cs" />
+    <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
+    <Compile Include="Budget\BudgetItemTest.cs" />
+    <Compile Include="Budget\BudgetModelTest.cs" />
+    <Compile Include="Budget\DtoToBudgetBucketTest.cs" />
+    <Compile Include="Budget\DtoToFixedBudgetProjectBucketTest.cs" />
+    <Compile Include="Budget\ExpenseTest.cs" />
+    <Compile Include="Budget\ExpenseToDtoMapperTest.cs" />
+    <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
+    <Compile Include="Budget\IncomeTest.cs" />
+    <Compile Include="Budget\IncomeToDtoMapperTest.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepositoryTest.cs" />
+    <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DuplicateNameException.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="GlobalFilterCriteriaTest.cs" />
     <Compile Include="Helper\BudgetModelHelper.cs" />
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
+    <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />
+    <Compile Include="Ledger\LedgerBookDtoTest.cs" />
+    <Compile Include="Ledger\LedgerBookRepositoryTest.cs" />
+    <Compile Include="Ledger\LedgerBook_DataTest.cs" />
+    <Compile Include="Ledger\LedgerBook_GeneralTest.cs" />
+    <Compile Include="Ledger\LedgerBook_ReconcileTest.cs" />
+    <Compile Include="Ledger\LedgerBucketTest.cs" />
+    <Compile Include="Ledger\LedgerCalculationTest.cs" />
+    <Compile Include="Ledger\LedgerEntryLineTest.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
+    <Compile Include="Ledger\SavedUpForLedgerReconciliationBehaviourTest.cs" />
+    <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
+    <Compile Include="Ledger\TransferFundsCommandTest.cs" />
+    <Compile Include="Matching\MatchingRuleTest.cs" />
+    <Compile Include="Matching\MatchMakerTest.cs" />
+    <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
+    <Compile Include="MetaTest.cs" />
+    <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
+    <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicHolidaysTestData.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PublicHolidaysTestGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReferenceNumberGeneratorTest.cs" />
+    <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
+    <Compile Include="Reports\GraphDataTest.cs" />
+    <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
+    <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
+    <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
+    <Compile Include="Services\StatementModelTestHarness.cs" />
+    <Compile Include="Services\TransactionManagerServiceTest.cs" />
+    <Compile Include="Services\TransactionRuleServiceTest.cs" />
+    <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
+    <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
+    <Compile Include="Statement\BankImportUtilitiesTest.cs" />
+    <Compile Include="Statement\BankStatementImporterRepositoryTest.cs" />
+    <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
+    <Compile Include="Statement\StatementModelGeneratorTest.cs" />
+    <Compile Include="Statement\StatementModelTest.cs" />
+    <Compile Include="Statement\TransactionDtoTest.cs" />
+    <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
+    <Compile Include="Statement\TransactionTest.cs" />
+    <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
     <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
@@ -96,10 +161,21 @@
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\BudgetModelFake.cs" />
+    <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidgetTest.cs" />
+    <Compile Include="Widgets\OverspentWarningTest.cs" />
+    <Compile Include="Widgets\RemainingActualSurplusWidgetTest.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidgetTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -114,8 +190,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PublicHolidaysTestGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PublicHolidaysTestGenerator1.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="TestData\BudgetCollectionTestData.xml" />
     <Content Include="TestData\MatchingRulesTestData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

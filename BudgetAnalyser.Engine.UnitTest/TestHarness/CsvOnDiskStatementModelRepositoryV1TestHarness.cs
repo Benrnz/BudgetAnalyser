@@ -6,7 +6,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {

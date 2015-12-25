@@ -1,11 +1,11 @@
 ﻿using System;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.Helper;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class XamlOnDiskApplicationDatabaseRepositoryTestHarness : XamlOnDiskApplicationDatabaseRepository
     {

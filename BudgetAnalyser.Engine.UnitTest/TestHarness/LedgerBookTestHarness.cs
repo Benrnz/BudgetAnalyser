@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     internal class LedgerBookTestHarness : LedgerBook
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.Engine.UnitTest
 {
     internal class DuplicateNameException : Exception
     {

@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 
-namespace BudgetAnalyser.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper
 {
     public static class LedgerBookHelper
     {

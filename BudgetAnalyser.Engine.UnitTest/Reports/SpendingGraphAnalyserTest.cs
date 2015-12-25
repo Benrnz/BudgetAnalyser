@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Budget;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Reports
+namespace BudgetAnalyser.Engine.UnitTest.Reports
 {
     [TestClass]
     public class SpendingGraphAnalyserTest

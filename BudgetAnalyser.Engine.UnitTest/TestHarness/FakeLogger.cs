@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using BudgetAnalyser.Engine;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class FakeLogger : ILogger
     {

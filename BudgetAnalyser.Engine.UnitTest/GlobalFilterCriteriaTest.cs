@@ -3,7 +3,7 @@ using System.Text;
 using BudgetAnalyser.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.Engine.UnitTest
 {
     [TestClass]
     public class GlobalFilterCriteriaTest

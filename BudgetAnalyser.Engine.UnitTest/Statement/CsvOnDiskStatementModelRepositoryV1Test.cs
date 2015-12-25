@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
-using BudgetAnalyser.UnitTest.Helper;
-using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class CsvOnDiskStatementModelRepositoryV1Test

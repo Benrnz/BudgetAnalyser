@@ -3,11 +3,11 @@ using System.Globalization;
 using System.IO;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class BankImportUtilitiesTest

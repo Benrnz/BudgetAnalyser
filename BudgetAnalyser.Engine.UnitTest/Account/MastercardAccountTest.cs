@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.BankAccount;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Account
+namespace BudgetAnalyser.Engine.UnitTest.Account
 {
     [TestClass]
     public class MastercardAccountTest

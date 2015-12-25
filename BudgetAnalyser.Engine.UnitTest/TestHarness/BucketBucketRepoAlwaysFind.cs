@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class BucketBucketRepoAlwaysFind : InMemoryBudgetBucketRepository
     {

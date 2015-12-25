@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class XamlOnDiskBudgetRepositoryTestHarness : XamlOnDiskBudgetRepository
     {

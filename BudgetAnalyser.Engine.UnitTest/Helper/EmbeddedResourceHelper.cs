@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Xaml;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
-namespace BudgetAnalyser.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper
 {
     public static class EmbeddedResourceHelper
     {

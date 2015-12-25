@@ -1,7 +1,7 @@
 ﻿using BudgetAnalyser.Engine.Statement.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class TransactionDtoTest

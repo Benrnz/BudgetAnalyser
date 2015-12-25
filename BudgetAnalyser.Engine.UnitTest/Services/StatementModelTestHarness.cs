@@ -1,9 +1,9 @@
 ﻿using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
-namespace BudgetAnalyser.UnitTest.Services
+namespace BudgetAnalyser.Engine.UnitTest.Services
 {
     public class StatementModelTestHarness : StatementModel
     {

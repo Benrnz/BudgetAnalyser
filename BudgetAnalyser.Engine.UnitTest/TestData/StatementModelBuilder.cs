@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public class StatementModelBuilder
     {

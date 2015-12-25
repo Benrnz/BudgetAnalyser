@@ -2,7 +2,7 @@
 using System.Text;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class BudgetModelFake : BudgetModel
     {

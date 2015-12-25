@@ -7,7 +7,7 @@ using BudgetAnalyser.Engine.Statement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class BankStatementImporterRepositoryTest

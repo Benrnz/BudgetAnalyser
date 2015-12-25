@@ -1,7 +1,7 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.UnitTest.TestHarness
+namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class BankImportUtilitiesTestHarness : BankImportUtilities
     {

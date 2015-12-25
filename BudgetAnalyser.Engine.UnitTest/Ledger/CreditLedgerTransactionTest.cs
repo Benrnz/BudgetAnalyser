@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.Ledger;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class CreditLedgerTransactionTest

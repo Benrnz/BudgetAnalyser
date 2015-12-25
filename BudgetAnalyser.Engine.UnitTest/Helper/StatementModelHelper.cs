@@ -4,7 +4,7 @@ using System.Linq;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Statement;
 
-namespace BudgetAnalyser.UnitTest.Helper
+namespace BudgetAnalyser.Engine.UnitTest.Helper
 {
     public static class StatementModelHelper
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 
-namespace BudgetAnalyser.UnitTest.TestData
+namespace BudgetAnalyser.Engine.UnitTest.TestData
 {
     public static class BudgetBucketTestData
     {

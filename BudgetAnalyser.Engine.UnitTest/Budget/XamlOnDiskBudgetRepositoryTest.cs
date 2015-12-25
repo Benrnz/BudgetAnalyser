@@ -5,16 +5,16 @@ using System.Xaml;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.UnitTest.Helper;
-using BudgetAnalyser.UnitTest.TestData;
-using BudgetAnalyser.UnitTest.TestHarness;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using BudgetAnalyser.Engine.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Portable.Xaml;
+
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class XamlOnDiskBudgetRepositoryTest
