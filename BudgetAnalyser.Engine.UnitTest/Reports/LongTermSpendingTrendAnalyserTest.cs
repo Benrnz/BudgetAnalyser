@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser.Engine.UnitTest.Reports
 {
     [TestClass]
     public class LongTermSpendingTrendAnalyserTest
     {
-        private IUserMessageBox MessageBoxFake { get; set; }
         // Used on demand for performance profiling
         //[TestMethod]
         //public void PerformanceTest()
@@ -57,12 +54,6 @@ namespace BudgetAnalyser.Engine.UnitTest.Reports
             subject.Analyse(StatementModelTestData.TestData2(), new GlobalFilterCriteria());
 
             Output(subject);
-        }
-
-        [TestInitialize]
-        public void TestInitialise()
-        {
-            MessageBoxFake = new Mock<IUserMessageBox>().Object;
         }
 
         private static void Output(LongTermSpendingTrendAnalyser subject)
