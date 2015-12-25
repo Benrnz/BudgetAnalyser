@@ -172,6 +172,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             var newAdjustment = new BankBalanceAdjustmentTransaction
             {
+                Date = Date,
                 Narrative = narrative,
                 Amount = adjustment,
                 BankAccount = account

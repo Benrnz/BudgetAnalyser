@@ -64,7 +64,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 Amount = -(closingBalance - budgetAmount),
                 Date = reconciliationDate,
-                Narrative = SupplementLessThanBudgetText
+                Narrative = RemoveExcessText
             };
         }
 
