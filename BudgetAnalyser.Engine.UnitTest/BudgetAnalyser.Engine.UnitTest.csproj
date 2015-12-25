@@ -113,6 +113,8 @@
     <Compile Include="Reports\GraphDataTest.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
     <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
+    <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
+    <Compile Include="Services\StatementModelTestHarness.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
