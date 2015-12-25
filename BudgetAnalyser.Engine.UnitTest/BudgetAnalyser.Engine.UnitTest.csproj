@@ -70,6 +70,14 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
+    <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetCollectionTest.cs" />
+    <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
+    <Compile Include="Budget\BudgetItemTest.cs" />
+    <Compile Include="Budget\BudgetModelTest.cs" />
+    <Compile Include="Budget\ExpenseTest.cs" />
+    <Compile Include="Budget\IncomeTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="Global.cs" />
