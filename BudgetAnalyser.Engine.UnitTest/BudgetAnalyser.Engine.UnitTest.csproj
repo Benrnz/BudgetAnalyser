@@ -148,6 +148,7 @@
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
