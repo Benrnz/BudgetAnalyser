@@ -13760,7 +13760,8 @@
       "JetBrains.Annotations >= 10.0.0",
       "Microsoft.NETCore >= 5.0.0",
       "Microsoft.NETCore.Portable.Compatibility >= 1.0.0",
-      "Portable.Xaml >= 0.6.1"
+      "Portable.Xaml >= 0.6.1",
+      "System.Reflection.TypeExtensions >= 4.0.0"
     ],
     ".NETPlatform,Version=v5.0": []
   }
