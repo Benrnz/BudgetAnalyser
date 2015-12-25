@@ -40,4 +40,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("3.01.0")]
 [assembly: AssemblyFileVersion("3.01.0")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Engine.UnitTest")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: CLSCompliant(false)]
