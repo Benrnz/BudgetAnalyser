@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
 
 namespace Rees.TangyFruitMapper
@@ -65,9 +63,9 @@ namespace Rees.TangyFruitMapper
             this.codeOutput($@"{Indent()}public {this.modelType.Name} ToModel({this.dtoType.Name} dto)
 {Indent()}{{
 {Indent(true)}var model = new {this.modelType.Name}();");
-            foreach (var kvp in map.ModelToDtoMap)
+            foreach (var assignment in map.ModelToDtoMap.Values)
             {
-                this.codeOutput($"{Indent()}model.{kvp.Key} = dto.{kvp.Value};");
+                this.codeOutput($"{Indent()}{assignment.CreateCodeLine()}");
             }
             this.codeOutput($@"{Indent()}return model;
 {Outdent()}}} // End ToModel Method");
@@ -77,9 +75,9 @@ namespace Rees.TangyFruitMapper
 {Indent()}public {this.dtoType.Name} ToDto({this.modelType.Name} model)
 {Indent()}{{
 {Indent(true)}var dto = new {this.dtoType.Name}();");
-            foreach (var kvp in map.DtoToModelMap)
+            foreach (var assignment in map.DtoToModelMap.Values)
             {
-                this.codeOutput($"{Indent()}dto.{kvp.Key} = model.{kvp.Value};");
+                this.codeOutput($"{Indent()}{assignment.CreateCodeLine()}");
             }
             this.codeOutput($@"{Indent()}return dto;
 {Outdent()}}} // End ToDto Method");

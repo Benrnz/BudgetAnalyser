@@ -9,9 +9,9 @@ namespace Rees.TangyFruitMapper
     internal class MapByProperties
     {
         private readonly Action<string> diagnosticLogger;
-        private readonly Dictionary<string, string> dtoToModelMap = new Dictionary<string, string>();
+        private readonly Dictionary<string, AssignmentStrategy> dtoToModelMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type dtoType;
-        private readonly Dictionary<string, string> modelToDtoMap = new Dictionary<string, string>();
+        private readonly Dictionary<string, AssignmentStrategy> modelToDtoMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type modelType;
         private readonly List<string> warnings = new List<string>();
 
@@ -28,12 +28,12 @@ namespace Rees.TangyFruitMapper
         /// <summary>
         /// Gets a map with the Dto Property name as the key and the property name from the Model as the value.
         /// </summary>
-        public IReadOnlyDictionary<string, string> DtoToModelMap => this.dtoToModelMap;
+        public IReadOnlyDictionary<string, AssignmentStrategy> DtoToModelMap => this.dtoToModelMap;
 
         /// <summary>
         /// Gets a map with the Model Property name as the key and the property name from the Dto as the value.
         /// </summary>
-        public IReadOnlyDictionary<string, string> ModelToDtoMap => this.modelToDtoMap;
+        public IReadOnlyDictionary<string, AssignmentStrategy> ModelToDtoMap => this.modelToDtoMap;
 
         public IEnumerable<string> Warnings => this.warnings;
 
@@ -43,7 +43,11 @@ namespace Rees.TangyFruitMapper
             foreach (var dtoProperty in this.dtoType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for property '{this.dtoType.Name}.{dtoProperty.Name}'");
-                this.dtoToModelMap.Add(dtoProperty.Name, "// TODO value not found on model.");
+                this.dtoToModelMap.Add(dtoProperty.Name, new CommentedAssignment("TODO value not found on model.")
+                {
+                    AssignmentDestination = dtoProperty.Name,
+                    AssignmentDestinationIsDto = true,
+                });
                 if (AttemptMapToProperty(dtoProperty, this.modelType, this.dtoToModelMap)) continue;
                 // Attempt Field map 
             }
@@ -51,9 +55,14 @@ namespace Rees.TangyFruitMapper
             foreach (var modelProperty in this.modelType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for property '{this.modelType.Name}.{modelProperty.Name}'");
-                this.modelToDtoMap.Add(modelProperty.Name, "// TODO value not found on model.");
+                this.modelToDtoMap.Add(modelProperty.Name, new CommentedAssignment("TODO value not found on model.")
+                {
+                    AssignmentDestination = modelProperty.Name,
+                    AssignmentDestinationIsDto = false,
+                });
                 if (AttemptMapToProperty(modelProperty, this.dtoType, this.modelToDtoMap)) continue;
                 // Attempt Field map 
+                
             }
 
             OutConditions();
@@ -66,7 +75,7 @@ namespace Rees.TangyFruitMapper
             WarnIfMissingProperties(this.modelType, this.modelToDtoMap);
         }
 
-        private void WarnIfMissingProperties(Type target, Dictionary<string, string> map)
+        private void WarnIfMissingProperties(Type target, Dictionary<string, AssignmentStrategy> map)
         {
             var query = target.GetProperties().Where(p => p.CanWrite).ToList();
             if (map.Count < query.Count())
@@ -80,12 +89,17 @@ namespace Rees.TangyFruitMapper
             }
         }
 
-        private bool AttemptMapToProperty(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, string> mapping)
+        private bool AttemptMapToProperty(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
         {
             var sourceProperty = FindMatchingSourceProperty(assignmentDestination, assignmentSource);
             if (sourceProperty != null)
             {
-                mapping[assignmentDestination.Name] = sourceProperty.Name;
+                mapping[assignmentDestination.Name] = new SimpleAssignment
+                {
+                    AssignmentDestination = assignmentDestination.Name,
+                    AssignmentDestinationIsDto = mapping[assignmentDestination.Name].AssignmentDestinationIsDto,
+                    AssignmentSource = sourceProperty.Name,
+                };
                 return true;
             }
 

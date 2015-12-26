@@ -39,6 +39,8 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssignmentStrategy.cs" />
+    <Compile Include="CommentedAssignment.cs" />
     <Compile Include="IDtoMapper.cs" />
     <Compile Include="MapByProperties.cs" />
     <Compile Include="MappingGenerator.cs" />
@@ -46,6 +48,7 @@
     <Compile Include="NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyNotMatchedException.cs" />
+    <Compile Include="SimpleAssignment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
