@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using JetBrains.Annotations;
 
 namespace Rees.TangyFruitMapper
 {
     public class MappingGenerator
     {
-        private List<PropertyInfo> mappedProperties = new List<PropertyInfo>();
+        private Dictionary<PropertyInfo,PropertyInfo> mappedProperties = new Dictionary<PropertyInfo, PropertyInfo>();
         private Type dtoType;
         private Type modelType;
         private Action<string> codeOutput;
@@ -18,7 +16,7 @@ namespace Rees.TangyFruitMapper
 
         public Action<string> DiagnosticLogging { get; set; }
 
-        public void Generate<TModel, TDto>(
+        public void Generate<TDto, TModel>(
             [NotNull] Action<string> codeOutput,
             [NotNull] Action<string> errorOutput)
         {
@@ -32,6 +30,7 @@ namespace Rees.TangyFruitMapper
             this.dtoType = typeof (TDto);
             DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
 
+            Preconditions();
             WriteClassHeader();
 
             try
@@ -55,6 +54,21 @@ namespace Rees.TangyFruitMapper
             }
         }
 
+        private void Preconditions()
+        {
+            var modelCtor = this.modelType.GetConstructor(new Type[] { });
+            if (modelCtor == null)
+            {
+                throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.modelType.Name}");
+            }
+
+            var dtoCtor = this.modelType.GetConstructor(new Type[] { });
+            if (dtoCtor == null)
+            {
+                throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.dtoType.Name}");
+            }
+        }
+
         private void WriteClassFooter()
         {
             this.codeOutput($@"{Outdent()}}} // End Class");
@@ -63,14 +77,13 @@ namespace Rees.TangyFruitMapper
 
         private void WriteMapToDtoFooter()
         {
-            this.codeOutput($@"
-{Indent()}return dto;
+            this.codeOutput($@"{Indent()}return dto;
 {Outdent()}}} // End ToDto Method");
         }
 
         private void WriteMapToDtoHeader()
         {
-            this.codeOutput($@"{Indent(true)}public {this.modelType.Name} ToModel({this.dtoType.Name}) {{ throw new NotImplementedException(); }}
+            this.codeOutput($@"{Indent(true)}public {this.modelType.Name} ToModel({this.dtoType.Name} dto) {{ throw new NotImplementedException(); }}
 {Indent()}public {this.dtoType.Name} ToDto({this.modelType.Name} model)
 {Indent()}{{
 {Indent(true)}var dto = new {this.dtoType.Name}();");
@@ -78,29 +91,32 @@ namespace Rees.TangyFruitMapper
 
         private void WriteClassHeader()
         {
-            this.codeOutput($@"using Rees.TangyFruitMapper;
+            this.codeOutput($@"using System;
+using System.CodeDom.Compiler;
+using Rees.TangyFruitMapper;
 using {this.modelType.Namespace};
 using {this.dtoType.Namespace};
-
 namespace GeneratedCode
 {{
-{Indent(true)}public class Mapper_{this.modelType.Name}_{this.dtoType.Name} : IDtoMapper<{this.dtoType.Name}, {this.dtoType.Name}>
+{Indent(true)}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
+{Indent()}public class Mapper_{this.dtoType.Name}_{this.modelType.Name} : IDtoMapper<{this.dtoType.Name}, {this.modelType.Name}>
 {Indent()}{{");
         }
 
-        private bool AttemptMapToProperty(PropertyInfo sourceProperty)
+        private bool AttemptMapToProperty(PropertyInfo sourceModelProperty)
         {
-            var destinationProperty = FindDestinationProperty(sourceProperty);
-            if (destinationProperty != null)
+            var destinationDtoProperty = FindDestinationDtoProperty(sourceModelProperty);
+            if (destinationDtoProperty != null)
             {
-                this.codeOutput($"{Indent()}dto.{destinationProperty.Name} = model.{sourceProperty.Name};");
+                this.mappedProperties.Add(destinationDtoProperty, sourceModelProperty);
+                this.codeOutput($"{Indent()}dto.{destinationDtoProperty.Name} = model.{sourceModelProperty.Name};");
                 return true;
             }
 
             return false;
         }
 
-        private PropertyInfo FindDestinationProperty(PropertyInfo sourceProperty)
+        private PropertyInfo FindDestinationDtoProperty(PropertyInfo sourceProperty)
         {
             var destinationProperty = this.dtoType.GetProperty(sourceProperty.Name);
             if (destinationProperty != null)

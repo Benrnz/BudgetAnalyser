@@ -22,7 +22,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         public void Generate_ShouldOutputCode()
         {
             bool codeOutputed = false, errors = false;
-            this.subject.Generate<ModelType1, DtoType1>(
+            this.subject.Generate<DtoType1, ModelType1>(
                 s =>
                 {
                     codeOutputed = true;
