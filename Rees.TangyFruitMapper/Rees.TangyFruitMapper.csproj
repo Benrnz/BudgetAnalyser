@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDtoMapper.cs" />
+    <Compile Include="MapByProperties.cs" />
     <Compile Include="MappingGenerator.cs" />
+    <Compile Include="NamespaceFinder.cs" />
     <Compile Include="NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyNotMatchedException.cs" />

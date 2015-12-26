@@ -1,6 +1,6 @@
 ﻿namespace Rees.TangyFruitMapper.UnitTest.TestData
 {
-    public class ModelType1
+    public class DtoType2
     {
         public string Name { get; set; }
 
