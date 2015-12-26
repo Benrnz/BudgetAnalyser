@@ -46,6 +46,7 @@
     <Compile Include="MappingGenerator.cs" />
     <Compile Include="NamespaceFinder.cs" />
     <Compile Include="NoAccessibleDefaultConstructorException.cs" />
+    <Compile Include="PrivateFieldAssignment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyNotMatchedException.cs" />
     <Compile Include="SimpleAssignment.cs" />

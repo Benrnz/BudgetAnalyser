@@ -4,9 +4,7 @@
     {
         public override string CreateCodeLine()
         {
-            var destination = AssignmentDestinationIsDto ? "dto" : "model";
-            var source = AssignmentDestinationIsDto ? "model" : "dto";
-            return $"{destination}.{AssignmentDestination} = {source}.{AssignmentSource};";
+            return $"{DestinationName}.{AssignmentDestination} = {SourceName}.{AssignmentSource};";
         }
     }
 }

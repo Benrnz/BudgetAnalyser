@@ -9,5 +9,9 @@
         public bool AssignmentDestinationIsDto { get; set; }
 
         public abstract string CreateCodeLine();
+
+        protected string DestinationName => AssignmentDestinationIsDto ? "dto" : "model";
+
+        protected string SourceName => AssignmentDestinationIsDto ? "model" : "dto";
     }
 }

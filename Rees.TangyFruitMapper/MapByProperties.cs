@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -40,16 +41,17 @@ namespace Rees.TangyFruitMapper
         public void CreateMap()
         {
             Preconditions();
-            foreach (var dtoProperty in this.dtoType.GetProperties())
+            // DTO properties must be writable
+            foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
             {
-                this.diagnosticLogger($"Looking for a match for property '{this.dtoType.Name}.{dtoProperty.Name}'");
+                this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
                 this.dtoToModelMap.Add(dtoProperty.Name, new CommentedAssignment("TODO value not found on model.")
                 {
                     AssignmentDestination = dtoProperty.Name,
                     AssignmentDestinationIsDto = true,
                 });
-                if (AttemptMapToProperty(dtoProperty, this.modelType, this.dtoToModelMap)) continue;
-                // Attempt Field map 
+                if (AttemptMapToSourceProperty(dtoProperty.Name, this.modelType, this.dtoToModelMap)) continue;
+                if (AttemptMapToSourceField(dtoProperty.Name, this.dtoType, this.modelType, this.dtoToModelMap)) continue;
             }
 
             foreach (var modelProperty in this.modelType.GetProperties())
@@ -60,12 +62,46 @@ namespace Rees.TangyFruitMapper
                     AssignmentDestination = modelProperty.Name,
                     AssignmentDestinationIsDto = false,
                 });
-                if (AttemptMapToProperty(modelProperty, this.dtoType, this.modelToDtoMap)) continue;
+                if (AttemptMapToSourceProperty(modelProperty.Name, this.dtoType, this.modelToDtoMap)) continue;
                 // Attempt Field map 
                 
             }
 
             OutConditions();
+        }
+
+        private bool AttemptMapToSourcePrivateSetter(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        {
+            var property = assignmentSource.GetProperty(assignmentDestination.Name);
+            if (property == null) return false;
+            var setterMethod = property.SetMethod;
+
+        }
+
+        private bool AttemptMapToSourceField(string destinationName, Type destinationType, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        {
+            // Looking for a backing field with a similar name
+            var sourceField = assignmentSource.GetField(destinationName.ToLower());
+            if (sourceField == null)
+            {
+                sourceField = assignmentSource.GetField(destinationName);
+            }
+            if (sourceField == null)
+            {
+                sourceField = assignmentSource.GetField($"_{destinationName.ToLower()}");
+            }
+
+            if (sourceField != null)
+            {
+                mapping[destinationName] = new PrivateFieldAssignment(destinationType, sourceField)
+                {
+                    AssignmentDestination = destinationName,
+                    AssignmentDestinationIsDto = mapping[destinationName].AssignmentDestinationIsDto,
+                };
+                return true;
+            }
+
+            return false;
         }
 
         private void OutConditions()
@@ -89,15 +125,15 @@ namespace Rees.TangyFruitMapper
             }
         }
 
-        private bool AttemptMapToProperty(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        private bool AttemptMapToSourceProperty(string destinationName, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
         {
-            var sourceProperty = FindMatchingSourceProperty(assignmentDestination, assignmentSource);
+            var sourceProperty = FindMatchingSourceProperty(destinationName, assignmentSource);
             if (sourceProperty != null)
             {
-                mapping[assignmentDestination.Name] = new SimpleAssignment
+                mapping[destinationName] = new SimpleAssignment
                 {
-                    AssignmentDestination = assignmentDestination.Name,
-                    AssignmentDestinationIsDto = mapping[assignmentDestination.Name].AssignmentDestinationIsDto,
+                    AssignmentDestination = destinationName,
+                    AssignmentDestinationIsDto = mapping[destinationName].AssignmentDestinationIsDto,
                     AssignmentSource = sourceProperty.Name,
                 };
                 return true;
@@ -106,9 +142,9 @@ namespace Rees.TangyFruitMapper
             return false;
         }
 
-        private PropertyInfo FindMatchingSourceProperty(PropertyInfo property, Type source)
+        private PropertyInfo FindMatchingSourceProperty(string destinationName, Type source)
         {
-            var sourceProperty = source.GetProperty(property.Name);
+            var sourceProperty = source.GetProperty(destinationName);
             if (sourceProperty != null)
             {
                 this.diagnosticLogger($"    Found match with same name on destination type.");
@@ -122,7 +158,7 @@ namespace Rees.TangyFruitMapper
             }
             else
             {
-                this.warnings.Add($"    WARNING: No Source property found to map to: {property.DeclaringType.Name}.{property.Name} - it will be ignored.");
+                this.warnings.Add($"    WARNING: No Source property found to map to: {destinationName} - it will be ignored.");
             }
 
             // Source property isn't public
