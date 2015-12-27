@@ -239,7 +239,7 @@ namespace Rees.TangyFruitMapper
         private void DtoPropertiesMustBePublicAndWriteable()
         {
             int counter = 0;
-            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public))
+            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 counter++;
                 if (!property.CanWrite || !property.SetMethod.IsPublic)
