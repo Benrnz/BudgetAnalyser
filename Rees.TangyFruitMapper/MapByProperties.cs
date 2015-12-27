@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -67,10 +66,7 @@ namespace Rees.TangyFruitMapper
                     continue;
                 }
 
-                assignmentStrategy.Source = new CommentedFetchSource
-                {
-                    SourceName = dtoProperty.Name,
-                };
+                assignmentStrategy.Source = new CommentedFetchSource(dtoProperty.Name);
             }
 
             foreach (var modelProperty in this.modelType.GetProperties())
@@ -86,7 +82,7 @@ namespace Rees.TangyFruitMapper
                     assignmentStrategy.Destination = CanDestinationBeAssignedUsingReflection(modelProperty, this.modelType);
                     if (assignmentStrategy.Destination == null)
                     {
-                        assignmentStrategy.Destination = new CommentedAssignment("TODO destination isn't writeable", modelProperty.Name);
+                        assignmentStrategy.Destination = new CommentedAssignment(modelProperty.Name);
                     }
                 }
 
@@ -96,6 +92,14 @@ namespace Rees.TangyFruitMapper
                 {
                     continue;
                 }
+
+                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(modelProperty.Name, this.dtoType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
+
+                assignmentStrategy.Source = new CommentedFetchSource(modelProperty.Name);
             }
 
             OutConditions();

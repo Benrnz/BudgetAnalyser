@@ -10,7 +10,7 @@
         public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
             var destinationObject = DestinationObjectName(destinationKind);
-            return $"{destinationObject}.GetType().GetProperty({AssignmentDestinationName}).SetValue({destinationObject}, {sourceVariableName});";
+            return $@"{AssignmentStrategy.ModelTypeVariableName}.GetProperty(""{AssignmentDestinationName}"").SetValue({destinationObject}, {sourceVariableName});";
         }
     }
 }

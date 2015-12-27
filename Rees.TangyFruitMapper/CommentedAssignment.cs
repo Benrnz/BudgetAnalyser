@@ -4,15 +4,16 @@
     {
         private readonly string reason;
 
-        public CommentedAssignment(string reason, string assignmentDestinationName)
+        public CommentedAssignment(string assignmentDestinationName)
         {
-            this.reason = reason;
             AssignmentDestinationName = assignmentDestinationName;
         }
 
         public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
-            return $"// {DestinationObjectName(destinationKind)}.{AssignmentDestinationName} = {sourceVariableName}; // {this.reason}";
+            // return $"// var {SourceVariableName} = // TODO Cannot find a way to retrieve this property: {SourceObjectName(sourceKind)}.{SourceName}.";
+            var destinationObject = DestinationObjectName(destinationKind);
+            return $"// {destinationObject}.{AssignmentDestinationName} = {sourceVariableName}; // TODO Cannot find a way to set this property: {destinationObject}.{AssignmentDestinationName}.";
         }
     }
 }

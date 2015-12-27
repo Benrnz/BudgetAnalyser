@@ -13,12 +13,13 @@ namespace GeneratedCode
         public ModelType2_PrivateSet ToModel(DtoType2 dto)
         {
             var model = new ModelType2_PrivateSet();
+            var modelType = model.GetType();
             var source1 = dto.Name;
-            // model.Name = source1; // TODO destination isn't writeable:
+            modelType.GetProperty("Name").SetValue(model, source1);
             var source2 = dto.Age;
-            // model.Age = source2; // TODO destination isn't writeable:
+            modelType.GetProperty("Age").SetValue(model, source2);
             var source3 = dto.MyNumber;
-            // model.MyNumber = source3; // TODO destination isn't writeable:
+            modelType.GetProperty("MyNumber").SetValue(model, source3);
             return model;
         } // End ToModel Method
 
