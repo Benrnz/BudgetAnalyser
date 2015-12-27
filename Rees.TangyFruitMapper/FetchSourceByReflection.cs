@@ -15,7 +15,7 @@ namespace Rees.TangyFruitMapper
         public override string CreateCodeLine(DtoOrModel sourceKind)
         {
             var sourceObjectName = SourceObjectName(sourceKind);
-            return $@"var {SourceVariableName} = {sourceObjectName}.GetType().GetField(""{this.sourceField}"").GetValue({sourceObjectName});";
+            return $@"var {SourceVariableName} = {sourceObjectName}.GetType().GetField(""{this.sourceField}"", BindingFlags.Instance | BindingFlags.NonPublic).GetValue({sourceObjectName});";
         }
     }
 }

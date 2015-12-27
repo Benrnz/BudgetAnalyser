@@ -30,12 +30,6 @@ namespace Rees.TangyFruitMapper.UnitTest
             }
             var assembly = results.CompiledAssembly;
             var mapperType = assembly.GetType($"GeneratedCode.Mapper_{typeof(TDto).Name}_{typeof(TModel).Name}");
-            var types = assembly.GetExportedTypes();
-            foreach (var type in types)
-            {
-                output.WriteLine(type.FullName);
-            }
-
             return (IDtoMapper<TDto, TModel>)mapperType.GetConstructor(new Type[] { }).Invoke(new object[] { });
         }
     }

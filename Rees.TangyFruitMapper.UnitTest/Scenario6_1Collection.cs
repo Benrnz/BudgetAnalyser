@@ -15,13 +15,13 @@ namespace Rees.TangyFruitMapper.UnitTest
         [Fact]
         public void Generate_ShouldOutputCode()
         {
-            Assert.NotEmpty(this.generatedCode);
+            Assert.NotEmpty(this.GeneratedCode);
         }
 
         [Fact]
         public void Generate_ShouldSuccessfullyMapToDto()
         {
-            var mapper = CreateMapper();
+            var mapper = CreateMapperFromGeneratedCode();
             var result = mapper.ToDto(new ModelType6_1Collection(410, 3.1415M, new[] { "Horse", "Battery", "Stapler" }));
 
             Assert.Equal(410, result.Age);
@@ -34,7 +34,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         [Fact]
         public void Generate_ShouldSuccessfullyMapToModel()
         {
-            var mapper = CreateMapper();
+            var mapper = CreateMapperFromGeneratedCode();
             var result = mapper.ToModel(new DtoType6
             {
                 Age = 410,

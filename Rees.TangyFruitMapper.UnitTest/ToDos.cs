@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace Rees.TangyFruitMapper.UnitTest
 {
-    public class MappingGeneratorTest
+    public class ToDos
     {
         //TODO Deep Collections.
     }

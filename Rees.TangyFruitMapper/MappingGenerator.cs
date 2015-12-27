@@ -91,6 +91,7 @@ namespace Rees.TangyFruitMapper
         {
             this.codeOutput($@"using System;
 using System.CodeDom.Compiler;
+using System.Reflection;
 using Rees.TangyFruitMapper;");
             foreach (var ns in this.namespaceFinder.DiscoverNamespaces())
             {

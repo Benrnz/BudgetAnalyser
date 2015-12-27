@@ -11,7 +11,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         protected readonly List<string> DiagnosticMessages = new List<string>();
         protected readonly ITestOutputHelper Output;
         protected readonly MappingGenerator Subject;
-        protected readonly string generatedCode;
+        protected readonly string GeneratedCode;
 
         protected MappingGeneratorScenarios(ITestOutputHelper output)
         {
@@ -21,7 +21,7 @@ namespace Rees.TangyFruitMapper.UnitTest
                 DiagnosticLogging = l => this.DiagnosticMessages.Add(l)
             };
 
-            this.generatedCode = Act();
+            this.GeneratedCode = Act();
         }
 
         protected string Act()
@@ -51,9 +51,9 @@ namespace Rees.TangyFruitMapper.UnitTest
             return code.ToString();
         }
 
-        protected IDtoMapper<TDto, TModel> CreateMapper()
+        protected IDtoMapper<TDto, TModel> CreateMapperFromGeneratedCode()
         {
-            var mapper = new DynamicCodeCompiler().CompileMapperCode<TDto, TModel>(this.generatedCode, this.Output);
+            var mapper = new DynamicCodeCompiler().CompileMapperCode<TDto, TModel>(this.GeneratedCode, this.Output);
             return mapper;
         }
     }

@@ -41,34 +41,15 @@ namespace Rees.TangyFruitMapper
         {
             Preconditions();
 
-            // DTO properties must be writable so not checked here.
-            foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
-            {
-                this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
-                var assignmentStrategy = new AssignmentStrategy
-                {
-                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
-                    {
-                        AssignmentDestinationName = dtoProperty.Name,
-                    }
-                };
-                this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
+            CreateMapToDto();
 
-                // Find a way to get the Source value...
-                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
-                if (assignmentStrategy.Source != null)
-                {
-                    continue;
-                }
-                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(dtoProperty.Name, this.modelType);
-                if (assignmentStrategy.Source != null)
-                {
-                    continue;
-                }
+            CreateMapToModel();
 
-                assignmentStrategy.Source = new CommentedFetchSource(dtoProperty.Name);
-            }
+            OutConditions();
+        }
 
+        private void CreateMapToModel()
+        {
             foreach (var modelProperty in this.modelType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
@@ -101,8 +82,37 @@ namespace Rees.TangyFruitMapper
 
                 assignmentStrategy.Source = new CommentedFetchSource(modelProperty.Name);
             }
+        }
 
-            OutConditions();
+        private void CreateMapToDto()
+        {
+// DTO properties must be writable so not checked here.
+            foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
+            {
+                this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
+                var assignmentStrategy = new AssignmentStrategy
+                {
+                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
+                    {
+                        AssignmentDestinationName = dtoProperty.Name,
+                    }
+                };
+                this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
+
+                // Find a way to get the Source value...
+                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
+                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(dtoProperty.Name, this.modelType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
+
+                assignmentStrategy.Source = new CommentedFetchSource(dtoProperty.Name);
+            }
         }
 
         private AssignDestinationStrategy CanDestinationBeAssignedUsingReflection(PropertyInfo modelProperty, Type destinationType)
@@ -148,14 +158,22 @@ namespace Rees.TangyFruitMapper
 
         private static FieldInfo FindSimilarlyNamedField(string targetPropertyName, Type searchTarget)
         {
-            var sourceField = searchTarget.GetField(targetPropertyName.ToLower());
+            var sourceField = searchTarget.GetField(targetPropertyName, BindingFlags.Instance | BindingFlags.NonPublic); 
             if (sourceField == null)
             {
-                sourceField = searchTarget.GetField(targetPropertyName);
+                sourceField = searchTarget.GetField(targetPropertyName.ToLower(), BindingFlags.Instance | BindingFlags.NonPublic);
             }
             if (sourceField == null)
             {
-                sourceField = searchTarget.GetField($"_{targetPropertyName.ToLower()}");
+                sourceField = searchTarget.GetField(targetPropertyName.ToCamelCase(), BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ToLower()}", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
             }
             return sourceField;
         }
