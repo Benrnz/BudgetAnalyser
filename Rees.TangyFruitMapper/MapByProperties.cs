@@ -41,7 +41,8 @@ namespace Rees.TangyFruitMapper
         public void CreateMap()
         {
             Preconditions();
-            // DTO properties must be writable
+
+            // DTO properties must be writable so not checked here.
             foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
             {
                 this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
@@ -56,7 +57,8 @@ namespace Rees.TangyFruitMapper
 
             foreach (var modelProperty in this.modelType.GetProperties())
             {
-                this.diagnosticLogger($"Looking for a match for property '{this.modelType.Name}.{modelProperty.Name}'");
+                this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
+                IsDestinationPropertyWriteable(modelProperty);
                 this.modelToDtoMap.Add(modelProperty.Name, new CommentedAssignment("TODO value not found on model.")
                 {
                     AssignmentDestination = modelProperty.Name,
@@ -68,6 +70,10 @@ namespace Rees.TangyFruitMapper
             }
 
             OutConditions();
+        }
+
+        private bool IsDestinationPropertyWriteable(PropertyInfo modelProperty)
+        {
         }
 
         private bool AttemptMapToSourcePrivateSetter(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
@@ -183,6 +189,22 @@ namespace Rees.TangyFruitMapper
         private void Preconditions()
         {
             MustHaveADefaultConstructor();
+            DtoPropertiesMustBePublicAndWriteable();
+        }
+
+        private void DtoPropertiesMustBePublicAndWriteable()
+        {
+            int counter = 0;
+            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public))
+            {
+                counter++;
+                if (!property.CanWrite || !property.SetMethod.IsPublic)
+                {
+                    throw new PropertiesMustBePublicWriteableException();
+                }
+            }
+
+            this.diagnosticLogger($"{counter} public and writeable Dto properties found.");
         }
     }
 }

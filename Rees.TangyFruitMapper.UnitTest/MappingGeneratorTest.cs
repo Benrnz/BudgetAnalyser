@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Rees.TangyFruitMapper.UnitTest.TestData;
 using Xunit;
 using Xunit.Abstractions;
@@ -27,9 +28,30 @@ namespace Rees.TangyFruitMapper.UnitTest
         }
 
         [Fact]
-        public void Generate_ShouldOutputCode_GivenPrivateSetters()
+        public void Generate_ShouldOutputCode_GivenPrivateAutoSetters()
         {
             Act<DtoType2, ModelType2_PrivateSet>();
+        }
+
+        [Fact]
+        public void Generate_ShouldOutputCode_GivenPrivateSetterWithBackingField()
+        {
+            throw new NotImplementedException();
+            // TODO
+        }
+
+        [Fact]
+        public void Generate_ShouldOutputCode_GivenDeepObjectGraph()
+        {
+            throw new NotImplementedException();
+            // TODO
+        }
+
+        [Fact]
+        public void Generate_ShouldOutputCode_GivenCollectionOfObjects()
+        {
+            throw new NotImplementedException();
+            // TODO
         }
 
         private void Act<TDto, TModel>()
