@@ -1,22 +1,20 @@
-using System;
 using System.Reflection;
 
 namespace Rees.TangyFruitMapper
 {
-    internal class PrivateFieldAssignment : AssignmentStrategy
+    internal class PrivateFieldAssignment : AssignDestinationStrategy
     {
-        private readonly Type destinationType;
         private readonly FieldInfo sourceField;
 
-        public PrivateFieldAssignment(Type destinationType, FieldInfo sourceField)
+        public PrivateFieldAssignment(FieldInfo sourceField)
         {
-            this.destinationType = destinationType;
             this.sourceField = sourceField;
         }
 
-        public override string CreateCodeLine()
+        public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
-            return $"typeof({this.destinationType.FullName}).GetField({this.sourceField.Name}).SetValue({DestinationName}, {SourceName}.{AssignmentSource};";
+            var destinationObject = DestinationObjectName(destinationKind);
+            return $"{destinationObject}.GetType().GetField({this.sourceField.Name}).SetValue({destinationObject}, {sourceVariableName});";
         }
     }
 }

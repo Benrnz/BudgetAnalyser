@@ -46,68 +46,114 @@ namespace Rees.TangyFruitMapper
             foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
             {
                 this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
-                this.dtoToModelMap.Add(dtoProperty.Name, new CommentedAssignment("TODO value not found on model.")
+                var assignmentStrategy = new AssignmentStrategy
                 {
-                    AssignmentDestination = dtoProperty.Name,
-                    AssignmentDestinationIsDto = true,
-                });
-                if (AttemptMapToSourceProperty(dtoProperty.Name, this.modelType, this.dtoToModelMap)) continue;
-                if (AttemptMapToSourceField(dtoProperty.Name, this.dtoType, this.modelType, this.dtoToModelMap)) continue;
+                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
+                    {
+                        AssignmentDestinationName = dtoProperty.Name,
+                    }
+                };
+                this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
+
+                // Find a way to get the Source value...
+                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
+                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(dtoProperty.Name, this.modelType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
+
+                assignmentStrategy.Source = new CommentedFetchSource
+                {
+                    SourceName = dtoProperty.Name,
+                };
             }
 
             foreach (var modelProperty in this.modelType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
-                IsDestinationPropertyWriteable(modelProperty);
-                this.modelToDtoMap.Add(modelProperty.Name, new CommentedAssignment("TODO value not found on model.")
+                var assignmentStrategy = new AssignmentStrategy();
+                this.modelToDtoMap.Add(modelProperty.Name, assignmentStrategy);
+
+                // Figure out how to assign into the destination property...
+                assignmentStrategy.Destination = CanDestinationBeAssignedUsingAProperty(modelProperty);
+                if (assignmentStrategy.Destination == null)
                 {
-                    AssignmentDestination = modelProperty.Name,
-                    AssignmentDestinationIsDto = false,
-                });
-                if (AttemptMapToSourceProperty(modelProperty.Name, this.dtoType, this.modelToDtoMap)) continue;
-                // Attempt Field map 
-                
+                    assignmentStrategy.Destination = CanDestinationBeAssignedUsingReflection(modelProperty, this.modelType);
+                    if (assignmentStrategy.Destination == null)
+                    {
+                        assignmentStrategy.Destination = new CommentedAssignment("TODO destination isn't writeable", modelProperty.Name);
+                    }
+                }
+
+                // Find a way to get the Source value...
+                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(modelProperty.Name, this.dtoType);
+                if (assignmentStrategy.Source != null)
+                {
+                    continue;
+                }
             }
 
             OutConditions();
         }
 
-        private bool IsDestinationPropertyWriteable(PropertyInfo modelProperty)
+        private AssignDestinationStrategy CanDestinationBeAssignedUsingReflection(PropertyInfo modelProperty, Type destinationType)
         {
+            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPrivate)
+            {
+                return new PrivatePropertyAssignment(modelProperty.Name);
+            }
+
+            var field = FindSimilarlyNamedField(modelProperty.Name, destinationType);
+            if (field != null)
+            {
+                return new PrivateFieldAssignment(field);
+            }
+
+            return null;
         }
 
-        private bool AttemptMapToSourcePrivateSetter(PropertyInfo assignmentDestination, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        private AssignDestinationStrategy CanDestinationBeAssignedUsingAProperty(PropertyInfo modelProperty)
         {
-            var property = assignmentSource.GetProperty(assignmentDestination.Name);
-            if (property == null) return false;
-            var setterMethod = property.SetMethod;
+            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPublic)
+            {
+                return new SimpleAssignment
+                {
+                    AssignmentDestinationName = modelProperty.Name,
+                };
+            }
 
+            return null;
         }
 
-        private bool AttemptMapToSourceField(string destinationName, Type destinationType, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        private FetchSourceStrategy DoesSourceHaveFieldWithSimilarName(string targetPropertyName, Type assignmentSource)
         {
             // Looking for a backing field with a similar name
-            var sourceField = assignmentSource.GetField(destinationName.ToLower());
-            if (sourceField == null)
-            {
-                sourceField = assignmentSource.GetField(destinationName);
-            }
-            if (sourceField == null)
-            {
-                sourceField = assignmentSource.GetField($"_{destinationName.ToLower()}");
-            }
-
+            var sourceField = FindSimilarlyNamedField(targetPropertyName, assignmentSource);
             if (sourceField != null)
             {
-                mapping[destinationName] = new PrivateFieldAssignment(destinationType, sourceField)
-                {
-                    AssignmentDestination = destinationName,
-                    AssignmentDestinationIsDto = mapping[destinationName].AssignmentDestinationIsDto,
-                };
-                return true;
+                return new FetchSourceByReflection(sourceField);
             }
 
-            return false;
+            return null;
+        }
+
+        private static FieldInfo FindSimilarlyNamedField(string targetPropertyName, Type searchTarget)
+        {
+            var sourceField = searchTarget.GetField(targetPropertyName.ToLower());
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField(targetPropertyName);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ToLower()}");
+            }
+            return sourceField;
         }
 
         private void OutConditions()
@@ -131,21 +177,15 @@ namespace Rees.TangyFruitMapper
             }
         }
 
-        private bool AttemptMapToSourceProperty(string destinationName, Type assignmentSource, Dictionary<string, AssignmentStrategy> mapping)
+        private FetchSourceStrategy DoesSourceHavePropertyWithSameName(string destinationName, Type assignmentSource)
         {
             var sourceProperty = FindMatchingSourceProperty(destinationName, assignmentSource);
             if (sourceProperty != null)
             {
-                mapping[destinationName] = new SimpleAssignment
-                {
-                    AssignmentDestination = destinationName,
-                    AssignmentDestinationIsDto = mapping[destinationName].AssignmentDestinationIsDto,
-                    AssignmentSource = sourceProperty.Name,
-                };
-                return true;
+                return new FetchSourceUsingPropertyAccess(sourceProperty.Name);
             }
 
-            return false;
+            return null;
         }
 
         private PropertyInfo FindMatchingSourceProperty(string destinationName, Type source)

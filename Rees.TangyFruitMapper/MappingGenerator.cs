@@ -60,26 +60,30 @@ namespace Rees.TangyFruitMapper
 
         private void WriteMethods(MapByProperties map)
         {
-            this.codeOutput($@"{Indent()}public {this.modelType.Name} ToModel({this.dtoType.Name} dto)
+            this.codeOutput($@"{Indent()}public {this.modelType.Name} ToModel({this.dtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}var model = new {this.modelType.Name}();");
+{Indent(true)}var {AssignmentStrategy.ModelVariableName} = new {this.modelType.Name}();
+{Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
-                this.codeOutput($"{Indent()}{assignment.CreateCodeLine()}");
+                // model.Property = dto.Property;
+                this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Dto)}");
+                this.codeOutput($"{Indent()}{assignment.Destination.CreateCodeLine(DtoOrModel.Model, assignment.Source.SourceVariableName)}");
             }
-            this.codeOutput($@"{Indent()}return model;
+            this.codeOutput($@"{Indent()}return {AssignmentStrategy.ModelVariableName};
 {Outdent()}}} // End ToModel Method");
 
 
             this.codeOutput($@"
-{Indent()}public {this.dtoType.Name} ToDto({this.modelType.Name} model)
+{Indent()}public {this.dtoType.Name} ToDto({this.modelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
-{Indent(true)}var dto = new {this.dtoType.Name}();");
+{Indent(true)}var {AssignmentStrategy.DtoVariableName} = new {this.dtoType.Name}();");
             foreach (var assignment in map.DtoToModelMap.Values)
             {
-                this.codeOutput($"{Indent()}{assignment.CreateCodeLine()}");
+                this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
+                this.codeOutput($"{Indent()}{assignment.Destination.CreateCodeLine(DtoOrModel.Dto, assignment.Source.SourceVariableName)}");
             }
-            this.codeOutput($@"{Indent()}return dto;
+            this.codeOutput($@"{Indent()}return {AssignmentStrategy.DtoVariableName};
 {Outdent()}}} // End ToDto Method");
         }
 

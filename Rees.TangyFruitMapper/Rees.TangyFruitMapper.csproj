@@ -39,14 +39,21 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssignDestinationStrategy.cs" />
     <Compile Include="AssignmentStrategy.cs" />
     <Compile Include="CommentedAssignment.cs" />
+    <Compile Include="CommentedFetchSource.cs" />
+    <Compile Include="FetchSourceByReflection.cs" />
+    <Compile Include="FetchSourceStrategy.cs" />
+    <Compile Include="FetchSourceUsingPropertyAccess.cs" />
     <Compile Include="IDtoMapper.cs" />
     <Compile Include="MapByProperties.cs" />
     <Compile Include="MappingGenerator.cs" />
+    <Compile Include="DtoOrModel.cs" />
     <Compile Include="NamespaceFinder.cs" />
     <Compile Include="NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="PrivateFieldAssignment.cs" />
+    <Compile Include="PrivatePropertyAssignment.cs" />
     <Compile Include="PropertiesMustBePublicWriteableException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyNotMatchedException.cs" />

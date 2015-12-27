@@ -1,10 +1,10 @@
 ﻿namespace Rees.TangyFruitMapper
 {
-    internal class SimpleAssignment : AssignmentStrategy
+    internal class SimpleAssignment : AssignDestinationStrategy
     {
-        public override string CreateCodeLine()
+        public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
-            return $"{DestinationName}.{AssignmentDestination} = {SourceName}.{AssignmentSource};";
+            return $"{DestinationObjectName(destinationKind)}.{AssignmentDestinationName} = {sourceVariableName};";
         }
     }
 }

@@ -1,17 +1,18 @@
 ﻿namespace Rees.TangyFruitMapper
 {
-    internal class CommentedAssignment : AssignmentStrategy
+    internal class CommentedAssignment : AssignDestinationStrategy
     {
         private readonly string reason;
 
-        public CommentedAssignment(string reason)
+        public CommentedAssignment(string reason, string assignmentDestinationName)
         {
             this.reason = reason;
+            AssignmentDestinationName = assignmentDestinationName;
         }
 
-        public override string CreateCodeLine()
+        public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
-            return $"// {AssignmentDestination} = {AssignmentSource}; // {this.reason}";
+            return $"// {DestinationObjectName(destinationKind)}.{AssignmentDestinationName} = {sourceVariableName}; // {this.reason}";
         }
     }
 }
