@@ -78,7 +78,7 @@ using System.Reflection;
 using Rees.TangyFruitMapper;");
             foreach (var ns in this.namespaceFinder.DiscoverNamespaces())
             {
-                this.codeOutput($@"using {ns};");
+                this.codeOutput($@"using {ns.Key};");
             }
             this.codeOutput($@"
 namespace GeneratedCode

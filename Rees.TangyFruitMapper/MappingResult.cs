@@ -27,5 +27,31 @@ namespace Rees.TangyFruitMapper
         {
             return $"Mapper_{dtoType.Name}_{modelType.Name}";
         }
+
+        /// <summary>
+        /// Makes sure that there are no inconsistencies between the Destination Assignment Strategy and Fetch Source Strategy.
+        /// For example: If the fetch source strategy is a commented out strategy, then the destination must also be commented out.
+        /// </summary>
+        internal MapResult Consolidate()
+        {
+            EnsureBothStrategiesAreCommentedIfOneIsPresent(DtoToModelMap.Values);
+            EnsureBothStrategiesAreCommentedIfOneIsPresent(ModelToDtoMap.Values);
+            return this;
+        }
+
+        private static void EnsureBothStrategiesAreCommentedIfOneIsPresent(IEnumerable<AssignmentStrategy> strategies)
+        {
+            foreach (var strategy in strategies)
+            {
+                if (strategy.Source is CommentedFetchSource && !(strategy.Destination is CommentedAssignment))
+                {
+                    strategy.Destination = new CommentedAssignment(strategy.Destination.AssignmentDestinationName);
+                }
+                else if (strategy.Destination is CommentedAssignment && !(strategy.Source is CommentedFetchSource))
+                {
+                    strategy.Source = new CommentedFetchSource(strategy.Source.SourceName);
+                }
+            }
+        }
     }
 }

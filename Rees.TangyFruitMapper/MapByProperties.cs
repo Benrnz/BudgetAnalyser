@@ -56,7 +56,7 @@ namespace Rees.TangyFruitMapper
                 DtoToModelMap = this.dtoToModelMap,
                 ModelToDtoMap = this.modelToDtoMap,
                 DependentOnMaps = this.dependentMappers,
-            };
+            }.Consolidate();
         }
 
         private AssignDestinationStrategy CanDestinationBeAssignedUsingAProperty(PropertyInfo modelProperty)
@@ -174,7 +174,7 @@ namespace Rees.TangyFruitMapper
                         key =>
                         {
                             var newMapper = new MapByProperties(
-                                msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
+                                msg => this.diagnosticLogger($"->{this.dtoType.Name} " + msg),
                                 assignmentStrategy.Source.SourceType,
                                 assignmentStrategy.Destination.DestinationType)
                                 .CreateMap();

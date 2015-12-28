@@ -73,11 +73,14 @@
     <Compile Include="Scenario1_PublicSettersTest.cs" />
     <Compile Include="Scenario2_PrivateAutoSetters.cs" />
     <Compile Include="Scenario4_PropertiesWithBackingFieldAndUnderscorePrefix.cs" />
+    <Compile Include="Scenario6_3DeepObjectGraph.cs" />
     <Compile Include="Scenario7_1Collection.cs" />
     <Compile Include="Scenario5_DeepObjectGraph.cs" />
     <Compile Include="Scenario3_PropertiesWithBackingFields.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\DtoType6.cs" />
+    <Compile Include="TestData\ModelType6_3DeepObjectGraph.cs" />
     <Compile Include="ToDos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\DtoType7.cs" />
