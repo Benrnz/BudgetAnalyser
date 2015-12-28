@@ -6,7 +6,7 @@ namespace Rees.TangyFruitMapper
     {
         private readonly FieldInfo sourceField;
 
-        public PrivateFieldAssignment(FieldInfo sourceField)
+        public PrivateFieldAssignment(FieldInfo sourceField) : base(sourceField.FieldType)
         {
             this.sourceField = sourceField;
         }

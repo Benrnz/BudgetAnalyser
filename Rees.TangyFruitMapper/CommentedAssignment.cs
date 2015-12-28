@@ -2,7 +2,7 @@
 {
     internal class CommentedAssignment : AssignDestinationStrategy
     {
-        public CommentedAssignment(string assignmentDestinationName)
+        public CommentedAssignment(string assignmentDestinationName) : base(null)
         {
             AssignmentDestinationName = assignmentDestinationName;
         }

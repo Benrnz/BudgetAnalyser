@@ -14,6 +14,7 @@ namespace Rees.TangyFruitMapper
         private readonly Dictionary<string, AssignmentStrategy> modelToDtoMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type modelType;
         private readonly List<string> warnings = new List<string>();
+        private readonly List<MapResult> nestedResults = new List<MapResult>();
 
         public MapByProperties([NotNull] Action<string> diagnosticLogger, [NotNull] Type dtoType, [NotNull] Type modelType)
         {
@@ -39,8 +40,11 @@ namespace Rees.TangyFruitMapper
 
             return new MapResult
             {
+                DtoType = this.dtoType,
+                ModelType = this.modelType,
                 DtoToModelMap = this.dtoToModelMap,
                 ModelToDtoMap = this.modelToDtoMap,
+                DependentOnMaps = this.nestedResults,
             };
         }
 
@@ -48,7 +52,7 @@ namespace Rees.TangyFruitMapper
         {
             if (modelProperty.CanWrite && modelProperty.SetMethod.IsPublic)
             {
-                return new SimpleAssignment
+                return new SimpleAssignment(modelProperty.PropertyType)
                 {
                     AssignmentDestinationName = modelProperty.Name
                 };
@@ -61,7 +65,7 @@ namespace Rees.TangyFruitMapper
         {
             if (modelProperty.CanWrite && modelProperty.SetMethod.IsPrivate)
             {
-                return new PrivatePropertyAssignment(modelProperty.Name);
+                return new PrivatePropertyAssignment(modelProperty.Name, modelProperty.PropertyType);
             }
 
             var field = FindSimilarlyNamedField(modelProperty.Name, destinationType);
@@ -81,7 +85,7 @@ namespace Rees.TangyFruitMapper
                 this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
                 var assignmentStrategy = new AssignmentStrategy
                 {
-                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
+                    Destination = new SimpleAssignment(dtoProperty.PropertyType) // Dto Properties must be writeable so SimpleAssignment will always work.
                     {
                         AssignmentDestinationName = dtoProperty.Name
                     }
@@ -103,25 +107,14 @@ namespace Rees.TangyFruitMapper
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
+                    // TODO this could result in duplicate maps being created.
+                    this.nestedResults.Add(new MapByProperties(
+                        msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
+                        assignmentStrategy.Destination.DestinationType,
+                        assignmentStrategy.Source.SourceType)
+                        .CreateMap());
                 }
             }
-        }
-
-        private bool IsComplexType(Type sourceType)
-        {
-            if (sourceType.GetTypeInfo().IsPrimitive)
-            {
-                // https://msdn.microsoft.com/en-us/library/system.type.isprimitive(v=vs.110).aspx
-                // Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
-                return false;
-            }
-
-            if (sourceType == typeof(decimal))
-            {
-                return false;
-            }
-
-            return true;
         }
 
         private void CreateMapToModel()
@@ -145,18 +138,26 @@ namespace Rees.TangyFruitMapper
 
                 // Find a way to get the Source value...
                 assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(modelProperty.Name, this.dtoType);
-                if (assignmentStrategy.Source != null)
+                if (assignmentStrategy.Source == null)
                 {
-                    continue;
+                    assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(modelProperty.Name, this.dtoType);
+                    if (assignmentStrategy.Source == null)
+                    {
+                        assignmentStrategy.Source = new CommentedFetchSource(modelProperty.Name);
+                    }
                 }
 
-                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(modelProperty.Name, this.dtoType);
-                if (assignmentStrategy.Source != null)
+                if (IsComplexType(assignmentStrategy.Source.SourceType))
                 {
-                    continue;
+                    // Nest objects detected - will need to attempt to map these as well.
+                    this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
+                    // TODO this could result in duplicate maps being created.
+                    this.nestedResults.Add(new MapByProperties(
+                        msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
+                        assignmentStrategy.Destination.DestinationType,
+                        assignmentStrategy.Source.SourceType)
+                        .CreateMap());
                 }
-
-                assignmentStrategy.Source = new CommentedFetchSource(modelProperty.Name);
             }
         }
 
@@ -241,6 +242,23 @@ namespace Rees.TangyFruitMapper
                 sourceField = searchTarget.GetField($"_{targetPropertyName.ConvertPascalCaseToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
             }
             return sourceField;
+        }
+
+        private bool IsComplexType(Type sourceType)
+        {
+            if (sourceType.GetTypeInfo().IsPrimitive)
+            {
+                // https://msdn.microsoft.com/en-us/library/system.type.isprimitive(v=vs.110).aspx
+                // Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
+                return false;
+            }
+
+            if (sourceType == typeof (decimal) || sourceType == typeof(string))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void MustHaveADefaultConstructor()

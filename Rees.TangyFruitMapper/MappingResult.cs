@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Rees.TangyFruitMapper
 {
@@ -13,5 +14,11 @@ namespace Rees.TangyFruitMapper
         ///     Gets a map with the Model Property name as the key and the property name from the Dto as the value.
         /// </summary>
         public IReadOnlyDictionary<string, AssignmentStrategy> ModelToDtoMap { get; set; }
+
+        public Type DtoType { get; set; }
+
+        public Type ModelType { get; set; }
+
+        public IEnumerable<MapResult> DependentOnMaps { get; set; } 
     }
 }

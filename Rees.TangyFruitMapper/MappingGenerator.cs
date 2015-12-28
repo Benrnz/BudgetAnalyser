@@ -45,17 +45,53 @@ namespace Rees.TangyFruitMapper
                 return;
             }
 
-            WriteClassHeader();
-            WriteMethods(mapResult);
-            WriteClassFooter();
+            WriteFileHeader();
+
+            WriteMappingClasses(mapResult);
+
+            WriteFileFooter();
 
             mapper.Warnings.ToList().ForEach(warnOutputDelegate);
         }
 
-        private void WriteClassFooter()
+        private void WriteMappingClasses(MapResult mapResult)
         {
-            this.codeOutput($@"{Outdent()}}} // End Class");
-            this.codeOutput($@"{Outdent()}}} // End Namespace
+            WriteClassHeader(mapResult);
+            WriteMethods(mapResult);
+            WriteClassFooter(mapResult);
+
+            if (mapResult.DependentOnMaps.Any())
+            {
+                foreach (var nestedMap in mapResult.DependentOnMaps)
+                {
+                    WriteMappingClasses(nestedMap);
+                }
+            }
+        }
+
+        private void WriteFileHeader()
+        {
+            this.codeOutput($@"using System;
+using System.CodeDom.Compiler;
+using System.Reflection;
+using Rees.TangyFruitMapper;");
+            foreach (var ns in this.namespaceFinder.DiscoverNamespaces())
+            {
+                this.codeOutput($@"using {ns};");
+            }
+            this.codeOutput($@"
+namespace GeneratedCode
+{{");
+        }
+
+        private void WriteFileFooter()
+        {
+            this.codeOutput($@"{Outdent()}}} // End Namespace");
+        }
+
+        private void WriteClassFooter(MapResult map)
+        {
+            this.codeOutput($@"{Outdent()}}} // End Class
 ");
         }
 
@@ -88,20 +124,9 @@ namespace Rees.TangyFruitMapper
 {Outdent()}}} // End ToDto Method");
         }
 
-        private void WriteClassHeader()
+        private void WriteClassHeader(MapResult map)
         {
-            this.codeOutput($@"using System;
-using System.CodeDom.Compiler;
-using System.Reflection;
-using Rees.TangyFruitMapper;");
-            foreach (var ns in this.namespaceFinder.DiscoverNamespaces())
-            {
-                this.codeOutput($@"using {ns};");
-            }
-            this.codeOutput($@"
-namespace GeneratedCode
-{{
-{Indent(true)}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
+            this.codeOutput($@"{Indent(true)}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
 {Indent()}public class Mapper_{this.dtoType.Name}_{this.modelType.Name} : IDtoMapper<{this.dtoType.Name}, {this.modelType.Name}>
 {Indent()}{{
 {Indent(true)}");
