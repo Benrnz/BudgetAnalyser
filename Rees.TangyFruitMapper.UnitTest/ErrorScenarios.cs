@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Rees.TangyFruitMapper.UnitTest.TestData;
 using Xunit;
 
@@ -25,9 +26,27 @@ namespace Rees.TangyFruitMapper.UnitTest
         }
 
         [Fact]
-        public void ShouldThrow_GivenDtoCollectionsAreNotLists()
+        public void ShouldThrow_GivenDtoCollection()
         {
-            Assert.Throws<CollectionsMustBeListTException>(() => Act<CollectionsShouldBeLists, DtoType1>());
+            Assert.Throws<CollectionsMustBeListTException>(() => Act<CollectionsNotSupported, DtoType1>());
+        }
+
+        [Fact]
+        public void ShouldThrow_GivenDtoArray()
+        {
+            Assert.Throws<CollectionsMustBeListTException>(() => Act<ArraysNotSupported, DtoType1>());
+        }
+
+        [Fact]
+        public void ShouldThrow_GivenDtoIList()
+        {
+            Assert.Throws<CollectionsMustBeListTException>(() => Act<IListNotSupported, DtoType1>());
+        }
+
+        [Fact]
+        public void ShouldThrow_GivenDtoIEnumerable()
+        {
+            Assert.Throws<CollectionsMustBeListTException>(() => Act<IEnumerableNotSupported, DtoType1>());
         }
 
         private static void Act<TDto, TModel>()
@@ -36,9 +55,24 @@ namespace Rees.TangyFruitMapper.UnitTest
             subject.Generate<TDto, TModel>(s => { }, e => { }, w => { });
         }
 
-        public class CollectionsShouldBeLists
+        public class CollectionsNotSupported
         {
             public Collection<int> RandomInts { get; set; }
+        }
+
+        public class IListNotSupported
+        {
+            public IList<int> RandomInts { get; set; }
+        }
+
+        public class IEnumerableNotSupported
+        {
+            public IEnumerable<int> RandomInts { get; set; }
+        }
+
+        public class ArraysNotSupported
+        {
+            public int[] RandomInts { get; set; }
         }
 
         public class NoDefaultConstructorDto
