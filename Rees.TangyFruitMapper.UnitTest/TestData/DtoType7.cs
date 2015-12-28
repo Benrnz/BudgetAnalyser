@@ -2,9 +2,9 @@
 
 namespace Rees.TangyFruitMapper.UnitTest.TestData
 {
-    public class DtoType6
+    public class DtoType7
     {
-        public DtoType6()
+        public DtoType7()
         {
             Names = new List<string>();
         }
