@@ -1,0 +1,5 @@
+﻿
+1)  DTO's must use public getters and setters.
+2)  Properties must use Pascal casing.
+3)  Non-public fields must use camel casing to be automatically mapped. (Either with or without an underscore prefix, both are supported).
+4)  Class names must be unique. No two classes can have the same class-name regardless of namespace.
