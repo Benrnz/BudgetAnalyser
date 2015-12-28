@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,16 @@ namespace Rees.TangyFruitMapper
         private readonly Type modelType;
         private readonly List<string> warnings = new List<string>();
         private readonly List<MapResult> dependentMappers = new List<MapResult>();
+
+        /// <summary>
+        /// All the maps. Keyed by class name.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, MapResult> AllMaps = new ConcurrentDictionary<string, MapResult>();
+
+        public static void ClearMapCache()
+        {
+            AllMaps.Clear();
+        }
 
         public MapByProperties([NotNull] Action<string> diagnosticLogger, [NotNull] Type dtoType, [NotNull] Type modelType)
         {
@@ -107,13 +118,18 @@ namespace Rees.TangyFruitMapper
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
-                    // TODO this could result in duplicate maps being created.
-                    var dependentMapper = new MapByProperties(
-                        msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
-                        assignmentStrategy.Destination.DestinationType,
-                        assignmentStrategy.Source.SourceType)
-                        .CreateMap();
-                    this.dependentMappers.Add(dependentMapper);
+                    var dependentMapper = AllMaps.GetOrAdd(
+                        MapResult.GetMapperName(assignmentStrategy.Destination.DestinationType, assignmentStrategy.Source.SourceType),
+                        key =>
+                        {
+                            var newMapper = new MapByProperties(
+                                msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
+                                assignmentStrategy.Destination.DestinationType,
+                                assignmentStrategy.Source.SourceType)
+                                .CreateMap();
+                            this.dependentMappers.Add(newMapper);
+                            return newMapper;
+                        });
                     assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
                 }
             }
@@ -153,13 +169,18 @@ namespace Rees.TangyFruitMapper
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
-                    // TODO this could result in duplicate maps being created.
-                    var dependentMapper = new MapByProperties(
-                        msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
-                        assignmentStrategy.Source.SourceType,
-                        assignmentStrategy.Destination.DestinationType)
-                        .CreateMap();
-                    this.dependentMappers.Add(dependentMapper);
+                    var dependentMapper = AllMaps.GetOrAdd(
+                        MapResult.GetMapperName(assignmentStrategy.Source.SourceType, assignmentStrategy.Destination.DestinationType),
+                        key =>
+                        {
+                            var newMapper = new MapByProperties(
+                                msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
+                                assignmentStrategy.Source.SourceType,
+                                assignmentStrategy.Destination.DestinationType)
+                                .CreateMap();
+                            this.dependentMappers.Add(newMapper);
+                            return newMapper;
+                        });
                     assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
                 }
             }

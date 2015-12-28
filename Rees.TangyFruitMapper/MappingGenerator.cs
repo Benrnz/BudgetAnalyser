@@ -32,6 +32,7 @@ namespace Rees.TangyFruitMapper
             this.namespaceFinder = new NamespaceFinder(this.dtoType, this.modelType);
             DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
 
+            MapByProperties.ClearMapCache();
             MapByProperties mapper;
             MapResult mapResult;
             try
@@ -82,7 +83,8 @@ using Rees.TangyFruitMapper;");
             }
             this.codeOutput($@"
 namespace GeneratedCode
-{{");
+{{
+{Indent(true)}");
         }
 
         private void WriteFileFooter()
@@ -98,9 +100,9 @@ namespace GeneratedCode
 
         private void WriteMethods(MapResult map)
         {
-            this.codeOutput($@"{Indent()}public {this.modelType.Name} ToModel({this.dtoType.Name} {AssignmentStrategy.DtoVariableName})
+            this.codeOutput($@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.ModelVariableName} = new {this.modelType.Name}();
+{Indent(true)}var {AssignmentStrategy.ModelVariableName} = new {map.ModelType.Name}();
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
@@ -113,9 +115,9 @@ namespace GeneratedCode
 
 
             this.codeOutput($@"
-{Indent()}public {this.dtoType.Name} ToDto({this.modelType.Name} {AssignmentStrategy.ModelVariableName})
+{Indent()}public {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.DtoVariableName} = new {this.dtoType.Name}();");
+{Indent(true)}var {AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();");
             foreach (var assignment in map.DtoToModelMap.Values)
             {
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
@@ -127,8 +129,8 @@ namespace GeneratedCode
 
         private void WriteClassHeader(MapResult map)
         {
-            this.codeOutput($@"{Indent(true)}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
-{Indent()}public class Mapper_{map.DtoType.Name}_{map.ModelType.Name} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
+            this.codeOutput($@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
+{Indent()}public class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
 {Indent()}{{
 {Indent(true)}");
         }
