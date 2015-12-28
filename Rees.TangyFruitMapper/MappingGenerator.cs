@@ -10,33 +10,34 @@ namespace Rees.TangyFruitMapper
         private Type modelType;
         private Action<string> codeOutput;
         private Action<string> errorOutput;
-        private int indent = 0;
+        private int indent;
         private NamespaceFinder namespaceFinder;
 
         public Action<string> DiagnosticLogging { get; set; }
 
         public void Generate<TDto, TModel>(
-            [NotNull] Action<string> codeOutput,
-            [NotNull] Action<string> errorOutput, 
-            [NotNull] Action<string> warnOutput)
+            [NotNull] Action<string> codeOutputDelegate,
+            [NotNull] Action<string> errorOutputDelegate, 
+            [NotNull] Action<string> warnOutputDelegate)
         {
-            if (codeOutput == null) throw new ArgumentNullException(nameof(codeOutput));
-            if (errorOutput == null) throw new ArgumentNullException(nameof(errorOutput));
-            if (warnOutput == null) throw new ArgumentNullException(nameof(warnOutput));
+            if (codeOutputDelegate == null) throw new ArgumentNullException(nameof(codeOutputDelegate));
+            if (errorOutputDelegate == null) throw new ArgumentNullException(nameof(errorOutputDelegate));
+            if (warnOutputDelegate == null) throw new ArgumentNullException(nameof(warnOutputDelegate));
             if (DiagnosticLogging == null) DiagnosticLogging = x => { };
 
-            this.codeOutput = codeOutput;
-            this.errorOutput = errorOutput;
+            this.codeOutput = codeOutputDelegate;
+            this.errorOutput = errorOutputDelegate;
             this.modelType = typeof (TModel);
             this.dtoType = typeof (TDto);
             this.namespaceFinder = new NamespaceFinder(this.dtoType, this.modelType);
             DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
 
-            MapByProperties map = null;
+            MapByProperties mapper;
+            MapResult mapResult;
             try
             {
-                map = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
-                map.CreateMap();
+                mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
+                mapResult = mapper.CreateMap();
             }
             catch (PropertyNotMatchedException ex)
             {
@@ -45,10 +46,10 @@ namespace Rees.TangyFruitMapper
             }
 
             WriteClassHeader();
-            WriteMethods(map);
+            WriteMethods(mapResult);
             WriteClassFooter();
 
-            map.Warnings.ToList().ForEach(warnOutput);
+            mapper.Warnings.ToList().ForEach(warnOutputDelegate);
         }
 
         private void WriteClassFooter()
@@ -58,7 +59,7 @@ namespace Rees.TangyFruitMapper
 ");
         }
 
-        private void WriteMethods(MapByProperties map)
+        private void WriteMethods(MapResult map)
         {
             this.codeOutput($@"{Indent()}public {this.modelType.Name} ToModel({this.dtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{

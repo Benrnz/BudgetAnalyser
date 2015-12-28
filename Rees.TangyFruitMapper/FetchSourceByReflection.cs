@@ -6,10 +6,9 @@ namespace Rees.TangyFruitMapper
     {
         private readonly FieldInfo sourceField;
 
-        public FetchSourceByReflection(FieldInfo sourceField)
+        public FetchSourceByReflection(FieldInfo sourceField) : base(sourceField.FieldType, sourceField.Name)
         {
             this.sourceField = sourceField;
-            SourceName = this.sourceField.Name;
         }
 
         public override string CreateCodeLine(DtoOrModel sourceKind)

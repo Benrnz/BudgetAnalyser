@@ -50,6 +50,7 @@
     <Compile Include="MapByProperties.cs" />
     <Compile Include="MappingGenerator.cs" />
     <Compile Include="DtoOrModel.cs" />
+    <Compile Include="MappingResult.cs" />
     <Compile Include="NamespaceFinder.cs" />
     <Compile Include="NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="PrivateFieldAssignment.cs" />

@@ -1,13 +1,23 @@
-﻿namespace Rees.TangyFruitMapper
+﻿using System;
+
+namespace Rees.TangyFruitMapper
 {
     internal abstract class FetchSourceStrategy
     {
         private static int VariableCounter = 1;
         private static readonly object SyncRoot = new object();
 
-        private string variableName = null;
+        private string variableName;
+
+        protected FetchSourceStrategy(Type sourceType, string sourceName)
+        {
+            SourceType = sourceType;
+            SourceName = sourceName;
+        }
 
         public string SourceName { get; set; }
+
+        public Type SourceType { get; set; }
 
         public string SourceVariableName
         {

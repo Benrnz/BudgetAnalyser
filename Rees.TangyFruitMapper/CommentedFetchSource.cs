@@ -2,9 +2,8 @@ namespace Rees.TangyFruitMapper
 {
     internal class CommentedFetchSource : FetchSourceStrategy
     {
-        public CommentedFetchSource(string sourceName)
+        public CommentedFetchSource(string sourceName) : base(null, sourceName)
         {
-            SourceName = sourceName;
         }
 
         public override string CreateCodeLine(DtoOrModel sourceKind)

@@ -2,8 +2,6 @@
 {
     internal class CommentedAssignment : AssignDestinationStrategy
     {
-        private readonly string reason;
-
         public CommentedAssignment(string assignmentDestinationName)
         {
             AssignmentDestinationName = assignmentDestinationName;

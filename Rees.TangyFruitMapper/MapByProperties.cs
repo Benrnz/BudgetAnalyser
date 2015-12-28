@@ -25,19 +25,9 @@ namespace Rees.TangyFruitMapper
             this.modelType = modelType;
         }
 
-        /// <summary>
-        /// Gets a map with the Dto Property name as the key and the property name from the Model as the value.
-        /// </summary>
-        public IReadOnlyDictionary<string, AssignmentStrategy> DtoToModelMap => this.dtoToModelMap;
-
-        /// <summary>
-        /// Gets a map with the Model Property name as the key and the property name from the Dto as the value.
-        /// </summary>
-        public IReadOnlyDictionary<string, AssignmentStrategy> ModelToDtoMap => this.modelToDtoMap;
-
         public IEnumerable<string> Warnings => this.warnings;
 
-        public void CreateMap()
+        public MapResult CreateMap()
         {
             Preconditions();
 
@@ -46,6 +36,92 @@ namespace Rees.TangyFruitMapper
             CreateMapToModel();
 
             OutConditions();
+
+            return new MapResult
+            {
+                DtoToModelMap = this.dtoToModelMap,
+                ModelToDtoMap = this.modelToDtoMap,
+            };
+        }
+
+        private AssignDestinationStrategy CanDestinationBeAssignedUsingAProperty(PropertyInfo modelProperty)
+        {
+            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPublic)
+            {
+                return new SimpleAssignment
+                {
+                    AssignmentDestinationName = modelProperty.Name
+                };
+            }
+
+            return null;
+        }
+
+        private AssignDestinationStrategy CanDestinationBeAssignedUsingReflection(PropertyInfo modelProperty, Type destinationType)
+        {
+            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPrivate)
+            {
+                return new PrivatePropertyAssignment(modelProperty.Name);
+            }
+
+            var field = FindSimilarlyNamedField(modelProperty.Name, destinationType);
+            if (field != null)
+            {
+                return new PrivateFieldAssignment(field);
+            }
+
+            return null;
+        }
+
+        private void CreateMapToDto()
+        {
+            // DTO properties must be writable so not checked here.
+            foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
+            {
+                this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
+                var assignmentStrategy = new AssignmentStrategy
+                {
+                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
+                    {
+                        AssignmentDestinationName = dtoProperty.Name
+                    }
+                };
+                this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
+
+                // Find a way to get the Source value...
+                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
+                if (assignmentStrategy.Source == null)
+                {
+                    assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(dtoProperty.Name, this.modelType);
+                    if (assignmentStrategy.Source == null)
+                    {
+                        assignmentStrategy.Source = new CommentedFetchSource(dtoProperty.Name);
+                    }
+                }
+
+                if (IsComplexType(assignmentStrategy.Source.SourceType))
+                {
+                    // Nest objects detected - will need to attempt to map these as well.
+                    this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
+                }
+            }
+        }
+
+        private bool IsComplexType(Type sourceType)
+        {
+            if (sourceType.GetTypeInfo().IsPrimitive)
+            {
+                // https://msdn.microsoft.com/en-us/library/system.type.isprimitive(v=vs.110).aspx
+                // Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
+                return false;
+            }
+
+            if (sourceType == typeof(decimal))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void CreateMapToModel()
@@ -84,66 +160,6 @@ namespace Rees.TangyFruitMapper
             }
         }
 
-        private void CreateMapToDto()
-        {
-// DTO properties must be writable so not checked here.
-            foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
-            {
-                this.diagnosticLogger($"Looking for a match for Dto property '{this.dtoType.Name}.{dtoProperty.Name}'");
-                var assignmentStrategy = new AssignmentStrategy
-                {
-                    Destination = new SimpleAssignment // Dto Properties must be writeable so SimpleAssignment will always work.
-                    {
-                        AssignmentDestinationName = dtoProperty.Name,
-                    }
-                };
-                this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
-
-                // Find a way to get the Source value...
-                assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
-                if (assignmentStrategy.Source != null)
-                {
-                    continue;
-                }
-                assignmentStrategy.Source = DoesSourceHaveFieldWithSimilarName(dtoProperty.Name, this.modelType);
-                if (assignmentStrategy.Source != null)
-                {
-                    continue;
-                }
-
-                assignmentStrategy.Source = new CommentedFetchSource(dtoProperty.Name);
-            }
-        }
-
-        private AssignDestinationStrategy CanDestinationBeAssignedUsingReflection(PropertyInfo modelProperty, Type destinationType)
-        {
-            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPrivate)
-            {
-                return new PrivatePropertyAssignment(modelProperty.Name);
-            }
-
-            var field = FindSimilarlyNamedField(modelProperty.Name, destinationType);
-            if (field != null)
-            {
-                return new PrivateFieldAssignment(field);
-            }
-
-            return null;
-        }
-
-        private AssignDestinationStrategy CanDestinationBeAssignedUsingAProperty(PropertyInfo modelProperty)
-        {
-            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPublic)
-            {
-                return new SimpleAssignment
-                {
-                    AssignmentDestinationName = modelProperty.Name,
-                };
-            }
-
-            return null;
-        }
-
         private FetchSourceStrategy DoesSourceHaveFieldWithSimilarName(string targetPropertyName, Type assignmentSource)
         {
             // Looking for a backing field with a similar name
@@ -156,58 +172,30 @@ namespace Rees.TangyFruitMapper
             return null;
         }
 
-        private static FieldInfo FindSimilarlyNamedField(string targetPropertyName, Type searchTarget)
-        {
-            var sourceField = searchTarget.GetField(targetPropertyName, BindingFlags.Instance | BindingFlags.NonPublic); 
-            if (sourceField == null)
-            {
-                sourceField = searchTarget.GetField(targetPropertyName.ToLower(), BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-            if (sourceField == null)
-            {
-                sourceField = searchTarget.GetField(targetPropertyName.ConvertPascalCaseToCamelCase(), BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-            if (sourceField == null)
-            {
-                sourceField = searchTarget.GetField($"_{targetPropertyName.ToLower()}", BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-            if (sourceField == null)
-            {
-                sourceField = searchTarget.GetField($"_{targetPropertyName.ConvertPascalCaseToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-            return sourceField;
-        }
-
-        private void OutConditions()
-        {
-            // Check that all available Dto properties have been mapped to a model property.
-            WarnIfMissingProperties(this.dtoType, this.dtoToModelMap);
-            WarnIfMissingProperties(this.modelType, this.modelToDtoMap);
-        }
-
-        private void WarnIfMissingProperties(Type target, Dictionary<string, AssignmentStrategy> map)
-        {
-            var query = target.GetProperties().Where(p => p.CanWrite).ToList();
-            if (map.Count < query.Count())
-            {
-                this.warnings.Add($"Warning: Not all properties on Type '{target.FullName}' can be found on source.");
-                var missingProperties = query.Select(p => p.Name).Except(map.Keys);
-                foreach (var missingProperty in missingProperties)
-                {
-                    this.warnings.Add($"    {missingProperty}");
-                }
-            }
-        }
-
         private FetchSourceStrategy DoesSourceHavePropertyWithSameName(string destinationName, Type assignmentSource)
         {
             var sourceProperty = FindMatchingSourceProperty(destinationName, assignmentSource);
             if (sourceProperty != null)
             {
-                return new FetchSourceUsingPropertyAccess(sourceProperty.Name);
+                return new FetchSourceUsingPropertyAccess(sourceProperty.Name, sourceProperty.PropertyType);
             }
 
             return null;
+        }
+
+        private void DtoPropertiesMustBePublicAndWriteable()
+        {
+            var counter = 0;
+            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                counter++;
+                if (!property.CanWrite || !property.SetMethod.IsPublic)
+                {
+                    throw new PropertiesMustBePublicWriteableException();
+                }
+            }
+
+            this.diagnosticLogger($"{counter} public and writeable Dto properties found.");
         }
 
         private PropertyInfo FindMatchingSourceProperty(string destinationName, Type source)
@@ -233,6 +221,28 @@ namespace Rees.TangyFruitMapper
             return null;
         }
 
+        private static FieldInfo FindSimilarlyNamedField(string targetPropertyName, Type searchTarget)
+        {
+            var sourceField = searchTarget.GetField(targetPropertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField(targetPropertyName.ToLower(), BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField(targetPropertyName.ConvertPascalCaseToCamelCase(), BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ToLower()}", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (sourceField == null)
+            {
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ConvertPascalCaseToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            return sourceField;
+        }
+
         private void MustHaveADefaultConstructor()
         {
             var modelCtor = this.modelType.GetConstructor(new Type[] {});
@@ -248,25 +258,31 @@ namespace Rees.TangyFruitMapper
             }
         }
 
+        private void OutConditions()
+        {
+            // Check that all available Dto properties have been mapped to a model property.
+            WarnIfMissingProperties(this.dtoType, this.dtoToModelMap);
+            WarnIfMissingProperties(this.modelType, this.modelToDtoMap);
+        }
+
         private void Preconditions()
         {
             MustHaveADefaultConstructor();
             DtoPropertiesMustBePublicAndWriteable();
         }
 
-        private void DtoPropertiesMustBePublicAndWriteable()
+        private void WarnIfMissingProperties(Type target, Dictionary<string, AssignmentStrategy> map)
         {
-            int counter = 0;
-            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            var query = target.GetProperties().Where(p => p.CanWrite).ToList();
+            if (map.Count < query.Count())
             {
-                counter++;
-                if (!property.CanWrite || !property.SetMethod.IsPublic)
+                this.warnings.Add($"Warning: Not all properties on Type '{target.FullName}' can be found on source.");
+                var missingProperties = query.Select(p => p.Name).Except(map.Keys);
+                foreach (var missingProperty in missingProperties)
                 {
-                    throw new PropertiesMustBePublicWriteableException();
+                    this.warnings.Add($"    {missingProperty}");
                 }
             }
-
-            this.diagnosticLogger($"{counter} public and writeable Dto properties found.");
         }
     }
 }
