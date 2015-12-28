@@ -20,7 +20,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         [InlineData("myNumber", "myNumber")]
         public void ToCamelCase(string input, string expected)
         {
-            var result = input.ToCamelCase();
+            var result = input.ConvertPascalCaseToCamelCase();
             this.output.WriteLine($"{input} => {result}");
             Assert.Equal(expected, result);
         }

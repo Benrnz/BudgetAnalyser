@@ -165,7 +165,7 @@ namespace Rees.TangyFruitMapper
             }
             if (sourceField == null)
             {
-                sourceField = searchTarget.GetField(targetPropertyName.ToCamelCase(), BindingFlags.Instance | BindingFlags.NonPublic);
+                sourceField = searchTarget.GetField(targetPropertyName.ConvertPascalCaseToCamelCase(), BindingFlags.Instance | BindingFlags.NonPublic);
             }
             if (sourceField == null)
             {
@@ -173,7 +173,7 @@ namespace Rees.TangyFruitMapper
             }
             if (sourceField == null)
             {
-                sourceField = searchTarget.GetField($"_{targetPropertyName.ToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
+                sourceField = searchTarget.GetField($"_{targetPropertyName.ConvertPascalCaseToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
             }
             return sourceField;
         }
