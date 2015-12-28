@@ -29,8 +29,9 @@ namespace Rees.TangyFruitMapper
         }
 
         /// <summary>
-        /// Makes sure that there are no inconsistencies between the Destination Assignment Strategy and Fetch Source Strategy.
-        /// For example: If the fetch source strategy is a commented out strategy, then the destination must also be commented out.
+        ///     Makes sure that there are no inconsistencies between the Destination Assignment Strategy and Fetch Source Strategy.
+        ///     For example: If the fetch source strategy is a commented out strategy, then the destination must also be commented
+        ///     out.
         /// </summary>
         internal MapResult Consolidate()
         {

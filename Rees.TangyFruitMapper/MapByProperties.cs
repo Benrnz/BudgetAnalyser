@@ -209,23 +209,6 @@ namespace Rees.TangyFruitMapper
             return null;
         }
 
-        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params DtoPreconditionRule[] rules)
-        {
-            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-            {
-                foreach (var rule in rules)
-                {
-                    rule.IsCompliant(property);
-                }
-                typeCheckList.GetOrAdd(type, key => null);
-                if (property.PropertyType.IsComplexType())
-                {
-                    typeCheckList.GetOrAdd(property.PropertyType, key => null);
-                    VisitAllProperties(property.PropertyType, typeCheckList, rules);
-                }
-            }
-        }
-
         private PropertyInfo FindMatchingSourceProperty(string destinationName, Type source)
         {
             var sourceProperty = source.GetProperty(destinationName);
@@ -298,6 +281,23 @@ namespace Rees.TangyFruitMapper
             MustHaveADefaultConstructor();
             var typeCheckList = new ConcurrentDictionary<Type, object>();
             VisitAllProperties(this.dtoType, typeCheckList, new DtoMustOnlyHavePublicWriteableProperties(), new DtoMustOnlyUseListForCollections());
+        }
+
+        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params DtoPreconditionRule[] rules)
+        {
+            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                foreach (var rule in rules)
+                {
+                    rule.IsCompliant(property);
+                }
+                typeCheckList.GetOrAdd(type, key => null);
+                if (property.PropertyType.IsComplexType())
+                {
+                    typeCheckList.GetOrAdd(property.PropertyType, key => null);
+                    VisitAllProperties(property.PropertyType, typeCheckList, rules);
+                }
+            }
         }
 
         private void WarnIfMissingProperties(Type target, Dictionary<string, AssignmentStrategy> map)

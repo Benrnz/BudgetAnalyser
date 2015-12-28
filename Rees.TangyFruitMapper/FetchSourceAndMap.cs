@@ -2,8 +2,8 @@ namespace Rees.TangyFruitMapper
 {
     internal class FetchSourceAndMap : FetchSourceStrategy
     {
-        private readonly FetchSourceStrategy unmappedSource;
         private readonly MapResult dependentMapper;
+        private readonly FetchSourceStrategy unmappedSource;
 
         public FetchSourceAndMap(FetchSourceStrategy unmappedSource, MapResult dependentMapper) : base(unmappedSource.SourceType, unmappedSource.SourceName)
         {

@@ -6,18 +6,18 @@ namespace Rees.TangyFruitMapper
 {
     public class MappingGenerator
     {
-        private Type dtoType;
-        private Type modelType;
         private Action<string> codeOutput;
+        private Type dtoType;
         private Action<string> errorOutput;
         private int indent;
+        private Type modelType;
         private NamespaceFinder namespaceFinder;
 
         public Action<string> DiagnosticLogging { get; set; }
 
         public void Generate<TDto, TModel>(
             [NotNull] Action<string> codeOutputDelegate,
-            [NotNull] Action<string> errorOutputDelegate, 
+            [NotNull] Action<string> errorOutputDelegate,
             [NotNull] Action<string> warnOutputDelegate)
         {
             if (codeOutputDelegate == null) throw new ArgumentNullException(nameof(codeOutputDelegate));
@@ -27,8 +27,8 @@ namespace Rees.TangyFruitMapper
 
             this.codeOutput = codeOutputDelegate;
             this.errorOutput = errorOutputDelegate;
-            this.modelType = typeof (TModel);
-            this.dtoType = typeof (TDto);
+            this.modelType = typeof(TModel);
+            this.dtoType = typeof(TDto);
             this.namespaceFinder = new NamespaceFinder(this.dtoType, this.modelType);
             DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
 
@@ -55,19 +55,38 @@ namespace Rees.TangyFruitMapper
             mapper.Warnings.ToList().ForEach(warnOutputDelegate);
         }
 
-        private void WriteMappingClasses(MapResult mapResult)
+        private string Indent(bool increment = false)
         {
-            WriteClassHeader(mapResult);
-            WriteMethods(mapResult);
-            WriteClassFooter(mapResult);
+            if (increment) this.indent++;
+            return new string(' ', 4*this.indent);
+        }
 
-            if (mapResult.DependentOnMaps.Any())
-            {
-                foreach (var nestedMap in mapResult.DependentOnMaps)
-                {
-                    WriteMappingClasses(nestedMap);
-                }
-            }
+        private string Outdent()
+        {
+            this.indent--;
+            if (this.indent < 0) this.indent = 0;
+            return new string(' ', 4*this.indent);
+        }
+
+        private void WriteClassFooter(MapResult map)
+        {
+            this.codeOutput($@"{Outdent()}}} // End Class
+");
+        }
+
+        private void WriteClassHeader(MapResult map)
+        {
+            this.codeOutput(
+                $@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
+{Indent()}public class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
+{Indent()}{{
+{
+                    Indent(true)}");
+        }
+
+        private void WriteFileFooter()
+        {
+            this.codeOutput($@"{Outdent()}}} // End Namespace");
         }
 
         private void WriteFileHeader()
@@ -86,23 +105,29 @@ namespace GeneratedCode
 {Indent(true)}");
         }
 
-        private void WriteFileFooter()
+        private void WriteMappingClasses(MapResult mapResult)
         {
-            this.codeOutput($@"{Outdent()}}} // End Namespace");
-        }
+            WriteClassHeader(mapResult);
+            WriteMethods(mapResult);
+            WriteClassFooter(mapResult);
 
-        private void WriteClassFooter(MapResult map)
-        {
-            this.codeOutput($@"{Outdent()}}} // End Class
-");
+            if (mapResult.DependentOnMaps.Any())
+            {
+                foreach (var nestedMap in mapResult.DependentOnMaps)
+                {
+                    WriteMappingClasses(nestedMap);
+                }
+            }
         }
 
         private void WriteMethods(MapResult map)
         {
             // TODO maybe add support for internal constructors? The below code assumes public default constructors are available.
-            this.codeOutput($@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
+            this.codeOutput(
+                $@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.ModelVariableName} = new {map.ModelType.Name}();
+{Indent(true)}var {AssignmentStrategy.ModelVariableName
+                    } = new {map.ModelType.Name}();
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
@@ -114,10 +139,12 @@ namespace GeneratedCode
 {Outdent()}}} // End ToModel Method");
 
 
-            this.codeOutput($@"
+            this.codeOutput(
+                $@"
 {Indent()}public {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();");
+{Indent(true)}var {AssignmentStrategy.DtoVariableName
+                    } = new {map.DtoType.Name}();");
             foreach (var assignment in map.DtoToModelMap.Values)
             {
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
@@ -125,27 +152,6 @@ namespace GeneratedCode
             }
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.DtoVariableName};
 {Outdent()}}} // End ToDto Method");
-        }
-
-        private void WriteClassHeader(MapResult map)
-        {
-            this.codeOutput($@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
-{Indent()}public class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
-{Indent()}{{
-{Indent(true)}");
-        }
-
-        private string Indent(bool increment = false)
-        {
-            if (increment) this.indent++;
-            return new string(' ', 4 * this.indent);
-        }
-
-        private string Outdent()
-        {
-            this.indent--;
-            if (this.indent < 0) this.indent = 0;
-            return new string(' ', 4 * this.indent);
         }
     }
 }

@@ -4,6 +4,6 @@
     {
         NotSet = 0,
         Dto = 1,
-        Model = 2,
+        Model = 2
     }
 }

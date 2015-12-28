@@ -14,7 +14,9 @@ namespace Rees.TangyFruitMapper
         public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
             var destinationObject = DestinationObjectName(destinationKind);
-            return $@"{AssignmentStrategy.ModelTypeVariableName}.GetField(""{this.sourceField.Name}"", BindingFlags.Instance | BindingFlags.NonPublic).SetValue({destinationObject}, {sourceVariableName});";
+            return
+                $@"{AssignmentStrategy.ModelTypeVariableName}.GetField(""{this.sourceField.Name}"", BindingFlags.Instance | BindingFlags.NonPublic).SetValue({destinationObject}, {sourceVariableName
+                    });";
         }
     }
 }

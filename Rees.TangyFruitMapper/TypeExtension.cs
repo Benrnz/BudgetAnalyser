@@ -15,7 +15,7 @@ namespace Rees.TangyFruitMapper
                 return false;
             }
 
-            if (instance == typeof (decimal) || instance == typeof (string))
+            if (instance == typeof(decimal) || instance == typeof(string))
             {
                 return false;
             }
