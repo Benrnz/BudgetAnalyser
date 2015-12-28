@@ -43,6 +43,7 @@
     <Compile Include="AssignmentStrategy.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />
+    <Compile Include="FetchSourceAndMap.cs" />
     <Compile Include="FetchSourceByReflection.cs" />
     <Compile Include="FetchSourceStrategy.cs" />
     <Compile Include="FetchSourceUsingPropertyAccess.cs" />

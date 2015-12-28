@@ -71,6 +71,7 @@ namespace Rees.TangyFruitMapper
 
         private void WriteFileHeader()
         {
+            // TODO this is not going to work for namespaces discovered for nested types.
             this.codeOutput($@"using System;
 using System.CodeDom.Compiler;
 using System.Reflection;
@@ -127,7 +128,7 @@ namespace GeneratedCode
         private void WriteClassHeader(MapResult map)
         {
             this.codeOutput($@"{Indent(true)}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
-{Indent()}public class Mapper_{this.dtoType.Name}_{this.modelType.Name} : IDtoMapper<{this.dtoType.Name}, {this.modelType.Name}>
+{Indent()}public class Mapper_{map.DtoType.Name}_{map.ModelType.Name} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
 {Indent()}{{
 {Indent(true)}");
         }

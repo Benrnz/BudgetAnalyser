@@ -14,7 +14,7 @@ namespace Rees.TangyFruitMapper
         private readonly Dictionary<string, AssignmentStrategy> modelToDtoMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type modelType;
         private readonly List<string> warnings = new List<string>();
-        private readonly List<MapResult> nestedResults = new List<MapResult>();
+        private readonly List<MapResult> dependentMappers = new List<MapResult>();
 
         public MapByProperties([NotNull] Action<string> diagnosticLogger, [NotNull] Type dtoType, [NotNull] Type modelType)
         {
@@ -44,7 +44,7 @@ namespace Rees.TangyFruitMapper
                 ModelType = this.modelType,
                 DtoToModelMap = this.dtoToModelMap,
                 ModelToDtoMap = this.modelToDtoMap,
-                DependentOnMaps = this.nestedResults,
+                DependentOnMaps = this.dependentMappers,
             };
         }
 
@@ -108,11 +108,13 @@ namespace Rees.TangyFruitMapper
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
                     // TODO this could result in duplicate maps being created.
-                    this.nestedResults.Add(new MapByProperties(
+                    var dependentMapper = new MapByProperties(
                         msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
                         assignmentStrategy.Destination.DestinationType,
                         assignmentStrategy.Source.SourceType)
-                        .CreateMap());
+                        .CreateMap();
+                    this.dependentMappers.Add(dependentMapper);
+                    assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
                 }
             }
         }
@@ -152,11 +154,13 @@ namespace Rees.TangyFruitMapper
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
                     // TODO this could result in duplicate maps being created.
-                    this.nestedResults.Add(new MapByProperties(
+                    var dependentMapper = new MapByProperties(
                         msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
-                        assignmentStrategy.Destination.DestinationType,
-                        assignmentStrategy.Source.SourceType)
-                        .CreateMap());
+                        assignmentStrategy.Source.SourceType,
+                        assignmentStrategy.Destination.DestinationType)
+                        .CreateMap();
+                    this.dependentMappers.Add(dependentMapper);
+                    assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
                 }
             }
         }
