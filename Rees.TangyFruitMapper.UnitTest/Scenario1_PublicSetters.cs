@@ -4,9 +4,9 @@ using Xunit.Abstractions;
 
 namespace Rees.TangyFruitMapper.UnitTest
 {
-    public class Scenario1_PublicSettersTest : MappingGeneratorScenarios<DtoType1, ModelType1_AllWriteable>
+    public class Scenario1_PublicSetters : MappingGeneratorScenarios<DtoType1, ModelType1_AllWriteable>
     {
-        public Scenario1_PublicSettersTest(ITestOutputHelper output) : base(output)
+        public Scenario1_PublicSetters(ITestOutputHelper output) : base(output)
         {
         }
 

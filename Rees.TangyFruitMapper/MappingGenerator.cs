@@ -99,6 +99,7 @@ namespace GeneratedCode
 
         private void WriteMethods(MapResult map)
         {
+            // TODO maybe add support for internal constructors? The below code assumes public default constructors are available.
             this.codeOutput($@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
 {Indent(true)}var {AssignmentStrategy.ModelVariableName} = new {map.ModelType.Name}();

@@ -4,3 +4,5 @@
 3)  Non-public fields must use camel casing to be automatically mapped. (Either with or without an underscore prefix, both are supported).
 4)  Class names must be unique. No two classes can have the same class-name regardless of namespace.
 5)  Any property that cannot be matched will produce a comment and a todo in the generated code.
+6)  All DTO's and Models must have a default constructor.
+7)  All DTO collections must be List<T>.

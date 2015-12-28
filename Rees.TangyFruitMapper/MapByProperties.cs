@@ -9,23 +9,18 @@ namespace Rees.TangyFruitMapper
 {
     internal class MapByProperties
     {
+        /// <summary>
+        ///     All the maps. Keyed by mapper name.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, MapResult> AllMaps = new ConcurrentDictionary<string, MapResult>();
+
+        private readonly List<MapResult> dependentMappers = new List<MapResult>();
         private readonly Action<string> diagnosticLogger;
         private readonly Dictionary<string, AssignmentStrategy> dtoToModelMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type dtoType;
         private readonly Dictionary<string, AssignmentStrategy> modelToDtoMap = new Dictionary<string, AssignmentStrategy>();
         private readonly Type modelType;
         private readonly List<string> warnings = new List<string>();
-        private readonly List<MapResult> dependentMappers = new List<MapResult>();
-
-        /// <summary>
-        /// All the maps. Keyed by mapper name.
-        /// </summary>
-        private static readonly ConcurrentDictionary<string, MapResult> AllMaps = new ConcurrentDictionary<string, MapResult>();
-
-        public static void ClearMapCache()
-        {
-            AllMaps.Clear();
-        }
 
         public MapByProperties([NotNull] Action<string> diagnosticLogger, [NotNull] Type dtoType, [NotNull] Type modelType)
         {
@@ -38,6 +33,11 @@ namespace Rees.TangyFruitMapper
         }
 
         public IEnumerable<string> Warnings => this.warnings;
+
+        public static void ClearMapCache()
+        {
+            AllMaps.Clear();
+        }
 
         public MapResult CreateMap()
         {
@@ -55,7 +55,7 @@ namespace Rees.TangyFruitMapper
                 ModelType = this.modelType,
                 DtoToModelMap = this.dtoToModelMap,
                 ModelToDtoMap = this.modelToDtoMap,
-                DependentOnMaps = this.dependentMappers,
+                DependentOnMaps = this.dependentMappers
             }.Consolidate();
         }
 
@@ -209,19 +209,21 @@ namespace Rees.TangyFruitMapper
             return null;
         }
 
-        private void DtoPropertiesMustBePublicAndWriteable()
+        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params DtoPreconditionRule[] rules)
         {
-            var counter = 0;
-            foreach (var property in this.dtoType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                counter++;
-                if (!property.CanWrite || !property.SetMethod.IsPublic)
+                foreach (var rule in rules)
                 {
-                    throw new PropertiesMustBePublicWriteableException();
+                    rule.IsCompliant(property);
+                }
+                typeCheckList.GetOrAdd(type, key => null);
+                if (property.PropertyType.IsComplexType())
+                {
+                    typeCheckList.GetOrAdd(property.PropertyType, key => null);
+                    VisitAllProperties(property.PropertyType, typeCheckList, rules);
                 }
             }
-
-            this.diagnosticLogger($"{counter} public and writeable Dto properties found.");
         }
 
         private PropertyInfo FindMatchingSourceProperty(string destinationName, Type source)
@@ -277,7 +279,7 @@ namespace Rees.TangyFruitMapper
                 throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.modelType.Name}");
             }
 
-            var dtoCtor = this.modelType.GetConstructor(new Type[] {});
+            var dtoCtor = this.dtoType.GetConstructor(new Type[] {});
             if (dtoCtor == null)
             {
                 throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.dtoType.Name}");
@@ -294,7 +296,8 @@ namespace Rees.TangyFruitMapper
         private void Preconditions()
         {
             MustHaveADefaultConstructor();
-            DtoPropertiesMustBePublicAndWriteable();
+            var typeCheckList = new ConcurrentDictionary<Type, object>();
+            VisitAllProperties(this.dtoType, typeCheckList, new DtoMustOnlyHavePublicWriteableProperties(), new DtoMustOnlyUseListForCollections());
         }
 
         private void WarnIfMissingProperties(Type target, Dictionary<string, AssignmentStrategy> map)

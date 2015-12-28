@@ -68,9 +68,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DynamicCodeCompiler.cs" />
+    <Compile Include="ErrorScenarios.cs" />
     <Compile Include="MappingGeneratorScenarios.cs" />
     <Compile Include="NamespaceFinderTest.cs" />
-    <Compile Include="Scenario1_PublicSettersTest.cs" />
+    <Compile Include="Scenario1_PublicSetters.cs" />
     <Compile Include="Scenario2_PrivateAutoSetters.cs" />
     <Compile Include="Scenario4_PropertiesWithBackingFieldAndUnderscorePrefix.cs" />
     <Compile Include="Scenario6_3DeepObjectGraph.cs" />

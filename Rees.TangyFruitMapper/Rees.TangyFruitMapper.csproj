@@ -41,8 +41,12 @@
   <ItemGroup>
     <Compile Include="AssignDestinationStrategy.cs" />
     <Compile Include="AssignmentStrategy.cs" />
+    <Compile Include="CollectionsMustBeListTException.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />
+    <Compile Include="DtoMustOnlyHavePublicWriteableProperties.cs" />
+    <Compile Include="DtoMustOnlyUseListForCollections.cs" />
+    <Compile Include="DtoPreconditionRule.cs" />
     <Compile Include="FetchSourceAndMap.cs" />
     <Compile Include="FetchSourceByReflection.cs" />
     <Compile Include="FetchSourceStrategy.cs" />
