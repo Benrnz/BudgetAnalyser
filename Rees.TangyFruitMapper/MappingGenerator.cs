@@ -72,7 +72,6 @@ namespace Rees.TangyFruitMapper
 
         private void WriteFileHeader()
         {
-            // TODO this is not going to work for namespaces discovered for nested types.
             this.codeOutput($@"using System;
 using System.CodeDom.Compiler;
 using System.Reflection;

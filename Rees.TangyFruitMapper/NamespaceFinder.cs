@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using JetBrains.Annotations;
 
 namespace Rees.TangyFruitMapper
@@ -8,6 +10,7 @@ namespace Rees.TangyFruitMapper
     {
         private readonly Type dtoType;
         private readonly Type modelType;
+        private readonly List<Type> visitedTypes = new List<Type>();
 
         public NamespaceFinder([NotNull] Type dtoType, [NotNull] Type modelType)
         {
@@ -17,17 +20,26 @@ namespace Rees.TangyFruitMapper
             this.modelType = modelType;
         }
 
-        public IEnumerable<string> DiscoverNamespaces()
+        public IReadOnlyDictionary<string, string> DiscoverNamespaces()
         {
-            var list = new List<string>();
-            list.Add(this.dtoType.Namespace);
+            var namespaces = new ConcurrentDictionary<string, string>();
+            DiscoverAllNamespaces(namespaces, this.dtoType);
+            DiscoverAllNamespaces(namespaces, this.modelType);
+            return namespaces;
+        }
 
-            if (!list.Contains(this.modelType.Namespace))
+        private void DiscoverAllNamespaces(ConcurrentDictionary<string, string> namespaces, Type type)
+        {
+            namespaces.GetOrAdd(type.Namespace, key => type.Name);
+
+            if (!this.visitedTypes.Contains(type))
             {
-                list.Add(this.modelType.Namespace);
+                this.visitedTypes.Add(type);
+                foreach (var propertyInfo in type.GetProperties())
+                {
+                    DiscoverAllNamespaces(namespaces, propertyInfo.PropertyType);
+                }
             }
-
-            return list;
         }
     }
 }

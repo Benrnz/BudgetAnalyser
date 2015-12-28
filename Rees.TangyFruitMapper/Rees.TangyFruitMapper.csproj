@@ -61,6 +61,7 @@
     <Compile Include="PropertyNotMatchedException.cs" />
     <Compile Include="SimpleAssignment.cs" />
     <Compile Include="StringExtension.cs" />
+    <Compile Include="TypeExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assumptions.txt" />

@@ -18,7 +18,7 @@ namespace Rees.TangyFruitMapper
         private readonly List<MapResult> dependentMappers = new List<MapResult>();
 
         /// <summary>
-        /// All the maps. Keyed by class name.
+        /// All the maps. Keyed by mapper name.
         /// </summary>
         private static readonly ConcurrentDictionary<string, MapResult> AllMaps = new ConcurrentDictionary<string, MapResult>();
 
@@ -114,7 +114,7 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
-                if (IsComplexType(assignmentStrategy.Source.SourceType))
+                if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
@@ -165,7 +165,7 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
-                if (IsComplexType(assignmentStrategy.Source.SourceType))
+                if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
@@ -267,23 +267,6 @@ namespace Rees.TangyFruitMapper
                 sourceField = searchTarget.GetField($"_{targetPropertyName.ConvertPascalCaseToCamelCase()}", BindingFlags.Instance | BindingFlags.NonPublic);
             }
             return sourceField;
-        }
-
-        private bool IsComplexType(Type sourceType)
-        {
-            if (sourceType.GetTypeInfo().IsPrimitive)
-            {
-                // https://msdn.microsoft.com/en-us/library/system.type.isprimitive(v=vs.110).aspx
-                // Boolean, Byte, SByte, Int16, UInt16, Int32, UInt32, Int64, UInt64, IntPtr, UIntPtr, Char, Double, and Single.
-                return false;
-            }
-
-            if (sourceType == typeof (decimal) || sourceType == typeof(string))
-            {
-                return false;
-            }
-
-            return true;
         }
 
         private void MustHaveADefaultConstructor()

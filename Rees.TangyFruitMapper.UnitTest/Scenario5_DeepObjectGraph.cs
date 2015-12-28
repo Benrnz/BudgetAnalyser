@@ -1,4 +1,5 @@
 ﻿using Rees.TangyFruitMapper.UnitTest.TestData;
+using Rees.TangyFruitMapper.UnitTest.TestData.SubNamespace;
 using Xunit;
 using Xunit.Abstractions;
 

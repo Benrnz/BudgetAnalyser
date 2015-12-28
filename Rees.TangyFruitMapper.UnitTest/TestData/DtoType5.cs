@@ -1,4 +1,6 @@
-﻿namespace Rees.TangyFruitMapper.UnitTest.TestData
+﻿using Rees.TangyFruitMapper.UnitTest.TestData.SubNamespace;
+
+namespace Rees.TangyFruitMapper.UnitTest.TestData
 {
     public class DtoType5
     {
@@ -9,10 +11,13 @@
         public decimal MyNumber { get; set; }
     }
 
-    public class NameDto5
+    namespace SubNamespace
     {
-        public string FirstName { get; set; }
+        public class NameDto5
+        {
+            public string FirstName { get; set; }
 
-        public string Surname { get; set; }
+            public string Surname { get; set; }
+        }
     }
 }
