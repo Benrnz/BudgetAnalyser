@@ -223,7 +223,7 @@ namespace Rees.TangyFruitMapper
             {
                 // Both dto and model are complex types
                 var dependentGenericTypeMapper = AllMaps.GetOrAdd(
-                    MapResult.GetMapperName(genericSourceType, genericDestinationType),
+                    MapResult.GetMapperName(dtoGenericType, modelGenericType),
                     key =>
                     {
                         var newMapper = new MapByProperties(
@@ -234,7 +234,7 @@ namespace Rees.TangyFruitMapper
                         this.dependentMappers.Add(newMapper);
                         return newMapper;
                     });
-                assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper, genericSourceType);
+                assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper);
                 return;
             }
 

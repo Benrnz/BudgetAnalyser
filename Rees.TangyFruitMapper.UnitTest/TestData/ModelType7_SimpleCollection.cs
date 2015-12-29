@@ -2,13 +2,13 @@
 
 namespace Rees.TangyFruitMapper.UnitTest.TestData
 {
-    public class ModelType7_1Collection
+    public class ModelType7_SimpleCollection
     {
-        public ModelType7_1Collection()
+        public ModelType7_SimpleCollection()
         {
         }
 
-        public ModelType7_1Collection(int age, decimal myNumber, IEnumerable<string> names)
+        public ModelType7_SimpleCollection(int age, decimal myNumber, IEnumerable<string> names)
         {
             Age = age;
             MyNumber = myNumber;

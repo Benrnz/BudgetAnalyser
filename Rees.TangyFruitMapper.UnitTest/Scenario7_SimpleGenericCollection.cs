@@ -6,9 +6,9 @@ using Xunit.Abstractions;
 
 namespace Rees.TangyFruitMapper.UnitTest
 {
-    public class Scenario7_1Collection : MappingGeneratorScenarios<DtoType7, ModelType7_1Collection>
+    public class Scenario7_SimpleGenericCollection : MappingGeneratorScenarios<DtoType7, ModelType7_SimpleCollection>
     {
-        public Scenario7_1Collection(ITestOutputHelper output) : base(output)
+        public Scenario7_SimpleGenericCollection(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -22,7 +22,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         public void Generate_ShouldSuccessfullyMapToDto()
         {
             var mapper = CreateMapperFromGeneratedCode();
-            var result = mapper.ToDto(new ModelType7_1Collection(410, 3.1415M, new[] { "Horse", "Battery", "Stapler" }));
+            var result = mapper.ToDto(new ModelType7_SimpleCollection(410, 3.1415M, new[] { "Horse", "Battery", "Stapler" }));
 
             Assert.Equal(410, result.Age);
             Assert.Equal(3.1415M, result.MyNumber);

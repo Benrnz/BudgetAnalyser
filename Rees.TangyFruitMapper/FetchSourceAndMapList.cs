@@ -1,19 +1,35 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rees.TangyFruitMapper
 {
     internal class FetchSourceAndMapList : FetchSourceStrategy
     {
-        private readonly Type genericSourceType;
+        private readonly MapResult mapResult;
+        private static int MapperCounter = 1;
 
-        public FetchSourceAndMapList(FetchSourceStrategy source, MapResult mapResult, Type genericSourceType) : base(source.SourceType, source.SourceName)
+        public FetchSourceAndMapList(FetchSourceStrategy source, MapResult mapResult) : base(source.SourceType, source.SourceName)
         {
-            this.genericSourceType = genericSourceType;
+            this.mapResult = mapResult;
         }
 
         public override string CreateCodeLine(DtoOrModel sourceKind)
         {
-            return $"// TODO List support not yet complete.";
+            // var listMapper = new Mapper_NameDto5_Name5();
+            // var source1 = dto.Names.Select(listMapper.ToModel); 
+            var mapperVar = GetMapperVariableName();
+            return $@"var {mapperVar} = new {this.mapResult.MapperName}();
+var {SourceVariableName} = {SourceObjectName(sourceKind)}.{SourceName}.Select({mapperVar}.{MapperMethodToCall(sourceKind)}).ToList();";
+        }
+
+        private string MapperMethodToCall(DtoOrModel sourceKind)
+        {
+            return sourceKind == DtoOrModel.Dto ? "ToModel" : "ToDto";
+        }
+
+        private string GetMapperVariableName()
+        {
+            return $"mapper{MapperCounter++}";
         }
     }
 }
