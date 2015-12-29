@@ -118,7 +118,6 @@ namespace Rees.TangyFruitMapper
                 if (assignmentStrategy.Source.SourceType.IsCollection())
                 {
                     // Collection detected
-                    this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
                     MapCollection(assignmentStrategy, this.modelType, false);
                     continue;
                 }
@@ -205,7 +204,7 @@ namespace Rees.TangyFruitMapper
         private void MapCollection(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
         {
 // Collection detected
-            this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
+            this.diagnosticLogger($"Collection detected: {parentType.Name}.{assignmentStrategy.Source.SourceType}");
             if (assignmentStrategy.Source.SourceType.GetGenericArguments().Length != 1
                 || assignmentStrategy.Destination.DestinationType.GetGenericArguments().Length != 1)
             {
@@ -236,11 +235,14 @@ namespace Rees.TangyFruitMapper
                         return newMapper;
                     });
                 assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper, genericSourceType);
+                return;
             }
-            else if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
+
+            if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
             {
                 // Both dto and model are simple types
                 assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source, genericSourceType);
+                return;
             }
 
             // The dto and model types appear to be incompatible types of list

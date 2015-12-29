@@ -14,6 +14,9 @@ namespace Rees.TangyFruitMapper.UnitTest
             var parameters = new CompilerParameters();
             parameters.ReferencedAssemblies.Add("Rees.TangyFruitMapper.dll");
             parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add("System.Core.dll");
+            parameters.ReferencedAssemblies.Add("System.Runtime.dll");
+            parameters.ReferencedAssemblies.Add("System.Linq.dll");
             parameters.ReferencedAssemblies.Add("Rees.TangyFruitMapper.UnitTest.dll");
             // True - memory generation, false - external file generation
             parameters.GenerateInMemory = true;

@@ -23,6 +23,7 @@ namespace Rees.TangyFruitMapper
         public IReadOnlyDictionary<string, string> DiscoverNamespaces()
         {
             var namespaces = new ConcurrentDictionary<string, string>();
+            namespaces.GetOrAdd("System", key => "System");
             DiscoverAllNamespaces(namespaces, this.dtoType);
             DiscoverAllNamespaces(namespaces, this.modelType);
             return namespaces;

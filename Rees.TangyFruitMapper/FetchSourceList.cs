@@ -13,8 +13,8 @@ namespace Rees.TangyFruitMapper
 
         public override string CreateCodeLine(DtoOrModel sourceKind)
         {
-            // TODO
-            return $"// TODO List support not yet complete.";
+            // var source1 = model.Names.ToList();
+            return $"var {SourceVariableName} = {SourceObjectName(sourceKind)}.{SourceName}.ToList();";
         }
     }
 }

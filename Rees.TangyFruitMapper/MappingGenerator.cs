@@ -92,8 +92,8 @@ namespace Rees.TangyFruitMapper
 
         private void WriteFileHeader()
         {
-            this.codeOutput($@"using System;
-using System.CodeDom.Compiler;
+            this.codeOutput($@"using System.CodeDom.Compiler;
+using System.Linq;
 using System.Reflection;
 using Rees.TangyFruitMapper;");
             foreach (var ns in this.namespaceFinder.DiscoverNamespaces())
