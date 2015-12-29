@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
+using Rees.TangyFruitMapper.Validation;
 
 namespace Rees.TangyFruitMapper
 {
@@ -114,6 +117,13 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
+                if (assignmentStrategy.Source.SourceType.IsCollection())
+                {
+                    // Collection detected
+                    this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
+                    continue;
+                }
+
                 if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
                     // Nest objects detected - will need to attempt to map these as well.
@@ -130,7 +140,7 @@ namespace Rees.TangyFruitMapper
                             this.dependentMappers.Add(newMapper);
                             return newMapper;
                         });
-                    assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
+                    assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
                 }
             }
         }
@@ -165,6 +175,31 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
+                if (assignmentStrategy.Source.SourceType.IsCollection())
+                {
+                    // Collection detected
+                    this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
+                    var genericSourceType = assignmentStrategy.Source.SourceType.GetGenericArguments()[0]; // Should be safe given the PreConditions
+                    var genericDestinationType = assignmentStrategy.Destination.DestinationType.GetGenericArguments()[0];
+                    if (genericDestinationType.IsComplexType() && genericDestinationType.IsComplexType())
+                    {
+                        var dependentGenericTypeMapper = AllMaps.GetOrAdd(
+                            MapResult.GetMapperName(genericSourceType, genericDestinationType),
+                            key =>
+                            {
+                                var newMapper = new MapByProperties(
+                                    msg => this.diagnosticLogger($"->{this.dtoType.Name} " + msg),
+                                    genericSourceType,
+                                    genericDestinationType)
+                                    .CreateMap();
+                                this.dependentMappers.Add(newMapper);
+                                return newMapper;
+                            });
+                        assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper, genericSourceType);
+                    }
+                    continue;
+                }
+
                 if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
                     // Nest objects detected - will need to attempt to map these as well.
@@ -181,7 +216,7 @@ namespace Rees.TangyFruitMapper
                             this.dependentMappers.Add(newMapper);
                             return newMapper;
                         });
-                    assignmentStrategy.Source = new FetchSourceAndMap(assignmentStrategy.Source, dependentMapper);
+                    assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
                 }
             }
         }
@@ -279,11 +314,19 @@ namespace Rees.TangyFruitMapper
         private void Preconditions()
         {
             MustHaveADefaultConstructor();
-            var typeCheckList = new ConcurrentDictionary<Type, object>();
-            VisitAllProperties(this.dtoType, typeCheckList, new DtoMustOnlyHavePublicWriteableProperties(), new DtoMustOnlyUseListForCollections());
+            VisitAllProperties(
+                this.dtoType,
+                new ConcurrentDictionary<Type, object>(),
+                new DictionariesAreNotSupported(),
+                new MustOnlyHavePublicWriteableProperties(), 
+                new MustOnlyUseListForCollections());
+            VisitAllProperties(
+                this.modelType,
+                new ConcurrentDictionary<Type, object>(),
+                new DictionariesAreNotSupported());
         }
 
-        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params DtoPreconditionRule[] rules)
+        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)
         {
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {

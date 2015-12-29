@@ -41,13 +41,15 @@
   <ItemGroup>
     <Compile Include="AssignDestinationStrategy.cs" />
     <Compile Include="AssignmentStrategy.cs" />
-    <Compile Include="CollectionsMustBeListTException.cs" />
+    <Compile Include="FetchSourceAndMapList.cs" />
+    <Compile Include="Validation\CollectionsMustBeListTException.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />
-    <Compile Include="DtoMustOnlyHavePublicWriteableProperties.cs" />
-    <Compile Include="DtoMustOnlyUseListForCollections.cs" />
-    <Compile Include="DtoPreconditionRule.cs" />
-    <Compile Include="FetchSourceAndMap.cs" />
+    <Compile Include="Validation\DictionariesAreNotSupported.cs" />
+    <Compile Include="Validation\MustOnlyHavePublicWriteableProperties.cs" />
+    <Compile Include="Validation\MustOnlyUseListForCollections.cs" />
+    <Compile Include="Validation\PreconditionRule.cs" />
+    <Compile Include="FetchSourceAndCallMapper.cs" />
     <Compile Include="FetchSourceByReflection.cs" />
     <Compile Include="FetchSourceStrategy.cs" />
     <Compile Include="FetchSourceUsingPropertyAccess.cs" />
@@ -57,12 +59,12 @@
     <Compile Include="DtoOrModel.cs" />
     <Compile Include="MappingResult.cs" />
     <Compile Include="NamespaceFinder.cs" />
-    <Compile Include="NoAccessibleDefaultConstructorException.cs" />
+    <Compile Include="Validation\NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="PrivateFieldAssignment.cs" />
     <Compile Include="PrivatePropertyAssignment.cs" />
-    <Compile Include="PropertiesMustBePublicWriteableException.cs" />
+    <Compile Include="Validation\PropertiesMustBePublicWriteableException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyNotMatchedException.cs" />
+    <Compile Include="Validation\PropertyNotMatchedException.cs" />
     <Compile Include="SimpleAssignment.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="TypeExtension.cs" />
@@ -70,6 +72,7 @@
   <ItemGroup>
     <Content Include="Assumptions.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

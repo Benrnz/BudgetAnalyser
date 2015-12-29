@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 
-namespace Rees.TangyFruitMapper
+namespace Rees.TangyFruitMapper.Validation
 {
-    internal abstract class DtoPreconditionRule
+    public abstract class PreconditionRule
     {
         public abstract void IsCompliant(PropertyInfo property);
     }

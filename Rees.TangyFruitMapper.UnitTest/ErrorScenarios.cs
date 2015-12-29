@@ -25,11 +25,12 @@ namespace Rees.TangyFruitMapper.UnitTest
             Assert.Throws<NoAccessibleDefaultConstructorException>(() => Act<NonPublicPropertyDto, NoDefaultConstructorDto>());
         }
 
-        [Fact]
-        public void ShouldThrow_GivenDtoCollection()
-        {
-            Assert.Throws<CollectionsMustBeListTException>(() => Act<CollectionsNotSupported, DtoType1>());
-        }
+        // ***BR 29/12/2015 - Commented out to allow collections for now until theres a reason not to.
+        //[Fact]
+        //public void ShouldThrow_GivenDtoCollection()
+        //{
+        //    Assert.Throws<CollectionsMustBeListTException>(() => Act<CollectionsNotSupported, DtoType1>());
+        //}
 
         [Fact]
         public void ShouldThrow_GivenDtoArray()

@@ -6,3 +6,4 @@
 5)  Any property that cannot be matched will produce a comment and a todo in the generated code.
 6)  All DTO's and Models must have a default constructor.
 7)  All DTO collections must be List<T>.
+8)  Dictionaries are currently not supported.
