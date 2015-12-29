@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using Rees.TangyFruitMapper.Validation;
@@ -121,6 +119,7 @@ namespace Rees.TangyFruitMapper
                 {
                     // Collection detected
                     this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
+                    MapCollection(assignmentStrategy, this.modelType, false);
                     continue;
                 }
 
@@ -128,19 +127,11 @@ namespace Rees.TangyFruitMapper
                 {
                     // Nest objects detected - will need to attempt to map these as well.
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
-                    var dependentMapper = AllMaps.GetOrAdd(
-                        MapResult.GetMapperName(assignmentStrategy.Destination.DestinationType, assignmentStrategy.Source.SourceType),
-                        key =>
-                        {
-                            var newMapper = new MapByProperties(
-                                msg => this.diagnosticLogger($"->{this.modelType.Name} " + msg),
-                                assignmentStrategy.Destination.DestinationType,
-                                assignmentStrategy.Source.SourceType)
-                                .CreateMap();
-                            this.dependentMappers.Add(newMapper);
-                            return newMapper;
-                        });
-                    assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
+                    MapNestedObject(
+                        assignmentStrategy,
+                        this.modelType,
+                        assignmentStrategy.Destination.DestinationType,
+                        assignmentStrategy.Source.SourceType);
                 }
             }
         }
@@ -177,48 +168,84 @@ namespace Rees.TangyFruitMapper
 
                 if (assignmentStrategy.Source.SourceType.IsCollection())
                 {
-                    // Collection detected
-                    this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
-                    var genericSourceType = assignmentStrategy.Source.SourceType.GetGenericArguments()[0]; // Should be safe given the PreConditions
-                    var genericDestinationType = assignmentStrategy.Destination.DestinationType.GetGenericArguments()[0];
-                    if (genericDestinationType.IsComplexType() && genericDestinationType.IsComplexType())
-                    {
-                        var dependentGenericTypeMapper = AllMaps.GetOrAdd(
-                            MapResult.GetMapperName(genericSourceType, genericDestinationType),
-                            key =>
-                            {
-                                var newMapper = new MapByProperties(
-                                    msg => this.diagnosticLogger($"->{this.dtoType.Name} " + msg),
-                                    genericSourceType,
-                                    genericDestinationType)
-                                    .CreateMap();
-                                this.dependentMappers.Add(newMapper);
-                                return newMapper;
-                            });
-                        assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper, genericSourceType);
-                    }
+                    MapCollection(assignmentStrategy, this.dtoType, true);
                     continue;
                 }
 
                 if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
-                    // Nest objects detected - will need to attempt to map these as well.
-                    this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
-                    var dependentMapper = AllMaps.GetOrAdd(
-                        MapResult.GetMapperName(assignmentStrategy.Source.SourceType, assignmentStrategy.Destination.DestinationType),
-                        key =>
-                        {
-                            var newMapper = new MapByProperties(
-                                msg => this.diagnosticLogger($"->{this.dtoType.Name} " + msg),
-                                assignmentStrategy.Source.SourceType,
-                                assignmentStrategy.Destination.DestinationType)
-                                .CreateMap();
-                            this.dependentMappers.Add(newMapper);
-                            return newMapper;
-                        });
-                    assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
+                    this.diagnosticLogger($"Nested object graph detected on model property: {this.dtoType.Name}.{assignmentStrategy.Source.SourceName}");
+                    MapNestedObject(
+                        assignmentStrategy, 
+                        this.dtoType, 
+                        assignmentStrategy.Source.SourceType, 
+                        assignmentStrategy.Destination.DestinationType);
                 }
             }
+        }
+
+        private void MapNestedObject(AssignmentStrategy assignmentStrategy, Type parentType, Type dto, Type model)
+        {
+// Nest objects detected - will need to attempt to map these as well.
+            var dependentMapper = AllMaps.GetOrAdd(
+                MapResult.GetMapperName(dto, model),
+                key =>
+                {
+                    var newMapper = new MapByProperties(
+                        msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
+                        dto,
+                        model)
+                        .CreateMap();
+                    this.dependentMappers.Add(newMapper);
+                    return newMapper;
+                });
+            assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
+        }
+
+        private void MapCollection(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
+        {
+// Collection detected
+            this.diagnosticLogger($"Collection detected: {assignmentStrategy.Source.SourceType}");
+            if (assignmentStrategy.Source.SourceType.GetGenericArguments().Length != 1
+                || assignmentStrategy.Destination.DestinationType.GetGenericArguments().Length != 1)
+            {
+                // Either the source or destination property types are not generic collections with one generic argument.
+                assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName, "Either the source or destination property types are not generic collections with one generic argument.");
+                assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName, "Either the source or destination property types are not generic collections with one generic argument");
+                return;
+            }
+
+            var genericSourceType = assignmentStrategy.Source.SourceType.GetGenericArguments()[0]; // Should be safe given the PreConditions
+            var genericDestinationType = assignmentStrategy.Destination.DestinationType.GetGenericArguments()[0];
+            var dtoGenericType = sourceIsDto ? genericSourceType : genericDestinationType;
+            var modelGenericType = sourceIsDto ? genericDestinationType : genericSourceType;
+
+            if (dtoGenericType.IsComplexType() && modelGenericType.IsComplexType())
+            {
+                // Both dto and model are complex types
+                var dependentGenericTypeMapper = AllMaps.GetOrAdd(
+                    MapResult.GetMapperName(genericSourceType, genericDestinationType),
+                    key =>
+                    {
+                        var newMapper = new MapByProperties(
+                            msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
+                            dtoGenericType,
+                            modelGenericType)
+                            .CreateMap();
+                        this.dependentMappers.Add(newMapper);
+                        return newMapper;
+                    });
+                assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper, genericSourceType);
+            }
+            else if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
+            {
+                // Both dto and model are simple types
+                assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source, genericSourceType);
+            }
+
+            // The dto and model types appear to be incompatible types of list
+            assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName, "Either the source or destination property types is a complex type and the other is a simple type.");
+            assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName, "Either the source or destination property types is a complex type and the other is a simple type.");
         }
 
         private FetchSourceStrategy DoesSourceHaveFieldWithSimilarName(string targetPropertyName, Type assignmentSource)
@@ -317,13 +344,13 @@ namespace Rees.TangyFruitMapper
             VisitAllProperties(
                 this.dtoType,
                 new ConcurrentDictionary<Type, object>(),
-                new DictionariesAreNotSupported(),
-                new MustOnlyHavePublicWriteableProperties(), 
-                new MustOnlyUseListForCollections());
+                new DictionariesAreNotSupportedRule(),
+                new MustOnlyHavePublicWriteablePropertiesRule(), 
+                new MustOnlyUseListForCollectionsRule());
             VisitAllProperties(
                 this.modelType,
                 new ConcurrentDictionary<Type, object>(),
-                new DictionariesAreNotSupported());
+                new DictionariesAreNotSupportedRule());
         }
 
         private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)
@@ -335,7 +362,7 @@ namespace Rees.TangyFruitMapper
                     rule.IsCompliant(property);
                 }
                 typeCheckList.GetOrAdd(type, key => null);
-                if (property.PropertyType.IsComplexType())
+                if (property.PropertyType.IsComplexType() && !property.PropertyType.IsCollection())
                 {
                     typeCheckList.GetOrAdd(property.PropertyType, key => null);
                     VisitAllProperties(property.PropertyType, typeCheckList, rules);

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
-using Rees.TangyFruitMapper.Validation;
 
-namespace Rees.TangyFruitMapper
+namespace Rees.TangyFruitMapper.Validation
 {
-    public class DictionariesAreNotSupported : PreconditionRule
+    public class DictionariesAreNotSupportedRule : PreconditionRule
     {
         public override void IsCompliant(PropertyInfo property)
         {

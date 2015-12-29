@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
-using Rees.TangyFruitMapper.Validation;
 
-namespace Rees.TangyFruitMapper
+namespace Rees.TangyFruitMapper.Validation
 {
-    internal class MustOnlyHavePublicWriteableProperties : PreconditionRule
+    internal class MustOnlyHavePublicWriteablePropertiesRule : PreconditionRule
     {
         public override void IsCompliant(PropertyInfo property)
         {

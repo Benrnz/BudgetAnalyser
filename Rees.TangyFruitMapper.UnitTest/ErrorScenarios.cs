@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Rees.TangyFruitMapper.UnitTest.TestData;
+using Rees.TangyFruitMapper.Validation;
 using Xunit;
 
 namespace Rees.TangyFruitMapper.UnitTest

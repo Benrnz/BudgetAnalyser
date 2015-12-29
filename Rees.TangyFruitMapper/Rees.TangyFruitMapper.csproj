@@ -42,11 +42,12 @@
     <Compile Include="AssignDestinationStrategy.cs" />
     <Compile Include="AssignmentStrategy.cs" />
     <Compile Include="FetchSourceAndMapList.cs" />
+    <Compile Include="FetchSourceList.cs" />
     <Compile Include="Validation\CollectionsMustBeListTException.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />
-    <Compile Include="Validation\DictionariesAreNotSupported.cs" />
-    <Compile Include="Validation\MustOnlyHavePublicWriteableProperties.cs" />
+    <Compile Include="Validation\DictionariesAreNotSupportedRule.cs" />
+    <Compile Include="Validation\MustOnlyHavePublicWriteablePropertiesRule.cs" />
     <Compile Include="Validation\MustOnlyUseListForCollections.cs" />
     <Compile Include="Validation\PreconditionRule.cs" />
     <Compile Include="FetchSourceAndCallMapper.cs" />

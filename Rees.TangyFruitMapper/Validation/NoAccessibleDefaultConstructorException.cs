@@ -1,6 +1,6 @@
 using System;
 
-namespace Rees.TangyFruitMapper
+namespace Rees.TangyFruitMapper.Validation
 {
     public class NoAccessibleDefaultConstructorException : Exception
     {

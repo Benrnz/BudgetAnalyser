@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
-using Rees.TangyFruitMapper.Validation;
 
-namespace Rees.TangyFruitMapper
+namespace Rees.TangyFruitMapper.Validation
 {
-    internal class MustOnlyUseListForCollections : PreconditionRule
+    internal class MustOnlyUseListForCollectionsRule : PreconditionRule
     {
         public override void IsCompliant(PropertyInfo property)
         {
