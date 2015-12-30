@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
 namespace Rees.TangyFruitMapper
 {
     internal class FetchSourceAndMapList : FetchSourceStrategy
