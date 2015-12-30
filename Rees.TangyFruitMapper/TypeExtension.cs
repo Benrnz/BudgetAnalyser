@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -23,6 +24,12 @@ namespace Rees.TangyFruitMapper
         public static bool IsComplexType(this Type instance)
         {
             if (instance == null) return false;
+
+            if (instance.FullName.StartsWith("System.Nullable`1"))
+            {
+                return false;
+            }
+
             if (instance.GetTypeInfo().IsPrimitive)
             {
                 // https://msdn.microsoft.com/en-us/library/system.type.isprimitive(v=vs.110).aspx
@@ -30,7 +37,8 @@ namespace Rees.TangyFruitMapper
                 return false;
             }
 
-            if (instance == typeof(decimal) || instance == typeof(string))
+            // In this context these are also considered simple types.
+            if (instance == typeof(decimal) || instance == typeof(string) || instance == typeof(DateTime))
             {
                 return false;
             }

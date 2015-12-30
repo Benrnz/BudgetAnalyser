@@ -8,7 +8,7 @@ namespace Rees.TangyFruitMapper.Validation
         {
             if (!property.CanWrite || !property.SetMethod.IsPublic)
             {
-                throw new PropertiesMustBePublicWriteableException();
+                throw new PropertiesMustBePublicWriteableException($"{property.DeclaringType}.{property.Name}");
             }
         }
     }
