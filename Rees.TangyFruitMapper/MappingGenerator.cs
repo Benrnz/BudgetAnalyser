@@ -49,6 +49,8 @@ namespace Rees.TangyFruitMapper
             WriteMappingClasses(mapResult);
 
             WriteFileFooter();
+
+            DiagnosticLogging($"================== Mapping Complete {this.dtoType.Name} to {this.modelType.Name} ======================");
         }
 
         private string Indent(bool increment = false)

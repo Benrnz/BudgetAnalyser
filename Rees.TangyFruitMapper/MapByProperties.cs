@@ -103,7 +103,7 @@ namespace Rees.TangyFruitMapper
 
         private void CreateMapToDto()
         {
-            this.diagnosticLogger($"Creating a map to Map To a Dto {this.dtoType.Name}.");
+            this.diagnosticLogger($"Creating a map to Map To a Dto {this.dtoType.FullName}.");
             // DTO properties must be writable so not checked here.
             foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
             {
@@ -116,6 +116,7 @@ namespace Rees.TangyFruitMapper
                     }
                 };
                 this.dtoToModelMap[dtoProperty.Name] = assignmentStrategy;
+                this.diagnosticLogger($"SimpleAssignment will be used to assign a value into {this.dtoType.Name}.{dtoProperty.Name}");
 
                 // Find a way to get the Source value...
                 assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(dtoProperty.Name, this.modelType);
@@ -128,6 +129,8 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
+                this.diagnosticLogger($"First pass to get source value for {this.dtoType.Name}.{dtoProperty.Name} from {this.modelType.Name} complete, using {assignmentStrategy.Source.GetType().Name}");
+
                 if (assignmentStrategy.Source.SourceType.IsCollection())
                 {
                     // Collection detected
@@ -138,19 +141,16 @@ namespace Rees.TangyFruitMapper
                 if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
                     // Nest objects detected - will need to attempt to map these as well.
-                    this.diagnosticLogger($"Nested object graph detected on model property: {this.modelType.Name}.{assignmentStrategy.Source.SourceName}");
-                    MapNestedObject(
-                        assignmentStrategy,
-                        this.modelType,
-                        assignmentStrategy.Destination.DestinationType,
-                        assignmentStrategy.Source.SourceType);
+                    MapNestedObject(assignmentStrategy, this.modelType, false);
                 }
+
+                this.diagnosticLogger($"Second pass to get source value for {this.dtoType.Name}.{dtoProperty.Name} from {this.modelType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
             }
         }
 
         private void CreateMapToModel()
         {
-            this.diagnosticLogger($"Creating a map to Map To a Model {this.modelType.Name}.");
+            this.diagnosticLogger($"Creating a map to Map To a Model {this.modelType.FullName}.");
             foreach (var modelProperty in this.modelType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
@@ -168,6 +168,8 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
+                this.diagnosticLogger($"{assignmentStrategy.Destination.GetType()} will be used to assign a value into {this.modelType.Name}.{modelProperty.Name}.");
+
                 // Find a way to get the Source value...
                 assignmentStrategy.Source = DoesSourceHavePropertyWithSameName(modelProperty.Name, this.dtoType);
                 if (assignmentStrategy.Source == null)
@@ -179,6 +181,8 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
+                this.diagnosticLogger($"First pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, using {assignmentStrategy.Source.GetType().Name}");
+
                 if (assignmentStrategy.Source.SourceType.IsCollection())
                 {
                     MapCollection(assignmentStrategy, this.dtoType, true);
@@ -187,13 +191,10 @@ namespace Rees.TangyFruitMapper
 
                 if (assignmentStrategy.Source.SourceType.IsComplexType())
                 {
-                    this.diagnosticLogger($"Nested object graph detected on model property: {this.dtoType.Name}.{assignmentStrategy.Source.SourceName}");
-                    MapNestedObject(
-                        assignmentStrategy,
-                        this.dtoType,
-                        assignmentStrategy.Source.SourceType,
-                        assignmentStrategy.Destination.DestinationType);
+                    MapNestedObject(assignmentStrategy, this.dtoType, true);
                 }
+
+                this.diagnosticLogger($"Second pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
             }
         }
 
@@ -268,10 +269,11 @@ namespace Rees.TangyFruitMapper
         private void MapCollection(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
         {
 // Collection detected
-            this.diagnosticLogger($"Collection detected: {parentType.Name}.{assignmentStrategy.Source.SourceType}");
+            this.diagnosticLogger($"Collection detected: {parentType.Name}.{assignmentStrategy.Source.SourceType}. Examining collection...");
             if (assignmentStrategy.Source.SourceType.GetGenericArguments().Length != 1
                 || assignmentStrategy.Destination.DestinationType.GetGenericArguments().Length != 1)
             {
+                this.diagnosticLogger($"The source and/or the destination are not generic collections. Commenting out the assignment.");
                 // Either the source or destination property types are not generic collections with one generic argument.
                 assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName,
                     "Either the source or destination property types are not generic collections with one generic argument.");
@@ -287,6 +289,7 @@ namespace Rees.TangyFruitMapper
 
             if (dtoGenericType.IsComplexType() && modelGenericType.IsComplexType())
             {
+                this.diagnosticLogger($"Both source List<{genericSourceType}> and destination List<{genericDestinationType}> are generic collections with a complex generic argument.");
                 // Both dto and model are complex types
                 var dependentGenericTypeMapper = AllMaps.GetOrAdd(
                     MapResult.GetMapperName(dtoGenericType, modelGenericType),
@@ -301,12 +304,15 @@ namespace Rees.TangyFruitMapper
                         return newMapper;
                     });
                 assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper);
+                this.diagnosticLogger($"Mapping collection generic argument complete for {parentType.Name}.{assignmentStrategy.Source.SourceType}");
+                this.diagnosticLogger($"    Can now map from List<{genericSourceType}> to List<{genericDestinationType}>");
                 return;
             }
 
             if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
             {
                 // Both dto and model are simple types
+                this.diagnosticLogger($"Both source List<{genericSourceType}> and destination List<{genericDestinationType}> are generic collections with a simple generic argument.");
                 assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source);
                 return;
             }
@@ -318,22 +324,26 @@ namespace Rees.TangyFruitMapper
                 "Either the source or destination property types is a complex type and the other is a simple type.");
         }
 
-        private void MapNestedObject(AssignmentStrategy assignmentStrategy, Type parentType, Type dto, Type model)
+        private void MapNestedObject(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
         {
-// Nest objects detected - will need to attempt to map these as well.
+            // Nest objects detected - will need to attempt to map these as well.
+            this.diagnosticLogger($"Nested object graph detected on model property: {parentType.Name}.{assignmentStrategy.Source.SourceName}");
+            var nestedDtoType = sourceIsDto ? assignmentStrategy.Source.SourceType : assignmentStrategy.Destination.DestinationType;
+            var nestedModelType = sourceIsDto ? assignmentStrategy.Destination.DestinationType : assignmentStrategy.Source.SourceType;
             var dependentMapper = AllMaps.GetOrAdd(
-                MapResult.GetMapperName(dto, model),
+                MapResult.GetMapperName(nestedDtoType, nestedModelType),
                 key =>
                 {
                     var newMapper = new MapByProperties(
                         msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
-                        dto,
-                        model)
+                        nestedDtoType,
+                        nestedModelType)
                         .CreateMap(true);
                     this.dependentMappers.Add(newMapper);
                     return newMapper;
                 });
             assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
+            this.diagnosticLogger($"Mapping nested object complete for {parentType.Name}.{assignmentStrategy.Source.SourceName}");
         }
 
         private void MustHaveADefaultConstructor()
