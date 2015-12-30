@@ -47,6 +47,7 @@
     <Compile Include="AssignmentStrategy.cs" />
     <Compile Include="FetchSourceAndMapList.cs" />
     <Compile Include="FetchSourceList.cs" />
+    <Compile Include="Validation\CodeGenerationFailedException.cs" />
     <Compile Include="Validation\CollectionsMustBeListTException.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />

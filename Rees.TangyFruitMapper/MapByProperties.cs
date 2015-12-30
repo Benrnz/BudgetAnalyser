@@ -15,6 +15,8 @@ namespace Rees.TangyFruitMapper
         /// </summary>
         private static readonly ConcurrentDictionary<string, MapResult> AllMaps = new ConcurrentDictionary<string, MapResult>();
 
+        private static int RecursionFailSafe;
+
         private readonly List<MapResult> dependentMappers = new List<MapResult>();
         private readonly Action<string> diagnosticLogger;
         private readonly Dictionary<string, AssignmentStrategy> dtoToModelMap = new Dictionary<string, AssignmentStrategy>();
@@ -47,6 +49,11 @@ namespace Rees.TangyFruitMapper
         public MapResult CreateMap(bool skipPreconditions = false)
         {
             this.diagnosticLogger($"CreateMap for mapping {this.dtoType.FullName} to {this.modelType.FullName}");
+            this.diagnosticLogger($"Recursion Index: {RecursionFailSafe++}");
+            if (RecursionFailSafe > 100)
+            {
+                throw new CodeGenerationFailedException("Too many nested objects or cyclic depedency detected. Aborting to avoid StackOverflow.");
+            }
             if (skipPreconditions)
             {
                 this.diagnosticLogger($"Skipping Preconditions.");
@@ -374,7 +381,9 @@ namespace Rees.TangyFruitMapper
             MustHaveADefaultConstructor();
             this.diagnosticLogger("Constructors meet convention requirements.");
             this.diagnosticLogger($"Analysing all properties recursively for {this.dtoType.FullName}");
+            int recursionFailSafe = 0;
             VisitAllProperties(
+                recursionFailSafe,
                 this.dtoType,
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule(),
@@ -382,15 +391,21 @@ namespace Rees.TangyFruitMapper
                 new MustOnlyUseListForCollectionsRule());
             this.diagnosticLogger($"{this.dtoType.FullName} meets Precondition requirements.");
             this.diagnosticLogger($"Analysing all properties recursively for {this.modelType.FullName}");
+            recursionFailSafe = 0;
             VisitAllProperties(
+                recursionFailSafe,
                 this.modelType,
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule());
             this.diagnosticLogger($"{this.modelType.FullName} meets Precondition requirements.");
         }
 
-        private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)
+        private void VisitAllProperties(int recursionIndex, Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)
         {
+            if (recursionIndex++ > 100)
+            {
+                throw new CodeGenerationFailedException("Unable to apply Precondition rules. Cyclic depedencies detected or too many nested types. Aborting to avoid StackOverflow.");
+            }
             foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 foreach (var rule in rules)
@@ -401,7 +416,7 @@ namespace Rees.TangyFruitMapper
                 if (property.PropertyType.IsComplexType() && !property.PropertyType.IsCollection())
                 {
                     typeCheckList.GetOrAdd(property.PropertyType, key => null);
-                    VisitAllProperties(property.PropertyType, typeCheckList, rules);
+                    VisitAllProperties(recursionIndex, property.PropertyType, typeCheckList, rules);
                 }
             }
         }
