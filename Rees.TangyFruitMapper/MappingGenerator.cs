@@ -5,8 +5,8 @@ using JetBrains.Annotations;
 namespace Rees.TangyFruitMapper
 {
     /// <summary>
-    /// A Convention based C# code generator for mapping a model object to a DTO object and back.
-    /// This class is designed to be used either with T4, console application, or a unit test.
+    ///     A Convention based C# code generator for mapping a model object to a DTO object and back.
+    ///     This class is designed to be used either with T4, console application, or a unit test.
     /// </summary>
     public class MappingGenerator
     {
@@ -17,12 +17,12 @@ namespace Rees.TangyFruitMapper
         private NamespaceFinder namespaceFinder;
 
         /// <summary>
-        /// An optional delegate to a logging action to output diagnostic messages for debugging and troubleshooting purposes.
+        ///     An optional delegate to a logging action to output diagnostic messages for debugging and troubleshooting purposes.
         /// </summary>
         public Action<string> DiagnosticLogging { get; set; }
 
         /// <summary>
-        /// Generates the code for the specified types. Be sure to check for TODO's in the generated code.
+        ///     Generates the code for the specified types. Be sure to check for TODO's in the generated code.
         /// </summary>
         /// <typeparam name="TDto">The type of the dto. It is important that this Dto follows the Dto conventions.</typeparam>
         /// <typeparam name="TModel">The type of the model. There are less convention rules for model objects.</typeparam>

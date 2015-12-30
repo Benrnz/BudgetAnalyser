@@ -7,7 +7,18 @@ namespace Rees.TangyFruitMapper
 {
     internal static class TypeExtension
     {
-        private static readonly Type[] ExemptionList = new[] { typeof(string) };
+        private static readonly Type[] ExemptionList = {typeof(string)};
+
+        public static bool IsCollection(this Type instance)
+        {
+            if (instance == null) return false;
+            if (ExemptionList.Contains(instance))
+            {
+                return false;
+            }
+
+            return typeof(IEnumerable).IsAssignableFrom(instance);
+        }
 
         public static bool IsComplexType(this Type instance)
         {
@@ -25,17 +36,6 @@ namespace Rees.TangyFruitMapper
             }
 
             return true;
-        }
-
-        public static bool IsCollection(this Type instance)
-        {
-            if (instance == null) return false;
-            if (ExemptionList.Contains(instance))
-            {
-                return false;
-            }
-
-            return typeof(IEnumerable).IsAssignableFrom(instance);
         }
     }
 }

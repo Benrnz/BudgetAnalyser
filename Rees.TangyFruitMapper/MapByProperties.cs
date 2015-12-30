@@ -175,79 +175,12 @@ namespace Rees.TangyFruitMapper
                 {
                     this.diagnosticLogger($"Nested object graph detected on model property: {this.dtoType.Name}.{assignmentStrategy.Source.SourceName}");
                     MapNestedObject(
-                        assignmentStrategy, 
-                        this.dtoType, 
-                        assignmentStrategy.Source.SourceType, 
+                        assignmentStrategy,
+                        this.dtoType,
+                        assignmentStrategy.Source.SourceType,
                         assignmentStrategy.Destination.DestinationType);
                 }
             }
-        }
-
-        private void MapNestedObject(AssignmentStrategy assignmentStrategy, Type parentType, Type dto, Type model)
-        {
-// Nest objects detected - will need to attempt to map these as well.
-            var dependentMapper = AllMaps.GetOrAdd(
-                MapResult.GetMapperName(dto, model),
-                key =>
-                {
-                    var newMapper = new MapByProperties(
-                        msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
-                        dto,
-                        model)
-                        .CreateMap();
-                    this.dependentMappers.Add(newMapper);
-                    return newMapper;
-                });
-            assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
-        }
-
-        private void MapCollection(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
-        {
-// Collection detected
-            this.diagnosticLogger($"Collection detected: {parentType.Name}.{assignmentStrategy.Source.SourceType}");
-            if (assignmentStrategy.Source.SourceType.GetGenericArguments().Length != 1
-                || assignmentStrategy.Destination.DestinationType.GetGenericArguments().Length != 1)
-            {
-                // Either the source or destination property types are not generic collections with one generic argument.
-                assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName, "Either the source or destination property types are not generic collections with one generic argument.");
-                assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName, "Either the source or destination property types are not generic collections with one generic argument");
-                return;
-            }
-
-            var genericSourceType = assignmentStrategy.Source.SourceType.GetGenericArguments()[0]; // Should be safe given the PreConditions
-            var genericDestinationType = assignmentStrategy.Destination.DestinationType.GetGenericArguments()[0];
-            var dtoGenericType = sourceIsDto ? genericSourceType : genericDestinationType;
-            var modelGenericType = sourceIsDto ? genericDestinationType : genericSourceType;
-
-            if (dtoGenericType.IsComplexType() && modelGenericType.IsComplexType())
-            {
-                // Both dto and model are complex types
-                var dependentGenericTypeMapper = AllMaps.GetOrAdd(
-                    MapResult.GetMapperName(dtoGenericType, modelGenericType),
-                    key =>
-                    {
-                        var newMapper = new MapByProperties(
-                            msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
-                            dtoGenericType,
-                            modelGenericType)
-                            .CreateMap();
-                        this.dependentMappers.Add(newMapper);
-                        return newMapper;
-                    });
-                assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper);
-                return;
-            }
-
-            if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
-            {
-                // Both dto and model are simple types
-                assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source);
-                return;
-            }
-
-            // The dto and model types appear to be incompatible types of list
-            assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName, "Either the source or destination property types is a complex type and the other is a simple type.");
-            assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName, "Either the source or destination property types is a complex type and the other is a simple type.");
         }
 
         private FetchSourceStrategy DoesSourceHaveFieldWithSimilarName(string targetPropertyName, Type assignmentSource)
@@ -318,6 +251,77 @@ namespace Rees.TangyFruitMapper
             return sourceField;
         }
 
+        private void MapCollection(AssignmentStrategy assignmentStrategy, Type parentType, bool sourceIsDto)
+        {
+// Collection detected
+            this.diagnosticLogger($"Collection detected: {parentType.Name}.{assignmentStrategy.Source.SourceType}");
+            if (assignmentStrategy.Source.SourceType.GetGenericArguments().Length != 1
+                || assignmentStrategy.Destination.DestinationType.GetGenericArguments().Length != 1)
+            {
+                // Either the source or destination property types are not generic collections with one generic argument.
+                assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName,
+                    "Either the source or destination property types are not generic collections with one generic argument.");
+                assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName,
+                    "Either the source or destination property types are not generic collections with one generic argument");
+                return;
+            }
+
+            var genericSourceType = assignmentStrategy.Source.SourceType.GetGenericArguments()[0]; // Should be safe given the PreConditions
+            var genericDestinationType = assignmentStrategy.Destination.DestinationType.GetGenericArguments()[0];
+            var dtoGenericType = sourceIsDto ? genericSourceType : genericDestinationType;
+            var modelGenericType = sourceIsDto ? genericDestinationType : genericSourceType;
+
+            if (dtoGenericType.IsComplexType() && modelGenericType.IsComplexType())
+            {
+                // Both dto and model are complex types
+                var dependentGenericTypeMapper = AllMaps.GetOrAdd(
+                    MapResult.GetMapperName(dtoGenericType, modelGenericType),
+                    key =>
+                    {
+                        var newMapper = new MapByProperties(
+                            msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
+                            dtoGenericType,
+                            modelGenericType)
+                            .CreateMap();
+                        this.dependentMappers.Add(newMapper);
+                        return newMapper;
+                    });
+                assignmentStrategy.Source = new FetchSourceAndMapList(assignmentStrategy.Source, dependentGenericTypeMapper);
+                return;
+            }
+
+            if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
+            {
+                // Both dto and model are simple types
+                assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source);
+                return;
+            }
+
+            // The dto and model types appear to be incompatible types of list
+            assignmentStrategy.Source = new CommentedFetchSource(assignmentStrategy.Source.SourceName,
+                "Either the source or destination property types is a complex type and the other is a simple type.");
+            assignmentStrategy.Destination = new CommentedAssignment(assignmentStrategy.Destination.AssignmentDestinationName,
+                "Either the source or destination property types is a complex type and the other is a simple type.");
+        }
+
+        private void MapNestedObject(AssignmentStrategy assignmentStrategy, Type parentType, Type dto, Type model)
+        {
+// Nest objects detected - will need to attempt to map these as well.
+            var dependentMapper = AllMaps.GetOrAdd(
+                MapResult.GetMapperName(dto, model),
+                key =>
+                {
+                    var newMapper = new MapByProperties(
+                        msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
+                        dto,
+                        model)
+                        .CreateMap();
+                    this.dependentMappers.Add(newMapper);
+                    return newMapper;
+                });
+            assignmentStrategy.Source = new FetchSourceAndCallMapper(assignmentStrategy.Source, dependentMapper);
+        }
+
         private void MustHaveADefaultConstructor()
         {
             var modelCtor = this.modelType.GetConstructor(new Type[] {});
@@ -347,7 +351,7 @@ namespace Rees.TangyFruitMapper
                 this.dtoType,
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule(),
-                new MustOnlyHavePublicWriteablePropertiesRule(), 
+                new MustOnlyHavePublicWriteablePropertiesRule(),
                 new MustOnlyUseListForCollectionsRule());
             VisitAllProperties(
                 this.modelType,

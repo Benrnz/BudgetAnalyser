@@ -18,7 +18,8 @@
         public override string CreateCodeLine(DtoOrModel destinationKind, string sourceVariableName)
         {
             var destinationObject = DestinationObjectName(destinationKind);
-            return $"// {destinationObject}.{AssignmentDestinationName} = {sourceVariableName}; // TODO Cannot find a way to set this property: {destinationObject}.{AssignmentDestinationName}. {this.reason}";
+            return
+                $"// {destinationObject}.{AssignmentDestinationName} = {sourceVariableName}; // TODO Cannot find a way to set this property: {destinationObject}.{AssignmentDestinationName}. {this.reason}";
         }
     }
 }

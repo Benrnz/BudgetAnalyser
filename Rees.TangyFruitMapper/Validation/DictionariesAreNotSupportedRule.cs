@@ -5,13 +5,13 @@ using System.Reflection;
 namespace Rees.TangyFruitMapper.Validation
 {
     /// <summary>
-    /// A Precondition rule that ensures dictionaries are not used on DTO types.
+    ///     A Precondition rule that ensures dictionaries are not used on DTO types.
     /// </summary>
     /// <seealso cref="Rees.TangyFruitMapper.Validation.PreconditionRule" />
     public class DictionariesAreNotSupportedRule : PreconditionRule
     {
         /// <summary>
-        /// Determines whether the specified property is compliant with the rule.
+        ///     Determines whether the specified property is compliant with the rule.
         /// </summary>
         /// <param name="property">The property to examine.</param>
         /// <exception cref="System.NotSupportedException">Dictionaries are currently not supported.</exception>
