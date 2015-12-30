@@ -167,6 +167,10 @@
       <Project>{22e5fb3e-3044-4bda-88ff-619f83ec4e99}</Project>
       <Name>BudgetAnalyser.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rees.TangyFruitMapper\Rees.TangyFruitMapper.csproj">
+      <Project>{aaf315d4-ed07-44b3-aa75-9725e618d5c7}</Project>
+      <Name>Rees.TangyFruitMapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="PublicHolidaysTestGenerator.tt">

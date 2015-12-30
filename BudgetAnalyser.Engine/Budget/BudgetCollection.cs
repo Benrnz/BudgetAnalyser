@@ -18,6 +18,11 @@ namespace BudgetAnalyser.Engine.Budget
         private readonly SortedList<DateTime, BudgetModel> budgetStorage;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BudgetCollection"/> class.
+        /// </summary>
+        public BudgetCollection() : this(new BudgetModel[] {}) { }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
         /// </summary>
         /// <param name="initialBudgets">The initial budgets.</param>
