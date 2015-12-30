@@ -25,6 +25,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\Rees.TangyFruitMapper.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -65,7 +69,6 @@
     <Compile Include="PrivatePropertyAssignment.cs" />
     <Compile Include="Validation\PropertiesMustBePublicWriteableException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\PropertyNotMatchedException.cs" />
     <Compile Include="SimpleAssignment.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="TypeExtension.cs" />

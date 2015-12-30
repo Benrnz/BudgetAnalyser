@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Rees.TangyFruitMapper.UnitTest.TestData;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,13 +33,7 @@ namespace Rees.TangyFruitMapper.UnitTest
                     codeOutputed = true;
                     code.AppendLine(c);
                     this.Output.WriteLine(c);
-                },
-                e =>
-                {
-                    errors = true;
-                    this.Output.WriteLine(e);
-                },
-                w => this.Output.WriteLine(w));
+                });
 
             this.Output.WriteLine("===== Logging Messages: =====");
             this.DiagnosticMessages.ForEach(this.Output.WriteLine);

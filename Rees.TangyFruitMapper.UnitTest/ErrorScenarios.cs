@@ -54,7 +54,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         private static void Act<TDto, TModel>()
         {
             var subject = new MappingGenerator();
-            subject.Generate<TDto, TModel>(s => { }, e => { }, w => { });
+            subject.Generate<TDto, TModel>(s => { });
         }
 
         public class CollectionsNotSupported

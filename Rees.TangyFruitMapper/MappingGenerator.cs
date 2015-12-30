@@ -1,59 +1,55 @@
 ﻿using System;
 using System.Linq;
 using JetBrains.Annotations;
-using Rees.TangyFruitMapper.Validation;
 
 namespace Rees.TangyFruitMapper
 {
+    /// <summary>
+    /// A Convention based C# code generator for mapping a model object to a DTO object and back.
+    /// This class is designed to be used either with T4, console application, or a unit test.
+    /// </summary>
     public class MappingGenerator
     {
         private Action<string> codeOutput;
         private Type dtoType;
-        private Action<string> errorOutput;
         private int indent;
         private Type modelType;
         private NamespaceFinder namespaceFinder;
 
+        /// <summary>
+        /// An optional delegate to a logging action to output diagnostic messages for debugging and troubleshooting purposes.
+        /// </summary>
         public Action<string> DiagnosticLogging { get; set; }
 
+        /// <summary>
+        /// Generates the code for the specified types. Be sure to check for TODO's in the generated code.
+        /// </summary>
+        /// <typeparam name="TDto">The type of the dto. It is important that this Dto follows the Dto conventions.</typeparam>
+        /// <typeparam name="TModel">The type of the model. There are less convention rules for model objects.</typeparam>
+        /// <param name="codeOutputDelegate">An action to output the code.</param>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
         public void Generate<TDto, TModel>(
-            [NotNull] Action<string> codeOutputDelegate,
-            [NotNull] Action<string> errorOutputDelegate,
-            [NotNull] Action<string> warnOutputDelegate)
+            [NotNull] Action<string> codeOutputDelegate)
         {
             if (codeOutputDelegate == null) throw new ArgumentNullException(nameof(codeOutputDelegate));
-            if (errorOutputDelegate == null) throw new ArgumentNullException(nameof(errorOutputDelegate));
-            if (warnOutputDelegate == null) throw new ArgumentNullException(nameof(warnOutputDelegate));
             if (DiagnosticLogging == null) DiagnosticLogging = x => { };
 
             this.codeOutput = codeOutputDelegate;
-            this.errorOutput = errorOutputDelegate;
             this.modelType = typeof(TModel);
             this.dtoType = typeof(TDto);
             this.namespaceFinder = new NamespaceFinder(this.dtoType, this.modelType);
             DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
 
             MapByProperties.ClearMapCache();
-            MapByProperties mapper;
-            MapResult mapResult;
-            try
-            {
-                mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
-                mapResult = mapper.CreateMap();
-            }
-            catch (PropertyNotMatchedException ex)
-            {
-                this.errorOutput(ex.Message);
-                return;
-            }
+            var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
+            var mapResult = mapper.CreateMap();
 
             WriteFileHeader();
 
             WriteMappingClasses(mapResult);
 
             WriteFileFooter();
-
-            mapper.Warnings.ToList().ForEach(warnOutputDelegate);
         }
 
         private string Indent(bool increment = false)
@@ -69,7 +65,7 @@ namespace Rees.TangyFruitMapper
             return new string(' ', 4*this.indent);
         }
 
-        private void WriteClassFooter(MapResult map)
+        private void WriteClassFooter()
         {
             this.codeOutput($@"{Outdent()}}} // End Class
 ");
@@ -110,7 +106,7 @@ namespace GeneratedCode
         {
             WriteClassHeader(mapResult);
             WriteMethods(mapResult);
-            WriteClassFooter(mapResult);
+            WriteClassFooter();
 
             if (mapResult.DependentOnMaps.Any())
             {

@@ -241,7 +241,7 @@ namespace Rees.TangyFruitMapper
             if (!dtoGenericType.IsComplexType() && !modelGenericType.IsComplexType())
             {
                 // Both dto and model are simple types
-                assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source, genericSourceType);
+                assignmentStrategy.Source = new FetchSourceList(assignmentStrategy.Source);
                 return;
             }
 
