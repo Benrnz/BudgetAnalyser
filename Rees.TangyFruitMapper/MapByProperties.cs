@@ -31,18 +31,30 @@ namespace Rees.TangyFruitMapper
             this.diagnosticLogger = diagnosticLogger;
             this.dtoType = dtoType;
             this.modelType = modelType;
+            this.diagnosticLogger("MapByProperties mapper-generator created.");
         }
 
         public IEnumerable<string> Warnings => this.warnings;
 
+        /// <summary>
+        /// Clear the static cache used to ensure the same type mapping isn't done twice.
+        /// </summary>
         public static void ClearMapCache()
         {
             AllMaps.Clear();
         }
 
-        public MapResult CreateMap()
+        public MapResult CreateMap(bool skipPreconditions = false)
         {
-            Preconditions();
+            this.diagnosticLogger($"CreateMap for mapping {this.dtoType.FullName} to {this.modelType.FullName}");
+            if (skipPreconditions)
+            {
+                this.diagnosticLogger($"Skipping Preconditions.");
+            }
+            else
+            {
+                Preconditions();
+            }
 
             CreateMapToDto();
 
@@ -91,6 +103,7 @@ namespace Rees.TangyFruitMapper
 
         private void CreateMapToDto()
         {
+            this.diagnosticLogger($"Creating a map to Map To a Dto {this.dtoType.Name}.");
             // DTO properties must be writable so not checked here.
             foreach (var dtoProperty in this.dtoType.GetProperties().Where(p => p.CanWrite && p.SetMethod.IsPublic))
             {
@@ -137,6 +150,7 @@ namespace Rees.TangyFruitMapper
 
         private void CreateMapToModel()
         {
+            this.diagnosticLogger($"Creating a map to Map To a Model {this.modelType.Name}.");
             foreach (var modelProperty in this.modelType.GetProperties())
             {
                 this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
@@ -282,7 +296,7 @@ namespace Rees.TangyFruitMapper
                             msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
                             dtoGenericType,
                             modelGenericType)
-                            .CreateMap();
+                            .CreateMap(true);
                         this.dependentMappers.Add(newMapper);
                         return newMapper;
                     });
@@ -315,7 +329,7 @@ namespace Rees.TangyFruitMapper
                         msg => this.diagnosticLogger($"->{parentType.Name} " + msg),
                         dto,
                         model)
-                        .CreateMap();
+                        .CreateMap(true);
                     this.dependentMappers.Add(newMapper);
                     return newMapper;
                 });
@@ -346,17 +360,23 @@ namespace Rees.TangyFruitMapper
 
         private void Preconditions()
         {
+            this.diagnosticLogger("Evaluating Preconditions (Exceptions will be thrown in Preconditions are not met)...");
             MustHaveADefaultConstructor();
+            this.diagnosticLogger("Constructors meet convention requirements.");
+            this.diagnosticLogger($"Analysing all properties recursively for {this.dtoType.FullName}");
             VisitAllProperties(
                 this.dtoType,
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule(),
                 new MustOnlyHavePublicWriteablePropertiesRule(),
                 new MustOnlyUseListForCollectionsRule());
+            this.diagnosticLogger($"{this.dtoType.FullName} meets Precondition requirements.");
+            this.diagnosticLogger($"Analysing all properties recursively for {this.modelType.FullName}");
             VisitAllProperties(
                 this.modelType,
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule());
+            this.diagnosticLogger($"{this.modelType.FullName} meets Precondition requirements.");
         }
 
         private void VisitAllProperties(Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)

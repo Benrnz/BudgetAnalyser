@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Rees.TangyFruitMapper")]
-[assembly: AssemblyDescription("A mapping toolkit to copy data to and from DTO types.")]
+[assembly: AssemblyDescription("A convention based code generation approach to mapping and copying data to and from DTO types.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
 [assembly: AssemblyProduct("Rees.TangyFruitMapper")]

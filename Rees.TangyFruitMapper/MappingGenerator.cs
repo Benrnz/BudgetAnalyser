@@ -29,8 +29,7 @@ namespace Rees.TangyFruitMapper
         /// <param name="codeOutputDelegate">An action to output the code.</param>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public void Generate<TDto, TModel>(
-            [NotNull] Action<string> codeOutputDelegate)
+        public void Generate<TDto, TModel>([NotNull] Action<string> codeOutputDelegate)
         {
             if (codeOutputDelegate == null) throw new ArgumentNullException(nameof(codeOutputDelegate));
             if (DiagnosticLogging == null) DiagnosticLogging = x => { };
@@ -39,7 +38,7 @@ namespace Rees.TangyFruitMapper
             this.modelType = typeof(TModel);
             this.dtoType = typeof(TDto);
             this.namespaceFinder = new NamespaceFinder(this.dtoType, this.modelType);
-            DiagnosticLogging($"Starting to generate code for mapping {this.modelType.Name} to {this.dtoType.Name}...");
+            DiagnosticLogging($"Starting to generate code for mapping {this.dtoType.Name} to {this.modelType.Name}...");
 
             MapByProperties.ClearMapCache();
             var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
