@@ -46,7 +46,7 @@ namespace Rees.TangyFruitMapper
             DiagnosticLogging($"Starting to generate code for mapping {this.dtoType.Name} to {this.modelType.Name}...");
 
             MapByProperties.ClearMapCache();
-            var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType)
+            var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
             var mapResult = mapper.CreateMap();
 
             WriteFileHeader();
