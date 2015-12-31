@@ -29,7 +29,7 @@ namespace Rees.TangyFruitMapper
                     {
                         if (string.IsNullOrWhiteSpace(this.variableName))
                         {
-                            this.variableName = $"source{VariableCounter++}";
+                            this.variableName = $"{SourceName.ConvertPascalCaseToCamelCase()}{VariableCounter++}";
                         }
                     }
                 }
