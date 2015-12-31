@@ -1,0 +1,20 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Runtime" #>
+<#@ assembly name="$(SolutionDir)MapperGeneration\\bin\\Debug\\Rees.TangyFruitMapper.dll" #>
+<#@ assembly name="$(SolutionDir)MapperGeneration\\bin\\Debug\\BudgetAnalyser.Engine.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Rees.TangyFruitMapper" #>
+<#@ import namespace="BudgetAnalyser.Engine.Budget" #>
+<#@ import namespace="BudgetAnalyser.Engine.Budget.Data" #>
+<#@ output extension="generated.cs" #>
+
+<#
+MappingGenerator codeGenerator;
+StringBuilder diagnosticLogger = new StringBuilder();
+codeGenerator = new MappingGenerator();
+codeGenerator.Generate<BudgetCollectionDto, BudgetCollection>(WriteLine);
+#>
+

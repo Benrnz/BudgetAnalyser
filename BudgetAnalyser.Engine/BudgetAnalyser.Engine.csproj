@@ -69,8 +69,11 @@
     <Compile Include="Budget\Data\BucketDtoType.cs" />
     <Compile Include="Budget\Data\BudgetBucketDto.cs" />
     <Compile Include="Budget\Data\BudgetBucketFactory.cs" />
+    <Compile Include="Budget\Data\BudgetBucketToDtoMapper.cs" />
     <Compile Include="Budget\Data\BudgetCollectionDto.cs" />
+    <Compile Include="Budget\Data\BudgetCollectionToDtoMapper.cs" />
     <Compile Include="Budget\Data\BudgetModelDto.cs" />
+    <Compile Include="Budget\Data\BudgetModelToDtoMapper.cs" />
     <Compile Include="Budget\Data\ExpenseDto.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
     <Compile Include="Budget\Data\IBudgetBucketFactory.cs" />
@@ -271,6 +274,12 @@
     <Compile Include="Widgets\WidgetPersistentState.cs" />
     <Compile Include="Widgets\WidgetsApplicationState.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rees.TangyFruitMapper\Rees.TangyFruitMapper.csproj">
+      <Project>{aaf315d4-ed07-44b3-aa75-9725e618d5c7}</Project>
+      <Name>Rees.TangyFruitMapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

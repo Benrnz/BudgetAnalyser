@@ -17,6 +17,7 @@ namespace MapperGeneration
             this.codeGenerator = new MappingGenerator
             {
                 DiagnosticLogging = l => this.diagnosticLogger.AppendLine(l),
+                EmitWithInternalAccessors = true,
             };
         }
 

@@ -19,9 +19,15 @@ namespace MapperGeneration
         }
 
         [Fact]
-        public void GenerateBudgetToDto()
+        public void GenerateBudgetModelToDto()
         {
             Act<BudgetModelDto, BudgetModel>();
+        }
+
+        [Fact]
+        public void GenerateBudgetBucketToDto()
+        {
+            Act<BudgetBucketDto, BudgetBucket>();
         }
     }
 }
