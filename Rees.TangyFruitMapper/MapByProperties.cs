@@ -39,7 +39,7 @@ namespace Rees.TangyFruitMapper
         public IEnumerable<string> Warnings => this.warnings;
 
         /// <summary>
-        /// Clear the static cache used to ensure the same type mapping isn't done twice.
+        ///     Clear the static cache used to ensure the same type mapping isn't done twice.
         /// </summary>
         public static void ClearMapCache()
         {
@@ -152,7 +152,8 @@ namespace Rees.TangyFruitMapper
                     MapNestedObject(assignmentStrategy, this.modelType, false);
                 }
 
-                this.diagnosticLogger($"Second pass to get source value for {this.dtoType.Name}.{dtoProperty.Name} from {this.modelType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
+                this.diagnosticLogger(
+                    $"Second pass to get source value for {this.dtoType.Name}.{dtoProperty.Name} from {this.modelType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
             }
         }
 
@@ -189,7 +190,8 @@ namespace Rees.TangyFruitMapper
                     }
                 }
 
-                this.diagnosticLogger($"First pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, using {assignmentStrategy.Source.GetType().Name}");
+                this.diagnosticLogger(
+                    $"First pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, using {assignmentStrategy.Source.GetType().Name}");
 
                 if (assignmentStrategy.Source.SourceType.IsCollection())
                 {
@@ -202,7 +204,8 @@ namespace Rees.TangyFruitMapper
                     MapNestedObject(assignmentStrategy, this.dtoType, true);
                 }
 
-                this.diagnosticLogger($"Second pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
+                this.diagnosticLogger(
+                    $"Second pass to get source value for {this.modelType.Name}.{modelProperty.Name} from {this.dtoType.Name} complete, will use {assignmentStrategy.Source.GetType().Name}");
             }
         }
 
@@ -368,7 +371,7 @@ namespace Rees.TangyFruitMapper
             VisitType(this.modelType, new HasAccessibleConstructorRule());
             this.diagnosticLogger("Constructors meet convention requirements.");
             this.diagnosticLogger($"Analysing all properties recursively for {this.dtoType.FullName}");
-            int recursionFailSafe = 0;
+            var recursionFailSafe = 0;
             VisitAllProperties(
                 recursionFailSafe,
                 this.dtoType,
@@ -385,14 +388,6 @@ namespace Rees.TangyFruitMapper
                 new ConcurrentDictionary<Type, object>(),
                 new DictionariesAreNotSupportedRule());
             this.diagnosticLogger($"{this.modelType.FullName} meets Precondition requirements.");
-        }
-
-        private void VisitType(Type typeToCheck, params PreconditionTypeRule[] rules)
-        {
-            foreach (var rule in rules)
-            {
-                rule.IsCompliant(typeToCheck);
-            }
         }
 
         private void VisitAllProperties(int recursionIndex, Type typeToCheck, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionPropertyRule[] rules)
@@ -413,6 +408,14 @@ namespace Rees.TangyFruitMapper
                     typeCheckList.GetOrAdd(property.PropertyType, key => null);
                     VisitAllProperties(recursionIndex, property.PropertyType, typeCheckList, rules);
                 }
+            }
+        }
+
+        private void VisitType(Type typeToCheck, params PreconditionTypeRule[] rules)
+        {
+            foreach (var rule in rules)
+            {
+                rule.IsCompliant(typeToCheck);
             }
         }
 

@@ -9,7 +9,7 @@ namespace Rees.TangyFruitMapper.Validation
         public override void IsCompliant(Type typeToCheck)
         {
             // public default constructor?
-            var constructor = typeToCheck.GetConstructor(new Type[] { });
+            var constructor = typeToCheck.GetConstructor(new Type[] {});
             if (constructor != null)
             {
                 return;

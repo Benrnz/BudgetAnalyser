@@ -8,7 +8,7 @@ namespace Rees.TangyFruitMapper
     {
         public ConstructionStrategy Build(Type type)
         {
-            var constructor = type.GetConstructor(new Type[] { });
+            var constructor = type.GetConstructor(new Type[] {});
             if (constructor != null)
             {
                 return new PublicDefaultConstructor(type);

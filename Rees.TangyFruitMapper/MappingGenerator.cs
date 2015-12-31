@@ -22,6 +22,11 @@ namespace Rees.TangyFruitMapper
         public Action<string> DiagnosticLogging { get; set; }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether generated code will be emitted as internal classes.
+        /// </summary>
+        public bool EmitWithInternalAccessors { get; set; }
+
+        /// <summary>
         ///     Generates the code for the specified types. Be sure to check for TODO's in the generated code.
         /// </summary>
         /// <typeparam name="TDto">The type of the dto. It is important that this Dto follows the Dto conventions.</typeparam>
@@ -41,7 +46,7 @@ namespace Rees.TangyFruitMapper
             DiagnosticLogging($"Starting to generate code for mapping {this.dtoType.Name} to {this.modelType.Name}...");
 
             MapByProperties.ClearMapCache();
-            var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType);
+            var mapper = new MapByProperties(DiagnosticLogging, this.dtoType, this.modelType)
             var mapResult = mapper.CreateMap();
 
             WriteFileHeader();
@@ -74,9 +79,10 @@ namespace Rees.TangyFruitMapper
 
         private void WriteClassHeader(MapResult map)
         {
+            var classAccessor = EmitWithInternalAccessors ? "internal" : "public";
             this.codeOutput(
                 $@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
-{Indent()}public class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
+{Indent()}{classAccessor} class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
 {Indent()}{{
 {
                     Indent(true)}");
@@ -124,7 +130,8 @@ namespace GeneratedCode
             this.codeOutput(
                 $@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}{map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
+{Indent(true)}{
+                    map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {

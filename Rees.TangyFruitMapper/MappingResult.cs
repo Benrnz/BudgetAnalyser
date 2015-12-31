@@ -16,14 +16,14 @@ namespace Rees.TangyFruitMapper
 
         public string MapperName => GetMapperName(DtoType, ModelType);
 
+        public ConstructionStrategy ModelConstructor { get; set; }
+
         /// <summary>
         ///     Gets a map with the Model Property name as the key and the property name from the Dto as the value.
         /// </summary>
         public IReadOnlyDictionary<string, AssignmentStrategy> ModelToDtoMap { get; set; }
 
         public Type ModelType { get; set; }
-
-        public ConstructionStrategy ModelConstructor { get; set; }
 
         public static string GetMapperName(Type dtoType, Type modelType)
         {
