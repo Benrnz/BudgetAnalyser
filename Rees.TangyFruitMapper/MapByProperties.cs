@@ -71,6 +71,7 @@ namespace Rees.TangyFruitMapper
 
             return new MapResult
             {
+                ModelConstructor = new ConstructionStrategyBuilder().Build(this.modelType),
                 DtoType = this.dtoType,
                 ModelType = this.modelType,
                 DtoToModelMap = this.dtoToModelMap,
@@ -353,21 +354,6 @@ namespace Rees.TangyFruitMapper
             this.diagnosticLogger($"Mapping nested object complete for {parentType.Name}.{assignmentStrategy.Source.SourceName}");
         }
 
-        private void MustHaveADefaultConstructor()
-        {
-            var modelCtor = this.modelType.GetConstructor(new Type[] {});
-            if (modelCtor == null)
-            {
-                throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.modelType.Name}");
-            }
-
-            var dtoCtor = this.dtoType.GetConstructor(new Type[] {});
-            if (dtoCtor == null)
-            {
-                throw new NoAccessibleDefaultConstructorException($"No constructor found on {this.dtoType.Name}");
-            }
-        }
-
         private void OutConditions()
         {
             // Check that all available Dto properties have been mapped to a model property.
@@ -378,7 +364,8 @@ namespace Rees.TangyFruitMapper
         private void Preconditions()
         {
             this.diagnosticLogger("Evaluating Preconditions (Exceptions will be thrown in Preconditions are not met)...");
-            MustHaveADefaultConstructor();
+            VisitType(this.dtoType, new HasAccessibleConstructorRule());
+            VisitType(this.modelType, new HasAccessibleConstructorRule());
             this.diagnosticLogger("Constructors meet convention requirements.");
             this.diagnosticLogger($"Analysing all properties recursively for {this.dtoType.FullName}");
             int recursionFailSafe = 0;
@@ -400,19 +387,27 @@ namespace Rees.TangyFruitMapper
             this.diagnosticLogger($"{this.modelType.FullName} meets Precondition requirements.");
         }
 
-        private void VisitAllProperties(int recursionIndex, Type type, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionRule[] rules)
+        private void VisitType(Type typeToCheck, params PreconditionTypeRule[] rules)
+        {
+            foreach (var rule in rules)
+            {
+                rule.IsCompliant(typeToCheck);
+            }
+        }
+
+        private void VisitAllProperties(int recursionIndex, Type typeToCheck, ConcurrentDictionary<Type, object> typeCheckList, params PreconditionPropertyRule[] rules)
         {
             if (recursionIndex++ > 100)
             {
                 throw new CodeGenerationFailedException("Unable to apply Precondition rules. Cyclic depedencies detected or too many nested types. Aborting to avoid StackOverflow.");
             }
-            foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            foreach (var property in typeToCheck.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 foreach (var rule in rules)
                 {
                     rule.IsCompliant(property);
                 }
-                typeCheckList.GetOrAdd(type, key => null);
+                typeCheckList.GetOrAdd(typeToCheck, key => null);
                 if (property.PropertyType.IsComplexType() && !property.PropertyType.IsCollection())
                 {
                     typeCheckList.GetOrAdd(property.PropertyType, key => null);

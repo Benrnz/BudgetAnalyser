@@ -4,9 +4,9 @@ namespace Rees.TangyFruitMapper.Validation
 {
     /// <summary>
     ///     An abstract type to describe the shape of a precondition rule.  These rules are applied and evaluated against Dto
-    ///     and Model types before they are mapped.
+    ///     and Model properties before they are mapped.
     /// </summary>
-    public abstract class PreconditionRule
+    internal abstract class PreconditionPropertyRule
     {
         /// <summary>
         ///     Determines whether the specified property is compliant with the rule.

@@ -9,6 +9,6 @@ namespace Rees.TangyFruitMapper.UnitTest
 {
     public class ToDos
     {
-        //TODO Deep Collections.
+        //TODO Inherited collections
     }
 }

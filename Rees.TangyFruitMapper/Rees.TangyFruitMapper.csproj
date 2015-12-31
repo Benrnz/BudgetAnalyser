@@ -45,16 +45,22 @@
   <ItemGroup>
     <Compile Include="AssignDestinationStrategy.cs" />
     <Compile Include="AssignmentStrategy.cs" />
+    <Compile Include="CommentedOutConstructor.cs" />
+    <Compile Include="ConstructionStrategy.cs" />
+    <Compile Include="ConstructionStrategyBuilder.cs" />
     <Compile Include="FetchSourceAndMapList.cs" />
     <Compile Include="FetchSourceList.cs" />
+    <Compile Include="NonpublicDefaultConstructor.cs" />
+    <Compile Include="PublicDefaultConstructor.cs" />
     <Compile Include="Validation\CodeGenerationFailedException.cs" />
     <Compile Include="Validation\CollectionsMustBeListTException.cs" />
     <Compile Include="CommentedAssignment.cs" />
     <Compile Include="CommentedFetchSource.cs" />
     <Compile Include="Validation\DictionariesAreNotSupportedRule.cs" />
+    <Compile Include="Validation\HasAccessibleConstructorRule.cs" />
     <Compile Include="Validation\MustOnlyHavePublicWriteablePropertiesRule.cs" />
-    <Compile Include="Validation\MustOnlyUseListForCollections.cs" />
-    <Compile Include="Validation\PreconditionRule.cs" />
+    <Compile Include="Validation\MustOnlyUseListForCollectionsRule.cs" />
+    <Compile Include="Validation\PreconditionPropertyRule.cs" />
     <Compile Include="FetchSourceAndCallMapper.cs" />
     <Compile Include="FetchSourceByReflection.cs" />
     <Compile Include="FetchSourceStrategy.cs" />
@@ -68,6 +74,7 @@
     <Compile Include="Validation\NoAccessibleDefaultConstructorException.cs" />
     <Compile Include="PrivateFieldAssignment.cs" />
     <Compile Include="PrivatePropertyAssignment.cs" />
+    <Compile Include="Validation\PreconditionTypeRule.cs" />
     <Compile Include="Validation\PropertiesMustBePublicWriteableException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleAssignment.cs" />

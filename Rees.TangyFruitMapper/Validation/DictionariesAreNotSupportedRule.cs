@@ -7,8 +7,8 @@ namespace Rees.TangyFruitMapper.Validation
     /// <summary>
     ///     A Precondition rule that ensures dictionaries are not used on DTO types.
     /// </summary>
-    /// <seealso cref="Rees.TangyFruitMapper.Validation.PreconditionRule" />
-    public class DictionariesAreNotSupportedRule : PreconditionRule
+    /// <seealso cref="PreconditionPropertyRule" />
+    internal class DictionariesAreNotSupportedRule : PreconditionPropertyRule
     {
         /// <summary>
         ///     Determines whether the specified property is compliant with the rule.

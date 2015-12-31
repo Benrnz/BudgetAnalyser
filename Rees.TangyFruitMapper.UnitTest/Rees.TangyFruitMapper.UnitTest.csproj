@@ -71,6 +71,7 @@
     <Compile Include="ErrorScenarios.cs" />
     <Compile Include="MappingGeneratorScenarios.cs" />
     <Compile Include="NamespaceFinderTest.cs" />
+    <Compile Include="Scenario9_InternalConstructor.cs" />
     <Compile Include="Scenario1_PublicSetters.cs" />
     <Compile Include="Scenario2_PrivateAutoSetters.cs" />
     <Compile Include="Scenario4_PropertiesWithBackingFieldAndUnderscorePrefix.cs" />
@@ -81,8 +82,10 @@
     <Compile Include="Scenario3_PropertiesWithBackingFields.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\DtoType9.cs" />
     <Compile Include="TestData\DtoType6.cs" />
     <Compile Include="TestData\DtoType8.cs" />
+    <Compile Include="TestData\ModelType9_InternalConstructor.cs" />
     <Compile Include="TestData\ModelType6_3DeepObjectGraph.cs" />
     <Compile Include="TestData\ModelType8_ComplexCollection.cs" />
     <Compile Include="ToDos.cs" />

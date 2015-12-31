@@ -124,8 +124,7 @@ namespace GeneratedCode
             this.codeOutput(
                 $@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.ModelVariableName
-                    } = new {map.ModelType.Name}();
+{Indent(true)}{map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {

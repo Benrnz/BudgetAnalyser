@@ -23,6 +23,8 @@ namespace Rees.TangyFruitMapper
 
         public Type ModelType { get; set; }
 
+        public ConstructionStrategy ModelConstructor { get; set; }
+
         public static string GetMapperName(Type dtoType, Type modelType)
         {
             return $"Mapper_{dtoType.Name}_{modelType.Name}";

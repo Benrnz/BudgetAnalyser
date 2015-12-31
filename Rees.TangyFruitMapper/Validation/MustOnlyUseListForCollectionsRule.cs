@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Rees.TangyFruitMapper.Validation
 {
-    internal class MustOnlyUseListForCollectionsRule : PreconditionRule
+    internal class MustOnlyUseListForCollectionsRule : PreconditionPropertyRule
     {
         public override void IsCompliant(PropertyInfo property)
         {

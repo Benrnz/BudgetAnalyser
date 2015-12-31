@@ -2,7 +2,7 @@
 
 namespace Rees.TangyFruitMapper.Validation
 {
-    internal class MustOnlyHavePublicWriteablePropertiesRule : PreconditionRule
+    internal class MustOnlyHavePublicWriteablePropertiesRule : PreconditionPropertyRule
     {
         public override void IsCompliant(PropertyInfo property)
         {
