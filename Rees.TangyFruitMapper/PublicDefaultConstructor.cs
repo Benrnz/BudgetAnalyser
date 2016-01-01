@@ -10,7 +10,7 @@ namespace Rees.TangyFruitMapper
 
         public override string CreateCodeLine(DtoOrModel destinationKind)
         {
-            return $"var {DestinationObjectName(destinationKind)} = new {DestinationType.Name}();";
+            return $"{DestinationObjectName(destinationKind)} = new {DestinationType.Name}();";
         }
     }
 }

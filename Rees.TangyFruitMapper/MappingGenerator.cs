@@ -126,12 +126,13 @@ namespace GeneratedCode
 
         private void WriteMethods(MapResult map)
         {
-            // TODO maybe add support for internal constructors? The below code assumes public default constructors are available.
             this.codeOutput(
                 $@"{Indent()}public virtual {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
-{Indent(true)}{
-                    map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
+{Indent(true)}ToModelPreprocessing({AssignmentStrategy.DtoVariableName});
+{Indent()}{map.ModelType.Name} {AssignmentStrategy.ModelVariableName} = null;
+{Indent()}ModelFactory({AssignmentStrategy.DtoVariableName}, ref {AssignmentStrategy.ModelVariableName});
+{Indent()}if ({AssignmentStrategy.ModelVariableName} == null) {map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
@@ -143,6 +144,7 @@ namespace GeneratedCode
             {
                 this.codeOutput($"{Indent()} // TODO No properties found to map.");
             }
+            this.codeOutput($@"{Indent()}ToModelPostprocessing({AssignmentStrategy.DtoVariableName}, ref {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.ModelVariableName};
 {Outdent()}}} // End ToModel Method");
 
@@ -151,15 +153,23 @@ namespace GeneratedCode
                 $@"
 {Indent()}public virtual {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
-{Indent(true)}var {AssignmentStrategy.DtoVariableName
-                    } = new {map.DtoType.Name}();");
+{Indent(true)}ToDtoPreprocessing({AssignmentStrategy.ModelVariableName});
+{Indent()}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName};
+{Indent()}{AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();");
             foreach (var assignment in map.DtoToModelMap.Values)
             {
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
                 this.codeOutput($"{Indent()}{assignment.Destination.CreateCodeLine(DtoOrModel.Dto, assignment.Source.SourceVariableName)}");
             }
+            this.codeOutput($@"{Indent()}ToDtoPostprocessing(ref {AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.DtoVariableName};
 {Outdent()}}} // End ToDto Method");
+
+            this.codeOutput($@"{Indent()}partial void ToModelPreprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName});");
+            this.codeOutput($@"{Indent()}partial void ToDtoPreprocessing({map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            this.codeOutput($@"{Indent()}partial void ModelFactory({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            this.codeOutput($@"{Indent()}partial void ToModelPostprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            this.codeOutput($@"{Indent()}partial void ToDtoPostprocessing(ref {map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
         }
     }
 }

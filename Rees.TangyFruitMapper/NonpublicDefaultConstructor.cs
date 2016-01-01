@@ -14,8 +14,7 @@ namespace Rees.TangyFruitMapper
                 $@"var constructors = typeof({DestinationType.Name
                     }).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
 var constructor = constructors.First(c => c.GetParameters().Length == 0);
-var {
-                    DestinationObjectName(destinationKind)} = ({DestinationType.Name})constructor.Invoke(new Type[] {{ }});";
+{DestinationObjectName(destinationKind)} = ({DestinationType.Name})constructor.Invoke(new Type[] {{ }});";
         }
     }
 }

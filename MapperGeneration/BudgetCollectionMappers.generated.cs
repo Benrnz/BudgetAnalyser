@@ -12,7 +12,7 @@ namespace GeneratedCode
 {
     
     [GeneratedCode("1.0", "Tangy Fruit Mapper")] 
-    public class Mapper_BudgetCollectionDto_BudgetCollection : IDtoMapper<BudgetCollectionDto, BudgetCollection>
+    public partial class Mapper_BudgetCollectionDto_BudgetCollection : IDtoMapper<BudgetCollectionDto, BudgetCollection>
     {
         
         public BudgetCollection ToModel(BudgetCollectionDto dto)
@@ -39,6 +39,9 @@ namespace GeneratedCode
             dto.StorageKey = source6;
             return dto;
         } // End ToDto Method
+
+        partial void ToModelPreprocessing(BudgetBucketDto dto);
+
     } // End Class
 
 } // End Namespace
