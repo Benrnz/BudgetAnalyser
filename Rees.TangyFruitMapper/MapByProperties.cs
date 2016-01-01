@@ -100,6 +100,7 @@ namespace Rees.TangyFruitMapper
                 return new PrivatePropertyAssignment(modelProperty.Name, modelProperty.PropertyType);
             }
 
+            // Note this code is unreachable at this point.  Only properties with setters are mapped at this stage.
             var field = FindSimilarlyNamedField(modelProperty.Name, destinationType);
             if (field != null)
             {

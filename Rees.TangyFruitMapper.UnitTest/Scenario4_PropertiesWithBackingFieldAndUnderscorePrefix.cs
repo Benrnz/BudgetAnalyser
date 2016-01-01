@@ -30,18 +30,8 @@ namespace Rees.TangyFruitMapper.UnitTest
         [Fact]
         public void Generate_ShouldSuccessfullyMapToModel()
         {
-            var mapper = CreateMapperFromGeneratedCode();
-            var result = mapper.ToModel(new DtoType4
-            {
-                Age = 410,
-                MyNumber = 3.1415M,
-                Name = "Pie Constant"
-            });
-
-            Assert.Equal(410, result.Age);
-            Assert.Equal(3.1415M, result.MyNumber);
-            Assert.Equal("Pie Constant", result.Name);
+            // This is not supported.  Properties must be writable at least with private setters.
+            Assert.True(this.GeneratedCode.Contains("// TODO No properties found to map"));
         }
-
     }
 }
