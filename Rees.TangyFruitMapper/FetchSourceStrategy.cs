@@ -40,7 +40,7 @@ namespace Rees.TangyFruitMapper
 
         public abstract string CreateCodeLine(DtoOrModel sourceKind);
 
-        protected string SourceObjectName(DtoOrModel sourceKind)
+        protected static string SourceObjectName(DtoOrModel sourceKind)
         {
             return sourceKind == DtoOrModel.Dto ? AssignmentStrategy.DtoVariableName : AssignmentStrategy.ModelVariableName;
         }

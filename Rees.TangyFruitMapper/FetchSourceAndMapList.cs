@@ -22,12 +22,12 @@ namespace Rees.TangyFruitMapper
 var {SourceVariableName} = {SourceObjectName(sourceKind)}.{SourceName}.Select({mapperVar}.{MapperMethodToCall(sourceKind)}).ToList();";
         }
 
-        private string MapperMethodToCall(DtoOrModel sourceKind)
+        private static string MapperMethodToCall(DtoOrModel sourceKind)
         {
             return sourceKind == DtoOrModel.Dto ? "ToModel" : "ToDto";
         }
 
-        private string GetMapperVariableName()
+        private static string GetMapperVariableName()
         {
             return $"mapper{MapperCounter++}";
         }

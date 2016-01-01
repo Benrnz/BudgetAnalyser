@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\Rees.TangyFruitMapper.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Rees.TangyFruitMapper.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,9 +37,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Rees.TangyFruitMapper.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
+    <None Include="Rees.TangyFruitMapper.ruleset" />
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +52,7 @@
     <Compile Include="ConstructionStrategyBuilder.cs" />
     <Compile Include="FetchSourceAndMapList.cs" />
     <Compile Include="FetchSourceList.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="NonpublicDefaultConstructor.cs" />
     <Compile Include="PublicDefaultConstructor.cs" />
     <Compile Include="Validation\CodeGenerationFailedException.cs" />

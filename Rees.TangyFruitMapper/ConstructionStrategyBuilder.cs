@@ -6,6 +6,7 @@ namespace Rees.TangyFruitMapper
 {
     internal class ConstructionStrategyBuilder
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ConstructionStrategy Build(Type type)
         {
             var constructor = type.GetConstructor(new Type[] {});
