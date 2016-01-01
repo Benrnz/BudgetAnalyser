@@ -160,7 +160,7 @@ namespace Rees.TangyFruitMapper
         private void CreateMapToModel()
         {
             this.diagnosticLogger($"Creating a map to Map To a Model {this.modelType.FullName}.");
-            foreach (var modelProperty in this.modelType.GetProperties())
+            foreach (var modelProperty in this.modelType.GetProperties().Where(p => p.CanWrite))
             {
                 this.diagnosticLogger($"Looking for a match for Model property '{this.modelType.Name}.{modelProperty.Name}'");
                 var assignmentStrategy = new AssignmentStrategy();

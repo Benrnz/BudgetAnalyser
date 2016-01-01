@@ -82,7 +82,7 @@ namespace Rees.TangyFruitMapper
             var classAccessor = EmitWithInternalAccessors ? "internal" : "public";
             this.codeOutput(
                 $@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
-{Indent()}{classAccessor} class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
+{Indent()}{classAccessor} partial class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
 {Indent()}{{
 {
                     Indent(true)}");
@@ -128,7 +128,7 @@ namespace GeneratedCode
         {
             // TODO maybe add support for internal constructors? The below code assumes public default constructors are available.
             this.codeOutput(
-                $@"{Indent()}public {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
+                $@"{Indent()}public virtual {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
 {Indent()}{{
 {Indent(true)}{
                     map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
@@ -139,13 +139,17 @@ namespace GeneratedCode
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Dto)}");
                 this.codeOutput($"{Indent()}{assignment.Destination.CreateCodeLine(DtoOrModel.Model, assignment.Source.SourceVariableName)}");
             }
+            if (!map.ModelToDtoMap.Any())
+            {
+                this.codeOutput($"{Indent()} // TODO No properties found to map.");
+            }
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.ModelVariableName};
 {Outdent()}}} // End ToModel Method");
 
 
             this.codeOutput(
                 $@"
-{Indent()}public {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
+{Indent()}public virtual {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
 {Indent(true)}var {AssignmentStrategy.DtoVariableName
                     } = new {map.DtoType.Name}();");

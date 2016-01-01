@@ -1,13 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 using Rees.TangyFruitMapper.UnitTest.TestData;
 using Rees.TangyFruitMapper.Validation;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Rees.TangyFruitMapper.UnitTest
 {
     public class ErrorScenarios
     {
+        private readonly ITestOutputHelper output;
+
+        public ErrorScenarios(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact]
         public void ShouldThrow_GivenDtoWithNonpublicProperty()
         {
@@ -51,10 +61,32 @@ namespace Rees.TangyFruitMapper.UnitTest
             Assert.Throws<CollectionsMustBeListTException>(() => Act<IEnumerableNotSupported, DtoType1>());
         }
 
-        private static void Act<TDto, TModel>()
+        [Fact]
+        public void ShouldNotMapNonWriteableProperties()
+        {
+            var code = new StringBuilder();
+            var codeOutput = new Action<string>(s => code.AppendLine(s));
+            Act<DtoType1, IgnoreNonwriteableProperties>(codeOutput);
+            this.output.WriteLine(code.ToString());
+            Assert.False(code.ToString().Contains("WeirdCalculation"));
+        }
+
+        private static void Act<TDto, TModel>(Action<string> codeOutput = null)
         {
             var subject = new MappingGenerator();
-            subject.Generate<TDto, TModel>(s => { });
+            var codeWritter = codeOutput ?? (s => { });
+            subject.Generate<TDto, TModel>(codeWritter);
+        }
+
+        public class IgnoreNonwriteableProperties
+        {
+            public string Name { get; set; }
+
+            public int Age { get; set; }
+
+            public decimal MyNumber { get; set; }
+
+            public decimal WeirdCalculation => Age * MyNumber;
         }
 
         public class CollectionsNotSupported
