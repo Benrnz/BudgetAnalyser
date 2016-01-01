@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.Budget;
 namespace GeneratedCode
 {
     
-    [GeneratedCode("1.0", "Tangy Fruit Mapper")]
+    [GeneratedCode("1.0", "Tangy Fruit Mapper")] 
     public class Mapper_BudgetCollectionDto_BudgetCollection : IDtoMapper<BudgetCollectionDto, BudgetCollection>
     {
         

@@ -67,6 +67,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="T4Example.generated.cs">
+      <DependentUpon>T4Example.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="DynamicCodeCompiler.cs" />
     <Compile Include="ErrorScenarios.cs" />
     <Compile Include="MappingGeneratorScenarios.cs" />
@@ -111,6 +116,15 @@
       <Project>{aaf315d4-ed07-44b3-aa75-9725e618d5c7}</Project>
       <Name>Rees.TangyFruitMapper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="T4Example.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4Example.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

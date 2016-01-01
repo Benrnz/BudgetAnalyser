@@ -1,0 +1,20 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Runtime" #>
+<#@ assembly name="$(SolutionDir)Rees.TangyFruitMapper.UnitTest\\bin\\Debug\\Rees.TangyFruitMapper.dll" #>
+<#@ assembly name="$(SolutionDir)Rees.TangyFruitMapper.UnitTest\\bin\\Debug\\Rees.TangyFruitMapper.UnitTest.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Rees.TangyFruitMapper" #>
+<#@ import namespace="Rees.TangyFruitMapper.UnitTest" #>
+<#@ import namespace="Rees.TangyFruitMapper.UnitTest.TestData" #>
+<#@ output extension="generated.cs" #>
+
+<#
+MappingGenerator codeGenerator;
+StringBuilder diagnosticLogger = new StringBuilder();
+codeGenerator = new MappingGenerator();
+codeGenerator.Generate<DtoType1, ModelType1_AllWriteable>(WriteLine);
+#>
+
