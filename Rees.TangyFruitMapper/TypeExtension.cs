@@ -37,7 +37,7 @@ namespace Rees.TangyFruitMapper
             }
 
             // In this context these are also considered simple types.
-            if (instance == typeof(decimal) || instance == typeof(string) || instance == typeof(DateTime))
+            if (instance == typeof(decimal) || instance == typeof(string) || instance == typeof(DateTime) || instance == typeof(Guid))
             {
                 return false;
             }
