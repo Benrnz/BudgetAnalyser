@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget
@@ -28,7 +28,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<IncomeDto>(TestData);
+            var subject = new Mapper_IncomeDto_Income(new BucketBucketRepoAlwaysFind());
+            Result = subject.ToDto(TestData);
         }
     }
 }

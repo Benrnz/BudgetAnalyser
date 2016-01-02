@@ -4,11 +4,11 @@ using System.Reflection;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    internal partial class BudgetModelToDtoMapper
+    internal partial class Mapper_BudgetModelDto_BudgetModel
     {
         private readonly IBudgetBucketRepository bucketRepo;
 
-        public BudgetModelToDtoMapper(IBudgetBucketRepository bucketRepo)
+        public Mapper_BudgetModelDto_BudgetModel(IBudgetBucketRepository bucketRepo)
         {
             this.bucketRepo = bucketRepo;
         }

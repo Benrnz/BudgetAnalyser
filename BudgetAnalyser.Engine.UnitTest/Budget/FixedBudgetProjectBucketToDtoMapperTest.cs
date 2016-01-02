@@ -1,5 +1,4 @@
 ﻿using System;
-
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,8 +56,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             this.testData = new FixedBudgetProjectBucket(FixedProjectCode, "Foo bar dum-de-dum", 1000);
             PrivateAccessor.SetProperty(this.testData, "Created", this.testDataCreatedDate);
 
-            // When the buckets are mapped they are mapped using their base class, not their concrete type FixedBudgetProjectBucket.
-            this.result = Mapper.Map<FixedBudgetBucketDto>(this.testData);
+            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            this.result = subject.ToDto(this.testData);
         }
     }
 }

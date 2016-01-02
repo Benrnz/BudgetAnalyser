@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class DtoToExpenseMapper
@@ -38,7 +38,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<Expense>(TestData);
+            var subject = new Mapper_ExpenseDto_Expense(new BucketBucketRepoAlwaysFind());
+            Result = subject.ToModel(TestData);
         }
     }
 }

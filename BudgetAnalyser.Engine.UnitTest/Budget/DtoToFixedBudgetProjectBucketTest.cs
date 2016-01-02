@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldMapFixedBudgetAmount()
         {
-            Assert.AreEqual(((FixedBudgetBucketDto)this.testData).FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
+            Assert.AreEqual((this.testData).FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
         }
 
         [TestMethod]
@@ -50,8 +50,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                 Description = "Foo bar tiddle-de-dum",
                 FixedBudgetAmount = 2000
             };
-            var subject = new DtoToFixedBudgetBucketMapper();
-            this.result = subject.Map(this.testData);
+            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            this.result = subject.ToModel(this.testData);
         }
     }
 }

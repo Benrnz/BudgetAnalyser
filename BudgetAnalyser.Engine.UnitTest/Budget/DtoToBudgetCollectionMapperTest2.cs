@@ -1,14 +1,14 @@
 ﻿using System.Linq;
-using AutoMapper;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.Helper;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
-    public class DtoToBudgetCollectionAutoMapperTest
+    public class DtoToBudgetCollectionMapperTest2
     {
         private BudgetCollection Result { get; set; }
         private BudgetCollectionDto TestData { get; set; }
@@ -34,8 +34,13 @@ namespace BudgetAnalyser.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.UnitTest.TestData.BudgetCollectionTestData.xml");
-            Result = Mapper.Map<BudgetCollection>(TestData);
+            TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.Engine.UnitTest.TestData.BudgetCollectionTestData.xml");
+            var bucketRepo = new BucketBucketRepoAlwaysFind();
+            var subject = new Mapper_BudgetCollectionDto_BudgetCollection(
+                bucketRepo,
+                new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
+                new Mapper_BudgetModelDto_BudgetModel(bucketRepo));
+            Result = subject.ToModel(TestData);
         }
     }
 }

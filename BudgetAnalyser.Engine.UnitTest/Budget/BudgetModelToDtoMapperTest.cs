@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class BudgetModelToDtoMapperTest
@@ -97,8 +98,8 @@ namespace BudgetAnalyser.UnitTest.Budget
 
         private BudgetModelDto ArrangeAndAct()
         {
-            var mapper = new BudgetModelToDtoMapper();
-            return mapper.Map(TestData);
+            var mapper = new Mapper_BudgetModelDto_BudgetModel(new BucketBucketRepoAlwaysFind());
+            return mapper.ToDto(TestData);
         }
     }
 }
