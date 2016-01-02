@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
 
@@ -13,19 +13,18 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities)
             : base(importUtilities,
                 new FakeLogger(),
-                new TransactionSetDtoToStatementModelMapper(),
-                new StatementModelToTransactionSetDtoMapper())
+                new Mapper_TransactionSetDto_StatementModel(
+                    new FakeLogger(), 
+                    new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())))
         {
         }
 
         public CsvOnDiskStatementModelRepositoryV1TestHarness(
             BankImportUtilities importUtilities,
-            BasicMapper<TransactionSetDto, StatementModel> toDomainMapper,
-            BasicMapper<StatementModel, TransactionSetDto> toDtoMapper)
+            IDtoMapper<TransactionSetDto, StatementModel> mapper)
             : base(importUtilities,
                 new FakeLogger(),
-                toDomainMapper,
-                toDtoMapper)
+                mapper)
         {
         }
 

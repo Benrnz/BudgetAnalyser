@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
-using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Statement.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Statement
+namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class StatementModelToDtoMapperTest
@@ -58,7 +58,13 @@ namespace BudgetAnalyser.UnitTest.Statement
 
         private void Act(StatementModel testData)
         {
-            Result = Mapper.Map<TransactionSetDto>(testData);
+            var subject = new Mapper_TransactionSetDto_StatementModel(
+                new FakeLogger(), 
+                new Mapper_TransactionDto_Transaction(
+                    new InMemoryAccountTypeRepository(), 
+                    new BucketBucketRepoAlwaysFind(), 
+                    new InMemoryTransactionTypeRepository()));
+            Result = subject.ToDto(testData);
         }
     }
 }

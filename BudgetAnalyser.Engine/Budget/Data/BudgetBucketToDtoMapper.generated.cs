@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Budget.Data;
 namespace BudgetAnalyser.Engine.Budget.Data
 {
 
-    [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:39:29 AM UTC")]
+    [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 6:22:12 AM UTC")]
     internal partial class Mapper_BudgetBucketDto_BudgetBucket : IDtoMapper<BudgetBucketDto, BudgetBucket>
     {
 
@@ -38,22 +38,25 @@ namespace BudgetAnalyser.Engine.Budget.Data
         public virtual BudgetBucketDto ToDto(BudgetBucket model)
         {
             ToDtoPreprocessing(model);
-            BudgetBucketDto dto;
-            dto = new BudgetBucketDto();
+            BudgetBucketDto dto = null;
+            DtoFactory(ref dto, model);
+            if (dto == null)
+            {
+                dto = new BudgetBucketDto();
+            }
             var active4 = model.Active;
             dto.Active = active4;
             var code5 = model.Code;
             dto.Code = code5;
             var description6 = model.Description;
             dto.Description = description6;
-            // var type7 = // TODO Cannot find a way to retrieve this property: model.Type. 
-            // dto.Type = type7; // TODO Cannot find a way to set this property: dto.Type. 
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method
         partial void ToModelPreprocessing(BudgetBucketDto dto);
         partial void ToDtoPreprocessing(BudgetBucket model);
         partial void ModelFactory(BudgetBucketDto dto, ref BudgetBucket model);
+        partial void DtoFactory(ref BudgetBucketDto dto, BudgetBucket model);
         partial void ToModelPostprocessing(BudgetBucketDto dto, ref BudgetBucket model);
         partial void ToDtoPostprocessing(ref BudgetBucketDto dto, BudgetBucket model);
     } // End Class

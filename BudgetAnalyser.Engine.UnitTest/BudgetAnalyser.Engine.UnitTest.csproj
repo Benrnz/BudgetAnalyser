@@ -54,6 +54,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.0.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Reflection.TypeExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.TypeExtensions.4.0.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
       <Private>True</Private>
@@ -143,11 +151,16 @@
     <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
     <Compile Include="Statement\BankImportUtilitiesTest.cs" />
     <Compile Include="Statement\BankStatementImporterRepositoryTest.cs" />
+    <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
+    <Compile Include="Statement\DtoToStatementModelMapperTest.cs" />
+    <Compile Include="Statement\DtoToTransactionMapperTest.cs" />
     <Compile Include="Statement\StatementModelGeneratorTest.cs" />
     <Compile Include="Statement\StatementModelTest.cs" />
+    <Compile Include="Statement\StatementModelToDtoMapperTest.cs" />
     <Compile Include="Statement\TransactionDtoTest.cs" />
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="Statement\TransactionTest.cs" />
+    <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
@@ -169,6 +182,7 @@
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
     <Compile Include="TestHarness\DtoMapperStub.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
@@ -180,6 +194,9 @@
     <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
+      <Link>TestData\DemoTransactions.csv</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
     <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
