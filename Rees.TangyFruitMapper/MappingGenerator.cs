@@ -163,7 +163,11 @@ namespace {Namespace}
 {Indent()}{{
 {Indent(true)}ToDtoPreprocessing({AssignmentStrategy.ModelVariableName});
 {Indent()}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName};
-{Indent()}{AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();");
+{Indent()}DtoFactory(ref {AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});
+{Indent()}if ({AssignmentStrategy.DtoVariableName} == null) 
+{Indent()}{{
+{Indent(true)}{AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();
+{Outdent()}}}");
             foreach (var assignment in map.DtoToModelMap.Values)
             {
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
@@ -176,6 +180,7 @@ namespace {Namespace}
             this.codeOutput($@"{Indent()}partial void ToModelPreprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName});");
             this.codeOutput($@"{Indent()}partial void ToDtoPreprocessing({map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void ModelFactory({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            this.codeOutput($@"{Indent()}partial void DtoFactory(ref {map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void ToModelPostprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void ToDtoPostprocessing(ref {map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
         }
