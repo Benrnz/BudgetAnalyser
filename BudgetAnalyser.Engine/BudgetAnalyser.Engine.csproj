@@ -156,6 +156,8 @@
     <Compile Include="ListExtension.cs" />
     <Compile Include="MainApplicationState.cs" />
     <Compile Include="Matching\CriteriaT.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.generated.cs" />
     <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\SingleUseMatchingRuleDto.cs" />
     <Compile Include="Matching\IMatchingRuleFactory.cs" />
