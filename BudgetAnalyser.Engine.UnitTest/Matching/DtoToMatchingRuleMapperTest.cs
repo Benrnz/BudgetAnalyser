@@ -1,11 +1,11 @@
 ﻿using System;
-using AutoMapper;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Matching
+namespace BudgetAnalyser.Engine.UnitTest.Matching
 {
     [TestClass]
     public class DtoToMatchingRuleMapperTest
@@ -110,7 +110,8 @@ namespace BudgetAnalyser.UnitTest.Matching
         public void ShouldSetCreatedDateToNowIfGivenNull()
         {
             TestData.Created = null;
-            Result = Mapper.Map<MatchingRule>(TestData);
+            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            Result = subject.ToModel(TestData);
             Assert.IsFalse(Result.Created == default(DateTime));
         }
 
@@ -118,14 +119,16 @@ namespace BudgetAnalyser.UnitTest.Matching
         public void ShouldSetRuleIdDateToNowIfGivenNull()
         {
             TestData.RuleId = null;
-            Result = Mapper.Map<MatchingRule>(TestData);
+            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            Result = subject.ToModel(TestData);
             Assert.IsFalse(Result.RuleId == default(Guid));
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<MatchingRule>(TestData);
+            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            Result = subject.ToModel(TestData);
         }
     }
 }

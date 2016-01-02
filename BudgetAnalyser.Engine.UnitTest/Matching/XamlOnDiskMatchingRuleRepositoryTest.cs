@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.Engine.UnitTest.Helper;
@@ -19,15 +18,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenGivenNullMapper()
         {
-            new XamlOnDiskMatchingRuleRepository(null, new MatchingRuleDomainToDataMapper());
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowWhenGivenNullMapper2()
-        {
-            new XamlOnDiskMatchingRuleRepository(new DtoToMatchingRuleMapper(), null);
+            new XamlOnDiskMatchingRuleRepository(null);
             Assert.Fail();
         }
 
@@ -114,7 +105,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         {
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             MatchingRulesTestDataGenerated.BucketRepo = bucketRepo;
-            return new XamlOnDiskMatchingRuleRepositoryTestHarness(new DtoToMatchingRuleMapper(), new MatchingRuleDomainToDataMapper());
+            return new XamlOnDiskMatchingRuleRepositoryTestHarness(new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind()));
         }
     }
 }

@@ -17,22 +17,22 @@ namespace BudgetAnalyser.Engine.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
     {
-        private readonly IDtoMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper;
+        private readonly IDtoMapper<MatchingRuleDto, MatchingRule> mapper;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskMatchingRuleRepository" /> class.
         /// </summary>
-        /// <param name="dataToDomainMapper">The data to domain mapper.</param>
+        /// <param name="mapper">The data to domain mapper.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper)
+        public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper)
         {
-            if (dataToDomainMapper == null)
+            if (mapper == null)
             {
-                throw new ArgumentNullException(nameof(dataToDomainMapper));
+                throw new ArgumentNullException(nameof(mapper));
             }
 
-            this.dataToDomainMapper = dataToDomainMapper;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
-            return dataEntities.Select(d => this.dataToDomainMapper.ToModel(d));
+            return dataEntities.Select(d => this.mapper.ToModel(d));
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var dataEntities = rules.Select(r => this.dataToDomainMapper.ToDto(r));
+            var dataEntities = rules.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities);
         }
 

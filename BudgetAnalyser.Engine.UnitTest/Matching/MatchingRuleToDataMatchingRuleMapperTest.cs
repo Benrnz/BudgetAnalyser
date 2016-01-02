@@ -1,10 +1,10 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
-using BudgetAnalyser.UnitTest.TestHarness;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Matching
+namespace BudgetAnalyser.Engine.UnitTest.Matching
 {
     [TestClass]
     public class MatchingRuleToDataMatchingRuleMapperTest
@@ -115,7 +115,8 @@ namespace BudgetAnalyser.UnitTest.Matching
 
         private MatchingRuleDto ArrangeAndAct()
         {
-            return new MatchingRuleDomainToDataMapper().Map(TestData);
+            var subject = new Mapper_MatchingRuleDto_MatchingRule(new BucketBucketRepoAlwaysFind());
+            return subject.ToDto(TestData);
         }
     }
 }

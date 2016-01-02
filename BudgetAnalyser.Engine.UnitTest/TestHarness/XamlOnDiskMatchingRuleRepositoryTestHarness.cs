@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
 using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Matching.Data;
@@ -10,10 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class XamlOnDiskMatchingRuleRepositoryTestHarness : XamlOnDiskMatchingRuleRepository
     {
-        public XamlOnDiskMatchingRuleRepositoryTestHarness(
-            [NotNull] BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper,
-            [NotNull] BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper)
-            : base(dataToDomainMapper, domainToDataMapper)
+        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper) : base(mapper)
         {
         }
 
