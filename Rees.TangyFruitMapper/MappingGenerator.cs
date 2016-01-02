@@ -81,7 +81,7 @@ namespace Rees.TangyFruitMapper
         {
             var classAccessor = EmitWithInternalAccessors ? "internal" : "public";
             this.codeOutput(
-                $@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper"")]
+                $@"{Indent()}[GeneratedCode(""1.0"", ""Tangy Fruit Mapper {DateTime.UtcNow} UTC"")]
 {Indent()}{classAccessor} partial class {map.MapperName} : IDtoMapper<{map.DtoType.Name}, {map.ModelType.Name}>
 {Indent()}{{
 {
