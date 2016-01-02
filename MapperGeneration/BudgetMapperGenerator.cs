@@ -15,19 +15,19 @@ namespace MapperGeneration
         [Fact]
         public void GenerateBudgetCollectionToDto()
         {
-            Act<BudgetCollectionDto, BudgetCollection>();
+            Act<BudgetCollectionDto, BudgetCollection>("BudgetAnalyser.Engine.Budget.Data");
         }
 
         [Fact]
         public void GenerateBudgetModelToDto()
         {
-            Act<BudgetModelDto, BudgetModel>();
+            Act<BudgetModelDto, BudgetModel>("BudgetAnalyser.Engine.Budget.Data");
         }
 
         [Fact]
         public void GenerateBudgetBucketToDto()
         {
-            Act<BudgetBucketDto, BudgetBucket>();
+            Act<BudgetBucketDto, BudgetBucket>("BudgetAnalyser.Engine.Budget.Data");
         }
     }
 }

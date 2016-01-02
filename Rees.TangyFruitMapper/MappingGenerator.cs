@@ -27,6 +27,11 @@ namespace Rees.TangyFruitMapper
         public bool EmitWithInternalAccessors { get; set; }
 
         /// <summary>
+        /// Gets or sets the namespace for the generated code. Defaults to "GeneratedCode".
+        /// </summary>
+        public string Namespace { get; set; } = "GeneratedCode";
+
+        /// <summary>
         ///     Generates the code for the specified types. Be sure to check for TODO's in the generated code.
         /// </summary>
         /// <typeparam name="TDto">The type of the dto. It is important that this Dto follows the Dto conventions.</typeparam>
@@ -104,7 +109,7 @@ using Rees.TangyFruitMapper;");
                 this.codeOutput($@"using {ns.Key};");
             }
             this.codeOutput($@"
-namespace GeneratedCode
+namespace {Namespace}
 {{
 {Indent(true)}");
         }

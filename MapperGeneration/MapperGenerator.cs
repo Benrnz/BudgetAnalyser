@@ -21,16 +21,17 @@ namespace MapperGeneration
             this.codeGenerator = new MappingGenerator
             {
                 DiagnosticLogging = l => this.diagnosticLogger.AppendLine(l),
-                EmitWithInternalAccessors = true
+                EmitWithInternalAccessors = true,
             };
         }
 
         protected string GeneratedCode => this.generatedCode.ToString();
 
-        protected void Act<TDto, TModel>()
+        protected void Act<TDto, TModel>(string @namespace)
         {
             try
             {
+                this.codeGenerator.Namespace = @namespace;
                 this.codeGenerator.Generate<TDto, TModel>(codeLine =>
                 {
                     this.generatedCode.AppendLine(codeLine);

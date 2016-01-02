@@ -7,9 +7,10 @@ using System.Collections.Generic;
 using System;
 using BudgetAnalyser.Engine.Budget.Data;
 
-namespace GeneratedCode
+namespace BudgetAnalyser.Engine.Budget.Data
 {
-    [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:26:26 AM UTC")]
+
+    [GeneratedCode("1.0", "Tangy Fruit Mapper 2/01/2016 12:33:20 AM UTC")]
     internal partial class Mapper_BudgetCollectionDto_BudgetCollection : IDtoMapper<BudgetCollectionDto, BudgetCollection>
     {
 
@@ -31,10 +32,6 @@ namespace GeneratedCode
             ToDtoPreprocessing(model);
             BudgetCollectionDto dto;
             dto = new BudgetCollectionDto();
-            // var buckets2 = // TODO Cannot find a way to retrieve this property: model.Buckets. 
-            // dto.Buckets = buckets2; // TODO Cannot find a way to set this property: dto.Buckets. 
-            // var budgets3 = // TODO Cannot find a way to retrieve this property: model.Budgets. 
-            // dto.Budgets = budgets3; // TODO Cannot find a way to set this property: dto.Budgets. 
             var storageKey4 = model.StorageKey;
             dto.StorageKey = storageKey4;
             ToDtoPostprocessing(ref dto, model);
@@ -46,4 +43,5 @@ namespace GeneratedCode
         partial void ToModelPostprocessing(BudgetCollectionDto dto, ref BudgetCollection model);
         partial void ToDtoPostprocessing(ref BudgetCollectionDto dto, BudgetCollection model);
     } // End Class
+
 } // End Namespace
