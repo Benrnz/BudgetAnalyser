@@ -137,7 +137,10 @@ namespace {Namespace}
 {Indent(true)}ToModelPreprocessing({AssignmentStrategy.DtoVariableName});
 {Indent()}{map.ModelType.Name} {AssignmentStrategy.ModelVariableName} = null;
 {Indent()}ModelFactory({AssignmentStrategy.DtoVariableName}, ref {AssignmentStrategy.ModelVariableName});
-{Indent()}if ({AssignmentStrategy.ModelVariableName} == null) {map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
+{Indent()}if ({AssignmentStrategy.ModelVariableName} == null) 
+{Indent()}{{
+{Indent(true)}{map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
+{Outdent()}}}
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
