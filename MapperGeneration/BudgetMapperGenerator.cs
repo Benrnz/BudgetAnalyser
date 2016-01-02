@@ -7,7 +7,7 @@ namespace MapperGeneration
 {
     public class BudgetMapperGenerator : MapperGenerator
     {
-
+        private const string NameSpace = "BudgetAnalyser.Engine.Budget.Data";
         public BudgetMapperGenerator(ITestOutputHelper output) : base(output)
         {
         }
@@ -15,19 +15,19 @@ namespace MapperGeneration
         [Fact]
         public void GenerateBudgetCollectionToDto()
         {
-            Act<BudgetCollectionDto, BudgetCollection>("BudgetAnalyser.Engine.Budget.Data");
+            Act<BudgetCollectionDto, BudgetCollection>(NameSpace);
         }
 
         [Fact]
         public void GenerateBudgetModelToDto()
         {
-            Act<BudgetModelDto, BudgetModel>("BudgetAnalyser.Engine.Budget.Data");
+            Act<BudgetModelDto, BudgetModel>(NameSpace);
         }
 
         [Fact]
         public void GenerateBudgetBucketToDto()
         {
-            Act<BudgetBucketDto, BudgetBucket>("BudgetAnalyser.Engine.Budget.Data");
+            Act<BudgetBucketDto, BudgetBucket>(NameSpace);
         }
     }
 }

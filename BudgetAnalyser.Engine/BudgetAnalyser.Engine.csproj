@@ -230,8 +230,11 @@
     <Compile Include="Statement\BankImportUtilities.cs" />
     <Compile Include="Statement\BankStatementImporterRepository.cs" />
     <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1.cs" />
+    <Compile Include="Statement\Data\StatementModelToDtoMapper.cs" />
+    <Compile Include="Statement\Data\StatementModelToDtoMapper.generated.cs" />
     <Compile Include="Statement\Data\TransactionDto.cs" />
     <Compile Include="Statement\Data\TransactionSetDto.cs" />
+    <Compile Include="Statement\Data\TransactionToTransactionDtoMapper.cs" />
     <Compile Include="Statement\IBankStatementImporter.cs" />
     <Compile Include="Statement\IBankStatementImporterRepository.cs" />
     <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
