@@ -28,7 +28,7 @@ namespace Rees.TangyFruitMapper.UnitTest
         }
 
         [Fact]
-        public void Generate_ShouldSuccessfullyMapToModel()
+        public void Generate_ShouldNOTMapToModel()
         {
             // This is not supported.  Properties must be writable at least with private setters.
             Assert.True(this.GeneratedCode.Contains("// TODO No properties found to map"));
