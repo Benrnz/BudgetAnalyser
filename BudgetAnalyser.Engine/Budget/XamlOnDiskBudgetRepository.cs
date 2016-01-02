@@ -17,8 +17,7 @@ namespace BudgetAnalyser.Engine.Budget
     public class XamlOnDiskBudgetRepository : IBudgetRepository
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
-        private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper;
-        private readonly IDtoMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper;
+        private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
         private BudgetCollection currentBudgetCollection;
 
         /// <summary>
@@ -28,27 +27,20 @@ namespace BudgetAnalyser.Engine.Budget
         /// </exception>
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] IDtoMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
-            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
+            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper)
         {
             if (bucketRepository == null)
             {
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
 
-            if (toDtoMapper == null)
+            if (mapper == null)
             {
-                throw new ArgumentNullException(nameof(toDtoMapper));
-            }
-
-            if (toDomainMapper == null)
-            {
-                throw new ArgumentNullException(nameof(toDomainMapper));
+                throw new ArgumentNullException(nameof(mapper));
             }
 
             this.budgetBucketRepository = bucketRepository;
-            this.toDtoMapper = toDtoMapper;
-            this.toDomainMapper = toDomainMapper;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -149,7 +141,7 @@ namespace BudgetAnalyser.Engine.Budget
             // Bucket Repository must be initialised first, the budget model incomes/expenses are dependent on the bucket repository.
             this.budgetBucketRepository.Initialise(correctDataFormat.Buckets);
 
-            var budgetCollection = this.toDomainMapper.ToModel(correctDataFormat);
+            var budgetCollection = this.mapper.ToModel(correctDataFormat);
             budgetCollection.StorageKey = storageKey;
             this.currentBudgetCollection = budgetCollection;
             return budgetCollection;
@@ -166,7 +158,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }
 
-            var dataFormat = this.toDtoMapper.ToModel(this.currentBudgetCollection);
+            var dataFormat = this.mapper.ToDto(this.currentBudgetCollection);
 
             var serialised = Serialise(dataFormat);
             await WriteToDisk(dataFormat.StorageKey, serialised);

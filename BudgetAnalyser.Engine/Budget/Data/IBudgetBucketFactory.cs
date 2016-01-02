@@ -8,7 +8,12 @@ namespace BudgetAnalyser.Engine.Budget.Data
         /// <summary>
         ///     Builds a <see cref="BudgetBucket" /> based on the <see cref="BucketDtoType" /> for persistence purposes.
         /// </summary>
-        BudgetBucket Build(BudgetBucketDto dto);
+        BudgetBucket BuildModel(BudgetBucketDto dto);
+
+        /// <summary>
+        ///     Builds a <see cref="BudgetBucketDto" /> based on the model passed in.
+        /// </summary>
+        BudgetBucketDto BuildDto(BudgetBucket bucket);
 
         /// <summary>
         ///     Serialises the <see cref="BudgetBucket" /> to a simple persistence type.

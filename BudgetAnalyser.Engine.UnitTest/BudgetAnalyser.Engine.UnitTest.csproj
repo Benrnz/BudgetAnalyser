@@ -45,6 +45,10 @@
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Portable.Xaml, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.Xaml.0.6.1\lib\dotnet\Portable.Xaml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
       <Private>True</Private>
@@ -96,6 +100,8 @@
     <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
     <Compile Include="Budget\IncomeTest.cs" />
     <Compile Include="Budget\IncomeToDtoMapperTest.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepositoryTest.cs" />
     <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="Global.cs" />
@@ -163,11 +169,13 @@
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\DtoMapperStub.cs" />
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\BudgetModelFake.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
   </ItemGroup>
@@ -188,6 +196,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoBudget.xml">
+      <Link>TestData\DemoBudget.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\BudgetAnalyser\BudgetModel.xml">
+      <Link>TestData\BudgetModel.xml</Link>
+    </EmbeddedResource>
     <Content Include="PublicHolidaysTestGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>PublicHolidaysTestGenerator1.generated.cs</LastGenOutput>

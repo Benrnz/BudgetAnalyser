@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void ShouldMapFixedBudgetAmount()
         {
-            Assert.AreEqual((this.testData).FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
+            Assert.AreEqual(this.testData.FixedBudgetAmount, ((FixedBudgetProjectBucket)this.result).FixedBudgetAmount);
         }
 
         [TestMethod]

@@ -14,14 +14,15 @@ namespace BudgetAnalyser.Engine.Budget.Data
         }
 
         // ReSharper disable once RedundantAssignment
-        partial void ModelFactory(BudgetBucketDto dto, ref BudgetBucket model)
+        partial void DtoFactory(ref BudgetBucketDto dto, BudgetBucket model)
         {
-            model = this.bucketFactory.Build(dto);
+            dto = this.bucketFactory.BuildDto(model);
         }
 
-        partial void ToDtoPostprocessing(ref BudgetBucketDto dto, BudgetBucket model)
+        // ReSharper disable once RedundantAssignment
+        partial void ModelFactory(BudgetBucketDto dto, ref BudgetBucket model)
         {
-            dto.Type = this.bucketFactory.SerialiseType(model);
+            model = this.bucketFactory.BuildModel(dto);
         }
     }
 } 

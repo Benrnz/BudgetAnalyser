@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using JetBrains.Annotations;
@@ -10,15 +9,19 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     public class XamlOnDiskBudgetRepositoryTestHarness : XamlOnDiskBudgetRepository
     {
         public XamlOnDiskBudgetRepositoryTestHarness([NotNull] IBudgetBucketRepository bucketRepository)
-            : base(bucketRepository, new BudgetCollectionToDtoMapper(), new DtoToBudgetCollectionMapper())
+            : base(
+                  bucketRepository, 
+                  new Mapper_BudgetCollectionDto_BudgetCollection(
+                      bucketRepository, 
+                      new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
+                      new Mapper_BudgetModelDto_BudgetModel(bucketRepository)))
         {
         }
 
         public XamlOnDiskBudgetRepositoryTestHarness(
             IBudgetBucketRepository bucketRepo,
-            BasicMapper<BudgetCollection, BudgetCollectionDto> toDtoMapper,
-            BasicMapper<BudgetCollectionDto, BudgetCollection> toDomainMapper)
-            : base(bucketRepo, toDtoMapper, toDomainMapper)
+            IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper)
+            : base(bucketRepo, mapper)
         {
         }
 

@@ -74,22 +74,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullDomainMapper()
+        public void CtorShouldThrowGivenNullMapper()
         {
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
-                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
                 null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullDtoMapper()
-        {
-            new XamlOnDiskBudgetRepository(
-                new BucketBucketRepoAlwaysFind(),
-                null,
-                new BasicMapperFake<BudgetCollectionDto, BudgetCollection>());
         }
 
         [TestMethod]
@@ -98,8 +87,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             new XamlOnDiskBudgetRepository(
                 null,
-                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
-                new BasicMapperFake<BudgetCollectionDto, BudgetCollection>());
+                new DtoMapperStub<BudgetCollectionDto, BudgetCollection>());
             Assert.Fail();
         }
 
@@ -109,12 +97,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             var mockBucketRepository = new Mock<IBudgetBucketRepository>();
             mockBucketRepository.Setup(m => m.Initialise(null));
 
-            var toDomainMapper = new Mock<BasicMapper<BudgetCollectionDto, BudgetCollection>>();
+            var mapperMock = new Mock<IDtoMapper<BudgetCollectionDto, BudgetCollection>>();
             var subject = new XamlOnDiskBudgetRepositoryTestHarness(
                 mockBucketRepository.Object,
-                new BasicMapperFake<BudgetCollection, BudgetCollectionDto>(),
-                toDomainMapper.Object);
-            toDomainMapper.Setup(m => m.Map(It.IsAny<BudgetCollectionDto>())).Returns(BudgetModelTestData.CreateCollectionWith1And2);
+                mapperMock.Object);
+            mapperMock.Setup(m => m.ToModel(It.IsAny<BudgetCollectionDto>())).Returns(BudgetModelTestData.CreateCollectionWith1And2);
             subject.FileExistsMock = f => true;
 
             subject.LoadFromDiskMock = OnLoadFromDiskMock;
@@ -246,7 +233,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             if (bucketRepo == null)
             {
-                bucketRepo = new InMemoryBudgetBucketRepository(new DtoToBudgetBucketMapper(), new DtoToFixedBudgetBucketMapper());
+                bucketRepo = new InMemoryBudgetBucketRepository(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()));
             }
 
             return new XamlOnDiskBudgetRepositoryTestHarness(bucketRepo);
