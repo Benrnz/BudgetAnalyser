@@ -2,7 +2,7 @@
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Budget
+namespace BudgetAnalyser.Engine.UnitTest.Budget
 {
     [TestClass]
     public class BudgetBucketToDtoMapperTest
@@ -37,7 +37,8 @@ namespace BudgetAnalyser.UnitTest.Budget
         public void TestInitialise()
         {
             var testData = StatementModelTestData.CarMtcBucket;
-            Result = Mapper.Map<BudgetBucketDto>(testData);
+            var subject = new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory());
+            Result = subject.ToDto(testData);
         }
     }
 }

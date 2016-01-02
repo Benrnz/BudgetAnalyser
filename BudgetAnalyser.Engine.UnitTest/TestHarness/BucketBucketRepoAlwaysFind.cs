@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 
@@ -9,7 +8,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     {
         private readonly string projectPrefix;
 
-        public BucketBucketRepoAlwaysFind() : base(new BasicMapperFake<BudgetBucketDto, BudgetBucket>(), new DtoToFixedBudgetBucketMapper())
+        public BucketBucketRepoAlwaysFind() : base(new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()))
         {
             InitialiseMandatorySpecialBuckets();
             this.projectPrefix = string.Format(FixedBudgetProjectBucket.ProjectCodeTemplateWithPrefix, string.Empty);

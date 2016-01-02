@@ -15,7 +15,6 @@ namespace BudgetAnalyser.Engine.Budget
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class InMemoryBudgetBucketRepository : IBudgetBucketRepository
     {
-        private readonly IDtoMapper<FixedBudgetBucketDto, FixedBudgetProjectBucket> fixedProjectMapper;
         private readonly IDtoMapper<BudgetBucketDto, BudgetBucket> mapper;
         private readonly object syncRoot = new object();
         private Dictionary<string, BudgetBucket> lookupTable = new Dictionary<string, BudgetBucket>();
@@ -25,22 +24,14 @@ namespace BudgetAnalyser.Engine.Budget
         /// </summary>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public InMemoryBudgetBucketRepository(
-            [NotNull] IDtoMapper<BudgetBucketDto, BudgetBucket> mapper,
-            [NotNull] IDtoMapper<FixedBudgetBucketDto, FixedBudgetProjectBucket> fixedProjectMapper)
+        public InMemoryBudgetBucketRepository([NotNull] IDtoMapper<BudgetBucketDto, BudgetBucket> mapper)
         {
             if (mapper == null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            if (fixedProjectMapper == null)
-            {
-                throw new ArgumentNullException(nameof(fixedProjectMapper));
-            }
-
             this.mapper = mapper;
-            this.fixedProjectMapper = fixedProjectMapper;
         }
 
         /// <summary>
@@ -186,7 +177,7 @@ namespace BudgetAnalyser.Engine.Budget
             {
                 this.lookupTable = buckets
                     .Where(dto => dto.Type != BucketDtoType.PayCreditCard && dto.Type != BucketDtoType.Surplus)
-                    .Select(SelectMapperAndMap)
+                    .Select(this.mapper.ToModel)
                     .Distinct()
                     .ToDictionary(e => e.Code, e => e);
 
@@ -286,16 +277,6 @@ namespace BudgetAnalyser.Engine.Budget
             AddBucket(SurplusBucket);
             AddBucket(new PayCreditCardBucket(PayCreditCardBucket.PayCreditCardCode,
                 "A special bucket to allocate internal transfers."));
-        }
-
-        private BudgetBucket SelectMapperAndMap(BudgetBucketDto dto)
-        {
-            var source = dto as FixedBudgetBucketDto;
-            if (source != null)
-            {
-                return this.fixedProjectMapper.ToModel(source);
-            }
-            return this.mapper.ToModel(dto);
         }
     }
 }

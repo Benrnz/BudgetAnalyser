@@ -76,6 +76,7 @@
     <Compile Include="Account\VisaAccountTest.cs" />
     <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetBucketToDtoMapperTest.cs" />
     <Compile Include="Budget\BudgetCollectionTest.cs" />
     <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
     <Compile Include="Budget\BudgetItemTest.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
     <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\BudgetModelFake.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />

@@ -36,8 +36,9 @@ namespace BudgetAnalyser.Engine.Budget
         ///     Initializes a new instance of the <see cref="FixedBudgetProjectBucket" /> class.
         ///     Used only for persistence.
         /// </summary>
-        internal FixedBudgetProjectBucket()
+        internal FixedBudgetProjectBucket(decimal fixedBudgetAmount)
         {
+            FixedBudgetAmount = fixedBudgetAmount;
         }
 
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local

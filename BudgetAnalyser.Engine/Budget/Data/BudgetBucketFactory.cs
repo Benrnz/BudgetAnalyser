@@ -6,9 +6,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class BudgetBucketFactory : IBudgetBucketFactory
     {
-        public BudgetBucket Build(BucketDtoType type)
+        public BudgetBucket Build(BudgetBucketDto dto)
         {
-            switch (type)
+            switch (dto.Type)
             {
                 case BucketDtoType.Income:
                     return new IncomeBudgetBucket();
@@ -23,9 +23,9 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 case BucketDtoType.SpentMonthlyExpense:
                     return new SpentMonthlyExpenseBucket();
                 case BucketDtoType.FixedBudgetProject:
-                    return new FixedBudgetProjectBucket();
+                    return new FixedBudgetProjectBucket(((FixedBudgetBucketDto) dto).FixedBudgetAmount);
                 default:
-                    throw new NotSupportedException("Unsupported Bucket type detected: " + type);
+                    throw new NotSupportedException("Unsupported Bucket type detected: " + dto);
             }
         }
 

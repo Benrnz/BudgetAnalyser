@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
         // ReSharper disable once RedundantAssignment
         partial void ModelFactory(BudgetBucketDto dto, ref BudgetBucket model)
         {
-            model = this.bucketFactory.Build(dto.Type);
+            model = this.bucketFactory.Build(dto);
         }
 
         partial void ToDtoPostprocessing(ref BudgetBucketDto dto, BudgetBucket model)

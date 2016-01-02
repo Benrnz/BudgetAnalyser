@@ -20,38 +20,58 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public void BuildShouldCreateFixedBudgetProject()
         {
-            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.FixedBudgetProject), typeof(FixedBudgetProjectBucket));
+            Assert.IsInstanceOfType(
+                Subject.Build(
+                    new FixedBudgetBucketDto
+                    {
+                        Type = BucketDtoType.FixedBudgetProject
+                    }),
+                typeof(FixedBudgetProjectBucket));
         }
 
         [TestMethod]
         public void BuildShouldCreateIncomeBucket()
         {
-            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.Income), typeof(IncomeBudgetBucket));
+            Assert.IsInstanceOfType(
+                Subject.Build(
+                    new BudgetBucketDto
+                    {
+                        Type = BucketDtoType.Income
+                    }),
+                typeof(IncomeBudgetBucket));
         }
 
         [TestMethod]
         public void BuildShouldCreateSavedUpForExpenseBucket()
         {
-            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.SavedUpForExpense), typeof(SavedUpForExpenseBucket));
+            Assert.IsInstanceOfType(
+                Subject.Build(
+                    new BudgetBucketDto {Type = BucketDtoType.SavedUpForExpense}),
+                typeof(SavedUpForExpenseBucket));
         }
 
         [TestMethod]
         public void BuildShouldCreateSavingsCommittmentBucket()
         {
-            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.SavingsCommitment), typeof(SavingsCommitmentBucket));
+            Assert.IsInstanceOfType(
+                Subject.Build(
+                    new BudgetBucketDto { Type = BucketDtoType.SavingsCommitment }), 
+                typeof(SavingsCommitmentBucket));
         }
 
         [TestMethod]
         public void BuildShouldCreateSpentMonthlyBucket()
         {
-            Assert.IsInstanceOfType(Subject.Build(BucketDtoType.SpentMonthlyExpense), typeof(SpentMonthlyExpenseBucket));
+            Assert.IsInstanceOfType(
+                Subject.Build(new BudgetBucketDto { Type = BucketDtoType.SpentMonthlyExpense }), 
+                typeof(SpentMonthlyExpenseBucket));
         }
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
         public void BuildShouldThrowGivenPayCreditCard()
         {
-            Subject.Build(BucketDtoType.PayCreditCard);
+            Subject.Build(new BudgetBucketDto { Type = BucketDtoType.PayCreditCard });
             Assert.Fail();
         }
 
@@ -59,7 +79,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(NotSupportedException))]
         public void BuildShouldThrowGivenSurplus()
         {
-            Subject.Build(BucketDtoType.Surplus);
+            Subject.Build(new BudgetBucketDto { Type = BucketDtoType.Surplus});
             Assert.Fail();
         }
 
