@@ -67,6 +67,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Scenario10_InternalAutoSetters.cs" />
     <Compile Include="T4Example.generated.cs">
       <DependentUpon>T4Example.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -87,9 +88,11 @@
     <Compile Include="Scenario3_PropertiesWithBackingFields.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\DtoType10.cs" />
     <Compile Include="TestData\DtoType9.cs" />
     <Compile Include="TestData\DtoType6.cs" />
     <Compile Include="TestData\DtoType8.cs" />
+    <Compile Include="TestData\ModelType10_InternalSet.cs" />
     <Compile Include="TestData\ModelType9_InternalConstructor.cs" />
     <Compile Include="TestData\ModelType6_3DeepObjectGraph.cs" />
     <Compile Include="TestData\ModelType8_ComplexCollection.cs" />

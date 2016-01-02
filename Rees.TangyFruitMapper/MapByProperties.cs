@@ -95,7 +95,7 @@ namespace Rees.TangyFruitMapper
 
         private AssignDestinationStrategy CanDestinationBeAssignedUsingReflection(PropertyInfo modelProperty, Type destinationType)
         {
-            if (modelProperty.CanWrite && modelProperty.SetMethod.IsPrivate)
+            if (modelProperty.CanWrite && !modelProperty.SetMethod.IsPublic)
             {
                 return new PrivatePropertyAssignment(modelProperty.Name, modelProperty.PropertyType);
             }
