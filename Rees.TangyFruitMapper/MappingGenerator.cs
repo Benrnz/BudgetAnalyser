@@ -162,7 +162,7 @@ namespace {Namespace}
 {Indent()}public virtual {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
 {Indent()}{{
 {Indent(true)}ToDtoPreprocessing({AssignmentStrategy.ModelVariableName});
-{Indent()}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName};
+{Indent()}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName} = null;
 {Indent()}DtoFactory(ref {AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});
 {Indent()}if ({AssignmentStrategy.DtoVariableName} == null) 
 {Indent()}{{
