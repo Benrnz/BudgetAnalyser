@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             modelType.GetProperty("BankBalances").SetValue(model, bankBalances19);
             var date20 = dto.Date;
             modelType.GetProperty("Date").SetValue(model, date20);
-            var mapper7 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory);
+            var mapper7 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
             var entries21 = dto.Entries.Select(mapper7.ToModel).ToList();
             modelType.GetProperty("Entries").SetValue(model, entries21);
             var remarks22 = dto.Remarks;
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             dto.BankBalances = bankBalances25;
             var date26 = model.Date;
             dto.Date = date26;
-            var mapper10 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory);
+            var mapper10 = new Mapper_LedgerEntryDto_LedgerEntry(this.bucketFactory, this.transactionFactory, this.accountTypeRepo);
             var entries27 = model.Entries.Select(mapper10.ToDto).ToList();
             dto.Entries = entries27;
             var remarks28 = model.Remarks;
@@ -317,7 +317,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             }
             var balance49 = model.Balance;
             dto.Balance = balance49;
-            var mapper11 = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory);
+            var mapper11 = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
             var transactions52 = model.Transactions.Select(mapper11.ToDto).ToList();
             dto.Transactions = transactions52;
             ToDtoPostprocessing(ref dto, model);

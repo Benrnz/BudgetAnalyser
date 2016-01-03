@@ -128,13 +128,16 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     {
         private readonly ILedgerBucketFactory bucketFactory;
         private readonly ILedgerTransactionFactory transactionFactory;
+        private readonly IAccountTypeRepository accountTypeRepo;
 
-        public Mapper_LedgerEntryDto_LedgerEntry([NotNull] ILedgerBucketFactory bucketFactory, [NotNull] ILedgerTransactionFactory transactionFactory)
+        public Mapper_LedgerEntryDto_LedgerEntry([NotNull] ILedgerBucketFactory bucketFactory, [NotNull] ILedgerTransactionFactory transactionFactory, [NotNull] IAccountTypeRepository accountTypeRepo)
         {
             if (bucketFactory == null) throw new ArgumentNullException(nameof(bucketFactory));
             if (transactionFactory == null) throw new ArgumentNullException(nameof(transactionFactory));
+            if (accountTypeRepo == null) throw new ArgumentNullException(nameof(accountTypeRepo));
             this.bucketFactory = bucketFactory;
             this.transactionFactory = transactionFactory;
+            this.accountTypeRepo = accountTypeRepo;
         }
 
         partial void ToModelPostprocessing(LedgerEntryDto dto, ref LedgerEntry model)
@@ -152,16 +155,35 @@ namespace BudgetAnalyser.Engine.Ledger.Data
     internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
     {
         private readonly ILedgerTransactionFactory transactionFactory;
+        private readonly IAccountTypeRepository accountTypeRepo;
 
-        public Mapper_LedgerTransactionDto_LedgerTransaction([NotNull] ILedgerTransactionFactory transactionFactory)
+        public Mapper_LedgerTransactionDto_LedgerTransaction([NotNull] ILedgerTransactionFactory transactionFactory, [NotNull] IAccountTypeRepository accountTypeRepo)
         {
             if (transactionFactory == null) throw new ArgumentNullException(nameof(transactionFactory));
+            if (accountTypeRepo == null) throw new ArgumentNullException(nameof(accountTypeRepo));
             this.transactionFactory = transactionFactory;
+            this.accountTypeRepo = accountTypeRepo;
         }
 
         partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, LedgerTransaction model)
         {
             dto.TransactionType = model.GetType().FullName;
+            // Inheritance could be better handled.
+            var bankBalanceTransaction = model as BankBalanceAdjustmentTransaction;
+            if (bankBalanceTransaction != null)
+            {
+                dto.Account = bankBalanceTransaction.BankAccount.Name;
+            }
+        }
+
+        partial void ToModelPostprocessing(LedgerTransactionDto dto, ref LedgerTransaction model)
+        {
+            // Inheritance could be better handled.
+            var balanaceTransaction = model as BankBalanceAdjustmentTransaction;
+            if (balanaceTransaction != null)
+            {
+                balanaceTransaction.BankAccount = this.accountTypeRepo.GetByKey(dto.Account);
+            }
         }
 
         // ReSharper disable once RedundantAssignment
