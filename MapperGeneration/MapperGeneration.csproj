@@ -73,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BudgetCollectionMappers.tt</DependentUpon>
     </Compile>
+    <Compile Include="LedgerBookMapperGenerator.cs" />
     <Compile Include="MatchingMapperGenerator.cs" />
     <Compile Include="StatementMapperGenerator.cs" />
     <Compile Include="BudgetMapperGenerator.cs" />

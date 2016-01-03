@@ -20,6 +20,11 @@ namespace BudgetAnalyser.Engine.Ledger
         private List<LedgerBucket> ledgersColumns = new List<LedgerBucket>();
         private List<LedgerEntryLine> reconciliations;
 
+        internal LedgerBook() : this(new ReconciliationBuilder(new NullLogger()))
+        {
+            throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
+        }
+
         /// <summary>
         ///     Constructs a new instance of the <see cref="LedgerBook" /> class.  The Persistence system calls this constructor,
         ///     not the IoC system.

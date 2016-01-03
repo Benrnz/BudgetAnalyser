@@ -38,6 +38,11 @@ namespace BudgetAnalyser.Engine.Statement
         private IEnumerable<IGrouping<int, Transaction>> duplicates;
         private int fullDuration;
 
+        internal StatementModel()
+        {
+            throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
+        }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="StatementModel" /> class.
         /// </summary>

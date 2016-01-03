@@ -118,6 +118,7 @@
     <Compile Include="Helper\EmbeddedResourceHelper.cs" />
     <Compile Include="Helper\LedgerBookHelper.cs" />
     <Compile Include="Helper\StatementModelHelper.cs" />
+    <Compile Include="Ledger\BankBalanceToDtoMapperTest.cs" />
     <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />
     <Compile Include="Ledger\LedgerBookDtoTest.cs" />
     <Compile Include="Ledger\LedgerBook_DataTest.cs" />

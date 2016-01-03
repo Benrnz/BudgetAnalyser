@@ -120,6 +120,8 @@
     <Compile Include="Ledger\Data\ILedgerBucketFactory.cs" />
     <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerBookDto.cs" />
+    <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
+    <Compile Include="Ledger\Data\LedgerBookToDtoMapper.generated.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
     <Compile Include="Ledger\Data\LedgerBucketFactory.cs" />
     <Compile Include="Ledger\Data\LedgerEntryDto.cs" />

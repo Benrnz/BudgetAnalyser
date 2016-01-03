@@ -28,6 +28,11 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
+        internal MatchingRule()
+        {
+            throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
+        }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MatchingRule" /> class.
         /// </summary>
