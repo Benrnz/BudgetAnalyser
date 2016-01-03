@@ -1,12 +1,11 @@
 ﻿using System;
-using AutoMapper;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class LedgerTransactionToDtoMapperTest
@@ -78,7 +77,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerTransactionDto>(TestData);
+            var subject = new Mapper_LedgerTransactionDto_LedgerTransaction(new LedgerTransactionFactory());
+            Result = subject.ToDto(TestData);
         }
     }
 }

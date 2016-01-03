@@ -127,6 +127,7 @@
     <Compile Include="Ledger\LedgerBucketTest.cs" />
     <Compile Include="Ledger\LedgerCalculationTest.cs" />
     <Compile Include="Ledger\LedgerEntryLineTest.cs" />
+    <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
     <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
     <Compile Include="Ledger\SavedUpForLedgerReconciliationBehaviourTest.cs" />
     <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
