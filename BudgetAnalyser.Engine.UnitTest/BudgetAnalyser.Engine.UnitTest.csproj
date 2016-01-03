@@ -202,7 +202,10 @@
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidgetTest.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
+    <Compile Include="Widgets\RemainingActualSurplusWidgetTest.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidgetTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
