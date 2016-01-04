@@ -131,17 +131,23 @@ namespace {Namespace}
 
         private void WriteMethods(MapResult map)
         {
-            this.codeOutput(
-                $@"{Indent()}public virtual {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
-{Indent()}{{
-{Indent(true)}ToModelPreprocessing({AssignmentStrategy.DtoVariableName});
-{Indent()}{map.ModelType.Name} {AssignmentStrategy.ModelVariableName} = null;
+            // ToModel Method
+            this.codeOutput($@"{Indent()}public virtual {map.ModelType.Name} ToModel({map.DtoType.Name} {AssignmentStrategy.DtoVariableName})
+{Indent()}{{");
+
+            // Construct Model
+            this.codeOutput($@"{Indent(true)}{map.ModelType.Name} {AssignmentStrategy.ModelVariableName} = null;
 {Indent()}ModelFactory({AssignmentStrategy.DtoVariableName}, ref {AssignmentStrategy.ModelVariableName});
 {Indent()}if ({AssignmentStrategy.ModelVariableName} == null) 
 {Indent()}{{
 {Indent(true)}{map.ModelConstructor.CreateCodeLine(DtoOrModel.Model)}
 {Outdent()}}}
 {Indent()}var {AssignmentStrategy.ModelTypeVariableName} = {AssignmentStrategy.ModelVariableName}.GetType();");
+
+            // Optional Pre-processing
+            this.codeOutput($"{Indent()}ToModelPreprocessing({AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});");
+
+            // Assign properties by convention if possible
             foreach (var assignment in map.ModelToDtoMap.Values)
             {
                 // model.Property = dto.Property;
@@ -152,33 +158,43 @@ namespace {Namespace}
             {
                 this.codeOutput($"{Indent()} // TODO No properties found to map.");
             }
+
+            // Optional Post-processing
             this.codeOutput($@"{Indent()}ToModelPostprocessing({AssignmentStrategy.DtoVariableName}, ref {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.ModelVariableName};
 {Outdent()}}} // End ToModel Method");
 
 
-            this.codeOutput(
-                $@"
-{Indent()}public virtual {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
-{Indent()}{{
-{Indent(true)}ToDtoPreprocessing({AssignmentStrategy.ModelVariableName});
-{Indent()}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName} = null;
+            // ToDto Method
+            this.codeOutput($@"{Indent()}public virtual {map.DtoType.Name} ToDto({map.ModelType.Name} {AssignmentStrategy.ModelVariableName})
+{Indent()}{{");
+
+            // Construct Dto
+            this.codeOutput($@"{Indent(true)}{map.DtoType.Name} {AssignmentStrategy.DtoVariableName} = null;
 {Indent()}DtoFactory(ref {AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});
 {Indent()}if ({AssignmentStrategy.DtoVariableName} == null) 
 {Indent()}{{
 {Indent(true)}{AssignmentStrategy.DtoVariableName} = new {map.DtoType.Name}();
 {Outdent()}}}");
+
+            // Optional Pre-processing
+            this.codeOutput($@"{Indent()}ToDtoPreprocessing({AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});");
+
+            // Assign properties by convention if possible
             foreach (var assignment in map.DtoToModelMap.Values)
             {
                 this.codeOutput($"{Indent()}{assignment.Source.CreateCodeLine(DtoOrModel.Model)}");
                 this.codeOutput($"{Indent()}{assignment.Destination.CreateCodeLine(DtoOrModel.Dto, assignment.Source.SourceVariableName)}");
             }
+
+            // Optional Post-processing
             this.codeOutput($@"{Indent()}ToDtoPostprocessing(ref {AssignmentStrategy.DtoVariableName}, {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}return {AssignmentStrategy.DtoVariableName};
 {Outdent()}}} // End ToDto Method");
 
-            this.codeOutput($@"{Indent()}partial void ToModelPreprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName});");
-            this.codeOutput($@"{Indent()}partial void ToDtoPreprocessing({map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            // Partial Methods
+            this.codeOutput($@"{Indent()}partial void ToModelPreprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
+            this.codeOutput($@"{Indent()}partial void ToDtoPreprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void ModelFactory({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void DtoFactory(ref {map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
             this.codeOutput($@"{Indent()}partial void ToModelPostprocessing({map.DtoType.Name} {AssignmentStrategy.DtoVariableName}, ref {map.ModelType.Name} {AssignmentStrategy.ModelVariableName});");
