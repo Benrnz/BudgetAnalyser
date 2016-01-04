@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Ledger;
+﻿using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,8 +27,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            //TODO
-            //Result = Mapper.Map<BankBalanceDto>(TestData);
+            var subject = new Mapper_BankBalanceDto_BankBalance(new InMemoryAccountTypeRepository());
+            Result = subject.ToDto(TestData);
         }
     }
 }

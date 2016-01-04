@@ -74,6 +74,17 @@ namespace BudgetAnalyser.Engine.Ledger
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
         /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
+        }
+
+        /// <summary>
         ///     Used for persistence only.  Don't use during Reconciliation.
         /// </summary>
         /// <param name="newTransaction"></param>
@@ -94,6 +105,11 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        internal void Lock()
+        {
+            this.isNew = false;
+        }
+
         internal void RemoveTransaction(Guid transactionId)
         {
             if (!this.isNew)
@@ -102,7 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
+            LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.transactions.Remove(txn);
@@ -124,7 +140,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     date.
         /// </param>
         internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions,
-            DateTime reconciliationDate)
+                                                       DateTime reconciliationDate)
         {
             if (this.transactions.Any())
             {
@@ -135,17 +151,6 @@ namespace BudgetAnalyser.Engine.Ledger
             LedgerBucket.ReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
             Balance += NetAmount;
-        }
-
-        /// <summary>
-        ///     Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        ///     A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.CurrentCulture, "Ledger Entry - {0}", LedgerBucket);
         }
 
         internal void Unlock()

@@ -1,10 +1,13 @@
 ﻿using System.Linq;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class LedgerBookToDtoMapperTest
@@ -197,8 +200,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerBookDto ArrangeAndAct()
         {
-            var mapper = new LedgerBookToDtoMapper();
-            return mapper.Map(TestData);
+            var bucketRepo = new BucketBucketRepoAlwaysFind();
+            var accountRepo = new InMemoryAccountTypeRepository();
+            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            return mapper.ToDto(TestData);
         }
     }
 }

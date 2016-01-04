@@ -26,7 +26,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 model = (LedgerBook)constructor.Invoke(new Type[] { });
             }
             var modelType = model.GetType();
-            var mapper1 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo);
+            var mapper1 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
             var ledgers1 = dto.Ledgers.Select(mapper1.ToModel).ToList();
             modelType.GetProperty("Ledgers").SetValue(model, ledgers1);
             var modified2 = dto.Modified;
@@ -51,7 +51,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 dto = new LedgerBookDto();
             }
-            var mapper3 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo);
+            var mapper3 = new Mapper_LedgerBucketDto_LedgerBucket(this.bucketRepo, this.accountTypeRepo, this.bucketFactory);
             var ledgers7 = model.Ledgers.Select(mapper3.ToDto).ToList();
             dto.Ledgers = ledgers7;
             var modified8 = model.Modified;
@@ -254,10 +254,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 // model = new BankBalance(); 
             }
             var modelType = model.GetType();
-            var account42 = dto.Account;
-            modelType.GetProperty("Account").SetValue(model, account42);
-            var balance43 = dto.Balance;
-            modelType.GetProperty("Balance").SetValue(model, balance43);
             ToModelPostprocessing(dto, ref model);
             return model;
         } // End ToModel Method
@@ -290,7 +286,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public virtual LedgerEntry ToModel(LedgerEntryDto dto)
         {
-            ToModelPreprocessing(dto);
             LedgerEntry model = null;
             ModelFactory(dto, ref model);
             if (model == null)
@@ -300,6 +295,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 model = (LedgerEntry)constructor.Invoke(new Type[] { });
             }
             var modelType = model.GetType();
+            ToModelPreprocessing(dto, model);
             var balance47 = dto.Balance;
             modelType.GetProperty("Balance").SetValue(model, balance47);
             ToModelPostprocessing(dto, ref model);
@@ -323,7 +319,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method
-        partial void ToModelPreprocessing(LedgerEntryDto dto);
+        partial void ToModelPreprocessing(LedgerEntryDto dto, LedgerEntry model);
         partial void ToDtoPreprocessing(LedgerEntry model);
         partial void ModelFactory(LedgerEntryDto dto, ref LedgerEntry model);
         partial void DtoFactory(ref LedgerEntryDto dto, LedgerEntry model);

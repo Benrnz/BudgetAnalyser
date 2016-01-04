@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class DtoToLedgerBookMapperTest
@@ -24,12 +24,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = "Foobar";
                 ArrangeAndAct();
             }
-            catch (AutoMapperMappingException ex)
+            catch (DataFormatException)
             {
-                if (ex.InnerException is DataFormatException)
-                {
-                    return;
-                }
+                return;
             }
 
             Assert.Fail();
@@ -43,12 +40,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 TestData.Reconciliations.First().Entries.Last().Transactions.First().TransactionType = null;
                 ArrangeAndAct();
             }
-            catch (AutoMapperMappingException ex)
+            catch (ArgumentNullException)
             {
-                if (ex.InnerException is ArgumentNullException)
-                {
                     return;
-                }
             }
 
             Assert.Fail();
@@ -235,8 +229,10 @@ namespace BudgetAnalyser.UnitTest.Ledger
 
         private LedgerBook ArrangeAndAct()
         {
-            var mapper = new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository());
-            return mapper.Map(TestData);
+            var bucketRepo = new BucketBucketRepoAlwaysFind();
+            var accountRepo = new InMemoryAccountTypeRepository();
+            var mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
+            return mapper.ToModel(TestData);
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
-using AutoMapper;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class DtoToLedgerTransactionMapperTest
@@ -37,7 +37,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
                 Account = StatementModelTestData.ChequeAccount.Name,
                 TransactionType = typeof(BankBalanceAdjustmentTransaction).FullName
             };
-            Result = Mapper.Map<BankBalanceAdjustmentTransaction>(TestData);
+            var subject = new Mapper_LedgerTransactionDto_LedgerTransaction(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository());
+            Result = subject.ToModel(TestData);
 
             Assert.AreEqual(StatementModelTestData.ChequeAccount.Name, ((BankBalanceAdjustmentTransaction)Result).BankAccount.Name);
         }
@@ -69,7 +70,8 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerTransaction>(TestData);
+            var subject = new Mapper_LedgerTransactionDto_LedgerTransaction(new LedgerTransactionFactory(), new InMemoryAccountTypeRepository());
+            Result = subject.ToModel(TestData);
         }
     }
 }

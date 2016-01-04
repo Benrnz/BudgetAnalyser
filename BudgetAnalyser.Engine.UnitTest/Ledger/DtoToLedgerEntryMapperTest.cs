@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class DtoToLedgerEntryMapperTest
@@ -89,7 +90,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerEntry>(TestData);
+            var accountRepo = new InMemoryAccountTypeRepository();
+            var subject = new Mapper_LedgerEntryDto_LedgerEntry(new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory(), accountRepo);
+            Result = subject.ToModel(TestData);
 
             LedgerBook book = LedgerBookTestData.TestData2();
             Control = book.Reconciliations.First(l => l.Date == new DateTime(2013, 08, 15)).Entries.First(e => e.LedgerBucket.BudgetBucket.Code == TestDataConstants.PowerBucketCode);

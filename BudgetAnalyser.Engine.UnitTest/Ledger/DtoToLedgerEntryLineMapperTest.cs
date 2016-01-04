@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
+using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Ledger
+namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class DtoToLedgerEntryLineMapperTest
@@ -85,7 +86,9 @@ namespace BudgetAnalyser.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
-            Result = Mapper.Map<LedgerEntryLine>(TestData);
+            var accountRepo = new InMemoryAccountTypeRepository();
+            var subject = new Mapper_LedgerEntryLineDto_LedgerEntryLine(accountRepo, new LedgerBucketFactory(new BucketBucketRepoAlwaysFind(), accountRepo), new LedgerTransactionFactory());
+            Result = subject.ToModel(TestData);
         }
     }
 }
