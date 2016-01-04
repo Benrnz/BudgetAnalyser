@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.UnitTest.Helper;
@@ -12,9 +11,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     public class XamlOnDiskLedgerBookRepositoryTestHarness : XamlOnDiskLedgerBookRepository
     {
         public XamlOnDiskLedgerBookRepositoryTestHarness(
-            [NotNull] BasicMapper<LedgerBookDto, LedgerBook> dataToDomainMapper,
-            [NotNull] BasicMapper<LedgerBook, LedgerBookDto> domainToDataMapper
-            ) : base(dataToDomainMapper, domainToDataMapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())))
+            [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper) : base(mapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())))
         {
             LoadXamlFromDiskFromEmbeddedResources = true;
         }

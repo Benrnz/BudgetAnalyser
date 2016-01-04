@@ -10,13 +10,16 @@ using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
     [TestClass]
     public class LedgerBookRepositoryTest
     {
-        private const string LoadFileName = @"BudgetAnalyser.UnitTest.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
+        private const string LoadFileName = @"BudgetAnalyser.Engine.UnitTest.TestData.LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml";
+
+        private IDtoMapper<LedgerBookDto, LedgerBook> mapper;
 
         [TestMethod]
         public async Task DemoBookFileChecksumShouldNotChangeWhenLoadAndSave()
@@ -47,7 +50,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             string serialisedData = string.Empty;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(this.mapper);
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
                 await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo.xml");
             }
@@ -183,7 +186,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             string serialisedData = string.Empty;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(this.mapper);
                 subject.WriteToDiskOverride = (f, d) => serialisedData = d;
                 await subject.SaveAsync(LedgerBookTestData.TestData2(), "Foo2.xml");
             }
@@ -193,7 +196,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
 
             LedgerBookDto bookDto;
             {
-                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository()), new BasicMapperFake<LedgerBook, LedgerBookDto>());
+                var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(this.mapper);
                 subject.FileExistsOverride = f => true;
                 subject.LoadXamlAsStringOverride = f => serialisedData;
                 subject.LoadXamlFromDiskFromEmbeddedResources = false;
@@ -211,7 +214,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         public async Task SerialiseTestData2ToEnsureItMatches_Load_ShouldLoadTheXmlFile_xml()
         {
-            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(new BasicMapperFake<LedgerBookDto, LedgerBook>(), new LedgerBookToDtoMapper());
+            var subject = new XamlOnDiskLedgerBookRepositoryTestHarness(this.mapper);
             string serialisedData = string.Empty;
             subject.WriteToDiskOverride = (f, d) => serialisedData = d;
             await subject.SaveAsync(LedgerBookTestData.TestData2(), "Leonard Nimoy.xml");
@@ -224,11 +227,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestInitialize]
         public void TestInitialise()
         {
+            var accountRepo = new InMemoryAccountTypeRepository();
+            var bucketRepo = new BucketBucketRepoAlwaysFind();
+            this.mapper = new Mapper_LedgerBookDto_LedgerBook(bucketRepo, accountRepo, new LedgerBucketFactory(bucketRepo, accountRepo), new LedgerTransactionFactory(), new Mock<IReconciliationBuilder>().Object);
         }
 
         private XamlOnDiskLedgerBookRepositoryTestHarness ArrangeAndAct()
         {
-            return new XamlOnDiskLedgerBookRepositoryTestHarness(new DtoToLedgerBookMapper(new InMemoryAccountTypeRepository()), new LedgerBookToDtoMapper());
+            return new XamlOnDiskLedgerBookRepositoryTestHarness(this.mapper);
         }
     }
 }
