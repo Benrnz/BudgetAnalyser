@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDataType.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
+    <Compile Include="AutoRegisterWithIoCProcessor.cs" />
     <Compile Include="BankAccount\Account.cs" />
     <Compile Include="BankAccount\AccountType.cs" />
     <Compile Include="BankAccount\AccountTypeRepositoryConstants.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="DependencyRegistrationRequirement.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICloneable.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
+    <Compile Include="PropertyInjectionDependencyRequirement.cs" />
     <Compile Include="ReferenceNumberGenerator.cs" />
     <Compile Include="Reports\BucketPerformanceResult.cs" />
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />
