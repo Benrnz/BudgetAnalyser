@@ -97,7 +97,7 @@
           "lib/net45/_._": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -768,7 +768,7 @@
           "lib/net45/_._": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -1463,7 +1463,7 @@
           "lib/net45/_._": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -2206,7 +2206,7 @@
           "lib/dotnet/Microsoft.VisualBasic.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -3045,7 +3045,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -4190,7 +4190,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -5379,7 +5379,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -6545,7 +6545,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -7734,7 +7734,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -8900,7 +8900,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -10089,7 +10089,7 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.6.1": {
+      "Portable.Xaml/0.7.0": {
         "compile": {
           "lib/dotnet/Portable.Xaml.dll": {}
         },
@@ -11703,8 +11703,8 @@
         "ref/xamarinmac20/_._"
       ]
     },
-    "Portable.Xaml/0.6.1": {
-      "sha512": "Vwkvy7My9pMNy/aTStLjuBgXmskheuYQIFFKHRIUOkAhIatEFVpJvrdoFBQ9C+UK6XqXy+I0rXupOn4PQAxeyw==",
+    "Portable.Xaml/0.7.0": {
+      "sha512": "77TeMdtRozP0jVsfu7Bk0UbMbkQx7+yCDcJUm6nz5LRA9CDro6m7JP+E0NlNlPuouEafPc08u33ZMShxdjCoqA==",
       "type": "Package",
       "files": [
         "[Content_Types].xml",
@@ -11714,7 +11714,7 @@
         "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
         "lib/Xamarin.Mac/Portable.Xaml.dll",
         "LICENSE.txt",
-        "package/services/metadata/core-properties/7d85099798444a30b3c4f3817fc5172f.psmdcp",
+        "package/services/metadata/core-properties/1f4f464baa344d8aa3a5b88ca4b966c8.psmdcp",
         "Portable.Xaml.nuspec"
       ]
     },
@@ -13760,8 +13760,9 @@
       "JetBrains.Annotations >= 10.0.0",
       "Microsoft.NETCore >= 5.0.0",
       "Microsoft.NETCore.Portable.Compatibility >= 1.0.0",
-      "Portable.Xaml >= 0.6.1",
-      "System.Reflection.TypeExtensions >= 4.0.0"
+      "Portable.Xaml >= 0.7.0",
+      "System.Reflection.TypeExtensions >= 4.0.0",
+      "System.Runtime >= 4.0.20"
     ],
     ".NETPlatform,Version=v5.0": []
   }
