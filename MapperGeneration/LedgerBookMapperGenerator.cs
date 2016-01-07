@@ -1,4 +1,5 @@
-﻿using BudgetAnalyser.Engine.Ledger;
+﻿using System.Collections.Generic;
+using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,9 +14,15 @@ namespace MapperGeneration
         }
 
         [Fact]
-        public void GenerateStatementModelToDto()
+        public void GenerateLedgerBookToDto()
         {
             Act<LedgerBookDto, LedgerBook>(NameSpace);
+        }
+
+        [Fact]
+        public void GenerateToDoTaskToDto()
+        {
+            Act<ToDoTaskDto, ToDoTask>(NameSpace);
         }
     }
 }

@@ -6,6 +6,12 @@ namespace BudgetAnalyser.Engine.Ledger
     public class ToDoTask
     {
         /// <summary>
+        /// Used only for persistence. If you're consuming this outside a Mapper, you're using this constructor incorrectly.
+        /// </summary>
+        internal ToDoTask()
+        {
+        }
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ToDoTask" /> class.
         /// </summary>
         public ToDoTask(string description, bool systemGenerated = false, bool canDelete = true)

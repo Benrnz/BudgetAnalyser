@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the budget collection storage key.
         ///     This is used to locate and load the <see cref="BudgetCollection" />.
         /// </summary>
-        public string BudgetCollectionStorageKey { get; [UsedImplicitly] private set; }
+        public string BudgetCollectionStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the name of the main Budget Analyser Data file.
@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the ledger book storage key.
         ///     This is used to locate and load the <see cref="LedgerBook" />.
         /// </summary>
-        public string LedgerBookStorageKey { get; [UsedImplicitly] private set; }
+        public string LedgerBookStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the ledger reconciliation to do collection.
@@ -51,13 +51,13 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the matching rules collection storage key.
         ///     This is used to locate and load a list of <see cref="MatchingRule" />s.
         /// </summary>
-        public string MatchingRulesCollectionStorageKey { get; [UsedImplicitly] private set; }
+        public string MatchingRulesCollectionStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the statement model storage key.
         ///     This is used to locate and load the <see cref="StatementModel" />.
         /// </summary>
-        public string StatementModelStorageKey { get; [UsedImplicitly] private set; }
+        public string StatementModelStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the storage path that identifies this budget analyser file.

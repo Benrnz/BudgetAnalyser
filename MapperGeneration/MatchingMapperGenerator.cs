@@ -13,7 +13,7 @@ namespace MapperGeneration
         }
 
         [Fact]
-        public void GenerateStatementModelToDto()
+        public void GenerateMatchingRuleToDto()
         {
             Act<MatchingRuleDto, MatchingRule>(NameSpace);
         }

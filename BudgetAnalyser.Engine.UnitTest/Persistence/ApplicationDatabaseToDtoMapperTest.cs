@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using BudgetAnalyser.Engine.Ledger;
+﻿using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.UnitTestUtilities;
 
-namespace BudgetAnalyser.UnitTest.Persistence
+namespace BudgetAnalyser.Engine.UnitTest.Persistence
 {
     [TestClass]
     public class ApplicationDatabaseToDtoMapperTest
@@ -55,6 +54,7 @@ namespace BudgetAnalyser.UnitTest.Persistence
             PrivateAccessor.SetProperty(this.testData, "MatchingRulesCollectionStorageKey", "Rules.xml");
             PrivateAccessor.SetProperty(this.testData, "StatementModelStorageKey", "Statement.xml");
             PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
+
             this.result = Mapper.Map<BudgetAnalyserStorageRoot>(this.testData);
         }
     }
