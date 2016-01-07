@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
         [TestInitialize]
         public void TestInitialise()
         {
-            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new StorageRootToApplicationDatabaseMapper(), new ApplicationDatabaseToStorageRootMapper())
+            this.subject = new XamlOnDiskApplicationDatabaseRepositoryTestHarness(new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase())
             {
                 FileExistsOverride = fileName => true
             };

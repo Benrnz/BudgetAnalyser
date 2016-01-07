@@ -1,17 +1,15 @@
 ﻿using System;
-using BudgetAnalyser.Engine;
 using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.UnitTest.Helper;
-using JetBrains.Annotations;
+using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class XamlOnDiskApplicationDatabaseRepositoryTestHarness : XamlOnDiskApplicationDatabaseRepository
     {
         public XamlOnDiskApplicationDatabaseRepositoryTestHarness(
-            [NotNull] BasicMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> loadingMapper,
-            [NotNull] BasicMapper<ApplicationDatabase, BudgetAnalyserStorageRoot> savingMapper) : base(loadingMapper, savingMapper)
+            [NotNull] IDtoMapper<BudgetAnalyserStorageRoot, ApplicationDatabase> mapper) : base(mapper)
         {
         }
 

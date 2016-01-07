@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using AutoMapper;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BudgetAnalyser.UnitTest.Persistence
+namespace BudgetAnalyser.Engine.UnitTest.Persistence
 {
     [TestClass]
     public class DtoToApplicationDatabaseMapperTest
@@ -58,7 +57,8 @@ namespace BudgetAnalyser.UnitTest.Persistence
                 }
             };
 
-            this.result = Mapper.Map<ApplicationDatabase>(this.testData);
+            var subject = new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase();
+            this.result = subject.ToModel(this.testData);
         }
     }
 }

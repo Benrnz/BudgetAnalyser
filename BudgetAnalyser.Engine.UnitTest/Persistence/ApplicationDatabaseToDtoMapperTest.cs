@@ -55,7 +55,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Persistence
             PrivateAccessor.SetProperty(this.testData, "StatementModelStorageKey", "Statement.xml");
             PrivateAccessor.SetProperty(this.testData, "LedgerReconciliationToDoCollection", todoCollection);
 
-            this.result = Mapper.Map<BudgetAnalyserStorageRoot>(this.testData);
+            var subject = new Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase();
+            this.result = subject.ToDto(this.testData);
         }
     }
 }
