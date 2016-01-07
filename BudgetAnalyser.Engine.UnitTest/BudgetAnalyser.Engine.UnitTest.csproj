@@ -152,7 +152,6 @@
     <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
     <Compile Include="Matching\MatchMakerTest.cs" />
     <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
-    <Compile Include="MetaTest.cs" />
     <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicHolidaysTestData.cs" />
