@@ -97,14 +97,6 @@
           "lib/net45/_._": {}
         }
       },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        }
-      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Runtime": "[4.0.0, )"
@@ -766,14 +758,6 @@
         },
         "runtime": {
           "lib/net45/_._": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -1461,14 +1445,6 @@
         },
         "runtime": {
           "lib/net45/_._": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -2204,14 +2180,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.VisualBasic.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -3043,14 +3011,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -4188,14 +4148,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -5379,14 +5331,6 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        }
-      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.0, )",
@@ -6543,14 +6487,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -7734,14 +7670,6 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        }
-      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "[4.0.0, )",
@@ -8898,14 +8826,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -10087,14 +10007,6 @@
         },
         "runtime": {
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "Portable.Xaml/0.7.0": {
-        "compile": {
-          "lib/dotnet/Portable.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/Portable.Xaml.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -11701,21 +11613,6 @@
         "ref/net46/Microsoft.Win32.Primitives.dll",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._"
-      ]
-    },
-    "Portable.Xaml/0.7.0": {
-      "sha512": "77TeMdtRozP0jVsfu7Bk0UbMbkQx7+yCDcJUm6nz5LRA9CDro6m7JP+E0NlNlPuouEafPc08u33ZMShxdjCoqA==",
-      "type": "Package",
-      "files": [
-        "[Content_Types].xml",
-        "_rels/.rels",
-        "lib/dotnet/Portable.Xaml.dll",
-        "lib/portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
-        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
-        "lib/Xamarin.Mac/Portable.Xaml.dll",
-        "LICENSE.txt",
-        "package/services/metadata/core-properties/1f4f464baa344d8aa3a5b88ca4b966c8.psmdcp",
-        "Portable.Xaml.nuspec"
       ]
     },
     "System.AppContext/4.0.0": {
@@ -13760,7 +13657,6 @@
       "JetBrains.Annotations >= 10.0.0",
       "Microsoft.NETCore >= 5.0.0",
       "Microsoft.NETCore.Portable.Compatibility >= 1.0.0",
-      "Portable.Xaml >= 0.7.0",
       "System.Reflection.TypeExtensions >= 4.0.0",
       "System.Runtime >= 4.0.20"
     ],

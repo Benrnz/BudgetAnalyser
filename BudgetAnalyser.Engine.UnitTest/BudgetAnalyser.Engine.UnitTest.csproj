@@ -46,8 +46,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Portable.Xaml, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.Xaml.0.7.0\lib\dotnet\Portable.Xaml.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
@@ -217,6 +217,7 @@
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
+    <Compile Include="ThirdPartyTests\PortableXamlTest.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="Widgets\BudgetBucketMonitorWidgetTest.cs" />
     <Compile Include="Widgets\OverspentWarningTest.cs" />
