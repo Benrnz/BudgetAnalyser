@@ -36,9 +36,9 @@ namespace BudgetAnalyser.Engine.Reports
             };
             GraphData.SeriesList.Add(series);
 
-            foreach (var reconciliation in book.Reconciliations.Take(24).Reverse())
+            foreach (LedgerEntryLine reconciliation in book.Reconciliations.Take(24).Reverse())
             {
-                var entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
+                LedgerEntry entry = reconciliation.Entries.FirstOrDefault(e => e.LedgerBucket == ledger);
                 var plot = new DatedGraphPlot
                 {
                     Date = reconciliation.Date,

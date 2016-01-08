@@ -18,6 +18,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="criteria">The criteria.</param>
         /// <returns>A data result object that contains the results of the anaylsis ready for binding in the UI.</returns>
         OverallPerformanceBudgetResult BuildChart([NotNull] StatementModel statementModel,
-            [NotNull] BudgetCollection budgets, [NotNull] GlobalFilterCriteria criteria);
+                                                  [NotNull] BudgetCollection budgets, [NotNull] GlobalFilterCriteria criteria);
     }
 }

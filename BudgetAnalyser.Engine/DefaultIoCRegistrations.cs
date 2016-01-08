@@ -79,14 +79,14 @@ namespace BudgetAnalyser.Engine
                 .ToArray();
 
             return from type in allTypes
-                   let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
-                   select new DependencyRegistrationRequirement
-                   {
-                       DependencyRequired = type,
-                       IsSingleton = autoRegisterAttribute.SingleInstance,
-                       NamedInstanceName = autoRegisterAttribute.Named,
-                       AdditionalRegistrationType = autoRegisterAttribute.RegisterAs
-                   };
+                let autoRegisterAttribute = type.GetTypeInfo().GetCustomAttribute<AutoRegisterWithIoCAttribute>()
+                select new DependencyRegistrationRequirement
+                {
+                    DependencyRequired = type,
+                    IsSingleton = autoRegisterAttribute.SingleInstance,
+                    NamedInstanceName = autoRegisterAttribute.Named,
+                    AdditionalRegistrationType = autoRegisterAttribute.RegisterAs
+                };
             //IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
             //if (autoRegisterAttribute.SingleInstance)
             //{

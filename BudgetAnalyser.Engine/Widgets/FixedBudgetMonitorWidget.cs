@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public FixedBudgetMonitorWidget()
         {
             Category = WidgetGroup.ProjectsSectionName;
-            Dependencies = new[] {typeof (StatementModel), typeof (IBudgetBucketRepository)};
+            Dependencies = new[] { typeof(StatementModel), typeof(IBudgetBucketRepository) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             this.standardStyle = "WidgetStandardStyle1";
 
@@ -134,7 +134,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 remainingBudget, totalSpend);
             DetailedText = string.Format(CultureInfo.CurrentCulture, "{0} Project", bucket.SubCode);
 
-            if (remainingBudget < 0.1M*totalBudget)
+            if (remainingBudget < 0.1M * totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }

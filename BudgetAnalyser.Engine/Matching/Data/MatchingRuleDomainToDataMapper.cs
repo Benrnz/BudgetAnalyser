@@ -20,14 +20,14 @@ namespace BudgetAnalyser.Engine.Matching.Data
             model = new MatchingRule(this.bucketRepo);
         }
 
-        partial void ToModelPostprocessing(MatchingRuleDto dto, ref MatchingRule model)
-        {
-            model.BucketCode = dto.BucketCode;
-        }
-
         partial void ToDtoPostprocessing(ref MatchingRuleDto dto, MatchingRule model)
         {
             dto.BucketCode = model.Bucket.Code;
+        }
+
+        partial void ToModelPostprocessing(MatchingRuleDto dto, ref MatchingRule model)
+        {
+            model.BucketCode = dto.BucketCode;
         }
     }
 }

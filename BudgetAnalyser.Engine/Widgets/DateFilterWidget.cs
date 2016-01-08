@@ -23,29 +23,13 @@ namespace BudgetAnalyser.Engine.Widgets
         public DateFilterWidget()
         {
             Category = WidgetGroup.GlobalFilterSectionName;
-            Dependencies = new[] {typeof (GlobalFilterCriteria)};
+            Dependencies = new[] { typeof(GlobalFilterCriteria) };
             ImageResourceName = "DateFilterBeakerImage";
             ImageResourceName2 = "DateFilterCalendarImage";
             Size = WidgetSize.Medium;
             this.standardStyleName = "Brush.ModernTile.Background2";
             WidgetStyle = "ModernTileMediumStyle2";
             Clickable = true;
-        }
-
-        private void DateFilterApplied(GlobalFilterCriteria criteria)
-        {
-            ColourStyleName = this.standardStyleName;
-            DetailedText = string.Format(
-                CultureInfo.CurrentCulture,
-                "Filtered from {0} to {1}",
-                criteria.BeginDate?.Date.ToString("d"),
-                criteria.EndDate?.Date.ToString("d"));
-        }
-
-        private void NoDateFilterApplied()
-        {
-            DetailedText = "No date filter applied.";
-            ColourStyleName = WidgetWarningStyle;
         }
 
         /// <summary>
@@ -77,6 +61,22 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 NoDateFilterApplied();
             }
+        }
+
+        private void DateFilterApplied(GlobalFilterCriteria criteria)
+        {
+            ColourStyleName = this.standardStyleName;
+            DetailedText = string.Format(
+                CultureInfo.CurrentCulture,
+                "Filtered from {0} to {1}",
+                criteria.BeginDate?.Date.ToString("d"),
+                criteria.EndDate?.Date.ToString("d"));
+        }
+
+        private void NoDateFilterApplied()
+        {
+            DetailedText = "No date filter applied.";
+            ColourStyleName = WidgetWarningStyle;
         }
     }
 }

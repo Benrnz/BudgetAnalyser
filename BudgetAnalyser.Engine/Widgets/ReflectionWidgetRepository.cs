@@ -41,14 +41,14 @@ namespace BudgetAnalyser.Engine.Widgets
             MessageId = "IUserDefinedWidget")]
         public IUserDefinedWidget Create(string widgetType, string id)
         {
-            var type = Type.GetType(widgetType);
+            Type type = Type.GetType(widgetType);
             if (type == null)
             {
                 throw new NotSupportedException("The widget type specified " + widgetType +
                                                 " is not found in any known type library.");
             }
 
-            if (!typeof (IUserDefinedWidget).IsAssignableFrom(type))
+            if (!typeof(IUserDefinedWidget).IsAssignableFrom(type))
             {
                 throw new NotSupportedException("The widget type specified " + widgetType +
                                                 " is not a IUserDefinedWidget");
@@ -76,12 +76,12 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (this.cachedWidgets.None())
             {
-                var widgetTypes = GetType().GetTypeInfo().Assembly.GetExportedTypes()
-                    .Where(t => typeof (Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract)
+                List<Type> widgetTypes = GetType().GetTypeInfo().Assembly.GetExportedTypes()
+                    .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract)
                     .ToList();
 
-                foreach (var widget in widgetTypes
-                    .Where(t => !typeof (IUserDefinedWidget).IsAssignableFrom(t))
+                foreach (Widget widget in widgetTypes
+                    .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
                     .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
                 {
                     this.cachedWidgets.Add(widget.Category + widget.Name, widget);

@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
         /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
         Widget CreateNewFixedBudgetMonitorWidget([NotNull] string bucketCode, [NotNull] string description,
-            decimal fixedBudgetAmount);
+                                                 decimal fixedBudgetAmount);
 
         /// <summary>
         ///     Creates the new surprise payment monitor widget. This is a widget that shows which months require extra payments
@@ -55,7 +55,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="paymentDate">The payment date.</param>
         /// <param name="frequency">The frequency.</param>
         Widget CreateNewSurprisePaymentMonitorWidget([NotNull] string bucketCode, DateTime paymentDate,
-            WeeklyOrFortnightly frequency);
+                                                     WeeklyOrFortnightly frequency);
 
         /// <summary>
         ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).

@@ -245,15 +245,6 @@ namespace BudgetAnalyser.Engine.Matching
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        ///     Allows subclasses to set some protected and internal fields.
-        /// </summary>
-        protected void AllowSubclassAccess(string bucketCode, Guid ruleId)
-        {
-            BucketCode = bucketCode;
-            RuleId = ruleId;
-        }
-
-        /// <summary>
         ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         ///     Delegates to <see cref="Equals(MatchingRule)" />.
         /// </summary>
@@ -374,17 +365,6 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
-        ///     Called when a property has changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
         ///     Implements the operator ==. Delegates to Equals.
         /// </summary>
         public static bool operator ==(MatchingRule left, MatchingRule right)
@@ -410,6 +390,26 @@ namespace BudgetAnalyser.Engine.Matching
         {
             return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code,
                 Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
+        }
+
+        /// <summary>
+        ///     Allows subclasses to set some protected and internal fields.
+        /// </summary>
+        protected void AllowSubclassAccess(string bucketCode, Guid ruleId)
+        {
+            BucketCode = bucketCode;
+            RuleId = ruleId;
+        }
+
+        /// <summary>
+        ///     Called when a property has changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -271,12 +271,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         /// <summary>
         ///     Returns a string that represents the current object.
         /// </summary>
@@ -287,6 +281,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             return string.Format(CultureInfo.CurrentUICulture, "Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount,
                 Description, BudgetBucket.Code, Reference1, Id);
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

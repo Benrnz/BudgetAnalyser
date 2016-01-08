@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static double SafeAverage<T>(this IEnumerable<T> instance, Func<T, double> selector)
         {
-            var copy = instance.ToList();
+            List<T> copy = instance.ToList();
             if (copy.None())
             {
                 return 0;
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public static decimal SafeAverage<T>(this IEnumerable<T> instance, Func<T, decimal> selector)
         {
-            var copy = instance.ToList();
+            List<T> copy = instance.ToList();
             if (copy.None())
             {
                 return 0;

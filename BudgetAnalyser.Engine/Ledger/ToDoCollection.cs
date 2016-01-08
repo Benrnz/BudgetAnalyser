@@ -11,17 +11,6 @@ namespace BudgetAnalyser.Engine.Ledger
     public class ToDoCollection : ObservableCollection<ToDoTask>
     {
         /// <summary>
-        ///     Removes all items from the collection.
-        /// </summary>
-        protected override void ClearItems()
-        {
-            foreach (var task in this.ToArray())
-            {
-                Remove(task);
-            }
-        }
-
-        /// <summary>
         ///     Removes the specified task, only if it is allowed to be deleted by the user. Use this method primarily and in the
         ///     UI.
         /// </summary>
@@ -42,19 +31,6 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Removes the item at the specified index of the collection.
-        /// </summary>
-        /// <param name="index">The zero-based index of the element to remove.</param>
-        protected override void RemoveItem(int index)
-        {
-            var task = this[index];
-            if (task.CanDelete)
-            {
-                base.RemoveItem(index);
-            }
-        }
-
-        /// <summary>
         ///     Forced removal of a task.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -67,6 +43,30 @@ namespace BudgetAnalyser.Engine.Ledger
 
             task.CanDelete = true;
             return Remove(task);
+        }
+
+        /// <summary>
+        ///     Removes all items from the collection.
+        /// </summary>
+        protected override void ClearItems()
+        {
+            foreach (ToDoTask task in this.ToArray())
+            {
+                Remove(task);
+            }
+        }
+
+        /// <summary>
+        ///     Removes the item at the specified index of the collection.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element to remove.</param>
+        protected override void RemoveItem(int index)
+        {
+            ToDoTask task = this[index];
+            if (task.CanDelete)
+            {
+                base.RemoveItem(index);
+            }
         }
     }
 }

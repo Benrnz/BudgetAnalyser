@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public TransactionGroupedByBucket([NotNull] IEnumerable<Transaction> transactions,
-            [NotNull] BudgetBucket groupByThisBucket)
+                                          [NotNull] BudgetBucket groupByThisBucket)
         {
             if (transactions == null)
             {
@@ -147,17 +147,6 @@ namespace BudgetAnalyser.Engine.Statement
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        ///     Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
         ///     Triggers a refresh of the totals row.
         /// </summary>
         public void TriggerRefreshTotalsRow()
@@ -170,6 +159,17 @@ namespace BudgetAnalyser.Engine.Statement
             OnPropertyChanged(nameof(HasTransactions));
             OnPropertyChanged(nameof(MinTransactionDate));
             OnPropertyChanged(nameof(MaxTransactionDate));
+        }
+
+        /// <summary>
+        ///     Called when a property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

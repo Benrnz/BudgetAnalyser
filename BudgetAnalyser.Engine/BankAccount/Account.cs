@@ -65,18 +65,6 @@ namespace BudgetAnalyser.Engine.BankAccount
         }
 
         /// <summary>
-        ///     Returns true if the <see cref="Account.Name" /> is equal to the other <see cref="Account.Name" />
-        /// </summary>
-        protected bool Equals([CanBeNull] Account other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-            return string.Equals(Name, other.Name);
-        }
-
-        /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
         /// <returns>
@@ -113,6 +101,18 @@ namespace BudgetAnalyser.Engine.BankAccount
         public override string ToString()
         {
             return Name + " Account";
+        }
+
+        /// <summary>
+        ///     Returns true if the <see cref="Account.Name" /> is equal to the other <see cref="Account.Name" />
+        /// </summary>
+        protected bool Equals([CanBeNull] Account other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return string.Equals(Name, other.Name);
         }
     }
 }

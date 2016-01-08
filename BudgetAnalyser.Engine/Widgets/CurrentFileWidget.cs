@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public CurrentFileWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] {typeof (ApplicationDatabase)};
+            Dependencies = new[] { typeof(ApplicationDatabase) };
             Size = WidgetSize.Medium;
             WidgetStyle = "ModernTileMediumStyle1";
             Clickable = true;
@@ -25,28 +25,6 @@ namespace BudgetAnalyser.Engine.Widgets
             ColourStyleName = WidgetWarningStyle;
             ImageResourceName = "FolderOpenImage";
             Sequence = 20;
-        }
-
-        private static string ShortenFileName([NotNull] string fileName)
-        {
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
-
-            if (fileName.Length < 30)
-            {
-                return fileName;
-            }
-
-            var proposed = Path.GetFileName(fileName);
-            var drive = Path.GetPathRoot(fileName);
-            if (proposed.Length < 30)
-            {
-                return drive + "...\\" + proposed;
-            }
-
-            return drive + "...\\" + proposed.Substring(proposed.Length - 30);
         }
 
         /// <summary>
@@ -73,6 +51,28 @@ namespace BudgetAnalyser.Engine.Widgets
                 DetailedText = ShortenFileName(appDb.FileName);
                 ToolTip = appDb.FileName;
             }
+        }
+
+        private static string ShortenFileName([NotNull] string fileName)
+        {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            if (fileName.Length < 30)
+            {
+                return fileName;
+            }
+
+            var proposed = Path.GetFileName(fileName);
+            var drive = Path.GetPathRoot(fileName);
+            if (proposed.Length < 30)
+            {
+                return drive + "...\\" + proposed;
+            }
+
+            return drive + "...\\" + proposed.Substring(proposed.Length - 30);
         }
     }
 }

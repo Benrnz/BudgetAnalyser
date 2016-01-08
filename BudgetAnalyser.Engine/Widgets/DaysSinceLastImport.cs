@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public DaysSinceLastImport()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] {typeof (StatementModel)};
+            Dependencies = new[] { typeof(StatementModel) };
             DetailedText = "Days since last import";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.

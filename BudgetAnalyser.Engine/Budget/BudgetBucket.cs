@@ -205,17 +205,6 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
-        ///     Called when [property changed].
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
         ///     Implements the operator ==. Delegates to Equals.
         /// </summary>
         public static bool operator ==(BudgetBucket obj1, BudgetBucket obj2)
@@ -296,6 +285,17 @@ namespace BudgetAnalyser.Engine.Budget
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "[{0}] {1}", Code, Description);
+        }
+
+        /// <summary>
+        ///     Called when [property changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

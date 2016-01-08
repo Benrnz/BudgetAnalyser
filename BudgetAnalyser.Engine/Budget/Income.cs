@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Budget
 
             var retval = Bucket.Validate(validationMessages);
 
-            if (retval && Bucket.GetType() != typeof (IncomeBudgetBucket))
+            if (retval && Bucket.GetType() != typeof(IncomeBudgetBucket))
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
                     "Income {0} with amount {1:C} is invalid, you must allocate an income bucket.", Bucket.Description,

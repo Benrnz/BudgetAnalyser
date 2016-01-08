@@ -73,8 +73,8 @@ namespace BudgetAnalyser.Engine
             unchecked
             {
                 var hashCode = this.doNotUseBeginDate.GetHashCode();
-                hashCode = (hashCode*397) ^ this.doNotUseCleared.GetHashCode();
-                hashCode = (hashCode*397) ^ this.doNotUseEndDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.doNotUseCleared.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.doNotUseEndDate.GetHashCode();
                 return hashCode;
             }
         }
@@ -123,6 +123,15 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        ///     Raise the property change event.
+        /// </summary>
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private void CheckConsistency()
         {
             if (BeginDate != null && BeginDate.Value == DateTime.MinValue)
@@ -149,15 +158,6 @@ namespace BudgetAnalyser.Engine
             {
                 EndDate = BeginDate.Value.AddDays(1);
             }
-        }
-
-        /// <summary>
-        ///     Raise the property change event.
-        /// </summary>
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

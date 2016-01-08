@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var dataEntities = rules.Select(r => this.mapper.ToDto(r));
+            IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities);
         }
 

@@ -55,15 +55,15 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             Reset();
-            var minDate = CalculateStartDate(statement, criteria);
-            var maxDate = CalculateEndDate(statement, criteria);
+            DateTime minDate = CalculateStartDate(statement, criteria);
+            DateTime maxDate = CalculateEndDate(statement, criteria);
 
-            var currentMonth = minDate;
-            var nextMonth = currentMonth.AddMonths(1);
+            DateTime currentMonth = minDate;
+            DateTime nextMonth = currentMonth.AddMonths(1);
             var subTotals = new Dictionary<string, decimal>();
-            var allSeriesData = InitialiseSeriesData(minDate, maxDate);
+            List<SeriesData> allSeriesData = InitialiseSeriesData(minDate, maxDate);
 
-            foreach (var transaction in statement.AllTransactions)
+            foreach (Transaction transaction in statement.AllTransactions)
             {
                 if (transaction.Date >= nextMonth)
                 {
@@ -82,15 +82,20 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             StoreSummarisedMonthData(subTotals, allSeriesData, currentMonth);
-            Graph = new GraphData {SeriesList = allSeriesData, GraphName = "Long term spending for Budget Buckets"};
+            Graph = new GraphData { SeriesList = allSeriesData, GraphName = "Long term spending for Budget Buckets" };
             RemoveSeriesWithNoData();
+        }
+
+        public void Reset()
+        {
+            Graph = null;
         }
 
         private static DateTime CalculateEndDate(StatementModel statement, GlobalFilterCriteria criteria)
         {
             if (criteria.Cleared || criteria.EndDate == null)
             {
-                var maxDate = statement.AllTransactions.Max(t => t.Date).Date;
+                DateTime maxDate = statement.AllTransactions.Max(t => t.Date).Date;
                 return maxDate.LastDateInMonth();
             }
 
@@ -101,7 +106,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (criteria.Cleared || criteria.BeginDate == null)
             {
-                var minDate = statement.AllTransactions.Min(t => t.Date).Date;
+                DateTime minDate = statement.AllTransactions.Min(t => t.Date).Date;
                 minDate = minDate.FirstDateInMonth();
                 return minDate;
             }
@@ -123,16 +128,16 @@ namespace BudgetAnalyser.Engine.Reports
 
         private List<SeriesData> InitialiseSeriesData(DateTime minDate, DateTime maxDate)
         {
-            var allSeriesData = this.budgetBucketRepo.Buckets
-                .Select(bucket => new SeriesData {SeriesName = bucket.Code, Description = bucket.Description})
+            List<SeriesData> allSeriesData = this.budgetBucketRepo.Buckets
+                .Select(bucket => new SeriesData { SeriesName = bucket.Code, Description = bucket.Description })
                 .ToList();
 
-            var currentMonth = minDate;
+            DateTime currentMonth = minDate;
             do
             {
-                foreach (var seriesData in allSeriesData)
+                foreach (SeriesData seriesData in allSeriesData)
                 {
-                    seriesData.PlotsList.Add(new DatedGraphPlot {Date = currentMonth, Amount = 0M});
+                    seriesData.PlotsList.Add(new DatedGraphPlot { Date = currentMonth, Amount = 0M });
                 }
 
                 currentMonth = currentMonth.AddMonths(1);
@@ -143,28 +148,23 @@ namespace BudgetAnalyser.Engine.Reports
 
         private void RemoveSeriesWithNoData()
         {
-            var zeroSeries = Graph.SeriesList.Where(s => s.PlotsList.Sum(p => p.Amount) == 0).ToList();
-            foreach (var removeMe in zeroSeries)
+            List<SeriesData> zeroSeries = Graph.SeriesList.Where(s => s.PlotsList.Sum(p => p.Amount) == 0).ToList();
+            foreach (SeriesData removeMe in zeroSeries)
             {
                 Graph.SeriesList.Remove(removeMe);
             }
         }
 
-        public void Reset()
-        {
-            Graph = null;
-        }
-
         private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals,
-            List<SeriesData> allSeriesData, DateTime currentMonth)
+                                                     List<SeriesData> allSeriesData, DateTime currentMonth)
         {
             // Current month's data is complete - update totals and advance to next month
-            foreach (var subTotal in subTotals)
+            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
             {
                 // Find appropriate bucket series
-                var series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
+                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
                 // Find appropriate month on that bucket graph line
-                var monthData = series.PlotsList.Single(s => s.Date == currentMonth);
+                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
                 monthData.Amount = Math.Abs(subTotal.Value);
                 // Negate because all debits are stored as negative. Graph lines will look better as positive values.
             }

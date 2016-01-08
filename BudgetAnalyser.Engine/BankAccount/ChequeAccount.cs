@@ -34,7 +34,7 @@
         /// </value>
         public override bool IsSalaryAccount => true;
 
-        internal virtual string[] KeyWords => new[] {"CHEQUE", "CHECK"};
+        internal virtual string[] KeyWords => new[] { "CHEQUE", "CHECK" };
 
         /// <summary>
         ///     Clones this instance and give the new clone the specified name.

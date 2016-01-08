@@ -33,13 +33,13 @@ namespace BudgetAnalyser.Engine.Services
         ///     Creates a new balance adjustment transaction for the given entry line.
         /// </summary>
         LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount,
-            [NotNull] string narrative, [NotNull] Account account);
+                                                  [NotNull] string narrative, [NotNull] Account account);
 
         /// <summary>
         ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
         /// </summary>
         LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntryLine reconciliation,
-            [NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
+                                                  [NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
 
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.

@@ -54,7 +54,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative,
-            Account account)
+                                                         Account account)
         {
             if (entryLine == null)
             {
@@ -71,13 +71,13 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(account));
             }
 
-            var adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
+            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
             adjustmentTransaction.Date = entryLine.Date;
             return adjustmentTransaction;
         }
 
         public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry,
-            decimal amount, string narrative)
+                                                         decimal amount, string narrative)
         {
             if (reconciliation == null)
             {
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Services
             bool ignoreWarnings,
             params BankBalance[] balances)
         {
-            var reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
+            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
                 budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);

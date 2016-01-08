@@ -22,13 +22,13 @@ namespace BudgetAnalyser.Engine.Widgets
             Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[]
             {
-                typeof (StatementModel),
-                typeof (BudgetCollection),
-                typeof (IBudgetCurrencyContext),
-                typeof (LedgerBook),
-                typeof (IBudgetBucketRepository),
-                typeof (GlobalFilterCriteria),
-                typeof (LedgerCalculation)
+                typeof(StatementModel),
+                typeof(BudgetCollection),
+                typeof(IBudgetCurrencyContext),
+                typeof(LedgerBook),
+                typeof(IBudgetBucketRepository),
+                typeof(GlobalFilterCriteria),
+                typeof(LedgerCalculation)
             };
             RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(10);
             DetailedText = "Refresh Count";

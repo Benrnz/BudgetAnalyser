@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine.Services
         public void Close()
         {
             CreateNewBudgetCollection();
-            var handler = Closed;
+            EventHandler handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Engine.Services
                 await
                     this.budgetRepository.LoadAsync(
                         applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
-            var handler = NewDataSourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
 
             this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
@@ -173,7 +173,7 @@ namespace BudgetAnalyser.Engine.Services
             if (Budgets.Validate(messages))
             {
                 await this.budgetRepository.SaveAsync();
-                var savedHandler = Saved;
+                EventHandler savedHandler = Saved;
                 savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
         {
-            var handler = Saving;
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
             handler?.Invoke(this, args);
 
@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool ValidateModel(StringBuilder messages)
         {
-            var handler = Validating;
+            EventHandler<ValidatingEventArgs> handler = Validating;
             var args = new ValidatingEventArgs();
             handler?.Invoke(this, args);
 
@@ -238,13 +238,13 @@ namespace BudgetAnalyser.Engine.Services
         private void EnsureAllBucketsUsedAreInBucketRepo()
         {
             // Make sure all buckets are in the bucket repo.
-            var buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
+            IEnumerable<BudgetBucket> buckets = Budgets.SelectMany(b => b.Expenses.Select(e => e.Bucket))
                 .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
                 .Distinct();
 
-            foreach (var budgetBucket in buckets)
+            foreach (BudgetBucket budgetBucket in buckets)
             {
-                var copyOfBucket = budgetBucket;
+                BudgetBucket copyOfBucket = budgetBucket;
                 BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
             }
         }

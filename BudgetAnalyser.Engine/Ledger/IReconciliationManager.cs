@@ -57,6 +57,6 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     is thrown; otherwise the method returns.
         /// </summary>
         void ValidateAgainstOrphanedAutoMatchingTransactions([NotNull] LedgerBook ledgerBook,
-            [NotNull] StatementModel statement);
+                                                             [NotNull] StatementModel statement);
     }
 }

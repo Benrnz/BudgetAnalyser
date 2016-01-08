@@ -16,11 +16,11 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
         public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
-            decimal openingBalance)
+                                                     decimal openingBalance)
         {
             var netAmount = transactions.Sum(t => t.Amount);
             var closingBalance = openingBalance + netAmount;
-            var budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
+            BudgetCreditLedgerTransaction budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
 
             if (budgetTransaction == null)
             {
@@ -53,8 +53,27 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        /// <summary>
+        ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
+        ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">
+        ///     Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be
+        ///     used with an instance of Spent-Monthly-Ledger.
+        /// </exception>
+        protected override void ValidateBucketSet(BudgetBucket bucket)
+        {
+            if (bucket is SpentMonthlyExpenseBucket)
+            {
+                return;
+            }
+
+            throw new NotSupportedException(
+                "Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
+        }
+
         private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate,
-            decimal budgetAmount)
+                                                                    decimal budgetAmount)
         {
             if (closingBalance - budgetAmount == 0)
             {
@@ -69,7 +88,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance,
-            DateTime reconciliationDate, decimal openingBalance)
+                                                                      DateTime reconciliationDate, decimal openingBalance)
         {
             if (closingBalance - openingBalance == 0)
             {
@@ -84,7 +103,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate,
-            decimal budgetAmount)
+                                                                  decimal budgetAmount)
         {
             if (budgetAmount - closingBalance == 0)
             {
@@ -110,25 +129,6 @@ namespace BudgetAnalyser.Engine.Ledger
                 Date = reconciliationDate,
                 Narrative = RemoveExcessNoBudgetAmountText
             };
-        }
-
-        /// <summary>
-        ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
-        ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
-        /// </summary>
-        /// <exception cref="System.NotSupportedException">
-        ///     Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be
-        ///     used with an instance of Spent-Monthly-Ledger.
-        /// </exception>
-        protected override void ValidateBucketSet(BudgetBucket bucket)
-        {
-            if (bucket is SpentMonthlyExpenseBucket)
-            {
-                return;
-            }
-
-            throw new NotSupportedException(
-                "Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
         }
     }
 }

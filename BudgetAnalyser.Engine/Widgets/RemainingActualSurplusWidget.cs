@@ -28,14 +28,8 @@ namespace BudgetAnalyser.Engine.Widgets
             DetailedText = "Bank Surplus";
             Name = "Surplus A";
             Dependencies = new[]
-            {typeof (StatementModel), typeof (GlobalFilterCriteria), typeof (LedgerBook), typeof (LedgerCalculation)};
+            { typeof(StatementModel), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
             this.standardStyle = "WidgetStandardStyle3";
-        }
-
-        private decimal CalculateOpeningBalance()
-        {
-            var line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
-            return line?.CalculatedSurplus ?? 0;
         }
 
         /// <summary>
@@ -82,7 +76,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Maximum = Convert.ToDouble(openingBalance);
             Value = Convert.ToDouble(remainingBalance);
             Minimum = 0;
-            if (remainingBalance < 0.2M*openingBalance)
+            if (remainingBalance < 0.2M * openingBalance)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
@@ -93,6 +87,12 @@ namespace BudgetAnalyser.Engine.Widgets
 
             ToolTip = string.Format(CultureInfo.CurrentCulture, "Remaining Surplus for period is {0:C} of {1:C}",
                 remainingBalance, openingBalance);
+        }
+
+        private decimal CalculateOpeningBalance()
+        {
+            LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
+            return line?.CalculatedSurplus ?? 0;
         }
     }
 }

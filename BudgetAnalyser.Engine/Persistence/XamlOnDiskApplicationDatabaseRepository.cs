@@ -49,15 +49,15 @@ namespace BudgetAnalyser.Engine.Persistence
                 Path.GetFileNameWithoutExtension(storageKey) ?? string.Empty);
             var storageRoot = new BudgetAnalyserStorageRoot
             {
-                BudgetCollectionRootDto = new StorageBranch {Source = path + ".Budget.xml"},
-                LedgerBookRootDto = new StorageBranch {Source = path + ".LedgerBook.xml"},
+                BudgetCollectionRootDto = new StorageBranch { Source = path + ".Budget.xml" },
+                LedgerBookRootDto = new StorageBranch { Source = path + ".LedgerBook.xml" },
                 LedgerReconciliationToDoCollection = new List<ToDoTaskDto>(),
-                MatchingRulesCollectionRootDto = new StorageBranch {Source = path + ".MatchingRules.xml"},
-                StatementModelRootDto = new StorageBranch {Source = path + ".Transactions.csv"}
+                MatchingRulesCollectionRootDto = new StorageBranch { Source = path + ".MatchingRules.xml" },
+                StatementModelRootDto = new StorageBranch { Source = path + ".Transactions.csv" }
             };
             var serialised = Serialise(storageRoot);
             await WriteToDiskAsync(storageKey, serialised);
-            var appDb = this.mapper.ToModel(storageRoot);
+            ApplicationDatabase appDb = this.mapper.ToModel(storageRoot);
             appDb.FileName = storageKey;
             return appDb;
         }
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Persistence
                     ex);
             }
 
-            var db = this.mapper.ToModel(storageRoot);
+            ApplicationDatabase db = this.mapper.ToModel(storageRoot);
             db.FileName = fileName;
             if (db.LedgerReconciliationToDoCollection == null)
             {
@@ -140,13 +140,6 @@ namespace BudgetAnalyser.Engine.Persistence
             return File.ReadAllText(fileName);
         }
 
-        private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
-        {
-            object result = null;
-            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
-            return result as BudgetAnalyserStorageRoot;
-        }
-
         /// <summary>
         ///     Serialises the specified budget analyser database to a Xaml string.
         /// </summary>
@@ -169,6 +162,13 @@ namespace BudgetAnalyser.Engine.Persistence
                     await file.FlushAsync();
                 }
             }
+        }
+
+        private async Task<BudgetAnalyserStorageRoot> LoadXmlFromDiskAsync(string fileName)
+        {
+            object result = null;
+            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+            return result as BudgetAnalyserStorageRoot;
         }
     }
 }

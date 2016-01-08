@@ -21,19 +21,19 @@ namespace BudgetAnalyser.Engine.Statement.Data
             this.transactionTypeRepo = transactionTypeRepo;
         }
 
+        partial void ToDtoPostprocessing(ref TransactionDto dto, Transaction model)
+        {
+            dto.Account = model.Account.Name;
+            dto.BudgetBucketCode = model.BudgetBucket.Code;
+            dto.TransactionType = model.TransactionType.Name;
+        }
+
         partial void ToModelPostprocessing(TransactionDto dto, ref Transaction model)
         {
             // TODO do these need to be added to the repo here?
             model.Account = this.accountRepo.GetByKey(dto.Account);
             model.BudgetBucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode);
             model.TransactionType = this.transactionTypeRepo.GetOrCreateNew(dto.TransactionType);
-        }
-
-        partial void ToDtoPostprocessing(ref TransactionDto dto, Transaction model)
-        {
-            dto.Account = model.Account.Name;
-            dto.BudgetBucketCode = model.BudgetBucket.Code;
-            dto.TransactionType = model.TransactionType.Name;
         }
     }
 }

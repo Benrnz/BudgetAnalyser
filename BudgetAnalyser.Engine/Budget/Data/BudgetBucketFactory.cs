@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 dto = new FixedBudgetBucketDto
                 {
                     Created = fixedProjectBucket.Created,
-                    FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount,
+                    FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
                 };
             }
             else

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
-            decimal openingBalance)
+                                                     decimal openingBalance)
         {
             if (transactions == null)
             {
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             // This ledger can accumulate a balance but cannot be negative.
             var closingBalance = openingBalance + netAmount;
-            var budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
+            LedgerTransaction budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
             if (budgetedAmount != null && closingBalance < budgetedAmount.Amount)
             {
                 // This ledger has a monthly budgeted amount and the balance has resulted in a balance less than the monthly budgeted amount, supplement from surplus to equal budgeted amount.

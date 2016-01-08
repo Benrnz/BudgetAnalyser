@@ -38,7 +38,7 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         public BurnDownChartAnalyserResult Analyse(StatementModel statementModel, BudgetModel budgetModel,
-            IEnumerable<BudgetBucket> bucketsSubset, LedgerBook ledgerBook, DateTime beginDate)
+                                                   IEnumerable<BudgetBucket> bucketsSubset, LedgerBook ledgerBook, DateTime beginDate)
         {
             if (statementModel == null)
             {
@@ -50,27 +50,27 @@ namespace BudgetAnalyser.Engine.Reports
                 throw new ArgumentNullException(nameof(budgetModel));
             }
 
-            var bucketsCopy = bucketsSubset.ToList();
+            List<BudgetBucket> bucketsCopy = bucketsSubset.ToList();
             this.logger.LogInfo(
                 l => "BurnDownChartAnalyser.Analyse: " + string.Join(" ", bucketsCopy.Select(b => b.Code)));
 
             var result = new BurnDownChartAnalyserResult();
 
-            var datesOfTheMonth = YieldAllDaysInDateRange(beginDate);
-            var lastDate = datesOfTheMonth.Last();
+            List<DateTime> datesOfTheMonth = YieldAllDaysInDateRange(beginDate);
+            DateTime lastDate = datesOfTheMonth.Last();
 
             CreateZeroLine(datesOfTheMonth, result);
 
             var openingBalance = GetBudgetedTotal(budgetModel, ledgerBook, bucketsCopy, beginDate);
             CalculateBudgetLineValues(openingBalance, datesOfTheMonth, result);
 
-            var spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, beginDate, lastDate,
+            List<ReportTransactionWithRunningBalance> spendingTransactions = CollateStatementTransactions(statementModel, bucketsCopy, beginDate, lastDate,
                 openingBalance);
 
             // Only relevant when calculating surplus burndown - ovespent ledgers are supplemented from surplus so affect its burndown.
             if (ledgerBook != null && bucketsCopy.OfType<SurplusBucket>().Any())
             {
-                var overSpentLedgers =
+                List<ReportTransaction> overSpentLedgers =
                     this.ledgerCalculator.CalculateOverspentLedgers(statementModel, ledgerBook, beginDate).ToList();
                 if (overSpentLedgers.Any())
                 {
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Reports
                 Description = "Running balance over time as transactions spend, the balance decreases."
             };
             result.GraphLines.SeriesList.Add(actualSpending);
-            foreach (var day in datesOfTheMonth)
+            foreach (DateTime day in datesOfTheMonth)
             {
                 if (day > DateTime.Today)
                 {
@@ -96,8 +96,8 @@ namespace BudgetAnalyser.Engine.Reports
                 }
 
                 var dayClosingBalance = GetDayClosingBalance(spendingTransactions, day);
-                actualSpending.PlotsList.Add(new DatedGraphPlot {Date = day, Amount = dayClosingBalance});
-                var copyOfDay = day;
+                actualSpending.PlotsList.Add(new DatedGraphPlot { Date = day, Amount = dayClosingBalance });
+                DateTime copyOfDay = day;
                 this.logger.LogInfo(l => l.Format("    {0} Close Bal:{1:N}", copyOfDay, dayClosingBalance));
             }
 
@@ -106,9 +106,9 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         private static void CalculateBudgetLineValues(decimal budgetTotal, List<DateTime> datesOfTheMonth,
-            BurnDownChartAnalyserResult result)
+                                                      BurnDownChartAnalyserResult result)
         {
-            var average = budgetTotal/datesOfTheMonth.Count();
+            var average = budgetTotal / datesOfTheMonth.Count();
 
             var seriesData = new SeriesData
             {
@@ -118,9 +118,9 @@ namespace BudgetAnalyser.Engine.Reports
             result.GraphLines.SeriesList.Add(seriesData);
 
             var iteration = 0;
-            foreach (var day in datesOfTheMonth)
+            foreach (DateTime day in datesOfTheMonth)
             {
-                seriesData.PlotsList.Add(new DatedGraphPlot {Amount = budgetTotal - average*iteration++, Date = day});
+                seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - average * iteration++, Date = day });
             }
         }
 
@@ -132,7 +132,7 @@ namespace BudgetAnalyser.Engine.Reports
             decimal openingBalance)
         {
             // The below query has to cater for special Surplus buckets which are intended to be equivelent but use a type hierarchy with inheritance.
-            var query = statementModel.Transactions
+            List<ReportTransactionWithRunningBalance> query = statementModel.Transactions
                 .Join(bucketsToInclude, t => t.BudgetBucket, b => b, (t, b) => t, new SurplusAgnosticBucketComparer())
                 .Where(t => t.Date >= beginDate && t.Date <= lastDate)
                 .OrderBy(t => t.Date)
@@ -169,9 +169,9 @@ namespace BudgetAnalyser.Engine.Reports
                 Description = "Zero line"
             };
             result.GraphLines.SeriesList.Add(series);
-            foreach (var day in datesOfTheMonth)
+            foreach (DateTime day in datesOfTheMonth)
             {
-                series.PlotsList.Add(new DatedGraphPlot {Amount = 0, Date = day});
+                series.PlotsList.Add(new DatedGraphPlot { Amount = 0, Date = day });
             }
         }
 
@@ -187,9 +187,9 @@ namespace BudgetAnalyser.Engine.Reports
             DateTime beginDate)
         {
             decimal budgetTotal = 0;
-            var bucketsCopy = buckets.ToList();
+            List<BudgetBucket> bucketsCopy = buckets.ToList();
 
-            var applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, beginDate);
+            LedgerEntryLine applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, beginDate);
             if (applicableLine == null)
             {
                 // Use budget values from budget model instead, there is no ledger book line for this month.
@@ -223,7 +223,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return budgetModel.Surplus;
             }
 
-            var budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+            Expense budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
             if (budget != null)
             {
                 return budget.Amount;
@@ -239,14 +239,14 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         private static decimal GetLedgerBalanceForBucket(BudgetModel budgetModel, LedgerEntryLine applicableLine,
-            BudgetBucket bucket)
+                                                         BudgetBucket bucket)
         {
             if (bucket is SurplusBucket)
             {
                 return applicableLine.CalculatedSurplus;
             }
 
-            var ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == bucket);
+            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == bucket);
             if (ledger != null)
             {
                 return ledger.Balance;
@@ -260,7 +260,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             var balance = query.First().Balance;
             // Skip 1 because the first row has the opening balance.
-            foreach (var transaction in query.Skip(1))
+            foreach (ReportTransactionWithRunningBalance transaction in query.Skip(1))
             {
                 balance += transaction.Amount;
                 transaction.Balance = balance;
@@ -272,11 +272,11 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         private static List<DateTime> YieldAllDaysInDateRange(DateTime beginDate)
         {
-            var startDate = beginDate;
-            var end = beginDate.AddMonths(1).AddDays(-1);
+            DateTime startDate = beginDate;
+            DateTime end = beginDate.AddMonths(1).AddDays(-1);
 
             var data = new List<DateTime>();
-            var current = startDate;
+            DateTime current = startDate;
             do
             {
                 data.Add(current);

@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Engine
     /// </summary>
     public static class StringExtension
     {
-        private static readonly char[] Vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};
+        private static readonly char[] Vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
 
         /// <summary>
         ///     Returns the appropriate 'An' or 'A' prefix for the given string.  The given string is not included

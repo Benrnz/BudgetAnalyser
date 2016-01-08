@@ -25,7 +25,7 @@
         /// </summary>
         public override string ImagePath => "../Assets/Misc1Logo.png";
 
-        internal virtual string[] KeyWords => new string[] {};
+        internal virtual string[] KeyWords => new string[] { };
 
         /// <summary>
         ///     Clones this instance and give the new clone the specified name.

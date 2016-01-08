@@ -97,10 +97,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
 
-            var line = Reconciliations.FirstOrDefault();
+            LedgerEntryLine line = Reconciliations.FirstOrDefault();
             if (line != null)
             {
-                var previous = Reconciliations.Skip(1).FirstOrDefault();
+                LedgerEntryLine previous = Reconciliations.Skip(1).FirstOrDefault();
                 if (previous != null && line.Date <= previous.Date)
                 {
                     validationMessages.AppendFormat(CultureInfo.CurrentCulture,
@@ -117,6 +117,21 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
+        /// <summary>
+        ///     Lists all the Ledgers available for transfer funds to and from.
+        /// </summary>
+        public IEnumerable<LedgerBucket> LedgersAvailableForTransfer()
+        {
+            List<LedgerBucket> ledgers = Ledgers.ToList();
+            IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
+            foreach (Account account in accounts)
+            {
+                ledgers.Insert(0, new SurplusLedger { StoredInAccount = account });
+            }
+
+            return ledgers;
+        }
+
         internal LedgerBucket AddLedger(LedgerBucket newLedger)
         {
             if (this.ledgersColumns.Any(l => l.BudgetBucket == newLedger.BudgetBucket))
@@ -127,21 +142,6 @@ namespace BudgetAnalyser.Engine.Ledger
 
             this.ledgersColumns.Add(newLedger);
             return newLedger;
-        }
-
-        /// <summary>
-        ///     Lists all the Ledgers available for transfer funds to and from.
-        /// </summary>
-        public IEnumerable<LedgerBucket> LedgersAvailableForTransfer()
-        {
-            var ledgers = Ledgers.ToList();
-            var accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
-            foreach (var account in accounts)
-            {
-                ledgers.Insert(0, new SurplusLedger {StoredInAccount = account});
-            }
-
-            return ledgers;
         }
 
         /// <summary>
@@ -160,9 +160,9 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     ledger book.
         /// </param>
         internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget,
-            StatementModel statement, params BankBalance[] currentBankBalances)
+                                                        StatementModel statement, params BankBalance[] currentBankBalances)
         {
-            var newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget,
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget,
                 statement, currentBankBalances);
             this.reconciliations.Insert(0, newRecon.Reconciliation);
             return newRecon;
@@ -227,7 +227,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal LedgerEntryLine UnlockMostRecentLine()
         {
-            var line = Reconciliations.FirstOrDefault();
+            LedgerEntryLine line = Reconciliations.FirstOrDefault();
             line?.Unlock();
 
             return line;

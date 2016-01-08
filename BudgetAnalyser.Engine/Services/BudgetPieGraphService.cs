@@ -39,8 +39,8 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budget));
             }
 
-            var surplus = new Expense {Amount = budget.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket};
-            var interim =
+            var surplus = new Expense { Amount = budget.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
+            List<KeyValuePair<string, decimal>> interim =
                 budget.Expenses.Select(expense => new KeyValuePair<string, decimal>(expense.Bucket.Code, expense.Amount))
                     .ToList();
             interim.Add(new KeyValuePair<string, decimal>(surplus.Bucket.Code, surplus.Amount));
@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budget));
             }
 
-            var list = budget.Incomes
+            List<KeyValuePair<string, decimal>> list = budget.Incomes
                 .Select(income => new KeyValuePair<string, decimal>(income.Bucket.Code, income.Amount))
                 .ToList();
             return list.OrderByDescending(x => x.Value)
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(model));
             }
 
-            return new Expense {Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket};
+            return new Expense { Amount = model.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
         }
     }
 }

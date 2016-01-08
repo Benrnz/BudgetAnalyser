@@ -22,32 +22,32 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         public MatchingRule CreateNewRule(string bucketCode, string description, string[] references,
-            string transactionTypeName, decimal? amount, bool andMatching)
+                                          string transactionTypeName, decimal? amount, bool andMatching)
         {
             return CreateAnyNewRule(CreateRuleForPersistence, bucketCode, description, references, transactionTypeName,
                 amount, andMatching);
         }
 
         public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references,
-            string transactionTypeName, decimal? amount, bool andMatching)
+                                                            string transactionTypeName, decimal? amount, bool andMatching)
         {
-            var rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references,
+            SingleUseMatchingRule rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references,
                 transactionTypeName, amount, andMatching);
             return rule;
         }
 
         public MatchingRule CreateRuleForPersistence(string budgetBucketCode)
         {
-            return new MatchingRule(this.bucketRepo) {BucketCode = budgetBucketCode};
+            return new MatchingRule(this.bucketRepo) { BucketCode = budgetBucketCode };
         }
 
         public SingleUseMatchingRule CreateSingleUseRuleForPersistence(string budgetBucketCode)
         {
-            return new SingleUseMatchingRule(this.bucketRepo) {BucketCode = budgetBucketCode};
+            return new SingleUseMatchingRule(this.bucketRepo) { BucketCode = budgetBucketCode };
         }
 
         private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description,
-            string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+                                             string[] references, string transactionTypeName, decimal? amount, bool andMatching)
             where T : MatchingRule
         {
             if (string.IsNullOrEmpty(bucketCode))
@@ -85,7 +85,7 @@ namespace BudgetAnalyser.Engine.Matching
                 adjustedReferences = references.ToList();
             }
 
-            var newRule = ruleCtor(bucketCode);
+            T newRule = ruleCtor(bucketCode);
             newRule.Description = description;
             newRule.Reference1 = adjustedReferences[0];
             newRule.Reference2 = adjustedReferences[1];

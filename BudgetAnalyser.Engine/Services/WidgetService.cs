@@ -15,10 +15,10 @@ namespace BudgetAnalyser.Engine.Services
     {
         private static readonly Dictionary<string, int> GroupSequence = new Dictionary<string, int>
         {
-            {WidgetGroup.OverviewSectionName, 1},
-            {WidgetGroup.GlobalFilterSectionName, 2},
-            {WidgetGroup.MonthlyTrackingSectionName, 3},
-            {WidgetGroup.ProjectsSectionName, 4}
+            { WidgetGroup.OverviewSectionName, 1 },
+            { WidgetGroup.GlobalFilterSectionName, 2 },
+            { WidgetGroup.MonthlyTrackingSectionName, 3 },
+            { WidgetGroup.ProjectsSectionName, 4 }
         };
 
         private readonly ILogger logger;
@@ -55,10 +55,10 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (storedStates != null)
             {
-                var widgets = this.widgetRepo.GetAll().ToList();
-                foreach (var widgetState in storedStates)
+                List<Widget> widgets = this.widgetRepo.GetAll().ToList();
+                foreach (WidgetPersistentState widgetState in storedStates)
                 {
-                    var stateClone = widgetState;
+                    WidgetPersistentState stateClone = widgetState;
                     var multiInstanceState = widgetState as MultiInstanceWidgetState;
                     if (multiInstanceState != null)
                     {
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Services
                     else
                     {
                         // Ordinary widgets will already exist in the repository as they are single instance per class.
-                        var typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                        Widget typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
                         if (typedWidget != null)
                         {
                             typedWidget.Visibility = widgetState.Visible;
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Services
         private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
         {
             // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-            var newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+            IUserDefinedWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
             newIdWidget.Visibility = multiInstanceState.Visible;
             newIdWidget.Initialise(multiInstanceState, this.logger);
         }

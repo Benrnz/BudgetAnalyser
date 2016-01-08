@@ -45,6 +45,6 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="allIncomes">All income objects that may have changed in the UI.</param>
         /// <param name="allExpenses">All expense objects that may have changed in the UI.</param>
         void UpdateIncomesAndExpenses(BudgetModel model, IEnumerable<Income> allIncomes,
-            IEnumerable<Expense> allExpenses);
+                                      IEnumerable<Expense> allExpenses);
     }
 }

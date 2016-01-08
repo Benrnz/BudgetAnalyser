@@ -84,18 +84,6 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Returns true if the to ledger buckets are refering to the same bucket.
-        /// </summary>
-        protected bool Equals([CanBeNull] LedgerBucket other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-            return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
-        }
-
-        /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
         /// <returns>
@@ -106,7 +94,7 @@ namespace BudgetAnalyser.Engine.Ledger
             unchecked
             {
                 // ReSharper disable NonReadonlyMemberInGetHashCode - Properties are only set by persistence
-                return ((BudgetBucket?.GetHashCode() ?? 0)*397) ^ (StoredInAccount?.GetHashCode() ?? 0);
+                return ((BudgetBucket?.GetHashCode() ?? 0) * 397) ^ (StoredInAccount?.GetHashCode() ?? 0);
                 // ReSharper restore NonReadonlyMemberInGetHashCode
             }
         }
@@ -131,7 +119,7 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
         public abstract void ReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions,
-            DateTime reconciliationDate, decimal openingBalance);
+                                                     DateTime reconciliationDate, decimal openingBalance);
 
         /// <summary>
         ///     Returns a string that represents the current object.
@@ -142,6 +130,18 @@ namespace BudgetAnalyser.Engine.Ledger
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "Ledger Bucket {0}", BudgetBucket);
+        }
+
+        /// <summary>
+        ///     Returns true if the to ledger buckets are refering to the same bucket.
+        /// </summary>
+        protected bool Equals([CanBeNull] LedgerBucket other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return Equals(BudgetBucket, other.BudgetBucket) && Equals(StoredInAccount, other.StoredInAccount);
         }
 
         /// <summary>

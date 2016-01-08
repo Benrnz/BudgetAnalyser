@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel = null;
             this.budgetCollection = null;
             this.budgetHash = 0;
-            var handler = Closed;
+            EventHandler handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -153,7 +153,7 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            var handler = Saving;
+            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
             var messages = new StringBuilder();
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.statementRepository.SaveAsync(StatementModel);
-            var savedHandler = Saved;
+            EventHandler savedHandler = Saved;
             savedHandler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public bool ValidateModel(StringBuilder messages)
         {
-            var handler = Validating;
+            EventHandler<ValidatingEventArgs> handler = Validating;
             handler?.Invoke(this, new ValidatingEventArgs());
 
             // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
@@ -313,7 +313,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            var duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
+            List<IGrouping<int, Transaction>> duplicates = StatementModel.ValidateAgainstDuplicates().ToList();
             return duplicates.Any()
                 ? string.Format(CultureInfo.CurrentCulture, "{0} suspected duplicates!",
                     duplicates.Sum(group => group.Count()))
@@ -333,7 +333,7 @@ namespace BudgetAnalyser.Engine.Services
             return this.bucketRepository.Buckets
                 .Where(b => b.Active)
                 .Select(b => b.Code)
-                .Union(new[] {string.Empty, UncategorisedFilter})
+                .Union(new[] { string.Empty, UncategorisedFilter })
                 .OrderBy(b => b);
         }
 
@@ -355,7 +355,7 @@ namespace BudgetAnalyser.Engine.Services
                             StatementModel.Transactions.Where(t => t.BudgetBucket == null));
             }
 
-            var bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
+            BudgetBucket bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
 
             if (bucket == null)
             {
@@ -435,9 +435,9 @@ namespace BudgetAnalyser.Engine.Services
                     "There are no transactions loaded, you must first load an existing file or create a new one.");
             }
 
-            var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-            var combinedModel = StatementModel.Merge(additionalModel);
-            var duplicates = combinedModel.ValidateAgainstDuplicates();
+            StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
+            StatementModel combinedModel = StatementModel.Merge(additionalModel);
+            IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {
                 throw new TransactionsAlreadyImportedException();
@@ -474,13 +474,13 @@ namespace BudgetAnalyser.Engine.Services
             if (StatementModel == null)
             {
                 // This can occur if the statement file is closed while viewing in GroupByBucket Mode.
-                return new TransactionGroupedByBucket[] {};
+                return new TransactionGroupedByBucket[] { };
             }
 
             if (this.sortedByBucket)
             {
                 // SortByBucket == true so group and sort by bucket.
-                var query = StatementModel.Transactions
+                IEnumerable<TransactionGroupedByBucket> query = StatementModel.Transactions
                     .GroupBy(t => t.BudgetBucket)
                     .OrderBy(g => g.Key)
                     .Select(group => new TransactionGroupedByBucket(group, group.Key));
@@ -488,7 +488,7 @@ namespace BudgetAnalyser.Engine.Services
             }
             // When viewing transactions by date, databinding pulls data directly from the StatementModel.
             // As for the GroupByBucket Collection this can be cleared.
-            return new TransactionGroupedByBucket[] {};
+            return new TransactionGroupedByBucket[] { };
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public void SplitTransaction(Transaction originalTransaction, decimal splinterAmount1, decimal splinterAmount2,
-            BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
+                                     BudgetBucket splinterBucket1, BudgetBucket splinterBucket2)
         {
             if (originalTransaction == null)
             {
@@ -655,7 +655,7 @@ namespace BudgetAnalyser.Engine.Services
         private void NewDataAvailable()
         {
             ResetTransactionsCollection();
-            var handler = NewDataSourceAvailable;
+            EventHandler handler = NewDataSourceAvailable;
             handler?.Invoke(this, EventArgs.Empty);
         }
 

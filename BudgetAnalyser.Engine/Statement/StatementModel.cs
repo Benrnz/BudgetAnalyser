@@ -151,27 +151,6 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
-        {
-            if (criteria.Cleared)
-            {
-                return AllTransactions.ToList();
-            }
-
-            var query = AllTransactions;
-            if (criteria.BeginDate != null)
-            {
-                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
-            }
-
-            if (criteria.EndDate != null)
-            {
-                query = query.Where(t => t.Date <= criteria.EndDate.Value);
-            }
-
-            return query;
-        }
-
         /// <summary>
         ///     Calculates the duration in months from the beginning of the period to the end.
         /// </summary>
@@ -182,7 +161,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <param name="transactions">The list of transactions to use to determine duration.</param>
         public static int CalculateDuration(GlobalFilterCriteria criteria, IEnumerable<Transaction> transactions)
         {
-            var list = transactions.ToList();
+            List<Transaction> list = transactions.ToList();
             DateTime minDate = DateTime.MaxValue, maxDate = DateTime.MinValue;
 
             if (criteria != null && !criteria.Cleared)
@@ -217,6 +196,18 @@ namespace BudgetAnalyser.Engine.Statement
             this.disposed = true;
         }
 
+        /// <summary>
+        ///     Called when a property is changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            ThrowIfDisposed();
+            PropertyChangedEventHandler handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         internal virtual void Filter(GlobalFilterCriteria criteria)
         {
             ThrowIfDisposed();
@@ -245,23 +236,12 @@ namespace BudgetAnalyser.Engine.Statement
                 return;
             }
 
-            var query = BaseFilterQuery(criteria);
+            IEnumerable<Transaction> query = BaseFilterQuery(criteria);
 
             Transactions = query.ToList();
             DurationInMonths = CalculateDuration(criteria, Transactions);
             this.duplicates = null;
             Filtered = true;
-        }
-
-        /// <summary>
-        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
-        ///     This destructor will run only if the Dispose method does not get called.
-        ///     Do not provide destructors in types derived from this class.
-        /// </summary>
-        ~StatementModel()
-        {
-            // Do not re-create Dispose clean-up code here. 
-            Dispose(false);
         }
 
         /// <summary>
@@ -317,37 +297,13 @@ namespace BudgetAnalyser.Engine.Statement
                 StorageKey = StorageKey
             };
 
-            var mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
+            List<Transaction> mergedTransactions = AllTransactions.ToList().Merge(additionalModel.AllTransactions).ToList();
             combinedModel.LoadTransactions(mergedTransactions);
             return combinedModel;
         }
 
-        /// <summary>
-        ///     Called when a property is changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            ThrowIfDisposed();
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case nameof(Transaction.Amount):
-                case nameof(Transaction.BudgetBucket):
-                case nameof(Transaction.Date):
-                    this.changeHash = Guid.NewGuid();
-                    break;
-            }
-        }
-
         internal void ReassignFixedProjectTransactions([NotNull] FixedBudgetProjectBucket bucket,
-            [NotNull] BudgetBucket reassignmentBucket)
+                                                       [NotNull] BudgetBucket reassignmentBucket)
         {
             ThrowIfDisposed();
             if (bucket == null)
@@ -360,7 +316,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(reassignmentBucket));
             }
 
-            foreach (var transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
+            foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
             {
                 transaction.BudgetBucket = reassignmentBucket;
             }
@@ -403,8 +359,8 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
-            var splinterTransaction1 = originalTransaction.Clone();
-            var splinterTransaction2 = originalTransaction.Clone();
+            Transaction splinterTransaction1 = originalTransaction.Clone();
+            Transaction splinterTransaction2 = originalTransaction.Clone();
 
             splinterTransaction1.Amount = splinterAmount1;
             splinterTransaction2.Amount = splinterAmount2;
@@ -424,14 +380,74 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 AllTransactions = new List<Transaction>();
             }
-            var mergedTransactions =
-                AllTransactions.ToList().Merge(new[] {splinterTransaction1, splinterTransaction2}).ToList();
+            List<Transaction> mergedTransactions =
+                AllTransactions.ToList().Merge(new[] { splinterTransaction1, splinterTransaction2 }).ToList();
             AllTransactions = mergedTransactions;
             splinterTransaction1.PropertyChanged += OnTransactionPropertyChanged;
             splinterTransaction2.PropertyChanged += OnTransactionPropertyChanged;
             this.duplicates = null;
             UpdateDuration();
             Filter(this.currentFilter);
+        }
+
+        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
+        {
+            ThrowIfDisposed();
+            if (this.duplicates != null)
+            {
+                return this.duplicates;
+                // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
+            }
+
+            List<IGrouping<int, Transaction>> query =
+                Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t)
+                    .Where(group => group.Count() > 1)
+                    .AsParallel()
+                    .ToList();
+            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
+            query.ForEach(
+                duplicate =>
+                {
+                    foreach (Transaction txn in duplicate)
+                    {
+                        txn.IsSuspectedDuplicate = true;
+                    }
+                });
+            this.duplicates = query;
+            return this.duplicates;
+        }
+
+        private IEnumerable<Transaction> BaseFilterQuery(GlobalFilterCriteria criteria)
+        {
+            if (criteria.Cleared)
+            {
+                return AllTransactions.ToList();
+            }
+
+            IEnumerable<Transaction> query = AllTransactions;
+            if (criteria.BeginDate != null)
+            {
+                query = AllTransactions.Where(t => t.Date >= criteria.BeginDate.Value);
+            }
+
+            if (criteria.EndDate != null)
+            {
+                query = query.Where(t => t.Date <= criteria.EndDate.Value);
+            }
+
+            return query;
+        }
+
+        private void OnTransactionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case nameof(Transaction.Amount):
+                case nameof(Transaction.BudgetBucket):
+                case nameof(Transaction.Date):
+                    this.changeHash = Guid.NewGuid();
+                    break;
+            }
         }
 
         private void SubscribeToTransactionChangedEvents()
@@ -470,31 +486,15 @@ namespace BudgetAnalyser.Engine.Statement
             DurationInMonths = CalculateDuration(null, Transactions);
         }
 
-        internal IEnumerable<IGrouping<int, Transaction>> ValidateAgainstDuplicates()
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="StatementModel" /> class.
+        ///     This destructor will run only if the Dispose method does not get called.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~StatementModel()
         {
-            ThrowIfDisposed();
-            if (this.duplicates != null)
-            {
-                return this.duplicates;
-                // Reset by Merging Transations, Load Transactions, or by reloading the statement model.
-            }
-
-            var query =
-                Transactions.GroupBy(t => t.GetEqualityHashCode(), t => t)
-                    .Where(group => group.Count() > 1)
-                    .AsParallel()
-                    .ToList();
-            this.logger.LogWarning(l => l.Format("{0} Duplicates detected.", query.Sum(group => group.Count())));
-            query.ForEach(
-                duplicate =>
-                {
-                    foreach (var txn in duplicate)
-                    {
-                        txn.IsSuspectedDuplicate = true;
-                    }
-                });
-            this.duplicates = query;
-            return this.duplicates;
+            // Do not re-create Dispose clean-up code here. 
+            Dispose(false);
         }
     }
 }

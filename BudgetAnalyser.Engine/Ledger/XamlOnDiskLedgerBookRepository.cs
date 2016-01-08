@@ -69,7 +69,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var book = this.ledgerBookFactory.CreateNew();
+            LedgerBook book = this.ledgerBookFactory.CreateNew();
             book.Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ');
             book.StorageKey = storageKey;
             book.Modified = DateTime.Now;
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             dataEntity.StorageKey = storageKey;
-            var book = this.mapper.ToModel(dataEntity);
+            LedgerBook book = this.mapper.ToModel(dataEntity);
 
             var messages = new StringBuilder();
             if (!book.Validate(messages))
@@ -164,22 +164,12 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var dataEntity = this.mapper.ToDto(book);
+            LedgerBookDto dataEntity = this.mapper.ToDto(book);
             book.StorageKey = storageKey;
             dataEntity.StorageKey = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
 
             await SaveDtoToDiskAsync(dataEntity);
-        }
-
-        private static double CalculateChecksum(LedgerBook dataEntity)
-        {
-            // ReSharper disable once EnumerableSumInExplicitUncheckedContext - Used to calculate a checksum and revolving (overflowing) integers are ok here.
-            return dataEntity.Reconciliations.Sum(
-                l =>
-                    (double) l.LedgerBalance
-                    + l.BankBalanceAdjustments.Sum(b => (double) b.Amount)
-                    + l.Entries.Sum(e => (double) e.Balance));
         }
 
         /// <summary>
@@ -246,6 +236,16 @@ namespace BudgetAnalyser.Engine.Ledger
                     await file.WriteAsync(data);
                 }
             }
+        }
+
+        private static double CalculateChecksum(LedgerBook dataEntity)
+        {
+            // ReSharper disable once EnumerableSumInExplicitUncheckedContext - Used to calculate a checksum and revolving (overflowing) integers are ok here.
+            return dataEntity.Reconciliations.Sum(
+                l =>
+                    (double) l.LedgerBalance
+                    + l.BankBalanceAdjustments.Sum(b => (double) b.Amount)
+                    + l.Entries.Sum(e => (double) e.Balance));
         }
     }
 }

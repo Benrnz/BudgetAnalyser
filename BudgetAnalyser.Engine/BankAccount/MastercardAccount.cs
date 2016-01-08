@@ -25,7 +25,7 @@
         /// </summary>
         public override string ImagePath => "MastercardLogoImage";
 
-        internal virtual string[] KeyWords => new[] {"MASTERCARD"};
+        internal virtual string[] KeyWords => new[] { "MASTERCARD" };
 
         /// <summary>
         ///     Clones this instance and give the new clone the specified name.

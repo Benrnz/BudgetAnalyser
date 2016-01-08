@@ -141,7 +141,7 @@ namespace BudgetAnalyser.Engine.Budget
             // Bucket Repository must be initialised first, the budget model incomes/expenses are dependent on the bucket repository.
             this.budgetBucketRepository.Initialise(correctDataFormat.Buckets);
 
-            var budgetCollection = this.mapper.ToModel(correctDataFormat);
+            BudgetCollection budgetCollection = this.mapper.ToModel(correctDataFormat);
             budgetCollection.StorageKey = storageKey;
             this.currentBudgetCollection = budgetCollection;
             return budgetCollection;
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }
 
-            var dataFormat = this.mapper.ToDto(this.currentBudgetCollection);
+            BudgetCollectionDto dataFormat = this.mapper.ToDto(this.currentBudgetCollection);
 
             var serialised = Serialise(dataFormat);
             await WriteToDisk(dataFormat.StorageKey, serialised);

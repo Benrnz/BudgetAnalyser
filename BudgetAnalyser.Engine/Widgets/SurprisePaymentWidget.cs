@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public SurprisePaymentWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] {typeof (IBudgetBucketRepository), typeof (GlobalFilterCriteria)};
+            Dependencies = new[] { typeof(IBudgetBucketRepository), typeof(GlobalFilterCriteria) };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
             ToolTip = ToolTipPrefix;
             Size = WidgetSize.Medium;
@@ -95,55 +95,6 @@ namespace BudgetAnalyser.Engine.Widgets
             this.diagLogger = logger;
         }
 
-        private bool AbnormalNumberOfPayments(int paymentsInMonthCount)
-        {
-            switch (Frequency)
-            {
-                case WeeklyOrFortnightly.Weekly:
-                    return paymentsInMonthCount > WeeklyPaymentsInOneNormalMonth;
-                case WeeklyOrFortnightly.Fortnightly:
-                    return paymentsInMonthCount > FortnightlyPaymentsInOneNormalMonth;
-                default:
-                    throw new NotSupportedException("Unexpected frequency enumeration value found: " + Frequency);
-            }
-        }
-
-        private PaymentDate CalculateNextPaymentDate(PaymentDate paymentDate)
-        {
-            var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7*this.multiplier));
-            if (this.filter.BeginDate != null)
-            {
-                var holidays =
-                    NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value,
-                        this.filter.BeginDate.Value.AddYears(1)).ToList();
-                while (holidays.Contains(proposedDate.Date))
-                {
-                    proposedDate.Date = proposedDate.Date.AddDays(1);
-                    proposedDate.Date = proposedDate.Date.FindNextWeekday();
-                }
-            }
-
-            if (proposedDate.Date != proposedDate.ScheduledDate)
-            {
-                this.diagLogger.LogInfo(
-                    l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
-            }
-            return proposedDate;
-        }
-
-        private PaymentDate CalculateStartDate(DateTime startPaymentDate, DateTime filterBeginDate)
-        {
-            var proposed = new PaymentDate(startPaymentDate);
-            while (proposed.Date < filterBeginDate)
-            {
-                proposed = CalculateNextPaymentDate(proposed);
-            }
-
-            this.diagLogger.LogInfo(
-                l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
-            return proposed;
-        }
-
         /// <summary>
         ///     Updates the widget with new input.
         /// </summary>
@@ -186,7 +137,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 l =>
                     l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id,
                         this.filter.BeginDate, this.filter.EndDate));
-            var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
+            PaymentDate currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
             var currentMonthTally = new NextOccurance
@@ -251,6 +202,55 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        private bool AbnormalNumberOfPayments(int paymentsInMonthCount)
+        {
+            switch (Frequency)
+            {
+                case WeeklyOrFortnightly.Weekly:
+                    return paymentsInMonthCount > WeeklyPaymentsInOneNormalMonth;
+                case WeeklyOrFortnightly.Fortnightly:
+                    return paymentsInMonthCount > FortnightlyPaymentsInOneNormalMonth;
+                default:
+                    throw new NotSupportedException("Unexpected frequency enumeration value found: " + Frequency);
+            }
+        }
+
+        private PaymentDate CalculateNextPaymentDate(PaymentDate paymentDate)
+        {
+            var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
+            if (this.filter.BeginDate != null)
+            {
+                List<DateTime> holidays =
+                    NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value,
+                        this.filter.BeginDate.Value.AddYears(1)).ToList();
+                while (holidays.Contains(proposedDate.Date))
+                {
+                    proposedDate.Date = proposedDate.Date.AddDays(1);
+                    proposedDate.Date = proposedDate.Date.FindNextWeekday();
+                }
+            }
+
+            if (proposedDate.Date != proposedDate.ScheduledDate)
+            {
+                this.diagLogger.LogInfo(
+                    l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
+            }
+            return proposedDate;
+        }
+
+        private PaymentDate CalculateStartDate(DateTime startPaymentDate, DateTime filterBeginDate)
+        {
+            var proposed = new PaymentDate(startPaymentDate);
+            while (proposed.Date < filterBeginDate)
+            {
+                proposed = CalculateNextPaymentDate(proposed);
+            }
+
+            this.diagLogger.LogInfo(
+                l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
+            return proposed;
+        }
+
         private class NextOccurance
         {
             public NextOccurance()
@@ -281,7 +281,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             public NextOccurance NextMonth(int day)
             {
-                var nextMonth = new NextOccurance {StartDate = StartDate.AddMonths(1), EndDate = EndDate.AddMonths(1)};
+                var nextMonth = new NextOccurance { StartDate = StartDate.AddMonths(1), EndDate = EndDate.AddMonths(1) };
                 nextMonth.Tally(day);
                 return nextMonth;
             }

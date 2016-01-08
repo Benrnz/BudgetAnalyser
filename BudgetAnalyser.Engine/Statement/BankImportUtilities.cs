@@ -49,7 +49,7 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index,
-            [NotNull] IBudgetBucketRepository bucketRepository)
+                                                [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (array == null)
             {

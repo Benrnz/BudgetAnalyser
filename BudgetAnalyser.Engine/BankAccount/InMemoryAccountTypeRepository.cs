@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.BankAccount
         /// <returns>The found account or null.</returns>
         public Account Find(Predicate<Account> criteria)
         {
-            var copy = this.repository.ToArray();
+            KeyValuePair<string, Account>[] copy = this.repository.ToArray();
             return copy.FirstOrDefault(x => criteria(x.Value)).Value;
         }
 

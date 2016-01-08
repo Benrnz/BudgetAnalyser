@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
-    internal partial class Mapper_BudgetBucketDto_BudgetBucket 
+    internal partial class Mapper_BudgetBucketDto_BudgetBucket
     {
         private readonly IBudgetBucketFactory bucketFactory;
 
@@ -25,4 +25,4 @@ namespace BudgetAnalyser.Engine.Budget.Data
             model = this.bucketFactory.BuildModel(dto);
         }
     }
-} 
+}

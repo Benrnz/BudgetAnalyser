@@ -260,20 +260,25 @@ namespace BudgetAnalyser.Engine.Widgets
         public event EventHandler ColourStyleChanged;
 
         /// <summary>
+        ///     Updates the widget with new input.
+        /// </summary>
+        public abstract void Update(params object[] input);
+
+        /// <summary>
+        ///     Occurs when the widget style has changed.
+        /// </summary>
+        public event EventHandler WidgetStyleChanged;
+
+        /// <summary>
         ///     Called when a property has changed.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        /// <summary>
-        ///     Updates the widget with new input.
-        /// </summary>
-        public abstract void Update(params object[] input);
 
         /// <summary>
         ///     Validates the updated input to ensure it is compliant with this widget dependency requirements.
@@ -286,16 +291,16 @@ namespace BudgetAnalyser.Engine.Widgets
                 return false;
             }
 
-            var dependencies = Dependencies.ToList();
+            List<Type> dependencies = Dependencies.ToList();
             if (dependencies.Count() > input.Length)
             {
                 return false;
             }
 
             int index = 0, nullCount = 0;
-            foreach (var dependencyType in Dependencies)
+            foreach (Type dependencyType in Dependencies)
             {
-                var dependencyInstance = input[index++];
+                object dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.
@@ -316,10 +321,5 @@ namespace BudgetAnalyser.Engine.Widgets
 
             return true;
         }
-
-        /// <summary>
-        ///     Occurs when the widget style has changed.
-        /// </summary>
-        public event EventHandler WidgetStyleChanged;
     }
 }

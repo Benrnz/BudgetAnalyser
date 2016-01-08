@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Budget
         ///     A new fixed budget project bucket cannot be created, because the code  + bucketCode +  already exists.
         /// </exception>
         public FixedBudgetProjectBucket CreateNewFixedBudgetProject(string bucketCode, string description,
-            decimal fixedBudgetAmount)
+                                                                    decimal fixedBudgetAmount)
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return this.lookupTable[upperCode];
                 }
 
-                var newBucket = factory();
+                BudgetBucket newBucket = factory();
                 this.lookupTable.Add(upperCode, newBucket);
                 return newBucket;
             }

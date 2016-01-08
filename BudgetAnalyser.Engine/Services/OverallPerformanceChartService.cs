@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public OverallPerformanceBudgetResult BuildChart(StatementModel statementModel, BudgetCollection budgets,
-            GlobalFilterCriteria criteria)
+                                                         GlobalFilterCriteria criteria)
         {
             if (statementModel == null)
             {

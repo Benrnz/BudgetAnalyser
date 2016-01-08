@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public BurnDownChartsBuilder([NotNull] IBudgetBucketRepository budgetBucketRepository,
-            [NotNull] Func<IBurnDownChartAnalyser> chartAnalyserFactory)
+                                     [NotNull] Func<IBurnDownChartAnalyser> chartAnalyserFactory)
         {
             if (budgetBucketRepository == null)
             {
@@ -44,11 +44,55 @@ namespace BudgetAnalyser.Engine.Reports
         public IEnumerable<CustomAggregateBurnDownGraph> CustomCharts { get; set; }
         public BurnDownCharts Results { get; private set; }
 
-        private BurnDownChartAnalyserResult AnalyseDataForChart(StatementModel statementModel, BudgetModel budgetModel,
-            LedgerBook ledgerBookModel, BudgetBucket bucket, DateTime beginDate)
+        public void Build(
+            GlobalFilterCriteria criteria,
+            StatementModel statementModel,
+            BudgetModel budgetModel,
+            LedgerBook ledgerBookModel)
         {
-            var analyser = this.chartAnalyserFactory();
-            var result = analyser.Analyse(statementModel, budgetModel, new[] {bucket}, ledgerBookModel, beginDate);
+            DateTime beginDate = CalculateBeginDate(criteria);
+            var dateRangeDescription = string.Format(CultureInfo.CurrentCulture,
+                "For the month starting {0:D} to {1:D} inclusive.", beginDate, beginDate.AddMonths(1).AddDays(-1));
+
+            var listOfCharts = new List<BurnDownChartAnalyserResult>(this.budgetBucketRepository.Buckets.Count());
+            foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
+                .Where(b => b is ExpenseBucket && b.Active)
+                .OrderBy(b => b.Code))
+            {
+                BurnDownChartAnalyserResult analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, bucket, beginDate);
+                analysis.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
+                listOfCharts.Add(analysis);
+            }
+
+            listOfCharts = listOfCharts.ToList();
+
+            // Put surplus at the top.
+            BurnDownChartAnalyserResult analysisResult = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel,
+                this.budgetBucketRepository.SurplusBucket, beginDate);
+            analysisResult.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart",
+                this.budgetBucketRepository.SurplusBucket);
+            listOfCharts.Insert(0, analysisResult);
+
+            // Put any custom charts on top.
+            foreach (CustomAggregateBurnDownGraph customChart in CustomCharts)
+            {
+                IEnumerable<BudgetBucket> buckets = this.budgetBucketRepository.Buckets
+                    .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
+
+                BurnDownChartAnalyserResult analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, buckets, beginDate);
+                analysis.ChartTitle = customChart.Name;
+                analysis.IsCustomAggregateChart = true;
+                listOfCharts.Insert(0, analysis);
+            }
+
+            Results = new BurnDownCharts(beginDate, dateRangeDescription, listOfCharts);
+        }
+
+        private BurnDownChartAnalyserResult AnalyseDataForChart(StatementModel statementModel, BudgetModel budgetModel,
+                                                                LedgerBook ledgerBookModel, BudgetBucket bucket, DateTime beginDate)
+        {
+            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
+            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, new[] { bucket }, ledgerBookModel, beginDate);
             return result;
         }
 
@@ -59,53 +103,9 @@ namespace BudgetAnalyser.Engine.Reports
             IEnumerable<BudgetBucket> buckets,
             DateTime beginDate)
         {
-            var analyser = this.chartAnalyserFactory();
-            var result = analyser.Analyse(statementModel, budgetModel, buckets, ledgerBookModel, beginDate);
+            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
+            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, buckets, ledgerBookModel, beginDate);
             return result;
-        }
-
-        public void Build(
-            GlobalFilterCriteria criteria,
-            StatementModel statementModel,
-            BudgetModel budgetModel,
-            LedgerBook ledgerBookModel)
-        {
-            var beginDate = CalculateBeginDate(criteria);
-            var dateRangeDescription = string.Format(CultureInfo.CurrentCulture,
-                "For the month starting {0:D} to {1:D} inclusive.", beginDate, beginDate.AddMonths(1).AddDays(-1));
-
-            var listOfCharts = new List<BurnDownChartAnalyserResult>(this.budgetBucketRepository.Buckets.Count());
-            foreach (var bucket in this.budgetBucketRepository.Buckets
-                .Where(b => b is ExpenseBucket && b.Active)
-                .OrderBy(b => b.Code))
-            {
-                var analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, bucket, beginDate);
-                analysis.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", bucket.Code);
-                listOfCharts.Add(analysis);
-            }
-
-            listOfCharts = listOfCharts.ToList();
-
-            // Put surplus at the top.
-            var analysisResult = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel,
-                this.budgetBucketRepository.SurplusBucket, beginDate);
-            analysisResult.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart",
-                this.budgetBucketRepository.SurplusBucket);
-            listOfCharts.Insert(0, analysisResult);
-
-            // Put any custom charts on top.
-            foreach (var customChart in CustomCharts)
-            {
-                var buckets = this.budgetBucketRepository.Buckets
-                    .Join(customChart.BucketIds, bucket => bucket.Code, code => code, (bucket, code) => bucket);
-
-                var analysis = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, buckets, beginDate);
-                analysis.ChartTitle = customChart.Name;
-                analysis.IsCustomAggregateChart = true;
-                listOfCharts.Insert(0, analysis);
-            }
-
-            Results = new BurnDownCharts(beginDate, dateRangeDescription, listOfCharts);
         }
 
         private static DateTime CalculateBeginDate(GlobalFilterCriteria criteria)

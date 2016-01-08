@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public NewFileWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] {typeof (ApplicationDatabase)};
+            Dependencies = new[] { typeof(ApplicationDatabase) };
             Size = WidgetSize.Small;
             WidgetStyle = "ModernTileSmallStyle1";
             Clickable = true;

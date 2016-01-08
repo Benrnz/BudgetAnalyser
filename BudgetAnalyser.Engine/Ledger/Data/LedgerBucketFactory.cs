@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         private readonly IBudgetBucketRepository bucketRepo;
 
         public LedgerBucketFactory([NotNull] IBudgetBucketRepository bucketRepo,
-            [NotNull] IAccountTypeRepository accountRepo)
+                                   [NotNull] IAccountTypeRepository accountRepo)
         {
             if (bucketRepo == null)
             {
@@ -34,26 +34,26 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public LedgerBucket Build(string bucketCode, string accountName)
         {
-            var account = this.accountRepo.GetByKey(accountName);
+            Account account = this.accountRepo.GetByKey(accountName);
             return Build(bucketCode, account);
         }
 
         public LedgerBucket Build(string bucketCode, Account account)
         {
-            var bucket = this.bucketRepo.GetByCode(bucketCode);
+            BudgetBucket bucket = this.bucketRepo.GetByCode(bucketCode);
             if (bucket is SavedUpForExpenseBucket)
             {
-                return new SavedUpForLedger {BudgetBucket = bucket, StoredInAccount = account};
+                return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
             }
 
             if (bucket is SpentMonthlyExpenseBucket)
             {
-                return new SpentMonthlyLedger {BudgetBucket = bucket, StoredInAccount = account};
+                return new SpentMonthlyLedger { BudgetBucket = bucket, StoredInAccount = account };
             }
 
             if (bucket is SavingsCommitmentBucket)
             {
-                return new SavedUpForLedger {BudgetBucket = bucket, StoredInAccount = account};
+                return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };
             }
 
             throw new NotSupportedException(

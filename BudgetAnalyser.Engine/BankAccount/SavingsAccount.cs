@@ -25,7 +25,7 @@
         /// </summary>
         public override string ImagePath => "SavingsLogoImage";
 
-        internal virtual string[] KeyWords => new[] {"SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL"};
+        internal virtual string[] KeyWords => new[] { "SAVINGS", "SAVE", "DEPOSIT", "TERM DEPOSIT", "ONCALL", "ON CALL" };
 
         /// <summary>
         ///     Clones the specified name.

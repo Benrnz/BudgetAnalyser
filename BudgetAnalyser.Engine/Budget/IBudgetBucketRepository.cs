@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <param name="fixedBudgetAmount">The fixed budget amount.</param>
         /// <exception cref="ArgumentException">Will be thrown if the bucket code already exists.</exception>
         FixedBudgetProjectBucket CreateNewFixedBudgetProject([NotNull] string bucketCode, [NotNull] string description,
-            decimal fixedBudgetAmount);
+                                                             decimal fixedBudgetAmount);
 
         /// <summary>
         ///     Gets a bucket by its code.

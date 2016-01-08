@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(storeInThisAccount));
             }
 
-            var newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
+            LedgerBucket newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
             return LedgerBook.AddLedger(newLedger);
         }
 
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool ValidateModel(StringBuilder messages)
         {
-            var handler = Validating;
+            EventHandler<ValidatingEventArgs> handler = Validating;
             handler?.Invoke(this, new ValidatingEventArgs());
 
             return LedgerBook.Validate(messages);

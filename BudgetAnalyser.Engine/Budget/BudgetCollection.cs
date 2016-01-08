@@ -18,9 +18,11 @@ namespace BudgetAnalyser.Engine.Budget
         private readonly SortedList<DateTime, BudgetModel> budgetStorage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BudgetCollection"/> class.
+        ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
         /// </summary>
-        public BudgetCollection() : this(new BudgetModel[] {}) { }
+        public BudgetCollection() : this(new BudgetModel[] { })
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
@@ -107,7 +109,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(item));
             }
 
-            var key = item.EffectiveFrom;
+            DateTime key = item.EffectiveFrom;
             while (this.budgetStorage.ContainsKey(key))
             {
                 // Arbitrarily change the effective from date to ensure no overlap between budgets.
@@ -136,7 +138,7 @@ namespace BudgetAnalyser.Engine.Budget
         public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
         {
             var budgets = new List<BudgetModel>();
-            var firstEffectiveBudget = ForDate(beginInclusive);
+            BudgetModel firstEffectiveBudget = ForDate(beginInclusive);
             if (firstEffectiveBudget == null)
             {
                 throw new BudgetException(
@@ -146,11 +148,6 @@ namespace BudgetAnalyser.Engine.Budget
             budgets.Add(firstEffectiveBudget);
             budgets.AddRange(this.Where(b => b.EffectiveFrom >= beginInclusive && b.EffectiveFrom < endInclusive));
             return budgets;
-        }
-
-        internal virtual int IndexOf(BudgetModel budget)
-        {
-            return this.budgetStorage.IndexOfValue(budget);
         }
 
         /// <summary>
@@ -193,6 +190,11 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return budget.EffectiveFrom > DateTime.Now;
+        }
+
+        internal virtual int IndexOf(BudgetModel budget)
+        {
+            return this.budgetStorage.IndexOfValue(budget);
         }
     }
 }

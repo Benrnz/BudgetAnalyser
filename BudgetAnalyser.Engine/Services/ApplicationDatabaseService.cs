@@ -45,8 +45,8 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
-                // Only clears system generated tasks, not persistent user created tasks.
-            foreach (var service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
+            // Only clears system generated tasks, not persistent user created tasks.
+            foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
             }
@@ -66,7 +66,7 @@ namespace BudgetAnalyser.Engine.Services
 
             ClearDirtyDataFlags();
             this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
-            foreach (var service in this.databaseDependents)
+            foreach (ISupportsModelPersistence service in this.databaseDependents)
             {
                 await service.CreateAsync(this.budgetAnalyserDatabase);
             }
@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
             try
             {
-                foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
+                foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
                 {
                     await service.LoadAsync(this.budgetAnalyserDatabase);
                 }
@@ -176,7 +176,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var valid = true;
-            foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
+            foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
             {
                 try
                 {
@@ -194,7 +194,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ClearDirtyDataFlags()
         {
-            foreach (var key in this.dirtyData.Keys.ToList())
+            foreach (ApplicationDataType key in this.dirtyData.Keys.ToList())
             {
                 this.dirtyData[key] = false;
             }
@@ -202,7 +202,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void InitialiseDirtyDataTable()
         {
-            foreach (int value in Enum.GetValues(typeof (ApplicationDataType)))
+            foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
             {
                 var enumValue = (ApplicationDataType) value;
                 this.dirtyData.Add(enumValue, false);

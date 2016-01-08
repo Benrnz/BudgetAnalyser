@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Services
         private readonly BurnDownChartsBuilder chartsBuilder;
 
         public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] BurnDownChartsBuilder chartsBuilder, [NotNull] IBurnDownChartAnalyser chartAnalyser)
+                                     [NotNull] BurnDownChartsBuilder chartsBuilder, [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
             if (bucketRepository == null)
             {
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel,
-            LedgerBook ledgerBookModel, GlobalFilterCriteria criteria)
+                                             LedgerBook ledgerBookModel, GlobalFilterCriteria criteria)
         {
             this.chartsBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
             return this.chartsBuilder.Results;
@@ -59,8 +59,8 @@ namespace BudgetAnalyser.Engine.Services
             DateTime beginDate,
             string chartTitle)
         {
-            var bucketsList = buckets.ToList();
-            var result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
+            List<BudgetBucket> bucketsList = buckets.ToList();
+            BurnDownChartAnalyserResult result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
             result.ChartTitle = chartTitle;
             var persistChart = new CustomAggregateBurnDownGraph
             {
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Services
                 Name = chartTitle
             };
 
-            this.chartsBuilder.CustomCharts = this.chartsBuilder.CustomCharts.Union(new[] {persistChart}).ToList();
+            this.chartsBuilder.CustomCharts = this.chartsBuilder.CustomCharts.Union(new[] { persistChart }).ToList();
             return result;
         }
 
@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public CustomBurnDownChartApplicationState PreparePersistentStateData()
         {
-            var charts = this.chartsBuilder.CustomCharts ?? new List<CustomAggregateBurnDownGraph>();
+            IEnumerable<CustomAggregateBurnDownGraph> charts = this.chartsBuilder.CustomCharts ?? new List<CustomAggregateBurnDownGraph>();
             return new CustomBurnDownChartApplicationState
             {
                 Charts = charts.ToList()
@@ -93,8 +93,8 @@ namespace BudgetAnalyser.Engine.Services
 
         public void RemoveCustomChart(string chartName)
         {
-            var customCharts = this.chartsBuilder.CustomCharts.ToList();
-            var chart = customCharts.FirstOrDefault(c => c.Name == chartName);
+            List<CustomAggregateBurnDownGraph> customCharts = this.chartsBuilder.CustomCharts.ToList();
+            CustomAggregateBurnDownGraph chart = customCharts.FirstOrDefault(c => c.Name == chartName);
             customCharts.Remove(chart);
             this.chartsBuilder.CustomCharts = customCharts;
         }

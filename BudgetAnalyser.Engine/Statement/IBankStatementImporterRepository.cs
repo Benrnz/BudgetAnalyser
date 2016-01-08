@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 
 namespace BudgetAnalyser.Engine.Statement

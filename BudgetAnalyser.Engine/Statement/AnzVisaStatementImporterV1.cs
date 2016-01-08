@@ -74,9 +74,9 @@ namespace BudgetAnalyser.Engine.Statement
                     continue;
                 }
 
-                var split = line.Split(',');
+                string[] split = line.Split(',');
                 decimal amount;
-                var transactionType = FetchTransactionType(split, 1, 2, out amount);
+                NamedTransaction transactionType = FetchTransactionType(split, 1, 2, out amount);
                 var transaction = new Transaction
                 {
                     Account = account,
@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            var split = line.Split(',');
+            string[] split = line.Split(',');
             var card = this.importUtilities.FetchString(split, 0);
             if (card.IsNothing())
             {
@@ -127,7 +127,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            var date = this.importUtilities.FetchDate(split, 4);
+            DateTime date = this.importUtilities.FetchDate(split, 4);
             if (date == DateTime.MinValue)
             {
                 return false;
@@ -136,8 +136,42 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
+        /// <summary>
+        ///     Reads the lines from the file asynchronous;y.
+        /// </summary>
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        {
+            return await this.importUtilities.ReadLinesAsync(fileName);
+        }
+
+        /// <summary>
+        ///     Reads a chunk of text asynchronously.
+        /// </summary>
+        protected virtual async Task<string> ReadTextChunkAsync(string filePath)
+        {
+            using (
+                var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false)
+                )
+            {
+                var sb = new StringBuilder();
+                var buffer = new byte[0x128];
+                int numRead;
+                while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    var text = Encoding.UTF8.GetString(buffer, 0, numRead);
+                    sb.Append(text);
+                    if (text.Contains("\n"))
+                    {
+                        break;
+                    }
+                }
+
+                return sb.ToString();
+            }
+        }
+
         private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex,
-            out decimal amount)
+                                                      out decimal amount)
         {
             var stringType = this.importUtilities.FetchString(array, transactionTypeindex);
             amount = this.importUtilities.FetchDecimal(array, amountIndex);
@@ -148,7 +182,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             if (TransactionTypes.ContainsKey(stringType))
             {
-                var cachedTransactionType = TransactionTypes[stringType];
+                NamedTransaction cachedTransactionType = TransactionTypes[stringType];
                 amount *= -1;
                 return cachedTransactionType;
             }
@@ -191,40 +225,6 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             return chunk;
-        }
-
-        /// <summary>
-        ///     Reads the lines from the file asynchronous;y.
-        /// </summary>
-        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
-        {
-            return await this.importUtilities.ReadLinesAsync(fileName);
-        }
-
-        /// <summary>
-        ///     Reads a chunk of text asynchronously.
-        /// </summary>
-        protected virtual async Task<string> ReadTextChunkAsync(string filePath)
-        {
-            using (
-                var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false)
-                )
-            {
-                var sb = new StringBuilder();
-                var buffer = new byte[0x128];
-                int numRead;
-                while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                {
-                    var text = Encoding.UTF8.GetString(buffer, 0, numRead);
-                    sb.Append(text);
-                    if (text.Contains("\n"))
-                    {
-                        break;
-                    }
-                }
-
-                return sb.ToString();
-            }
         }
     }
 }

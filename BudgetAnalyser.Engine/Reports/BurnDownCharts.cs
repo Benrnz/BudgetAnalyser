@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Reports
         /// <param name="dateRangeDescription">The date range description.</param>
         /// <param name="listOfCharts">The list of charts.</param>
         public BurnDownCharts(DateTime beginDate, string dateRangeDescription,
-            IEnumerable<BurnDownChartAnalyserResult> listOfCharts)
+                              IEnumerable<BurnDownChartAnalyserResult> listOfCharts)
         {
             BeginDate = beginDate;
             DateRangeDescription = dateRangeDescription;

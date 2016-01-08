@@ -24,7 +24,7 @@
         /// </summary>
         public override string ImagePath => "VisaLogoImage";
 
-        internal virtual string[] KeyWords => new[] {"VISA"};
+        internal virtual string[] KeyWords => new[] { "VISA" };
 
         /// <summary>
         ///     Clones this instance and give the new clone the specified name.

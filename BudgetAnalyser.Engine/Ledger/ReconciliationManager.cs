@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -19,7 +20,7 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly ITransactionRuleService transactionRuleService;
 
         public ReconciliationManager([NotNull] ITransactionRuleService transactionRuleService,
-            [NotNull] IReconciliationConsistency reconciliationConsistency, [NotNull] ILogger logger)
+                                     [NotNull] IReconciliationConsistency reconciliationConsistency, [NotNull] ILogger logger)
         {
             if (transactionRuleService == null)
             {
@@ -74,7 +75,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("Reconciling against an inactive budget is invalid.");
             }
 
-            var stopWatch = Stopwatch.StartNew();
+            Stopwatch stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
 
             try
@@ -96,7 +97,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
-            foreach (var task in recon.Tasks)
+            foreach (ToDoTask task in recon.Tasks)
             {
                 this.logger.LogInfo(
                     l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
@@ -109,7 +110,7 @@ namespace BudgetAnalyser.Engine.Ledger
                                 "TRANSFER-TASK detected- creating new single use rule. SystemGenerated:{1} Reference:{2}",
                                 task.Description, task.SystemGenerated, transferTask.Reference));
                     this.transactionRuleService.CreateNewSingleUseRule(transferTask.BucketCode, null,
-                        new[] {transferTask.Reference}, null, null, true);
+                        new[] { transferTask.Reference }, null, null, true);
                 }
             }
 
@@ -164,13 +165,13 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(statement));
             }
 
-            var lastLine = ledgerBook.Reconciliations.FirstOrDefault();
+            LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
             if (lastLine == null)
             {
                 return;
             }
 
-            var unmatchedTxns = lastLine.Entries
+            List unmatchedTxns = lastLine.Entries
                 .SelectMany(e => e.Transactions)
                 .Where(
                     t =>
@@ -184,10 +185,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+            List statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
             foreach (var ledgerTransaction in unmatchedTxns)
             {
-                var statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
+                IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
                     ledgerTransaction.AutoMatchingReference);
                 if (statementTxns.None())
                 {
@@ -234,14 +235,14 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.transactionRuleService.CreateNewSingleUseRule(
                     transferDetails.FromLedger.BudgetBucket.Code,
                     null,
-                    new[] {transferDetails.AutoMatchingReference},
+                    new[] { transferDetails.AutoMatchingReference },
                     null,
                     -transferDetails.TransferAmount,
                     true);
                 this.transactionRuleService.CreateNewSingleUseRule(
                     transferDetails.ToLedger.BudgetBucket.Code,
                     null,
-                    new[] {transferDetails.AutoMatchingReference},
+                    new[] { transferDetails.AutoMatchingReference },
                     null,
                     transferDetails.TransferAmount,
                     true);
@@ -250,20 +251,20 @@ namespace BudgetAnalyser.Engine.Ledger
             // No need for a source transaction for surplus ledger.
             if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
-                var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
                 ledgerEntry.AddTransaction(sourceTransaction);
             }
 
             // No need for a destination transaction for surplus ledger.
             if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
-                var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
+                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
                 ledgerEntry.AddTransaction(destinationTransaction);
             }
         }
 
         private void PreReconciliationValidation(LedgerBook ledgerBook, DateTime reconciliationDate,
-            StatementModel statement)
+                                                 StatementModel statement)
         {
             var messages = new StringBuilder();
             if (!ledgerBook.Validate(messages))
@@ -277,7 +278,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            var startDate = ReconciliationBuilder.CalculateDateForReconcile(ledgerBook, reconciliationDate);
+            DateTime startDate = ReconciliationBuilder.CalculateDateForReconcile(ledgerBook, reconciliationDate);
 
             ValidateDates(ledgerBook, startDate, reconciliationDate, statement);
 
@@ -287,7 +288,7 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         private void ValidateAgainstUncategorisedTransactions(DateTime startDate, DateTime reconciliationDate,
-            StatementModel statement)
+                                                              StatementModel statement)
         {
             if (statement.AllTransactions
                 .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
@@ -296,7 +297,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         t.BudgetBucket == null ||
                         (t.BudgetBucket != null && string.IsNullOrWhiteSpace(t.BudgetBucket.Code))))
             {
-                var uncategorised =
+                IEnumerable<Transaction> uncategorised =
                     statement.AllTransactions.Where(
                         t =>
                             t.BudgetBucket == null ||
@@ -305,10 +306,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.logger.LogWarning(
                     _ =>
                         "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
-                foreach (var transaction in uncategorised)
+                foreach (Transaction transaction in uncategorised)
                 {
                     count++;
-                    var transactionCopy = transaction;
+                    Transaction transactionCopy = transaction;
                     this.logger.LogWarning(
                         _ =>
                             "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
@@ -327,9 +328,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate,
-            StatementModel statement)
+                                          StatementModel statement)
         {
-            var recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
+            LedgerEntryLine recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
             if (recentEntry != null)
             {
                 if (reconciliationDate <= recentEntry.Date)
@@ -337,7 +338,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     throw new InvalidOperationException("The start Date entered is before the previous ledger entry.");
                 }
 
-                if (recentEntry.Date.AddDays(7*4) > reconciliationDate)
+                if (recentEntry.Date.AddDays(7 * 4) > reconciliationDate)
                 {
                     throw new InvalidOperationException(
                         "The start Date entered is not at least 4 weeks after the previous reconciliation. ");

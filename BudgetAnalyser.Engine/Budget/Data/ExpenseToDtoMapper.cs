@@ -13,14 +13,14 @@ namespace BudgetAnalyser.Engine.Budget.Data
             this.bucketRepo = bucketRepo;
         }
 
-        partial void ToModelPostprocessing(ExpenseDto dto, ref Expense model)
-        {
-            model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode);
-        }
-
         partial void ToDtoPostprocessing(ref ExpenseDto dto, Expense model)
         {
             dto.BudgetBucketCode = model.Bucket.Code;
+        }
+
+        partial void ToModelPostprocessing(ExpenseDto dto, ref Expense model)
+        {
+            model.Bucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode);
         }
     }
 }

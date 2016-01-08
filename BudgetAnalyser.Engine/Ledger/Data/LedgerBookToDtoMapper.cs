@@ -9,18 +9,18 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 {
     internal partial class Mapper_LedgerBookDto_LedgerBook
     {
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly ILedgerBucketFactory bucketFactory;
-        private readonly ILedgerTransactionFactory transactionFactory;
-        private readonly IReconciliationBuilder reconciliationBuilder;
+        private readonly IBudgetBucketRepository bucketRepo;
         private readonly Dictionary<string, LedgerBucket> cachedLedgers = new Dictionary<string, LedgerBucket>();
+        private readonly IReconciliationBuilder reconciliationBuilder;
+        private readonly ILedgerTransactionFactory transactionFactory;
 
         public Mapper_LedgerBookDto_LedgerBook(
-            [NotNull] IBudgetBucketRepository bucketRepo, 
-            [NotNull] IAccountTypeRepository accountTypeRepo, 
-            [NotNull] ILedgerBucketFactory bucketFactory, 
-            [NotNull] ILedgerTransactionFactory transactionFactory, 
+            [NotNull] IBudgetBucketRepository bucketRepo,
+            [NotNull] IAccountTypeRepository accountTypeRepo,
+            [NotNull] ILedgerBucketFactory bucketFactory,
+            [NotNull] ILedgerTransactionFactory transactionFactory,
             [NotNull] IReconciliationBuilder reconciliationBuilder)
         {
             if (bucketRepo == null) throw new ArgumentNullException(nameof(bucketRepo));
@@ -35,16 +35,21 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.reconciliationBuilder = reconciliationBuilder;
         }
 
-        // ReSharper disable once RedundantAssignment
-        partial void ModelFactory(LedgerBookDto dto, ref LedgerBook model)
+        // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
+        private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
         {
-            // TODO Seems odd that a mapper requires the ReconciliationBuilder, either need a factory or better yet move the reconciliation code out of the LedgerBook class.
-            model = new LedgerBook(this.reconciliationBuilder);
-        }
+            if (this.cachedLedgers.ContainsKey(ledger.BudgetBucket.Code))
+            {
+                return this.cachedLedgers[ledger.BudgetBucket.Code];
+            }
 
-        partial void ToModelPostprocessing(LedgerBookDto dto, ref LedgerBook model)
-        {
-            InitialiseAndValidateLedgerBook(dto, model);
+            if (throwIfNotFound)
+            {
+                throw new ArgumentException($"Ledger Bucket {ledger.BudgetBucket.Code} not found in cache.");
+            }
+
+            this.cachedLedgers.Add(ledger.BudgetBucket.Code, ledger);
+            return ledger;
         }
 
         /// <summary>
@@ -66,7 +71,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 GetOrAddFromCache(ledgerBucket);
             }
 
-            bool ledgersMapWasEmpty = model.Ledgers.None();
+            var ledgersMapWasEmpty = model.Ledgers.None();
 
             // Default to CHEQUE when StoredInAccount is null.
             foreach (LedgerEntryLine line in model.Reconciliations)
@@ -89,29 +94,24 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             }
         }
 
-        // ReSharper disable once UnusedParameter.Local - This argument is used to optionally detect elements not in array.
-        private LedgerBucket GetOrAddFromCache(LedgerBucket ledger, bool throwIfNotFound = false)
+        // ReSharper disable once RedundantAssignment
+        partial void ModelFactory(LedgerBookDto dto, ref LedgerBook model)
         {
-            if (this.cachedLedgers.ContainsKey(ledger.BudgetBucket.Code))
-            {
-                return this.cachedLedgers[ledger.BudgetBucket.Code];
-            }
+            // TODO Seems odd that a mapper requires the ReconciliationBuilder, either need a factory or better yet move the reconciliation code out of the LedgerBook class.
+            model = new LedgerBook(this.reconciliationBuilder);
+        }
 
-            if (throwIfNotFound)
-            {
-                throw new ArgumentException($"Ledger Bucket {ledger.BudgetBucket.Code} not found in cache.");
-            }
-
-            this.cachedLedgers.Add(ledger.BudgetBucket.Code, ledger);
-            return ledger;
+        partial void ToModelPostprocessing(LedgerBookDto dto, ref LedgerBook model)
+        {
+            InitialiseAndValidateLedgerBook(dto, model);
         }
     }
 
     internal partial class Mapper_LedgerBucketDto_LedgerBucket
     {
-        private readonly IBudgetBucketRepository bucketRepo;
         private readonly IAccountTypeRepository accountTypeRepo;
         private readonly ILedgerBucketFactory bucketFactory;
+        private readonly IBudgetBucketRepository bucketRepo;
 
         public Mapper_LedgerBucketDto_LedgerBucket([NotNull] IBudgetBucketRepository bucketRepo, [NotNull] IAccountTypeRepository accountTypeRepo, [NotNull] ILedgerBucketFactory bucketFactory)
         {
@@ -129,16 +129,16 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             model = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount);
         }
 
-        partial void ToModelPostprocessing(LedgerBucketDto dto, ref LedgerBucket model)
-        {
-            model.BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode);
-            model.StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount);
-        }
-
         partial void ToDtoPostprocessing(ref LedgerBucketDto dto, LedgerBucket model)
         {
             dto.BucketCode = model.BudgetBucket.Code;
             dto.StoredInAccount = model.StoredInAccount.Name;
+        }
+
+        partial void ToModelPostprocessing(LedgerBucketDto dto, ref LedgerBucket model)
+        {
+            model.BudgetBucket = this.bucketRepo.GetByCode(dto.BucketCode);
+            model.StoredInAccount = this.accountTypeRepo.GetByKey(dto.StoredInAccount);
         }
     }
 
@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         private readonly ILedgerTransactionFactory transactionFactory;
 
         public Mapper_LedgerEntryLineDto_LedgerEntryLine(
-            [NotNull] IAccountTypeRepository accountTypeRepo, 
+            [NotNull] IAccountTypeRepository accountTypeRepo,
             [NotNull] ILedgerBucketFactory bucketFactory,
             [NotNull] ILedgerTransactionFactory transactionFactory)
         {
@@ -182,15 +182,15 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.accountTypeRepo = accountTypeRepo;
         }
 
-        partial void ToModelPostprocessing(LedgerTransactionDto dto, ref BankBalanceAdjustmentTransaction model)
-        {
-            model.BankAccount = this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
-        }
-
         partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, BankBalanceAdjustmentTransaction model)
         {
             dto.Account = model.BankAccount.Name;
             dto.TransactionType = model.GetType().FullName;
+        }
+
+        partial void ToModelPostprocessing(LedgerTransactionDto dto, ref BankBalanceAdjustmentTransaction model)
+        {
+            model.BankAccount = this.accountTypeRepo.GetByKey(dto.Account) ?? this.accountTypeRepo.GetByKey(AccountTypeRepositoryConstants.Cheque);
         }
     }
 
@@ -218,13 +218,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
     internal partial class Mapper_LedgerEntryDto_LedgerEntry
     {
+        private readonly IAccountTypeRepository accountTypeRepo;
         private readonly ILedgerBucketFactory bucketFactory;
         private readonly ILedgerTransactionFactory transactionFactory;
-        private readonly IAccountTypeRepository accountTypeRepo;
 
         public Mapper_LedgerEntryDto_LedgerEntry(
-            [NotNull] ILedgerBucketFactory bucketFactory, 
-            [NotNull] ILedgerTransactionFactory transactionFactory, 
+            [NotNull] ILedgerBucketFactory bucketFactory,
+            [NotNull] ILedgerTransactionFactory transactionFactory,
             [NotNull] IAccountTypeRepository accountTypeRepo)
         {
             if (bucketFactory == null) throw new ArgumentNullException(nameof(bucketFactory));
@@ -235,14 +235,10 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             this.accountTypeRepo = accountTypeRepo;
         }
 
-        partial void ToModelPreprocessing(LedgerEntryDto dto, LedgerEntry model)
+        partial void ToDtoPostprocessing(ref LedgerEntryDto dto, LedgerEntry model)
         {
-            // Transactions must be done first otherwise balance will be changed by adding transactions and the balance should be read from the Dto.
-            var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
-            foreach (var txn in dto.Transactions)
-            {
-                model.AddTransaction(transactionMapper.ToModel(txn));
-            }
+            dto.BucketCode = model.LedgerBucket.BudgetBucket.Code;
+            dto.StoredInAccount = model.LedgerBucket.StoredInAccount.Name;
         }
 
         partial void ToModelPostprocessing(LedgerEntryDto dto, ref LedgerEntry model)
@@ -250,17 +246,21 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             model.LedgerBucket = this.bucketFactory.Build(dto.BucketCode, dto.StoredInAccount);
         }
 
-        partial void ToDtoPostprocessing(ref LedgerEntryDto dto, LedgerEntry model)
+        partial void ToModelPreprocessing(LedgerEntryDto dto, LedgerEntry model)
         {
-            dto.BucketCode = model.LedgerBucket.BudgetBucket.Code;
-            dto.StoredInAccount = model.LedgerBucket.StoredInAccount.Name;
+            // Transactions must be done first otherwise balance will be changed by adding transactions and the balance should be read from the Dto.
+            var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
+            foreach (LedgerTransactionDto txn in dto.Transactions)
+            {
+                model.AddTransaction(transactionMapper.ToModel(txn));
+            }
         }
     }
 
     internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
     {
-        private readonly ILedgerTransactionFactory transactionFactory;
         private readonly IAccountTypeRepository accountTypeRepo;
+        private readonly ILedgerTransactionFactory transactionFactory;
 
         public Mapper_LedgerTransactionDto_LedgerTransaction([NotNull] ILedgerTransactionFactory transactionFactory, [NotNull] IAccountTypeRepository accountTypeRepo)
         {
@@ -268,6 +268,12 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             if (accountTypeRepo == null) throw new ArgumentNullException(nameof(accountTypeRepo));
             this.transactionFactory = transactionFactory;
             this.accountTypeRepo = accountTypeRepo;
+        }
+
+        // ReSharper disable once RedundantAssignment
+        partial void ModelFactory(LedgerTransactionDto dto, ref LedgerTransaction model)
+        {
+            model = this.transactionFactory.Build(dto.TransactionType, dto.Id);
         }
 
         partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, LedgerTransaction model)
@@ -289,12 +295,6 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 balanaceTransaction.BankAccount = this.accountTypeRepo.GetByKey(dto.Account);
             }
-        }
-
-        // ReSharper disable once RedundantAssignment
-        partial void ModelFactory(LedgerTransactionDto dto, ref LedgerTransaction model)
-        {
-            model = this.transactionFactory.Build(dto.TransactionType, dto.Id);
         }
     }
 }

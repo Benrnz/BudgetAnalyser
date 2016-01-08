@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.Budget
                 retval = false;
             }
 
-            var duplicates = Expenses
+            IEnumerable<string> duplicates = Expenses
                 .GroupBy(i => i.Bucket.Code)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);

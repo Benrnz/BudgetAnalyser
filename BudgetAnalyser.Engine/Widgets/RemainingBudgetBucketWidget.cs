@@ -26,12 +26,12 @@ namespace BudgetAnalyser.Engine.Widgets
             Category = WidgetGroup.MonthlyTrackingSectionName;
             Dependencies = new[]
             {
-                typeof (IBudgetCurrencyContext),
-                typeof (StatementModel),
-                typeof (GlobalFilterCriteria),
-                typeof (IBudgetBucketRepository),
-                typeof (LedgerBook),
-                typeof (LedgerCalculation)
+                typeof(IBudgetCurrencyContext),
+                typeof(StatementModel),
+                typeof(GlobalFilterCriteria),
+                typeof(IBudgetBucketRepository),
+                typeof(LedgerBook),
+                typeof(LedgerCalculation)
             };
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(6);
             RemainingBudgetToolTip = "Remaining Balance for period is {0:C}";
@@ -78,34 +78,6 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     Gets the statement model.
         /// </summary>
         protected StatementModel Statement { get; private set; }
-
-        /// <summary>
-        ///     Calculates the monthly budget amount.
-        /// </summary>
-        protected virtual decimal MonthlyBudgetAmount()
-        {
-            Debug.Assert(Filter.BeginDate != null);
-            Debug.Assert(Filter.EndDate != null);
-
-            var monthlyBudget = Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
-            var totalBudgetedAmount = monthlyBudget;
-            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
-
-            if (LedgerBook == null || ledgerLine == null ||
-                ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
-            {
-                return totalBudgetedAmount;
-            }
-
-            return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
-        }
-
-        /// <summary>
-        ///     Provides an optional means to include additional dependencies.
-        /// </summary>
-        protected virtual void SetAdditionalDependencies(object[] input)
-        {
-        }
 
         /// <summary>
         ///     Updates the widget with new input.
@@ -169,7 +141,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Value = Convert.ToDouble(remainingBalance);
             ToolTip = string.Format(CultureInfo.CurrentCulture, RemainingBudgetToolTip, remainingBalance);
 
-            if (remainingBalance < 0.2M*totalBudget)
+            if (remainingBalance < 0.2M * totalBudget)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
@@ -177,6 +149,34 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 ColourStyleName = this.standardStyle;
             }
+        }
+
+        /// <summary>
+        ///     Calculates the monthly budget amount.
+        /// </summary>
+        protected virtual decimal MonthlyBudgetAmount()
+        {
+            Debug.Assert(Filter.BeginDate != null);
+            Debug.Assert(Filter.EndDate != null);
+
+            var monthlyBudget = Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
+            var totalBudgetedAmount = monthlyBudget;
+            LedgerEntryLine ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
+
+            if (LedgerBook == null || ledgerLine == null ||
+                ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))
+            {
+                return totalBudgetedAmount;
+            }
+
+            return ledgerLine.Entries.First(e => e.LedgerBucket.BudgetBucket.Code == BucketCode).Balance;
+        }
+
+        /// <summary>
+        ///     Provides an optional means to include additional dependencies.
+        /// </summary>
+        protected virtual void SetAdditionalDependencies(object[] input)
+        {
         }
     }
 }
