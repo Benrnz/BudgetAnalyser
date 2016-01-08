@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
-using BudgetAnalyser.Engine;
-
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
+    [AutoRegisterWithIoC(Named = "Named Logger", SingleInstance  = true)]
     public class FakeLogger : ILogger
     {
         public string Format(string format, params object[] parameters)

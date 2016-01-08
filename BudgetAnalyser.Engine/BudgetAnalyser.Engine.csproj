@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="ApplicationDataType.cs" />
     <Compile Include="AutoRegisterWithIoCAttribute.cs" />
-    <Compile Include="AutoRegisterWithIoCProcessor.cs" />
     <Compile Include="BankAccount\Account.cs" />
     <Compile Include="BankAccount\AccountType.cs" />
     <Compile Include="BankAccount\AccountTypeRepositoryConstants.cs" />
@@ -100,9 +99,11 @@
     <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="DebugLogger.cs" />
+    <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="DefaultIoCRegistrations.cs" />
     <Compile Include="DependencyRegistrationRequirement.cs" />
     <Compile Include="GlobalFilterCriteria.cs" />
     <Compile Include="GlobalSuppressions.cs" />

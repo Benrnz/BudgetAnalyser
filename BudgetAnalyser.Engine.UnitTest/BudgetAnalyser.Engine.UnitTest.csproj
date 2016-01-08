@@ -86,6 +86,8 @@
     <Compile Include="Account\ChequeAccountTest.cs" />
     <Compile Include="Account\MastercardAccountTest.cs" />
     <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
+    <Compile Include="DefaultIoCRegistrationsTest.cs" />
     <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
     <Compile Include="Budget\BudgetBucketTest.cs" />
     <Compile Include="Budget\BudgetBucketToDtoMapperTest.cs" />
@@ -268,7 +270,7 @@
     </EmbeddedResource>
     <Content Include="PublicHolidaysTestGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PublicHolidaysTestGenerator1.generated.cs</LastGenOutput>
+      <LastGenOutput>PublicHolidaysTestGenerator.generated.cs</LastGenOutput>
     </Content>
     <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
     <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />

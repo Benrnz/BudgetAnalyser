@@ -1,7 +1,6 @@
-﻿using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace BudgetAnalyser.UnitTest
+namespace BudgetAnalyser.Engine.UnitTest
 {
     [AutoRegisterWithIoC]
     [UsedImplicitly]
