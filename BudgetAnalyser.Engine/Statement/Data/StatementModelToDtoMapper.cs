@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
 
         partial void ToDtoPostprocessing(ref TransactionSetDto dto, StatementModel model)
         {
-            List transactions10 = model.AllTransactions.Select(this.transactionMapper.ToDto).ToList();
+            var transactions10 = model.AllTransactions.Select(this.transactionMapper.ToDto).ToList();
             dto.Transactions = transactions10;
         }
 

@@ -171,7 +171,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            List unmatchedTxns = lastLine.Entries
+            var unmatchedTxns = lastLine.Entries
                 .SelectMany(e => e.Transactions)
                 .Where(
                     t =>
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            List statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+            var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
             foreach (var ledgerTransaction in unmatchedTxns)
             {
                 IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
