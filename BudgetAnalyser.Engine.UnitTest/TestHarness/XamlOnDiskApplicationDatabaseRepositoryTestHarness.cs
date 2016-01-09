@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using Portable.Xaml;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {

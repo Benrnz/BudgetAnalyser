@@ -5,6 +5,7 @@ using System.Reflection;
 using Rees.TangyFruitMapper;
 using System.Collections.Generic;
 using System;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Budget;
 

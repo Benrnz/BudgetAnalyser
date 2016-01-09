@@ -11,6 +11,7 @@ using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {

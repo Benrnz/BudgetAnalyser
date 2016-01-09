@@ -109,7 +109,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICloneable.cs" />
     <Compile Include="IDataChangeDetection.cs" />
-    <Compile Include="IDtoMapper.cs" />
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="IEnvironmentFolders.cs" />
     <Compile Include="ILogger.cs" />
@@ -294,12 +293,6 @@
     <Compile Include="Widgets\WidgetPersistentState.cs" />
     <Compile Include="Widgets\WidgetsApplicationState.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rees.TangyFruitMapper\Rees.TangyFruitMapper.csproj">
-      <Project>{aaf315d4-ed07-44b3-aa75-9725e618d5c7}</Project>
-      <Name>Rees.TangyFruitMapper</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Portable.Xaml">

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Statement.Data;
 using JetBrains.Annotations;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Statement
 {

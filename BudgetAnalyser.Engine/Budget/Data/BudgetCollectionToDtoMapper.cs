@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JetBrains.Annotations;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {

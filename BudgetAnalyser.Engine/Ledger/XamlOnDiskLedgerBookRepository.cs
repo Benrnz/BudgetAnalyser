@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 using Portable.Xaml;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger
 {

@@ -7,6 +7,7 @@
     "JetBrains.Annotations": "10.0.0",
     "Microsoft.NETCore": "5.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.0",
+    "Rees.TangyFruitMapper": "1.0.3",
     "System.Reflection.TypeExtensions": "4.0.0",
     "System.Runtime": "4.0.20"
   },

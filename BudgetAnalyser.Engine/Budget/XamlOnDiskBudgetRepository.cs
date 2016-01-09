@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget.Data;
 using JetBrains.Annotations;
 using Portable.Xaml;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget
 {

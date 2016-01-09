@@ -7,6 +7,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest
 {

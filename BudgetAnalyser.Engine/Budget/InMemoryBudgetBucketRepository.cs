@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget.Data;
 using JetBrains.Annotations;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget
 {

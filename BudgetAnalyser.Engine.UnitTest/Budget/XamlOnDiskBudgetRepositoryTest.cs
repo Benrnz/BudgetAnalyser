@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-
+using Rees.TangyFruitMapper;
 using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Budget

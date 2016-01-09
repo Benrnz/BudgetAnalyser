@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Matching.Data;
 using JetBrains.Annotations;
 using Portable.Xaml;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Matching
 {

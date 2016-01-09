@@ -49,6 +49,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
     </Reference>
+    <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.3\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
       <Private>True</Private>
@@ -246,10 +250,6 @@
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
       <Project>{22e5fb3e-3044-4bda-88ff-619f83ec4e99}</Project>
       <Name>BudgetAnalyser.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rees.TangyFruitMapper\Rees.TangyFruitMapper.csproj">
-      <Project>{aaf315d4-ed07-44b3-aa75-9725e618d5c7}</Project>
-      <Name>Rees.TangyFruitMapper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
