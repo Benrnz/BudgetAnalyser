@@ -44,14 +44,6 @@ namespace BudgetAnalyser.Engine
                             DependencyRequired = property.PropertyType,
                             PropertyInjectionAssignment = instance => property.SetValue(null, instance)
                         };
-                        //// Some reasonably awkard Autofac usage here to allow testibility.  (Extension methods aren't easy to test)
-                        //IComponentRegistration registration;
-                        //bool success = container.ComponentRegistry.TryGetRegistration(new TypedService(property.PropertyType), out registration);
-                        //if (success)
-                        //{
-                        //    object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
-                        //    property.SetValue(null, dependency);
-                        //}
                     }
                 }
             }
@@ -83,35 +75,10 @@ namespace BudgetAnalyser.Engine
                 select new DependencyRegistrationRequirement
                 {
                     DependencyRequired = type,
-                    IsSingleton = autoRegisterAttribute.SingleInstance,
+                    IsSingleInstance = autoRegisterAttribute.SingleInstance,
                     NamedInstanceName = autoRegisterAttribute.Named,
                     AdditionalRegistrationType = autoRegisterAttribute.RegisterAs
                 };
-            //IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
-            //if (autoRegisterAttribute.SingleInstance)
-            //{
-            //    // Singleton
-            //    registration = builder.RegisterType(type).SingleInstance();
-            //}
-            //else
-            //{
-            //    // Transient
-            //    registration = builder.RegisterType(type).InstancePerDependency();
-            //}
-
-            //if (!string.IsNullOrWhiteSpace(autoRegisterAttribute.Named))
-            //{
-            //    // Named Dependency
-            //    registration = registration.Named(autoRegisterAttribute.Named, type);
-            //}
-
-            //registration.AsImplementedInterfaces().AsSelf();
-
-            //// Register as custom type, other than its own class name, and directly implemented interfaces.
-            //if (autoRegisterAttribute.RegisterAs != null)
-            //{
-            //    registration.As(autoRegisterAttribute.RegisterAs);
-            //}
         }
     }
 }

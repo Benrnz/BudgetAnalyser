@@ -25,8 +25,9 @@ namespace BudgetAnalyser.Engine
         /// <summary>
         ///     Get or sets a value indicating if the dependency instance needs to be a singleton.
         ///     If false, register as a transient, or per-call.
+        ///     Intentionally not called Singleton, as it is possible to use more than one, but only one per IoC container.
         /// </summary>
-        public bool IsSingleton { get; set; }
+        public bool IsSingleInstance { get; set; }
 
         /// <summary>
         ///     Get or sets an optional value to register under a specific name.

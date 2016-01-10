@@ -99,7 +99,7 @@ namespace BudgetAnalyser.Engine.UnitTest
             IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
             DependencyRegistrationRequirement loggerRegistration = result.First();
             Assert.AreEqual(typeof(FakeLogger), loggerRegistration.DependencyRequired);
-            Assert.IsTrue(loggerRegistration.IsSingleton);
+            Assert.IsTrue(loggerRegistration.IsSingleInstance);
             Assert.AreEqual("Named Logger", loggerRegistration.NamedInstanceName);
         }
 
