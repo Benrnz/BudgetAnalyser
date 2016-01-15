@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Builder;
@@ -48,6 +47,7 @@ namespace BudgetAnalyser.Uwp
                 }
             }
 
+            // TODO
             // ConstructUiContext(container);
 
             ShellController = container.Resolve<ShellController>();
