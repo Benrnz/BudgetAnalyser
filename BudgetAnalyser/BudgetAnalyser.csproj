@@ -154,6 +154,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationState\ApplicationStateLoadedMessage.cs" />
+    <Compile Include="ApplicationState\ApplicationStateLoadFinishedMessage.cs" />
+    <Compile Include="ApplicationState\ApplicationStateRequestedMessage.cs" />
+    <Compile Include="ApplicationState\BadApplicationStateFileFormatException.cs" />
+    <Compile Include="ApplicationState\IPersistApplicationState.cs" />
+    <Compile Include="ApplicationState\PersistApplicationStateAsXaml.cs" />
     <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="Budget\BudgetBucketBindingSource.cs" />
     <Compile Include="Budget\BudgetBucketChosenEventArgs.cs" />
@@ -236,7 +242,7 @@
     <Compile Include="ScratchPad.xaml.cs">
       <DependentUpon>ScratchPad.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShellPersistentStateV1.cs" />
+    <Compile Include="ShellPersistentState.cs" />
     <Compile Include="LedgerBook\BankBalanceUserControl.xaml.cs">
       <DependentUpon>BankBalanceUserControl.xaml</DependentUpon>
     </Compile>

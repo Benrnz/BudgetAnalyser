@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using BudgetAnalyser.Annotations;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
@@ -15,9 +17,10 @@ using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser
 {
@@ -117,7 +120,7 @@ namespace BudgetAnalyser
             }
 
             this.initialised = true;
-            IList<IPersistent> rehydratedModels = this.statePersistence.Load()?.ToList();
+            IList<IPersistentApplicationState> rehydratedModels = this.statePersistence.Load()?.ToList();
 
             if (rehydratedModels == null || rehydratedModels.None())
             {
@@ -133,7 +136,7 @@ namespace BudgetAnalyser
             foreach (int sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                IEnumerable<IPersistent> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+                IEnumerable<IPersistentApplicationState> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -198,11 +201,11 @@ namespace BudgetAnalyser
             return false;
         }
 
-        private static IList<IPersistent> CreateNewDefaultApplicationState()
+        private static IList<IPersistentApplicationState> CreateNewDefaultApplicationState()
         {
             // Widget persistent state object is required to draw the widgets, even the ones that should be there by default.
             // The widgets must be drawn so a user can open or create a new file. 
-            var appState = new List<IPersistent>
+            var appState = new List<IPersistentApplicationState>
             {
                 new WidgetsApplicationState()
             };
@@ -216,7 +219,7 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var shellState = message.ElementOfType<ShellPersistentStateV1>();
+            var shellState = message.ElementOfType<ShellPersistentState>();
             if (shellState != null)
             {
                 // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
@@ -252,7 +255,7 @@ namespace BudgetAnalyser
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var shellPersistentStateV1 = new ShellPersistentStateV1
+            var shellPersistentStateV1 = new ShellPersistentState
             {
                 Size = WindowSize,
                 TopLeft = WindowTopLeft

@@ -21,9 +21,9 @@ using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 using Rees.Wpf.RecentFiles;
 using Rees.Wpf.UserInteraction;
+using PersistApplicationStateAsXaml = BudgetAnalyser.ApplicationState.PersistApplicationStateAsXaml;
 
 namespace BudgetAnalyser
 {
@@ -33,6 +33,7 @@ namespace BudgetAnalyser
     ///     This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used any where
     ///     else in the application to prevent the Service Locator anti-pattern from appearing.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
     public class CompositionRoot
     {
         private const string InputBoxView = "InputBoxView";
