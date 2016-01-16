@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Matching;
 

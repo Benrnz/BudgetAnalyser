@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using Rees.UserInteraction.Contracts;

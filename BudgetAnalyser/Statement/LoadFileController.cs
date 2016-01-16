@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.ShellDialog;

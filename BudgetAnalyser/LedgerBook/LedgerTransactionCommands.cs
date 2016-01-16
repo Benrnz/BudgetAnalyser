@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;

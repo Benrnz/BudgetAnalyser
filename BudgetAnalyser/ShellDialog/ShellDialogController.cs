@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using System.Windows.Threading;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 

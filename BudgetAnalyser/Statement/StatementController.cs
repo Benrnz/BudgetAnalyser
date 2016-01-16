@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ClearTextFilterCommand
         {
             get
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Statement
         public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         public StatementControllerFileOperations FileOperations { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
 
         public bool Shown
@@ -124,10 +124,10 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public string TextFilter

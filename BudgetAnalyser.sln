@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Uwp", "Budge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperGeneration", "MapperGeneration\MapperGeneration.csproj", "{7FA4712A-2EEC-4441-BEDC-33F6DEF5E67E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser", "BudgetAnalyser\BudgetAnalyser.csproj", "{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,22 @@ Global
 		{7FA4712A-2EEC-4441-BEDC-33F6DEF5E67E}.Release|x64.Build.0 = Release|Any CPU
 		{7FA4712A-2EEC-4441-BEDC-33F6DEF5E67E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7FA4712A-2EEC-4441-BEDC-33F6DEF5E67E}.Release|x86.Build.0 = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|ARM.Build.0 = Debug|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|x64.ActiveCfg = Debug|x64
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|x64.Build.0 = Debug|x64
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|x86.ActiveCfg = Debug|x86
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Debug|x86.Build.0 = Debug|x86
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|ARM.Build.0 = Release|Any CPU
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|x64.ActiveCfg = Release|x64
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|x64.Build.0 = Release|x64
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|x86.ActiveCfg = Release|x86
+		{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

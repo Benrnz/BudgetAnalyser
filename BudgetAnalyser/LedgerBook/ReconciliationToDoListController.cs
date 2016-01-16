@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.CommandWpf;

@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;

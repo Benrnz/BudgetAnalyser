@@ -45,10 +45,10 @@ namespace BudgetAnalyser.Matching
             this.ruleService.Saved += OnSavedNotificationReceived;
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ApplyRulesCommand => new RelayCommand(OnApplyRulesCommandExecute, CanExecuteApplyRulesCommand);
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand CreateRuleCommand => new RelayCommand(OnCreateRuleCommandExecute, CanExecuteCreateRuleCommand);
 
         public bool Dirty
@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Matching
 
         public RulesController RulesController { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ShowRulesCommand => new RelayCommand(OnShowRulesCommandExecute);
 
         private bool CanExecuteApplyRulesCommand()

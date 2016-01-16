@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.Messaging;

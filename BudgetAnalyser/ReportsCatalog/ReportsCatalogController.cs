@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;

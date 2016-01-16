@@ -1,6 +1,6 @@
 ﻿using System;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.ShellDialog;

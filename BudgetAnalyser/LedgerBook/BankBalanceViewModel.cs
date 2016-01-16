@@ -42,7 +42,7 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public bool ShowAdjustedBalance => this.line != null;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using GalaSoft.MvvmLight.Messaging;

@@ -73,7 +73,7 @@ namespace BudgetAnalyser
             ReportsDialog = new ShellDialogController();
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public BudgetController BudgetController => this.uiContext.BudgetController;
 
         public ShellDialogController BudgetDialog { get; }
@@ -81,29 +81,29 @@ namespace BudgetAnalyser
         public ShellDialogController DashboardDialog { get; }
         public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public LedgerBookController LedgerBookController => this.uiContext.LedgerBookController;
 
         public ShellDialogController LedgerBookDialog { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public MainMenuController MainMenuController => this.uiContext.MainMenuController;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ReportsCatalogController ReportsCatalogController => this.uiContext.ReportsCatalogController;
 
         public ShellDialogController ReportsDialog { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public RulesController RulesController => this.uiContext.RulesController;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public StatementController StatementController => this.uiContext.StatementController;
 
         public ShellDialogController TransactionsDialog { get; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public string WindowTitle => "Budget Analyser";
 
         internal Point WindowSize { get; private set; }
