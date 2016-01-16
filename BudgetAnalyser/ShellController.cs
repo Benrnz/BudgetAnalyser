@@ -204,7 +204,7 @@ namespace BudgetAnalyser
             // The widgets must be drawn so a user can open or create a new file. 
             var appState = new List<IPersistent>
             {
-                new WidgetsApplicationStateV1()
+                new WidgetsApplicationState()
             };
             return appState;
         }
@@ -236,7 +236,7 @@ namespace BudgetAnalyser
                 }
             }
 
-            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
+            var storedMainAppState = message.ElementOfType<MainApplicationState>();
             if (storedMainAppState != null)
             {
                 try
@@ -259,7 +259,7 @@ namespace BudgetAnalyser
             };
             message.PersistThisModel(shellPersistentStateV1);
 
-            MainApplicationStateModelV1 dataFileState = this.persistenceOperations.PreparePersistentStateData();
+            MainApplicationState dataFileState = this.persistenceOperations.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 

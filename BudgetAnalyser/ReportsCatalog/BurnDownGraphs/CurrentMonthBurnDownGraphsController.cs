@@ -156,7 +156,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var customChartState = message.ElementOfType<CustomBurnDownChartsV1>();
+            var customChartState = message.ElementOfType<CustomBurnDownChartApplicationState>();
             if (customChartState != null)
             {
                 this.chartsService.LoadPersistedStateData(customChartState);

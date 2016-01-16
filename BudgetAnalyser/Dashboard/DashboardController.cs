@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
+            var storedWidgetsState = message.ElementOfType<WidgetsApplicationState>();
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            WidgetsApplicationStateV1 widgetStates = this.dashboardService.PreparePersistentStateData();
+            WidgetsApplicationState widgetStates = this.dashboardService.PreparePersistentStateData();
             message.PersistThisModel(widgetStates);
         }
 

@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public void FilterableBuckets_ShouldContainUncatergorised_GivenAnyBucketList()
         {
-            Assert.IsTrue(this.subject.FilterableBuckets().Any(b => b == TransactionManagerService.UncategorisedFilter));
+            Assert.IsTrue(this.subject.FilterableBuckets().Any(b => b == TransactionConstants.UncategorisedFilter));
         }
 
         [TestMethod]
@@ -174,7 +174,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.testData = model2;
             Arrange();
 
-            var result = this.subject.FilterByBucket(TransactionManagerService.UncategorisedFilter);
+            var result = this.subject.FilterByBucket(TransactionConstants.UncategorisedFilter);
 
             this.testData.Output(DateTime.MinValue);
             Assert.AreEqual(1, result.Count());

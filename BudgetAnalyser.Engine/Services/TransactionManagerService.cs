@@ -16,16 +16,11 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     ///     A service to manipulate and manage transactions and statements.
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Services.ITransactionManagerService" />
-    /// <seealso cref="BudgetAnalyser.Engine.Services.ISupportsModelPersistence" />
+    /// <seealso cref="ITransactionManagerService" />
+    /// <seealso cref="ISupportsModelPersistence" />
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class TransactionManagerService : ITransactionManagerService, ISupportsModelPersistence
     {
-        /// <summary>
-        ///     A constant to refer to uncategorised transactions for filtering purposes. Used in the filter drop down list.
-        /// </summary>
-        public const string UncategorisedFilter = "[Uncategorised Only]";
-
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly ILogger logger;
         private readonly IStatementRepository statementRepository;
@@ -333,7 +328,7 @@ namespace BudgetAnalyser.Engine.Services
             return this.bucketRepository.Buckets
                 .Where(b => b.Active)
                 .Select(b => b.Code)
-                .Union(new[] { string.Empty, UncategorisedFilter })
+                .Union(new[] { string.Empty, TransactionConstants.UncategorisedFilter })
                 .OrderBy(b => b);
         }
 
@@ -342,12 +337,12 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="bucketCode">
         ///     The bucket code as text. This can be null or return all, and
-        ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
+        ///     <see cref="TransactionConstants.UncategorisedFilter" /> to
         ///     only return transactions without a bucket classification.
         /// </param>
         public ObservableCollection<Transaction> FilterByBucket(string bucketCode)
         {
-            if (bucketCode == UncategorisedFilter)
+            if (bucketCode == TransactionConstants.UncategorisedFilter)
             {
                 return
                     this.transactions =

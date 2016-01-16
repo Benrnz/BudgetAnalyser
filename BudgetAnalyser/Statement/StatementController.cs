@@ -209,7 +209,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var statementMetadata = message.ElementOfType<StatementApplicationStateV1>();
+            var statementMetadata = message.ElementOfType<StatementApplicationState>();
             if (statementMetadata == null)
             {
                 return;
@@ -225,7 +225,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            StatementApplicationStateV1 statementMetadata = this.transactionService.PreparePersistentStateData();
+            StatementApplicationState statementMetadata = this.transactionService.PreparePersistentStateData();
             message.PersistThisModel(statementMetadata);
         }
 

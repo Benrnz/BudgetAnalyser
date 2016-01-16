@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="bucketCode">
         ///     The bucket code as text. This can be null or return all, and
-        ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
+        ///     <see cref="TransactionConstants.UncategorisedFilter" /> to
         ///     only return transactions without a bucket classification.
         /// </param>
         ObservableCollection<Transaction> FilterByBucket([CanBeNull] string bucketCode);

@@ -53,7 +53,7 @@ namespace BudgetAnalyser.Statement
             {
                 defaultView.Filter = null;
             }
-            else if (Controller.BucketFilter == TransactionManagerService.UncategorisedFilter)
+            else if (Controller.BucketFilter == TransactionConstants.UncategorisedFilter)
             {
                 defaultView.Filter = t =>
                 {

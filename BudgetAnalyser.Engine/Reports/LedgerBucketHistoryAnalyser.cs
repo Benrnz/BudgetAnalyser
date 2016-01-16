@@ -5,13 +5,26 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    internal class LedgerBucketHistoryAnalyser
+    // TODO this shouldn't be public and Analyse probably should be served by a service
+    /// <summary>
+    /// A analyser to build the aggregated graph data for the Bucket History graph.
+    /// </summary>
+    public class LedgerBucketHistoryAnalyser
     {
+        /// <summary>
+        /// Gets the balance line data to draw a line on the graph for balance over time.
+        /// </summary>
         [UsedImplicitly]
         public SeriesData BalanceLine => GraphData.Series.FirstOrDefault();
 
+        /// <summary>
+        /// Gets the graph data.
+        /// </summary>
         public GraphData GraphData { get; private set; }
 
+        /// <summary>
+        /// Analyses the specified ledger and assigns graph data
+        /// </summary>
         public void Analyse([NotNull] LedgerBucket ledger, [NotNull] LedgerBook book)
         {
             if (ledger == null)

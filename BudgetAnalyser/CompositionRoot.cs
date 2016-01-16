@@ -112,9 +112,6 @@ namespace BudgetAnalyser
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
             AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
 
-            var autoMapperConfig = container.Resolve<AutoMapperConfiguration>();
-            autoMapperConfig.Configure();
-
             // Kick it off
             ConstructUiContext(container);
             ShellController = container.Resolve<ShellController>();

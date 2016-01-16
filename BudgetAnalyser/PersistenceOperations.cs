@@ -115,7 +115,7 @@ namespace BudgetAnalyser
             ValidateModel("Validate Budget Analyser Data");
         }
 
-        public MainApplicationStateModelV1 PreparePersistentStateData()
+        public MainApplicationState PreparePersistentStateData()
         {
             return this.applicationDatabaseService.PreparePersistentStateData();
         }

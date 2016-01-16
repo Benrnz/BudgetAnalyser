@@ -130,7 +130,7 @@ namespace BudgetAnalyser.Filtering
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var filterState = message.ElementOfType<PersistentFiltersV1>();
+            var filterState = message.ElementOfType<PersistentFiltersApplicationState>();
             if (filterState == null)
             {
                 return;
@@ -156,7 +156,7 @@ namespace BudgetAnalyser.Filtering
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             bool noCriteria = Criteria == null;
-            var filterState = new PersistentFiltersV1
+            var filterState = new PersistentFiltersApplicationState
             {
                 BeginDate = noCriteria ? null : Criteria.BeginDate,
                 EndDate = noCriteria ? null : Criteria.EndDate,
