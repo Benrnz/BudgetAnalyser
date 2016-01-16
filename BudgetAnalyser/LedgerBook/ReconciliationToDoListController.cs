@@ -10,6 +10,7 @@ using Rees.Wpf;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC]
     public class ReconciliationToDoListController : ControllerBase
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;

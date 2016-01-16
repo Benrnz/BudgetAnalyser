@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC]
     public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;

@@ -9,7 +9,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class XamlOnDiskLedgerBookRepositoryTestHarness : XamlOnDiskLedgerBookRepository
+    internal class XamlOnDiskLedgerBookRepositoryTestHarness : XamlOnDiskLedgerBookRepository
     {
         public XamlOnDiskLedgerBookRepositoryTestHarness(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper) : base(mapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())))

@@ -66,7 +66,8 @@ namespace BudgetAnalyser
             var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
             var thisAssembly = GetType().GetTypeInfo().Assembly;
 
-            // DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+            builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
+
             ComposeTypesWithDefaultImplementations(engineAssembly, builder);
             ComposeTypesWithDefaultImplementations(thisAssembly, builder);
 
@@ -127,7 +128,7 @@ namespace BudgetAnalyser
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
             builder.RegisterType<AppStateRecentFileManager>().As<IRecentFileManager>().SingleInstance();
-            builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
+            builder.RegisterType<PersistApplicationStateAsXaml>().As<ApplicationState.IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
             builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
             builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();

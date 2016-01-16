@@ -11,6 +11,7 @@ namespace BudgetAnalyser.Engine.Reports
     ///     This class will analyse a <see cref="StatementModel" /> and create a month based graph per
     ///     <see cref="BudgetBucket" />.
     /// </summary>
+    [AutoRegisterWithIoC]
     internal class LongTermSpendingTrendAnalyser
     {
         private readonly IBudgetBucketRepository budgetBucketRepo;

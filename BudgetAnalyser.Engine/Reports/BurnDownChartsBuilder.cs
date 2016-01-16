@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Engine.Reports
     /// <summary>
     ///     An builder to compile and collate data for the burn down charts.
     /// </summary>
+    [AutoRegisterWithIoC]
     internal class BurnDownChartsBuilder
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;

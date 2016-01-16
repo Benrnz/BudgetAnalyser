@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     /// <seealso cref="ILedgerBookRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
+    internal class XamlOnDiskLedgerBookRepository : ILedgerBookRepository
     {
         private readonly BankImportUtilities importUtilities;
         private readonly ILedgerBookFactory ledgerBookFactory;
@@ -32,7 +32,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="ledgerBookFactory">The ledger book factory.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        internal XamlOnDiskLedgerBookRepository(
+        public XamlOnDiskLedgerBookRepository(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILedgerBookFactory ledgerBookFactory)

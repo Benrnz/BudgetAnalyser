@@ -17,7 +17,8 @@ namespace BudgetAnalyser.Engine.Services
         private readonly BurnDownChartsBuilder chartsBuilder;
 
         public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository,
-                                     [NotNull] BurnDownChartsBuilder chartsBuilder, [NotNull] IBurnDownChartAnalyser chartAnalyser)
+                                     [NotNull] BurnDownChartsBuilder chartsBuilder, 
+                                     [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
             if (bucketRepository == null)
             {

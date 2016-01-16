@@ -11,6 +11,7 @@ namespace BudgetAnalyser.Engine.Reports
     /// <summary>
     ///     A analyser class to build report data for the overall performance report.
     /// </summary>
+    [AutoRegisterWithIoC]
     internal class OverallPerformanceBudgetAnalyser
     {
         private readonly IBudgetBucketRepository bucketRepository;
