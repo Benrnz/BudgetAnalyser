@@ -5,6 +5,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Statement.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_TransactionSetDto_StatementModel
     {
         private readonly ILogger logger;

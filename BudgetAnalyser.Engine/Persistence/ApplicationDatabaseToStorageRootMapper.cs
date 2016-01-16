@@ -2,6 +2,7 @@
 
 namespace BudgetAnalyser.Engine.Persistence
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_BudgetAnalyserStorageRoot_ApplicationDatabase
     {
         partial void ToDtoPostprocessing(ref BudgetAnalyserStorageRoot dto, ApplicationDatabase model)

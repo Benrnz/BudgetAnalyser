@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_BudgetModelDto_BudgetModel
     {
         private readonly IBudgetBucketRepository bucketRepo;

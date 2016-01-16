@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_ExpenseDto_Expense
     {
         private readonly IBudgetBucketRepository bucketRepo;

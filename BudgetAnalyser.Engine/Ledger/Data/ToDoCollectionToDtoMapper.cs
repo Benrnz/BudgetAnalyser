@@ -4,6 +4,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    [AutoRegisterWithIoC]
     internal class Mapper_ListToDoTaskDto_ToDoCollection : IDtoMapper<List<ToDoTaskDto>, ToDoCollection>
     {
         public List<ToDoTaskDto> ToDto(ToDoCollection model)

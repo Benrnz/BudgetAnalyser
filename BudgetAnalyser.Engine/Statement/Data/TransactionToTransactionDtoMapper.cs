@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_TransactionDto_Transaction
     {
         private readonly IAccountTypeRepository accountRepo;

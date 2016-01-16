@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerBookDto_LedgerBook
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -107,6 +108,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerBucketDto_LedgerBucket
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -142,6 +144,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerEntryLineDto_LedgerEntryLine
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -172,6 +175,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerTransactionDto_BankBalanceAdjustmentTransaction
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -194,6 +198,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_BankBalanceDto_BankBalance
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -216,6 +221,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerEntryDto_LedgerEntry
     {
         private readonly IAccountTypeRepository accountTypeRepo;
@@ -257,6 +263,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         }
     }
 
+    [AutoRegisterWithIoC]
     internal partial class Mapper_LedgerTransactionDto_LedgerTransaction
     {
         private readonly IAccountTypeRepository accountTypeRepo;

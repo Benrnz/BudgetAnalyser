@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_MatchingRuleDto_MatchingRule
     {
         private readonly IBudgetBucketRepository bucketRepo;

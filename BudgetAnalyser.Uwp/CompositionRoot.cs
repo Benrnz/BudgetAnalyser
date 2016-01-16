@@ -31,6 +31,7 @@ namespace BudgetAnalyser.Uwp
             var container = builder.Build();
             Logger = container.Resolve<ILogger>();
 
+            // Ensure anything requiring property injection is assigned a value.
             foreach (Assembly assembly in assemblies)
             {
                 var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);

@@ -5,6 +5,7 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
+    [AutoRegisterWithIoC]
     internal partial class Mapper_BudgetCollectionDto_BudgetCollection
     {
         private readonly IDtoMapper<BudgetBucketDto, BudgetBucket> bucketMapper;
