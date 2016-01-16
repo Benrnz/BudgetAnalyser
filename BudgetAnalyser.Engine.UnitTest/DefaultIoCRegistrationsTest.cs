@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.UnitTest
                     typeof(ICloneable<>), // Used to consistently implement cloning across multiple types.
                     typeof(IDtoMapper<,>), // Used to consistently implement mappers, mappers are internal and do not need to be registered in an IoC container.
                     typeof(IEnvironmentFolders), // Must be implemented in the UI project as it is platform dependent.
-                    typeof(IPersistent), // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
+                    typeof(IPersistentApplicationState), // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
                 };
             }
         }

@@ -6,8 +6,8 @@ namespace BudgetAnalyser.Engine.Statement
     /// <summary>
     ///     A state persistence Dto for global filters
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Persistence.IPersistent" />
-    public class PersistentFiltersApplicationState : IPersistent
+    /// <seealso cref="IPersistentApplicationState" />
+    public class PersistentFiltersApplicationState : IPersistentApplicationState
     {
         /// <summary>
         ///     Gets or sets the begin date.

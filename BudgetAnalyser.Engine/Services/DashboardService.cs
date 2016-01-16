@@ -208,9 +208,8 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public object PreparePersistentStateData()
+        public WidgetsApplicationState PreparePersistentStateData()
         {
-            // TODO this used to return a strongly typed object for Dashboard state persistence.
             IEnumerable<WidgetGroup> widgetStates = WidgetGroups?.ToList() ?? new List<WidgetGroup>();
             return new WidgetsApplicationState
             {

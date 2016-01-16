@@ -7,8 +7,8 @@ namespace BudgetAnalyser.Engine.Widgets
     /// <summary>
     ///     A state persistence Dto for widget data.
     /// </summary>
-    /// <seealso cref="IPersistent" />
-    public class WidgetsApplicationState : IPersistent
+    /// <seealso cref="IPersistentApplicationState" />
+    public class WidgetsApplicationState : IPersistentApplicationState
     {
         /// <summary>
         ///     Gets or sets the widget states.

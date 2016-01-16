@@ -14,9 +14,9 @@ namespace BudgetAnalyser.Engine.Statement
     /// <summary>
     ///     A collection of bank statement transactions that have been imported.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    /// <seealso cref="BudgetAnalyser.Engine.IDataChangeDetection" />
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="INotifyPropertyChanged" />
+    /// <seealso cref="IDataChangeDetection" />
+    /// <seealso cref="IDisposable" />
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
         Justification = "There are no native resources to clean up. Unnecessary complexity.")]
     public class StatementModel : INotifyPropertyChanged, IDataChangeDetection, IDisposable

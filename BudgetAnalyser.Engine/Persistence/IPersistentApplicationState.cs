@@ -2,12 +2,10 @@
 {
     /// <summary>
     ///     An interface that represents a object that needs to be persisted with application state when the application shuts
-    ///     down.
-    ///     This is not model data. For example it is windows size, last loaded file, user's UI preferences.
+    ///     down. This is not model data. For example it is windows size, last loaded file, user's UI preferences.
     /// </summary>
-    public interface IPersistent
+    public interface IPersistentApplicationState
     {
-        // TODO rename this to something better
         /// <summary>
         ///     Gets the order in which this object should be loaded.
         /// </summary>

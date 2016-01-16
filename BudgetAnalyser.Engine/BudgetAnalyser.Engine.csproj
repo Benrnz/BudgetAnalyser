@@ -184,7 +184,7 @@
     <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.generated.cs" />
     <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
     <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
-    <Compile Include="Persistence\IPersistent.cs" />
+    <Compile Include="Persistence\IPersistentApplicationState.cs" />
     <Compile Include="Persistence\StorageBranch.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -254,7 +254,7 @@
     <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\IVersionedStatementModelRepository.cs" />
     <Compile Include="Statement\NamedTransaction.cs" />
-    <Compile Include="Statement\PersistentFiltersApplicationState.cs" />
+    <Compile Include="Statement\PersistentApplicationStateFiltersApplicationState.cs" />
     <Compile Include="Statement\StatementApplicationState.cs" />
     <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
