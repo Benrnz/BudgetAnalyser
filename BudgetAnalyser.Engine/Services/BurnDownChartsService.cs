@@ -45,9 +45,21 @@ namespace BudgetAnalyser.Engine.Services
             return this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket);
         }
 
-        public BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel,
-                                             LedgerBook ledgerBookModel, GlobalFilterCriteria criteria)
+        public BurnDownCharts BuildAllCharts(
+            StatementModel statementModel, 
+            BudgetModel budgetModel,
+            LedgerBook ledgerBookModel, 
+            GlobalFilterCriteria criteria)
         {
+            if (criteria.Cleared) throw new ArgumentException("There is no date range criteria set. This graph is intended for one month of data.");
+            if (criteria.EndDate == null || criteria.BeginDate == null)
+            {
+                throw new ArgumentException("There is no date range set; either the begin or end date is not set. This graph is intended for one month of data.");
+            }
+            if (criteria.EndDate.Value.Subtract(criteria.EndDate.Value).Days > 31)
+            {
+                throw new ArgumentException("The date range is too great for this graph. This graph is intended for one month of data.");
+            }
             this.chartsBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
             return this.chartsBuilder.Results;
         }

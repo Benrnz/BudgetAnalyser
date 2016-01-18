@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
@@ -30,6 +31,11 @@ namespace BudgetAnalyser.Engine.Services
             if (criteria == null)
             {
                 throw new ArgumentNullException(nameof(criteria));
+            }
+
+            if (statementModel.Transactions.Any(t => t.BudgetBucket == null))
+            {
+                throw new ArgumentException("There are uncategorised transactions, finish assigning a bucket to all transactions before this running this graph.");
             }
 
             this.analyser.Analyse(statementModel, criteria);
