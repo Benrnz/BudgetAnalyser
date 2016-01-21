@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Statement.Data
         partial void ToDtoPostprocessing(ref TransactionDto dto, Transaction model)
         {
             dto.Account = model.Account.Name;
-            dto.BudgetBucketCode = model.BudgetBucket.Code;
+            dto.BudgetBucketCode = model.BudgetBucket?.Code;
             dto.TransactionType = model.TransactionType.Name;
         }
 
