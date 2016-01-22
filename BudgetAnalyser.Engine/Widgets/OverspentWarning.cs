@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -20,24 +20,39 @@ namespace BudgetAnalyser.Engine.Widgets
     {
         private decimal tolerance;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="OverspentWarning" /> class.
+        /// </summary>
         public OverspentWarning()
         {
             Category = WidgetGroup.OverviewSectionName;
-            Dependencies = new[] { typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria), typeof(LedgerBook), typeof(LedgerCalculation) };
+            Dependencies = new[]
+            {
+                typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria),
+                typeof(LedgerBook), typeof(LedgerCalculation)
+            };
             DetailedText = "Overspent";
             ImageResourceName = null;
             RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
-            Tolerance = 10;
+            Tolerance = 10; // By default must be overspent by 10 dollars to be considered overspent.
         }
 
+        internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the tolerance dollar value.
+        ///     By default must be overspent by 10 dollars to be considered overspent.
+        /// </summary>
         public decimal Tolerance
         {
             get { return this.tolerance; }
             set { this.tolerance = Math.Abs(value); }
         }
 
-        internal IEnumerable<KeyValuePair<BudgetBucket, decimal>> OverSpentSummary { get; private set; }
-
+        /// <summary>
+        ///     Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)
@@ -51,13 +66,14 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            var statement = (StatementModel)input[0];
-            var budget = (IBudgetCurrencyContext)input[1];
-            var filter = (GlobalFilterCriteria)input[2];
-            var ledgerBook = (LedgerBook)input[3];
-            var ledgerCalculator = (LedgerCalculation)input[4];
+            var statement = (StatementModel) input[0];
+            var budget = (IBudgetCurrencyContext) input[1];
+            var filter = (GlobalFilterCriteria) input[2];
+            var ledgerBook = (LedgerBook) input[3];
+            var ledgerCalculator = (LedgerCalculation) input[4];
 
-            if (budget == null || ledgerBook == null || statement == null || filter == null || filter.Cleared || filter.BeginDate == null || filter.EndDate == null)
+            if (budget == null || ledgerBook == null || statement == null || filter == null || filter.Cleared ||
+                filter.BeginDate == null || filter.EndDate == null)
             {
                 Enabled = false;
                 return;
@@ -72,7 +88,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             IDictionary<BudgetBucket, decimal> overspendingSummary = ledgerCalculator.CalculateCurrentMonthLedgerBalances(ledgerBook, filter, statement);
-            int warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
+            var warnings = overspendingSummary.Count(s => s.Value < -Tolerance);
 
             // Check other budget buckets that are not represented in the ledger book.
             warnings += SearchForOtherNonLedgerBookOverspentBuckets(statement, filter, budget, overspendingSummary);
@@ -84,7 +100,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 OverSpentSummary = overspendingSummary.Where(kvp => kvp.Value < -Tolerance).OrderBy(kvp => kvp.Key);
                 foreach (KeyValuePair<BudgetBucket, decimal> ledger in OverSpentSummary)
                 {
-                    builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key, ledger.Value);
+                    builder.AppendFormat(CultureInfo.CurrentCulture, "{0} is overspent by {1:C}", ledger.Key,
+                        ledger.Value);
                     builder.AppendLine();
                 }
 
@@ -94,7 +111,8 @@ namespace BudgetAnalyser.Engine.Widgets
             else
             {
                 LargeNumber = "0";
-                ToolTip = "No overspent ledgers for the month beginning " + filter.BeginDate.Value.ToString("d", CultureInfo.CurrentCulture);
+                ToolTip = "No overspent ledgers for the month beginning " +
+                          filter.BeginDate.Value.ToString("d", CultureInfo.CurrentCulture);
                 ColourStyleName = WidgetStandardStyle;
             }
         }
@@ -114,7 +132,8 @@ namespace BudgetAnalyser.Engine.Widgets
                     continue;
                 }
 
-                decimal bucketBalance = expense.Amount + transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
+                var bucketBalance = expense.Amount +
+                                    transactions.Where(t => t.BudgetBucket == expense.Bucket).Sum(t => t.Amount);
                 overspendingSummary.Add(expense.Bucket, bucketBalance);
                 if (bucketBalance < -Tolerance)
                 {

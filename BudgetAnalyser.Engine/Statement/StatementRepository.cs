@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -17,7 +17,8 @@ namespace BudgetAnalyser.Engine.Statement
     ///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow mulitple threads
     ///     to use it at the same time.
     /// </summary>
-    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC"
+        )]
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class StatementRepository : IStatementRepository
     {

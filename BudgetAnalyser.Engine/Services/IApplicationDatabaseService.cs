@@ -1,7 +1,7 @@
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.
         /// </summary>
-        MainApplicationStateModelV1 PreparePersistentStateData();
+        MainApplicationState PreparePersistentStateData();
 
         /// <summary>
         ///     Saves all Budget Analyser application data.

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class Matchmaker : IMatchmaker
+    internal class Matchmaker : IMatchmaker
     {
         private readonly ILogger logger;
 

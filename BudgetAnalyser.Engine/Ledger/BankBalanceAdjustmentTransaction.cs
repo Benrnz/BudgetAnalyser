@@ -9,6 +9,10 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class BankBalanceAdjustmentTransaction : LedgerTransaction
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BankBalanceAdjustmentTransaction" /> class.
+        /// </summary>
+        /// <param name="id"></param>
         public BankBalanceAdjustmentTransaction(Guid id) : base(id)
         {
         }

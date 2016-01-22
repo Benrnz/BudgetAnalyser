@@ -1,15 +1,15 @@
 using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
     /// <summary>
-    ///     Responsible for reconciliation the month's transactions against the budget and creating a
+    ///     Responsible for reconciling the month's transactions against the budget and creating a
     ///     <see cref="LedgerEntryLine" /> that shows the results.
     /// </summary>
-    public interface IReconciliationBuilder
+    internal interface IReconciliationBuilder
     {
         /// <summary>
         ///     The <see cref="LedgerBook" /> that we are building a monthly reconciliation for. This property must be set prior to

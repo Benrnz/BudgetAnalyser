@@ -5,12 +5,21 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A Ledger Bucket that does not allow funds to accumulate at the end of the month. Any excess funds if not spent,
+    ///     will be transfered to Surplus.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerBucket" />
     public class SpentMonthlyLedger : LedgerBucket
     {
-        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        /// <summary>
+        ///     Allows ledger bucket specific behaviour during reconciliation.
+        /// </summary>
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
+                                                     decimal openingBalance)
         {
-            decimal netAmount = transactions.Sum(t => t.Amount);
-            decimal closingBalance = openingBalance + netAmount;
+            var netAmount = transactions.Sum(t => t.Amount);
+            var closingBalance = openingBalance + netAmount;
             BudgetCreditLedgerTransaction budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
 
             if (budgetTransaction == null)
@@ -23,7 +32,8 @@ namespace BudgetAnalyser.Engine.Ledger
             // Supplement
             if (closingBalance < budgetTransaction.Amount || closingBalance < openingBalance)
             {
-                transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
+                transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate,
+                    budgetTransaction.Amount));
                 return;
             }
 
@@ -32,26 +42,38 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (openingBalance > budgetTransaction.Amount)
                 {
-                    transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
+                    transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate,
+                        openingBalance));
                 }
                 else
                 {
-                    transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
+                    transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate,
+                        budgetTransaction.Amount));
                 }
             }
         }
 
-        public override void ValidateBucketSet(BudgetBucket bucket)
+        /// <summary>
+        ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
+        ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">
+        ///     Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be
+        ///     used with an instance of Spent-Monthly-Ledger.
+        /// </exception>
+        protected override void ValidateBucketSet(BudgetBucket bucket)
         {
             if (bucket is SpentMonthlyExpenseBucket)
             {
                 return;
             }
 
-            throw new NotSupportedException("Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
+            throw new NotSupportedException(
+                "Invalid budget bucket used, only Spent-Monthly-Expense-Bucket can be used with an instance of Spent-Monthly-Ledger.");
         }
 
-        private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+        private static LedgerTransaction RemoveExcessToBudgetAmount(decimal closingBalance, DateTime reconciliationDate,
+                                                                    decimal budgetAmount)
         {
             if (closingBalance - budgetAmount == 0)
             {
@@ -65,7 +87,8 @@ namespace BudgetAnalyser.Engine.Ledger
             };
         }
 
-        private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+        private static LedgerTransaction RemoveExcessToOpeningBalance(decimal closingBalance,
+                                                                      DateTime reconciliationDate, decimal openingBalance)
         {
             if (closingBalance - openingBalance == 0)
             {
@@ -79,7 +102,8 @@ namespace BudgetAnalyser.Engine.Ledger
             };
         }
 
-        private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate, decimal budgetAmount)
+        private static LedgerTransaction SupplementToBudgetAmount(decimal closingBalance, DateTime reconciliationDate,
+                                                                  decimal budgetAmount)
         {
             if (budgetAmount - closingBalance == 0)
             {

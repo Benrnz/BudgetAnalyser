@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.Services
     ///     A service to prepare and present data ready for convenient consumption by the Budget Pie Graph.
     /// </summary>
     [AutoRegisterWithIoC]
-    public class BudgetPieGraphService : IBudgetPieGraphService
+    internal class BudgetPieGraphService : IBudgetPieGraphService
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
 
@@ -40,7 +40,9 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var surplus = new Expense { Amount = budget.Surplus, Bucket = this.budgetBucketRepository.SurplusBucket };
-            List<KeyValuePair<string, decimal>> interim = budget.Expenses.Select(expense => new KeyValuePair<string, decimal>(expense.Bucket.Code, expense.Amount)).ToList();
+            List<KeyValuePair<string, decimal>> interim =
+                budget.Expenses.Select(expense => new KeyValuePair<string, decimal>(expense.Bucket.Code, expense.Amount))
+                    .ToList();
             interim.Add(new KeyValuePair<string, decimal>(surplus.Bucket.Code, surplus.Amount));
             return interim.OrderByDescending(x => x.Value).ToDictionary(e => e.Key, e => e.Value);
         }

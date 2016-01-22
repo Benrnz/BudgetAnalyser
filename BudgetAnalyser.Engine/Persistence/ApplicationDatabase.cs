@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
@@ -15,6 +15,9 @@ namespace BudgetAnalyser.Engine.Persistence
     /// </summary>
     public class ApplicationDatabase
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ApplicationDatabase" /> class.
+        /// </summary>
         public ApplicationDatabase()
         {
             LedgerReconciliationToDoCollection = new ToDoCollection();
@@ -24,7 +27,7 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the budget collection storage key.
         ///     This is used to locate and load the <see cref="BudgetCollection" />.
         /// </summary>
-        public string BudgetCollectionStorageKey { get; [UsedImplicitly] private set; }
+        public string BudgetCollectionStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the name of the main Budget Analyser Data file.
@@ -35,7 +38,7 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the ledger book storage key.
         ///     This is used to locate and load the <see cref="LedgerBook" />.
         /// </summary>
-        public string LedgerBookStorageKey { get; [UsedImplicitly] private set; }
+        public string LedgerBookStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the ledger reconciliation to do collection.
@@ -48,16 +51,22 @@ namespace BudgetAnalyser.Engine.Persistence
         ///     Gets the matching rules collection storage key.
         ///     This is used to locate and load a list of <see cref="MatchingRule" />s.
         /// </summary>
-        public string MatchingRulesCollectionStorageKey { get; [UsedImplicitly] private set; }
+        public string MatchingRulesCollectionStorageKey { get; internal set; }
 
         /// <summary>
         ///     Gets the statement model storage key.
         ///     This is used to locate and load the <see cref="StatementModel" />.
         /// </summary>
-        public string StatementModelStorageKey { get; [UsedImplicitly] private set; }
+        public string StatementModelStorageKey { get; internal set; }
 
+        /// <summary>
+        ///     Gets the storage path that identifies this budget analyser file.
+        /// </summary>
         protected virtual string StoragePath => Path.GetDirectoryName(FileName);
 
+        /// <summary>
+        ///     Closes this instance.
+        /// </summary>
         public void Close()
         {
             BudgetCollectionStorageKey = null;
@@ -68,6 +77,9 @@ namespace BudgetAnalyser.Engine.Persistence
             StatementModelStorageKey = null;
         }
 
+        /// <summary>
+        ///     Builds and returns the full filename and path.
+        /// </summary>
         public virtual string FullPath(string fileName)
         {
             return Path.Combine(StoragePath, fileName);

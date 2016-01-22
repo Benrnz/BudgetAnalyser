@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -9,6 +9,10 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface IWidgetService
     {
+        /// <summary>
+        ///     Arranges the widgets into groups for display in the UI.
+        /// </summary>
+        /// <param name="storedStates">The stored states.</param>
         IEnumerable<WidgetGroup> PrepareWidgets([CanBeNull] IEnumerable<WidgetPersistentState> storedStates);
     }
 }

@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -28,7 +28,18 @@ namespace BudgetAnalyser.Engine.Matching
         private string doNotUseReference3;
         private string doNotUseTransactionType;
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
+        internal MatchingRule()
+        {
+            throw new NotSupportedException("This constructor is only used for producing mappers by reflection.");
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MatchingRule" /> class.
+        /// </summary>
+        /// <param name="bucketRepository">The bucket repository.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)
@@ -42,8 +53,10 @@ namespace BudgetAnalyser.Engine.Matching
             And = true;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        ///     Gets or sets the amount criteria.
+        ///     If null this field is not used to match.
+        /// </summary>
         public decimal? Amount
         {
             get { return this.doNotUseAmount; }
@@ -54,6 +67,9 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether the criteria values are 'And'ed together or 'Or'ed.
+        /// </summary>
         public bool And
         {
             get { return this.doNotUseAnd; }
@@ -64,6 +80,9 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets the bucket to assign the transaction to if it matches the criteria specified in this rule.
+        /// </summary>
         public BudgetBucket Bucket
         {
             get { return this.bucketRepository.GetByCode(BucketCode); }
@@ -82,8 +101,21 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the bucket code. Used only in persisting the rule. The <see cref="Bucket" /> property is lazy loaded
+        ///     from this value.
+        /// </summary>
+        internal string BucketCode { get; set; }
+
+        /// <summary>
+        ///     Gets the date this rule was created.
+        /// </summary>
         public DateTime Created { get; internal set; }
 
+        /// <summary>
+        ///     Gets or sets the description text to match.
+        ///     If null this field is not used to match.
+        /// </summary>
         public string Description
         {
             get { return this.doNotUseDescription; }
@@ -94,6 +126,9 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether this rule should be hidden in the UI. Also indicates this is a system rule.
+        /// </summary>
         public bool Hidden { get; set; }
 
         /// <summary>
@@ -122,6 +157,10 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the reference1 text to match.
+        ///     If null this field is not used to match.
+        /// </summary>
         public string Reference1
         {
             get { return this.doNotUseReference1; }
@@ -133,6 +172,10 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the reference2 text to match.
+        ///     If null this field is not used to match.
+        /// </summary>
         public string Reference2
         {
             get { return this.doNotUseReference2; }
@@ -144,6 +187,10 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the reference3 text to match.
+        ///     If null this field is not used to match.
+        /// </summary>
         public string Reference3
         {
             get { return this.doNotUseReference3; }
@@ -155,8 +202,15 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
+        /// <summary>
+        ///     Gets the identifier that uniquely identifies this rule.
+        /// </summary>
         public Guid RuleId { get; internal set; }
 
+        /// <summary>
+        ///     Gets or sets the transaction type text to match.
+        ///     If null this field is not used to match.
+        /// </summary>
         public string TransactionType
         {
             get { return this.doNotUseTransactionType; }
@@ -167,18 +221,9 @@ namespace BudgetAnalyser.Engine.Matching
             }
         }
 
-        internal string BucketCode { get; set; }
-
-        public static bool operator ==(MatchingRule left, MatchingRule right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(MatchingRule left, MatchingRule right)
-        {
-            return !Equals(left, right);
-        }
-
+        /// <summary>
+        ///     Returns true if the rule provided is this rule or the rule id's are equal.
+        /// </summary>
         public bool Equals(MatchingRule other)
         {
             if (ReferenceEquals(null, other))
@@ -194,6 +239,19 @@ namespace BudgetAnalyser.Engine.Matching
             return RuleId.Equals(other.RuleId);
         }
 
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        ///     Delegates to <see cref="Equals(MatchingRule)" />.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -208,15 +266,15 @@ namespace BudgetAnalyser.Engine.Matching
             {
                 return false;
             }
-            return Equals((MatchingRule)obj);
+            return Equals((MatchingRule) obj);
         }
 
-        protected void AllowSubclassAccess(string bucketCode, Guid ruleId)
-        {
-            BucketCode = bucketCode;
-            RuleId = ruleId;
-        }
-
+        /// <summary>
+        ///     Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             // ReSharper disable once NonReadonlyMemberInGetHashCode - Property setter is used by Persistence only
@@ -296,7 +354,7 @@ namespace BudgetAnalyser.Engine.Matching
                 maxMatches++;
             }
 
-            bool matched = And ? matchesMade == maxMatches : matchesMade >= 1;
+            var matched = And ? matchesMade == maxMatches : matchesMade >= 1;
             if (matched)
             {
                 LastMatch = DateTime.Now;
@@ -306,11 +364,47 @@ namespace BudgetAnalyser.Engine.Matching
             return matched;
         }
 
-        public override string ToString()
+        /// <summary>
+        ///     Implements the operator ==. Delegates to Equals.
+        /// </summary>
+        public static bool operator ==(MatchingRule left, MatchingRule right)
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code, Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
+            return Equals(left, right);
         }
 
+        /// <summary>
+        ///     Implements the operator !=. Delegates to Equals.
+        /// </summary>
+        public static bool operator !=(MatchingRule left, MatchingRule right)
+        {
+            return !Equals(left, right);
+        }
+
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "{0}({1} {2} {3})", GetType().Name, Bucket.Code,
+                Description ?? Reference1 ?? Reference2 ?? Reference3, Amount);
+        }
+
+        /// <summary>
+        ///     Allows subclasses to set some protected and internal fields.
+        /// </summary>
+        protected void AllowSubclassAccess(string bucketCode, Guid ruleId)
+        {
+            BucketCode = bucketCode;
+            RuleId = ruleId;
+        }
+
+        /// <summary>
+        ///     Called when a property has changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

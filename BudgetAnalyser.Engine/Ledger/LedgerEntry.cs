@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -68,6 +68,9 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         public decimal NetAmount => this.transactions.Sum(t => t.Amount);
 
+        /// <summary>
+        ///     Gets the transactions collection for this entry.
+        /// </summary>
         public IEnumerable<LedgerTransaction> Transactions => this.transactions;
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             this.transactions.Add(newTransaction);
-            decimal newBalance = Balance + newTransaction.Amount;
+            var newBalance = Balance + newTransaction.Amount;
             Balance = newBalance > 0 ? newBalance : 0;
             var balanceAdjustmentTransaction = newTransaction as BankBalanceAdjustmentTransaction;
             if (balanceAdjustmentTransaction != null)
@@ -102,11 +105,17 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        internal void Lock()
+        {
+            this.isNew = false;
+        }
+
         internal void RemoveTransaction(Guid transactionId)
         {
             if (!this.isNew)
             {
-                throw new InvalidOperationException("Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                throw new InvalidOperationException(
+                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
@@ -130,11 +139,13 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     The reconciliation date - this is used to give automatically created transactions a
         ///     date.
         /// </param>
-        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions, DateTime reconciliationDate)
+        internal void SetTransactionsForReconciliation(List<LedgerTransaction> newTransactions,
+                                                       DateTime reconciliationDate)
         {
             if (this.transactions.Any())
             {
-                throw new InvalidOperationException("Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
+                throw new InvalidOperationException(
+                    "Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
             }
 
             LedgerBucket.ReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
@@ -158,13 +169,15 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (LedgerBucket.BudgetBucket == null)
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                    "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
                 result = false;
             }
 
             if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
+                    "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
                 result = false;
             }
 

@@ -15,6 +15,8 @@ using BudgetAnalyser.ShellDialog;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.Statement
 {
@@ -88,7 +90,7 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ClearTextFilterCommand
         {
             get
@@ -107,7 +109,7 @@ namespace BudgetAnalyser.Statement
         public ICommand EditTransactionCommand => new RelayCommand(OnEditTransactionCommandExecute, ViewModel.HasSelectedRow);
         public StatementControllerFileOperations FileOperations { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand MergeStatementCommand => new RelayCommand(OnMergeStatementCommandExecute, FileOperations.CanExecuteCloseStatementCommand);
 
         public bool Shown
@@ -124,10 +126,10 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand SortCommand => new RelayCommand(OnSortCommandExecute, CanExecuteSortCommand);
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand SplitTransactionCommand => new RelayCommand(OnSplitTransactionCommandExecute, ViewModel.HasSelectedRow);
 
         public string TextFilter
@@ -209,7 +211,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var statementMetadata = message.ElementOfType<StatementApplicationStateV1>();
+            var statementMetadata = message.ElementOfType<StatementApplicationState>();
             if (statementMetadata == null)
             {
                 return;
@@ -225,7 +227,7 @@ namespace BudgetAnalyser.Statement
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            StatementApplicationStateV1 statementMetadata = this.transactionService.PreparePersistentStateData();
+            StatementApplicationState statementMetadata = this.transactionService.PreparePersistentStateData();
             message.PersistThisModel(statementMetadata);
         }
 

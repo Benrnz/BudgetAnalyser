@@ -9,30 +9,59 @@ namespace BudgetAnalyser.Engine.Reports
     /// </summary>
     public class BucketPerformanceResult
     {
+        /// <summary>
+        ///     Gets the calculated average spend.
+        /// </summary>
         public decimal AverageSpend { get; internal set; }
+
+        /// <summary>
+        ///     Gets the calculated balance.
+        /// </summary>
         public decimal Balance { get; internal set; }
+
+        /// <summary>
+        ///     Gets the bucket.
+        /// </summary>
         public BudgetBucket Bucket { get; internal set; }
+
+        /// <summary>
+        ///     Gets the budget amount.
+        /// </summary>
         public decimal Budget { get; internal set; }
+
+        /// <summary>
+        ///     Gets the calculated budget compared to average.
+        /// </summary>
         public string BudgetComparedToAverage { get; internal set; }
+
+        /// <summary>
+        ///     Gets the calculated budget total.
+        /// </summary>
         public decimal BudgetTotal { get; internal set; }
 
+        /// <summary>
+        ///     Gets the calculated percentage.
+        /// </summary>
         public double Percent
         {
             get
             {
                 if (BudgetTotal < 0.01M)
                 {
-                    return (double)Math.Round(TotalSpent / 0.01M, 2);
+                    return (double) Math.Round(TotalSpent / 0.01M, 2);
                 }
-                return (double)Math.Round(TotalSpent / BudgetTotal, 2);
+                return (double) Math.Round(TotalSpent / BudgetTotal, 2);
             }
         }
 
+        /// <summary>
+        ///     Gets the summary.
+        /// </summary>
         public string Summary
         {
             get
             {
-                decimal difference = BudgetTotal - TotalSpent;
+                var difference = BudgetTotal - TotalSpent;
                 if (Percent > 1)
                 {
                     return string.Format(
@@ -56,6 +85,9 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
+        /// <summary>
+        ///     Gets the calculated total spent.
+        /// </summary>
         public decimal TotalSpent { get; internal set; }
     }
 }

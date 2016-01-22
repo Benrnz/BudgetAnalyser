@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -17,17 +17,41 @@ namespace BudgetAnalyser.Engine.Budget
     {
         private readonly SortedList<DateTime, BudgetModel> budgetStorage;
 
-        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
+        /// </summary>
+        public BudgetCollection() : this(new BudgetModel[] { })
         {
-            this.budgetStorage = new SortedList<DateTime, BudgetModel>(initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom), new DateTimeDescendingOrder());
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
+        /// </summary>
+        /// <param name="initialBudgets">The initial budgets.</param>
+        public BudgetCollection(IEnumerable<BudgetModel> initialBudgets)
+        {
+            this.budgetStorage =
+                new SortedList<DateTime, BudgetModel>(
+                    initialBudgets.OrderByDescending(b => b.EffectiveFrom).ToDictionary(model => model.EffectiveFrom),
+                    new DateTimeDescendingOrder());
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BudgetCollection" /> class.
+        /// </summary>
+        /// <param name="initialBudgets">The initial budgets.</param>
         public BudgetCollection(params BudgetModel[] initialBudgets) : this(initialBudgets.ToList())
         {
         }
 
+        /// <summary>
+        ///     Gets the count of budgets stored in this collection.
+        /// </summary>
         public int Count => this.budgetStorage.Count;
 
+        /// <summary>
+        ///     Gets the current active budget.
+        /// </summary>
         public BudgetModel CurrentActiveBudget
         {
             get
@@ -37,9 +61,47 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
-        public string StorageKey { get; set; }
         internal BudgetModel this[int index] => this.budgetStorage.ElementAt(index).Value;
 
+        /// <summary>
+        ///     Gets or sets the storage key.
+        /// </summary>
+        public string StorageKey { get; set; }
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>
+        ///     An enumerator that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator<BudgetModel> GetEnumerator()
+        {
+            return this.budgetStorage.Select(kvp => kvp.Value).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        ///     Validate the instance and populate any warnings and errors into the <paramref name="validationMessages" /> string
+        ///     builder.
+        /// </summary>
+        /// <param name="validationMessages">A non-null string builder that will be appended to for any messages.</param>
+        /// <returns>
+        ///     If the instance is in an invalid state it will return false, otherwise it returns true.
+        /// </returns>
+        public bool Validate(StringBuilder validationMessages)
+        {
+            var allValid = this.All(budget => budget.Validate(validationMessages));
+            return allValid;
+        }
+
+        /// <summary>
+        ///     Adds the specified item.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Add([NotNull] BudgetModel item)
         {
             if (item == null)
@@ -58,18 +120,29 @@ namespace BudgetAnalyser.Engine.Budget
             this.budgetStorage.Add(item.EffectiveFrom, item);
         }
 
+        /// <summary>
+        ///     Retrieves the applicable budget for the specified date.
+        /// </summary>
         public BudgetModel ForDate(DateTime date)
         {
             return this.OrderByDescending(b => b.EffectiveFrom).FirstOrDefault(b => b.EffectiveFrom <= date);
         }
 
+        /// <summary>
+        ///     Retrieves the applicable budgets for the specified date range.
+        /// </summary>
+        /// <exception cref="BudgetException">
+        ///     The period covered by the dates given overlaps a period where no budgets are
+        ///     available.
+        /// </exception>
         public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
         {
             var budgets = new List<BudgetModel>();
             BudgetModel firstEffectiveBudget = ForDate(beginInclusive);
             if (firstEffectiveBudget == null)
             {
-                throw new BudgetException("The period covered by the dates given overlaps a period where no budgets are available.");
+                throw new BudgetException(
+                    "The period covered by the dates given overlaps a period where no budgets are available.");
             }
 
             budgets.Add(firstEffectiveBudget);
@@ -77,11 +150,9 @@ namespace BudgetAnalyser.Engine.Budget
             return budgets;
         }
 
-        public IEnumerator<BudgetModel> GetEnumerator()
-        {
-            return this.budgetStorage.Select(kvp => kvp.Value).GetEnumerator();
-        }
-
+        /// <summary>
+        ///     Determines whether the provided budget is archived.
+        /// </summary>
         public bool IsArchivedBudget(BudgetModel budget)
         {
             if (IsFutureBudget(budget))
@@ -97,12 +168,20 @@ namespace BudgetAnalyser.Engine.Budget
             return this.Any(b => b.EffectiveFrom <= budget.EffectiveFrom);
         }
 
+        /// <summary>
+        ///     Determines whether the provided budget is the current budget.
+        /// </summary>
         public bool IsCurrentBudget(BudgetModel budget)
         {
             return CurrentActiveBudget == budget;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Better for consistency with other methods here")]
+        /// <summary>
+        ///     Determines whether [is future budget] [the specified budget].
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Better for consistency with other methods here")]
         public bool IsFutureBudget([NotNull] BudgetModel budget)
         {
             if (budget == null)
@@ -111,17 +190,6 @@ namespace BudgetAnalyser.Engine.Budget
             }
 
             return budget.EffectiveFrom > DateTime.Now;
-        }
-
-        public bool Validate(StringBuilder validationMessages)
-        {
-            bool allValid = this.All(budget => budget.Validate(validationMessages));
-            return allValid;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         internal virtual int IndexOf(BudgetModel budget)

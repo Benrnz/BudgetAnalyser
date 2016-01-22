@@ -9,7 +9,8 @@ namespace BudgetAnalyser.Engine.Services
     ///     For example WPF and Windows RT.
     ///     The methods of the class should be aligned with use cases of the UI.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = "Useful to document the purpose of these service interfaces.")]
+    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
+        Justification = "Useful to document the purpose of these service interfaces.")]
     public interface IServiceFoundation
     {
     }

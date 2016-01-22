@@ -1,9 +1,9 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -32,12 +32,14 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Creates a new balance adjustment transaction for the given entry line.
         /// </summary>
-        LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount, [NotNull] string narrative, [NotNull] Account account);
+        LedgerTransaction CreateBalanceAdjustment([NotNull] LedgerEntryLine entryLine, decimal amount,
+                                                  [NotNull] string narrative, [NotNull] Account account);
 
         /// <summary>
         ///     Creates a new ledger transaction in the given Ledger. The Ledger Entry must exist in the current Ledger Book.
         /// </summary>
-        LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntryLine reconciliation, [NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
+        LedgerTransaction CreateLedgerTransaction([NotNull] LedgerEntryLine reconciliation,
+                                                  [NotNull] LedgerEntry ledgerEntry, decimal amount, [NotNull] string narrative);
 
         /// <summary>
         ///     Creates a new LedgerEntryLine for the specified <see cref="LedgerBook" /> to begin reconciliation.
@@ -53,7 +55,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="statement">The currently loaded statement.</param>
         /// <param name="ignoreWarnings">Ignores validation warnings if true, otherwise <see cref="ValidationWarningException" />.</param>
         /// <param name="balances">
-        ///     The bank balances as at the <see cref="reconciliationDate" /> to include in this new single line of the
+        ///     The bank balances as at the <paramref name="reconciliationDate" /> to include in this new single line of the
         ///     ledger book.
         /// </param>
         /// <exception cref="InvalidOperationException">Thrown when this <see cref="LedgerBook" /> is in an invalid state.</exception>

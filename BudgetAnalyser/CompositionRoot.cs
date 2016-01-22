@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Autofac;
+using Autofac.Builder;
+using Autofac.Core;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -16,9 +21,9 @@ using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
 using Rees.Wpf.RecentFiles;
 using Rees.Wpf.UserInteraction;
+using PersistApplicationStateAsXaml = BudgetAnalyser.ApplicationState.PersistApplicationStateAsXaml;
 
 namespace BudgetAnalyser
 {
@@ -28,6 +33,7 @@ namespace BudgetAnalyser
     ///     This class also contains all usage of IoC (Autofac in this case) to this class.  It should not be used any where
     ///     else in the application to prevent the Service Locator anti-pattern from appearing.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
     public class CompositionRoot
     {
         private const string InputBoxView = "InputBoxView";
@@ -57,12 +63,13 @@ namespace BudgetAnalyser
         public void Compose()
         {
             var builder = new ContainerBuilder();
+            var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
+            var thisAssembly = GetType().GetTypeInfo().Assembly;
 
-            // Automatically trigger registration of all mundane mappings. Classes that are decorated with AutoRegisterWithIoC are automatically registered against their implemented interfaces.
-            DefaultIoCRegistrations.RegisterDefaultMappings(builder);
+            builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
-            // Detect and register all automatic registrations in the Engine Assembly.
-            AutoRegisterWithIoCProcessor.RegisterAutoMappingsFromAssembly(builder, GetType().Assembly);
+            ComposeTypesWithDefaultImplementations(engineAssembly, builder);
+            ComposeTypesWithDefaultImplementations(thisAssembly, builder);
 
             // Register Messenger Singleton from MVVM Light
             builder.RegisterType<ConcurrentMessenger>().As<IMessenger>().SingleInstance().WithParameter("defaultMessenger", Messenger.Default);
@@ -70,10 +77,42 @@ namespace BudgetAnalyser
             // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
             RegistrationsForReesWpf(builder);
 
-
             AllLocalNonAutomaticRegistrations();
 
-            BuildApplicationObjectGraph(builder);
+            BuildApplicationObjectGraph(builder, engineAssembly, thisAssembly);
+        }
+
+        private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
+        {
+            var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
+            foreach (var dependency in dependencies)
+            {
+                IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> registration;
+                if (dependency.IsSingleInstance)
+                {
+                    // Singleton
+                    registration = builder.RegisterType(dependency.DependencyRequired).SingleInstance();
+                }
+                else
+                {
+                    // Transient
+                    registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
+                }
+
+                if (!string.IsNullOrWhiteSpace(dependency.NamedInstanceName))
+                {
+                    // Named Dependency
+                    registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
+                }
+
+                registration.AsImplementedInterfaces().AsSelf();
+
+                // Register as custom type, other than its own class name, and directly implemented interfaces.
+                if (dependency.AdditionalRegistrationType != null)
+                {
+                    registration.As(dependency.AdditionalRegistrationType);
+                }
+            }
         }
 
         private static void AllLocalNonAutomaticRegistrations()
@@ -89,7 +128,7 @@ namespace BudgetAnalyser
             builder.RegisterInstance<Func<IWaitCursor>>(() => new WpfWaitCursor());
 
             builder.RegisterType<AppStateRecentFileManager>().As<IRecentFileManager>().SingleInstance();
-            builder.RegisterType<PersistApplicationStateAsXaml>().As<IPersistApplicationState>().SingleInstance();
+            builder.RegisterType<PersistApplicationStateAsXaml>().As<ApplicationState.IPersistApplicationState>().SingleInstance();
             // Input Box / Message Box / Question Box / User Prompts etc
             builder.RegisterType<WpfViewLoader<InputBox>>().Named<IViewLoader>(InputBoxView);
             builder.Register(c => new WindowsInputBox(c.ResolveNamed<IViewLoader>(InputBoxView))).As<IUserInputBox>();
@@ -101,7 +140,7 @@ namespace BudgetAnalyser
                 .SingleInstance();
         }
 
-        private void BuildApplicationObjectGraph(ContainerBuilder builder)
+        private void BuildApplicationObjectGraph(ContainerBuilder builder, params Assembly[] assemblies)
         {
             // Instantiate and store all controllers...
             // These must be executed in the order of dependency.  For example the RulesController requires a NewRuleController so the NewRuleController must be instantiated first.
@@ -109,11 +148,21 @@ namespace BudgetAnalyser
 
             Logger = container.Resolve<ILogger>();
 
-            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, typeof(DefaultIoCRegistrations).Assembly);
-            AutoRegisterWithIoCProcessor.ProcessPropertyInjection(container, GetType().Assembly);
-
-            var autoMapperConfig = container.Resolve<AutoMapperConfiguration>();
-            autoMapperConfig.Configure();
+            foreach (Assembly assembly in assemblies)
+            {
+                var requiredPropertyInjections = DefaultIoCRegistrations.ProcessPropertyInjection(assembly);
+                foreach (PropertyInjectionDependencyRequirement requirement in requiredPropertyInjections)
+                {
+                    // Some reasonably awkard Autofac usage here to allow testibility.  (Extension methods aren't easy to test)
+                    IComponentRegistration registration;
+                    bool success = container.ComponentRegistry.TryGetRegistration(new TypedService(requirement.DependencyRequired), out registration);
+                    if (success)
+                    {
+                        object dependency = container.ResolveComponent(registration, Enumerable.Empty<Parameter>());
+                        requirement.PropertyInjectionAssignment(dependency);
+                    }
+                }
+            }
 
             // Kick it off
             ConstructUiContext(container);

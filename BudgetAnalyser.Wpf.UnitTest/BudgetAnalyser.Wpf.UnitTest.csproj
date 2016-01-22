@@ -101,8 +101,8 @@
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rees.UnitTestUtilities, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.1\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
+    <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rees.UserInteraction.Contracts">
@@ -133,13 +133,13 @@
     <Compile Include="Statement\StatementViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BudgetAnalyser.Engine.UnitTest\BudgetAnalyser.Engine.UnitTest.csproj">
+      <Project>{c5d0a350-d275-4e72-b17a-559801232b86}</Project>
+      <Name>BudgetAnalyser.Engine.UnitTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
       <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
       <Name>BudgetAnalyser.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BudgetAnalyser.UnitTest\BudgetAnalyser.UnitTest.csproj">
-      <Project>{d2a141e8-73f2-4c1a-8d31-a744968aeed9}</Project>
-      <Name>BudgetAnalyser.UnitTest</Name>
     </ProjectReference>
     <ProjectReference Include="..\BudgetAnalyser\BudgetAnalyser.csproj">
       <Project>{3f2f3bc6-153d-4fd5-b819-6c456be2dc25}</Project>

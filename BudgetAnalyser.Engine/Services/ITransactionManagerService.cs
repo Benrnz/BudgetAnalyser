@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -15,10 +15,29 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ITransactionManagerService : INotifyDatabaseChanges, IServiceFoundation
     {
+        /// <summary>
+        ///     Gets the calculated average debit.
+        /// </summary>
         decimal AverageDebit { get; }
+
+        /// <summary>
+        ///     Gets the statement model.
+        /// </summary>
         StatementModel StatementModel { get; }
+
+        /// <summary>
+        ///     Gets the calculated total count.
+        /// </summary>
         decimal TotalCount { get; }
+
+        /// <summary>
+        ///     Gets the calculated total credits.
+        /// </summary>
         decimal TotalCredits { get; }
+
+        /// <summary>
+        ///     Gets calculated the total debits.
+        /// </summary>
         decimal TotalDebits { get; }
 
         /// <summary>
@@ -49,7 +68,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="bucketCode">
         ///     The bucket code as text. This can be null or return all, and
-        ///     <see cref="TransactionManagerService.UncategorisedFilter" /> to
+        ///     <see cref="TransactionConstants.UncategorisedFilter" /> to
         ///     only return transactions without a bucket classification.
         /// </param>
         ObservableCollection<Transaction> FilterByBucket([CanBeNull] string bucketCode);
@@ -68,7 +87,7 @@ namespace BudgetAnalyser.Engine.Services
 
         /// <summary>
         ///     Imports a bank's transaction extract and merges it with the currently loaded Budget Analyser Statement.
-        ///     This method should not be used without a <see cref="StatementModel"/> loaded.
+        ///     This method should not be used without a <see cref="StatementModel" /> loaded.
         ///     It is recommended to follow this up with <see cref="ValidateWithCurrentBudgetsAsync" />.
         /// </summary>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
@@ -85,7 +104,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     Parses and loads the persisted state data from the provided object.
         /// </summary>
         /// <param name="stateData">The state data loaded from persistent storage.</param>
-        void Initialise([NotNull] StatementApplicationStateV1 stateData);
+        void Initialise([NotNull] StatementApplicationState stateData);
 
         /// <summary>
         ///     Populates a collection grouped by bucket with date sorted transactions contained in each group.
@@ -98,7 +117,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Prepares the persistent state data to save to storage.
         /// </summary>
-        StatementApplicationStateV1 PreparePersistentStateData();
+        StatementApplicationState PreparePersistentStateData();
 
         /// <summary>
         ///     Removes the provided transaction from the currently loaded Budget Analyser Statement.

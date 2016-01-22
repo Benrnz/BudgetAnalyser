@@ -1,5 +1,5 @@
-﻿using BudgetAnalyser.Engine.Annotations;
-using BudgetAnalyser.Engine.Budget;
+﻿using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -9,6 +9,10 @@ namespace BudgetAnalyser.Engine.Matching
     /// </summary>
     public class SingleUseMatchingRule : MatchingRule
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SingleUseMatchingRule" /> class.
+        /// </summary>
+        /// <param name="bucketRepository">The bucket repository.</param>
         public SingleUseMatchingRule([NotNull] IBudgetBucketRepository bucketRepository) : base(bucketRepository)
         {
             Hidden = true;

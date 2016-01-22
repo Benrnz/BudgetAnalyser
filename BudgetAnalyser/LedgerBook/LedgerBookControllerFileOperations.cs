@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Services;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace BudgetAnalyser.LedgerBook
 {
+    [AutoRegisterWithIoC]
     public class LedgerBookControllerFileOperations : INotifyPropertyChanged
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;

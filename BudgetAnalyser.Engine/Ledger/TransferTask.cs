@@ -7,7 +7,11 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class TransferTask : ToDoTask
     {
-        public TransferTask(string description, bool systemGenerated = false, bool canDelete = true) : base(description, systemGenerated, canDelete)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TransferTask" /> class.
+        /// </summary>
+        public TransferTask(string description, bool systemGenerated = false, bool canDelete = true)
+            : base(description, systemGenerated, canDelete)
         {
         }
 

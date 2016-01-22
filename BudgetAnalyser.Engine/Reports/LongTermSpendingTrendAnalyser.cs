@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
@@ -11,10 +11,16 @@ namespace BudgetAnalyser.Engine.Reports
     ///     This class will analyse a <see cref="StatementModel" /> and create a month based graph per
     ///     <see cref="BudgetBucket" />.
     /// </summary>
-    public class LongTermSpendingTrendAnalyser
+    [AutoRegisterWithIoC]
+    internal class LongTermSpendingTrendAnalyser
     {
         private readonly IBudgetBucketRepository budgetBucketRepo;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LongTermSpendingTrendAnalyser" /> class.
+        /// </summary>
+        /// <param name="budgetBucketRepo">The budget bucket repo.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public LongTermSpendingTrendAnalyser([NotNull] IBudgetBucketRepository budgetBucketRepo)
         {
             if (budgetBucketRepo == null)
@@ -25,8 +31,18 @@ namespace BudgetAnalyser.Engine.Reports
             this.budgetBucketRepo = budgetBucketRepo;
         }
 
+        /// <summary>
+        ///     Gets the graph data.
+        /// </summary>
         public GraphData Graph { get; private set; }
 
+        /// <summary>
+        ///     Analyses the specified statement.
+        /// </summary>
+        /// <param name="statement">The statement.</param>
+        /// <param name="criteria">The criteria.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public void Analyse([NotNull] StatementModel statement, [NotNull] GlobalFilterCriteria criteria)
         {
             if (statement == null)
@@ -111,19 +127,6 @@ namespace BudgetAnalyser.Engine.Reports
             }
         }
 
-        private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals, List<SeriesData> allSeriesData, DateTime currentMonth)
-        {
-            // Current month's data is complete - update totals and advance to next month
-            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
-            {
-                // Find appropriate bucket series
-                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
-                // Find appropriate month on that bucket graph line
-                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
-                monthData.Amount = Math.Abs(subTotal.Value); // Negate because all debits are stored as negative. Graph lines will look better as positive values.
-            }
-        }
-
         private List<SeriesData> InitialiseSeriesData(DateTime minDate, DateTime maxDate)
         {
             List<SeriesData> allSeriesData = this.budgetBucketRepo.Buckets
@@ -150,6 +153,21 @@ namespace BudgetAnalyser.Engine.Reports
             foreach (SeriesData removeMe in zeroSeries)
             {
                 Graph.SeriesList.Remove(removeMe);
+            }
+        }
+
+        private static void StoreSummarisedMonthData(Dictionary<string, decimal> subTotals,
+                                                     List<SeriesData> allSeriesData, DateTime currentMonth)
+        {
+            // Current month's data is complete - update totals and advance to next month
+            foreach (KeyValuePair<string, decimal> subTotal in subTotals)
+            {
+                // Find appropriate bucket series
+                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
+                // Find appropriate month on that bucket graph line
+                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
+                monthData.Amount = Math.Abs(subTotal.Value);
+                // Negate because all debits are stored as negative. Graph lines will look better as positive values.
             }
         }
     }

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Media;
 using BudgetAnalyser.Converters;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Reports;
 using Rees.Wpf;
 

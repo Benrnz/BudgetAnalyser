@@ -1,8 +1,8 @@
-﻿using BudgetAnalyser.Engine.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
-    public interface IMatchingRuleFactory
+    internal interface IMatchingRuleFactory
     {
         MatchingRule CreateNewRule(
             [NotNull] string bucketCode,

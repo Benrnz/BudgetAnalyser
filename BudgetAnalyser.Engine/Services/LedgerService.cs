@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class LedgerService : ILedgerService, ISupportsModelPersistence
+    internal class LedgerService : ILedgerService, ISupportsModelPersistence
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBucketFactory ledgerBucketFactory;
@@ -48,39 +48,8 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-        public ApplicationDataType DataType => ApplicationDataType.Ledger;
 
         public LedgerBook LedgerBook { get; private set; }
-        public int LoadSequence => 50;
-
-        public void Close()
-        {
-            LedgerBook = null;
-            Closed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase.LedgerBookStorageKey.IsNothing())
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
-            await LoadAsync(applicationDatabase);
-        }
-
-        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
-
-            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
-        }
 
         public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
         {
@@ -116,6 +85,61 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook.Name = newName;
         }
 
+        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
+        {
+            if (bucket == null)
+            {
+                throw new ArgumentNullException(nameof(bucket));
+            }
+            if (storeInThisAccount == null)
+            {
+                throw new ArgumentNullException(nameof(storeInThisAccount));
+            }
+
+            LedgerBucket newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
+            return LedgerBook.AddLedger(newLedger);
+        }
+
+        public IEnumerable<Account> ValidLedgerAccounts()
+        {
+            return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
+        }
+
+        public ApplicationDataType DataType => ApplicationDataType.Ledger;
+        public int LoadSequence => 50;
+
+        public void Close()
+        {
+            LedgerBook = null;
+            Closed?.Invoke(this, EventArgs.Empty);
+        }
+
+        public async Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase.LedgerBookStorageKey.IsNothing())
+            {
+                throw new ArgumentNullException(nameof(applicationDatabase));
+            }
+
+            await this.ledgerRepository.CreateNewAndSaveAsync(applicationDatabase.LedgerBookStorageKey);
+            await LoadAsync(applicationDatabase);
+        }
+
+        public async Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException(nameof(applicationDatabase));
+            }
+
+            LedgerBook =
+                await
+                    this.ledgerRepository.LoadAsync(
+                        applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
+
+            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+        }
+
         public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
         {
             Saving?.Invoke(this, new AdditionalInformationRequestedEventArgs());
@@ -134,32 +158,12 @@ namespace BudgetAnalyser.Engine.Services
         {
         }
 
-        public LedgerBucket TrackNewBudgetBucket(ExpenseBucket bucket, Account storeInThisAccount)
-        {
-            if (bucket == null)
-            {
-                throw new ArgumentNullException(nameof(bucket));
-            }
-            if (storeInThisAccount == null)
-            {
-                throw new ArgumentNullException(nameof(storeInThisAccount));
-            }
-
-            LedgerBucket newLedger = this.ledgerBucketFactory.Build(bucket.Code, storeInThisAccount);
-            return LedgerBook.AddLedger(newLedger);
-        }
-
         public bool ValidateModel(StringBuilder messages)
         {
             EventHandler<ValidatingEventArgs> handler = Validating;
             handler?.Invoke(this, new ValidatingEventArgs());
 
             return LedgerBook.Validate(messages);
-        }
-
-        public IEnumerable<Account> ValidLedgerAccounts()
-        {
-            return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }
     }
 }

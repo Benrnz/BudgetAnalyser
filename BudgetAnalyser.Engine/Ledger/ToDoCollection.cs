@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
@@ -10,6 +10,11 @@ namespace BudgetAnalyser.Engine.Ledger
     /// </summary>
     public class ToDoCollection : ObservableCollection<ToDoTask>
     {
+        /// <summary>
+        ///     Removes the specified task, only if it is allowed to be deleted by the user. Use this method primarily and in the
+        ///     UI.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public new bool Remove([NotNull] ToDoTask task)
         {
             if (task == null)
@@ -25,6 +30,10 @@ namespace BudgetAnalyser.Engine.Ledger
             return false;
         }
 
+        /// <summary>
+        ///     Forced removal of a task.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool RemoveReminderTask([NotNull] ToDoTask task)
         {
             if (task == null)

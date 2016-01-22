@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using BudgetAnalyser.Annotations;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
@@ -15,9 +17,10 @@ using BudgetAnalyser.Matching;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
-using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser
 {
@@ -73,7 +76,7 @@ namespace BudgetAnalyser
             ReportsDialog = new ShellDialogController();
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public BudgetController BudgetController => this.uiContext.BudgetController;
 
         public ShellDialogController BudgetDialog { get; }
@@ -81,29 +84,29 @@ namespace BudgetAnalyser
         public ShellDialogController DashboardDialog { get; }
         public bool HasUnsavedChanges => this.persistenceOperations.HasUnsavedChanges;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public LedgerBookController LedgerBookController => this.uiContext.LedgerBookController;
 
         public ShellDialogController LedgerBookDialog { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public MainMenuController MainMenuController => this.uiContext.MainMenuController;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ReportsCatalogController ReportsCatalogController => this.uiContext.ReportsCatalogController;
 
         public ShellDialogController ReportsDialog { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public RulesController RulesController => this.uiContext.RulesController;
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public StatementController StatementController => this.uiContext.StatementController;
 
         public ShellDialogController TransactionsDialog { get; }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public string WindowTitle => "Budget Analyser";
 
         internal Point WindowSize { get; private set; }
@@ -117,7 +120,7 @@ namespace BudgetAnalyser
             }
 
             this.initialised = true;
-            IList<IPersistent> rehydratedModels = this.statePersistence.Load()?.ToList();
+            IList<IPersistentApplicationState> rehydratedModels = this.statePersistence.Load()?.ToList();
 
             if (rehydratedModels == null || rehydratedModels.None())
             {
@@ -133,7 +136,7 @@ namespace BudgetAnalyser
             foreach (int sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                IEnumerable<IPersistent> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+                IEnumerable<IPersistentApplicationState> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -198,13 +201,13 @@ namespace BudgetAnalyser
             return false;
         }
 
-        private static IList<IPersistent> CreateNewDefaultApplicationState()
+        private static IList<IPersistentApplicationState> CreateNewDefaultApplicationState()
         {
             // Widget persistent state object is required to draw the widgets, even the ones that should be there by default.
             // The widgets must be drawn so a user can open or create a new file. 
-            var appState = new List<IPersistent>
+            var appState = new List<IPersistentApplicationState>
             {
-                new WidgetsApplicationStateV1()
+                new WidgetsApplicationState()
             };
             return appState;
         }
@@ -216,7 +219,7 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var shellState = message.ElementOfType<ShellPersistentStateV1>();
+            var shellState = message.ElementOfType<ShellPersistentState>();
             if (shellState != null)
             {
                 // Setting Window Size at this point has no effect, must happen after window is loaded. See OnViewReady()
@@ -236,7 +239,7 @@ namespace BudgetAnalyser
                 }
             }
 
-            var storedMainAppState = message.ElementOfType<MainApplicationStateModelV1>();
+            var storedMainAppState = message.ElementOfType<MainApplicationState>();
             if (storedMainAppState != null)
             {
                 try
@@ -252,14 +255,14 @@ namespace BudgetAnalyser
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            var shellPersistentStateV1 = new ShellPersistentStateV1
+            var shellPersistentStateV1 = new ShellPersistentState
             {
                 Size = WindowSize,
                 TopLeft = WindowTopLeft
             };
             message.PersistThisModel(shellPersistentStateV1);
 
-            MainApplicationStateModelV1 dataFileState = this.persistenceOperations.PreparePersistentStateData();
+            MainApplicationState dataFileState = this.persistenceOperations.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 

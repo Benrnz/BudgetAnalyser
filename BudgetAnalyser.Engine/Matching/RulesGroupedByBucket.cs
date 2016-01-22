@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -12,6 +12,13 @@ namespace BudgetAnalyser.Engine.Matching
     /// </summary>
     public class RulesGroupedByBucket
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="RulesGroupedByBucket" /> class.
+        /// </summary>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="rules">The rules.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public RulesGroupedByBucket([NotNull] BudgetBucket bucket, [NotNull] IEnumerable<MatchingRule> rules)
         {
             if (bucket == null)
@@ -28,8 +35,19 @@ namespace BudgetAnalyser.Engine.Matching
             Rules = new ObservableCollection<MatchingRule>(rules.ToList());
         }
 
+        /// <summary>
+        ///     Gets the bucket for this group.
+        /// </summary>
         public BudgetBucket Bucket { get; }
+
+        /// <summary>
+        ///     Gets the rules that match to this bucket.
+        /// </summary>
         public ObservableCollection<MatchingRule> Rules { get; }
+
+        /// <summary>
+        ///     Gets the number of rules in this group.
+        /// </summary>
         public int RulesCount => Rules.Count();
     }
 }

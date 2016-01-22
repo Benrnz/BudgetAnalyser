@@ -4,20 +4,19 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class DashboardService : IDashboardService
+    internal class DashboardService : IDashboardService
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
@@ -84,6 +83,8 @@ namespace BudgetAnalyser.Engine.Services
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
+        public IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
+
         /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
         ///     Duplicates are not allowed in the collection and will not be added.
@@ -95,14 +96,17 @@ namespace BudgetAnalyser.Engine.Services
         /// </returns>
         public Widget CreateNewBucketMonitorWidget(string bucketCode)
         {
-            if (WidgetGroups.SelectMany(group => group.Widgets).OfType<BudgetBucketMonitorWidget>().Any(w => w.BucketCode == bucketCode))
+            if (
+                WidgetGroups.SelectMany(group => group.Widgets)
+                    .OfType<BudgetBucketMonitorWidget>()
+                    .Any(w => w.BucketCode == bucketCode))
             {
                 // Bucket code already exists - so already has a bucket monitor widget.
                 return null;
             }
 
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
-            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
         public Widget CreateNewFixedBudgetMonitorWidget(string bucketCode, string description, decimal fixedBudgetAmount)
@@ -125,10 +129,11 @@ namespace BudgetAnalyser.Engine.Services
             FixedBudgetProjectBucket bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
             this.budgetRepository.SaveAsync();
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
-            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
-        public Widget CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate, WeeklyOrFortnightly frequency)
+        public Widget CreateNewSurprisePaymentMonitorWidget(string bucketCode, DateTime paymentDate,
+                                                            WeeklyOrFortnightly frequency)
         {
             if (string.IsNullOrWhiteSpace(bucketCode))
             {
@@ -143,14 +148,16 @@ namespace BudgetAnalyser.Engine.Services
             BudgetBucket bucket = this.bucketRepository.GetByCode(bucketCode);
             if (bucket == null)
             {
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode), nameof(bucketCode));
+                throw new ArgumentException(
+                    string.Format(CultureInfo.CurrentCulture, "No Bucket with code {0} exists", bucketCode),
+                    nameof(bucketCode));
             }
 
             IUserDefinedWidget widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
-            var paymentWidget = (SurprisePaymentWidget)widget;
+            var paymentWidget = (SurprisePaymentWidget) widget;
             paymentWidget.StartPaymentDate = paymentDate;
             paymentWidget.Frequency = frequency;
-            return UpdateWidgetCollectionWithNewAddition((Widget)widget);
+            return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
         public IEnumerable<Account> FilterableAccountTypes()
@@ -160,8 +167,9 @@ namespace BudgetAnalyser.Engine.Services
             return accountTypeList;
         }
 
-        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationStateV1 storedState)
+        public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
         {
+            // TODO This used to accept a strongly typed state object for Dashboard state persistence.
             if (storedState == null)
             {
                 throw new ArgumentNullException(nameof(storedState));
@@ -172,7 +180,8 @@ namespace BudgetAnalyser.Engine.Services
                 this.availableDependencies = InitialiseSupportedDependenciesArray();
             }
 
-            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
+            WidgetGroups =
+                new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
             foreach (WidgetGroup group in WidgetGroups)
             {
@@ -199,10 +208,10 @@ namespace BudgetAnalyser.Engine.Services
             NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
-        public WidgetsApplicationStateV1 PreparePersistentStateData()
+        public WidgetsApplicationState PreparePersistentStateData()
         {
             IEnumerable<WidgetGroup> widgetStates = WidgetGroups?.ToList() ?? new List<WidgetGroup>();
-            return new WidgetsApplicationStateV1
+            return new WidgetsApplicationState
             {
                 WidgetStates = widgetStates.SelectMany(group => group.Widgets).Select(CreateWidgetState).ToList()
             };
@@ -214,10 +223,12 @@ namespace BudgetAnalyser.Engine.Services
             if (fixedProjectWidget != null)
             {
                 // Reassign transactions to Surplus
-                var projectBucket = this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
+                var projectBucket =
+                    this.bucketRepository.GetByCode(fixedProjectWidget.BucketCode) as FixedBudgetProjectBucket;
                 if (projectBucket == null)
                 {
-                    throw new InvalidOperationException("The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
+                    throw new InvalidOperationException(
+                        "The fixed project bucket provided doesn't actually appear to be a Fixed Budget Project Bucket");
                 }
 
                 projectBucket.Active = false;
@@ -233,7 +244,7 @@ namespace BudgetAnalyser.Engine.Services
 
             this.widgetRepository.Remove(widgetToRemove);
 
-            var baseWidget = (Widget)widgetToRemove;
+            var baseWidget = (Widget) widgetToRemove;
             WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
             widgetGroup?.Widgets.Remove(baseWidget);
@@ -288,14 +299,14 @@ namespace BudgetAnalyser.Engine.Services
                 return true;
             }
 
-            long newHash = supportsDataChangeDetection.SignificantDataChangeHash();
+            var newHash = supportsDataChangeDetection.SignificantDataChangeHash();
             if (!this.changesHashes.ContainsKey(typeKey))
             {
                 this.changesHashes.Add(typeKey, newHash);
                 return true;
             }
 
-            bool result = this.changesHashes[typeKey] != newHash;
+            var result = this.changesHashes[typeKey] != newHash;
             this.changesHashes[typeKey] = newHash;
             return result;
         }
@@ -348,10 +359,9 @@ namespace BudgetAnalyser.Engine.Services
                         await Task.Delay(widget.RecommendedTimeIntervalUpdate.Value);
                         this.logger.LogInfo(
                             l => l.Format(
-                                "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes. ThreadId: {2}",
+                                "Scheduled Update for \"{0}\" widget. Will run again after {1} minutes.",
                                 widget.Name,
-                                widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes,
-                                Thread.CurrentThread.ManagedThreadId));
+                                widget.RecommendedTimeIntervalUpdate.Value.TotalMinutes));
                         UpdateWidget(widget);
                     }
                     // ReSharper disable once FunctionNeverReturns - intentional timer tick infinite loop
@@ -415,7 +425,11 @@ namespace BudgetAnalyser.Engine.Services
             WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => @group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
-                widgetGroup = new WidgetGroup { Heading = baseWidget.Category, Widgets = new ObservableCollection<Widget>() };
+                widgetGroup = new WidgetGroup
+                {
+                    Heading = baseWidget.Category,
+                    Widgets = new ObservableCollection<Widget>()
+                };
                 WidgetGroups.Add(widgetGroup);
             }
 

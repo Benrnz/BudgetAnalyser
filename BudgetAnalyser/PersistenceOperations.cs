@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using Rees.UserInteraction.Contracts;
@@ -115,7 +115,7 @@ namespace BudgetAnalyser
             ValidateModel("Validate Budget Analyser Data");
         }
 
-        public MainApplicationStateModelV1 PreparePersistentStateData()
+        public MainApplicationState PreparePersistentStateData()
         {
             return this.applicationDatabaseService.PreparePersistentStateData();
         }

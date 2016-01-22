@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Reports;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC]
-    public class BurnDownChartsService : IBurnDownChartsService
+    internal class BurnDownChartsService : IBurnDownChartsService
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IBurnDownChartAnalyser chartAnalyser;
         private readonly BurnDownChartsBuilder chartsBuilder;
 
-        public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository, [NotNull] BurnDownChartsBuilder chartsBuilder, [NotNull] IBurnDownChartAnalyser chartAnalyser)
+        public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository,
+                                     [NotNull] BurnDownChartsBuilder chartsBuilder, 
+                                     [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
             if (bucketRepository == null)
             {
@@ -43,8 +45,21 @@ namespace BudgetAnalyser.Engine.Services
             return this.bucketRepository.Buckets.Where(b => b is ExpenseBucket || b is SurplusBucket);
         }
 
-        public BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, GlobalFilterCriteria criteria)
+        public BurnDownCharts BuildAllCharts(
+            StatementModel statementModel, 
+            BudgetModel budgetModel,
+            LedgerBook ledgerBookModel, 
+            GlobalFilterCriteria criteria)
         {
+            if (criteria.Cleared) throw new ArgumentException("There is no date range criteria set. This graph is intended for one month of data.");
+            if (criteria.EndDate == null || criteria.BeginDate == null)
+            {
+                throw new ArgumentException("There is no date range set; either the begin or end date is not set. This graph is intended for one month of data.");
+            }
+            if (criteria.EndDate.Value.Subtract(criteria.EndDate.Value).Days > 31)
+            {
+                throw new ArgumentException("The date range is too great for this graph. This graph is intended for one month of data.");
+            }
             this.chartsBuilder.Build(criteria, statementModel, budgetModel, ledgerBookModel);
             return this.chartsBuilder.Results;
         }
@@ -70,7 +85,7 @@ namespace BudgetAnalyser.Engine.Services
             return result;
         }
 
-        public void LoadPersistedStateData(CustomBurnDownChartsV1 persistedStateData)
+        public void LoadPersistedStateData(CustomBurnDownChartApplicationState persistedStateData)
         {
             if (persistedStateData == null)
             {
@@ -80,10 +95,10 @@ namespace BudgetAnalyser.Engine.Services
             this.chartsBuilder.CustomCharts = persistedStateData.Charts;
         }
 
-        public CustomBurnDownChartsV1 PreparePersistentStateData()
+        public CustomBurnDownChartApplicationState PreparePersistentStateData()
         {
             IEnumerable<CustomAggregateBurnDownGraph> charts = this.chartsBuilder.CustomCharts ?? new List<CustomAggregateBurnDownGraph>();
-            return new CustomBurnDownChartsV1
+            return new CustomBurnDownChartApplicationState
             {
                 Charts = charts.ToList()
             };

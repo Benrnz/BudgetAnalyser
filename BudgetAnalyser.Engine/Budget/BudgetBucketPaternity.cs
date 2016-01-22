@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.Engine.Budget
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BudgetAnalyser.Engine.Budget
 {
     /// <summary>
     ///     A comparison class used to determine if a bucket is considered in the same "family" as another.
@@ -9,9 +11,14 @@
     /// </summary>
     public class BudgetBucketPaternity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "I prefer instance classes over static for ease of testing and extension")]
+        /// <summary>
+        ///     Returns true if the two buckets are considered to be in the same family.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "I prefer instance classes over static for ease of testing and extension")]
         public bool OfSameBucketFamily(BudgetBucket bucket1, BudgetBucket bucket2)
         {
+            // TODO is this the same as BucketComparer?
             if (bucket1 is SurplusBucket && bucket2 is SurplusBucket)
             {
                 // All surplus subclasses are considered a subset of Surplus.

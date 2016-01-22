@@ -1,17 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{733305F6-B587-45EE-AD4D-FD6DFEF015AB}</ProjectGuid>
+    <ProjectGuid>{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BudgetAnalyser.Engine</RootNamespace>
     <AssemblyName>BudgetAnalyser.Engine</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,10 +25,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\BudgetAnalyser.Engine.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,126 +36,116 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>CODE_ANALYSIS;DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>CODE_ANALYSIS;DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.UserInteraction.Contracts.1.2.41\lib\net46\Rees.UserInteraction.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <None Include="Budget\BudgetBuckets.cd" />
+    <None Include="Ledger\LedgerBook.cd" />
+    <None Include="project.json" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationDataType.cs" />
+    <Compile Include="AutoRegisterWithIoCAttribute.cs" />
     <Compile Include="BankAccount\Account.cs" />
     <Compile Include="BankAccount\AccountType.cs" />
     <Compile Include="BankAccount\AccountTypeRepositoryConstants.cs" />
-    <Compile Include="BankAccount\InMemoryAccountTypeRepository.cs" />
-    <Compile Include="BankAccount\ChequeAccount.cs" />
     <Compile Include="BankAccount\AmexAccount.cs" />
+    <Compile Include="BankAccount\ChequeAccount.cs" />
     <Compile Include="BankAccount\IAccountTypeRepository.cs" />
+    <Compile Include="BankAccount\InMemoryAccountTypeRepository.cs" />
     <Compile Include="BankAccount\MastercardAccount.cs" />
     <Compile Include="BankAccount\MiscellaneousAccount.cs" />
     <Compile Include="BankAccount\SavingsAccount.cs" />
     <Compile Include="BankAccount\VisaAccount.cs" />
-    <Compile Include="ApplicationDataType.cs" />
+    <Compile Include="Budget\BillToPayExpenseBucket.cs" />
     <Compile Include="Budget\BucketComparer.cs" />
+    <Compile Include="Budget\BudgetBucket.cs" />
     <Compile Include="Budget\BudgetBucketPaternity.cs" />
-    <Compile Include="Budget\Data\BudgetAutoMapperConfiguration.cs" />
-    <Compile Include="Budget\Data\DtoToFixedBudgetBucketMapper.cs" />
+    <Compile Include="Budget\BudgetCollection.cs" />
+    <Compile Include="Budget\BudgetCurrencyContext.cs" />
+    <Compile Include="Budget\BudgetException.cs" />
+    <Compile Include="Budget\BudgetItem.cs" />
+    <Compile Include="Budget\BudgetModel.cs" />
+    <Compile Include="Budget\Data\BucketDtoType.cs" />
+    <Compile Include="Budget\Data\BudgetBucketDto.cs" />
+    <Compile Include="Budget\Data\BudgetBucketFactory.cs" />
+    <Compile Include="Budget\Data\BudgetBucketToDtoMapper.cs" />
+    <Compile Include="Budget\Data\BudgetBucketToDtoMapper.generated.cs" />
+    <Compile Include="Budget\Data\BudgetCollectionDto.cs" />
+    <Compile Include="Budget\Data\BudgetCollectionToDtoMapper.cs" />
+    <Compile Include="Budget\Data\BudgetCollectionToDtoMapper.generated.cs" />
+    <Compile Include="Budget\Data\BudgetModelDto.cs" />
+    <Compile Include="Budget\Data\BudgetModelToDtoMapper.generated.cs" />
+    <Compile Include="Budget\Data\ExpenseDto.cs" />
+    <Compile Include="Budget\Data\IncomeToDtoMapper.cs" />
+    <Compile Include="Budget\Data\ExpenseToDtoMapper.cs" />
     <Compile Include="Budget\Data\FixedBudgetBucketDto.cs" />
+    <Compile Include="Budget\Data\IBudgetBucketFactory.cs" />
+    <Compile Include="Budget\Data\IncomeDto.cs" />
+    <Compile Include="Budget\Data\BudgetModelToDtoMapper.cs" />
     <Compile Include="Budget\DateTimeDescendingOrder.cs" />
+    <Compile Include="Budget\Expense.cs" />
+    <Compile Include="Budget\ExpenseBucket.cs" />
     <Compile Include="Budget\FixedBudgetProjectBucket.cs" />
+    <Compile Include="Budget\IBudgetBucketRepository.cs" />
     <Compile Include="Budget\IBudgetCurrencyContext.cs" />
+    <Compile Include="Budget\IBudgetRepository.cs" />
+    <Compile Include="Budget\Income.cs" />
+    <Compile Include="Budget\IncomeBudgetBucket.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
+    <Compile Include="Budget\PayCreditCardBucket.cs" />
+    <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
+    <Compile Include="Budget\SavingsCommitmentBucket.cs" />
+    <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
+    <Compile Include="Budget\SurplusBucket.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
+    <Compile Include="DebugLogger.cs" />
+    <Compile Include="Services\TransactionConstants.cs" />
+    <Compile Include="ToDo.cs" />
+    <Compile Include="DataFormatException.cs" />
+    <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="DefaultIoCRegistrations.cs" />
+    <Compile Include="DependencyRegistrationRequirement.cs" />
+    <Compile Include="GlobalFilterCriteria.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ICloneable.cs" />
     <Compile Include="IDataChangeDetection.cs" />
     <Compile Include="IEnumerableExtension.cs" />
-    <Compile Include="ListExtension.cs" />
-    <Compile Include="ILocalAutoMapperConfiguration.cs" />
+    <Compile Include="IEnvironmentFolders.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="IModelValidate.cs" />
+    <Compile Include="Ledger\BankBalance.cs" />
     <Compile Include="Ledger\BankBalanceAdjustmentTransaction.cs" />
-    <Compile Include="Ledger\Data\DtoToToDoCollectionMapper.cs" />
-    <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
+    <Compile Include="Ledger\CorruptedLedgerBookException.cs" />
+    <Compile Include="Ledger\CreditLedgerTransaction.cs" />
+    <Compile Include="Ledger\Data\BankBalanceDto.cs" />
     <Compile Include="Ledger\Data\ILedgerBucketFactory.cs" />
-    <Compile Include="Ledger\Data\LedgerAutoMapperConfiguration.cs" />
+    <Compile Include="Ledger\Data\ILedgerTransactionFactory.cs" />
+    <Compile Include="Ledger\Data\LedgerBookDto.cs" />
+    <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
+    <Compile Include="Ledger\Data\LedgerBookToDtoMapper.generated.cs" />
     <Compile Include="Ledger\Data\LedgerBucketDto.cs" />
-    <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\LedgerBucketFactory.cs" />
+    <Compile Include="Ledger\Data\LedgerEntryDto.cs" />
+    <Compile Include="Ledger\Data\LedgerEntryLineDto.cs" />
+    <Compile Include="Ledger\Data\LedgerTransactionDto.cs" />
+    <Compile Include="Ledger\Data\LedgerTransactionFactory.cs" />
     <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.cs" />
+    <Compile Include="Ledger\Data\ToDoCollectionToDtoMapper.generated.cs" />
     <Compile Include="Ledger\Data\ToDoTaskDto.cs" />
     <Compile Include="Ledger\ILedgerBookFactory.cs" />
+    <Compile Include="Ledger\ILedgerBookRepository.cs" />
     <Compile Include="Ledger\IReconciliationBuilder.cs" />
     <Compile Include="Ledger\IReconciliationConsistency.cs" />
     <Compile Include="Ledger\IReconciliationManager.cs" />
+    <Compile Include="Ledger\LedgerBook.cs" />
     <Compile Include="Ledger\LedgerBookFactory.cs" />
-    <Compile Include="Ledger\LedgerForTransferFunds.cs" />
+    <Compile Include="Ledger\LedgerBucket.cs" />
+    <Compile Include="Ledger\LedgerCalculation.cs" />
+    <Compile Include="Ledger\LedgerEntry.cs" />
+    <Compile Include="Ledger\LedgerEntryLine.cs" />
+    <Compile Include="Ledger\LedgerTransaction.cs" />
     <Compile Include="Ledger\ReconciliationBuilder.cs" />
     <Compile Include="Ledger\ReconciliationConsistency.cs" />
     <Compile Include="Ledger\ReconciliationConsistencyChecker.cs" />
@@ -166,92 +159,51 @@
     <Compile Include="Ledger\ToDoTaskType.cs" />
     <Compile Include="Ledger\TransferFundsCommand.cs" />
     <Compile Include="Ledger\TransferTask.cs" />
-    <Compile Include="MagicMapper.cs" />
-    <Compile Include="AutoMapperConfiguration.cs" />
-    <Compile Include="AutoRegisterWithIoCAttribute.cs" />
-    <Compile Include="BasicMapper.cs" />
-    <Compile Include="BudgetAnalyserLog4NetLogger.cs" />
-    <Compile Include="Budget\BudgetBucket.cs" />
-    <Compile Include="Budget\BillToPayExpenseBucket.cs" />
-    <Compile Include="Budget\Data\BucketDtoType.cs" />
-    <Compile Include="Budget\Data\BudgetBucketDto.cs" />
-    <Compile Include="Budget\Data\DtoToBudgetBucketMapper.cs" />
-    <Compile Include="Budget\Data\BudgetBucketFactory.cs" />
-    <Compile Include="Budget\Data\BudgetBucketToDtoMapper.cs" />
-    <Compile Include="Budget\Data\BudgetCollectionToDtoMapper.cs" />
-    <Compile Include="Budget\Data\BudgetModelToDtoMapper.cs" />
-    <Compile Include="Budget\Data\BudgetCollectionDto.cs" />
-    <Compile Include="Budget\Data\DtoToBudgetCollectionMapper.cs" />
-    <Compile Include="Budget\Data\BudgetModelDto.cs" />
-    <Compile Include="Budget\Data\DtoToBudgetModelMapper.cs" />
-    <Compile Include="Budget\Data\ExpenseDto.cs" />
-    <Compile Include="Budget\Data\IBudgetBucketFactory.cs" />
-    <Compile Include="Budget\Data\IncomeDto.cs" />
-    <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
-    <Compile Include="Budget\BudgetCollection.cs" />
-    <Compile Include="Budget\BudgetCurrencyContext.cs" />
-    <Compile Include="Budget\BudgetException.cs" />
-    <Compile Include="Budget\BudgetItem.cs" />
-    <Compile Include="Budget\BudgetModel.cs" />
-    <Compile Include="Budget\SavingsCommitmentBucket.cs" />
-    <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
-    <Compile Include="Budget\Expense.cs" />
-    <Compile Include="Budget\ExpenseBucket.cs" />
-    <Compile Include="Budget\IBudgetBucketRepository.cs" />
-    <Compile Include="Budget\IBudgetRepository.cs" />
-    <Compile Include="Budget\Income.cs" />
-    <Compile Include="Budget\IncomeBudgetBucket.cs" />
-    <Compile Include="Budget\PayCreditCardBucket.cs" />
-    <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
-    <Compile Include="Budget\SpentMonthlyExpenseBucket.cs" />
-    <Compile Include="Budget\SurplusBucket.cs" />
-    <Compile Include="DefaultIoCRegistrations.cs" />
-    <Compile Include="ILogger.cs" />
-    <Compile Include="Ledger\BankBalance.cs" />
-    <Compile Include="Ledger\CorruptedLedgerBookException.cs" />
-    <Compile Include="Ledger\Data\BankBalanceDto.cs" />
-    <Compile Include="Ledger\Data\LedgerBookDto.cs" />
-    <Compile Include="Ledger\Data\LedgerEntryDto.cs" />
-    <Compile Include="Ledger\Data\LedgerEntryLineDto.cs" />
-    <Compile Include="Ledger\Data\LedgerTransactionDto.cs" />
-    <Compile Include="Ledger\Data\DtoToLedgerBookMapper.cs" />
-    <Compile Include="Ledger\Data\LedgerBookToDtoMapper.cs" />
-    <Compile Include="Ledger\LedgerCalculation.cs" />
-    <Compile Include="MainApplicationStateModelV1.cs" />
+    <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
+    <Compile Include="ListExtension.cs" />
+    <Compile Include="MainApplicationState.cs" />
     <Compile Include="Matching\CriteriaT.cs" />
-    <Compile Include="Matching\Data\MatchingAutoMapperConfiguration.cs" />
-    <Compile Include="Matching\Data\MatchingRuleDto.cs" />
-    <Compile Include="Matching\Data\DtoToMatchingRuleMapper.cs" />
     <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDomainToDataMapper.generated.cs" />
+    <Compile Include="Matching\Data\MatchingRuleDto.cs" />
     <Compile Include="Matching\Data\SingleUseMatchingRuleDto.cs" />
     <Compile Include="Matching\IMatchingRuleFactory.cs" />
+    <Compile Include="Matching\IMatchingRuleRepository.cs" />
     <Compile Include="Matching\IMatchMaker.cs" />
+    <Compile Include="Matching\MatchingRule.cs" />
     <Compile Include="Matching\MatchingRuleFactory.cs" />
     <Compile Include="Matching\MatchMaker.cs" />
     <Compile Include="Matching\RulesGroupedByBucket.cs" />
     <Compile Include="Matching\SimilarMatchedRule.cs" />
     <Compile Include="Matching\SingleUseMatchingRule.cs" />
+    <Compile Include="Matching\XamlOnDiskMatchingRuleRepository.cs" />
+    <Compile Include="NewZealandPublicHolidays.cs" />
     <Compile Include="NullLogger.cs" />
-    <Compile Include="Persistence\ApplicationAutoMapperConfiguration.cs" />
     <Compile Include="Persistence\ApplicationDatabase.cs" />
+    <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.cs" />
+    <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.generated.cs" />
     <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
     <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
+    <Compile Include="Persistence\IPersistentApplicationState.cs" />
     <Compile Include="Persistence\StorageBranch.cs" />
-    <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.cs" />
-    <Compile Include="Persistence\StorageRootToApplicationDatabaseMapper.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyInjectionAttribute.cs" />
-    <Compile Include="NewZealandPublicHolidays.cs" />
+    <Compile Include="PropertyInjectionDependencyRequirement.cs" />
     <Compile Include="ReferenceNumberGenerator.cs" />
+    <Compile Include="Reports\BucketPerformanceResult.cs" />
     <Compile Include="Reports\BurnDownChartAnalyser.cs" />
+    <Compile Include="Reports\BurnDownChartAnalyserResult.cs" />
     <Compile Include="Reports\BurnDownCharts.cs" />
     <Compile Include="Reports\BurnDownChartsBuilder.cs" />
-    <Compile Include="Reports\CustomBurnDownChartsV1.cs" />
+    <Compile Include="Reports\CustomAggregateBurnDownGraph.cs" />
+    <Compile Include="Reports\CustomBurnDownChartApplicationState.cs" />
     <Compile Include="Reports\DatedGraphPlot.cs" />
     <Compile Include="Reports\GraphData.cs" />
     <Compile Include="Reports\IBurnDownChartAnalyser.cs" />
     <Compile Include="Reports\LedgerBucketHistoryAnalyser.cs" />
     <Compile Include="Reports\LongTermSpendingTrendAnalyser.cs" />
+    <Compile Include="Reports\OverallPerformanceBudgetAnalyser.cs" />
     <Compile Include="Reports\OverallPerformanceBudgetResult.cs" />
     <Compile Include="Reports\ReportTransaction.cs" />
     <Compile Include="Reports\ReportTransactionWithRunningBalance.cs" />
@@ -262,18 +214,18 @@
     <Compile Include="Services\BudgetPieGraphService.cs" />
     <Compile Include="Services\BurnDownChartsService.cs" />
     <Compile Include="Services\DashboardService.cs" />
-    <Compile Include="Services\IReconciliationService.cs" />
-    <Compile Include="Services\ISupportsModelPersistence.cs" />
+    <Compile Include="Services\IApplicationDatabaseService.cs" />
     <Compile Include="Services\IBudgetMaintenanceService.cs" />
     <Compile Include="Services\IBudgetPieGraphService.cs" />
     <Compile Include="Services\IBurnDownChartsService.cs" />
-    <Compile Include="Services\IApplicationDatabaseService.cs" />
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Services\ILedgerService.cs" />
     <Compile Include="Services\ILongTermSpendingChartService.cs" />
     <Compile Include="Services\INotifyDatabaseChanges.cs" />
     <Compile Include="Services\IOverallPerformanceChartService.cs" />
+    <Compile Include="Services\IReconciliationService.cs" />
     <Compile Include="Services\IServiceFoundation.cs" />
+    <Compile Include="Services\ISupportsModelPersistence.cs" />
     <Compile Include="Services\ITransactionManagerService.cs" />
     <Compile Include="Services\ITransactionRuleService.cs" />
     <Compile Include="Services\IWidgetService.cs" />
@@ -285,105 +237,70 @@
     <Compile Include="Services\TransactionRuleService.cs" />
     <Compile Include="Services\ValidatingEventArgs.cs" />
     <Compile Include="Services\WidgetService.cs" />
-    <Compile Include="Statement\Data\StatementAutoMapperConfiguration.cs" />
-    <Compile Include="Statement\Data\TransactionSetDto.cs" />
-    <Compile Include="Statement\Data\TransactionSetDtoToStatementModelMapper.cs" />
-    <Compile Include="Statement\Data\StatementModelToTransactionSetDtoMapper.cs" />
-    <Compile Include="Statement\Data\TransactionDto.cs" />
-    <Compile Include="Statement\Data\TransactionDtoToTransactionMapper.cs" />
-    <Compile Include="Statement\Data\TransactionToTransactionDtoMapper.cs" />
-    <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
-    <Compile Include="Statement\IStatementRepository.cs" />
-    <Compile Include="Statement\ITransactionTypeRepository.cs" />
-    <Compile Include="Statement\NamedTransaction.cs" />
-    <Compile Include="Statement\PersistentFiltersV1.cs" />
-    <Compile Include="Statement\StatementApplicationStateV1.cs" />
-    <Compile Include="Statement\StatementModel.cs" />
-    <Compile Include="Statement\StatementRepository.cs" />
-    <Compile Include="Statement\TransactionsAlreadyImportedException.cs" />
-    <Compile Include="Statement\UnexpectedIndexException.cs" />
-    <Compile Include="Statement\Transaction.cs" />
-    <Compile Include="Statement\TransactionGroupedByBucket.cs" />
-    <Compile Include="Statement\TransactionListExtension.cs" />
-    <Compile Include="Statement\TransactionType.cs" />
-    <Compile Include="TaskExtension.cs" />
-    <Compile Include="ValidationWarningException.cs" />
-    <Compile Include="DataFormatException.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="AutoRegisterWithIoCProcessor.cs" />
-    <Compile Include="Ledger\ILedgerBookRepository.cs" />
-    <Compile Include="Ledger\XamlOnDiskLedgerBookRepository.cs" />
-    <Compile Include="Ledger\BudgetCreditLedgerTransaction.cs" />
-    <Compile Include="Ledger\CreditLedgerTransaction.cs" />
-    <Compile Include="Ledger\LedgerBucket.cs" />
-    <Compile Include="Ledger\LedgerBook.cs" />
-    <Compile Include="Ledger\LedgerEntry.cs" />
-    <Compile Include="Ledger\LedgerEntryLine.cs" />
-    <Compile Include="Ledger\LedgerTransaction.cs" />
-    <Compile Include="Matching\IMatchingRuleRepository.cs" />
-    <Compile Include="Matching\MatchingRule.cs" />
-    <Compile Include="Matching\XamlOnDiskMatchingRuleRepository.cs" />
-    <Compile Include="DateTimeExtension.cs" />
-    <Compile Include="GlobalFilterCriteria.cs" />
-    <Compile Include="IModelValidate.cs" />
-    <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\BucketPerformanceResult.cs" />
-    <Compile Include="Reports\CustomAggregateBurnDownGraph.cs" />
-    <Compile Include="Reports\OverallPerformanceBudgetAnalyser.cs" />
-    <Compile Include="Reports\BurnDownChartAnalyserResult.cs" />
     <Compile Include="Statement\AnzAccountStatementImporterV1.cs" />
     <Compile Include="Statement\AnzVisaStatementImporterV1.cs" />
     <Compile Include="Statement\BankImportUtilities.cs" />
     <Compile Include="Statement\BankStatementImporterRepository.cs" />
     <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1.cs" />
+    <Compile Include="Statement\Data\StatementModelToDtoMapper.cs" />
+    <Compile Include="Statement\Data\StatementModelToDtoMapper.generated.cs" />
+    <Compile Include="Statement\Data\TransactionDto.cs" />
+    <Compile Include="Statement\Data\TransactionSetDto.cs" />
+    <Compile Include="Statement\Data\TransactionToTransactionDtoMapper.cs" />
     <Compile Include="Statement\IBankStatementImporter.cs" />
     <Compile Include="Statement\IBankStatementImporterRepository.cs" />
+    <Compile Include="Statement\InMemoryTransactionTypeRepository.cs" />
+    <Compile Include="Statement\IStatementRepository.cs" />
+    <Compile Include="Statement\ITransactionTypeRepository.cs" />
     <Compile Include="Statement\IVersionedStatementModelRepository.cs" />
+    <Compile Include="Statement\NamedTransaction.cs" />
+    <Compile Include="Statement\PersistentApplicationStateFiltersApplicationState.cs" />
+    <Compile Include="Statement\StatementApplicationState.cs" />
+    <Compile Include="Statement\StatementModel.cs" />
     <Compile Include="Statement\StatementModelCheckSumException.cs" />
+    <Compile Include="Statement\StatementRepository.cs" />
+    <Compile Include="Statement\Transaction.cs" />
+    <Compile Include="Statement\TransactionGroupedByBucket.cs" />
+    <Compile Include="Statement\TransactionListExtension.cs" />
+    <Compile Include="Statement\TransactionsAlreadyImportedException.cs" />
+    <Compile Include="Statement\TransactionType.cs" />
+    <Compile Include="Statement\UnexpectedIndexException.cs" />
     <Compile Include="StringExtension.cs" />
-    <Compile Include="Widgets\NewFileWidget.cs" />
-    <Compile Include="Widgets\WidgetsApplicationStateV1.cs" />
-    <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
+    <Compile Include="TaskExtension.cs" />
+    <Compile Include="ValidationWarningException.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
     <Compile Include="Widgets\CurrentFileWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
-    <Compile Include="Widgets\IUserDefinedWidget.cs" />
-    <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
-    <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
+    <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
+    <Compile Include="Widgets\IUserDefinedWidget.cs" />
     <Compile Include="Widgets\IWidgetRepository.cs" />
     <Compile Include="Widgets\IWidgetWithAdditionalImage.cs" />
+    <Compile Include="Widgets\MultiInstanceWidgetState.cs" />
+    <Compile Include="Widgets\NewFileWidget.cs" />
+    <Compile Include="Widgets\OverspentWarning.cs" />
     <Compile Include="Widgets\ProgressBarWidget.cs" />
     <Compile Include="Widgets\ReflectionWidgetRepository.cs" />
-    <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
+    <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widgets\RemainingBudgetBucketWidget.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidget.cs" />
+    <Compile Include="Widgets\SavingsGoalWidget.cs" />
     <Compile Include="Widgets\SurprisePaymentWidget.cs" />
     <Compile Include="Widgets\SurprisePaymentWidgetPersistentState.cs" />
     <Compile Include="Widgets\TimedUpdateCounterWidget.cs" />
-    <Compile Include="Widgets\SavingsGoalWidget.cs" />
-    <Compile Include="Widgets\RemainingSurplusWidget.cs" />
-    <Compile Include="Widgets\RemainingActualSurplusWidget.cs" />
     <Compile Include="Widgets\WeeklyOrFortnightly.cs" />
     <Compile Include="Widgets\Widget.cs" />
     <Compile Include="Widgets\WidgetGroup.cs" />
     <Compile Include="Widgets\WidgetPersistentState.cs" />
-    <Compile Include="Widgets\WidgetRepositoryChangedEventArgs.cs" />
+    <Compile Include="Widgets\WidgetsApplicationState.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml">
-      <Link>CodeAnalysisDictionary.xml</Link>
-    </CodeAnalysisDictionary>
+    <Reference Include="Portable.Xaml">
+      <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Budget\BudgetBuckets.cd" />
-    <None Include="Ledger\LedgerBook.cd" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

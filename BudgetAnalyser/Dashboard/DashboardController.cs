@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
@@ -15,7 +15,8 @@ using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
-using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.Dashboard
 {
@@ -121,7 +122,7 @@ namespace BudgetAnalyser.Dashboard
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var storedWidgetsState = message.ElementOfType<WidgetsApplicationStateV1>();
+            var storedWidgetsState = message.ElementOfType<WidgetsApplicationState>();
             if (storedWidgetsState != null)
             {
                 // Now that we have the previously persisted state data we can properly intialise the service.
@@ -131,7 +132,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            WidgetsApplicationStateV1 widgetStates = this.dashboardService.PreparePersistentStateData();
+            WidgetsApplicationState widgetStates = this.dashboardService.PreparePersistentStateData();
             message.PersistThisModel(widgetStates);
         }
 

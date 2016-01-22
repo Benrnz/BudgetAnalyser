@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class ReconciliationService : IReconciliationService, ISupportsModelPersistence
+    internal class ReconciliationService : IReconciliationService, ISupportsModelPersistence
     {
         private readonly IReconciliationManager reconciliationManager;
 
@@ -26,17 +26,6 @@ namespace BudgetAnalyser.Engine.Services
 
             this.reconciliationManager = reconciliationManager;
         }
-
-        /// <summary>
-        ///     Gets the type of the data the implementation deals with.
-        /// </summary>
-        public ApplicationDataType DataType => ApplicationDataType.Ledger;
-
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
-        public int LoadSequence => 51;
 
         /// <summary>
         ///     The To Do List loaded from a persistent storage.
@@ -64,24 +53,8 @@ namespace BudgetAnalyser.Engine.Services
             entryLine.CancelBalanceAdjustment(transactionId);
         }
 
-        /// <summary>
-        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
-        /// </summary>
-        public void Close()
-        {
-            ReconciliationToDoList = new ToDoCollection();
-        }
-
-        /// <summary>
-        ///     Create a new file specific for that service's data.
-        /// </summary>
-        public Task CreateAsync(ApplicationDatabase applicationDatabase)
-        {
-            // Nothing needs to be done here.
-            return Task.CompletedTask;
-        }
-
-        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative, Account account)
+        public LedgerTransaction CreateBalanceAdjustment(LedgerEntryLine entryLine, decimal amount, string narrative,
+                                                         Account account)
         {
             if (entryLine == null)
             {
@@ -103,7 +76,8 @@ namespace BudgetAnalyser.Engine.Services
             return adjustmentTransaction;
         }
 
-        public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry, decimal amount, string narrative)
+        public LedgerTransaction CreateLedgerTransaction(LedgerEntryLine reconciliation, LedgerEntry ledgerEntry,
+                                                         decimal amount, string narrative)
         {
             if (reconciliation == null)
             {
@@ -127,21 +101,6 @@ namespace BudgetAnalyser.Engine.Services
             return newTransaction;
         }
 
-        /// <summary>
-        ///     Loads a data source with the provided database reference data asynchronously.
-        /// </summary>
-        public Task LoadAsync(ApplicationDatabase applicationDatabase)
-        {
-            if (applicationDatabase == null)
-            {
-                throw new ArgumentNullException(nameof(applicationDatabase));
-            }
-
-            // The To Do Collection persistence is managed by the ApplicationDatabaseService.
-            ReconciliationToDoList = applicationDatabase.LedgerReconciliationToDoCollection;
-            return Task.CompletedTask;
-        }
-
         public LedgerEntryLine MonthEndReconciliation(
             LedgerBook ledgerBook,
             DateTime reconciliationDate,
@@ -150,7 +109,8 @@ namespace BudgetAnalyser.Engine.Services
             bool ignoreWarnings,
             params BankBalance[] balances)
         {
-            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate, budgetContext, statement, ignoreWarnings, balances);
+            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
+                budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);
             return reconResult.Reconciliation;
@@ -167,32 +127,6 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        ///     Saves the application database asynchronously. This may be called using a background worker thread.
-        /// </summary>
-        /// <param name="contextObjects">
-        ///     The optional context objects that may have been populated by implementations of the
-        ///     <see cref="ISupportsModelPersistence.SavePreview" /> method call.
-        /// </param>
-        public Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
-        {
-            // Nothing needs to be done here.
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        ///     Called before Save is called. This will be called on the UI Thread.
-        ///     Objects can optionally add some context data that will be passed to the
-        ///     <see cref="ISupportsModelPersistence.SaveAsync" /> method call.
-        ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
-        ///     this
-        ///     can't be done during save as it may not be called using the UI Thread.
-        /// </summary>
-        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
-        {
-        }
-
-        /// <summary>
         ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is
         ///     unlocked.
         ///     This is usually used during reconciliation.
@@ -206,7 +140,8 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (reconciliation == null)
             {
-                throw new ArgumentNullException(nameof(reconciliation), "There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
+                throw new ArgumentNullException(nameof(reconciliation),
+                    "There are no reconciliations. Transfer funds can only be used on the most recent reconciliation.");
             }
 
             this.reconciliationManager.TransferFunds(transferDetails, reconciliation);
@@ -235,6 +170,75 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             entryLine.UpdateRemarks(remarks);
+        }
+
+        /// <summary>
+        ///     Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType => ApplicationDataType.Ledger;
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int LoadSequence => 51;
+
+        /// <summary>
+        ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
+        /// </summary>
+        public void Close()
+        {
+            ReconciliationToDoList = new ToDoCollection();
+        }
+
+        /// <summary>
+        ///     Create a new file specific for that service's data.
+        /// </summary>
+        public Task CreateAsync(ApplicationDatabase applicationDatabase)
+        {
+            // Nothing needs to be done here.
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Loads a data source with the provided database reference data asynchronously.
+        /// </summary>
+        public Task LoadAsync(ApplicationDatabase applicationDatabase)
+        {
+            if (applicationDatabase == null)
+            {
+                throw new ArgumentNullException(nameof(applicationDatabase));
+            }
+
+            // The To Do Collection persistence is managed by the ApplicationDatabaseService.
+            ReconciliationToDoList = applicationDatabase.LedgerReconciliationToDoCollection;
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Saves the application database asynchronously. This may be called using a background worker thread.
+        /// </summary>
+        /// <param name="contextObjects">
+        ///     The optional context objects that may have been populated by implementations of the
+        ///     <see cref="ISupportsModelPersistence.SavePreview" /> method call.
+        /// </param>
+        public Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        {
+            // Nothing needs to be done here.
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///     Called before Save is called. This will be called on the UI Thread.
+        ///     Objects can optionally add some context data that will be passed to the
+        ///     <see cref="ISupportsModelPersistence.SaveAsync" /> method call.
+        ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
+        ///     this
+        ///     can't be done during save as it may not be called using the UI Thread.
+        /// </summary>
+        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
+        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        {
         }
 
         /// <summary>

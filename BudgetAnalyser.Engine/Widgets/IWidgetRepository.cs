@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    ///     A repository to get, create, and remove widgets
+    /// </summary>
     public interface IWidgetRepository
     {
         /// <summary>
@@ -13,9 +16,16 @@ namespace BudgetAnalyser.Engine.Widgets
         /// <param name="id">A unique identifier for the instance</param>
         IUserDefinedWidget Create(string widgetType, string id);
 
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Prefered term in repository")]
+        /// <summary>
+        ///     Gets all the available widgets.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "Prefered term in repository")]
         IEnumerable<Widget> GetAll();
 
+        /// <summary>
+        ///     Removes the specified widget.
+        /// </summary>
         void Remove(IUserDefinedWidget widget);
     }
 }

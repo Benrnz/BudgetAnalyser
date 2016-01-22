@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
@@ -12,6 +12,9 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.Filtering
 {
@@ -130,7 +133,7 @@ namespace BudgetAnalyser.Filtering
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var filterState = message.ElementOfType<PersistentFiltersV1>();
+            var filterState = message.ElementOfType<PersistentFiltersApplicationState>();
             if (filterState == null)
             {
                 return;
@@ -156,7 +159,7 @@ namespace BudgetAnalyser.Filtering
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
             bool noCriteria = Criteria == null;
-            var filterState = new PersistentFiltersV1
+            var filterState = new PersistentFiltersApplicationState
             {
                 BeginDate = noCriteria ? null : Criteria.BeginDate,
                 EndDate = noCriteria ? null : Criteria.EndDate,

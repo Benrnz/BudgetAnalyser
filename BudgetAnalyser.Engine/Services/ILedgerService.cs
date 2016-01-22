@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
@@ -12,6 +12,9 @@ namespace BudgetAnalyser.Engine.Services
     /// </summary>
     public interface ILedgerService : INotifyDatabaseChanges, IServiceFoundation
     {
+        /// <summary>
+        ///     Gets the ledger book model.
+        /// </summary>
         LedgerBook LedgerBook { get; }
 
         /// <summary>
@@ -20,6 +23,12 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="ledger">The ledger column to move.</param>
         /// <param name="storedInAccount">The new account to store the ledger in.</param>
         void MoveLedgerToAccount([NotNull] LedgerBucket ledger, [NotNull] Account storedInAccount);
+
+        /// <summary>
+        ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        void RemoveReconciliation([NotNull] LedgerEntryLine line);
 
         /// <summary>
         ///     Renames the ledger book.
@@ -39,12 +48,5 @@ namespace BudgetAnalyser.Engine.Services
         ///     Returns a list of valid accounts for use with the Ledger Book.
         /// </summary>
         IEnumerable<Account> ValidLedgerAccounts();
-
-        /// <summary>
-        ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        void RemoveReconciliation([NotNull] LedgerEntryLine line);
-
     }
 }

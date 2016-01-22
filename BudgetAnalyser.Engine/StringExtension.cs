@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine
                 return instance;
             }
 
-            bool useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
+            var useAn = Vowels.Contains(instance.ToCharArray(0, 1)[0]);
 
             if (properCase && useAn)
             {
@@ -42,11 +42,19 @@ namespace BudgetAnalyser.Engine
             return "a";
         }
 
+        /// <summary>
+        ///     Returns true if the string is null, whitespace or empty.
+        ///     Equivelant to IsNullOrWhiteSpace
+        /// </summary>
         public static bool IsNothing(this string instance)
         {
             return string.IsNullOrWhiteSpace(instance);
         }
 
+        /// <summary>
+        ///     Returns true if the string is not null, not whitespace, and not empty.
+        ///     The direct opporsite of <see cref="IsNothing" />
+        /// </summary>
         public static bool IsSomething(this string instance)
         {
             return !string.IsNullOrWhiteSpace(instance);

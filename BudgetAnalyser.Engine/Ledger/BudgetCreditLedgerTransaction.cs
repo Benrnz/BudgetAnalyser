@@ -1,8 +1,12 @@
 ﻿using System;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A Ledger Transaction that represents a budgeted amount being credited to a ledger bucket.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerTransaction" />
     public class BudgetCreditLedgerTransaction : LedgerTransaction
     {
         /// <summary>

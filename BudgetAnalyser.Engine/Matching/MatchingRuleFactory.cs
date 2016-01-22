@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -21,14 +21,18 @@ namespace BudgetAnalyser.Engine.Matching
             this.bucketRepo = bucketRepo;
         }
 
-        public MatchingRule CreateNewRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+        public MatchingRule CreateNewRule(string bucketCode, string description, string[] references,
+                                          string transactionTypeName, decimal? amount, bool andMatching)
         {
-            return CreateAnyNewRule(CreateRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
+            return CreateAnyNewRule(CreateRuleForPersistence, bucketCode, description, references, transactionTypeName,
+                amount, andMatching);
         }
 
-        public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+        public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references,
+                                                            string transactionTypeName, decimal? amount, bool andMatching)
         {
-            SingleUseMatchingRule rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references, transactionTypeName, amount, andMatching);
+            SingleUseMatchingRule rule = CreateAnyNewRule(CreateSingleUseRuleForPersistence, bucketCode, description, references,
+                transactionTypeName, amount, andMatching);
             return rule;
         }
 
@@ -42,7 +46,8 @@ namespace BudgetAnalyser.Engine.Matching
             return new SingleUseMatchingRule(this.bucketRepo) { BucketCode = budgetBucketCode };
         }
 
-        private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
+        private static T CreateAnyNewRule<T>(Func<string, T> ruleCtor, string bucketCode, string description,
+                                             string[] references, string transactionTypeName, decimal? amount, bool andMatching)
             where T : MatchingRule
         {
             if (string.IsNullOrEmpty(bucketCode))

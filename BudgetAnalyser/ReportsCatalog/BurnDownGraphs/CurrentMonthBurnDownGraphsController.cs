@@ -13,6 +13,8 @@ using BudgetAnalyser.Engine.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using Rees.Wpf;
 using Rees.Wpf.ApplicationState;
+using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
+using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 {
@@ -56,14 +58,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand AddChartCommand => new RelayCommand(OnAddChartCommandExecuted);
 
         public BindingList<BucketBurnDownController> ChartControllers { get; private set; }
 
         public string DateRangeDescription
         {
-            [Engine.Annotations.UsedImplicitly] get { return this.doNotUseDateRangeDescription; }
+            [UsedImplicitly] get { return this.doNotUseDateRangeDescription; }
             private set
             {
                 this.doNotUseDateRangeDescription = value;
@@ -71,14 +73,14 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand RemoveChartCommand => new RelayCommand(OnRemoveChartCommandExecuted, RemoveChartCommandCanExecute);
 
         public BucketBurnDownController SelectedChart
         {
             get { return this.doNotUseSelectedChart; }
 
-            [Engine.Annotations.UsedImplicitly]
+            [UsedImplicitly]
             set
             {
                 if (value == null)
@@ -92,7 +94,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Required for data binding")]
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public string Title => "Current Month Burndown Graphs";
 
         public void Load(
@@ -156,7 +158,7 @@ namespace BudgetAnalyser.ReportsCatalog.BurnDownGraphs
 
         private void OnApplicationStateLoaded(ApplicationStateLoadedMessage message)
         {
-            var customChartState = message.ElementOfType<CustomBurnDownChartsV1>();
+            var customChartState = message.ElementOfType<CustomBurnDownChartApplicationState>();
             if (customChartState != null)
             {
                 this.chartsService.LoadPersistedStateData(customChartState);

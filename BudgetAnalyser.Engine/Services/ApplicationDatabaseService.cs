@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Services
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class ApplicationDatabaseService : IApplicationDatabaseService
+    internal class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
@@ -44,7 +44,8 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear(); // Only clears system generated tasks, not persistent user created tasks.
+            this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
+            // Only clears system generated tasks, not persistent user created tasks.
             foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
@@ -93,7 +94,8 @@ namespace BudgetAnalyser.Engine.Services
             catch (DataFormatException ex)
             {
                 Close();
-                throw new DataFormatException("A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
+                throw new DataFormatException(
+                    "A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
             }
             catch (KeyNotFoundException ex)
             {
@@ -114,14 +116,14 @@ namespace BudgetAnalyser.Engine.Services
             this.dirtyData[dataType] = true;
         }
 
-        public MainApplicationStateModelV1 PreparePersistentStateData()
+        public MainApplicationState PreparePersistentStateData()
         {
             if (this.budgetAnalyserDatabase == null)
             {
-                return new MainApplicationStateModelV1();
+                return new MainApplicationState();
             }
 
-            return new MainApplicationStateModelV1
+            return new MainApplicationState
             {
                 BudgetAnalyserDataStorageKey = this.budgetAnalyserDatabase.FileName
             };
@@ -202,7 +204,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             foreach (int value in Enum.GetValues(typeof(ApplicationDataType)))
             {
-                var enumValue = (ApplicationDataType)value;
+                var enumValue = (ApplicationDataType) value;
                 this.dirtyData.Add(enumValue, false);
             }
         }

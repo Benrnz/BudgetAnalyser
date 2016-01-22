@@ -2,19 +2,31 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Reports
 {
-    public class BurnDownChartsBuilder
+    /// <summary>
+    ///     An builder to compile and collate data for the burn down charts.
+    /// </summary>
+    [AutoRegisterWithIoC]
+    internal class BurnDownChartsBuilder
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly Func<IBurnDownChartAnalyser> chartAnalyserFactory;
 
-        public BurnDownChartsBuilder([NotNull] IBudgetBucketRepository budgetBucketRepository, [NotNull] Func<IBurnDownChartAnalyser> chartAnalyserFactory)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BurnDownChartsBuilder" /> class.
+        /// </summary>
+        /// <param name="budgetBucketRepository">The budget bucket repository.</param>
+        /// <param name="chartAnalyserFactory">The chart analyser factory.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        public BurnDownChartsBuilder([NotNull] IBudgetBucketRepository budgetBucketRepository,
+                                     [NotNull] Func<IBurnDownChartAnalyser> chartAnalyserFactory)
         {
             if (budgetBucketRepository == null)
             {
@@ -40,7 +52,8 @@ namespace BudgetAnalyser.Engine.Reports
             LedgerBook ledgerBookModel)
         {
             DateTime beginDate = CalculateBeginDate(criteria);
-            string dateRangeDescription = string.Format(CultureInfo.CurrentCulture, "For the month starting {0:D} to {1:D} inclusive.", beginDate, beginDate.AddMonths(1).AddDays(-1));
+            var dateRangeDescription = string.Format(CultureInfo.CurrentCulture,
+                "For the month starting {0:D} to {1:D} inclusive.", beginDate, beginDate.AddMonths(1).AddDays(-1));
 
             var listOfCharts = new List<BurnDownChartAnalyserResult>(this.budgetBucketRepository.Buckets.Count());
             foreach (BudgetBucket bucket in this.budgetBucketRepository.Buckets
@@ -55,8 +68,10 @@ namespace BudgetAnalyser.Engine.Reports
             listOfCharts = listOfCharts.ToList();
 
             // Put surplus at the top.
-            BurnDownChartAnalyserResult analysisResult = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel, this.budgetBucketRepository.SurplusBucket, beginDate);
-            analysisResult.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart", this.budgetBucketRepository.SurplusBucket);
+            BurnDownChartAnalyserResult analysisResult = AnalyseDataForChart(statementModel, budgetModel, ledgerBookModel,
+                this.budgetBucketRepository.SurplusBucket, beginDate);
+            analysisResult.ChartTitle = string.Format(CultureInfo.CurrentCulture, "{0} Spending Chart",
+                this.budgetBucketRepository.SurplusBucket);
             listOfCharts.Insert(0, analysisResult);
 
             // Put any custom charts on top.
@@ -72,6 +87,26 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             Results = new BurnDownCharts(beginDate, dateRangeDescription, listOfCharts);
+        }
+
+        private BurnDownChartAnalyserResult AnalyseDataForChart(StatementModel statementModel, BudgetModel budgetModel,
+                                                                LedgerBook ledgerBookModel, BudgetBucket bucket, DateTime beginDate)
+        {
+            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
+            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, new[] { bucket }, ledgerBookModel, beginDate);
+            return result;
+        }
+
+        private BurnDownChartAnalyserResult AnalyseDataForChart(
+            StatementModel statementModel,
+            BudgetModel budgetModel,
+            LedgerBook ledgerBookModel,
+            IEnumerable<BudgetBucket> buckets,
+            DateTime beginDate)
+        {
+            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
+            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, buckets, ledgerBookModel, beginDate);
+            return result;
         }
 
         private static DateTime CalculateBeginDate(GlobalFilterCriteria criteria)
@@ -92,25 +127,6 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             return criteria.EndDate.Value.AddMonths(-1);
-        }
-
-        private BurnDownChartAnalyserResult AnalyseDataForChart(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel, BudgetBucket bucket, DateTime beginDate)
-        {
-            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
-            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, new[] { bucket }, ledgerBookModel, beginDate);
-            return result;
-        }
-
-        private BurnDownChartAnalyserResult AnalyseDataForChart(
-            StatementModel statementModel,
-            BudgetModel budgetModel,
-            LedgerBook ledgerBookModel,
-            IEnumerable<BudgetBucket> buckets,
-            DateTime beginDate)
-        {
-            IBurnDownChartAnalyser analyser = this.chartAnalyserFactory();
-            BurnDownChartAnalyserResult result = analyser.Analyse(statementModel, budgetModel, buckets, ledgerBookModel, beginDate);
-            return result;
         }
     }
 }

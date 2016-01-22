@@ -2,16 +2,22 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
+    /// <summary>
+    ///     A budget line in a budget. This can represent an expense or an income.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
     public abstract class BudgetItem : INotifyPropertyChanged
     {
         private decimal doNotUseAmount;
         private BudgetBucket doNotUseBucket;
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        ///     Gets or sets the amount of this budgeted amount.
+        /// </summary>
         public decimal Amount
         {
             get { return this.doNotUseAmount; }
@@ -27,6 +33,10 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+
+        /// <summary>
+        ///     Gets or sets the bucket classification for this.
+        /// </summary>
         public BudgetBucket Bucket
         {
             get { return this.doNotUseBucket; }
@@ -47,6 +57,9 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        /// <summary>
+        ///     Gets the summary.
+        /// </summary>
         public string Summary => string.Format(
             CultureInfo.CurrentCulture,
             "{0} {1}: {2}",
@@ -54,16 +67,19 @@ namespace BudgetAnalyser.Engine.Budget
             EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
             Bucket.Description);
 
-        public static bool operator ==(BudgetItem left, BudgetItem right)
-        {
-            return Equals(left, right);
-        }
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public static bool operator !=(BudgetItem left, BudgetItem right)
-        {
-            return !Equals(left, right);
-        }
-
+        /// <summary>
+        ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        ///     Delegates to <see cref="Equals(BudgetItem)" />
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -80,6 +96,12 @@ namespace BudgetAnalyser.Engine.Budget
             return other != null && Equals(other);
         }
 
+        /// <summary>
+        ///     Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -88,6 +110,26 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        /// <summary>
+        ///     Implements the operator ==. Delegates to Equals.
+        /// </summary>
+        public static bool operator ==(BudgetItem left, BudgetItem right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        ///     Implements the operator !=. Delegates to Equals.
+        /// </summary>
+        public static bool operator !=(BudgetItem left, BudgetItem right)
+        {
+            return !Equals(left, right);
+        }
+
+        /// <summary>
+        ///     Returns true if the buckets are the same and the types are the same.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         protected bool Equals([NotNull] BudgetItem other)
         {
             if (other == null)
@@ -98,6 +140,10 @@ namespace BudgetAnalyser.Engine.Budget
             return Equals(Bucket, other.Bucket) && GetType() == other.GetType();
         }
 
+        /// <summary>
+        ///     Called when [property changed].
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -116,7 +162,7 @@ namespace BudgetAnalyser.Engine.Budget
             sentence2 = sentence2.Trim();
 
             string lastWord;
-            int wordIndex = sentence1.LastIndexOf(' ');
+            var wordIndex = sentence1.LastIndexOf(' ');
             if (wordIndex <= 0)
             {
                 lastWord = sentence1;

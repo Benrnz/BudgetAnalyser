@@ -27,6 +27,9 @@ namespace BudgetAnalyser.Engine.Widgets
         private GlobalFilterCriteria filter;
         private int multiplier = 1;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SurprisePaymentWidget" /> class.
+        /// </summary>
         public SurprisePaymentWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -39,8 +42,14 @@ namespace BudgetAnalyser.Engine.Widgets
             ImageResourceName2 = "OctWarningImage";
         }
 
+        /// <summary>
+        ///     Gets the bucket code.
+        /// </summary>
         public string BucketCode => Id;
 
+        /// <summary>
+        ///     Gets or sets the frequency of the expected payment.
+        /// </summary>
         public WeeklyOrFortnightly Frequency
         {
             get { return this.doNotUseFrequency; }
@@ -51,6 +60,14 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the start payment date.
+        /// </summary>
+        public DateTime StartPaymentDate { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
+        /// </summary>
         public string Id
         {
             get { return this.doNotUseId; }
@@ -61,18 +78,29 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
-        public DateTime StartPaymentDate { get; set; }
+        /// <summary>
+        ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in
+        ///     the user interface.
+        /// </summary>
         public Type WidgetType => GetType();
 
+        /// <summary>
+        ///     Initialises the widget and optionally offers it some state and a logger.
+        /// </summary>
         public void Initialise(MultiInstanceWidgetState state, ILogger logger)
         {
-            var myState = (SurprisePaymentWidgetPersistentState)state;
+            var myState = (SurprisePaymentWidgetPersistentState) state;
             StartPaymentDate = myState.PaymentStartDate;
             Frequency = myState.Frequency;
             this.diagLogger = logger;
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
+        /// <summary>
+        ///     Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
+            MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
         public override void Update(params object[] input)
         {
             if (input == null)
@@ -86,8 +114,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            this.bucketRepository = (IBudgetBucketRepository)input[0];
-            this.filter = (GlobalFilterCriteria)input[1];
+            this.bucketRepository = (IBudgetBucketRepository) input[0];
+            this.filter = (GlobalFilterCriteria) input[1];
 
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
@@ -98,17 +126,25 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (this.filter.Cleared || this.filter.BeginDate == null || this.filter.BeginDate == DateTime.MinValue || this.filter.EndDate == null || this.filter.EndDate.Value == DateTime.MinValue)
+            if (this.filter.Cleared || this.filter.BeginDate == null || this.filter.BeginDate == DateTime.MinValue ||
+                this.filter.EndDate == null || this.filter.EndDate.Value == DateTime.MinValue)
             {
                 Enabled = false;
                 return;
             }
 
-            this.diagLogger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
+            this.diagLogger.LogInfo(
+                l =>
+                    l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id,
+                        this.filter.BeginDate, this.filter.EndDate));
             PaymentDate currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
-            var currentMonthTally = new NextOccurance { StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1), EndDate = this.filter.EndDate.Value };
+            var currentMonthTally = new NextOccurance
+            {
+                StartDate = this.filter.EndDate.Value.AddDays(1).AddMonths(-1),
+                EndDate = this.filter.EndDate.Value
+            };
             var alert = false;
             NextOccurance firstOccurance = null;
             do
@@ -119,15 +155,20 @@ namespace BudgetAnalyser.Engine.Widgets
                 }
                 else
                 {
-                    this.diagLogger.LogInfo(l => l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"), currentMonthTally.ConcatDates()));
+                    this.diagLogger.LogInfo(
+                        l =>
+                            l.Format("    {0} {1}", currentMonthTally.StartDate.ToString("MMMM"),
+                                currentMonthTally.ConcatDates()));
                     if (AbnormalNumberOfPayments(currentMonthTally.Dates.Count))
                     {
                         if (firstOccurance == null)
                         {
                             firstOccurance = currentMonthTally;
                         }
-                        content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ", currentMonthTally.StartDate.ToString("MMMM"));
-                        if (currentMonthTally.EndDate == this.filter.EndDate.Value || currentMonthTally.EndDate == this.filter.EndDate.Value.AddMonths(1))
+                        content.AppendFormat(CultureInfo.CurrentCulture, "{0}, ",
+                            currentMonthTally.StartDate.ToString("MMMM"));
+                        if (currentMonthTally.EndDate == this.filter.EndDate.Value ||
+                            currentMonthTally.EndDate == this.filter.EndDate.Value.AddMonths(1))
                         {
                             // Is current or next month, so signal alert status
                             alert = true;
@@ -141,7 +182,8 @@ namespace BudgetAnalyser.Engine.Widgets
             } while (currentDate.Date <= this.filter.EndDate.Value.AddYears(1));
 
             ColourStyleName = alert ? WidgetWarningStyle : WidgetStandardStyle;
-            DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency, BucketCode, content);
+            DetailedText = string.Format(CultureInfo.CurrentCulture, "Monitoring {0} {1} bucket. {2}", Frequency,
+                BucketCode, content);
             if (firstOccurance == null)
             {
                 LargeNumber = string.Empty;
@@ -178,7 +220,9 @@ namespace BudgetAnalyser.Engine.Widgets
             var proposedDate = new PaymentDate(paymentDate.ScheduledDate.AddDays(7 * this.multiplier));
             if (this.filter.BeginDate != null)
             {
-                List<DateTime> holidays = NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value, this.filter.BeginDate.Value.AddYears(1)).ToList();
+                List<DateTime> holidays =
+                    NewZealandPublicHolidays.CalculateHolidays(this.filter.BeginDate.Value,
+                        this.filter.BeginDate.Value.AddYears(1)).ToList();
                 while (holidays.Contains(proposedDate.Date))
                 {
                     proposedDate.Date = proposedDate.Date.AddDays(1);
@@ -188,7 +232,8 @@ namespace BudgetAnalyser.Engine.Widgets
 
             if (proposedDate.Date != proposedDate.ScheduledDate)
             {
-                this.diagLogger.LogInfo(l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
+                this.diagLogger.LogInfo(
+                    l => l.Format("    {0} is a holiday, moved to {1}", proposedDate.ScheduledDate, proposedDate.Date));
             }
             return proposedDate;
         }
@@ -201,7 +246,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 proposed = CalculateNextPaymentDate(proposed);
             }
 
-            this.diagLogger.LogInfo(l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
+            this.diagLogger.LogInfo(
+                l => l.Format("   Payment Start Date: {0} ({1})", proposed.Date, proposed.ScheduledDate));
             return proposed;
         }
 
@@ -219,7 +265,7 @@ namespace BudgetAnalyser.Engine.Widgets
             public string ConcatDates()
             {
                 var builder = new StringBuilder();
-                foreach (int date in Dates)
+                foreach (var date in Dates)
                 {
                     builder.AppendFormat(CultureInfo.CurrentCulture, ", {0}", date);
                 }

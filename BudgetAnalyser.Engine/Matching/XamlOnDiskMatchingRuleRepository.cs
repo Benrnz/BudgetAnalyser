@@ -4,39 +4,52 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xaml;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Matching.Data;
+using JetBrains.Annotations;
+using Portable.Xaml;
+using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Matching
 {
+    /// <summary>
+    ///     A Repository to persistently store matching rules in Xaml format on local disk.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Matching.IMatchingRuleRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
     {
-        private readonly BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper;
-        private readonly BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper;
+        private readonly IDtoMapper<MatchingRuleDto, MatchingRule> mapper;
 
-        public XamlOnDiskMatchingRuleRepository([NotNull] BasicMapper<MatchingRuleDto, MatchingRule> dataToDomainMapper, [NotNull] BasicMapper<MatchingRule, MatchingRuleDto> domainToDataMapper)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="XamlOnDiskMatchingRuleRepository" /> class.
+        /// </summary>
+        /// <param name="mapper">The data to domain mapper.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper)
         {
-            if (dataToDomainMapper == null)
+            if (mapper == null)
             {
-                throw new ArgumentNullException(nameof(dataToDomainMapper));
+                throw new ArgumentNullException(nameof(mapper));
             }
 
-            if (domainToDataMapper == null)
-            {
-                throw new ArgumentNullException(nameof(domainToDataMapper));
-            }
-
-            this.dataToDomainMapper = dataToDomainMapper;
-            this.domainToDataMapper = domainToDataMapper;
+            this.mapper = mapper;
         }
 
+        /// <summary>
+        ///     Creates a new empty collection of <see cref="MatchingRule" />. The new collection is not saved.
+        /// </summary>
         public IEnumerable<MatchingRule> CreateNew()
         {
             return new List<MatchingRule>();
         }
 
+        /// <summary>
+        ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the
+        ///     <paramref name="storageKey" />. Any existing data at this location will be overwritten. After this is complete, use
+        ///     the <see cref="LoadAsync" /> method to load the new collection.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -47,7 +60,22 @@ namespace BudgetAnalyser.Engine.Matching
             await SaveAsync(new List<MatchingRule>(), storageKey);
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
+        /// <summary>
+        ///     Loads the rules collection from persistent storage.
+        /// </summary>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     storageKey is blank
+        ///     or
+        ///     Storage key can not be found:  + storageKey
+        /// </exception>
+        /// <exception cref="DataFormatException">
+        ///     Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is
+        ///     invalid.
+        ///     or
+        ///     Deserialised Matching-Rules are not of type List{MatchingRuleDto}
+        /// </exception>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly",
+            MessageId = "MatchingRuleDto")]
         public async Task<IEnumerable<MatchingRule>> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -67,7 +95,9 @@ namespace BudgetAnalyser.Engine.Matching
             }
             catch (Exception ex)
             {
-                throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
+                throw new DataFormatException(
+                    "Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.",
+                    ex);
             }
 
             if (dataEntities == null)
@@ -75,9 +105,14 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
-            return dataEntities.Select(d => this.dataToDomainMapper.Map(d));
+            return dataEntities.Select(d => this.mapper.ToModel(d));
         }
 
+        /// <summary>
+        ///     Saves the rules collection to persistent storage.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public async Task SaveAsync(IEnumerable<MatchingRule> rules, string storageKey)
         {
             if (rules == null)
@@ -90,16 +125,23 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.domainToDataMapper.Map(r));
+            IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities);
         }
 
+        /// <summary>
+        ///     Returns true if the matching rule collection identified by the given storage key exists or not.
+        /// </summary>
         protected virtual bool Exists(string storageKey)
         {
             return File.Exists(storageKey);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
+        /// <summary>
+        ///     Loads the rules collection from local disk.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+            Justification = "Necessary for persistence - this is the type of the rehydrated object")]
         protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
         {
             object result = null;
@@ -107,14 +149,26 @@ namespace BudgetAnalyser.Engine.Matching
             return result as List<MatchingRuleDto>;
         }
 
+        /// <summary>
+        ///     Loads the xaml from disk.
+        /// </summary>
         protected virtual string LoadXamlFromDisk(string fileName)
         {
             return File.ReadAllText(fileName);
         }
 
+        /// <summary>
+        ///     Saves the data to disk.
+        /// </summary>
         protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
         {
-            await Task.Run(() => XamlServices.Save(fileName, dataEntities.ToList()));
+            await Task.Run(() =>
+            {
+                using (var stream = new FileStream(fileName, FileMode.Create))
+                {
+                    XamlServices.Save(stream, dataEntities.ToList());
+                }
+            });
         }
     }
 }

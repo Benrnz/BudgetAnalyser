@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.BankAccount;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
@@ -15,10 +15,19 @@ namespace BudgetAnalyser.Engine.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AnzVisaStatementImporterV1 : IBankStatementImporter
     {
-        private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>();
+        private static readonly Dictionary<string, NamedTransaction> TransactionTypes =
+            new Dictionary<string, NamedTransaction>();
+
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AnzVisaStatementImporterV1" /> class.
+        /// </summary>
+        /// <param name="importUtilities">The import utilities.</param>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public AnzVisaStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
         {
             if (importUtilities == null)
@@ -32,7 +41,8 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.importUtilities = importUtilities;
-            this.importUtilities.ConfigureLocale(CultureInfo.CreateSpecificCulture("en-NZ")); // ANZ importers are NZ specific at this stage.
+            this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
+            // ANZ importers are NZ specific at this stage.
             this.logger = logger;
         }
 
@@ -57,7 +67,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
-            foreach (string line in await ReadLinesAsync(fileName))
+            foreach (var line in await ReadLinesAsync(fileName))
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -93,14 +103,14 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            string line = await ReadFirstLineAsync(fileName);
+            var line = await ReadFirstLineAsync(fileName);
             if (line.IsNothing())
             {
                 return false;
             }
 
             string[] split = line.Split(',');
-            string card = this.importUtilities.FetchString(split, 0);
+            var card = this.importUtilities.FetchString(split, 0);
             if (card.IsNothing())
             {
                 return false;
@@ -111,7 +121,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            decimal amount = this.importUtilities.FetchDecimal(split, 2);
+            var amount = this.importUtilities.FetchDecimal(split, 2);
             if (amount == 0)
             {
                 return false;
@@ -126,21 +136,29 @@ namespace BudgetAnalyser.Engine.Statement
             return true;
         }
 
+        /// <summary>
+        ///     Reads the lines from the file asynchronous;y.
+        /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
             return await this.importUtilities.ReadLinesAsync(fileName);
         }
 
+        /// <summary>
+        ///     Reads a chunk of text asynchronously.
+        /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
-            using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
+            using (
+                var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false)
+                )
             {
                 var sb = new StringBuilder();
                 var buffer = new byte[0x128];
                 int numRead;
                 while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    string text = Encoding.UTF8.GetString(buffer, 0, numRead);
+                    var text = Encoding.UTF8.GetString(buffer, 0, numRead);
                     sb.Append(text);
                     if (text.Contains("\n"))
                     {
@@ -152,9 +170,10 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex, out decimal amount)
+        private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex,
+                                                      out decimal amount)
         {
-            string stringType = this.importUtilities.FetchString(array, transactionTypeindex);
+            var stringType = this.importUtilities.FetchString(array, transactionTypeindex);
             amount = this.importUtilities.FetchDecimal(array, amountIndex);
             if (string.IsNullOrWhiteSpace(stringType))
             {
@@ -164,7 +183,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (TransactionTypes.ContainsKey(stringType))
             {
                 NamedTransaction cachedTransactionType = TransactionTypes[stringType];
-                amount *= cachedTransactionType.Sign;
+                amount *= -1;
                 return cachedTransactionType;
             }
 
@@ -173,7 +192,7 @@ namespace BudgetAnalyser.Engine.Statement
             if (stringType == "D")
             {
                 fullTypeText = "Credit Card Debit";
-                transactionType = new NamedTransaction(fullTypeText, -1);
+                transactionType = new NamedTransaction(fullTypeText);
             }
             else if (stringType == "C")
             {
@@ -186,20 +205,20 @@ namespace BudgetAnalyser.Engine.Statement
                 transactionType = new NamedTransaction(fullTypeText);
             }
 
-            amount *= transactionType.Sign;
+            amount *= -1;
             TransactionTypes.Add(stringType, transactionType);
             return transactionType;
         }
 
         private async Task<string> ReadFirstLineAsync(string fileName)
         {
-            string chunk = await ReadTextChunkAsync(fileName);
+            var chunk = await ReadTextChunkAsync(fileName);
             if (string.IsNullOrWhiteSpace(chunk))
             {
                 return null;
             }
 
-            int position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
+            var position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
             if (position > 0)
             {
                 return chunk.Substring(0, position);

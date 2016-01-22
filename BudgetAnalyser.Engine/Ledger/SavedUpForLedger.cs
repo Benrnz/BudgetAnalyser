@@ -5,9 +5,19 @@ using BudgetAnalyser.Engine.Budget;
 
 namespace BudgetAnalyser.Engine.Ledger
 {
+    /// <summary>
+    ///     A Ledger Bucket that allows funds to accumulate from month to month. Only spending or Ledger Book Transfers will
+    ///     remove funds from this ledger.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Ledger.LedgerBucket" />
     public class SavedUpForLedger : LedgerBucket
     {
-        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        /// <summary>
+        ///     Allows ledger bucket specific behaviour during reconciliation.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public override void ReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
+                                                     decimal openingBalance)
         {
             if (transactions == null)
             {
@@ -15,10 +25,10 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             LedgerTransaction zeroingTransaction = null;
-            decimal netAmount = transactions.Sum(t => t.Amount);
+            var netAmount = transactions.Sum(t => t.Amount);
 
             // This ledger can accumulate a balance but cannot be negative.
-            decimal closingBalance = openingBalance + netAmount;
+            var closingBalance = openingBalance + netAmount;
             LedgerTransaction budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
             if (budgetedAmount != null && closingBalance < budgetedAmount.Amount)
             {
@@ -46,7 +56,15 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public override void ValidateBucketSet(BudgetBucket bucket)
+        /// <summary>
+        ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
+        ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">
+        ///     Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or
+        ///     Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.
+        /// </exception>
+        protected override void ValidateBucketSet(BudgetBucket bucket)
         {
             if (bucket is SavedUpForExpenseBucket)
             {
@@ -57,7 +75,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            throw new NotSupportedException("Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.");
+            throw new NotSupportedException(
+                "Invalid budget bucket used, only Saved-Up-For-Expense-Buckets or Savings-Commitment-Buckets can be used with an instance of Saved-Up-For-Ledger.");
         }
     }
 }

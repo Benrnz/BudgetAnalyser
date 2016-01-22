@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C5D0A350-D275-4E72-B17A-559801232B86}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BudgetAnalyser.Engine.UnitTest</RootNamespace>
+    <AssemblyName>BudgetAnalyser.Engine.UnitTest</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Portable.Xaml, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
+    </Reference>
+    <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.3\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.0.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.0.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Account\AccountTypeRepositoryTest.cs" />
+    <Compile Include="Account\AmexAccountTest.cs" />
+    <Compile Include="Account\ChequeAccountTest.cs" />
+    <Compile Include="Account\MastercardAccountTest.cs" />
+    <Compile Include="Account\VisaAccountTest.cs" />
+    <Compile Include="AutoRegisterWithIoCProcessorPropertyInjectionTestSource.cs" />
+    <Compile Include="DefaultIoCRegistrationsTest.cs" />
+    <Compile Include="Budget\BudgetBucketFactoryTest.cs" />
+    <Compile Include="Budget\BudgetBucketTest.cs" />
+    <Compile Include="Budget\BudgetBucketToDtoMapperTest.cs" />
+    <Compile Include="Budget\BudgetCollectionTest.cs" />
+    <Compile Include="Budget\BudgetCollectionToDtoMapperTest2.cs" />
+    <Compile Include="Budget\BudgetCollectionToDtoMapperTest.cs" />
+    <Compile Include="Budget\BudgetCurrencyContextTest.cs" />
+    <Compile Include="Budget\BudgetItemTest.cs" />
+    <Compile Include="Budget\BudgetModelTest.cs" />
+    <Compile Include="Budget\BudgetModelToDtoMapperTest.cs" />
+    <Compile Include="Budget\DtoToBudgetBucketTest.cs" />
+    <Compile Include="Budget\DtoToBudgetCollectionMapperTest2.cs" />
+    <Compile Include="Budget\DtoToBudgetCollectionMapperTest.cs" />
+    <Compile Include="Budget\DtoToBudgetModelMapperTest.cs" />
+    <Compile Include="Budget\DtoToExpenseMapper.cs" />
+    <Compile Include="Budget\DtoToFixedBudgetProjectBucketTest.cs" />
+    <Compile Include="Budget\DtoToIncomeMapper.cs" />
+    <Compile Include="Budget\ExpenseTest.cs" />
+    <Compile Include="Budget\ExpenseToDtoMapperTest.cs" />
+    <Compile Include="Budget\FixedBudgetProjectBucketToDtoMapperTest.cs" />
+    <Compile Include="Budget\IncomeTest.cs" />
+    <Compile Include="Budget\IncomeToDtoMapperTest.cs" />
+    <Compile Include="Budget\InMemoryBudgetBucketRepositoryTest.cs" />
+    <Compile Include="Budget\XamlOnDiskBudgetRepositoryTest.cs" />
+    <Compile Include="DateTimeExtensionTest.cs" />
+    <Compile Include="DuplicateNameException.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="GlobalFilterCriteriaTest.cs" />
+    <Compile Include="Helper\BudgetModelHelper.cs" />
+    <Compile Include="Helper\EmbeddedResourceHelper.cs" />
+    <Compile Include="Helper\LedgerBookHelper.cs" />
+    <Compile Include="Helper\StatementModelHelper.cs" />
+    <Compile Include="Ledger\BankBalanceToDtoMapperTest.cs" />
+    <Compile Include="Ledger\CreditLedgerTransactionTest.cs" />
+    <Compile Include="Ledger\DtoToBankBalanceMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerBookMapperTest2.cs" />
+    <Compile Include="Ledger\DtoToLedgerBookMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerBucketMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerEntryLineMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerEntryMapperTest.cs" />
+    <Compile Include="Ledger\DtoToLedgerTransactionMapperTest.cs" />
+    <Compile Include="Ledger\LedgerBookDtoTest.cs" />
+    <Compile Include="Ledger\LedgerBookRepositoryTest.cs" />
+    <Compile Include="Ledger\LedgerBookToDtoMapperTest2.cs" />
+    <Compile Include="Ledger\LedgerBookToDtoMapperTest.cs" />
+    <Compile Include="Ledger\LedgerBook_DataTest.cs" />
+    <Compile Include="Ledger\LedgerBook_GeneralTest.cs" />
+    <Compile Include="Ledger\LedgerBook_ReconcileTest.cs" />
+    <Compile Include="Ledger\LedgerBucketTest.cs" />
+    <Compile Include="Ledger\LedgerBucketToDtoMapperTest.cs" />
+    <Compile Include="Ledger\LedgerCalculationTest.cs" />
+    <Compile Include="Ledger\LedgerEntryLineTest.cs" />
+    <Compile Include="Ledger\LedgerEntryLineToDtoMapperTest.cs" />
+    <Compile Include="Ledger\LedgerEntryToDtoMapperTest.cs" />
+    <Compile Include="Ledger\LedgerTransactionToDtoMapperTest.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_Reconcile.cs" />
+    <Compile Include="Ledger\ReconciliationManagerTest_TransferFunds.cs" />
+    <Compile Include="Ledger\SavedUpForLedgerReconciliationBehaviourTest.cs" />
+    <Compile Include="Ledger\SpentMonthlyLedgerReconciliationBehaviourTest.cs" />
+    <Compile Include="Ledger\TransferFundsCommandTest.cs" />
+    <Compile Include="Matching\DataMatchingRuleToMatchingRuleMapperTest.cs" />
+    <Compile Include="Matching\DtoToMatchingRuleMapperTest.cs" />
+    <Compile Include="Matching\MatchingRuleTest.cs" />
+    <Compile Include="Matching\MatchingRuleToDataMatchingRuleMapperTest.cs" />
+    <Compile Include="Matching\MatchingRuleToDtoMappeTest.cs" />
+    <Compile Include="Matching\MatchMakerTest.cs" />
+    <Compile Include="Matching\XamlOnDiskMatchingRuleRepositoryTest.cs" />
+    <Compile Include="NewZealandPublicHolidaysTestHarness.cs" />
+    <Compile Include="Persistence\ApplicationDatabaseToDtoMapperTest.cs" />
+    <Compile Include="Persistence\DtoToApplicationDatabaseMapperTest.cs" />
+    <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepositoryTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicHolidaysTestData.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.cs" />
+    <Compile Include="PublicHolidaysTestGenerator.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PublicHolidaysTestGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReferenceNumberGeneratorTest.cs" />
+    <Compile Include="Reports\BurnDownGraphAnalyserTest.cs" />
+    <Compile Include="Reports\GraphDataTest.cs" />
+    <Compile Include="Reports\LongTermSpendingTrendAnalyserTest.cs" />
+    <Compile Include="Reports\SpendingGraphAnalyserTest.cs" />
+    <Compile Include="Services\ApplicationDatabaseServiceTest.cs" />
+    <Compile Include="Services\StatementModelTestHarness.cs" />
+    <Compile Include="Services\TransactionManagerServiceTest.cs" />
+    <Compile Include="Services\TransactionRuleServiceTest.cs" />
+    <Compile Include="Statement\AnzAccountStatementImporterV1Test.cs" />
+    <Compile Include="Statement\AnzVisaStatementImporterV1Test.cs" />
+    <Compile Include="Statement\BankImportUtilitiesTest.cs" />
+    <Compile Include="Statement\BankStatementImporterRepositoryTest.cs" />
+    <Compile Include="Statement\CsvOnDiskStatementModelRepositoryV1Test.cs" />
+    <Compile Include="Statement\DtoToStatementModelMapperTest.cs" />
+    <Compile Include="Statement\DtoToTransactionMapperTest.cs" />
+    <Compile Include="Statement\StatementModelGeneratorTest.cs" />
+    <Compile Include="Statement\StatementModelTest.cs" />
+    <Compile Include="Statement\StatementModelToDtoMapperTest.cs" />
+    <Compile Include="Statement\TransactionDtoTest.cs" />
+    <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
+    <Compile Include="Statement\TransactionTest.cs" />
+    <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
+    <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TestData\AnzChequeCsvTestData.cs" />
+    <Compile Include="TestData\AnzVisaCsvTestData.cs" />
+    <Compile Include="TestData\BudgetAnalyserRawCsvTestDataV1.cs" />
+    <Compile Include="TestData\BudgetBucketTestData.cs" />
+    <Compile Include="TestData\BudgetModelTestData.cs" />
+    <Compile Include="TestData\LedgerBookBuilder.cs" />
+    <Compile Include="TestData\LedgerBookDtoTestData.cs" />
+    <Compile Include="TestData\LedgerBookTestData.cs" />
+    <Compile Include="TestData\MatchingRulesTestData.cs" />
+    <Compile Include="TestData\MatchingRulesTestDataGenerated.cs" />
+    <Compile Include="TestData\MatchingRulesTestDataGenerator.cs" />
+    <Compile Include="TestData\StatementModelBuilder.cs" />
+    <Compile Include="TestData\StatementModelTestData.cs" />
+    <Compile Include="TestData\StatementModelTestDataGenerated.cs" />
+    <Compile Include="TestData\StatementModelTestDataGenerator.cs" />
+    <Compile Include="TestData\TestDataConstants.cs" />
+    <Compile Include="TestData\TransactionSetDtoTestData.cs" />
+    <Compile Include="TestHarness\AnzAccountStatementImporterV1TestHarness.cs" />
+    <Compile Include="TestHarness\AnzVisaStatementImporterV1TestHarness.cs" />
+    <Compile Include="TestHarness\BankImportUtilitiesTestHarness.cs" />
+    <Compile Include="TestHarness\CsvOnDiskStatementModelRepositoryV1TestHarness.cs" />
+    <Compile Include="TestHarness\DtoMapperStub.cs" />
+    <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
+    <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
+    <Compile Include="TestHarness\BudgetModelFake.cs" />
+    <Compile Include="TestHarness\FakeEnvironmentFolders.cs" />
+    <Compile Include="TestHarness\FakeLogger.cs" />
+    <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
+    <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
+    <Compile Include="ThirdPartyTests\PortableXamlTest.cs" />
+    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Widgets\BudgetBucketMonitorWidgetTest.cs" />
+    <Compile Include="Widgets\OverspentWarningTest.cs" />
+    <Compile Include="Widgets\RemainingActualSurplusWidgetTest.cs" />
+    <Compile Include="Widgets\RemainingSurplusWidgetTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoTransactions.csv">
+      <Link>TestData\DemoTransactions.csv</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestData\BudgetAnalyserDemo.bax">
+      <Link>TestData\BudgetAnalyserDemo.bax</Link>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\AnzChequeCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\AnzVisaCsvFileExportFormat.csv" />
+    <EmbeddedResource Include="TestData\BudgetAnalyserTransactionFileFormatV1.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
+      <Project>{22e5fb3e-3044-4bda-88ff-619f83ec4e99}</Project>
+      <Name>BudgetAnalyser.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\TestData\DemoBudget.xml">
+      <Link>TestData\DemoBudget.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\BudgetAnalyser\BudgetModel.xml">
+      <Link>TestData\BudgetModel.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestData\DemoMatchingRules.xml">
+      <Link>TestData\DemoMatchingRules.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml">
+      <Link>TestData\LedgerBookRepositoryTest_Load_ShouldLoadTheXmlFile.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TestData\DemoLedgerBook.xml">
+      <Link>TestData\DemoLedgerBook.xml</Link>
+    </EmbeddedResource>
+    <Content Include="PublicHolidaysTestGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PublicHolidaysTestGenerator.generated.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="TestData\BudgetCollectionTestData.xml" />
+    <EmbeddedResource Include="TestData\MatchingRulesTestData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

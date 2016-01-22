@@ -1,12 +1,19 @@
 ﻿using System;
 using System.IO;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Persistence;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
+    /// <summary>
+    ///     Monitors the currently loaded Budget Analyser file and shows the file name.
+    /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
     public class CurrentFileWidget : Widget
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
+        /// </summary>
         public CurrentFileWidget()
         {
             Category = WidgetGroup.OverviewSectionName;
@@ -20,6 +27,10 @@ namespace BudgetAnalyser.Engine.Widgets
             Sequence = 20;
         }
 
+        /// <summary>
+        ///     Updates the widget with new input.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public override void Update([NotNull] params object[] input)
         {
             if (input == null)
@@ -54,8 +65,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return fileName;
             }
 
-            string proposed = Path.GetFileName(fileName);
-            string drive = Path.GetPathRoot(fileName);
+            var proposed = Path.GetFileName(fileName);
+            var drive = Path.GetPathRoot(fileName);
             if (proposed.Length < 30)
             {
                 return drive + "...\\" + proposed;

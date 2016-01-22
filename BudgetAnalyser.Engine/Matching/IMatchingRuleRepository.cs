@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Matching
 {
@@ -16,14 +16,19 @@ namespace BudgetAnalyser.Engine.Matching
 
         /// <summary>
         ///     Creates a new empty collection of <see cref="MatchingRule" />s at the location indicated by the
-        ///     <see cref="storageKey" />. Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to
-        ///     load the new collection.
+        ///     <paramref name="storageKey" />. Any existing data at this location will be overwritten. After this is complete, use
+        ///     the <see cref="LoadAsync" /> method to load the new collection.
         /// </summary>
         Task CreateNewAndSaveAsync([NotNull] string storageKey);
 
+        /// <summary>
+        ///     Loads the rules collection from persistent storage.
+        /// </summary>
         Task<IEnumerable<MatchingRule>> LoadAsync([NotNull] string storageKey);
+
+        /// <summary>
+        ///     Saves the rules collection to persistent storage.
+        /// </summary>
         Task SaveAsync([NotNull] IEnumerable<MatchingRule> rules, [NotNull] string storageKey);
     }
 }

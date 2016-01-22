@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.ShellDialog;
 using Rees.UserInteraction.Contracts;

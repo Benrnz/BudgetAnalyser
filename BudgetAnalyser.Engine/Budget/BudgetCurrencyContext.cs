@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -10,6 +10,7 @@ namespace BudgetAnalyser.Engine.Budget
     ///     This class will tell you if a budget is active, future dated, or has past and is archived.
     ///     This class has no state of its own it calculates all of its properties.
     /// </summary>
+    /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetCurrencyContext" />
     public class BudgetCurrencyContext : IBudgetCurrencyContext
     {
         /// <summary>
@@ -42,19 +43,37 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
+        ///     Gets the budget collection.
+        /// </summary>
+        public BudgetCollection BudgetCollection { get; }
+
+        /// <summary>
         ///     Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel" />.
         /// </summary>
         public bool BudgetActive => BudgetCollection.IsCurrentBudget(Model);
 
+        /// <summary>
+        ///     Gets a value indicating whether budget is archived.
+        /// </summary>
         public bool BudgetArchived => BudgetCollection.IsArchivedBudget(Model);
-        public BudgetCollection BudgetCollection { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the budget is a future budget.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if [budget in future]; otherwise, <c>false</c>.
+        /// </value>
         public bool BudgetInFuture => BudgetCollection.IsFutureBudget(Model);
 
+        /// <summary>
+        ///     Gets the effective until date. This is the last date the budget will applicable before another budget will come
+        ///     into affect.
+        /// </summary>
         public DateTime? EffectiveUntil
         {
             get
             {
-                int myIndex = BudgetCollection.IndexOf(Model);
+                var myIndex = BudgetCollection.IndexOf(Model);
                 if (myIndex == 0)
                 {
                     // There is no superceding budget, so this budget is effective indefinitely (no expiry date).
@@ -67,7 +86,15 @@ namespace BudgetAnalyser.Engine.Budget
             }
         }
 
+        /// <summary>
+        ///     Gets the name of the file.
+        /// </summary>
+        // TODO rename this to storage key or name
         public string FileName => BudgetCollection.StorageKey;
+
+        /// <summary>
+        ///     Gets the model.
+        /// </summary>
         public virtual BudgetModel Model { get; }
     }
 }

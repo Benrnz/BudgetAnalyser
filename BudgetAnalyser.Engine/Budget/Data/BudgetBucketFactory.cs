@@ -1,20 +1,21 @@
 using System;
-using BudgetAnalyser.Engine.Annotations;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget.Data
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class BudgetBucketFactory : IBudgetBucketFactory
     {
-        public BudgetBucket Build(BucketDtoType type)
+        public BudgetBucket BuildModel(BudgetBucketDto dto)
         {
-            switch (type)
+            switch (dto.Type)
             {
                 case BucketDtoType.Income:
                     return new IncomeBudgetBucket();
                 case BucketDtoType.PayCreditCard:
                 case BucketDtoType.Surplus:
-                    throw new NotSupportedException("You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
+                    throw new NotSupportedException(
+                        "You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
                 case BucketDtoType.SavedUpForExpense:
                     return new SavedUpForExpenseBucket();
                 case BucketDtoType.SavingsCommitment:
@@ -22,10 +23,34 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 case BucketDtoType.SpentMonthlyExpense:
                     return new SpentMonthlyExpenseBucket();
                 case BucketDtoType.FixedBudgetProject:
-                    return new FixedBudgetProjectBucket();
+                    return new FixedBudgetProjectBucket(((FixedBudgetBucketDto) dto).FixedBudgetAmount);
                 default:
-                    throw new NotSupportedException("Unsupported Bucket type detected: " + type);
+                    throw new NotSupportedException("Unsupported Bucket type detected: " + dto);
             }
+        }
+
+        /// <summary>
+        ///     Builds a <see cref="BudgetBucketDto" /> based on the model passed in.
+        /// </summary>
+        public BudgetBucketDto BuildDto(BudgetBucket bucket)
+        {
+            BudgetBucketDto dto;
+            var fixedProjectBucket = bucket as FixedBudgetProjectBucket;
+            if (fixedProjectBucket != null)
+            {
+                dto = new FixedBudgetBucketDto
+                {
+                    Created = fixedProjectBucket.Created,
+                    FixedBudgetAmount = fixedProjectBucket.FixedBudgetAmount
+                };
+            }
+            else
+            {
+                dto = new BudgetBucketDto();
+            }
+
+            dto.Type = SerialiseType(bucket);
+            return dto;
         }
 
         public BucketDtoType SerialiseType([NotNull] BudgetBucket bucket)

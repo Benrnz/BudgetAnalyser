@@ -4,19 +4,26 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Annotations;
 using BudgetAnalyser.Engine.Budget;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Statement
 {
+    /// <summary>
+    ///     A set of utilities used when importing bank data
+    /// </summary>
     [AutoRegisterWithIoC]
     public class BankImportUtilities
     {
         private readonly ILogger logger;
         private CultureInfo locale;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BankImportUtilities" /> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public BankImportUtilities([NotNull] ILogger logger)
         {
             if (logger == null)
@@ -25,7 +32,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             this.logger = logger;
-            this.locale = Thread.CurrentThread.CurrentCulture;
+            this.locale = CultureInfo.CurrentCulture;
         }
 
         internal virtual void AbortIfFileDoesntExist(string fileName)
@@ -41,7 +48,8 @@ namespace BudgetAnalyser.Engine.Statement
             this.locale = culture;
         }
 
-        internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index, [NotNull] IBudgetBucketRepository bucketRepository)
+        internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index,
+                                                [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (array == null)
             {
@@ -53,7 +61,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(bucketRepository));
             }
 
-            string stringType = FetchString(array, index);
+            var stringType = FetchString(array, index);
             if (string.IsNullOrWhiteSpace(stringType))
             {
                 return null;
@@ -76,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
                 ThrowIndexOutOfRangeException(array, index);
             }
 
-            string stringToParse = array[index];
+            var stringToParse = array[index];
             DateTime retval;
             if (!DateTime.TryParse(stringToParse, this.locale, DateTimeStyles.None, out retval))
             {
@@ -99,7 +107,7 @@ namespace BudgetAnalyser.Engine.Statement
                 ThrowIndexOutOfRangeException(array, index);
             }
 
-            string stringToParse = array[index];
+            var stringToParse = array[index];
             decimal retval;
             if (!decimal.TryParse(stringToParse, out retval))
             {
@@ -123,7 +131,7 @@ namespace BudgetAnalyser.Engine.Statement
                 ThrowIndexOutOfRangeException(array, index);
             }
 
-            string stringToParse = array[index];
+            var stringToParse = array[index];
             Guid result;
             if (!Guid.TryParse(stringToParse, out result))
             {
@@ -146,7 +154,7 @@ namespace BudgetAnalyser.Engine.Statement
                 ThrowIndexOutOfRangeException(array, index);
             }
 
-            string stringToParse = array[index];
+            var stringToParse = array[index];
             long retval;
             if (!long.TryParse(stringToParse, out retval))
             {
@@ -183,7 +191,8 @@ namespace BudgetAnalyser.Engine.Statement
 
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
         {
-            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
+            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture,
+                "Index {0} is out of range for array with length {1}.", index, array.Length));
         }
     }
 }

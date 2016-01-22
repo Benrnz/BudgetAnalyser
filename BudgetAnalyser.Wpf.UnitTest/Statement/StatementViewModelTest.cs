@@ -3,7 +3,7 @@ using System.Linq;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Statement;
-using BudgetAnalyser.UnitTest.TestData;
+using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UserInteraction.Contracts;

@@ -4,7 +4,7 @@
     ///     A factory to create new instances of a <see cref="LedgerBook" />.
     ///     Used by persistence and when the user creates a new one.
     /// </summary>
-    public interface ILedgerBookFactory
+    internal interface ILedgerBookFactory
     {
         LedgerBook CreateNew();
     }

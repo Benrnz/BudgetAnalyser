@@ -76,15 +76,15 @@ namespace BudgetAnalyser.Budget
             CurrentBudget = new BudgetCurrencyContext(this.maintenanceService.Budgets, this.maintenanceService.Budgets.CurrentActiveBudget);
         }
 
-        [Engine.Annotations.UsedImplicitly]
         public ICommand AddNewExpenseCommand => new RelayCommand<ExpenseBucket>(OnAddNewExpenseExecute);
 
-        [Engine.Annotations.UsedImplicitly]
         public ICommand AddNewIncomeCommand => new RelayCommand(OnAddNewIncomeExecute);
 
+        [UsedImplicitly]
         public string BudgetMenuItemName
         {
-            [Engine.Annotations.UsedImplicitly] get { return this.budgetMenuItemName; }
+            [UsedImplicitly]
+            get { return this.budgetMenuItemName; }
 
             set
             {
@@ -122,10 +122,10 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand DeleteBudgetItemCommand => new RelayCommand<object>(OnDeleteBudgetItemCommandExecute);
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand DetailsCommand => new RelayCommand(OnDetailsCommandExecute);
 
         public bool Dirty
@@ -169,12 +169,12 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand NewBudgetCommand => new RelayCommand(OnAddNewBudgetCommandExecuted, () => CurrentBudget != null);
 
         public NewBudgetModelController NewBudgetController { get; }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ShowAllCommand => new RelayCommand(OnShowAllCommandExecuted);
 
         public bool Shown
@@ -194,12 +194,12 @@ namespace BudgetAnalyser.Budget
             }
         }
 
-        [Engine.Annotations.UsedImplicitly]
+        [UsedImplicitly]
         public ICommand ShowPieCommand => new RelayCommand(OnShowPieCommandExecuted, CanExecuteShowPieCommand);
 
         public decimal Surplus
         {
-            [Engine.Annotations.UsedImplicitly] get { return this.surplus; }
+            [UsedImplicitly] get { return this.surplus; }
             private set
             {
                 this.surplus = value;
