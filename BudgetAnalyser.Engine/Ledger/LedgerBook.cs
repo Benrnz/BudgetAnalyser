@@ -168,33 +168,6 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
-        ///     Deletes the most recent <see cref="LedgerEntryLine" /> from the <see cref="Reconciliations" /> collection. Only the
-        ///     most recent one can be deleted and
-        ///     only if it is unlocked (generally means just created and not yet saved).
-        /// </summary>
-        internal void RemoveLine([NotNull] LedgerEntryLine line)
-        {
-            if (line == null)
-            {
-                throw new ArgumentNullException(nameof(line));
-            }
-
-            if (!line.IsNew)
-            {
-                throw new InvalidOperationException(
-                    "You cannot delete a Ledger Entry Line that is not unlocked or a newly created line.");
-            }
-
-            if (line != Reconciliations.FirstOrDefault())
-            {
-                throw new InvalidOperationException(
-                    "You cannot delete this line, it is not the first and most recent line.");
-            }
-
-            this.reconciliations.Remove(line);
-        }
-
-        /// <summary>
         ///     Used to allow the UI to set a ledger's account, but only if it is an instance in the <see cref="Ledgers" />
         ///     collection.
         /// </summary>

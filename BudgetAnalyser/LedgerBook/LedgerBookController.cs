@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using BudgetAnalyser.Budget;
@@ -108,7 +107,6 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
-        public ICommand RemoveLedgerEntryLineCommand => new RelayCommand<LedgerEntryLine>(OnRemoveReconciliationCommandExecuted, CanExecuteRemoveLedgerEntryLineCommand);
         public ICommand ShowBankBalancesCommand => new RelayCommand<LedgerEntryLine>(OnShowBankBalancesCommandExecuted, param => param != null);
         public ICommand ShowHideMonthsCommand => new RelayCommand<int>(OnShowHideMonthsCommandExecuted);
         public ICommand ShowLedgerBucketDetailsCommand => new RelayCommand<LedgerBucket>(OnShowLedgerBucketDetailsCommand, param => param != null);
@@ -181,11 +179,6 @@ namespace BudgetAnalyser.LedgerBook
         private bool CanExecuteNewReconciliationCommand()
         {
             return ViewModel.CurrentBudget != null && ViewModel.CurrentStatement != null && ViewModel.LedgerBook != null;
-        }
-
-        private bool CanExecuteRemoveLedgerEntryLineCommand(LedgerEntryLine line)
-        {
-            return ViewModel.LedgerBook != null && ViewModel.LedgerBook.Reconciliations.FirstOrDefault() == line && line == ViewModel.NewLedgerLine;
         }
 
         private bool CanExecuteShowRemarksCommand(LedgerEntryLine parameter)
@@ -324,23 +317,6 @@ namespace BudgetAnalyser.LedgerBook
         private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs eventArgs)
         {
             FileOperations.SyncDataFromLedgerService();
-        }
-
-        private void OnRemoveReconciliationCommandExecuted(LedgerEntryLine line)
-        {
-            bool? result = this.questionBox.Show(
-                string.Format(CultureInfo.CurrentCulture, "Are you sure you want to delete this Reconciliation for {0:d}?\nThis will also save the Ledger Book.", line.Date),
-                "Remove Ledger Book Reconciliation");
-            if (result == null || !result.Value)
-            {
-                return;
-            }
-
-            NumberOfMonthsToShow--;
-            this.ledgerService.RemoveReconciliation(line);
-            FileOperations.SyncDataFromLedgerService();
-            EventHandler handler = LedgerBookUpdated;
-            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnSaveNotificationReceieved(object sender, EventArgs eventArgs)

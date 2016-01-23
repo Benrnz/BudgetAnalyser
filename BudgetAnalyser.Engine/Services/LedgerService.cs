@@ -65,16 +65,6 @@ namespace BudgetAnalyser.Engine.Services
             LedgerBook.SetLedgerAccount(ledger, storedInAccount);
         }
 
-        public void RemoveReconciliation(LedgerEntryLine line)
-        {
-            if (line == null)
-            {
-                throw new ArgumentNullException(nameof(line));
-            }
-
-            LedgerBook.RemoveLine(line);
-        }
-
         public void RenameLedgerBook(string newName)
         {
             if (newName == null)
