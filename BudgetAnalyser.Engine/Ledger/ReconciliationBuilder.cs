@@ -30,8 +30,11 @@ namespace BudgetAnalyser.Engine.Ledger
 
         public LedgerBook LedgerBook { get; set; }
 
-        public ReconciliationResult CreateNewMonthlyReconciliation(DateTime reconciliationDateExclusive,
-                                                                   BudgetModel budget, StatementModel statement, params BankBalance[] bankBalances)
+        public ReconciliationResult CreateNewMonthlyReconciliation(
+            DateTime reconciliationDateExclusive,
+            BudgetModel budget,
+            StatementModel statement,
+            params BankBalance[] bankBalances)
         {
             if (bankBalances == null)
             {
@@ -50,8 +53,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (LedgerBook == null)
             {
-                throw new ArgumentException(
-                    "The Ledger Book property cannot be null. You must set this prior to calling this method.");
+                throw new ArgumentException("The Ledger Book property cannot be null. You must set this prior to calling this method.");
             }
 
             try
@@ -199,8 +201,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 LedgerBucket ledgerBucket;
                 var openingBalance = previousLedgerEntry.Balance;
-                LedgerBucket currentLedger =
-                    LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
+                LedgerBucket currentLedger = LedgerBook.Ledgers.Single(l => l.BudgetBucket == previousLedgerEntry.LedgerBucket.BudgetBucket);
                 if (previousLedgerEntry.LedgerBucket.StoredInAccount != currentLedger.StoredInAccount)
                 {
                     // Check to see if a ledger has been moved into a new default account since last reconciliation.
@@ -214,8 +215,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 var newEntry = new LedgerEntry(true) { Balance = openingBalance, LedgerBucket = ledgerBucket };
                 List<LedgerTransaction> transactions = IncludeBudgetedAmount(budget, ledgerBucket, reconciliationDate);
                 transactions.AddRange(IncludeStatementTransactions(newEntry, filteredStatementTransactions));
-                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry,
-                    transactions);
+                AutoMatchTransactionsAlreadyInPreviousPeriod(filteredStatementTransactions, previousLedgerEntry, transactions);
                 newEntry.SetTransactionsForReconciliation(transactions, reconciliationDate);
 
                 entries.Add(newEntry);

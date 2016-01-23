@@ -9,7 +9,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
     /// <summary>
     ///     Trialing a Fluent Builder pattern instead of a Object Mother pattern
     /// </summary>
-    public class LedgerBookBuilder
+    internal class LedgerBookBuilder
     {
         private readonly List<LedgerBucket> ledgerBuckets = new List<LedgerBucket>();
         private readonly Dictionary<LedgerBucket, decimal> openingBalances = new Dictionary<LedgerBucket, decimal>();
@@ -26,6 +26,15 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public IEnumerable<LedgerEntryLine> Reconciliations => this.reconciliations;
         public string StorageKey { get; set; } = "C:\\Folder\\book1.xml";
 
+        public ReconciliationTestDataBuilder AppendReconciliation(DateTime reconDate, params BankBalance[] bankBalances)
+        {
+            this.tempBankBalances = bankBalances;
+            this.tempReconDate = reconDate;
+
+            var reconBuilder = new ReconciliationTestDataBuilder(this);
+            return reconBuilder;
+        }
+
         public LedgerBook Build()
         {
             var book = new LedgerBook(new ReconciliationBuilder(new FakeLogger()))
@@ -37,7 +46,41 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(this.reconciliations);
 
-            return LedgerBookTestData.Finalise(book, this.lockWhenFinished);
+            LedgerBookTestData.Finalise(book, this.lockWhenFinished);
+            return book;
+        }
+
+        public LedgerBookTestHarness BuildTestHarness(IReconciliationBuilder reconciliationBuilder)
+        {
+            var book = new LedgerBookTestHarness(reconciliationBuilder)
+            {
+                Name = Name,
+                Modified = Modified,
+                StorageKey = StorageKey
+            };
+
+            book.SetReconciliations(this.reconciliations);
+
+            LedgerBookTestData.Finalise(book, this.lockWhenFinished);
+            return book;
+        }
+
+        public LedgerBookBuilder IncludeLedger(LedgerBucket ledger, decimal openingBalance = 0)
+        {
+            if (this.ledgerBuckets.Any(b => b.BudgetBucket.Code == ledger.BudgetBucket.Code))
+            {
+                throw new DuplicateNameException("Ledger Bucket already exists in collection.");
+            }
+
+            if (ledger.StoredInAccount == null)
+            {
+                ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
+            }
+
+            this.ledgerBuckets.Add(ledger);
+            this.openingBalances.Add(ledger, openingBalance);
+
+            return this;
         }
 
         public LedgerBookBuilder TestData1()
@@ -126,33 +169,6 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             return this;
         }
 
-        public LedgerBookBuilder IncludeLedger(LedgerBucket ledger, decimal openingBalance = 0)
-        {
-            if (this.ledgerBuckets.Any(b => b.BudgetBucket.Code == ledger.BudgetBucket.Code))
-            {
-                throw new DuplicateNameException("Ledger Bucket already exists in collection.");
-            }
-
-            if (ledger.StoredInAccount == null)
-            {
-                ledger.StoredInAccount = StatementModelTestData.ChequeAccount;
-            }
-
-            this.ledgerBuckets.Add(ledger);
-            this.openingBalances.Add(ledger, openingBalance);
-
-            return this;
-        }
-
-        public ReconciliationTestDataBuilder AppendReconciliation(DateTime reconDate, params BankBalance[] bankBalances)
-        {
-            this.tempBankBalances = bankBalances;
-            this.tempReconDate = reconDate;
-
-            var reconBuilder = new ReconciliationTestDataBuilder(this);
-            return reconBuilder;
-        }
-
         public LedgerBookBuilder WithUnlockFlagSet()
         {
             this.lockWhenFinished = false;
@@ -210,10 +226,40 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             }
         }
 
+        public class ReconciliationTestDataBuilder
+        {
+            private readonly LedgerBookBuilder bookBuilder;
+            private string remarks;
+
+            public ReconciliationTestDataBuilder(LedgerBookBuilder bookBuilder)
+            {
+                this.bookBuilder = bookBuilder;
+            }
+
+            public LedgerBookBuilder WithNoEntries()
+            {
+                return this.bookBuilder;
+            }
+
+            public LedgerBookBuilder WithReconciliationEntries(Action<LedgerEntryTestDataBuilder> createEntries)
+            {
+                var entryBuilder = new LedgerEntryTestDataBuilder(this.bookBuilder.LedgerBuckets);
+                createEntries(entryBuilder);
+                this.bookBuilder.SetReconciliation(entryBuilder.Ledgers, this.remarks);
+                return this.bookBuilder;
+            }
+
+            public ReconciliationTestDataBuilder WithRemarks(string reconRemarks)
+            {
+                this.remarks = reconRemarks;
+                return this;
+            }
+        }
+
         public class SpecificLedgerEntryTestDataBuilder
         {
-            private List<LedgerTransaction> ledgerTransactions;
             private readonly LedgerEntryTestDataBuilder entryBuilder;
+            private List<LedgerTransaction> ledgerTransactions;
 
             public SpecificLedgerEntryTestDataBuilder(LedgerEntryTestDataBuilder entryBuilder)
             {
@@ -234,36 +280,6 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             {
                 this.ledgerTransactions = new List<LedgerTransaction>();
                 return this.entryBuilder;
-            }
-        }
-
-        public class ReconciliationTestDataBuilder
-        {
-            private readonly LedgerBookBuilder bookBuilder;
-            private string remarks;
-
-            public ReconciliationTestDataBuilder(LedgerBookBuilder bookBuilder)
-            {
-                this.bookBuilder = bookBuilder;
-            }
-
-            public LedgerBookBuilder WithReconciliationEntries(Action<LedgerEntryTestDataBuilder> createEntries)
-            {
-                var entryBuilder = new LedgerEntryTestDataBuilder(this.bookBuilder.LedgerBuckets);
-                createEntries(entryBuilder);
-                this.bookBuilder.SetReconciliation(entryBuilder.Ledgers, this.remarks);
-                return this.bookBuilder;
-            }
-
-            public LedgerBookBuilder WithNoEntries()
-            {
-                return this.bookBuilder;
-            }
-
-            public ReconciliationTestDataBuilder WithRemarks(string reconRemarks)
-            {
-                this.remarks = reconRemarks;
-                return this;
             }
         }
 

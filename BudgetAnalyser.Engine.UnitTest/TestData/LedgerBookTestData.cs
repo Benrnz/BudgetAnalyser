@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static LedgerBucket CarInsLedger { get; }
         public static LedgerBucket CarMtcLedger { get; }
 
-        public static Engine.BankAccount.Account ChequeAccount { get; }
+        public static BankAccount.Account ChequeAccount { get; }
         public static LedgerBucket ClothesLedger { get; }
         public static LedgerBucket DocLedger { get; }
         public static LedgerBucket HairLedger { get; }
@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         public static LedgerBucket PowerLedger { get; }
         public static LedgerBucket RatesLedger { get; }
         public static LedgerBucket RegoLedger { get; }
-        public static Engine.BankAccount.Account SavingsAccount { get; }
+        public static BankAccount.Account SavingsAccount { get; }
         public static LedgerBucket SavingsLedger { get; }
         public static LedgerBucket SurplusLedger { get; }
         public static LedgerBucket SavingsSurplusLedger { get; }
@@ -152,7 +152,8 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(list);
 
-            return Finalise(book);
+            Finalise(book);
+            return book;
         }
 
         /// <summary>
@@ -258,7 +259,8 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(list);
 
-            return Finalise(book);
+            Finalise(book);
+            return book;
         }
 
         /// <summary>
@@ -345,7 +347,8 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(list);
 
-            return Finalise(book);
+            Finalise(book);
+            return book;
         }
 
         /// <summary>
@@ -450,7 +453,8 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(list);
 
-            return Finalise(book);
+            Finalise(book);
+            return book;
         }
 
         /// <summary>
@@ -582,7 +586,8 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
 
             book.SetReconciliations(list);
 
-            return Finalise(book);
+            Finalise(book);
+            return book;
         }
 
         /// <summary>
@@ -590,7 +595,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         ///     created.
         ///     Also ensures the StoredInAccount property for each ledger is set.
         /// </summary>
-        internal static LedgerBook Finalise(LedgerBook book, bool unlock = false)
+        internal static void Finalise(LedgerBook book, bool unlock = false)
         {
             var ledgers = new Dictionary<BudgetBucket, LedgerBucket>();
             foreach (LedgerEntryLine line in book.Reconciliations)
@@ -617,7 +622,6 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             }
 
             book.Ledgers = ledgers.Values;
-            return book;
         }
 
         internal static LedgerEntryLine SetEntriesForTesting(this LedgerEntryLine line, List<LedgerEntry> entries)
