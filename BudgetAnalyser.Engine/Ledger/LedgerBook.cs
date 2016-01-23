@@ -162,8 +162,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget,
                                                         StatementModel statement, params BankBalance[] currentBankBalances)
         {
-            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget,
-                statement, currentBankBalances);
+            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
             this.reconciliations.Insert(0, newRecon.Reconciliation);
             return newRecon;
         }

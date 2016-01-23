@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
@@ -10,6 +9,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace BudgetAnalyser.Engine.UnitTest.Ledger
 {
@@ -23,6 +23,29 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private BudgetModel testDataBudget;
         private StatementModel testDataStatement;
         private IEnumerable<ToDoTask> testDataToDoList;
+
+        [TestMethod]
+        public void Reconcile_ShouldCreateBalanceAdjustmentOf150_GivenSavingsMonthlyBudgetAmountsSumTo150()
+        {
+            // 95 Car Mtc Monthly budget
+            // 55 Hair cut monthly budget
+            // ===
+            // 150 Balance Adjustment expected in Savings
+            // Power 175 goes in Chq
+            this.subject = new LedgerBookBuilder()
+                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.CarMtcBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+                .IncludeLedger(new SavedUpForLedger { BudgetBucket = StatementModelTestData.HairBucket, StoredInAccount = LedgerBookTestData.SavingsAccount })
+                .IncludeLedger(LedgerBookTestData.PowerLedger)
+                .Build();
+
+            Act();
+
+            this.subject.Output(true);
+            var resultRecon = this.subject.Reconciliations.First();
+
+            Assert.AreEqual(150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.SavingsAccount).Amount);
+            Assert.AreEqual(-150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.ChequeAccount).Amount);
+        }
 
         [TestMethod]
         public void CompareObjectMotherTestData1ToBuilderTestData1()

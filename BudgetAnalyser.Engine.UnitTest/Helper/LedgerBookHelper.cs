@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Ledger.Data;
@@ -25,9 +24,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
 
         public static void Output(this LedgerBook book, bool outputTransactions = false)
         {
-            Debug.WriteLine("Name: {0}", book.Name);
-            Debug.WriteLine("Filename: {0}", book.StorageKey);
-            Debug.WriteLine("Modified: {0}", book.Modified);
+            Debug.WriteLine($"Name: {book.Name}");
+            Debug.WriteLine($"Filename: {book.StorageKey}");
+            Debug.WriteLine($"Modified: {book.Modified}");
             Debug.Write("Date        ");
             Dictionary<BudgetBucket, int> ledgerOrder = LedgerOrder(book);
 
