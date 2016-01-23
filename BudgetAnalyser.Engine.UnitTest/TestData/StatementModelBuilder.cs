@@ -54,5 +54,11 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             this.model = StatementModelTestData.TestData2();
             return this;
         }
+
+        public StatementModelBuilder TestData5()
+        {
+            this.model = StatementModelTestData.TestData5();
+            return this;
+        }
     }
 }

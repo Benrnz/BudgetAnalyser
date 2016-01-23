@@ -171,7 +171,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            var unmatchedTxns = lastLine.Entries
+            List<LedgerTransaction> unmatchedTxns = lastLine.Entries
                 .SelectMany(e => e.Transactions)
                 .Where(
                     t =>
@@ -185,8 +185,8 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            var statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
-            foreach (var ledgerTransaction in unmatchedTxns)
+            List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
+            foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
             {
                 IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
                     ledgerTransaction.AutoMatchingReference);
@@ -203,7 +203,10 @@ namespace BudgetAnalyser.Engine.Ledger
                             "There appears to be some transactions from last month that should be auto-matched to a statement transactions, but no matching statement transactions were found.\nHave you forgotten to do a transfer?\nTransaction ID:{0} Ref:{1} Amount:{2:C}",
                             ledgerTransaction.Id,
                             ledgerTransaction.AutoMatchingReference,
-                            ledgerTransaction.Amount));
+                            ledgerTransaction.Amount))
+                    {
+                        Source = "1"
+                    };
                 }
             }
         }
@@ -263,14 +266,12 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private void PreReconciliationValidation(LedgerBook ledgerBook, DateTime reconciliationDate,
-                                                 StatementModel statement)
+        private void PreReconciliationValidation(LedgerBook ledgerBook, DateTime reconciliationDate, StatementModel statement)
         {
             var messages = new StringBuilder();
             if (!ledgerBook.Validate(messages))
             {
-                throw new InvalidOperationException(
-                    "Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
+                throw new InvalidOperationException("Ledger book is currently in an invalid state. Cannot add new entries.\n" + messages);
             }
 
             if (statement == null)
@@ -285,10 +286,24 @@ namespace BudgetAnalyser.Engine.Ledger
             ValidateAgainstUncategorisedTransactions(startDate, reconciliationDate, statement);
 
             ValidateAgainstOrphanedAutoMatchingTransactions(ledgerBook, statement);
+
+            ValidateAgainstMissingTransactions(reconciliationDate, statement);
         }
 
-        private void ValidateAgainstUncategorisedTransactions(DateTime startDate, DateTime reconciliationDate,
-                                                              StatementModel statement)
+        private void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
+        {
+            DateTime lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
+            TimeSpan difference = reconciliationDate.Subtract(lastTransactionDate);
+            if (difference.TotalHours > 24)
+            {
+                throw new ValidationWarningException("There are no statement transactions in the last day or two, are you sure you have imported all this month's transactions?")
+                {
+                    Source = "2"
+                };
+            }
+        }
+
+        private void ValidateAgainstUncategorisedTransactions(DateTime startDate, DateTime reconciliationDate, StatementModel statement)
         {
             if (statement.AllTransactions
                 .Where(t => t.Date >= startDate && t.Date < reconciliationDate)
@@ -321,14 +336,15 @@ namespace BudgetAnalyser.Engine.Ledger
                     }
                 }
 
-                throw new ValidationWarningException(
-                    "There appears to be transactions in the statement that are not categorised into a budget bucket.");
+                throw new ValidationWarningException("There appears to be transactions in the statement that are not categorised into a budget bucket.")
+                {
+                    Source = "3"
+                };
             }
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate,
-                                          StatementModel statement)
+        private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement)
         {
             LedgerEntryLine recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
             if (recentEntry != null)
@@ -347,15 +363,19 @@ namespace BudgetAnalyser.Engine.Ledger
                 if (recentEntry.Date.Day != reconciliationDate.Day)
                 {
                     throw new ValidationWarningException(
-                        "The reconciliation Date chosen, {0}, isn't the same day of the month as the previous entry {1}. Not required, but ideally reconciliations should be evenly spaced.");
+                        $"The reconciliation Date chosen, {reconciliationDate}, isn't the same day of the month as the previous entry {recentEntry.Date}. Not required, but ideally reconciliations should be evenly spaced.")
+                    {
+                        Source = "4"
+                    };
                 }
             }
 
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
-                throw new ValidationWarningException(
-                    "There doesn't appear to be any transactions in the statement for the month up to " +
-                    reconciliationDate.ToString("d"));
+                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " +reconciliationDate.ToString("d"))
+                {
+                    Source = "5"
+                };
             }
         }
     }

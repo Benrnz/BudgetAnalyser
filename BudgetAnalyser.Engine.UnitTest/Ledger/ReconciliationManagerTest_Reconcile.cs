@@ -69,7 +69,18 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.bucketRepo = new BucketBucketRepoAlwaysFind();
             this.testDataBudgets = BudgetModelTestData.CreateCollectionWith1And2();
             this.testDataBudgetContext = new BudgetCurrencyContext(this.testDataBudgets, this.testDataBudgets.CurrentActiveBudget);
-            this.testDataStatement = StatementModelTestData.TestData5();
+            this.testDataStatement = new StatementModelBuilder()
+                .TestData5()
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = -23.56M,
+                    BudgetBucket = StatementModelTestData.RegoBucket,
+                    Date = ReconcileDate.Date.AddDays(-1),
+                    TransactionType = new NamedTransaction("Foo"),
+                    Description = "Last transaction"
+                })
+                .Build();
             this.testDataToDoList = new List<ToDoTask>();
             this.subject = new ReconciliationManager(this.mockRuleService.Object, this.mockReconciliationConsistency.Object, new FakeLogger());
 
@@ -86,21 +97,44 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
         public void Reconcile_ShouldThrow_GivenTestData1AndNoStatementModelTransactions()
         {
             this.testDataStatement = new StatementModel(new FakeLogger()) { StorageKey = "C:\\Foo.xml" };
-            Act(new DateTime(2013, 10, 15));
+            try
+            {
+                Act(new DateTime(2013, 10, 15));
+            }
+            catch (ValidationWarningException ex)
+            {
+                if (ex.Source == "5") return;
+            }
+
+            Assert.Fail();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
         public void Reconcile_ShouldThrow_GivenTestData1AndUnclassifiedTransactions()
         {
-            Transaction aTransaction = this.testDataStatement.AllTransactions.Last();
-            PrivateAccessor.SetField(aTransaction, "budgetBucket", null);
+            this.testDataStatement = new StatementModelBuilder()
+                .TestData1()
+                .AppendTransaction(new Transaction
+                {
+                    Account = StatementModelTestData.ChequeAccount,
+                    Amount = 12.45M,
+                    Date = ReconcileDate.AddDays(-1),
+                    Description = "Foo bar"
+                })
+                .Build();
+            try
+            {
+                Act();
+            }
+            catch (ValidationWarningException ex)
+            {
+                if (ex.Source == "3") return;
+            }
 
-            Act(new DateTime(2013, 9, 21));
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -127,10 +161,32 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ValidationWarningException))]
         public void Reconcile_ShouldThrowWhenAutoMatchingTransactionAreMissingFromStatement_GivenTestData5()
         {
-            ActOnTestData5(StatementModelTestData.TestData4());
+            try
+            {
+                ActOnTestData5(StatementModelTestData.TestData4());
+            }
+            catch (ValidationWarningException ex)
+            {
+                if (ex.Source == "1") return;
+            }
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void Reconcile_ShouldThrowValidationWarning_GivenStatmentIsMissingTransactionsForLastDay()
+        {
+            try
+            {
+                ActOnTestData5();
+            }
+            catch (ValidationWarningException ex)
+            {
+                if (ex.Source == "2") return;
+            }
+
             Assert.Fail();
         }
 
