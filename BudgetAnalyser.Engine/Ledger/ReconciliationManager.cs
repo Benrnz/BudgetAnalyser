@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -18,9 +19,11 @@ namespace BudgetAnalyser.Engine.Ledger
         private readonly ILogger logger;
         private readonly IReconciliationConsistency reconciliationConsistency;
         private readonly ITransactionRuleService transactionRuleService;
+        private ICollection<string> validationMessages = new Collection<string>();
 
         public ReconciliationManager([NotNull] ITransactionRuleService transactionRuleService,
-                                     [NotNull] IReconciliationConsistency reconciliationConsistency, [NotNull] ILogger logger)
+                                     [NotNull] IReconciliationConsistency reconciliationConsistency,
+                                     [NotNull] ILogger logger)
         {
             if (transactionRuleService == null)
             {
@@ -78,16 +81,14 @@ namespace BudgetAnalyser.Engine.Ledger
             Stopwatch stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
 
+            if (!ignoreWarnings) this.validationMessages = new Collection<string>();
             try
             {
                 PreReconciliationValidation(ledgerBook, reconciliationDate, statement);
             }
-            catch (ValidationWarningException)
+            catch (ValidationWarningException ex)
             {
-                if (!ignoreWarnings)
-                {
-                    throw;
-                }
+                if (ShouldValidationExceptionBeRethrown(ignoreWarnings, ex)) throw;
             }
 
             ReconciliationResult recon;
@@ -115,10 +116,8 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             stopWatch.Stop();
-            this.logger.LogInfo(
-                l =>
-                    l.Format("Finished Ledger Book reconciliation {0}. It took {1:F0}ms", DateTime.Now,
-                        stopWatch.ElapsedMilliseconds));
+            this.logger.LogInfo(l => l.Format("Finished Ledger Book reconciliation {0}. It took {1:F0}ms", DateTime.Now, stopWatch.ElapsedMilliseconds));
+            this.validationMessages = null;
             return recon;
         }
 
@@ -290,6 +289,18 @@ namespace BudgetAnalyser.Engine.Ledger
             ValidateAgainstMissingTransactions(reconciliationDate, statement);
         }
 
+        private bool ShouldValidationExceptionBeRethrown(bool ignoreWarnings, ValidationWarningException ex)
+        {
+            if (ignoreWarnings)
+            {
+                if (this.validationMessages.Contains(ex.Source)) return false;
+                return true;
+            }
+
+            this.validationMessages.Add(ex.Source);
+            return true;
+        }
+
         private void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
         {
             DateTime lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
@@ -372,7 +383,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (!statement.AllTransactions.Any(t => t.Date >= startDate))
             {
-                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " +reconciliationDate.ToString("d"))
+                throw new ValidationWarningException("There doesn't appear to be any transactions in the statement for the month up to " + reconciliationDate.ToString("d"))
                 {
                     Source = "5"
                 };
