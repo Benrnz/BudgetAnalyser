@@ -25,12 +25,6 @@ namespace BudgetAnalyser.Engine.Services
         void MoveLedgerToAccount([NotNull] LedgerBucket ledger, [NotNull] Account storedInAccount);
 
         /// <summary>
-        ///     Removes the most recent reconciliation <see cref="LedgerEntryLine" />.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        void RemoveReconciliation([NotNull] LedgerEntryLine line);
-
-        /// <summary>
         ///     Renames the ledger book.
         /// </summary>
         /// <param name="newName">The new name.</param>

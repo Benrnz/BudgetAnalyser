@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -34,7 +33,6 @@ namespace BudgetAnalyser.LedgerBook
         private const string RemarksStyle = "LedgerBookTextBlockHeadingRight";
         private const string SurplusBackground = "Brush.TileBackgroundAlternate";
         private const string SurplusTextBrush = "Brush.CreditBackground1";
-        private readonly ICommand removeLedgerEntryLineCommand;
         private readonly ICommand showBankBalancesCommand;
         private readonly ICommand showHideMonthsCommand;
         private readonly ICommand showLedgerBucketDetailsCommand;
@@ -50,7 +48,6 @@ namespace BudgetAnalyser.LedgerBook
             ICommand showTransactionsCommand,
             ICommand showBankBalancesCommand,
             ICommand showRemarksCommand,
-            ICommand removeLedgerEntryLineCommand,
             ICommand showHideMonthsCommand,
             ICommand showSurplusBalancesCommand,
             ICommand showLedgerBucketDetailsCommand)
@@ -58,7 +55,6 @@ namespace BudgetAnalyser.LedgerBook
             this.showTransactionsCommand = showTransactionsCommand;
             this.showBankBalancesCommand = showBankBalancesCommand;
             this.showRemarksCommand = showRemarksCommand;
-            this.removeLedgerEntryLineCommand = removeLedgerEntryLineCommand;
             this.showHideMonthsCommand = showHideMonthsCommand;
             this.showSurplusBalancesCommand = showSurplusBalancesCommand;
             this.showLedgerBucketDetailsCommand = showLedgerBucketDetailsCommand;
@@ -189,25 +185,6 @@ namespace BudgetAnalyser.LedgerBook
         {
             Border dateBorder = AddBorderToGridCell(grid, false, true, gridRow, gridColumn);
             AddContentToGrid(dateBorder, line.Date.ToString(DateFormat, CultureInfo.CurrentCulture), ref gridRow, gridColumn, DateColumnStyle);
-            gridRow--; // Not finished adding content to this cell yet.
-            var button = new Button
-            {
-                Style = Application.Current.Resources["Button.Round.SmallCross"] as Style,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Command = this.removeLedgerEntryLineCommand,
-                CommandParameter = line
-            };
-            var visibilityBinding = new Binding("IsEnabled")
-            {
-                Converter = (IValueConverter)Application.Current.Resources["Converter.BoolToVis"],
-                RelativeSource = new RelativeSource(RelativeSourceMode.Self)
-            };
-            button.SetBinding(UIElement.VisibilityProperty, visibilityBinding);
-
-            grid.Children.Add(button);
-            Grid.SetColumn(button, gridColumn);
-            Grid.SetRow(button, gridRow++);
-
             return gridRow;
         }
 
