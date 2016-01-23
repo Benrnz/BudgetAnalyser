@@ -87,7 +87,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [TestMethod]
         [Description("Ensures that the reconciliation process finds ledger transactions from the previous month that required funds to be transfered and matches these to " +
                      "statement transactions with automatching Id")]
-        public void Reconcile_ShouldAutoMatchTransactionsAndLinkToStatementTransaction_GivenTestData5()
+        public void Reconcile_ShouldAutoMatchTransactionsAndLinkIdToStatementTransaction_GivenTestData5()
         {
             // The automatched credit ledger transaction from last month should be linked to the statement transaction.
             this.testDataStatement = StatementModelTestData.TestData5();
