@@ -41,8 +41,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Act();
 
             this.subject.Output(true);
+            var resultRecon = this.subject.Reconciliations.First();
 
-            Assert.Inconclusive();
+            Assert.AreEqual(150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.SavingsAccount).Amount);
+            Assert.AreEqual(-150M, resultRecon.BankBalanceAdjustments.Single(b => b.BankAccount == LedgerBookTestData.ChequeAccount).Amount);
         }
 
         [TestMethod]

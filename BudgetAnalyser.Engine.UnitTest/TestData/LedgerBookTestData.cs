@@ -597,6 +597,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         /// </summary>
         internal static void Finalise(LedgerBook book, bool unlock = false)
         {
+            if (book.Reconciliations.None()) return;
             var ledgers = new Dictionary<BudgetBucket, LedgerBucket>();
             foreach (LedgerEntryLine line in book.Reconciliations)
             {

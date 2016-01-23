@@ -45,6 +45,10 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
             };
 
             book.SetReconciliations(this.reconciliations);
+            if (book.Reconciliations.None())
+            {
+                this.ledgerBuckets.ForEach(l => book.AddLedger(l));
+            }
 
             LedgerBookTestData.Finalise(book, this.lockWhenFinished);
             return book;
