@@ -44,7 +44,7 @@
             <TextBlock Text="{Binding Date, StringFormat='{}{0:d/MMM}'}"
                        ToolTip="{Binding Date, Converter={StaticResource Converter.ToString}, ConverterParameter='d/MMM/yy'}"
                        Width="60" />
-            <TextBlock Text="{Binding Narrative}" />
+            <TextBlock Text="{Binding Narrative}" ToolTip="{Binding Narrative}"/>
         </StackPanel>
 
         <statement:AccountUserControl Grid.Column="1"

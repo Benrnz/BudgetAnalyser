@@ -17,21 +17,9 @@ namespace BudgetAnalyser.Engine.Ledger
     public abstract class LedgerBucket
     {
         /// <summary>
-        ///     A constant for the "remove excess and no budget amount" text
-        /// </summary>
-        protected const string RemoveExcessNoBudgetAmountText =
-            "Automatically removing excess funds down to zero given there is no budget amount for this ledger";
-
-        /// <summary>
-        ///     A constant for the "remove excess" text
-        /// </summary>
-        protected const string RemoveExcessText = "Automatically removing excess funds.";
-
-        /// <summary>
         ///     A constant for the "supplement less than budget" text
         /// </summary>
-        protected const string SupplementLessThanBudgetText =
-            "Automatically supplementing shortfall so balance is not less than monthly budget amount";
+        protected const string SupplementLessThanBudgetText = "Automatically supplementing shortfall so balance is not less than monthly budget amount";
 
         /// <summary>
         ///     A constant for the "supplement overdrawn" text
@@ -118,8 +106,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public abstract void ReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions,
-                                                     DateTime reconciliationDate, decimal openingBalance);
+        public abstract void ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         /// <summary>
         ///     Returns a string that represents the current object.

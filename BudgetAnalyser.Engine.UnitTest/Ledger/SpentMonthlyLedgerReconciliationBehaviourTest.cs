@@ -70,6 +70,24 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
+        public void ShouldSupplementToOpeningBalance_GivenClosingBalanceLessThanOpeningBalance()
+        {
+            this.subject.Balance = 3552.20M;
+            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
+            var testInput = new List<LedgerTransaction>
+            {
+                new CreditLedgerTransaction { Amount = -1497.20M, Date = new DateTime(2013, 12, 22) },
+                new CreditLedgerTransaction { Amount = -1251.17M, Date = new DateTime(2014, 1, 14) },
+                new BudgetCreditLedgerTransaction { Amount = 1620.00M, Date = new DateTime(2014, 1, 20) },
+            };
+            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+
+            this.subject.Output();
+
+            Assert.AreEqual(3552.20M, this.subject.Balance);
+        }
+
+        [TestMethod]
         public void ShouldSupplementToZero_GivenNoBudgetAmountAndClosingBalanceIsLessThanZero()
         {
             this.subject.Balance = 100;

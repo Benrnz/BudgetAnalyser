@@ -71,8 +71,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon,
-                                                                                  bool includeMatchedTransactions = false)
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions([CanBeNull] LedgerEntryLine recon, bool includeMatchedTransactions = false)
         {
             if (recon == null)
             {
@@ -81,8 +80,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return recon.Entries.SelectMany(e => FindAutoMatchingTransactions(e, includeMatchedTransactions));
         }
 
-        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry,
-                                                                                  bool includeMatchedTransactions = false)
+        public static IEnumerable<LedgerTransaction> FindAutoMatchingTransactions(LedgerEntry ledgerEntry, bool includeMatchedTransactions = false)
         {
             if (ledgerEntry == null)
             {
@@ -100,8 +98,7 @@ namespace BudgetAnalyser.Engine.Ledger
                         !t.AutoMatchingReference.StartsWith(MatchedPrefix, StringComparison.Ordinal));
         }
 
-        public static bool IsAutoMatchingTransaction(Transaction statementTransaction,
-                                                     IEnumerable<LedgerTransaction> ledgerTransactions)
+        public static bool IsAutoMatchingTransaction(Transaction statementTransaction, IEnumerable<LedgerTransaction> ledgerTransactions)
         {
             return
                 ledgerTransactions.Any(
@@ -129,8 +126,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return startDateIncl;
         }
 
-        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions,
-                                                                         string autoMatchingReference)
+        internal static IEnumerable<Transaction> TransactionsToAutoMatch(IEnumerable<Transaction> transactions, string autoMatchingReference)
         {
             IOrderedEnumerable<Transaction> txns = transactions.Where(
                 t =>
@@ -458,8 +454,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return string.Empty;
         }
 
-        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket,
-                                                              DateTime reconciliationDate)
+        private List<LedgerTransaction> IncludeBudgetedAmount(BudgetModel currentBudget, LedgerBucket ledgerBucket, DateTime reconciliationDate)
         {
             Expense budgetedExpense =
                 currentBudget.Expenses.FirstOrDefault(e => e.Bucket.Code == ledgerBucket.BudgetBucket.Code);
@@ -516,8 +511,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return transactions;
         }
 
-        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry,
-                                                                                   ICollection<Transaction> filteredStatementTransactions)
+        private static IEnumerable<LedgerTransaction> IncludeStatementTransactions(LedgerEntry newEntry, ICollection<Transaction> filteredStatementTransactions)
         {
             if (filteredStatementTransactions.None())
             {

@@ -144,11 +144,10 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             if (this.transactions.Any())
             {
-                throw new InvalidOperationException(
-                    "Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
+                throw new InvalidOperationException("Code Error: You cannot call Set-Transactions-For-Reconciliation on an existing entry that already has transactions.");
             }
 
-            LedgerBucket.ReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
+            LedgerBucket.ApplyReconciliationBehaviour(newTransactions, reconciliationDate, Balance);
             this.transactions = newTransactions.OrderBy(t => t.Date).ToList();
             Balance += NetAmount;
         }
