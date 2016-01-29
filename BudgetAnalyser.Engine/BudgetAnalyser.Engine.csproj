@@ -122,6 +122,8 @@
     <Compile Include="Budget\SurplusBucket.cs" />
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="DebugLogger.cs" />
+    <Compile Include="DuplicateNameException.cs" />
+    <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />

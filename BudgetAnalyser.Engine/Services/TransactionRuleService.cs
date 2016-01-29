@@ -103,7 +103,7 @@ namespace BudgetAnalyser.Engine.Services
             catch (FileNotFoundException)
             {
                 // If file not found occurs here, assume this is the first time the app has run, and create a new one.
-                this.rulesStorageKey = BuildDefaultFileName();
+                this.rulesStorageKey = await BuildDefaultFileName();
                 repoRules = this.ruleRepository.CreateNew().ToList();
             }
 
@@ -264,9 +264,9 @@ namespace BudgetAnalyser.Engine.Services
             return true;
         }
 
-        protected virtual string BuildDefaultFileName()
+        protected virtual async Task<string> BuildDefaultFileName()
         {
-            var path = this.environmentFolders.ApplicationDataFolder();
+            var path = await this.environmentFolders.ApplicationDataFolder();
             return Path.Combine(path, "MatchingRules.xml");
         }
 

@@ -4,7 +4,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using GalaSoft.MvvmLight.Messaging;
 
-namespace BudgetAnalyser.ApplicationState
+namespace BudgetAnalyser.Uwp.ApplicationState
 {
     /// <summary>
     /// A <see cref="MessageBase"/> message object that broadcasts to subscribed components that the application is about to save user state data.  In response to this message 

@@ -74,6 +74,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -98,6 +100,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationState\ApplicationStateLoadedMessage.cs" />
+    <Compile Include="ApplicationState\ApplicationStateLoadFinishedMessage.cs" />
+    <Compile Include="ApplicationState\ApplicationStateRequestedMessage.cs" />
+    <Compile Include="ApplicationState\IPersistApplicationState.cs" />
+    <Compile Include="ApplicationState\PersistApplicationStateAsXaml.cs" />
+    <Compile Include="ApplicationState\UniversalAppEnvironmentFolders.cs" />
+    <Compile Include="BudgetAnalyserFeature.cs" />
     <Compile Include="CompositionRoot.cs" />
     <Compile Include="UiContext.cs" />
     <Compile Include="MainPage.xaml.cs">
