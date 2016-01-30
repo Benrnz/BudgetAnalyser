@@ -5,16 +5,24 @@ using BudgetAnalyser.Engine;
 
 namespace BudgetAnalyser.Uwp.ApplicationState
 {
+    [AutoRegisterWithIoC(SingleInstance = true)]
     internal class UniversalAppEnvironmentFolders : IEnvironmentFolders
     {
+        private string cachedAppDataFolder;
+
         /// <summary>
         ///     Get the folder to store applications state data.
         /// </summary>
         public async Task<string> ApplicationDataFolder()
         {
-            var root = ApplicationData.Current.LocalFolder;
-            var newFolder = await root.CreateFolderAsync("ApplicationState", CreationCollisionOption.OpenIfExists);
-            return newFolder.Path;
+            if (string.IsNullOrWhiteSpace(this.cachedAppDataFolder))
+            {
+                var root = ApplicationData.Current.LocalFolder;
+                var newFolder = await root.CreateFolderAsync("ApplicationState", CreationCollisionOption.OpenIfExists);
+                this.cachedAppDataFolder = newFolder.Path;
+            }
+
+            return this.cachedAppDataFolder;
         }
 
         /// <summary>

@@ -7,8 +7,8 @@ namespace BudgetAnalyser.Engine.Reports
     /// <summary>
     ///     An application state Dto to persist custom burn down chart user preferences.
     /// </summary>
-    /// <seealso cref="IPersistentApplicationState" />
-    public class CustomBurnDownChartApplicationState : IPersistentApplicationState
+    /// <seealso cref="IPersistentApplicationStateObject" />
+    public class CustomBurnDownChartApplicationState : IPersistentApplicationStateObject
     {
         // TODO These custom burn down charts should probably be saved with Application model data rather than state data.
         /// <summary>

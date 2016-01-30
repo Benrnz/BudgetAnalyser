@@ -68,18 +68,18 @@ namespace BudgetAnalyser.ApplicationState
         ///     This will be thrown if the file is
         ///     invalid.
         /// </exception>
-        public IEnumerable<IPersistentApplicationState> Load()
+        public IEnumerable<IPersistentApplicationStateObject> Load()
         {
             if (!File.Exists(FullFileName))
             {
-                return new List<IPersistentApplicationState>();
+                return new List<IPersistentApplicationStateObject>();
             }
 
             try
             {
                 object serialised = XamlServices.Load(FullFileName);
                 // Will always succeed without exceptions even if bad file format, but will return null.
-                var correctFormat = serialised as List<IPersistentApplicationState>;
+                var correctFormat = serialised as List<IPersistentApplicationStateObject>;
                 if (correctFormat == null)
                 {
                     throw new Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException(
@@ -93,7 +93,7 @@ namespace BudgetAnalyser.ApplicationState
             catch (IOException ex)
             {
                 this.userMessageBox.Show(ex, ex.Message);
-                return new List<IPersistentApplicationState>();
+                return new List<IPersistentApplicationStateObject>();
             }
         }
 
@@ -101,12 +101,12 @@ namespace BudgetAnalyser.ApplicationState
         ///     Persist the user data to the Xaml file on the local disk.
         /// </summary>
         /// <param name="modelsToPersist">
-        ///     All components in the App that implement <see cref="IPersistentApplicationState" /> so
+        ///     All components in the App that implement <see cref="IPersistentApplicationStateObject" /> so
         ///     the implementation can go get the data to persist.
         /// </param>
-        public void Persist(IEnumerable<IPersistentApplicationState> modelsToPersist)
+        public void Persist(IEnumerable<IPersistentApplicationStateObject> modelsToPersist)
         {
-            var data = new List<IPersistentApplicationState>(modelsToPersist.ToList());
+            var data = new List<IPersistentApplicationStateObject>(modelsToPersist.ToList());
             var serialised = XamlServices.Save(data);
             try
             {

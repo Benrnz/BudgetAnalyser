@@ -112,7 +112,7 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.3\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
+      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.12\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rees.UserInteraction.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">

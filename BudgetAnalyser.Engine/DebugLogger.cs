@@ -40,6 +40,7 @@ namespace BudgetAnalyser.Engine
         public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
         {
             Debug.WriteLine(ConstructLogEntry("ERROR", logEntryBuilder));
+            Debug.WriteLine(ex.ToString());
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace BudgetAnalyser.Engine
 
         private string ConstructLogEntry(string level, Func<ILogger, string> logEntryBuilder)
         {
-            return DateTime.Now.ToString("yy-MM-dThh:mm:ss.fff") + level.PadRight(7) + logEntryBuilder(this);
+            return $"{DateTime.Now.ToString("yy-MM-dThh:mm:ss.ffff")} {level.PadRight(7)}{logEntryBuilder(this)}";
         }
     }
 }

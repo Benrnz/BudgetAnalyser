@@ -4,7 +4,7 @@
     ///     An interface that represents a object that needs to be persisted with application state when the application shuts
     ///     down. This is not model data. For example it is windows size, last loaded file, user's UI preferences.
     /// </summary>
-    public interface IPersistentApplicationState
+    public interface IPersistentApplicationStateObject
     {
         /// <summary>
         ///     Gets the order in which this object should be loaded.

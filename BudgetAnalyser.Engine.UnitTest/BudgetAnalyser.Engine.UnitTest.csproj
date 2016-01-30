@@ -45,12 +45,12 @@
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Portable.Xaml, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
+    <Reference Include="Portable.Xaml, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.Xaml.0.8.0\lib\dotnet\Portable.Xaml.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.3\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
+      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.12\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">

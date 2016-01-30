@@ -6,7 +6,7 @@ namespace BudgetAnalyser.Engine
     ///     The stored application state for the Main view.
     ///     This is saved when the application exits.
     /// </summary>
-    public class MainApplicationState : IPersistentApplicationState
+    public class MainApplicationState : IPersistentApplicationStateObject
     {
         /// <summary>
         ///     Gets or sets a string that indicates where the budget analyser stores its data.

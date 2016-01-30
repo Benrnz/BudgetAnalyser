@@ -208,7 +208,7 @@
     <Compile Include="Persistence\ApplicationDatabaseToStorageRootMapper.generated.cs" />
     <Compile Include="Persistence\BudgetAnalyserStorageRoot.cs" />
     <Compile Include="Persistence\IApplicationDatabaseRepository.cs" />
-    <Compile Include="Persistence\IPersistentApplicationState.cs" />
+    <Compile Include="Persistence\IPersistentApplicationStateObject.cs" />
     <Compile Include="Persistence\StorageBranch.cs" />
     <Compile Include="Persistence\XamlOnDiskApplicationDatabaseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -318,11 +318,6 @@
     <Compile Include="Widgets\WidgetPersistentState.cs" />
     <Compile Include="Widgets\WidgetsApplicationState.cs" />
     <Compile Include="Widgets\WidgetSize.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Portable.Xaml">
-      <HintPath>..\packages\Portable.Xaml.CUSTOMBUILD\Portable.Xaml.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

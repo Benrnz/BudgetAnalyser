@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Uwp.ApplicationState
         ///     The recently loaded user data from persistent storage that this message should carry to
         ///     all subscribers.
         /// </param>
-        public ApplicationStateLoadedMessage(IEnumerable<IPersistentApplicationState> rehydratedModels)
+        public ApplicationStateLoadedMessage(IEnumerable<IPersistentApplicationStateObject> rehydratedModels)
         {
             var removeDuplicates = rehydratedModels
                 .GroupBy(model => model.GetType(), model => model)
@@ -30,20 +30,20 @@ namespace BudgetAnalyser.Uwp.ApplicationState
                 .Select(group => group.First());
 
             RehydratedModels =
-                new ReadOnlyDictionary<Type, IPersistentApplicationState>(removeDuplicates.ToDictionary(m => m.GetType(), m => m));
+                new ReadOnlyDictionary<Type, IPersistentApplicationStateObject>(removeDuplicates.ToDictionary(m => m.GetType(), m => m));
         }
 
         /// <summary>
         ///     Gets the recently loaded user data from persistent storage that this message should carry to all subscribers.
         /// </summary>
-        public IReadOnlyDictionary<Type, IPersistentApplicationState> RehydratedModels { get; private set; }
+        public IReadOnlyDictionary<Type, IPersistentApplicationStateObject> RehydratedModels { get; private set; }
 
         /// <summary>
         ///     Retrieves an element of the type <typeparamref name="T" />.
         ///     If no element of the requested type exists in the <see cref="RehydratedModels" /> dictionary, null is returned.
         /// </summary>
-        /// <typeparam name="T">The concrete type that implements <see cref="IPersistentApplicationState" /> to retrieve.</typeparam>
-        public T ElementOfType<T>() where T : class, IPersistentApplicationState
+        /// <typeparam name="T">The concrete type that implements <see cref="IPersistentApplicationStateObject" /> to retrieve.</typeparam>
+        public T ElementOfType<T>() where T : class, IPersistentApplicationStateObject
         {
             var type = typeof(T);
             if (RehydratedModels.ContainsKey(type))

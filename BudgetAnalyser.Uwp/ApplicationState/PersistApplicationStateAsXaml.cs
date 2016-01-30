@@ -15,6 +15,7 @@ namespace BudgetAnalyser.Uwp.ApplicationState
     ///     An implmentation of <see cref="IPersistApplicationState" /> that saves the user meta-data as Xaml to a file on the
     ///     local disk.
     /// </summary>
+    [AutoRegisterWithIoC]
     public class PersistApplicationStateAsXaml : IPersistApplicationState
     {
         private readonly IEnvironmentFolders folders;
@@ -59,17 +60,17 @@ namespace BudgetAnalyser.Uwp.ApplicationState
         /// <exception cref="BadApplicationStateFileFormatException">
         ///     This will be thrown if the file is invalid.
         /// </exception>
-        public async Task<IEnumerable<IPersistentApplicationState>> LoadAsync()
+        public async Task<IEnumerable<IPersistentApplicationStateObject>> LoadAsync()
         {
             var fullFileName = await FullFileName();
             if (!File.Exists(fullFileName))
             {
-                return new List<IPersistentApplicationState>();
+                return new List<IPersistentApplicationStateObject>();
             }
 
             object serialised = XamlServices.Load(fullFileName);
             // Will always succeed without exceptions even if bad file format, but will return null.
-            var correctFormat = serialised as List<IPersistentApplicationState>;
+            var correctFormat = serialised as List<IPersistentApplicationStateObject>;
             if (correctFormat == null)
             {
                 throw new BadApplicationStateFileFormatException($"The file used to store application state ({fullFileName}) is not in the correct format. It may have been tampered with.");
@@ -82,12 +83,12 @@ namespace BudgetAnalyser.Uwp.ApplicationState
         ///     Persist the user data to the Xaml file on the local disk.
         /// </summary>
         /// <param name="modelsToPersist">
-        ///     All components in the App that implement <see cref="IPersistentApplicationState" /> so
+        ///     All components in the App that implement <see cref="IPersistentApplicationStateObject" /> so
         ///     the implementation can go get the data to persist.
         /// </param>
-        public async Task PersistAsync(IEnumerable<IPersistentApplicationState> modelsToPersist)
+        public async Task PersistAsync(IEnumerable<IPersistentApplicationStateObject> modelsToPersist)
         {
-            var data = new List<IPersistentApplicationState>(modelsToPersist.ToList());
+            var data = new List<IPersistentApplicationStateObject>(modelsToPersist.ToList());
             var serialised = XamlServices.Save(data);
             var fullFileName = await FullFileName();
             using (var file = new FileStream(fullFileName, FileMode.Create))

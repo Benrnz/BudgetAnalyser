@@ -271,7 +271,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -1927,7 +1935,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -3616,7 +3632,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -5310,7 +5334,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -6999,7 +7031,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -8693,7 +8733,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -10382,7 +10430,15 @@
           "lib/windows81/GalaSoft.MvvmLight.Platform.dll": {}
         }
       },
-      "Rees.TangyFruitMapper/1.0.3": {
+      "Portable.Xaml/0.8.0": {
+        "compile": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Portable.Xaml.dll": {}
+        }
+      },
+      "Rees.TangyFruitMapper/1.0.12": {
         "compile": {
           "lib/portable-win+net45/Rees.TangyFruitMapper.dll": {}
         },
@@ -12645,15 +12701,30 @@
         "package/services/metadata/core-properties/2416d2969a834c638aba3851d652cc13.psmdcp"
       ]
     },
-    "Rees.TangyFruitMapper/1.0.3": {
-      "sha512": "lIbC1TMeXGGtibp4KtYkWvrgmxJdC8OF/lrMWt3P9b6WGJI8oINjrFoBuUYo4q/Wz7Zh4r9evm/Ns/Jik94ZuA==",
+    "Portable.Xaml/0.8.0": {
+      "sha512": "GocFLw3OVdBPAHzXYOiV1XS7zSUJTUDT9Rh7gMNuhnkAHycGkOkVPmx36JzISlFkd7C23d+8DfF8l4dyBpFk7g==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "lib/dotnet/Portable.Xaml.dll",
+        "lib/portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
+        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10/Portable.Xaml.dll",
+        "lib/Xamarin.Mac/Portable.Xaml.dll",
+        "LICENSE.txt",
+        "package/services/metadata/core-properties/a72791ee0bc346f2b9350a84fffe1355.psmdcp",
+        "Portable.Xaml.nuspec"
+      ]
+    },
+    "Rees.TangyFruitMapper/1.0.12": {
+      "sha512": "XdOMm9Q9Z/3KHuwLUndqzQD45iWgJxK2reh8MwWf7QEQV9HZ00uSL2AGVx5+Y731ML5NEKmo15FIxiazNcr5Og==",
       "type": "Package",
       "files": [
         "[Content_Types].xml",
         "_rels/.rels",
         "lib/portable-win+net45/Rees.TangyFruitMapper.dll",
         "lib/portable-win+net45/Rees.TangyFruitMapper.pdb",
-        "package/services/metadata/core-properties/f3ebd78fea524f90922a3561ae3a55a2.psmdcp",
+        "package/services/metadata/core-properties/8c8162edb6644be1a7c2e1d853e5f17e.psmdcp",
         "Rees.TangyFruitMapper.nuspec"
       ]
     },
@@ -15361,6 +15432,7 @@
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.1",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
       "MvvmLightLibs >= 5.2.0",
+      "Portable.Xaml >= 0.8.0",
       "System.Runtime >= 4.0.20"
     ],
     "UAP,Version=v10.0": []

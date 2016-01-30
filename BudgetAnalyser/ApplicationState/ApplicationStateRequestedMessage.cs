@@ -12,12 +12,12 @@ namespace BudgetAnalyser.ApplicationState
     /// </summary>
     public class ApplicationStateRequestedMessage : MessageBase
     {
-        private readonly List<IPersistentApplicationState> modelsToPersist = new List<IPersistentApplicationState>();
+        private readonly List<IPersistentApplicationStateObject> modelsToPersist = new List<IPersistentApplicationStateObject>();
 
         /// <summary>
         /// Gets all the persistent data for all subscribers.
         /// </summary>
-        public IReadOnlyCollection<IPersistentApplicationState> PersistentData => this.modelsToPersist;
+        public IReadOnlyCollection<IPersistentApplicationStateObject> PersistentData => this.modelsToPersist;
 
         /// <summary>
         /// Each subscriber can call this method to include any data it wishes to persist.  This data is intended to be user state metadata. It is not intended to be used for
@@ -28,7 +28,7 @@ namespace BudgetAnalyser.ApplicationState
         /// to retrieve it.  No other component should use this type, or collisions will occur.
         /// </param>
         /// <exception cref="DuplicateNameException">Attempt to save application state with a model that has already been saved.</exception>
-        public void PersistThisModel(IPersistentApplicationState model)
+        public void PersistThisModel(IPersistentApplicationStateObject model)
         {
             if (this.modelsToPersist.Any(m => m.GetType() == model.GetType()))
             {
