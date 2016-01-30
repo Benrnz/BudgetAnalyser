@@ -27,6 +27,7 @@
       <Word>Serialiser</Word>
       <Word>Uncategorised</Word>
       <Word>Xaml</Word>
+      <Word>Uwp</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""></Term>
@@ -41,6 +42,7 @@
   <Acronyms>
     <CasingExceptions>
       <Acronym>Io</Acronym>
+      <Acronym>Uwp</Acronym>
     </CasingExceptions>
   </Acronyms>
 </Dictionary>
