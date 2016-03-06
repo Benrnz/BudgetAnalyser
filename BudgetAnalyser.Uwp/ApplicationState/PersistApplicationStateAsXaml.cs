@@ -18,8 +18,9 @@ namespace BudgetAnalyser.Uwp.ApplicationState
     [AutoRegisterWithIoC]
     public class PersistApplicationStateAsXaml : IPersistApplicationState
     {
-        private readonly IEnvironmentFolders folders;
         private const string FileName = "BudgetAnalyserAppState.xml";
+        private readonly IEnvironmentFolders folders;
+        private readonly ILogger logger;
 
         private string doNotUseFullFileName;
 
@@ -27,27 +28,12 @@ namespace BudgetAnalyser.Uwp.ApplicationState
         ///     Initializes a new instance of the <see cref="PersistApplicationStateAsXaml" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">userMessageBox cannot be null.</exception>
-        public PersistApplicationStateAsXaml([NotNull] IEnvironmentFolders folders)
+        public PersistApplicationStateAsXaml([NotNull] ILogger logger, [NotNull] IEnvironmentFolders folders)
         {
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (folders == null) throw new ArgumentNullException(nameof(folders));
+            this.logger = logger;
             this.folders = folders;
-        }
-
-        /// <summary>
-        ///     Gets the full name of the file to save the data into.
-        ///     The file will be overwritten.
-        ///     By default this will save to the application folder with the name BudgetAnalyserAppState.xml.
-        /// </summary>
-        protected virtual async Task<string> FullFileName()
-        {
-            if (string.IsNullOrEmpty(this.doNotUseFullFileName))
-            {
-                var location = await this.folders.ApplicationDataFolder();
-                Debug.Assert(location != null);
-                this.doNotUseFullFileName = Path.Combine(location, FileName);
-            }
-
-            return this.doNotUseFullFileName;
         }
 
         /// <summary>
@@ -65,18 +51,28 @@ namespace BudgetAnalyser.Uwp.ApplicationState
             var fullFileName = await FullFileName();
             if (!File.Exists(fullFileName))
             {
+                this.logger.LogWarning(l => $"Application State file not found in '{fullFileName}', creating a new one with default settings.");
                 return new List<IPersistentApplicationStateObject>();
             }
 
-            object serialised = XamlServices.Load(fullFileName);
-            // Will always succeed without exceptions even if bad file format, but will return null.
-            var correctFormat = serialised as List<IPersistentApplicationStateObject>;
-            if (correctFormat == null)
+            try
             {
-                throw new BadApplicationStateFileFormatException($"The file used to store application state ({fullFileName}) is not in the correct format. It may have been tampered with.");
+                object serialised = XamlServices.Load(fullFileName);
+                // Will always succeed without exceptions even if bad file format, but will return null.
+                var correctFormat = serialised as List<IPersistentApplicationStateObject>;
+                if (correctFormat == null)
+                {
+                    throw new BadApplicationStateFileFormatException($"The file used to store application state ({fullFileName}) is not in the correct format. It may have been tampered with.");
+                }
+                return correctFormat;
             }
-
-            return correctFormat;
+            catch (XamlException ex)
+            {
+                // TODO ideally like to show error message to user:
+                // this.userMessageBox.Show(ex, $"Unable to load previously used application preferences. Preferences have been returned to default settings.\n\n{ex.Message}");
+                this.logger.LogError(l => $"Unable to load previously used application preferences. Preferences have been returned to default settings.\n\n{ex.Message}");
+                return HandleCorruptFileFormatGracefully(ex);
+            }
         }
 
         /// <summary>
@@ -98,6 +94,28 @@ namespace BudgetAnalyser.Uwp.ApplicationState
                     await writer.WriteAsync(serialised);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Gets the full name of the file to save the data into.
+        ///     The file will be overwritten.
+        ///     By default this will save to the application folder with the name BudgetAnalyserAppState.xml.
+        /// </summary>
+        protected virtual async Task<string> FullFileName()
+        {
+            if (string.IsNullOrEmpty(this.doNotUseFullFileName))
+            {
+                var location = await this.folders.ApplicationDataFolder();
+                Debug.Assert(location != null);
+                this.doNotUseFullFileName = Path.Combine(location, FileName);
+            }
+
+            return this.doNotUseFullFileName;
+        }
+
+        private IEnumerable<IPersistentApplicationStateObject> HandleCorruptFileFormatGracefully(Exception exception)
+        {
+            return new List<IPersistentApplicationStateObject>();
         }
     }
 }
