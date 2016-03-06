@@ -19,11 +19,11 @@ namespace BudgetAnalyser.Engine.Budget
         ///     The project code template used when creating a code. This is used to produce a <see cref="BudgetBucket.Code" />
         ///     that is prefixed with SURPLUS.
         /// </summary>
-        public static readonly string ProjectCodeTemplateWithPrefix = string.Format(ProjectCodeTemplate, SurplusCode,
-            "{0}");
+        public static readonly string ProjectCodeTemplateWithPrefix = string.Format(ProjectCodeTemplate, SurplusCode, "{0}");
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="FixedBudgetProjectBucket" /> class.
+        ///     Used to create a new instance from the User Interface.
         /// </summary>
         public FixedBudgetProjectBucket(string code, string description, decimal fixedBudgetAmount)
             : base(CreateCode(code), description)
@@ -36,9 +36,11 @@ namespace BudgetAnalyser.Engine.Budget
         ///     Initializes a new instance of the <see cref="FixedBudgetProjectBucket" /> class.
         ///     Used only for persistence.
         /// </summary>
-        internal FixedBudgetProjectBucket(decimal fixedBudgetAmount)
+        internal FixedBudgetProjectBucket(string code, string description, decimal fixedBudgetAmount, DateTime created)
+            : base(code, description)
         {
             FixedBudgetAmount = fixedBudgetAmount;
+            Created = created;
         }
 
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local

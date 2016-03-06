@@ -14,8 +14,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                     return new IncomeBudgetBucket();
                 case BucketDtoType.PayCreditCard:
                 case BucketDtoType.Surplus:
-                    throw new NotSupportedException(
-                        "You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
+                    throw new NotSupportedException("You may not create multiple instances of the Pay Credit Card or Surplus buckets.");
                 case BucketDtoType.SavedUpForExpense:
                     return new SavedUpForExpenseBucket();
                 case BucketDtoType.SavingsCommitment:
@@ -23,7 +22,8 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 case BucketDtoType.SpentMonthlyExpense:
                     return new SpentMonthlyExpenseBucket();
                 case BucketDtoType.FixedBudgetProject:
-                    return new FixedBudgetProjectBucket(((FixedBudgetBucketDto) dto).FixedBudgetAmount);
+                    var f = (FixedBudgetBucketDto)dto;
+                    return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created);
                 default:
                     throw new NotSupportedException("Unsupported Bucket type detected: " + dto);
             }
