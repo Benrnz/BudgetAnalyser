@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser
 {
-    public class ShellPersistentState : IPersistentApplicationState
+    public class ShellPersistentState : IPersistentApplicationStateObject
     {
         public int LoadSequence => 1;
         public Point Size { get; set; }

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Uwp", "Budge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperGeneration", "MapperGeneration\MapperGeneration.csproj", "{7FA4712A-2EEC-4441-BEDC-33F6DEF5E67E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser", "BudgetAnalyser\BudgetAnalyser.csproj", "{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf", "BudgetAnalyser\BudgetAnalyser.Wpf.csproj", "{3F2F3BC6-153D-4FD5-B819-6C456BE2DC25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest", "BudgetAnalyser.Wpf.UnitTest\BudgetAnalyser.Wpf.UnitTest.csproj", "{F6BEE529-FA66-4BCD-938B-49677225AFF9}"
 EndProject

@@ -5,8 +5,8 @@ namespace BudgetAnalyser.Engine.Statement
     /// <summary>
     ///     A state persistence Dto for Transactions.
     /// </summary>
-    /// <seealso cref="IPersistentApplicationState" />
-    public class StatementApplicationState : IPersistentApplicationState
+    /// <seealso cref="IPersistentApplicationStateObject" />
+    public class StatementApplicationState : IPersistentApplicationStateObject
     {
         /// <summary>
         ///     Gets or sets a value indicating if the user prefers to sort and group by bucket rather than by date.

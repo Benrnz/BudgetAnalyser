@@ -12,7 +12,7 @@ namespace BudgetAnalyser.Uwp
     {
         public ILogger Logger { get; set; }
 
-        public ShellController ShellController { get; set; }
+        public UiContext UiContext { get; private set; }
 
         public void ComposeAll()
         {
@@ -48,12 +48,15 @@ namespace BudgetAnalyser.Uwp
                 }
             }
 
-            // TODO
-            // ConstructUiContext(container);
-
-            ShellController = container.Resolve<ShellController>();
-
+            ConstructUiContext(container);
+            
             return container;
+        }
+
+        private void ConstructUiContext(IContainer container)
+        {
+            UiContext = container.Resolve<UiContext>();
+            UiContext.ShellController = container.Resolve<ShellController>();
         }
 
         private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)

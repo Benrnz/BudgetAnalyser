@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.3\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
+      <HintPath>..\packages\Rees.TangyFruitMapper.1.0.12\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

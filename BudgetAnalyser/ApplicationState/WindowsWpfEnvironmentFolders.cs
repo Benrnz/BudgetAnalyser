@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 
 namespace BudgetAnalyser.ApplicationState
@@ -9,17 +10,17 @@ namespace BudgetAnalyser.ApplicationState
         /// <summary>
         ///     Get the folder to store applications state data.
         /// </summary>
-        public string ApplicationDataFolder()
+        public Task<string> ApplicationDataFolder()
         {
-            return Path.GetDirectoryName(GetType().Assembly.Location);
+            return Task.FromResult(Path.GetDirectoryName(GetType().Assembly.Location));
         }
 
         /// <summary>
         ///     Gets the folder to store diagnostic Logs.
         /// </summary>
-        public string LogFolder()
+        public Task<string> LogFolder()
         {
-            return Path.GetDirectoryName(GetType().Assembly.Location);
+            return Task.FromResult(Path.GetDirectoryName(GetType().Assembly.Location));
         }
     }
 }

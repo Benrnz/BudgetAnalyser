@@ -8,6 +8,7 @@ using System.Xaml;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using Rees.UserInteraction.Contracts;
+using BadApplicationStateFileFormatException = Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException;
 
 namespace BudgetAnalyser.ApplicationState
 {
@@ -68,21 +69,21 @@ namespace BudgetAnalyser.ApplicationState
         ///     This will be thrown if the file is
         ///     invalid.
         /// </exception>
-        public IEnumerable<IPersistentApplicationState> Load()
+        public IEnumerable<IPersistentApplicationStateObject> Load()
         {
             if (!File.Exists(FullFileName))
             {
-                return new List<IPersistentApplicationState>();
+                return new List<IPersistentApplicationStateObject>();
             }
 
             try
             {
                 object serialised = XamlServices.Load(FullFileName);
-                // Will always succeed without exceptions even if bad file format, but will return null.
-                var correctFormat = serialised as List<IPersistentApplicationState>;
+                // Will throw Xaml Exception if the xml is corrupt, or the xaml types cannot be found and created.
+                var correctFormat = serialised as List<IPersistentApplicationStateObject>;
                 if (correctFormat == null)
                 {
-                    throw new Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException(
+                    throw new BadApplicationStateFileFormatException(
                         string.Format(CultureInfo.InvariantCulture,
                             "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.",
                             FullFileName));
@@ -92,8 +93,11 @@ namespace BudgetAnalyser.ApplicationState
             }
             catch (IOException ex)
             {
-                this.userMessageBox.Show(ex, ex.Message);
-                return new List<IPersistentApplicationState>();
+                return HandleCorruptFileGracefully(ex);
+            }
+            catch (XamlException ex)
+            {
+                return HandleCorruptFileGracefully(ex);
             }
         }
 
@@ -101,12 +105,12 @@ namespace BudgetAnalyser.ApplicationState
         ///     Persist the user data to the Xaml file on the local disk.
         /// </summary>
         /// <param name="modelsToPersist">
-        ///     All components in the App that implement <see cref="IPersistentApplicationState" /> so
+        ///     All components in the App that implement <see cref="IPersistentApplicationStateObject" /> so
         ///     the implementation can go get the data to persist.
         /// </param>
-        public void Persist(IEnumerable<IPersistentApplicationState> modelsToPersist)
+        public void Persist(IEnumerable<IPersistentApplicationStateObject> modelsToPersist)
         {
-            var data = new List<IPersistentApplicationState>(modelsToPersist.ToList());
+            var data = new List<IPersistentApplicationStateObject>(modelsToPersist.ToList());
             var serialised = XamlServices.Save(data);
             try
             {
@@ -116,6 +120,12 @@ namespace BudgetAnalyser.ApplicationState
             {
                 this.userMessageBox.Show(ex, "Unable to save recently used files.");
             }
+        }
+
+        private IEnumerable<IPersistentApplicationStateObject> HandleCorruptFileGracefully(Exception ex)
+        {
+            this.userMessageBox.Show(ex, $"Unable to load previously used application preferences. Preferences have been returned to default settings.\n\n{ex.Message}");
+            return new List<IPersistentApplicationStateObject>();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BudgetAnalyser.Engine
+﻿using System.Threading.Tasks;
+
+namespace BudgetAnalyser.Engine
 {
     /// <summary>
     ///     An interface to retrieve environment specific folder locations.  These locations and the means to get them will
@@ -9,11 +11,11 @@
         /// <summary>
         ///     Get the folder to store applications state data.
         /// </summary>
-        string ApplicationDataFolder();
+        Task<string> ApplicationDataFolder();
 
         /// <summary>
         ///     Gets the folder to store diagnostic Logs.
         /// </summary>
-        string LogFolder();
+        Task<string> LogFolder();
     }
 }

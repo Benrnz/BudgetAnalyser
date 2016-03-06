@@ -120,7 +120,7 @@ namespace BudgetAnalyser
             }
 
             this.initialised = true;
-            IList<IPersistentApplicationState> rehydratedModels = this.statePersistence.Load()?.ToList();
+            IList<IPersistentApplicationStateObject> rehydratedModels = this.statePersistence.Load()?.ToList();
 
             if (rehydratedModels == null || rehydratedModels.None())
             {
@@ -136,7 +136,7 @@ namespace BudgetAnalyser
             foreach (int sequence in sequences)
             {
                 int sequenceCopy = sequence;
-                IEnumerable<IPersistentApplicationState> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
+                IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
 
@@ -201,11 +201,11 @@ namespace BudgetAnalyser
             return false;
         }
 
-        private static IList<IPersistentApplicationState> CreateNewDefaultApplicationState()
+        private static IList<IPersistentApplicationStateObject> CreateNewDefaultApplicationState()
         {
             // Widget persistent state object is required to draw the widgets, even the ones that should be there by default.
             // The widgets must be drawn so a user can open or create a new file. 
-            var appState = new List<IPersistentApplicationState>
+            var appState = new List<IPersistentApplicationStateObject>
             {
                 new WidgetsApplicationState()
             };
