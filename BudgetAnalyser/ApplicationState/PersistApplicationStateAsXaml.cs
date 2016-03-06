@@ -8,6 +8,7 @@ using System.Xaml;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Persistence;
 using Rees.UserInteraction.Contracts;
+using BadApplicationStateFileFormatException = Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException;
 
 namespace BudgetAnalyser.ApplicationState
 {
@@ -82,7 +83,7 @@ namespace BudgetAnalyser.ApplicationState
                 var correctFormat = serialised as List<IPersistentApplicationStateObject>;
                 if (correctFormat == null)
                 {
-                    throw new Rees.Wpf.ApplicationState.BadApplicationStateFileFormatException(
+                    throw new BadApplicationStateFileFormatException(
                         string.Format(CultureInfo.InvariantCulture,
                             "The file used to store application state ({0}) is not in the correct format. It may have been tampered with.",
                             FullFileName));
@@ -92,8 +93,11 @@ namespace BudgetAnalyser.ApplicationState
             }
             catch (IOException ex)
             {
-                this.userMessageBox.Show(ex, ex.Message);
-                return new List<IPersistentApplicationStateObject>();
+                return HandleCorruptFileGracefully(ex);
+            }
+            catch (XamlException ex)
+            {
+                return HandleCorruptFileGracefully(ex);
             }
         }
 
@@ -116,6 +120,12 @@ namespace BudgetAnalyser.ApplicationState
             {
                 this.userMessageBox.Show(ex, "Unable to save recently used files.");
             }
+        }
+
+        private IEnumerable<IPersistentApplicationStateObject> HandleCorruptFileGracefully(Exception ex)
+        {
+            this.userMessageBox.Show(ex, $"Unable to load previously used application preferences. Preferences have been returned to default settings.\n\n{ex.Message}");
+            return new List<IPersistentApplicationStateObject>();
         }
     }
 }
