@@ -24,7 +24,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
                 Subject.BuildModel(
                     new FixedBudgetBucketDto
                     {
-                        Type = BucketDtoType.FixedBudgetProject
+                        Type = BucketDtoType.FixedBudgetProject,
+                        Created = DateTime.Now,
+                        Code = "SURPLUS.FOO",
+                        Description = "Fu bar"
                     }),
                 typeof(FixedBudgetProjectBucket));
         }
