@@ -45,8 +45,8 @@
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Portable.Xaml, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.Xaml.0.8.0\lib\dotnet\Portable.Xaml.dll</HintPath>
+    <Reference Include="Portable.Xaml, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.Xaml.0.11.0\lib\dotnet\Portable.Xaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rees.TangyFruitMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

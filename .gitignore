@@ -14,6 +14,7 @@ TestResults
 *.sln.docstates
 *.snk
 .vs
+project.lock.json
 
 # Build results
 [Dd]ebug/
