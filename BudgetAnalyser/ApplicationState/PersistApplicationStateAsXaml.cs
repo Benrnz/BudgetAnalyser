@@ -79,7 +79,7 @@ namespace BudgetAnalyser.ApplicationState
             try
             {
                 object serialised = XamlServices.Load(FullFileName);
-                // Will always succeed without exceptions even if bad file format, but will return null.
+                // Will throw Xaml Exception if the xml is corrupt, or the xaml types cannot be found and created.
                 var correctFormat = serialised as List<IPersistentApplicationStateObject>;
                 if (correctFormat == null)
                 {
