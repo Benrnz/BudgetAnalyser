@@ -6,8 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Annotations;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Services;
@@ -62,8 +62,6 @@ namespace BudgetAnalyser.LedgerBook
             Reset();
         }
 
-        public event EventHandler<LedgerTransactionEventArgs> Complete;
-
         [UsedImplicitly]
         public IEnumerable<Account> Accounts => this.ledgerService.ValidLedgerAccounts();
 
@@ -75,6 +73,8 @@ namespace BudgetAnalyser.LedgerBook
 
         public bool InBalanceAdjustmentMode { get; private set; }
         public bool InLedgerEntryMode { get; private set; }
+
+        public bool IsAddBalanceAdjustmentAllowed => InBalanceAdjustmentMode;
 
         public bool IsReadOnly
         {
@@ -98,8 +98,6 @@ namespace BudgetAnalyser.LedgerBook
                 RaisePropertyChanged(() => InLedgerEntryMode);
             }
         }
-
-        public bool IsAddBalanceAdjustmentAllowed => InBalanceAdjustmentMode;
 
         public Account NewTransactionAccount
         {
@@ -131,6 +129,8 @@ namespace BudgetAnalyser.LedgerBook
             }
         }
 
+        public decimal OpeningBalance { get; private set; }
+
         public bool ShowAddingNewTransactionPanel
         {
             get { return this.doNotUseShowAddingNewTransactionPanel; }
@@ -158,10 +158,12 @@ namespace BudgetAnalyser.LedgerBook
         [UsedImplicitly]
         public ICommand ZeroNetAmountCommand => new RelayCommand(OnZeroNetAmountCommandExecuted, CanExecuteZeroNetAmountCommand);
 
+        public event EventHandler<LedgerTransactionEventArgs> Complete;
+
         /// <summary>
         ///     Show the Ledger Transactions view for viewing and editing Ledger Transactions.
         /// </summary>
-        public void ShowDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry, bool isNew)
+        public void ShowLedgerTransactionsDialog(LedgerEntryLine ledgerEntryLine, LedgerEntry ledgerEntry, bool isNew)
         {
             if (ledgerEntry == null)
             {
@@ -171,16 +173,17 @@ namespace BudgetAnalyser.LedgerBook
             InBalanceAdjustmentMode = false;
             InLedgerEntryMode = true;
             LedgerEntry = ledgerEntry;
-            this.entryLine = ledgerEntryLine;
+            this.entryLine = ledgerEntryLine; // Will be null when editing an existing LedgerEntry as opposed to creating a new reconciliation.
             ShownTransactions = new ObservableCollection<LedgerTransaction>(LedgerEntry.Transactions);
             Title = string.Format(CultureInfo.CurrentCulture, "{0} Transactions", ledgerEntry.LedgerBucket.BudgetBucket.Code);
+            OpeningBalance = RetrieveOpeningBalance();
             ShowDialogCommon(isNew);
         }
 
         /// <summary>
         ///     Show the Ledger Transactions view, for viewing and editing Balance Adjustments
         /// </summary>
-        public void ShowDialog(LedgerEntryLine ledgerEntryLine, bool isNew)
+        public void ShowBankBalanceAdjustmentsDialog(LedgerEntryLine ledgerEntryLine, bool isNew)
         {
             if (ledgerEntryLine == null)
             {
@@ -311,6 +314,24 @@ namespace BudgetAnalyser.LedgerBook
             NewTransactionAmount = 0;
             NewTransactionNarrative = null;
             NewTransactionAccount = null;
+        }
+
+        private decimal RetrieveOpeningBalance()
+        {
+            Engine.Ledger.LedgerBook book = this.ledgerService.LedgerBook;
+            bool found = false;
+            IEnumerable<LedgerEntryLine> remainingRecons = book.Reconciliations.SkipWhile(r =>
+            {
+                // Find the recon that directly precedes this current one.
+                if (found) return false; // Found recon line on previous pass, now return.
+                found = r.Entries.Contains(LedgerEntry);
+                return true; // Keep skipping...
+            }).Take(1);
+
+            LedgerEntryLine previousLine = remainingRecons.FirstOrDefault();
+            if (previousLine == null) return 0M;
+            var previousEntry = previousLine.Entries.FirstOrDefault(l => l.LedgerBucket == LedgerEntry.LedgerBucket);
+            return previousEntry?.Balance ?? 0M;
         }
 
         private void Save()

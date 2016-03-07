@@ -372,11 +372,11 @@ namespace BudgetAnalyser.LedgerBook
             if (ledgerEntry != null)
             {
                 bool isNew = ViewModel.NewLedgerLine != null && ViewModel.NewLedgerLine.Entries.Any(e => e == ledgerEntry);
-                this.uiContext.LedgerTransactionsController.ShowDialog(ViewModel.NewLedgerLine, ledgerEntry, isNew);
+                this.uiContext.LedgerTransactionsController.ShowLedgerTransactionsDialog(ViewModel.NewLedgerLine, ledgerEntry, isNew);
             }
             else if (bankBalanceAdjustments != null)
             {
-                this.uiContext.LedgerTransactionsController.ShowDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
+                this.uiContext.LedgerTransactionsController.ShowBankBalanceAdjustmentsDialog(bankBalanceAdjustments, bankBalanceAdjustments == ViewModel.NewLedgerLine);
             }
             else
             {
