@@ -17,15 +17,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Stripe -->
-        <Border
-            BorderBrush="{Binding LedgerEntry.LedgerBucket.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
-            BorderThickness="24,0,0,0"
-            Grid.Column="0"
-            Grid.RowSpan="3"
-            HorizontalAlignment="Left"
-            Margin="-6,0,12,0"
-            ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
-            VerticalAlignment="Stretch" />
+        <Border BorderBrush="{Binding LedgerEntry.LedgerBucket.BudgetBucket, Converter={StaticResource Converter.BucketToColour}}"
+                BorderThickness="24,0,0,0"
+                Grid.Column="0"
+                Grid.RowSpan="3"
+                HorizontalAlignment="Left"
+                Margin="-6,0,12,0"
+                ToolTip="{Binding LedgerEntry.LedgerBucket.BudgetBucket.TypeDescription}"
+                VerticalAlignment="Stretch" />
+        <!-- Tool bar -->
         <Grid Grid.Column="1"
               Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -40,6 +40,7 @@
                     Style="{StaticResource Button.Round.Add}"
                     ToolTip="Add new balance adjustment"
                     Visibility="{Binding IsAddBalanceAdjustmentAllowed, Converter={StaticResource Converter.BoolToVis}}" />
+            <!-- Ledger Summaries -->
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -47,6 +48,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -61,21 +63,31 @@
                                   MaxHeight="35"
                                   Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBlock Grid.Column="1"
+                           Grid.Row="0"
+                           HorizontalAlignment="Right"
+                           Style="{StaticResource TextBlock.LabelStyle}"
+                           Text="Opening Balance: " />
+                <TextBlock Grid.Column="2"
+                           Grid.Row="0"
+                           Style="{StaticResource TextBlock.Number}"
+                           Text="{Binding OpeningBalance, StringFormat=N}"/>
+                <TextBlock Grid.Column="1"
+                           Grid.Row="1"
                            HorizontalAlignment="Right"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Net Amount: " />
                 <TextBlock Grid.Column="2"
-                           Grid.Row="0"
+                           Grid.Row="1"
                            Style="{StaticResource TextBlock.Number}"
                            Text="{Binding TransactionsTotal, StringFormat=N}" />
                 <TextBlock Grid.Column="1"
-                           Grid.Row="1"
+                           Grid.Row="2"
                            HorizontalAlignment="Right"
                            Style="{StaticResource TextBlock.LabelStyle}"
                            Text="Closing Balance: "
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
                 <TextBlock Grid.Column="2"
-                           Grid.Row="1"
+                           Grid.Row="2"
                            Style="{StaticResource TextBlock.Number}"
                            Text="{Binding LedgerEntry.Balance, StringFormat=N}"
                            Visibility="{Binding InLedgerEntryMode, Converter={StaticResource Converter.BoolToVis}}" />
