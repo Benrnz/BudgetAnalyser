@@ -122,6 +122,11 @@ namespace BudgetAnalyser.ReportsCatalog
         private void OnLongTermSpendingGraphCommandExecute()
         {
             LongTermSpendingGraphController.Load(this.currentStatementModel, RequestCurrentFilter());
+            if (LongTermSpendingGraphController.Graph == null)
+            {
+                // Error creating report, message to user is handled by the LongTermSpendingController.
+                return;
+            }
 
             this.newWindowViewLoader.MinHeight = this.newWindowViewLoader.Height = 600;
             this.newWindowViewLoader.MinWidth = this.newWindowViewLoader.Width = 600;
