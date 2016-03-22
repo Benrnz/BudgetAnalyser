@@ -15,8 +15,7 @@ namespace BudgetAnalyser.Engine.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AnzAccountStatementImporterV1 : IBankStatementImporter
     {
-        private static readonly Dictionary<string, TransactionType> TransactionTypes =
-            new Dictionary<string, TransactionType>();
+        private static readonly Dictionary<string, TransactionType> TransactionTypes = new Dictionary<string, TransactionType>();
 
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
@@ -64,7 +63,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
-            bool firstTime = true;
+            var firstTime = true;
             foreach (var line in await ReadLinesAsync(fileName))
             {
                 if (firstTime)
@@ -110,48 +109,19 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            var line = await ReadFirstLineAsync(fileName);
-            if (line.IsNothing())
+
+            string[] lines = await ReadFirstTwoLinesAsync(fileName);
+            if (lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
             }
 
             try
             {
-                string[] split = line.Split(',');
-                var type = this.importUtilities.FetchString(split, 0);
-                if (string.IsNullOrWhiteSpace(type))
-                {
-                    return false;
-                }
-
-                if (char.IsDigit(type.ToCharArray()[0]))
-                {
-                    return false;
-                }
-
-                var amount = this.importUtilities.FetchDecimal(split, 5);
-                if (amount == 0)
-                {
-                    return false;
-                }
-
-                DateTime date = this.importUtilities.FetchDate(split, 6);
-                if (date == DateTime.MinValue)
-                {
-                    return false;
-                }
-
-                if (split.Length != 8)
-                {
-                    return false;
-                }
+                if (!VerifyColumnHeaderLine(lines[0])) return false;
+                if (!VerifyFirstDataLine(lines[1])) return false;
             }
-            catch (InvalidDataException)
-            {
-                return false;
-            }
-            catch (UnexpectedIndexException)
+            catch (Exception)
             {
                 return false;
             }
@@ -172,12 +142,10 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
-            using (
-                var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false)
-                )
+            using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {
                 var sb = new StringBuilder();
-                var buffer = new byte[0x128];
+                var buffer = new byte[0x256];
                 int numRead;
                 while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
@@ -211,7 +179,7 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private async Task<string> ReadFirstLineAsync(string fileName)
+        private async Task<string[]> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
             if (chunk.IsNothing())
@@ -219,13 +187,60 @@ namespace BudgetAnalyser.Engine.Statement
                 return null;
             }
 
+            string[] twoLines = { string.Empty, string.Empty };
+
             var position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
             if (position > 0)
             {
-                return chunk.Substring(0, position);
+                twoLines[0] = chunk.Substring(0, position).TrimEndSafely();
             }
 
-            return chunk;
+            var position2 = chunk.IndexOf("\n", ++position, StringComparison.OrdinalIgnoreCase);
+            if (position > 0)
+            {
+                twoLines[1] = chunk.Substring(position, position2 - position).TrimEndSafely();
+            }
+
+            return twoLines;
+        }
+
+        private bool VerifyColumnHeaderLine(string line)
+        {
+            return string.CompareOrdinal(line, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
+        }
+
+        private bool VerifyFirstDataLine(string line)
+        {
+            string[] split = line.Split(',');
+            var type = this.importUtilities.FetchString(split, 0);
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                return false;
+            }
+
+            if (char.IsDigit(type.ToCharArray()[0]))
+            {
+                return false;
+            }
+
+            var amount = this.importUtilities.FetchDecimal(split, 5);
+            if (amount == 0)
+            {
+                return false;
+            }
+
+            DateTime date = this.importUtilities.FetchDate(split, 6);
+            if (date == DateTime.MinValue)
+            {
+                return false;
+            }
+
+            if (split.Length != 9)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
