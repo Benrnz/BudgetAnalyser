@@ -64,8 +64,16 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
+            bool firstTime = true;
             foreach (var line in await ReadLinesAsync(fileName))
             {
+                if (firstTime)
+                {
+                    // File contains column headers
+                    firstTime = false;
+                    continue;
+                }
+
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
