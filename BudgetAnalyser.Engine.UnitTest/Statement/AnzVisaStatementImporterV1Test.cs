@@ -104,7 +104,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task TatseTestShouldReturnFalseGivenTheChequeFormat()
         {
             AnzVisaStatementImporterV1TestHarness subject = Arrange();
-            subject.ReadTextChunkOverride = file => "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,"; // Cheque format given to Visa parser
+            subject.ReadTextChunkOverride = file => "Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,,"; // Cheque format given to Visa parser
             bool result = await subject.TasteTestAsync(@"transumm.CSV");
             Assert.IsFalse(result);
         }
