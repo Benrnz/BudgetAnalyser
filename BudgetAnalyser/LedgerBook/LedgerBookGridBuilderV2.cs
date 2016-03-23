@@ -101,9 +101,9 @@ namespace BudgetAnalyser.LedgerBook
 
             return string.Format(
                 CultureInfo.CurrentCulture,
-                "Total Ledger Balance: {0:N}; Total Bank Balance {1:N}; {2}",
+                "Total Ledger Balance: {0:N}; Adjusted Bank Balance {1:N}; {2}",
                 line.LedgerBalance,
-                line.TotalBankBalance,
+                line.TotalBankBalance + line.TotalBalanceAdjustments,
                 individualLedgerBalances);
         }
 

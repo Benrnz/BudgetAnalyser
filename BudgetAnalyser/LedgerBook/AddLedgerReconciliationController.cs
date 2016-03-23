@@ -179,8 +179,9 @@ namespace BudgetAnalyser.LedgerBook
 
         /// <summary>
         ///     Used to show the bank balances involved in this <see cref="LedgerEntryLine" />.
+        ///     Only shows balances at this stage, no editing allowed.
         /// </summary>
-        public void ShowEditDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line)
+        public void ShowViewDialog([NotNull] Engine.Ledger.LedgerBook ledgerBook, [NotNull] LedgerEntryLine line)
         {
             if (ledgerBook == null)
             {
