@@ -112,7 +112,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
             var lines = await ReadFirstTwoLinesAsync(fileName);
-            if (lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
+            if (lines == null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
             }
@@ -246,9 +246,13 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var position2 = chunk.IndexOf("\n", ++position, StringComparison.OrdinalIgnoreCase);
-            if (position > 0)
+            if (position2 > 0)
             {
                 twoLines[1] = chunk.Substring(position, position2 - position).TrimEndSafely();
+            }
+            else
+            {
+                twoLines[1] = chunk.Substring(position);
             }
 
             return twoLines;

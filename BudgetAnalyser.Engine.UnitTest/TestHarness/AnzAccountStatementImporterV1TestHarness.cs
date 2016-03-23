@@ -8,7 +8,6 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
     {
-        private int lineCounter = 0;
         public AnzAccountStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities)
             : base(importUtilities, new FakeLogger())
         {
@@ -31,12 +30,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (ReadTextChunkOverride == null)
             {
-                if (this.lineCounter == 0)
-                {
-                    this.lineCounter++;
-                    return Task.FromResult("Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge");
-                }
-                return Task.FromResult("Atm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,");
+                return Task.FromResult("Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge\r\nAtm Debit,Anz  1234567 Queen St,Anz  S3A1234,Queen St,Anch  123456,-80.00,16/06/2014,,");
             }
 
             return Task.FromResult(ReadTextChunkOverride(filePath));
