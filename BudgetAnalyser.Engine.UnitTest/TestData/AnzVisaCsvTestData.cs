@@ -8,6 +8,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
+                "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge  ",
                 "4123-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,   ",
                 "4123-****-****-1234,D,5.00,Subway Queen Street     Auckland      Nz ,24/06/2014,24/06/2014,    ",
                 "4123-****-****-1234,D,31.25,Countdown              Auckland      Nzl ,22/06/2014,23/06/2014,   ",
@@ -28,6 +29,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
+                "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge  ",
                 "4123-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,   ",
                 "4123-****-****-1234,D,5.00,Subway Queen Street     Auckland      Nz ,24/06/2014,24/06/2014,    ",
                 "4123-****-****-1234,D,31.25,Countdown              Auckland      Nzl ,22/06/2014,23/06/2014,   ",
@@ -48,6 +50,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
         {
             return new List<string>
             {
+                "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge  ",
                 "4123-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,   ",
                 "4123-****-****-1234,D,5.00,Subway Queen Street     Auckland      Nz ,24/06/2014,24/06/2014,    ",
                 "4123-****-****-1234,D,31.25,Countdown              Auckland      Nzl ,22/06/2014,23/06/2014,   ",

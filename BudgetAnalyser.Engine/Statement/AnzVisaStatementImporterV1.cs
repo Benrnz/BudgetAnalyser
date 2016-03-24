@@ -67,8 +67,16 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var transactions = new List<Transaction>();
+            var firstTime = true;
             foreach (var line in await ReadLinesAsync(fileName))
             {
+                if (firstTime)
+                {
+                    // File contains column headers
+                    firstTime = false;
+                    continue;
+                }
+
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
@@ -103,12 +111,27 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            var line = await ReadFirstLineAsync(fileName);
-            if (line.IsNothing())
+            var lines = await ReadFirstTwoLinesAsync(fileName);
+            if (lines == null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
             }
 
+            try
+            {
+                if (!VerifyColumnHeaderLine(lines[0])) return false;
+                if (!VerifyFirstDataLine(lines[1])) return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool VerifyFirstDataLine(string line)
+        {
             string[] split = line.Split(',');
             var card = this.importUtilities.FetchString(split, 0);
             if (card.IsNothing())
@@ -132,12 +155,11 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 return false;
             }
-
             return true;
         }
 
         /// <summary>
-        ///     Reads the lines from the file asynchronous;y.
+        ///     Reads the lines from the file asynchronously.
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
@@ -149,12 +171,10 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
-            using (
-                var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false)
-                )
+            using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
             {
                 var sb = new StringBuilder();
-                var buffer = new byte[0x128];
+                var buffer = new byte[0x256];
                 int numRead;
                 while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
@@ -170,8 +190,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex,
-                                                      out decimal amount)
+        private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex, out decimal amount)
         {
             var stringType = this.importUtilities.FetchString(array, transactionTypeindex);
             amount = this.importUtilities.FetchDecimal(array, amountIndex);
@@ -210,21 +229,38 @@ namespace BudgetAnalyser.Engine.Statement
             return transactionType;
         }
 
-        private async Task<string> ReadFirstLineAsync(string fileName)
+        private async Task<string[]> ReadFirstTwoLinesAsync(string fileName)
         {
             var chunk = await ReadTextChunkAsync(fileName);
-            if (string.IsNullOrWhiteSpace(chunk))
+            if (chunk.IsNothing())
             {
                 return null;
             }
 
+            string[] twoLines = { string.Empty, string.Empty };
+
             var position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
             if (position > 0)
             {
-                return chunk.Substring(0, position);
+                twoLines[0] = chunk.Substring(0, position).TrimEndSafely();
             }
 
-            return chunk;
+            var position2 = chunk.IndexOf("\n", ++position, StringComparison.OrdinalIgnoreCase);
+            if (position2 > 0)
+            {
+                twoLines[1] = chunk.Substring(position, position2 - position).TrimEndSafely();
+            }
+            else
+            {
+                twoLines[1] = chunk.Substring(position);
+            }
+
+            return twoLines;
+        }
+
+        private bool VerifyColumnHeaderLine(string line)
+        {
+            return string.CompareOrdinal(line, "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge") == 0;
         }
     }
 }

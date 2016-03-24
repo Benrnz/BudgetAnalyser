@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (ReadTextChunkOverride == null)
             {
-                return Task.FromResult("4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,");
+                return Task.FromResult("Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge\r\n4323-****-****-1234,D,32.36,Z Queen Street          Auckland      Nz ,24/06/2014,25/06/2014,,\r\n");
             }
 
             return Task.FromResult(ReadTextChunkOverride(filePath));
