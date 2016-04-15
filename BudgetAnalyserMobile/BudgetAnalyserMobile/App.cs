@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using BudgetAnalyserMobile.View;
 using Xamarin.Forms;
 
 namespace BudgetAnalyserMobile
