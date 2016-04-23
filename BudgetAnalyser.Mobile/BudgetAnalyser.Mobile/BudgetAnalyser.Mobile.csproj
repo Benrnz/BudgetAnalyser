@@ -44,8 +44,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GettingStarted.Xamarin" />
     <None Include="packages.config" />
+    <None Include="SampleData.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
