@@ -222,6 +222,7 @@
     <Compile Include="TestHarness\BudgetModelFake.cs" />
     <Compile Include="TestHarness\FakeEnvironmentFolders.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
+    <Compile Include="TestHarness\FakeMonitorableDependencies.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />

@@ -12,13 +12,15 @@ namespace BudgetAnalyser.Engine.Services
     internal class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
+        private readonly MonitorableDependencies monitorableDependencies;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
         private ApplicationDatabase budgetAnalyserDatabase;
 
         public ApplicationDatabaseService(
             [NotNull] IApplicationDatabaseRepository applicationRepository,
-            [NotNull] IEnumerable<ISupportsModelPersistence> databaseDependents)
+            [NotNull] IEnumerable<ISupportsModelPersistence> databaseDependents, 
+            [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (applicationRepository == null)
             {
@@ -30,7 +32,10 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(databaseDependents));
             }
 
+            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+
             this.applicationRepository = applicationRepository;
+            this.monitorableDependencies = monitorableDependencies;
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             InitialiseDirtyDataTable();
         }
@@ -71,6 +76,7 @@ namespace BudgetAnalyser.Engine.Services
                 await service.CreateAsync(this.budgetAnalyserDatabase);
             }
 
+            this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
             return this.budgetAnalyserDatabase;
         }
 
@@ -108,6 +114,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new DataFormatException("A subordinate data file contains unsupported data.", ex);
             }
 
+            this.monitorableDependencies.NotifyOfDependencyChange<ApplicationDatabase>(this.budgetAnalyserDatabase);
             return this.budgetAnalyserDatabase;
         }
 

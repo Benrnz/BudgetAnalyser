@@ -36,7 +36,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullBucketRepo()
         {
-            new TransactionManagerService(null, this.mockStatementRepo.Object, new FakeLogger());
+            new TransactionManagerService(null, this.mockStatementRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
             Assert.Fail();
         }
 
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullLogger()
         {
-            new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, null);
+            new TransactionManagerService(this.mockBudgetBucketRepo.Object, this.mockStatementRepo.Object, null, new FakeMonitorableDependencies());
             Assert.Fail();
         }
 
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullStatementRepo()
         {
-            new TransactionManagerService(this.mockBudgetBucketRepo.Object, null, new FakeLogger());
+            new TransactionManagerService(this.mockBudgetBucketRepo.Object, null, new FakeLogger(), new FakeMonitorableDependencies());
             Assert.Fail();
         }
 
@@ -459,7 +459,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
 
         private TransactionManagerService CreateSubject()
         {
-            return new TransactionManagerService(this.budgetBucketRepo, this.mockStatementRepo.Object, new FakeLogger());
+            return new TransactionManagerService(this.budgetBucketRepo, this.mockStatementRepo.Object, new FakeLogger(), new FakeMonitorableDependencies());
         }
     }
 }

@@ -81,7 +81,13 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockRuleFactory = new Mock<IMatchingRuleFactory>();
             this.mockBucketRepo = new BucketBucketRepoAlwaysFind();
 
-            this.subject = new TransactionRuleService(this.mockRuleRepo.Object, new FakeLogger(), this.mockMatchMaker.Object, this.mockRuleFactory.Object, new FakeEnvironmentFolders());
+            this.subject = new TransactionRuleService(
+                this.mockRuleRepo.Object, 
+                new FakeLogger(), 
+                this.mockMatchMaker.Object, 
+                this.mockRuleFactory.Object, 
+                new FakeEnvironmentFolders(),
+                new FakeMonitorableDependencies());
         }
 
         private void ArrangeForCreateNewRule()

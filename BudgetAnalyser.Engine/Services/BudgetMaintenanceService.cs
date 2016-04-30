@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Services
     internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
     {
         private readonly IBudgetRepository budgetRepository;
-        private readonly IDashboardService dashboardService;
+        private readonly MonitorableDependencies monitorableDependencies;
         private readonly ILogger logger;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger,
-            [NotNull] IDashboardService dashboardService)
+            [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (budgetRepository == null)
             {
@@ -46,14 +46,11 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(logger));
             }
 
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
-            }
+            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.budgetRepository = budgetRepository;
             this.logger = logger;
-            this.dashboardService = dashboardService;
+            this.monitorableDependencies = monitorableDependencies;
             BudgetBucketRepository = bucketRepo;
             CreateNewBudgetCollection();
         }
@@ -110,6 +107,7 @@ namespace BudgetAnalyser.Engine.Services
 
             Budgets.Add(newBudget);
             this.budgetRepository.SaveAsync();
+            UpdateServiceMonitor();
             return newBudget;
         }
 
@@ -155,14 +153,16 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
-            Budgets =
-                await
-                    this.budgetRepository.LoadAsync(
-                        applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
-            EventHandler handler = NewDataSourceAvailable;
-            handler?.Invoke(this, EventArgs.Empty);
+            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
+            UpdateServiceMonitor();
+            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
+        }
 
-            this.dashboardService.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
+        private void UpdateServiceMonitor()
+        {
+            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
+            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget));
+            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
         public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)

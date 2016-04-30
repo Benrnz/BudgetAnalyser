@@ -7,9 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using JetBrains.Annotations;
 
@@ -21,21 +18,19 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IBudgetRepository budgetRepository;
-        private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
-        private readonly LedgerCalculation ledgerCalculator;
         private readonly ILogger logger;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
-        private IDictionary<Type, object> availableDependencies;
-
+        private readonly MonitorableDependencies monitoringServices;
+        
         public DashboardService(
             [NotNull] IWidgetService widgetService,
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IBudgetRepository budgetRepository,
-            [NotNull] LedgerCalculation ledgerCalculator,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger, 
+            [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (widgetService == null)
             {
@@ -57,11 +52,6 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budgetRepository));
             }
 
-            if (ledgerCalculator == null)
-            {
-                throw new ArgumentNullException(nameof(ledgerCalculator));
-            }
-
             if (accountTypeRepository == null)
             {
                 throw new ArgumentNullException(nameof(accountTypeRepository));
@@ -71,19 +61,24 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException(nameof(logger));
             }
+            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.widgetService = widgetService;
             this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
             this.budgetRepository = budgetRepository;
-            this.ledgerCalculator = ledgerCalculator;
             this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
+            this.monitoringServices = monitorableDependencies;
+            this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;
+        }
+
+        private void OnMonitoringServicesDependencyChanged(object sender, DependencyChangedEventArgs dependencyChangedEventArgs)
+        {
+            throw new NotImplementedException();
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
-
-        public IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
 
         /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
@@ -160,13 +155,6 @@ namespace BudgetAnalyser.Engine.Services
             return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
-        public IEnumerable<Account> FilterableAccountTypes()
-        {
-            List<Account> accountTypeList = this.accountTypeRepository.ListCurrentlyUsedAccountTypes().ToList();
-            accountTypeList.Insert(0, null);
-            return accountTypeList;
-        }
-
         public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
         {
             // TODO This used to accept a strongly typed state object for Dashboard state persistence.
@@ -175,13 +163,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(storedState));
             }
 
-            if (this.availableDependencies == null)
-            {
-                this.availableDependencies = InitialiseSupportedDependenciesArray();
-            }
-
-            WidgetGroups =
-                new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
+            WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
             foreach (WidgetGroup group in WidgetGroups)
             {
@@ -192,20 +174,6 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             return WidgetGroups;
-        }
-
-        public void NotifyOfDependencyChange<T>(object dependency)
-        {
-            NotifyOfDependencyChangeInternal(dependency, typeof(T));
-        }
-
-        public void NotifyOfDependencyChange(object dependency)
-        {
-            if (dependency == null)
-            {
-                return;
-            }
-            NotifyOfDependencyChangeInternal(dependency, dependency.GetType());
         }
 
         public WidgetsApplicationState PreparePersistentStateData()
@@ -290,58 +258,6 @@ namespace BudgetAnalyser.Engine.Services
             };
         }
 
-        private bool HasDependencySignificantlyChanged(object dependency, Type typeKey)
-        {
-            var supportsDataChangeDetection = dependency as IDataChangeDetection;
-            if (supportsDataChangeDetection == null)
-            {
-                // Dependency doesn't support change hashes so every change is deemed worthy to trigger an update the UI.
-                return true;
-            }
-
-            var newHash = supportsDataChangeDetection.SignificantDataChangeHash();
-            if (!this.changesHashes.ContainsKey(typeKey))
-            {
-                this.changesHashes.Add(typeKey, newHash);
-                return true;
-            }
-
-            var result = this.changesHashes[typeKey] != newHash;
-            this.changesHashes[typeKey] = newHash;
-            return result;
-        }
-
-        private IDictionary<Type, object> InitialiseSupportedDependenciesArray()
-        {
-            this.availableDependencies = new Dictionary<Type, object>
-            {
-                [typeof(StatementModel)] = null,
-                [typeof(BudgetCollection)] = null,
-                [typeof(IBudgetCurrencyContext)] = null,
-                [typeof(LedgerBook)] = null,
-                [typeof(IBudgetBucketRepository)] = this.bucketRepository,
-                [typeof(GlobalFilterCriteria)] = null,
-                [typeof(LedgerCalculation)] = this.ledgerCalculator,
-                [typeof(ApplicationDatabase)] = null,
-                [typeof(ITransactionRuleService)] = null,
-            };
-            return this.availableDependencies;
-        }
-
-        private void NotifyOfDependencyChangeInternal(object dependency, Type typeKey)
-        {
-            if (this.availableDependencies == null)
-            {
-                this.availableDependencies = InitialiseSupportedDependenciesArray();
-            }
-            this.availableDependencies[typeKey] = dependency;
-
-            if (HasDependencySignificantlyChanged(dependency, typeKey))
-            {
-                UpdateAllWidgets(typeKey);
-            }
-        }
-
         private async void ScheduledWidgetUpdate(Widget widget)
         {
             Debug.Assert(widget.RecommendedTimeIntervalUpdate != null);
@@ -404,18 +320,20 @@ namespace BudgetAnalyser.Engine.Services
             var index = 0;
             foreach (Type dependencyType in widget.Dependencies)
             {
-                if (!this.availableDependencies.ContainsKey(dependencyType))
+                try
                 {
-                    // If you get an exception here first check the InitialiseSupportedDependenciesArray method.
+                    parameters[index++] = this.monitoringServices.RetrieveDependency(dependencyType);
+                }
+                catch (NotSupportedException ex)
+                {
+                    // If you get an exception here first check the MonitorableDependencies.ctor method.
                     throw new NotSupportedException(
                         string.Format(
                             CultureInfo.CurrentCulture,
                             "The requested dependency {0} for the widget {1} is not supported.",
                             dependencyType.Name,
-                            widget.Name));
+                            widget.Name), ex);
                 }
-
-                parameters[index++] = this.availableDependencies[dependencyType];
             }
 
             widget.Update(parameters);

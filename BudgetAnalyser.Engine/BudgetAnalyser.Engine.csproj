@@ -124,6 +124,8 @@
     <Compile Include="DebugLogger.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
+    <Compile Include="Services\DependencyChangedEventArgs.cs" />
+    <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />
