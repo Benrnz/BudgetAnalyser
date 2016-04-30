@@ -103,16 +103,16 @@ namespace BudgetAnalyser.Engine.Widgets
             LedgerBook = (LedgerBook) input[4];
             LedgerCalculation = (LedgerCalculation) input[5];
 
-            if (!this.bucketRepository.IsValidCode(BucketCode))
+            SetAdditionalDependencies(input);
+
+            if (Statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null ||
+                Filter.EndDate == null || LedgerCalculation == null || LedgerBook == null || this.bucketRepository == null)
             {
                 Enabled = false;
                 return;
             }
 
-            SetAdditionalDependencies(input);
-
-            if (Statement == null || Budget == null || Filter == null || Filter.Cleared || Filter.BeginDate == null ||
-                Filter.EndDate == null || LedgerCalculation == null || LedgerBook == null)
+            if (!this.bucketRepository.IsValidCode(BucketCode))
             {
                 Enabled = false;
                 return;

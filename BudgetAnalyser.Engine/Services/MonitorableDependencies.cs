@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.Services
     /// <summary>
     /// A class that contains references to services that can be used as dependencies for the Dashboard Service.
     /// </summary>
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class MonitorableDependencies
     {
         private readonly IDictionary<Type, object> availableDependencies;
@@ -25,15 +26,15 @@ namespace BudgetAnalyser.Engine.Services
         {
             this.availableDependencies = new Dictionary<Type, object>
             {
-                [typeof(StatementModel)] = null,                //
-                [typeof(BudgetCollection)] = null,              //
-                [typeof(IBudgetCurrencyContext)] = null,        //
-                [typeof(LedgerBook)] = null,                    //
-                [typeof(IBudgetBucketRepository)] = null,       //
+                [typeof(StatementModel)] = null,               
+                [typeof(BudgetCollection)] = null,             
+                [typeof(IBudgetCurrencyContext)] = null,       
+                [typeof(LedgerBook)] = null,                   
+                [typeof(IBudgetBucketRepository)] = null,      
                 [typeof(GlobalFilterCriteria)] = null,
-                [typeof(LedgerCalculation)] = ledgerCalculator,//
-                [typeof(ApplicationDatabase)] = null,          //
-                [typeof(ITransactionRuleService)] = null,      //
+                [typeof(LedgerCalculation)] = ledgerCalculator,
+                [typeof(ApplicationDatabase)] = null,          
+                [typeof(ITransactionRuleService)] = null,       
             };
         }
 

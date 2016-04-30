@@ -51,10 +51,15 @@ namespace BudgetAnalyser.Engine.Widgets
 
             Enabled = true;
             var ruleService = (ITransactionRuleService) input[0];
+
+            if (ruleService == null)
+            {
+                Enabled = false;
+                return;
+            }
+
             DateTime cutOffDate = DateTime.Today.AddYears(-1);
-            var rulesList = ruleService.MatchingRules.Where(r => (r.MatchCount == 0 && r.Created < cutOffDate)
-                                                                        || (r.MatchCount > 0 && r.LastMatch < cutOffDate))
-                                                     .ToList();
+            var rulesList = ruleService.MatchingRules.Where(r => (r.MatchCount == 0 && r.Created < cutOffDate) || (r.MatchCount > 0 && r.LastMatch < cutOffDate)).ToList();
             DisusedMatchingRules = rulesList;
             var count = rulesList.Count();
             LargeNumber = count.ToString();

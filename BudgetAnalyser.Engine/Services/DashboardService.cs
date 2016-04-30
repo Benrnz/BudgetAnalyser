@@ -75,7 +75,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void OnMonitoringServicesDependencyChanged(object sender, DependencyChangedEventArgs dependencyChangedEventArgs)
         {
-            throw new NotImplementedException();
+            UpdateAllWidgets(new[] { dependencyChangedEventArgs.DependencyType });
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
