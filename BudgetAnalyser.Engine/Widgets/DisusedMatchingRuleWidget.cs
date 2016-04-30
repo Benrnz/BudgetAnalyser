@@ -11,7 +11,7 @@ namespace BudgetAnalyser.Engine.Widgets
     ///     is.
     ///     This widget helps find unused rules so they can be cleaned up.
     /// </summary>
-    /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
+    /// <seealso cref="Widget" />
     public class DisusedMatchingRuleWidget : Widget
     {
         /// <summary>
@@ -23,7 +23,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Dependencies = new[] { typeof(ITransactionRuleService) };
             DetailedText = "Disused Matching Rules";
             ImageResourceName = null;
-            RecommendedTimeIntervalUpdate = TimeSpan.FromHours(12); // Every 12 hours.
+            RecommendedTimeIntervalUpdate = TimeSpan.FromMinutes(1);
             Clickable = true;
         }
 
@@ -52,12 +52,13 @@ namespace BudgetAnalyser.Engine.Widgets
             Enabled = true;
             var ruleService = (ITransactionRuleService) input[0];
             DateTime cutOffDate = DateTime.Today.AddYears(-1);
-            DisusedMatchingRules = ruleService.MatchingRules.Where(r => (r.MatchCount == 0 && r.Created < cutOffDate)
-                                                                        || (r.MatchCount > 0 && r.LastMatch < cutOffDate));
-
-            var count = DisusedMatchingRules.Count();
+            var rulesList = ruleService.MatchingRules.Where(r => (r.MatchCount == 0 && r.Created < cutOffDate)
+                                                                        || (r.MatchCount > 0 && r.LastMatch < cutOffDate))
+                                                     .ToList();
+            DisusedMatchingRules = rulesList;
+            var count = rulesList.Count();
             LargeNumber = count.ToString();
-            ToolTip = "Rules that have not been used for more than a year.";
+            ToolTip = $"{count}/{ruleService.MatchingRules.Count} Rules that have not been used for more than a year.";
             if (count >= 10)
             {
                 ColourStyleName = WidgetWarningStyle;

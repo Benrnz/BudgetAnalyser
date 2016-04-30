@@ -322,7 +322,8 @@ namespace BudgetAnalyser.Engine.Services
                 [typeof(IBudgetBucketRepository)] = this.bucketRepository,
                 [typeof(GlobalFilterCriteria)] = null,
                 [typeof(LedgerCalculation)] = this.ledgerCalculator,
-                [typeof(ApplicationDatabase)] = null
+                [typeof(ApplicationDatabase)] = null,
+                [typeof(ITransactionRuleService)] = null,
             };
             return this.availableDependencies;
         }
