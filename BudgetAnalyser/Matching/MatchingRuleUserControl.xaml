@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="BudgetAnalyser.Matching.MatchingRuleUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="TextBlock.MathcingRuleStyle"
+               BasedOn="{StaticResource {x:Type TextBlock}}"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="10" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Visibility="{Binding Hidden, Converter={StaticResource Converter.NotBoolToVis}}"
+          HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                   Text="{Binding Description}"
+                   ToolTip="{Binding Description}" />
+        <StackPanel Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                       Text="{Binding LastMatch, StringFormat=d}"
+                       ToolTip="The last date and time this rule was matched against a transaction." />
+            <TextBlock Margin="2,2,0,2"
+                       Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                       Text="x" />
+            <TextBlock Margin="0,2,2,2"
+                       Style="{StaticResource TextBlock.MathcingRuleStyle}"
+                       Text="{Binding MatchCount}"
+                       ToolTip="The number of times this rule has been used to match transactions." />
+        </StackPanel>
+    </Grid>
+</UserControl>

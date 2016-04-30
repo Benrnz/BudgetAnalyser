@@ -12,7 +12,8 @@
                     xmlns:account="clr-namespace:BudgetAnalyser.Engine.BankAccount;assembly=BudgetAnalyser.Engine"
                     xmlns:longTermSpendingLineGraph="clr-namespace:BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph"
                     xmlns:burnDownGraphs="clr-namespace:BudgetAnalyser.ReportsCatalog.BurnDownGraphs"
-                    xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance">
+                    xmlns:overallPerformance="clr-namespace:BudgetAnalyser.ReportsCatalog.OverallPerformance"
+                    xmlns:matching1="clr-namespace:BudgetAnalyser.Engine.Matching;assembly=BudgetAnalyser.Engine">
     <!-- Data Templates -->
     <DataTemplate DataType="{x:Type overallPerformance:OverallPerformanceController}">
         <overallPerformance:OverallPerformanceView />
@@ -138,4 +139,11 @@
         <ledgerBook:TransferFundsView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type matching1:MatchingRule}">
+        <matching:MatchingRuleUserControl />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type matching:DisusedRulesController}">
+        <filtering:DisusedRulesUserControl />
+    </DataTemplate>
 </ResourceDictionary>

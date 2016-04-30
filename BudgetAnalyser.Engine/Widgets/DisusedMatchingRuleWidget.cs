@@ -27,10 +27,20 @@ namespace BudgetAnalyser.Engine.Widgets
             Clickable = true;
         }
 
+        private static DateTime CutOffDate { get; set; }
+
         /// <summary>
         ///     Gets the list of disused matching rules.
         /// </summary>
         public IEnumerable<MatchingRule> DisusedMatchingRules { get; private set; }
+
+        /// <summary>
+        ///     Returns a query that filters to disused rules
+        /// </summary>
+        public static IEnumerable<MatchingRule> QueryRules(IEnumerable<MatchingRule> allRules)
+        {
+            return allRules.Where(r => (r.MatchCount == 0 && r.Created < CutOffDate) || (r.MatchCount > 0 && r.LastMatch < CutOffDate));
+        }
 
         /// <summary>
         ///     Updates the widget with new input.
@@ -58,8 +68,8 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            DateTime cutOffDate = DateTime.Today.AddYears(-1);
-            var rulesList = ruleService.MatchingRules.Where(r => (r.MatchCount == 0 && r.Created < cutOffDate) || (r.MatchCount > 0 && r.LastMatch < cutOffDate)).ToList();
+            CutOffDate = DateTime.Today.AddYears(-1);
+            List<MatchingRule> rulesList = QueryRules(ruleService.MatchingRules).ToList();
             DisusedMatchingRules = rulesList;
             var count = rulesList.Count();
             LargeNumber = count.ToString();

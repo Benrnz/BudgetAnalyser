@@ -7,43 +7,6 @@
              DataContextChanged="OnDataContextChanged">
 
     <UserControl.Resources>
-
-        <Style x:Key="TextBlock.MathcingRuleStyle"
-               BasedOn="{StaticResource {x:Type TextBlock}}"
-               TargetType="TextBlock">
-            <Setter Property="FontSize"
-                    Value="10" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Left" />
-        </Style>
-
-        <DataTemplate DataType="{x:Type matching:MatchingRule}">
-            <Grid Visibility="{Binding Hidden, Converter={StaticResource Converter.NotBoolToVis}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock MaxWidth="100"
-                           Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                           Text="{Binding Description}"
-                           ToolTip="{Binding Description}" />
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="{Binding LastMatch, StringFormat=d}"
-                               ToolTip="The last date and time this rule was matched against a transaction." />
-                    <TextBlock Margin="2,2,0,2"
-                               Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="x" />
-                    <TextBlock Margin="0,2,2,2"
-                               Style="{StaticResource TextBlock.MathcingRuleStyle}"
-                               Text="{Binding MatchCount}"
-                               ToolTip="The number of times this rule has been used to match transactions." />
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-
         <DataTemplate DataType="{x:Type matching:RulesGroupedByBucket}">
             <Expander IsExpanded="False"
                       Style="{StaticResource Expander.Style1}">
@@ -61,13 +24,11 @@
                         </Border>
                     </Grid>
                 </Expander.Header>
-                <ScrollViewer MaxHeight="300"
-                              VerticalScrollBarVisibility="Visible">
                     <ListBox ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                              SelectionChanged="OnGroupListBoxRuleSelectionChanged"
                              Loaded="OnGroupListBoxLoaded"
-                             ItemsSource="{Binding Rules}" />
-                </ScrollViewer>
+                             ItemsSource="{Binding Rules}"
+                             MaxHeight="300"/>
             </Expander>
         </DataTemplate>
 
@@ -88,6 +49,7 @@
     <Grid Background="{StaticResource Brush.MainBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -95,7 +57,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.ColumnSpan="2"
+        
+        <StackPanel Grid.ColumnSpan="3"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
             <Button Command="{Binding CloseCommand}"
@@ -134,6 +97,7 @@
                 </MenuItem>
             </Menu>
         </StackPanel>
+        
         <TextBlock Grid.Row="1"
                    Margin="5"
                    Style="{StaticResource TextBlock.Heading1}"
@@ -141,6 +105,7 @@
         <ListBox x:Name="GroupedByListBox"
                  ContextMenu="{StaticResource RuleContextMenu}"
                  Grid.Row="2"
+                 HorizontalAlignment="Left"
                  ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding RulesGroupedByBucket}"
                  Visibility="{Binding GroupByListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}" />
@@ -150,8 +115,21 @@
                  ItemContainerStyle="{StaticResource ListBox.StandardContainerStyle}"
                  ItemsSource="{Binding Rules}"
                  SelectedItem="{Binding SelectedRule}"
-                 Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}" />
-        <StackPanel Grid.Column="1"
+                 Visibility="{Binding FlatListBoxVisibility, Converter={StaticResource Converter.BoolToVis}}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <matching1:MatchingRuleUserControl />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GridSplitter Grid.Column="1"
+                      Grid.Row="1"
+                      Grid.RowSpan="2"
+                      Width="5"
+                      HorizontalAlignment="Stretch" />
+
+        <StackPanel Grid.Column="2"
                     Grid.Row="1"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
@@ -178,7 +156,7 @@
         </StackPanel>
         <Border Background="{StaticResource Brush.TileBackground}"
                 BorderThickness="2"
-                Grid.Column="1"
+                Grid.Column="2"
                 Grid.Row="2"
                 Margin="50,0,5,5"
                 Visibility="{Binding SelectedRule, Converter={StaticResource Converter.NullToVis}}">
