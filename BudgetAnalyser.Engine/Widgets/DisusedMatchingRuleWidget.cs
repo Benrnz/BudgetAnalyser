@@ -68,7 +68,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            CutOffDate = DateTime.Today.AddYears(-1);
+            CutOffDate = DateTime.Today.AddMonths(-18);
             List<MatchingRule> rulesList = QueryRules(ruleService.MatchingRules).ToList();
             DisusedMatchingRules = rulesList;
             var count = rulesList.Count();
