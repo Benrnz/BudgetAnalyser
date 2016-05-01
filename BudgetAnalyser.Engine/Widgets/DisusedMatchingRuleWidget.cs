@@ -8,8 +8,7 @@ namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
     ///     Monitors the number disused matching rules.  The more matching rules there are the slower the auto matching process
-    ///     is.
-    ///     This widget helps find unused rules so they can be cleaned up.
+    ///     is. This widget helps find unused rules so they can be cleaned up.
     /// </summary>
     /// <seealso cref="Widget" />
     public class DisusedMatchingRuleWidget : Widget

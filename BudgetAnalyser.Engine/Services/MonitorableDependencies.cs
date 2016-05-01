@@ -34,7 +34,8 @@ namespace BudgetAnalyser.Engine.Services
                 [typeof(GlobalFilterCriteria)] = null,
                 [typeof(LedgerCalculation)] = ledgerCalculator,
                 [typeof(ApplicationDatabase)] = null,          
-                [typeof(ITransactionRuleService)] = null,       
+                [typeof(ITransactionRuleService)] = null,   
+                [typeof(IApplicationDatabaseService)] = null,
             };
         }
 
