@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.UnitTestUtilities;
@@ -106,14 +107,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullRepo()
         {
-            new ApplicationDatabaseService(null, this.mockServices);
+            new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies());
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullServices()
         {
-            new ApplicationDatabaseService(this.mockRepo.Object, null);
+            new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies());
         }
 
         [TestMethod]
@@ -257,7 +258,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockService2.Setup(m => m.LoadSequence).Returns(20);
 
             this.mockServices = new[] { this.mockService1.Object, this.mockService2.Object };
-            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices);
+            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies());
         }
 
         private void CreateNewDatabaseSetup()

@@ -21,6 +21,7 @@ namespace BudgetAnalyser.Engine.Services
     internal class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
     {
         private readonly IEnvironmentFolders environmentFolders;
+        private readonly MonitorableDependencies monitorableDependencies;
         private readonly ILogger logger;
         private readonly IMatchmaker matchmaker;
         private readonly IMatchingRuleFactory ruleFactory;
@@ -32,7 +33,8 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] ILogger logger,
             [NotNull] IMatchmaker matchmaker,
             [NotNull] IMatchingRuleFactory ruleFactory,
-            [NotNull] IEnvironmentFolders environmentFolders)
+            [NotNull] IEnvironmentFolders environmentFolders, 
+            [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (ruleRepository == null)
             {
@@ -55,12 +57,14 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             if (environmentFolders == null) throw new ArgumentNullException(nameof(environmentFolders));
+            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.ruleRepository = ruleRepository;
             this.logger = logger;
             this.matchmaker = matchmaker;
             this.ruleFactory = ruleFactory;
             this.environmentFolders = environmentFolders;
+            this.monitorableDependencies = monitorableDependencies;
             MatchingRules = new ObservableCollection<MatchingRule>();
             MatchingRulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
         }
@@ -109,8 +113,8 @@ namespace BudgetAnalyser.Engine.Services
 
             InitialiseTheRulesCollections(repoRules);
 
-            EventHandler handler = NewDataSourceAvailable;
-            handler?.Invoke(this, EventArgs.Empty);
+            this.monitorableDependencies.NotifyOfDependencyChange<ITransactionRuleService>(this);
+            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
@@ -126,8 +130,8 @@ namespace BudgetAnalyser.Engine.Services
                     "Unable to save matching rules at this time, some data is invalid.\n" + messages);
             }
 
-            EventHandler savedHandler = Saved;
-            savedHandler?.Invoke(this, EventArgs.Empty);
+            this.monitorableDependencies.NotifyOfDependencyChange<ITransactionRuleService>(this);
+            Saved?.Invoke(this, EventArgs.Empty);
         }
 
         public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)

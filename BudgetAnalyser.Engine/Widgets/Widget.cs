@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         /// <summary>
         ///     Gets or sets the dependencies for this widget to function. See
-        ///     <see cref="IDashboardService.SupportedWidgetDependencyTypes" /> for a full list of supported dependency types.
+        ///     <see cref="MonitorableDependencies" /> for a full list of supported dependency types.
         /// </summary>
         public IEnumerable<Type> Dependencies { get; protected set; }
 

@@ -2,21 +2,17 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows.Input;
+using BudgetAnalyser.Annotations;
+using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Annotations;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
-using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
-using BudgetAnalyser.LedgerBook;
-using BudgetAnalyser.Statement;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.Wpf;
-using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
-using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser.Dashboard
 {
@@ -82,20 +78,6 @@ namespace BudgetAnalyser.Dashboard
 
         public GlobalFilterController GlobalFilterController { [UsedImplicitly] get; private set; }
 
-        public bool Shown
-        {
-            get { return this.doNotUseShown; }
-            set
-            {
-                if (value == this.doNotUseShown)
-                {
-                    return;
-                }
-                this.doNotUseShown = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public string VersionString
         {
             get
@@ -110,9 +92,18 @@ namespace BudgetAnalyser.Dashboard
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
-        private static bool WidgetCommandCanExecute(Widget widget)
+        public bool Shown
         {
-            return widget.Clickable;
+            get { return this.doNotUseShown; }
+            set
+            {
+                if (value == this.doNotUseShown)
+                {
+                    return;
+                }
+                this.doNotUseShown = value;
+                RaisePropertyChanged();
+            }
         }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
@@ -158,22 +149,6 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void OnBudgetReadyMessageReceived([NotNull] BudgetReadyMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.Budgets == null)
-            {
-                throw new InvalidOperationException("The budgets collection should never be null.");
-            }
-
-            this.dashboardService.NotifyOfDependencyChange(message.Budgets);
-            this.dashboardService.NotifyOfDependencyChange<IBudgetCurrencyContext>(message.ActiveBudget);
-        }
-
         private void OnCreateNewFixedProjectComplete(object sender, DialogResponseEventArgs dialogResponseEventArgs)
         {
             if (dialogResponseEventArgs.Canceled || dialogResponseEventArgs.CorrelationId != CorrelationId)
@@ -216,70 +191,6 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void OnFilterAppliedMessageReceived([NotNull] FilterAppliedMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.Criteria == null)
-            {
-                throw new InvalidOperationException("The Criteria object should never be null.");
-            }
-
-            this.dashboardService.NotifyOfDependencyChange(message.Criteria);
-        }
-
-        private void OnLedgerBookReadyMessageReceived([NotNull] LedgerBookReadyMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.LedgerBook == null)
-            {
-                this.dashboardService.NotifyOfDependencyChange<Engine.Ledger.LedgerBook>(null);
-            }
-            else
-            {
-                this.dashboardService.NotifyOfDependencyChange(message.LedgerBook);
-            }
-        }
-
-        private void OnStatementModifiedMessagedReceived([NotNull] StatementHasBeenModifiedMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.StatementModel == null)
-            {
-                return;
-            }
-
-            this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
-        }
-
-        private void OnStatementReadyMessageReceived([NotNull] StatementReadyMessage message)
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.StatementModel == null)
-            {
-                this.dashboardService.NotifyOfDependencyChange<StatementModel>(null);
-            }
-            else
-            {
-                this.dashboardService.NotifyOfDependencyChange(message.StatementModel);
-            }
-        }
-
         private void OnWidgetCommandExecuted(Widget widget)
         {
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
@@ -289,13 +200,13 @@ namespace BudgetAnalyser.Dashboard
         {
             // Register for all dependent objects change messages.
             MessengerInstance = messenger;
-            MessengerInstance.Register<StatementReadyMessage>(this, OnStatementReadyMessageReceived);
-            MessengerInstance.Register<StatementHasBeenModifiedMessage>(this, OnStatementModifiedMessagedReceived);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<BudgetReadyMessage>(this, OnBudgetReadyMessageReceived);
-            MessengerInstance.Register<FilterAppliedMessage>(this, OnFilterAppliedMessageReceived);
-            MessengerInstance.Register<LedgerBookReadyMessage>(this, OnLedgerBookReadyMessageReceived);
+        }
+
+        private static bool WidgetCommandCanExecute(Widget widget)
+        {
+            return widget.Clickable;
         }
     }
 }

@@ -99,8 +99,7 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     Updates the widget with new input.
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
-            MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "Only a month name is required.")]
         public override void Update(params object[] input)
         {
             if (input == null)
@@ -117,6 +116,13 @@ namespace BudgetAnalyser.Engine.Widgets
             this.bucketRepository = (IBudgetBucketRepository) input[0];
             this.filter = (GlobalFilterCriteria) input[1];
 
+            if (this.filter == null || this.filter.Cleared || this.filter.BeginDate == null || this.filter.BeginDate == DateTime.MinValue ||
+                this.filter.EndDate == null || this.filter.EndDate.Value == DateTime.MinValue || this.bucketRepository == null)
+            {
+                Enabled = false;
+                return;
+            }
+
             if (!this.bucketRepository.IsValidCode(BucketCode))
             {
                 Enabled = false;
@@ -126,17 +132,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            if (this.filter.Cleared || this.filter.BeginDate == null || this.filter.BeginDate == DateTime.MinValue ||
-                this.filter.EndDate == null || this.filter.EndDate.Value == DateTime.MinValue)
-            {
-                Enabled = false;
-                return;
-            }
-
-            this.diagLogger.LogInfo(
-                l =>
-                    l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id,
-                        this.filter.BeginDate, this.filter.EndDate));
+            this.diagLogger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
             PaymentDate currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.

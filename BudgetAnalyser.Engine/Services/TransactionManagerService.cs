@@ -23,6 +23,7 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly ILogger logger;
+        private readonly MonitorableDependencies monitorableDependencies;
         private readonly IStatementRepository statementRepository;
         private BudgetCollection budgetCollection;
         private int budgetHash;
@@ -35,12 +36,14 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="bucketRepository">The bucket repository.</param>
         /// <param name="statementRepository">The statement repository.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="monitorableDependencies">The dependency monitor manager</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public TransactionManagerService(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IStatementRepository statementRepository,
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger, 
+            [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (bucketRepository == null)
             {
@@ -57,9 +60,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(logger));
             }
 
+            if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+
             this.bucketRepository = bucketRepository;
             this.statementRepository = statementRepository;
             this.logger = logger;
+            this.monitorableDependencies = monitorableDependencies;
         }
 
         /// <summary>
@@ -116,10 +122,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel?.Dispose();
             try
             {
-                StatementModel =
-                    await
-                        this.statementRepository.LoadAsync(
-                            applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
+                StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
             }
             catch (StatementModelChecksumException ex)
             {
@@ -159,8 +162,8 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.statementRepository.SaveAsync(StatementModel);
-            EventHandler savedHandler = Saved;
-            savedHandler?.Invoke(this, EventArgs.Empty);
+            this.monitorableDependencies.NotifyOfDependencyChange<StatementModel>(StatementModel);
+            Saved?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -180,8 +183,7 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         public bool ValidateModel(StringBuilder messages)
         {
-            EventHandler<ValidatingEventArgs> handler = Validating;
-            handler?.Invoke(this, new ValidatingEventArgs());
+            Validating?.Invoke(this, new ValidatingEventArgs());
 
             // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
             return true;
@@ -397,6 +399,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(criteria));
             }
 
+            this.monitorableDependencies.NotifyOfDependencyChange<GlobalFilterCriteria>(criteria);
             StatementModel.Filter(criteria);
         }
 
@@ -650,8 +653,8 @@ namespace BudgetAnalyser.Engine.Services
         private void NewDataAvailable()
         {
             ResetTransactionsCollection();
-            EventHandler handler = NewDataSourceAvailable;
-            handler?.Invoke(this, EventArgs.Empty);
+            this.monitorableDependencies.NotifyOfDependencyChange<StatementModel>(StatementModel);
+            NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
         private void ResetTransactionsCollection()

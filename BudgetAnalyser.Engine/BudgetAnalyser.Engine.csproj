@@ -124,6 +124,8 @@
     <Compile Include="DebugLogger.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
+    <Compile Include="Services\DependencyChangedEventArgs.cs" />
+    <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="Widgets\CurrentFileWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
     <Compile Include="Widgets\DaysSinceLastImport.cs" />
+    <Compile Include="Widgets\DisusedMatchingRuleWidget.cs" />
     <Compile Include="Widgets\FixedBudgetMonitorWidget.cs" />
     <Compile Include="Widgets\IUserDefinedWidget.cs" />
     <Compile Include="Widgets\IWidgetRepository.cs" />

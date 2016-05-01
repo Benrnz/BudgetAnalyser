@@ -16,11 +16,6 @@ namespace BudgetAnalyser.Engine.Services
     public interface IDashboardService : IServiceFoundation
     {
         /// <summary>
-        ///     Gets the list of supported widget dependency types.
-        /// </summary>
-        IEnumerable<Type> SupportedWidgetDependencyTypes { get; }
-
-        /// <summary>
         ///     Creates a new bucket monitor widget and adds it to the tracked widgetGroups collection.
         ///     Duplicates are not allowed in the collection and will not be added.
         /// </summary>
@@ -58,30 +53,12 @@ namespace BudgetAnalyser.Engine.Services
                                                      WeeklyOrFortnightly frequency);
 
         /// <summary>
-        ///     Retrieves a list of filterable accounts for use on the dashboard, (to select an account type to filter by).
-        /// </summary>
-        IEnumerable<Account> FilterableAccountTypes();
-
-        /// <summary>
         ///     Initialises and returns the widget groups to view in the UI.
         ///     This must be called first before other methods of this service can be used.
         ///     The collection of widget groups is cached inside the service for use by the other methods.
         /// </summary>
         /// <param name="storedState">The persisted widget application state data object.</param>
         ObservableCollection<WidgetGroup> LoadPersistedStateData([NotNull] WidgetsApplicationState storedState);
-
-        /// <summary>
-        ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
-        /// </summary>
-        /// <typeparam name="T">The type to register if not the actual concrete type.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Preferred method of passing type parameter")]
-        void NotifyOfDependencyChange<T>([CanBeNull] object dependency);
-
-        /// <summary>
-        ///     Notifies the service that a dependency has been changed in the UI and all dependent widgets should be updated.
-        /// </summary>
-        void NotifyOfDependencyChange([CanBeNull] object dependency);
 
         /// <summary>
         ///     Prepares the persistent data for saving into permenant storage.

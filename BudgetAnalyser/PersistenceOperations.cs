@@ -14,24 +14,17 @@ namespace BudgetAnalyser
     public class PersistenceOperations
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;
-        private readonly IDashboardService dashboardService;
         private readonly DemoFileHelper demoFileHelper;
         private readonly UserPrompts userPrompts;
 
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
-            [NotNull] IDashboardService dashboardService,
             [NotNull] DemoFileHelper demoFileHelper,
             [NotNull] UserPrompts userPrompts)
         {
             if (applicationDatabaseService == null)
             {
                 throw new ArgumentNullException(nameof(applicationDatabaseService));
-            }
-
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (demoFileHelper == null)
@@ -45,7 +38,6 @@ namespace BudgetAnalyser
             }
 
             this.applicationDatabaseService = applicationDatabaseService;
-            this.dashboardService = dashboardService;
             this.demoFileHelper = demoFileHelper;
             this.userPrompts = userPrompts;
         }
@@ -79,14 +71,7 @@ namespace BudgetAnalyser
             string fileName = fileDialog.FileName;
 
             ApplicationDatabase appDb = this.applicationDatabaseService.Close();
-            try
-            {
-                appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
-            }
-            finally
-            {
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
-            }
+            appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
         }
 
         public async void OnLoadDatabaseCommandExecute()
@@ -142,14 +127,7 @@ namespace BudgetAnalyser
             }
 
             ApplicationDatabase appDb = this.applicationDatabaseService.Close();
-            try
-            {
-                appDb = await this.applicationDatabaseService.LoadAsync(fileName);
-            }
-            finally
-            {
-                this.dashboardService.NotifyOfDependencyChange<ApplicationDatabase>(appDb);
-            }
+            appDb = await this.applicationDatabaseService.LoadAsync(fileName);
         }
 
         private async Task<bool> PromptToSaveIfNecessary()
