@@ -37,6 +37,7 @@ namespace BudgetAnalyser.Engine.Services
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
+            this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
             InitialiseDirtyDataTable();
         }
 
@@ -59,6 +60,8 @@ namespace BudgetAnalyser.Engine.Services
             ClearDirtyDataFlags();
 
             this.budgetAnalyserDatabase.Close();
+            this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
+            this.monitorableDependencies.NotifyOfDependencyChange(this.budgetAnalyserDatabase);
             return this.budgetAnalyserDatabase;
         }
 
@@ -115,12 +118,14 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.monitorableDependencies.NotifyOfDependencyChange<ApplicationDatabase>(this.budgetAnalyserDatabase);
+            this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
             return this.budgetAnalyserDatabase;
         }
 
         public void NotifyOfChange(ApplicationDataType dataType)
         {
             this.dirtyData[dataType] = true;
+            this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         }
 
         public MainApplicationState PreparePersistentStateData()
@@ -173,6 +178,7 @@ namespace BudgetAnalyser.Engine.Services
                 .ContinueWhenAllTasksComplete();
 
             ClearDirtyDataFlags();
+            this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
         }
 
         public bool ValidateAll([NotNull] StringBuilder messages)

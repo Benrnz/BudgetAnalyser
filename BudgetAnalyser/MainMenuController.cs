@@ -204,6 +204,12 @@ namespace BudgetAnalyser
                 return;
             }
 
+            if (message.Widget is SaveWidget)
+            {
+                if (PersistenceOperationCommands.SaveDatabaseCommand.CanExecute(null)) PersistenceOperationCommands.SaveDatabaseCommand.Execute(null);
+                return;
+            }
+
             if (message.Widget is DaysSinceLastImport)
             {
                 OnTransactionExecuted();
