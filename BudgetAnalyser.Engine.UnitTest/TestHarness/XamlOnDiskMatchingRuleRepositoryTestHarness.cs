@@ -10,7 +10,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
     public class XamlOnDiskMatchingRuleRepositoryTestHarness : XamlOnDiskMatchingRuleRepository
     {
-        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper) : base(mapper)
+        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper) : base(mapper, new FakeLogger())
         {
         }
 
