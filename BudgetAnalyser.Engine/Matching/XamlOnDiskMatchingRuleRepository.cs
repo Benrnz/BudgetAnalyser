@@ -70,12 +70,9 @@ namespace BudgetAnalyser.Engine.Matching
         /// </exception>
         /// <exception cref="DataFormatException">
         ///     Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is
-        ///     invalid.
-        ///     or
-        ///     Deserialised Matching-Rules are not of type List{MatchingRuleDto}
+        ///     invalid or Deserialised Matching-Rules are not of type List{MatchingRuleDto}
         /// </exception>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly",
-            MessageId = "MatchingRuleDto")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MatchingRuleDto")]
         public async Task<IEnumerable<MatchingRule>> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -95,9 +92,7 @@ namespace BudgetAnalyser.Engine.Matching
             }
             catch (Exception ex)
             {
-                throw new DataFormatException(
-                    "Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.",
-                    ex);
+                throw new DataFormatException("Deserialisation Matching Rules failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             if (dataEntities == null)
@@ -105,7 +100,15 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
-            return dataEntities.Select(d => this.mapper.ToModel(d));
+            var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
+            Validate(realModel);
+            return realModel;
+        }
+
+        private IEnumerable<MatchingRule> Validate(IEnumerable<MatchingRule> model)
+        {
+            // TODO remove duplicates.
+            return model;
         }
 
         /// <summary>
@@ -125,7 +128,8 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            IEnumerable<MatchingRuleDto> dataEntities = rules.Select(r => this.mapper.ToDto(r));
+            var model = Validate(rules);
+            IEnumerable<MatchingRuleDto> dataEntities = model.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities);
         }
 
