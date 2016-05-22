@@ -47,6 +47,11 @@ namespace BudgetAnalyser.Engine.Ledger
         public Account StoredInAccount { get; internal set; }
 
         /// <summary>
+        ///     Allows ledger bucket specific behaviour during reconciliation.
+        /// </summary>
+        public abstract void ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
+
+        /// <summary>
         ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         ///     Delegates to <see cref="Equals(LedgerBucket)" />
         /// </summary>
@@ -102,11 +107,6 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             return !Equals(left, right);
         }
-
-        /// <summary>
-        ///     Allows ledger bucket specific behaviour during reconciliation.
-        /// </summary>
-        public abstract void ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         /// <summary>
         ///     Returns a string that represents the current object.

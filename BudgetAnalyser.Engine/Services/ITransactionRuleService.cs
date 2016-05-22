@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using BudgetAnalyser.Engine.Matching;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;

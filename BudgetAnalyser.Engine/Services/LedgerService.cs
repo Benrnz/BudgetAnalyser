@@ -16,13 +16,13 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly ILedgerBucketFactory ledgerBucketFactory;
-        private readonly MonitorableDependencies monitorableDependencies;
         private readonly ILedgerBookRepository ledgerRepository;
+        private readonly MonitorableDependencies monitorableDependencies;
 
         public LedgerService(
             [NotNull] ILedgerBookRepository ledgerRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILedgerBucketFactory ledgerBucketFactory, 
+            [NotNull] ILedgerBucketFactory ledgerBucketFactory,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (ledgerRepository == null)
@@ -54,7 +54,10 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
 
+        public ApplicationDataType DataType => ApplicationDataType.Ledger;
+
         public LedgerBook LedgerBook { get; private set; }
+        public int LoadSequence => 50;
 
         public void MoveLedgerToAccount(LedgerBucket ledger, Account storedInAccount)
         {
@@ -100,9 +103,6 @@ namespace BudgetAnalyser.Engine.Services
             return this.accountTypeRepository.ListCurrentlyUsedAccountTypes();
         }
 
-        public ApplicationDataType DataType => ApplicationDataType.Ledger;
-        public int LoadSequence => 50;
-
         public void Close()
         {
             LedgerBook = null;
@@ -129,7 +129,7 @@ namespace BudgetAnalyser.Engine.Services
 
             LedgerBook = await this.ledgerRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
 
-            this.monitorableDependencies.NotifyOfDependencyChange<LedgerBook>(LedgerBook);
+            this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
@@ -144,7 +144,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.StorageKey);
-            this.monitorableDependencies.NotifyOfDependencyChange<LedgerBook>(LedgerBook);
+            this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
             Saved?.Invoke(this, EventArgs.Empty);
         }
 

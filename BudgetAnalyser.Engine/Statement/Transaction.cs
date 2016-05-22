@@ -39,6 +39,11 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets the bank account that this transaction belongs in.
         /// </summary>
         public Account Account
@@ -212,11 +217,6 @@ namespace BudgetAnalyser.Engine.Statement
 
             return Date.CompareTo(otherTransaction.Date);
         }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Get a hash code that will indicate value based equivalence with another instance of <see cref="Transaction" />.

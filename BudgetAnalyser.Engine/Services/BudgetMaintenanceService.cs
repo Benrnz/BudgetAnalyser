@@ -18,8 +18,8 @@ namespace BudgetAnalyser.Engine.Services
     internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
     {
         private readonly IBudgetRepository budgetRepository;
-        private readonly MonitorableDependencies monitorableDependencies;
         private readonly ILogger logger;
+        private readonly MonitorableDependencies monitorableDependencies;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
@@ -62,6 +62,9 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler<ValidatingEventArgs> Validating;
         public IBudgetBucketRepository BudgetBucketRepository { get; }
         public BudgetCollection Budgets { get; private set; }
+
+        public ApplicationDataType DataType => ApplicationDataType.Budget;
+        public int LoadSequence => 5;
 
         public BudgetModel CloneBudgetModel(BudgetModel sourceBudget, DateTime newBudgetEffectiveFrom)
         {
@@ -125,9 +128,6 @@ namespace BudgetAnalyser.Engine.Services
             model.Update(allIncomes, allExpenses);
         }
 
-        public ApplicationDataType DataType => ApplicationDataType.Budget;
-        public int LoadSequence => 5;
-
         public void Close()
         {
             CreateNewBudgetCollection();
@@ -156,13 +156,6 @@ namespace BudgetAnalyser.Engine.Services
             Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
             UpdateServiceMonitor();
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void UpdateServiceMonitor()
-        {
-            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
-            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget));
-            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetBucketRepository>(BudgetBucketRepository);
         }
 
         public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
@@ -247,6 +240,13 @@ namespace BudgetAnalyser.Engine.Services
                 BudgetBucket copyOfBucket = budgetBucket;
                 BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
             }
+        }
+
+        private void UpdateServiceMonitor()
+        {
+            this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
+            this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget));
+            this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.Services
         public TransactionManagerService(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IStatementRepository statementRepository,
-            [NotNull] ILogger logger, 
+            [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (bucketRepository == null)
@@ -69,6 +69,50 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
+        ///     Occurs when the underlying storage for transactions is closed.
+        ///     This allows the UI to update and clear accordingly.
+        ///     Opening and closing files is controlled centrally, not by this service.
+        /// </summary>
+        public event EventHandler Closed;
+
+        /// <summary>
+        ///     Occurs when a new data source has been loaded and is now available for use.
+        /// </summary>
+        public event EventHandler NewDataSourceAvailable;
+
+        /// <summary>
+        ///     Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
+        /// </summary>
+        public event EventHandler Saved;
+
+        /// <summary>
+        ///     Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
+        /// </summary>
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+
+        /// <summary>
+        ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
+        ///     information with its service.
+        /// </summary>
+        public event EventHandler<ValidatingEventArgs> Validating;
+
+        /// <summary>
+        ///     Gets the calculated average debit.
+        /// </summary>
+        public decimal AverageDebit
+        {
+            get
+            {
+                if (this.transactions == null || this.transactions.None())
+                {
+                    return 0;
+                }
+
+                return this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
+            }
+        }
+
+        /// <summary>
         ///     Gets the type of the data the implementation deals with.
         /// </summary>
         public ApplicationDataType DataType => ApplicationDataType.Transactions;
@@ -77,6 +121,59 @@ namespace BudgetAnalyser.Engine.Services
         ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
         /// </summary>
         public int LoadSequence => 10;
+
+        /// <summary>
+        ///     Gets the statement model.
+        /// </summary>
+        public StatementModel StatementModel { get; private set; }
+
+        /// <summary>
+        ///     Gets the calculated total count.
+        /// </summary>
+        public decimal TotalCount
+        {
+            get
+            {
+                if (this.transactions == null || this.transactions.None())
+                {
+                    return 0;
+                }
+
+                return this.transactions.Count();
+            }
+        }
+
+        /// <summary>
+        ///     Gets the calculated total credits.
+        /// </summary>
+        public decimal TotalCredits
+        {
+            get
+            {
+                if (this.transactions == null || this.transactions.None())
+                {
+                    return 0;
+                }
+
+                return this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the calculated total debits.
+        /// </summary>
+        public decimal TotalDebits
+        {
+            get
+            {
+                if (this.transactions == null || this.transactions.None())
+                {
+                    return 0;
+                }
+
+                return this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
+            }
+        }
 
         /// <summary>
         ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.
@@ -162,7 +259,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await this.statementRepository.SaveAsync(StatementModel);
-            this.monitorableDependencies.NotifyOfDependencyChange<StatementModel>(StatementModel);
+            this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
             Saved?.Invoke(this, EventArgs.Empty);
         }
 
@@ -187,103 +284,6 @@ namespace BudgetAnalyser.Engine.Services
 
             // In the case of the StatementModel all edits are validated and resolved during data edits. No need for an overall consistency check.
             return true;
-        }
-
-        /// <summary>
-        ///     Occurs when the underlying storage for transactions is closed.
-        ///     This allows the UI to update and clear accordingly.
-        ///     Opening and closing files is controlled centrally, not by this service.
-        /// </summary>
-        public event EventHandler Closed;
-
-        /// <summary>
-        ///     Occurs when a new data source has been loaded and is now available for use.
-        /// </summary>
-        public event EventHandler NewDataSourceAvailable;
-
-        /// <summary>
-        ///     Occurs when the service has finished saving data. This allows the controller to update any clientside view-models.
-        /// </summary>
-        public event EventHandler Saved;
-
-        /// <summary>
-        ///     Occurs just before Saving the model. Can be used to request more information from the UI Controllers.
-        /// </summary>
-        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
-
-        /// <summary>
-        ///     Occurs just before Validating the model.  Can be used to ensure the UI Controller has updated any necessary
-        ///     information with its service.
-        /// </summary>
-        public event EventHandler<ValidatingEventArgs> Validating;
-
-        /// <summary>
-        ///     Gets the calculated average debit.
-        /// </summary>
-        public decimal AverageDebit
-        {
-            get
-            {
-                if (this.transactions == null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount < 0).SafeAverage(t => t.Amount);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the statement model.
-        /// </summary>
-        public StatementModel StatementModel { get; private set; }
-
-        /// <summary>
-        ///     Gets the calculated total count.
-        /// </summary>
-        public decimal TotalCount
-        {
-            get
-            {
-                if (this.transactions == null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Count();
-            }
-        }
-
-        /// <summary>
-        ///     Gets the calculated total credits.
-        /// </summary>
-        public decimal TotalCredits
-        {
-            get
-            {
-                if (this.transactions == null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount > 0).Sum(t => t.Amount);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the calculated total debits.
-        /// </summary>
-        public decimal TotalDebits
-        {
-            get
-            {
-                if (this.transactions == null || this.transactions.None())
-                {
-                    return 0;
-                }
-
-                return this.transactions.Where(t => t.Amount < 0).Sum(t => t.Amount);
-            }
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(criteria));
             }
 
-            this.monitorableDependencies.NotifyOfDependencyChange<GlobalFilterCriteria>(criteria);
+            this.monitorableDependencies.NotifyOfDependencyChange(criteria);
             StatementModel.Filter(criteria);
         }
 
@@ -653,7 +653,7 @@ namespace BudgetAnalyser.Engine.Services
         private void NewDataAvailable()
         {
             ResetTransactionsCollection();
-            this.monitorableDependencies.NotifyOfDependencyChange<StatementModel>(StatementModel);
+            this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 

@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <exception cref="System.ArgumentNullException"></exception>
         public override void ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate,
-                                                     decimal openingBalance)
+                                                          decimal openingBalance)
         {
             if (transactions == null)
             {

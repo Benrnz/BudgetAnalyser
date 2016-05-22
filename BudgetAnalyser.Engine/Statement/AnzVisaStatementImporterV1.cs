@@ -111,7 +111,7 @@ namespace BudgetAnalyser.Engine.Statement
         public async Task<bool> TasteTestAsync(string fileName)
         {
             this.importUtilities.AbortIfFileDoesntExist(fileName);
-            var lines = await ReadFirstTwoLinesAsync(fileName);
+            string[] lines = await ReadFirstTwoLinesAsync(fileName);
             if (lines == null || lines.Length != 2 || lines[0].IsNothing() || lines[1].IsNothing())
             {
                 return false;
@@ -127,34 +127,6 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            return true;
-        }
-
-        private bool VerifyFirstDataLine(string line)
-        {
-            string[] split = line.Split(',');
-            var card = this.importUtilities.FetchString(split, 0);
-            if (card.IsNothing())
-            {
-                return false;
-            }
-
-            if (!char.IsDigit(card.ToCharArray()[0]))
-            {
-                return false;
-            }
-
-            var amount = this.importUtilities.FetchDecimal(split, 2);
-            if (amount == 0)
-            {
-                return false;
-            }
-
-            DateTime date = this.importUtilities.FetchDate(split, 4);
-            if (date == DateTime.MinValue)
-            {
-                return false;
-            }
             return true;
         }
 
@@ -261,6 +233,34 @@ namespace BudgetAnalyser.Engine.Statement
         private bool VerifyColumnHeaderLine(string line)
         {
             return string.CompareOrdinal(line, "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge") == 0;
+        }
+
+        private bool VerifyFirstDataLine(string line)
+        {
+            string[] split = line.Split(',');
+            var card = this.importUtilities.FetchString(split, 0);
+            if (card.IsNothing())
+            {
+                return false;
+            }
+
+            if (!char.IsDigit(card.ToCharArray()[0]))
+            {
+                return false;
+            }
+
+            var amount = this.importUtilities.FetchDecimal(split, 2);
+            if (amount == 0)
+            {
+                return false;
+            }
+
+            DateTime date = this.importUtilities.FetchDate(split, 4);
+            if (date == DateTime.MinValue)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

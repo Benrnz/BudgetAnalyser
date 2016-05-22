@@ -54,6 +54,11 @@ namespace BudgetAnalyser.Engine.Matching
         }
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets the amount criteria.
         ///     If null this field is not used to match.
         /// </summary>
@@ -238,11 +243,6 @@ namespace BudgetAnalyser.Engine.Matching
 
             return RuleId.Equals(other.RuleId);
         }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.

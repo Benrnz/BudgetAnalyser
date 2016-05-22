@@ -24,6 +24,11 @@ namespace BudgetAnalyser.Engine.Reports
         }
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     The description of the series, typically used in the tool tip for a graph line.
         /// </summary>
         public string Description { get; set; }
@@ -58,11 +63,6 @@ namespace BudgetAnalyser.Engine.Reports
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -67,20 +67,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        private LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
-        {
-            if (openingBalance - closingBalance == 0)
-            {
-                return null;
-            }
-            return new CreditLedgerTransaction
-            {
-                Amount = openingBalance - closingBalance,
-                Date = reconciliationDate,
-                Narrative = SupplementLessThanOpeningBalance
-            };
-        }
-
         /// <summary>
         ///     Validates the bucket provided is valid for use with this LedgerBucket. There is an explicit relationship between
         ///     <see cref="BudgetBucket" />s and <see cref="LedgerBucket" />s.
@@ -139,6 +125,20 @@ namespace BudgetAnalyser.Engine.Ledger
                 Amount = budgetAmount - closingBalance,
                 Date = reconciliationDate,
                 Narrative = SupplementLessThanBudgetText
+            };
+        }
+
+        private LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+        {
+            if (openingBalance - closingBalance == 0)
+            {
+                return null;
+            }
+            return new CreditLedgerTransaction
+            {
+                Amount = openingBalance - closingBalance,
+                Date = reconciliationDate,
+                Narrative = SupplementLessThanOpeningBalance
             };
         }
 

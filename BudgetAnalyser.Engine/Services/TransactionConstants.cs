@@ -1,7 +1,7 @@
 ﻿namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A static class to store public constants for Transactions / Statements.
+    ///     A static class to store public constants for Transactions / Statements.
     /// </summary>
     public static class TransactionConstants
     {

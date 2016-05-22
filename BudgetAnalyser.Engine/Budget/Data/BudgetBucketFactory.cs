@@ -22,7 +22,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
                 case BucketDtoType.SpentMonthlyExpense:
                     return new SpentMonthlyExpenseBucket();
                 case BucketDtoType.FixedBudgetProject:
-                    var f = (FixedBudgetBucketDto)dto;
+                    var f = (FixedBudgetBucketDto) dto;
                     return new FixedBudgetProjectBucket(f.Code, f.Description, f.FixedBudgetAmount, f.Created);
                 default:
                     throw new NotSupportedException("Unsupported Bucket type detected: " + dto);

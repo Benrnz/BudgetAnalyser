@@ -4,13 +4,13 @@ using BudgetAnalyser.Engine.Services;
 namespace BudgetAnalyser.Engine.Widgets
 {
     /// <summary>
-    /// A widget that becomes available when there are unsaved changes. Clicking will save all changes.
+    ///     A widget that becomes available when there are unsaved changes. Clicking will save all changes.
     /// </summary>
     /// <seealso cref="Widget" />
     public class SaveWidget : Widget
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SaveWidget"/> class.
+        ///     Initializes a new instance of the <see cref="SaveWidget" /> class.
         /// </summary>
         public SaveWidget()
         {
@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 return;
             }
 
-            var appDbService = (IApplicationDatabaseService)input[0];
+            var appDbService = (IApplicationDatabaseService) input[0];
             if (appDbService == null) return;
 
             Enabled = appDbService.HasUnsavedChanges;

@@ -42,6 +42,11 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets the average debit amount.
         /// </summary>
         public decimal AverageDebit
@@ -140,11 +145,6 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Gets the grouped transactions.
         /// </summary>
         public ObservableCollection<Transaction> Transactions { get; }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Triggers a refresh of the totals row.

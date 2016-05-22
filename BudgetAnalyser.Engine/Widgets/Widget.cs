@@ -62,6 +62,21 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
+        ///     Occurs when the colour style has changed.
+        /// </summary>
+        public event EventHandler ColourStyleChanged;
+
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Occurs when the widget style has changed.
+        /// </summary>
+        public event EventHandler WidgetStyleChanged;
+
+        /// <summary>
         ///     Gets or sets the grouping category.
         /// </summary>
         public string Category
@@ -250,24 +265,9 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Occurs when the colour style has changed.
-        /// </summary>
-        public event EventHandler ColourStyleChanged;
-
-        /// <summary>
         ///     Updates the widget with new input.
         /// </summary>
         public abstract void Update(params object[] input);
-
-        /// <summary>
-        ///     Occurs when the widget style has changed.
-        /// </summary>
-        public event EventHandler WidgetStyleChanged;
 
         /// <summary>
         ///     Called when a property has changed.

@@ -19,17 +19,17 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
+        private readonly MonitorableDependencies monitoringServices;
         private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
-        private readonly MonitorableDependencies monitoringServices;
-        
+
         public DashboardService(
             [NotNull] IWidgetService widgetService,
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] ILogger logger, 
+            [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (widgetService == null)
@@ -71,11 +71,6 @@ namespace BudgetAnalyser.Engine.Services
             this.logger = logger;
             this.monitoringServices = monitorableDependencies;
             this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;
-        }
-
-        private void OnMonitoringServicesDependencyChanged(object sender, DependencyChangedEventArgs dependencyChangedEventArgs)
-        {
-            UpdateAllWidgets(new[] { dependencyChangedEventArgs.DependencyType });
         }
 
         protected ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
@@ -256,6 +251,11 @@ namespace BudgetAnalyser.Engine.Services
                 Visible = widget.Visibility,
                 WidgetType = widget.GetType().FullName
             };
+        }
+
+        private void OnMonitoringServicesDependencyChanged(object sender, DependencyChangedEventArgs dependencyChangedEventArgs)
+        {
+            UpdateAllWidgets(dependencyChangedEventArgs.DependencyType);
         }
 
         private async void ScheduledWidgetUpdate(Widget widget)

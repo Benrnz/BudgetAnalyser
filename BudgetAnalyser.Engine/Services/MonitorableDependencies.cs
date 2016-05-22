@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 namespace BudgetAnalyser.Engine.Services
 {
     /// <summary>
-    /// A class that contains references to services that can be used as dependencies for the Dashboard Service.
+    ///     A class that contains references to services that can be used as dependencies for the Dashboard Service.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MonitorableDependencies
@@ -20,34 +20,34 @@ namespace BudgetAnalyser.Engine.Services
         private readonly Dictionary<Type, long> changesHashes = new Dictionary<Type, long>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MonitorableDependencies"/> class.
+        ///     Initializes a new instance of the <see cref="MonitorableDependencies" /> class.
         /// </summary>
         public MonitorableDependencies(LedgerCalculation ledgerCalculator)
         {
             this.availableDependencies = new Dictionary<Type, object>
             {
-                [typeof(StatementModel)] = null,               
-                [typeof(BudgetCollection)] = null,             
-                [typeof(IBudgetCurrencyContext)] = null,       
-                [typeof(LedgerBook)] = null,                   
-                [typeof(IBudgetBucketRepository)] = null,      
+                [typeof(StatementModel)] = null,
+                [typeof(BudgetCollection)] = null,
+                [typeof(IBudgetCurrencyContext)] = null,
+                [typeof(LedgerBook)] = null,
+                [typeof(IBudgetBucketRepository)] = null,
                 [typeof(GlobalFilterCriteria)] = null,
                 [typeof(LedgerCalculation)] = ledgerCalculator,
-                [typeof(ApplicationDatabase)] = null,          
-                [typeof(ITransactionRuleService)] = null,   
-                [typeof(IApplicationDatabaseService)] = null,
+                [typeof(ApplicationDatabase)] = null,
+                [typeof(ITransactionRuleService)] = null,
+                [typeof(IApplicationDatabaseService)] = null
             };
         }
 
         internal event EventHandler<DependencyChangedEventArgs> DependencyChanged;
 
         /// <summary>
-        /// Gets a list of supported types
+        ///     Gets a list of supported types
         /// </summary>
         internal virtual IEnumerable<Type> SupportedWidgetDependencyTypes => this.availableDependencies.Keys;
 
         /// <summary>
-        /// Notifies this service of dependency that has changed.
+        ///     Notifies this service of dependency that has changed.
         /// </summary>
         /// <param name="dependency">The dependency.</param>
         /// <returns>A boolean value indicating if the dependency has significantly change, true if so, otherwise false.</returns>
@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
-        /// Notifies this service of dependency that has changed.
+        ///     Notifies this service of dependency that has changed.
         /// </summary>
         /// <param name="dependency">The dependency.</param>
         /// <param name="typeKey">The type key.</param>

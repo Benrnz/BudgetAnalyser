@@ -28,6 +28,17 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         /// <summary>
+        ///     Gets the type of the data the implementation deals with.
+        /// </summary>
+        public ApplicationDataType DataType => ApplicationDataType.Ledger;
+
+        /// <summary>
+        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
+        ///     Defaults to 50.
+        /// </summary>
+        public int LoadSequence => 51;
+
+        /// <summary>
         ///     The To Do List loaded from a persistent storage.
         /// </summary>
         public ToDoCollection ReconciliationToDoList { get; private set; }
@@ -171,17 +182,6 @@ namespace BudgetAnalyser.Engine.Services
 
             entryLine.UpdateRemarks(remarks);
         }
-
-        /// <summary>
-        ///     Gets the type of the data the implementation deals with.
-        /// </summary>
-        public ApplicationDataType DataType => ApplicationDataType.Ledger;
-
-        /// <summary>
-        ///     Gets the initialisation sequence number. Set this to a low number for important data that needs to be loaded first.
-        ///     Defaults to 50.
-        /// </summary>
-        public int LoadSequence => 51;
 
         /// <summary>
         ///     Closes the currently loaded file.  No warnings will be raised if there is unsaved data.

@@ -17,6 +17,11 @@ namespace BudgetAnalyser.Engine.Matching
         private T doNotUseValue;
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="Criteria{T}" /> will be applied as criteria.
         /// </summary>
         /// <value>
@@ -52,11 +57,6 @@ namespace BudgetAnalyser.Engine.Matching
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Determines whether the value is equal to the <paramref name="operand2" /> but not niether can be blank or null.

@@ -11,6 +11,11 @@ namespace BudgetAnalyser.Engine.Widgets
     public class WidgetsApplicationState : IPersistentApplicationStateObject
     {
         /// <summary>
+        ///     Gets the order in which this object should be loaded.
+        /// </summary>
+        public int LoadSequence => 100;
+
+        /// <summary>
         ///     Gets or sets the widget states.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
@@ -18,10 +23,5 @@ namespace BudgetAnalyser.Engine.Widgets
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
             Justification = "Required for serialisation")]
         public List<WidgetPersistentState> WidgetStates { get; set; }
-
-        /// <summary>
-        ///     Gets the order in which this object should be loaded.
-        /// </summary>
-        public int LoadSequence => 100;
     }
 }

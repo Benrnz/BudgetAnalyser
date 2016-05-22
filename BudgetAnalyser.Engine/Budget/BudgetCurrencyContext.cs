@@ -43,11 +43,6 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
-        ///     Gets the budget collection.
-        /// </summary>
-        public BudgetCollection BudgetCollection { get; }
-
-        /// <summary>
         ///     Gets a boolean value to indicate if this is the most recent and currently active <see cref="BudgetModel" />.
         /// </summary>
         public bool BudgetActive => BudgetCollection.IsCurrentBudget(Model);
@@ -56,6 +51,11 @@ namespace BudgetAnalyser.Engine.Budget
         ///     Gets a value indicating whether budget is archived.
         /// </summary>
         public bool BudgetArchived => BudgetCollection.IsArchivedBudget(Model);
+
+        /// <summary>
+        ///     Gets the budget collection.
+        /// </summary>
+        public BudgetCollection BudgetCollection { get; }
 
         /// <summary>
         ///     Gets a value indicating whether the budget is a future budget.

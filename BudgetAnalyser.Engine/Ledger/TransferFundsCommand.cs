@@ -17,6 +17,11 @@ namespace BudgetAnalyser.Engine.Ledger
         private LedgerBucket doNotUseToLedger;
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets the automatic matching reference.
         /// </summary>
         /// <value>
@@ -88,11 +93,6 @@ namespace BudgetAnalyser.Engine.Ledger
         ///     Gets or sets the transfer amount.
         /// </summary>
         public decimal TransferAmount { get; set; }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Returns true if the transfer is valid.

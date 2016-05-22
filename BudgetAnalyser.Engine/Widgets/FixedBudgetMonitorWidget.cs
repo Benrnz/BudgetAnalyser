@@ -52,11 +52,6 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        ///     Gets the statement model.
-        /// </summary>
-        public StatementModel Statement { get; private set; }
-
-        /// <summary>
         ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
         /// </summary>
         public string Id
@@ -69,6 +64,11 @@ namespace BudgetAnalyser.Engine.Widgets
                 BucketCode = Id;
             }
         }
+
+        /// <summary>
+        ///     Gets the statement model.
+        /// </summary>
+        public StatementModel Statement { get; private set; }
 
         /// <summary>
         ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in

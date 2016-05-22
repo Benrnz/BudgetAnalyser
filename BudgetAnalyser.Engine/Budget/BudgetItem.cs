@@ -16,6 +16,11 @@ namespace BudgetAnalyser.Engine.Budget
         private BudgetBucket doNotUseBucket;
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets the amount of this budgeted amount.
         /// </summary>
         public decimal Amount
@@ -66,11 +71,6 @@ namespace BudgetAnalyser.Engine.Budget
             Bucket.TypeDescription.AnOrA(true),
             EnsureNoRepeatedLastWord(Bucket.TypeDescription, GetType().Name),
             Bucket.Description);
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.

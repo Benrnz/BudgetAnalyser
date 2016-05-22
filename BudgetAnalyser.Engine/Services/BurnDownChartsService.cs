@@ -17,7 +17,7 @@ namespace BudgetAnalyser.Engine.Services
         private readonly BurnDownChartsBuilder chartsBuilder;
 
         public BurnDownChartsService([NotNull] IBudgetBucketRepository bucketRepository,
-                                     [NotNull] BurnDownChartsBuilder chartsBuilder, 
+                                     [NotNull] BurnDownChartsBuilder chartsBuilder,
                                      [NotNull] IBurnDownChartAnalyser chartAnalyser)
         {
             if (bucketRepository == null)
@@ -46,9 +46,9 @@ namespace BudgetAnalyser.Engine.Services
         }
 
         public BurnDownCharts BuildAllCharts(
-            StatementModel statementModel, 
+            StatementModel statementModel,
             BudgetModel budgetModel,
-            LedgerBook ledgerBookModel, 
+            LedgerBook ledgerBookModel,
             GlobalFilterCriteria criteria)
         {
             if (criteria.Cleared) throw new ArgumentException("There is no date range criteria set. This graph is intended for one month of data.");

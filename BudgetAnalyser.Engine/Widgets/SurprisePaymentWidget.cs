@@ -61,11 +61,6 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        ///     Gets or sets the start payment date.
-        /// </summary>
-        public DateTime StartPaymentDate { get; set; }
-
-        /// <summary>
         ///     Gets or sets a unique identifier for the widget. This is required for persistence purposes.
         /// </summary>
         public string Id
@@ -77,6 +72,11 @@ namespace BudgetAnalyser.Engine.Widgets
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        ///     Gets or sets the start payment date.
+        /// </summary>
+        public DateTime StartPaymentDate { get; set; }
 
         /// <summary>
         ///     Gets the type of the widget. Optionally allows the implementation to override the widget type description used in

@@ -64,6 +64,11 @@ namespace BudgetAnalyser.Engine.Statement
         }
 
         /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets all transactions ignoring any filters.
         /// </summary>
         public IEnumerable<Transaction> AllTransactions
@@ -145,11 +150,6 @@ namespace BudgetAnalyser.Engine.Statement
             // from executing a second time. 
             GC.SuppressFinalize(this);
         }
-
-        /// <summary>
-        ///     Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Calculates the duration in months from the beginning of the period to the end.
