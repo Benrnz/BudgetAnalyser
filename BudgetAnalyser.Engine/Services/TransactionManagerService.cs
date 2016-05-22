@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel = null;
             this.budgetCollection = null;
             this.budgetHash = 0;
-            EventHandler handler = Closed;
+            var handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -352,7 +352,7 @@ namespace BudgetAnalyser.Engine.Services
                             StatementModel.Transactions.Where(t => t.BudgetBucket == null));
             }
 
-            BudgetBucket bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
+            var bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
 
             if (bucket == null)
             {
@@ -433,8 +433,8 @@ namespace BudgetAnalyser.Engine.Services
                     "There are no transactions loaded, you must first load an existing file or create a new one.");
             }
 
-            StatementModel additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
-            StatementModel combinedModel = StatementModel.Merge(additionalModel);
+            var additionalModel = await this.statementRepository.ImportBankStatementAsync(storageKey, account);
+            var combinedModel = StatementModel.Merge(additionalModel);
             IEnumerable<IGrouping<int, Transaction>> duplicates = combinedModel.ValidateAgainstDuplicates();
             if (duplicates.Count() == additionalModel.AllTransactions.Count())
             {

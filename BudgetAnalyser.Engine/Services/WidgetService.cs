@@ -56,9 +56,9 @@ namespace BudgetAnalyser.Engine.Services
             if (storedStates != null)
             {
                 List<Widget> widgets = this.widgetRepo.GetAll().ToList();
-                foreach (WidgetPersistentState widgetState in storedStates)
+                foreach (var widgetState in storedStates)
                 {
-                    WidgetPersistentState stateClone = widgetState;
+                    var stateClone = widgetState;
                     var multiInstanceState = widgetState as MultiInstanceWidgetState;
                     if (multiInstanceState != null)
                     {
@@ -67,7 +67,7 @@ namespace BudgetAnalyser.Engine.Services
                     else
                     {
                         // Ordinary widgets will already exist in the repository as they are single instance per class.
-                        Widget typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
+                        var typedWidget = widgets.FirstOrDefault(w => w.GetType().FullName == stateClone.WidgetType);
                         if (typedWidget != null)
                         {
                             typedWidget.Visibility = widgetState.Visible;
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Services
         private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
         {
             // MultiInstance widgets need to be created at this point.  The App State data is required to create them.
-            IUserDefinedWidget newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
+            var newIdWidget = this.widgetRepo.Create(multiInstanceState.WidgetType, multiInstanceState.Id);
             newIdWidget.Visibility = multiInstanceState.Visible;
             newIdWidget.Initialise(multiInstanceState, this.logger);
         }

@@ -116,7 +116,7 @@ namespace BudgetAnalyser.Engine.Widgets
                                                                           IEnumerable<BudgetBucket> trackedSavingsLedgers)
         {
             decimal savingsToDate = 0;
-            foreach (BudgetBucket bucket in trackedSavingsLedgers)
+            foreach (var bucket in trackedSavingsLedgers)
             {
                 List<Transaction> transactions = statement.Transactions.Where(t => t.BudgetBucket == bucket).ToList();
 

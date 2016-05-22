@@ -276,7 +276,7 @@ namespace BudgetAnalyser.Engine.Widgets
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -298,9 +298,9 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             int index = 0, nullCount = 0;
-            foreach (Type dependencyType in Dependencies)
+            foreach (var dependencyType in Dependencies)
             {
-                object dependencyInstance = input[index++];
+                var dependencyInstance = input[index++];
                 if (dependencyInstance == null)
                 {
                     // Allow this to continue, because nulls are valid when the dependency isnt available yet.

@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(item));
             }
 
-            DateTime key = item.EffectiveFrom;
+            var key = item.EffectiveFrom;
             while (this.budgetStorage.ContainsKey(key))
             {
                 // Arbitrarily change the effective from date to ensure no overlap between budgets.
@@ -138,7 +138,7 @@ namespace BudgetAnalyser.Engine.Budget
         public IEnumerable<BudgetModel> ForDates(DateTime beginInclusive, DateTime endInclusive)
         {
             var budgets = new List<BudgetModel>();
-            BudgetModel firstEffectiveBudget = ForDate(beginInclusive);
+            var firstEffectiveBudget = ForDate(beginInclusive);
             if (firstEffectiveBudget == null)
             {
                 throw new BudgetException(

@@ -34,13 +34,13 @@ namespace BudgetAnalyser.Engine.Ledger.Data
 
         public LedgerBucket Build(string bucketCode, string accountName)
         {
-            Account account = this.accountRepo.GetByKey(accountName);
+            var account = this.accountRepo.GetByKey(accountName);
             return Build(bucketCode, account);
         }
 
         public LedgerBucket Build(string bucketCode, Account account)
         {
-            BudgetBucket bucket = this.bucketRepo.GetByCode(bucketCode);
+            var bucket = this.bucketRepo.GetByCode(bucketCode);
             if (bucket is SavedUpForExpenseBucket)
             {
                 return new SavedUpForLedger { BudgetBucket = bucket, StoredInAccount = account };

@@ -131,7 +131,7 @@ namespace BudgetAnalyser.Engine.Services
         public void Close()
         {
             CreateNewBudgetCollection();
-            EventHandler handler = Closed;
+            var handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Engine.Services
             if (Budgets.Validate(messages))
             {
                 await this.budgetRepository.SaveAsync();
-                EventHandler savedHandler = Saved;
+                var savedHandler = Saved;
                 savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
@@ -235,9 +235,9 @@ namespace BudgetAnalyser.Engine.Services
                 .Union(Budgets.SelectMany(b => b.Incomes.Select(i => i.Bucket)))
                 .Distinct();
 
-            foreach (BudgetBucket budgetBucket in buckets)
+            foreach (var budgetBucket in buckets)
             {
-                BudgetBucket copyOfBucket = budgetBucket;
+                var copyOfBucket = budgetBucket;
                 BudgetBucketRepository.GetOrCreateNew(copyOfBucket.Code, () => copyOfBucket);
             }
         }

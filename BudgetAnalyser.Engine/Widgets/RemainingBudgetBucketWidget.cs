@@ -161,7 +161,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
             var monthlyBudget = Budget.Model.Expenses.Single(b => b.Bucket.Code == BucketCode).Amount;
             var totalBudgetedAmount = monthlyBudget;
-            LedgerEntryLine ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
+            var ledgerLine = LedgerCalculation.LocateApplicableLedgerLine(LedgerBook, Filter);
 
             if (LedgerBook == null || ledgerLine == null ||
                 ledgerLine.Entries.All(e => e.LedgerBucket.BudgetBucket.Code != BucketCode))

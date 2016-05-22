@@ -40,7 +40,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// <returns>True if this file can be imported one of the importers in the repository.</returns>
         public async Task<bool> CanImportAsync(string fullFileName)
         {
-            foreach (IBankStatementImporter importer in this.importers)
+            foreach (var importer in this.importers)
             {
                 if (await importer.TasteTestAsync(fullFileName))
                 {
@@ -59,7 +59,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         public async Task<StatementModel> ImportAsync(string fullFileName, Account account)
         {
-            foreach (IBankStatementImporter importer in this.importers)
+            foreach (var importer in this.importers)
             {
                 if (await importer.TasteTestAsync(fullFileName))
                 {

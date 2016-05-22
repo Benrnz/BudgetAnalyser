@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(account));
             }
 
-            BankBalanceAdjustmentTransaction adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
+            var adjustmentTransaction = entryLine.BalanceAdjustment(amount, narrative, account);
             adjustmentTransaction.Date = entryLine.Date;
             return adjustmentTransaction;
         }
@@ -120,7 +120,7 @@ namespace BudgetAnalyser.Engine.Services
             bool ignoreWarnings,
             params BankBalance[] balances)
         {
-            ReconciliationResult reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
+            var reconResult = this.reconciliationManager.MonthEndReconciliation(ledgerBook, reconciliationDate,
                 budgetContext, statement, ignoreWarnings, balances);
             ReconciliationToDoList.Clear();
             reconResult.Tasks.ToList().ForEach(ReconciliationToDoList.Add);

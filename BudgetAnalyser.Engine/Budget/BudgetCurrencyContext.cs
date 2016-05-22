@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return null;
                 }
 
-                BudgetModel nextBudget = BudgetCollection[myIndex - 1];
+                var nextBudget = BudgetCollection[myIndex - 1];
                 return nextBudget.EffectiveFrom;
             }
         }

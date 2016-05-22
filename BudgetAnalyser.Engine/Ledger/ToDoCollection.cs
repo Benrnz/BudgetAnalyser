@@ -50,7 +50,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         protected override void ClearItems()
         {
-            foreach (ToDoTask task in this.ToArray())
+            foreach (var task in this.ToArray())
             {
                 Remove(task);
             }
@@ -62,7 +62,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <param name="index">The zero-based index of the element to remove.</param>
         protected override void RemoveItem(int index)
         {
-            ToDoTask task = this[index];
+            var task = this[index];
             if (task.CanDelete)
             {
                 base.RemoveItem(index);

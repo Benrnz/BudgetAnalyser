@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            BankBalanceAdjustmentTransaction txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
+            var txn = this.bankBalanceAdjustments.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.bankBalanceAdjustments.Remove(txn);
@@ -200,7 +200,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal void Lock()
         {
             IsNew = false;
-            foreach (LedgerEntry entry in Entries)
+            foreach (var entry in Entries)
             {
                 entry.Lock();
             }
@@ -218,7 +218,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal void Unlock()
         {
             IsNew = true;
-            foreach (LedgerEntry entry in Entries)
+            foreach (var entry in Entries)
             {
                 entry.Unlock();
             }
@@ -258,7 +258,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 validationMessages.Append("All ledgers + surplus + balance adjustments does not equal balance.");
             }
 
-            foreach (LedgerEntry ledgerEntry in Entries)
+            foreach (var ledgerEntry in Entries)
             {
                 if (
                     !ledgerEntry.Validate(validationMessages,
@@ -286,7 +286,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return 0;
             }
 
-            LedgerEntry previousEntry =
+            var previousEntry =
                 previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
             return previousEntry?.Balance ?? 0;
         }

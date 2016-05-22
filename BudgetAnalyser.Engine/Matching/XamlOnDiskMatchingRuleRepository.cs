@@ -201,7 +201,7 @@ namespace BudgetAnalyser.Engine.Matching
 
                 if (foundDuplicate)
                 {
-                    MatchingRule rule = model[indexOfDuplicate];
+                    var rule = model[indexOfDuplicate];
                     this.logger.LogWarning(l =>
                         $"Duplicate RuleID found and will be removed: {rule.RuleId} {rule.BucketCode} {rule.LastMatch:o} And:{rule.And} {rule.Description} {rule.TransactionType} {rule.Reference1}");
                     model.RemoveAt(indexOfDuplicate);

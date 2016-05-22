@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.Ledger
                     "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
-            LedgerTransaction txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
+            var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
             if (txn != null)
             {
                 this.transactions.Remove(txn);

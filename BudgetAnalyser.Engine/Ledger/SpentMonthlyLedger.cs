@@ -31,7 +31,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var netAmount = transactions.Sum(t => t.Amount);
             var closingBalance = openingBalance + netAmount;
-            BudgetCreditLedgerTransaction budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
+            var budgetTransaction = transactions.OfType<BudgetCreditLedgerTransaction>().FirstOrDefault();
 
             if (budgetTransaction == null)
             {

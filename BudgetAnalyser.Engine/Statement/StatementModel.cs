@@ -204,7 +204,7 @@ namespace BudgetAnalyser.Engine.Statement
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             ThrowIfDisposed();
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -316,7 +316,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(reassignmentBucket));
             }
 
-            foreach (Transaction transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
+            foreach (var transaction in AllTransactions.Where(t => t.BudgetBucket == bucket))
             {
                 transaction.BudgetBucket = reassignmentBucket;
             }
@@ -359,8 +359,8 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(splinterBucket2));
             }
 
-            Transaction splinterTransaction1 = originalTransaction.Clone();
-            Transaction splinterTransaction2 = originalTransaction.Clone();
+            var splinterTransaction1 = originalTransaction.Clone();
+            var splinterTransaction2 = originalTransaction.Clone();
 
             splinterTransaction1.Amount = splinterAmount1;
             splinterTransaction2.Amount = splinterAmount2;
@@ -408,7 +408,7 @@ namespace BudgetAnalyser.Engine.Statement
             query.ForEach(
                 duplicate =>
                 {
-                    foreach (Transaction txn in duplicate)
+                    foreach (var txn in duplicate)
                     {
                         txn.IsSuspectedDuplicate = true;
                     }

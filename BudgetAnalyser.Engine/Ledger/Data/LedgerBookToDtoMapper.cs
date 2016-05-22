@@ -61,7 +61,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         private void InitialiseAndValidateLedgerBook(LedgerBookDto dto, LedgerBook model)
         {
             this.cachedLedgers.Clear();
-            foreach (LedgerBucket ledgerBucket in model.Ledgers)
+            foreach (var ledgerBucket in model.Ledgers)
             {
                 if (ledgerBucket.StoredInAccount == null)
                 {
@@ -75,9 +75,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             var ledgersMapWasEmpty = model.Ledgers.None();
 
             // Default to CHEQUE when StoredInAccount is null.
-            foreach (LedgerEntryLine line in model.Reconciliations)
+            foreach (var line in model.Reconciliations)
             {
-                foreach (LedgerEntry entry in line.Entries)
+                foreach (var entry in line.Entries)
                 {
                     // Ensure the ledger bucker is the same instance as listed in the book.Legders;
                     entry.LedgerBucket = GetOrAddFromCache(entry.LedgerBucket, true);
@@ -256,7 +256,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         {
             // Transactions must be done first otherwise balance will be changed by adding transactions and the balance should be read from the Dto.
             var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
-            foreach (LedgerTransactionDto txn in dto.Transactions)
+            foreach (var txn in dto.Transactions)
             {
                 model.AddTransaction(transactionMapper.ToModel(txn));
             }

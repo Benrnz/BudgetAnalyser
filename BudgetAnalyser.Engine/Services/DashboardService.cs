@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            IUserDefinedWidget widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
+            var widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
             return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
@@ -116,9 +116,9 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Fixed Budget amount must be greater than zero.", nameof(fixedBudgetAmount));
             }
 
-            FixedBudgetProjectBucket bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
+            var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
             this.budgetRepository.SaveAsync();
-            IUserDefinedWidget widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
+            var widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
             return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
@@ -135,7 +135,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentException("Payment date is not set.", nameof(paymentDate));
             }
 
-            BudgetBucket bucket = this.bucketRepository.GetByCode(bucketCode);
+            var bucket = this.bucketRepository.GetByCode(bucketCode);
             if (bucket == null)
             {
                 throw new ArgumentException(
@@ -143,7 +143,7 @@ namespace BudgetAnalyser.Engine.Services
                     nameof(bucketCode));
             }
 
-            IUserDefinedWidget widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
+            var widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
             var paymentWidget = (SurprisePaymentWidget) widget;
             paymentWidget.StartPaymentDate = paymentDate;
             paymentWidget.Frequency = frequency;
@@ -160,9 +160,9 @@ namespace BudgetAnalyser.Engine.Services
 
             WidgetGroups = new ObservableCollection<WidgetGroup>(this.widgetService.PrepareWidgets(storedState.WidgetStates));
             UpdateAllWidgets();
-            foreach (WidgetGroup group in WidgetGroups)
+            foreach (var group in WidgetGroups)
             {
-                foreach (Widget widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
+                foreach (var widget in @group.Widgets.Where(widget => widget.RecommendedTimeIntervalUpdate != null))
                 {
                     ScheduledWidgetUpdate(widget);
                 }
@@ -208,7 +208,7 @@ namespace BudgetAnalyser.Engine.Services
             this.widgetRepository.Remove(widgetToRemove);
 
             var baseWidget = (Widget) widgetToRemove;
-            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
+            var widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
 
             widgetGroup?.Widgets.Remove(baseWidget);
         }
@@ -318,7 +318,7 @@ namespace BudgetAnalyser.Engine.Services
 
             var parameters = new object[widget.Dependencies.Count()];
             var index = 0;
-            foreach (Type dependencyType in widget.Dependencies)
+            foreach (var dependencyType in widget.Dependencies)
             {
                 try
                 {
@@ -341,7 +341,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private Widget UpdateWidgetCollectionWithNewAddition(Widget baseWidget)
         {
-            WidgetGroup widgetGroup = WidgetGroups.FirstOrDefault(group => @group.Heading == baseWidget.Category);
+            var widgetGroup = WidgetGroups.FirstOrDefault(group => @group.Heading == baseWidget.Category);
             if (widgetGroup == null)
             {
                 widgetGroup = new WidgetGroup

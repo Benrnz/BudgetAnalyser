@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
-            TransactionSetDto transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
+            var transactionSet = CreateTransactionSet(storageKey, allLines, transactions);
 
             ValidateChecksumIntegrity(transactionSet);
 
@@ -160,7 +160,7 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            TransactionSetDto transactionSet = this.mapper.ToDto(model);
+            var transactionSet = this.mapper.ToDto(model);
             transactionSet.VersionHash = VersionHash;
             transactionSet.StorageKey = storageKey;
             transactionSet.Checksum = CalculateTransactionCheckSum(transactionSet);
@@ -182,7 +182,7 @@ namespace BudgetAnalyser.Engine.Statement
                 {
                     WriteHeader(writer, transactionSet);
 
-                    foreach (TransactionDto transaction in transactionSet.Transactions)
+                    foreach (var transaction in transactionSet.Transactions)
                     {
                         var line = new StringBuilder();
                         line.Append(transaction.TransactionType);
@@ -237,7 +237,7 @@ namespace BudgetAnalyser.Engine.Statement
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
         {
             var responseList = new List<string>();
-            using (StreamReader reader = File.OpenText(fileName))
+            using (var reader = File.OpenText(fileName))
             {
                 try
                 {
@@ -267,7 +267,7 @@ namespace BudgetAnalyser.Engine.Statement
             unchecked
             {
                 txnCheckSum *= 397; // also prime 
-                foreach (TransactionDto txn in setDto.Transactions)
+                foreach (var txn in setDto.Transactions)
                 {
                     txnCheckSum += (long) txn.Amount * 100;
                     txnCheckSum *= 829;

@@ -47,7 +47,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             List<BudgetModel> budgetsInvolved = budgets.ForDates(beginDate, endDate).ToList();
             result.UsesMultipleBudgets = budgetsInvolved.Count() > 1;
-            BudgetModel currentBudget = budgetsInvolved.Last(); // Use most recent budget as the current
+            var currentBudget = budgetsInvolved.Last(); // Use most recent budget as the current
 
             result.DurationInMonths = StatementModel.CalculateDuration(criteria, statementModel.Transactions);
 
@@ -55,9 +55,9 @@ namespace BudgetAnalyser.Engine.Reports
 
             result.AnalysesList = new List<BucketPerformanceResult>();
             var list = new List<BucketPerformanceResult>();
-            foreach (BudgetBucket bucket in this.bucketRepository.Buckets)
+            foreach (var bucket in this.bucketRepository.Buckets)
             {
-                BudgetBucket bucketCopy = bucket;
+                var bucketCopy = bucket;
                 List<Transaction> query = statementModel.Transactions.Where(t => t.BudgetBucket == bucketCopy).ToList();
                 var totalSpent = query.Sum(t => t.Amount);
                 var averageSpend = totalSpent / result.DurationInMonths;
@@ -170,7 +170,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             return b =>
             {
-                Expense first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+                var first = b.Expenses.FirstOrDefault(e => e.Bucket == bucket);
                 if (first == null)
                 {
                     return 0;
@@ -184,7 +184,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             return b =>
             {
-                Income first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
+                var first = b.Incomes.FirstOrDefault(e => e.Bucket == bucket);
                 if (first == null)
                 {
                     return 0;
@@ -206,7 +206,7 @@ namespace BudgetAnalyser.Engine.Reports
             decimal budgetedAmount = 0;
             for (var month = 0; month < result.DurationInMonths; month++)
             {
-                BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
+                var budget = budgets.ForDate(beginDate.AddMonths(month));
                 budgetedAmount += whichBudgetBucket(budget);
             }
 
@@ -230,7 +230,7 @@ namespace BudgetAnalyser.Engine.Reports
 
             for (var month = 0; month < result.DurationInMonths; month++)
             {
-                BudgetModel budget = budgets.ForDate(beginDate.AddMonths(month));
+                var budget = budgets.ForDate(beginDate.AddMonths(month));
                 result.TotalBudgetExpenses += budget.Expenses.Sum(e => e.Amount);
             }
 

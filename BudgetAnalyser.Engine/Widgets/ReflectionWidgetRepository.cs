@@ -41,7 +41,7 @@ namespace BudgetAnalyser.Engine.Widgets
             MessageId = "IUserDefinedWidget")]
         public IUserDefinedWidget Create(string widgetType, string id)
         {
-            Type type = Type.GetType(widgetType);
+            var type = Type.GetType(widgetType);
             if (type == null)
             {
                 throw new NotSupportedException("The widget type specified " + widgetType +
@@ -80,7 +80,7 @@ namespace BudgetAnalyser.Engine.Widgets
                     .Where(t => typeof(Widget).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract)
                     .ToList();
 
-                foreach (Widget widget in widgetTypes
+                foreach (var widget in widgetTypes
                     .Where(t => !typeof(IUserDefinedWidget).IsAssignableFrom(t))
                     .Select(widgetType => Activator.CreateInstance(widgetType) as Widget))
                 {

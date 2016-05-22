@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.Widgets
 
         private decimal CalculateOpeningBalance()
         {
-            LedgerEntryLine line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
+            var line = this.ledgerCalculator.LocateApplicableLedgerLine(this.ledgerBook, this.filter);
             return line?.CalculatedSurplus ?? 0;
         }
     }

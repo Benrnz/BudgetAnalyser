@@ -93,7 +93,7 @@ namespace BudgetAnalyser.Engine.Statement
                 transactions.Add(transaction);
             }
 
-            StatementModel statement = new StatementModel(this.logger)
+            var statement = new StatementModel(this.logger)
             {
                 StorageKey = fileName,
                 LastImport = DateTime.Now
@@ -233,7 +233,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            DateTime date = this.importUtilities.FetchDate(split, 6);
+            var date = this.importUtilities.FetchDate(split, 6);
             if (date == DateTime.MinValue)
             {
                 return false;

@@ -86,7 +86,7 @@ namespace BudgetAnalyser.Engine.Services
             this.rulesStorageKey = null;
             this.matchingRulesGroupedByBucket.Clear();
             this.matchingRules.Clear();
-            EventHandler handler = Closed;
+            var handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
 
@@ -158,7 +158,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public MatchingRule CreateNewRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
-            MatchingRule rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
+            var rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
             AddRule(rule);
             return rule;
         }
@@ -166,7 +166,7 @@ namespace BudgetAnalyser.Engine.Services
         public SingleUseMatchingRule CreateNewSingleUseRule(string bucketCode, string description, string[] references,
                                                             string transactionTypeName, decimal? amount, bool andMatching)
         {
-            SingleUseMatchingRule rule = this.ruleFactory.CreateNewSingleUseRule(bucketCode, description, references, transactionTypeName,
+            var rule = this.ruleFactory.CreateNewSingleUseRule(bucketCode, description, references, transactionTypeName,
                 amount, andMatching);
             AddRule(rule);
             return rule;
@@ -218,7 +218,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             var matchesMade = this.matchmaker.Match(transactions, MatchingRules);
             this.logger.LogInfo(l => "TransactionRuleService: Removing any SingleUseRules that have been used.");
-            foreach (SingleUseMatchingRule rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
+            foreach (var rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
             {
                 if (rule.MatchCount > 0)
                 {
@@ -241,7 +241,7 @@ namespace BudgetAnalyser.Engine.Services
                     "Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
             }
 
-            RulesGroupedByBucket existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
+            var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
             if (existingGroup == null)
             {
                 return false;
@@ -249,7 +249,7 @@ namespace BudgetAnalyser.Engine.Services
 
             var success1 = existingGroup.Rules.Remove(ruleToRemove);
             var success2 = this.matchingRules.Remove(ruleToRemove);
-            MatchingRule removedRule = ruleToRemove;
+            var removedRule = ruleToRemove;
 
             this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
             if (!success1)
@@ -292,7 +292,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             // Check to see if an existing group object for the desired bucket already exists.
-            RulesGroupedByBucket existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
+            var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
             if (existingGroup == null)
             {
                 // Create a new group object for this bucket.

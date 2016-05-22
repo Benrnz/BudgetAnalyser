@@ -97,10 +97,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 return false;
             }
 
-            LedgerEntryLine line = Reconciliations.FirstOrDefault();
+            var line = Reconciliations.FirstOrDefault();
             if (line != null)
             {
-                LedgerEntryLine previous = Reconciliations.Skip(1).FirstOrDefault();
+                var previous = Reconciliations.Skip(1).FirstOrDefault();
                 if (previous != null && line.Date <= previous.Date)
                 {
                     validationMessages.AppendFormat(CultureInfo.CurrentCulture,
@@ -124,7 +124,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             List<LedgerBucket> ledgers = Ledgers.ToList();
             IEnumerable<Account> accounts = Ledgers.Select(l => l.StoredInAccount).Distinct();
-            foreach (Account account in accounts)
+            foreach (var account in accounts)
             {
                 ledgers.Insert(0, new SurplusLedger { StoredInAccount = account });
             }
@@ -162,7 +162,7 @@ namespace BudgetAnalyser.Engine.Ledger
         internal virtual ReconciliationResult Reconcile(DateTime reconciliationDate, BudgetModel budget,
                                                         StatementModel statement, params BankBalance[] currentBankBalances)
         {
-            ReconciliationResult newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
+            var newRecon = this.reconciliationBuilder.CreateNewMonthlyReconciliation(reconciliationDate, budget, statement, currentBankBalances);
             this.reconciliations.Insert(0, newRecon.Reconciliation);
             return newRecon;
         }
@@ -199,7 +199,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         internal LedgerEntryLine UnlockMostRecentLine()
         {
-            LedgerEntryLine line = Reconciliations.FirstOrDefault();
+            var line = Reconciliations.FirstOrDefault();
             line?.Unlock();
 
             return line;

@@ -57,7 +57,7 @@ namespace BudgetAnalyser.Engine.Reports
             var result = new BurnDownChartAnalyserResult();
 
             List<DateTime> datesOfTheMonth = YieldAllDaysInDateRange(beginDate);
-            DateTime lastDate = datesOfTheMonth.Last();
+            var lastDate = datesOfTheMonth.Last();
 
             CreateZeroLine(datesOfTheMonth, result);
 
@@ -88,7 +88,7 @@ namespace BudgetAnalyser.Engine.Reports
                 Description = "Running balance over time as transactions spend, the balance decreases."
             };
             result.GraphLines.SeriesList.Add(actualSpending);
-            foreach (DateTime day in datesOfTheMonth)
+            foreach (var day in datesOfTheMonth)
             {
                 if (day > DateTime.Today)
                 {
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.Reports
 
                 var dayClosingBalance = GetDayClosingBalance(spendingTransactions, day);
                 actualSpending.PlotsList.Add(new DatedGraphPlot { Date = day, Amount = dayClosingBalance });
-                DateTime copyOfDay = day;
+                var copyOfDay = day;
                 this.logger.LogInfo(l => l.Format("    {0} Close Bal:{1:N}", copyOfDay, dayClosingBalance));
             }
 
@@ -118,7 +118,7 @@ namespace BudgetAnalyser.Engine.Reports
             result.GraphLines.SeriesList.Add(seriesData);
 
             var iteration = 0;
-            foreach (DateTime day in datesOfTheMonth)
+            foreach (var day in datesOfTheMonth)
             {
                 seriesData.PlotsList.Add(new DatedGraphPlot { Amount = budgetTotal - average * iteration++, Date = day });
             }
@@ -169,7 +169,7 @@ namespace BudgetAnalyser.Engine.Reports
                 Description = "Zero line"
             };
             result.GraphLines.SeriesList.Add(series);
-            foreach (DateTime day in datesOfTheMonth)
+            foreach (var day in datesOfTheMonth)
             {
                 series.PlotsList.Add(new DatedGraphPlot { Amount = 0, Date = day });
             }
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.Reports
             decimal budgetTotal = 0;
             List<BudgetBucket> bucketsCopy = buckets.ToList();
 
-            LedgerEntryLine applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, beginDate);
+            var applicableLine = this.ledgerCalculator.LocateApplicableLedgerLine(ledgerBook, beginDate);
             if (applicableLine == null)
             {
                 // Use budget values from budget model instead, there is no ledger book line for this month.
@@ -223,7 +223,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return budgetModel.Surplus;
             }
 
-            Expense budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
+            var budget = budgetModel.Expenses.FirstOrDefault(e => e.Bucket == bucket);
             if (budget != null)
             {
                 return budget.Amount;
@@ -246,7 +246,7 @@ namespace BudgetAnalyser.Engine.Reports
                 return applicableLine.CalculatedSurplus;
             }
 
-            LedgerEntry ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == bucket);
+            var ledger = applicableLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == bucket);
             if (ledger != null)
             {
                 return ledger.Balance;
@@ -260,7 +260,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             var balance = query.First().Balance;
             // Skip 1 because the first row has the opening balance.
-            foreach (ReportTransactionWithRunningBalance transaction in query.Skip(1))
+            foreach (var transaction in query.Skip(1))
             {
                 balance += transaction.Amount;
                 transaction.Balance = balance;
@@ -272,11 +272,11 @@ namespace BudgetAnalyser.Engine.Reports
         /// </summary>
         private static List<DateTime> YieldAllDaysInDateRange(DateTime beginDate)
         {
-            DateTime startDate = beginDate;
-            DateTime end = beginDate.AddMonths(1).AddDays(-1);
+            var startDate = beginDate;
+            var end = beginDate.AddMonths(1).AddDays(-1);
 
             var data = new List<DateTime>();
-            DateTime current = startDate;
+            var current = startDate;
             do
             {
                 data.Add(current);

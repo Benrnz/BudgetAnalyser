@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Statement
 
                 string[] split = line.Split(',');
                 decimal amount;
-                NamedTransaction transactionType = FetchTransactionType(split, 1, 2, out amount);
+                var transactionType = FetchTransactionType(split, 1, 2, out amount);
                 var transaction = new Transaction
                 {
                     Account = account,
@@ -173,7 +173,7 @@ namespace BudgetAnalyser.Engine.Statement
 
             if (TransactionTypes.ContainsKey(stringType))
             {
-                NamedTransaction cachedTransactionType = TransactionTypes[stringType];
+                var cachedTransactionType = TransactionTypes[stringType];
                 amount *= -1;
                 return cachedTransactionType;
             }
@@ -255,7 +255,7 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            DateTime date = this.importUtilities.FetchDate(split, 4);
+            var date = this.importUtilities.FetchDate(split, 4);
             if (date == DateTime.MinValue)
             {
                 return false;

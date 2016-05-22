@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         /// <exception cref="DataFormatException">Invalid transaction type encountered:  + transactionTypeName</exception>
         public LedgerTransaction Build(string transactionTypeName, Guid id)
         {
-            Type type = Type.GetType(transactionTypeName);
+            var type = Type.GetType(transactionTypeName);
             if (type == null)
             {
                 throw new DataFormatException("Invalid transaction type encountered: " + transactionTypeName);

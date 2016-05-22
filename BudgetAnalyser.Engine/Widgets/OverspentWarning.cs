@@ -125,7 +125,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             var warnings = 0;
             List<Transaction> transactions = statement.Transactions.Where(t => t.Date < filter.BeginDate?.Date.AddMonths(1)).ToList();
-            foreach (Expense expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
+            foreach (var expense in budget.Model.Expenses.Where(e => e.Bucket is BillToPayExpenseBucket))
             {
                 if (overspendingSummary.ContainsKey(expense.Bucket))
                 {

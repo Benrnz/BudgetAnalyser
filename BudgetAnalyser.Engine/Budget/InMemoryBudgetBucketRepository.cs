@@ -157,7 +157,7 @@ namespace BudgetAnalyser.Engine.Budget
                     return this.lookupTable[upperCode];
                 }
 
-                BudgetBucket newBucket = factory();
+                var newBucket = factory();
                 this.lookupTable.Add(upperCode, newBucket);
                 return newBucket;
             }

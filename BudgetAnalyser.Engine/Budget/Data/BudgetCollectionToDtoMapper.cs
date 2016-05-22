@@ -33,7 +33,7 @@ namespace BudgetAnalyser.Engine.Budget.Data
 
         partial void ToModelPostprocessing(BudgetCollectionDto dto, ref BudgetCollection model)
         {
-            BudgetCollection budgetCollection = model;
+            var budgetCollection = model;
             dto.Budgets.ForEach(x => budgetCollection.Add(this.budgetMapper.ToModel(x)));
             dto.Buckets.ForEach(x => this.bucketRepo.GetOrCreateNew(x.Code, () => this.bucketMapper.ToModel(x)));
         }

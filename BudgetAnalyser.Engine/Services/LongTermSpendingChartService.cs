@@ -39,7 +39,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             this.analyser.Analyse(statementModel, criteria);
-            GraphData result = this.analyser.Graph;
+            var result = this.analyser.Graph;
             this.analyser.Reset();
             return result;
         }

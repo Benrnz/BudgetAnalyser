@@ -28,13 +28,13 @@ namespace BudgetAnalyser.Engine
             Type[] allTypes = assembly.GetTypes()
                 .Where(t =>
                 {
-                    TypeInfo typeInfo = t.GetTypeInfo();
+                    var typeInfo = t.GetTypeInfo();
                     return typeInfo.IsClass && typeInfo.IsAbstract && typeInfo.IsSealed && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null;
                 })
                 .ToArray();
-            foreach (Type type in allTypes)
+            foreach (var type in allTypes)
             {
-                foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Static))
+                foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static))
                 {
                     var injectionAttribute = property.GetCustomAttribute<PropertyInjectionAttribute>();
                     if (injectionAttribute != null)
@@ -65,7 +65,7 @@ namespace BudgetAnalyser.Engine
             Type[] allTypes = assembly.GetTypes()
                 .Where(t =>
                 {
-                    TypeInfo typeInfo = t.GetTypeInfo();
+                    var typeInfo = t.GetTypeInfo();
                     return !typeInfo.IsAbstract && typeInfo.IsClass && typeInfo.GetCustomAttribute<AutoRegisterWithIoCAttribute>() != null;
                 })
                 .ToArray();

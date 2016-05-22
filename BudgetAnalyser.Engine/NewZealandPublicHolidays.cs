@@ -40,9 +40,9 @@ namespace BudgetAnalyser.Engine
         public static IEnumerable<Tuple<string, DateTime>> CalculateHolidaysVerbose(DateTime start, DateTime end)
         {
             var holidays = new Dictionary<DateTime, string>();
-            foreach (Holiday holidayTemplate in HolidayTemplates)
+            foreach (var holidayTemplate in HolidayTemplates)
             {
-                DateTime proposedDate = holidayTemplate.CalculateDate(start, end);
+                var proposedDate = holidayTemplate.CalculateDate(start, end);
 
                 if (holidays.ContainsKey(proposedDate))
                 {
@@ -175,7 +175,7 @@ namespace BudgetAnalyser.Engine
 
             public override DateTime CalculateDate(DateTime start, DateTime end)
             {
-                DateTime proposed = DateTime.MinValue;
+                var proposed = DateTime.MinValue;
                 for (var year = start.Year; year <= end.Year; year++)
                 {
                     proposed = new DateTime(year, Month, Day);
@@ -224,7 +224,7 @@ namespace BudgetAnalyser.Engine
             {
                 for (var year = start.Year; year <= end.Year; year++)
                 {
-                    DateTime proposed = ProposeDate(year);
+                    var proposed = ProposeDate(year);
                     if (proposed >= start && proposed <= end)
                     {
                         return proposed;

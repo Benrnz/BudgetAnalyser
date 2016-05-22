@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             // This ledger can accumulate a balance but cannot be negative.
             var closingBalance = openingBalance + netAmount;
-            LedgerTransaction budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
+            var budgetedAmount = transactions.FirstOrDefault(t => t is BudgetCreditLedgerTransaction);
             if (budgetedAmount != null && closingBalance < budgetedAmount.Amount)
             {
                 // This ledger has a monthly budgeted amount and the balance has resulted in a balance less than the monthly budgeted amount, supplement from surplus to equal budgeted amount.

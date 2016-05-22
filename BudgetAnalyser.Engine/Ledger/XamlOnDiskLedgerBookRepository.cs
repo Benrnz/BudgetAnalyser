@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            LedgerBook book = this.ledgerBookFactory.CreateNew();
+            var book = this.ledgerBookFactory.CreateNew();
             book.Name = Path.GetFileNameWithoutExtension(storageKey).Replace('.', ' ');
             book.StorageKey = storageKey;
             book.Modified = DateTime.Now;
@@ -121,7 +121,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             dataEntity.StorageKey = storageKey;
-            LedgerBook book = this.mapper.ToModel(dataEntity);
+            var book = this.mapper.ToModel(dataEntity);
 
             var messages = new StringBuilder();
             if (!book.Validate(messages))
@@ -165,7 +165,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            LedgerBookDto dataEntity = this.mapper.ToDto(book);
+            var dataEntity = this.mapper.ToDto(book);
             book.StorageKey = storageKey;
             dataEntity.StorageKey = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);

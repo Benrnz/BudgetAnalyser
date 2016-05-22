@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             this.diagLogger.LogInfo(l => l.Format("{0} Calculating Payment Plan for {1}. From {2} to {3}", WidgetType.Name, Id, this.filter.BeginDate, this.filter.EndDate));
-            PaymentDate currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
+            var currentDate = CalculateStartDate(StartPaymentDate, this.filter.BeginDate.Value);
             var content = new StringBuilder();
             // Ignore start date in filter and force it to be one month prior to end date in filter.
             var currentMonthTally = new NextOccurance

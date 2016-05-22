@@ -58,7 +58,7 @@ namespace BudgetAnalyser.Engine.Persistence
             };
             var serialised = Serialise(storageRoot);
             await WriteToDiskAsync(storageKey, serialised);
-            ApplicationDatabase appDb = this.mapper.ToModel(storageRoot);
+            var appDb = this.mapper.ToModel(storageRoot);
             appDb.FileName = storageKey;
             return appDb;
         }
@@ -97,7 +97,7 @@ namespace BudgetAnalyser.Engine.Persistence
                     ex);
             }
 
-            ApplicationDatabase db = this.mapper.ToModel(storageRoot);
+            var db = this.mapper.ToModel(storageRoot);
             db.FileName = fileName;
             if (db.LedgerReconciliationToDoCollection == null)
             {

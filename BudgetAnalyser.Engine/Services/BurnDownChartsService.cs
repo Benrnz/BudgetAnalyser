@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Services
             string chartTitle)
         {
             List<BudgetBucket> bucketsList = buckets.ToList();
-            BurnDownChartAnalyserResult result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
+            var result = this.chartAnalyser.Analyse(statementModel, budgetModel, bucketsList, ledgerBookModel, beginDate);
             result.ChartTitle = chartTitle;
             var persistChart = new CustomAggregateBurnDownGraph
             {
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Services
         public void RemoveCustomChart(string chartName)
         {
             List<CustomAggregateBurnDownGraph> customCharts = this.chartsBuilder.CustomCharts.ToList();
-            CustomAggregateBurnDownGraph chart = customCharts.FirstOrDefault(c => c.Name == chartName);
+            var chart = customCharts.FirstOrDefault(c => c.Name == chartName);
             customCharts.Remove(chart);
             this.chartsBuilder.CustomCharts = customCharts;
         }

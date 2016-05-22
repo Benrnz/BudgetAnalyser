@@ -78,7 +78,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentException("Reconciling against an inactive budget is invalid.");
             }
 
-            Stopwatch stopWatch = Stopwatch.StartNew();
+            var stopWatch = Stopwatch.StartNew();
             this.logger.LogInfo(l => l.Format("Starting Ledger Book reconciliation {0}", DateTime.Now));
 
             if (!ignoreWarnings) this.validationMessages = new Collection<string>();
@@ -98,7 +98,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             // Create new single use matching rules - if needed to ensure transfers are assigned a bucket easily without user intervention.
-            foreach (ToDoTask task in recon.Tasks)
+            foreach (var task in recon.Tasks)
             {
                 this.logger.LogInfo(
                     l => l.Format("TASK: {0} SystemGenerated:{1}", task.Description, task.SystemGenerated));
@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(statement));
             }
 
-            LedgerEntryLine lastLine = ledgerBook.Reconciliations.FirstOrDefault();
+            var lastLine = ledgerBook.Reconciliations.FirstOrDefault();
             if (lastLine == null)
             {
                 return;
@@ -185,7 +185,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             List<Transaction> statementSubSet = statement.AllTransactions.Where(t => t.Date >= lastLine.Date).ToList();
-            foreach (LedgerTransaction ledgerTransaction in unmatchedTxns)
+            foreach (var ledgerTransaction in unmatchedTxns)
             {
                 IEnumerable<Transaction> statementTxns = ReconciliationBuilder.TransactionsToAutoMatch(statementSubSet,
                     ledgerTransaction.AutoMatchingReference);
@@ -253,14 +253,14 @@ namespace BudgetAnalyser.Engine.Ledger
             // No need for a source transaction for surplus ledger.
             if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
-                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
+                var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
                 ledgerEntry.AddTransaction(sourceTransaction);
             }
 
             // No need for a destination transaction for surplus ledger.
             if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
-                LedgerEntry ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
+                var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
                 ledgerEntry.AddTransaction(destinationTransaction);
             }
         }
@@ -278,7 +278,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 return;
             }
 
-            DateTime startDate = ReconciliationBuilder.CalculateDateForReconcile(ledgerBook, reconciliationDate);
+            var startDate = ReconciliationBuilder.CalculateDateForReconcile(ledgerBook, reconciliationDate);
 
             ValidateDates(ledgerBook, startDate, reconciliationDate, statement);
 
@@ -303,8 +303,8 @@ namespace BudgetAnalyser.Engine.Ledger
 
         private void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
         {
-            DateTime lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
-            TimeSpan difference = reconciliationDate.Subtract(lastTransactionDate);
+            var lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
+            var difference = reconciliationDate.Subtract(lastTransactionDate);
             if (difference.TotalHours > 24)
             {
                 throw new ValidationWarningException("There are no statement transactions in the last day or two, are you sure you have imported all this month's transactions?")
@@ -332,10 +332,10 @@ namespace BudgetAnalyser.Engine.Ledger
                 this.logger.LogWarning(
                     _ =>
                         "LedgerBook.PreReconciliationValidation: There appears to be transactions in the statement that are not categorised into a budget bucket.");
-                foreach (Transaction transaction in uncategorised)
+                foreach (var transaction in uncategorised)
                 {
                     count++;
-                    Transaction transactionCopy = transaction;
+                    var transactionCopy = transaction;
                     this.logger.LogWarning(
                         _ =>
                             "LedgerBook.PreReconciliationValidation: Transaction: " + transactionCopy.Id +
@@ -357,7 +357,7 @@ namespace BudgetAnalyser.Engine.Ledger
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static void ValidateDates(LedgerBook ledgerBook, DateTime startDate, DateTime reconciliationDate, StatementModel statement)
         {
-            LedgerEntryLine recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
+            var recentEntry = ledgerBook.Reconciliations.FirstOrDefault();
             if (recentEntry != null)
             {
                 if (reconciliationDate <= recentEntry.Date)

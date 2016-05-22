@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Services
 
             this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
             // Only clears system generated tasks, not persistent user created tasks.
-            foreach (ISupportsModelPersistence service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
+            foreach (var service in this.databaseDependents.OrderByDescending(d => d.LoadSequence))
             {
                 service.Close();
             }
@@ -74,7 +74,7 @@ namespace BudgetAnalyser.Engine.Services
 
             ClearDirtyDataFlags();
             this.budgetAnalyserDatabase = await this.applicationRepository.CreateNewAsync(storageKey);
-            foreach (ISupportsModelPersistence service in this.databaseDependents)
+            foreach (var service in this.databaseDependents)
             {
                 await service.CreateAsync(this.budgetAnalyserDatabase);
             }
@@ -95,7 +95,7 @@ namespace BudgetAnalyser.Engine.Services
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
             try
             {
-                foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
+                foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
                 {
                     await service.LoadAsync(this.budgetAnalyserDatabase);
                 }
@@ -189,7 +189,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var valid = true;
-            foreach (ISupportsModelPersistence service in this.databaseDependents) // Already sorted ascending by sequence number.
+            foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
             {
                 try
                 {
@@ -207,7 +207,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void ClearDirtyDataFlags()
         {
-            foreach (ApplicationDataType key in this.dirtyData.Keys.ToList())
+            foreach (var key in this.dirtyData.Keys.ToList())
             {
                 this.dirtyData[key] = false;
             }

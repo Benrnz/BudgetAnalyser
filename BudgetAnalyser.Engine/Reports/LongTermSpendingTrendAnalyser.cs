@@ -56,15 +56,15 @@ namespace BudgetAnalyser.Engine.Reports
             }
 
             Reset();
-            DateTime minDate = CalculateStartDate(statement, criteria);
-            DateTime maxDate = CalculateEndDate(statement, criteria);
+            var minDate = CalculateStartDate(statement, criteria);
+            var maxDate = CalculateEndDate(statement, criteria);
 
-            DateTime currentMonth = minDate;
-            DateTime nextMonth = currentMonth.AddMonths(1);
+            var currentMonth = minDate;
+            var nextMonth = currentMonth.AddMonths(1);
             var subTotals = new Dictionary<string, decimal>();
             List<SeriesData> allSeriesData = InitialiseSeriesData(minDate, maxDate);
 
-            foreach (Transaction transaction in statement.AllTransactions)
+            foreach (var transaction in statement.AllTransactions)
             {
                 if (transaction.Date >= nextMonth)
                 {
@@ -96,7 +96,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (criteria.Cleared || criteria.EndDate == null)
             {
-                DateTime maxDate = statement.AllTransactions.Max(t => t.Date).Date;
+                var maxDate = statement.AllTransactions.Max(t => t.Date).Date;
                 return maxDate.LastDateInMonth();
             }
 
@@ -107,7 +107,7 @@ namespace BudgetAnalyser.Engine.Reports
         {
             if (criteria.Cleared || criteria.BeginDate == null)
             {
-                DateTime minDate = statement.AllTransactions.Min(t => t.Date).Date;
+                var minDate = statement.AllTransactions.Min(t => t.Date).Date;
                 minDate = minDate.FirstDateInMonth();
                 return minDate;
             }
@@ -133,10 +133,10 @@ namespace BudgetAnalyser.Engine.Reports
                 .Select(bucket => new SeriesData { SeriesName = bucket.Code, Description = bucket.Description })
                 .ToList();
 
-            DateTime currentMonth = minDate;
+            var currentMonth = minDate;
             do
             {
-                foreach (SeriesData seriesData in allSeriesData)
+                foreach (var seriesData in allSeriesData)
                 {
                     seriesData.PlotsList.Add(new DatedGraphPlot { Date = currentMonth, Amount = 0M });
                 }
@@ -150,7 +150,7 @@ namespace BudgetAnalyser.Engine.Reports
         private void RemoveSeriesWithNoData()
         {
             List<SeriesData> zeroSeries = Graph.SeriesList.Where(s => s.PlotsList.Sum(p => p.Amount) == 0).ToList();
-            foreach (SeriesData removeMe in zeroSeries)
+            foreach (var removeMe in zeroSeries)
             {
                 Graph.SeriesList.Remove(removeMe);
             }
@@ -163,9 +163,9 @@ namespace BudgetAnalyser.Engine.Reports
             foreach (KeyValuePair<string, decimal> subTotal in subTotals)
             {
                 // Find appropriate bucket series
-                SeriesData series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
+                var series = allSeriesData.Single(a => a.SeriesName == subTotal.Key);
                 // Find appropriate month on that bucket graph line
-                DatedGraphPlot monthData = series.PlotsList.Single(s => s.Date == currentMonth);
+                var monthData = series.PlotsList.Single(s => s.Date == currentMonth);
                 monthData.Amount = Math.Abs(subTotal.Value);
                 // Negate because all debits are stored as negative. Graph lines will look better as positive values.
             }
