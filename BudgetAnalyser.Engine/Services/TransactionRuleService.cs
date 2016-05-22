@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,20 +20,21 @@ namespace BudgetAnalyser.Engine.Services
     internal class TransactionRuleService : ITransactionRuleService, ISupportsModelPersistence
     {
         private readonly IEnvironmentFolders environmentFolders;
-        private readonly MonitorableDependencies monitorableDependencies;
         private readonly ILogger logger;
+        private readonly List<MatchingRule> matchingRules;
+        private readonly List<RulesGroupedByBucket> matchingRulesGroupedByBucket;
         private readonly IMatchmaker matchmaker;
+        private readonly MonitorableDependencies monitorableDependencies;
         private readonly IMatchingRuleFactory ruleFactory;
         private readonly IMatchingRuleRepository ruleRepository;
         private string rulesStorageKey;
-        private readonly List<MatchingRule> matchingRules;
 
         public TransactionRuleService(
             [NotNull] IMatchingRuleRepository ruleRepository,
             [NotNull] ILogger logger,
             [NotNull] IMatchmaker matchmaker,
             [NotNull] IMatchingRuleFactory ruleFactory,
-            [NotNull] IEnvironmentFolders environmentFolders, 
+            [NotNull] IEnvironmentFolders environmentFolders,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
             if (ruleRepository == null)
@@ -68,16 +67,24 @@ namespace BudgetAnalyser.Engine.Services
             this.environmentFolders = environmentFolders;
             this.monitorableDependencies = monitorableDependencies;
             this.matchingRules = new List<MatchingRule>();
-            MatchingRulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
+            this.matchingRulesGroupedByBucket = new List<RulesGroupedByBucket>();
         }
+
+        public event EventHandler Closed;
+        public event EventHandler NewDataSourceAvailable;
+        public event EventHandler Saved;
+        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
+        public event EventHandler<ValidatingEventArgs> Validating;
 
         public ApplicationDataType DataType => ApplicationDataType.MatchingRules;
         public int LoadSequence => 50;
+        public IEnumerable<MatchingRule> MatchingRules => this.matchingRules;
+        public IEnumerable<RulesGroupedByBucket> MatchingRulesGroupedByBucket => this.matchingRulesGroupedByBucket;
 
         public void Close()
         {
             this.rulesStorageKey = null;
-            MatchingRulesGroupedByBucket.Clear();
+            this.matchingRulesGroupedByBucket.Clear();
             this.matchingRules.Clear();
             EventHandler handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
@@ -97,7 +104,7 @@ namespace BudgetAnalyser.Engine.Services
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
             this.matchingRules.Clear();
-            MatchingRulesGroupedByBucket.Clear();
+            this.matchingRulesGroupedByBucket.Clear();
             this.rulesStorageKey = applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey);
             List<MatchingRule> repoRules;
             try
@@ -148,16 +155,6 @@ namespace BudgetAnalyser.Engine.Services
             handler?.Invoke(this, new ValidatingEventArgs());
             return true;
         }
-
-        public event EventHandler Closed;
-        public event EventHandler NewDataSourceAvailable;
-        public event EventHandler Saved;
-        public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
-        public event EventHandler<ValidatingEventArgs> Validating;
-        public IEnumerable<MatchingRule> MatchingRules => this.matchingRules;
-
-        // TODO SHould this not be IEnumerable as well?
-        public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
         public MatchingRule CreateNewRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
@@ -300,7 +297,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 // Create a new group object for this bucket.
                 var addNewGroup = new RulesGroupedByBucket(ruleToAdd.Bucket, new[] { ruleToAdd });
-                MatchingRulesGroupedByBucket.Add(addNewGroup);
+                this.matchingRulesGroupedByBucket.Add(addNewGroup);
                 this.matchingRules.Add(ruleToAdd);
             }
             else
@@ -326,10 +323,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void InitialiseTheRulesCollections(List<MatchingRule> repoRules)
         {
-            foreach (MatchingRule rule in repoRules)
-            {
-                this.matchingRules.Add(rule);
-            }
+            this.matchingRules.AddRange(repoRules);
 
             IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)
                 .Where(group => @group.Key != null)
@@ -337,10 +331,7 @@ namespace BudgetAnalyser.Engine.Services
                 .Select(group => new RulesGroupedByBucket(@group.Key, @group))
                 .OrderBy(group => @group.Bucket.Code);
 
-            foreach (RulesGroupedByBucket groupedByBucket in grouped)
-            {
-                MatchingRulesGroupedByBucket.Add(groupedByBucket);
-            }
+            this.matchingRulesGroupedByBucket.AddRange(grouped);
         }
 
         private static void IsSimilarRulePreconditions(SimilarMatchedRule rule, DecimalCriteria amount,

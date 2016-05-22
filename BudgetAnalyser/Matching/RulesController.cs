@@ -284,7 +284,7 @@ namespace BudgetAnalyser.Matching
         {
             SortBy = BucketSortKey; // Defaults to Bucket sort order.
             Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
-            RulesGroupedByBucket = this.ruleService.MatchingRulesGroupedByBucket;
+            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
             SelectedRule = null;
             RaisePropertyChanged(() => Rules);
             RaisePropertyChanged(() => RulesGroupedByBucket);
