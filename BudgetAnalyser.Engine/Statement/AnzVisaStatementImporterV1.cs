@@ -212,6 +212,7 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 fullTypeText = "Credit Card Debit";
                 transactionType = new NamedTransaction(fullTypeText);
+                amount *= -1;
             }
             else if (stringType == "C")
             {
@@ -224,7 +225,6 @@ namespace BudgetAnalyser.Engine.Statement
                 transactionType = new NamedTransaction(fullTypeText);
             }
 
-            amount *= -1;
             TransactionTypes.Add(stringType, transactionType);
             return transactionType;
         }
