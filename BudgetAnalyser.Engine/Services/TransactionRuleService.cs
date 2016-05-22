@@ -158,8 +158,7 @@ namespace BudgetAnalyser.Engine.Services
         public MatchingRule CreateNewRule(string bucketCode, string description, string[] references,
                                           string transactionTypeName, decimal? amount, bool andMatching)
         {
-            MatchingRule rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount,
-                andMatching);
+            MatchingRule rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
             AddRule(rule);
             return rule;
         }
@@ -280,32 +279,39 @@ namespace BudgetAnalyser.Engine.Services
             {
                 throw new ArgumentNullException(nameof(ruleToAdd));
             }
+
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
-                throw new InvalidOperationException(
-                    "Unable to add a matching rule at this time, the service has not yet loaded a matching rule set.");
+                throw new InvalidOperationException("Unable to add a matching rule at this time, the service has not yet loaded a matching rule set.");
             }
 
+            // Make sure no rule already exists with this id:
+            if (MatchingRules.Any(r => r.RuleId == ruleToAdd.RuleId))
+            {
+                throw new DuplicateNameException($"Unable to add new matching rule: RuleID {ruleToAdd.RuleId} already exists in the collection.");
+            }
+
+            // Check to see if an existing group object for the desired bucket already exists.
             RulesGroupedByBucket existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
             if (existingGroup == null)
             {
+                // Create a new group object for this bucket.
                 var addNewGroup = new RulesGroupedByBucket(ruleToAdd.Bucket, new[] { ruleToAdd });
                 MatchingRulesGroupedByBucket.Add(addNewGroup);
                 MatchingRules.Add(ruleToAdd);
             }
             else
             {
+                // Add to existing group object.
                 if (existingGroup.Rules.Contains(ruleToAdd))
                 {
-                    this.logger.LogWarning(
-                        l => "Attempt to add new rule failed. Rule already exists in Grouped collection. " + ruleToAdd);
+                    this.logger.LogWarning(l => "Attempt to add new rule failed. Rule already exists in Grouped collection. " + ruleToAdd);
                     return;
                 }
                 existingGroup.Rules.Add(ruleToAdd);
                 if (MatchingRules.Contains(ruleToAdd))
                 {
-                    this.logger.LogWarning(
-                        l => "Attempt to add new rule failed. Rule already exists in main collection. " + ruleToAdd);
+                    this.logger.LogWarning(l => "Attempt to add new rule failed. Rule already exists in main collection. " + ruleToAdd);
                     return;
                 }
 
