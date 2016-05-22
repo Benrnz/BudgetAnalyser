@@ -283,8 +283,8 @@ namespace BudgetAnalyser.Matching
         private void OnNewDataSourceAvailableNotificationReceived(object sender, EventArgs e)
         {
             SortBy = BucketSortKey; // Defaults to Bucket sort order.
-            Rules = this.ruleService.MatchingRules;
-            RulesGroupedByBucket = this.ruleService.MatchingRulesGroupedByBucket;
+            Rules = new ObservableCollection<MatchingRule>(this.ruleService.MatchingRules);
+            RulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>(this.ruleService.MatchingRulesGroupedByBucket);
             SelectedRule = null;
             RaisePropertyChanged(() => Rules);
             RaisePropertyChanged(() => RulesGroupedByBucket);

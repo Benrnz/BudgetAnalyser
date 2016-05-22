@@ -73,6 +73,17 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             Assert.IsFalse(this.subject.MatchingRules.Any(r => r is SingleUseMatchingRule));
         }
 
+        [TestMethod]
+        public void CreateNewRule_ShouldNotCreateDuplicates()
+        {
+            this.mockRuleFactory.Setup(m => m.CreateNewRule(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<decimal?>(), It.IsAny<bool>()))
+                .Returns(new MatchingRule(this.mockBucketRepo) { And = true, BucketCode = TestDataConstants.CarMtcBucketCode, Description = "Test Description" });
+
+            var newRule = this.subject.CreateNewRule(" ", " ", new string[] { }, null, null, true);
+
+            Assert.AreEqual(1, this.subject.MatchingRules.Count());
+        }
+
         [TestInitialize]
         public void TestInitialise()
         {
@@ -88,6 +99,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
                 this.mockRuleFactory.Object, 
                 new FakeEnvironmentFolders(),
                 new FakeMonitorableDependencies());
+            
+            PrivateAccessor.SetField(this.subject, "rulesStorageKey", "Any storage key value");
         }
 
         private void ArrangeForCreateNewRule()

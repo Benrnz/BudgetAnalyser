@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Matching
         [ExpectedException(typeof(ArgumentNullException))]
         public void CtorShouldThrowWhenGivenNullMapper()
         {
-            new XamlOnDiskMatchingRuleRepository(null);
+            new XamlOnDiskMatchingRuleRepository(null, new FakeLogger());
             Assert.Fail();
         }
 

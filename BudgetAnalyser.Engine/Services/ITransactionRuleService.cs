@@ -16,12 +16,12 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Gets the matching rules for data binding in the UI.
         /// </summary>
-        ObservableCollection<MatchingRule> MatchingRules { get; }
+        IEnumerable<MatchingRule> MatchingRules { get; }
 
         /// <summary>
         ///     Gets the matching rules grouped by bucket.
         /// </summary>
-        ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
+        IEnumerable<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
         /// <summary>
         ///     Creates a new matching rule.
