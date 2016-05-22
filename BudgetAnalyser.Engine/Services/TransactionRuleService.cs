@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,7 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IMatchingRuleFactory ruleFactory;
         private readonly IMatchingRuleRepository ruleRepository;
         private string rulesStorageKey;
+        private readonly List<MatchingRule> matchingRules;
 
         public TransactionRuleService(
             [NotNull] IMatchingRuleRepository ruleRepository,
@@ -65,7 +67,7 @@ namespace BudgetAnalyser.Engine.Services
             this.ruleFactory = ruleFactory;
             this.environmentFolders = environmentFolders;
             this.monitorableDependencies = monitorableDependencies;
-            MatchingRules = new ObservableCollection<MatchingRule>();
+            this.matchingRules = new List<MatchingRule>();
             MatchingRulesGroupedByBucket = new ObservableCollection<RulesGroupedByBucket>();
         }
 
@@ -76,7 +78,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             this.rulesStorageKey = null;
             MatchingRulesGroupedByBucket.Clear();
-            MatchingRules.Clear();
+            this.matchingRules.Clear();
             EventHandler handler = Closed;
             handler?.Invoke(this, EventArgs.Empty);
         }
@@ -94,7 +96,7 @@ namespace BudgetAnalyser.Engine.Services
 
         public async Task LoadAsync(ApplicationDatabase applicationDatabase)
         {
-            MatchingRules.Clear();
+            this.matchingRules.Clear();
             MatchingRulesGroupedByBucket.Clear();
             this.rulesStorageKey = applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey);
             List<MatchingRule> repoRules;
@@ -152,11 +154,12 @@ namespace BudgetAnalyser.Engine.Services
         public event EventHandler Saved;
         public event EventHandler<AdditionalInformationRequestedEventArgs> Saving;
         public event EventHandler<ValidatingEventArgs> Validating;
-        public ObservableCollection<MatchingRule> MatchingRules { get; }
+        public IEnumerable<MatchingRule> MatchingRules => this.matchingRules;
+
+        // TODO SHould this not be IEnumerable as well?
         public ObservableCollection<RulesGroupedByBucket> MatchingRulesGroupedByBucket { get; }
 
-        public MatchingRule CreateNewRule(string bucketCode, string description, string[] references,
-                                          string transactionTypeName, decimal? amount, bool andMatching)
+        public MatchingRule CreateNewRule(string bucketCode, string description, string[] references, string transactionTypeName, decimal? amount, bool andMatching)
         {
             MatchingRule rule = this.ruleFactory.CreateNewRule(bucketCode, description, references, transactionTypeName, amount, andMatching);
             AddRule(rule);
@@ -248,7 +251,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var success1 = existingGroup.Rules.Remove(ruleToRemove);
-            var success2 = MatchingRules.Remove(ruleToRemove);
+            var success2 = this.matchingRules.Remove(ruleToRemove);
             MatchingRule removedRule = ruleToRemove;
 
             this.logger.LogInfo(_ => "Matching Rule is being Removed: " + removedRule);
@@ -298,7 +301,7 @@ namespace BudgetAnalyser.Engine.Services
                 // Create a new group object for this bucket.
                 var addNewGroup = new RulesGroupedByBucket(ruleToAdd.Bucket, new[] { ruleToAdd });
                 MatchingRulesGroupedByBucket.Add(addNewGroup);
-                MatchingRules.Add(ruleToAdd);
+                this.matchingRules.Add(ruleToAdd);
             }
             else
             {
@@ -315,7 +318,7 @@ namespace BudgetAnalyser.Engine.Services
                     return;
                 }
 
-                MatchingRules.Add(ruleToAdd);
+                this.matchingRules.Add(ruleToAdd);
             }
 
             this.logger.LogInfo(_ => "Matching Rule Added: " + ruleToAdd);
@@ -325,7 +328,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             foreach (MatchingRule rule in repoRules)
             {
-                MatchingRules.Add(rule);
+                this.matchingRules.Add(rule);
             }
 
             IEnumerable<RulesGroupedByBucket> grouped = repoRules.GroupBy(rule => rule.Bucket)

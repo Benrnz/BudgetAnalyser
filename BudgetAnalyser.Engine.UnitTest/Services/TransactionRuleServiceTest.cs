@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
 
             var newRule = this.subject.CreateNewRule(" ", " ", new string[] { }, null, null, true);
 
-            Assert.AreEqual(1, this.subject.MatchingRules.Count);
+            Assert.AreEqual(1, this.subject.MatchingRules.Count());
         }
 
         [TestInitialize]
