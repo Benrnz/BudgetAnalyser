@@ -18,22 +18,27 @@ namespace BudgetAnalyser.Engine.Matching
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
     {
+        private readonly ILogger logger;
         private readonly IDtoMapper<MatchingRuleDto, MatchingRule> mapper;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskMatchingRuleRepository" /> class.
         /// </summary>
         /// <param name="mapper">The data to domain mapper.</param>
+        /// <param name="logger">The diagnostics logger.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper)
+        public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper, [NotNull] ILogger logger)
         {
             if (mapper == null)
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
 
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -100,15 +105,8 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new DataFormatException("Deserialised Matching-Rules are not of type List<MatchingRuleDto>");
             }
 
-            var realModel = dataEntities.Select(d => this.mapper.ToModel(d));
-            Validate(realModel);
-            return realModel;
-        }
-
-        private IEnumerable<MatchingRule> Validate(IEnumerable<MatchingRule> model)
-        {
-            // TODO remove duplicates.
-            return model;
+            IEnumerable<MatchingRule> realModel = dataEntities.Select(d => this.mapper.ToModel(d));
+            return Validate(realModel.ToList());
         }
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace BudgetAnalyser.Engine.Matching
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            var model = Validate(rules);
+            IEnumerable<MatchingRule> model = Validate(rules.ToList());
             IEnumerable<MatchingRuleDto> dataEntities = model.Select(r => this.mapper.ToDto(r));
             await SaveToDiskAsync(storageKey, dataEntities);
         }
@@ -173,6 +171,44 @@ namespace BudgetAnalyser.Engine.Matching
                     XamlServices.Save(stream, dataEntities.ToList());
                 }
             });
+        }
+
+        private IList<MatchingRule> Validate(IList<MatchingRule> model)
+        {
+            // Remove duplicates.
+            var duplicatesExist = model.GroupBy(r => r.RuleId).Any(g => g.Count() > 1);
+            if (!duplicatesExist)
+            {
+                return model;
+            }
+
+            var knownList = new HashSet<Guid>();
+            var indexOfDuplicate = 0;
+            bool foundDuplicate;
+            do
+            {
+                foundDuplicate = false;
+                for (var index = indexOfDuplicate; index < model.Count; index++)
+                {
+                    if (knownList.Contains(model[index].RuleId))
+                    {
+                        indexOfDuplicate = index;
+                        foundDuplicate = true;
+                        break;
+                    }
+                    knownList.Add(model[index].RuleId);
+                }
+
+                if (foundDuplicate)
+                {
+                    MatchingRule rule = model[indexOfDuplicate];
+                    this.logger.LogWarning(l =>
+                            $"Duplicate RuleID found and will be removed: {rule.RuleId} {rule.BucketCode} {rule.LastMatch:o} And:{rule.And} {rule.Description} {rule.TransactionType} {rule.Reference1}");
+                    model.RemoveAt(indexOfDuplicate);
+                }
+            } while (foundDuplicate);
+
+            return model;
         }
     }
 }
