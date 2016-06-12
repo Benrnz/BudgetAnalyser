@@ -15,8 +15,19 @@ namespace BudgetAnalyser.Engine.Statement
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class AnzVisaStatementImporterV1 : IBankStatementImporter
     {
-        private static readonly Dictionary<string, NamedTransaction> TransactionTypes =
-            new Dictionary<string, NamedTransaction>();
+        private const int Reference1Index = 0;
+        private const int TransactionTypeIndex = 1;
+        private const int AmountIndex = 2;
+        private const int DescriptionIndex = 3;
+        private const int DateIndex = 4;
+        private const string DebitTransactionType = "D";
+        private const string CreditTransactionType = "C";
+
+        private static readonly Dictionary<string, NamedTransaction> TransactionTypes = new Dictionary<string, NamedTransaction>
+        {
+            { CreditTransactionType, new NamedTransaction("Credit Card Credit") },
+            { DebitTransactionType, new NamedTransaction("Credit Card Debit", true) }
+        };
 
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
@@ -83,17 +94,16 @@ namespace BudgetAnalyser.Engine.Statement
                 }
 
                 string[] split = line.Split(',');
-                decimal amount;
-                var transactionType = FetchTransactionType(split, 1, 2, out amount);
+                var transactionType = FetchTransactionType(split);
                 var transaction = new Transaction
                 {
                     Account = account,
-                    Reference1 = this.importUtilities.FetchString(split, 0),
+                    Reference1 = this.importUtilities.FetchString(split, Reference1Index),
                     TransactionType = transactionType,
-                    Amount = amount,
-                    Description = this.importUtilities.FetchString(split, 3),
-                    Date = this.importUtilities.FetchDate(split, 4)
+                    Description = this.importUtilities.FetchString(split, DescriptionIndex),
+                    Date = this.importUtilities.FetchDate(split, DateIndex)
                 };
+                transaction.Amount = FetchAmount(split, transactionType);
                 transactions.Add(transaction);
             }
 
@@ -162,10 +172,20 @@ namespace BudgetAnalyser.Engine.Statement
             }
         }
 
-        private NamedTransaction FetchTransactionType(string[] array, int transactionTypeindex, int amountIndex, out decimal amount)
+        private decimal FetchAmount(string[] array, NamedTransaction transaction)
         {
-            var stringType = this.importUtilities.FetchString(array, transactionTypeindex);
-            amount = this.importUtilities.FetchDecimal(array, amountIndex);
+            var amount = this.importUtilities.FetchDecimal(array, AmountIndex);
+            if (transaction.IsDebit)
+            {
+                amount *= -1;
+            }
+
+            return amount;
+        }
+
+        private NamedTransaction FetchTransactionType(string[] array)
+        {
+            var stringType = this.importUtilities.FetchString(array, TransactionTypeIndex);
             if (string.IsNullOrWhiteSpace(stringType))
             {
                 return null;
@@ -173,30 +193,11 @@ namespace BudgetAnalyser.Engine.Statement
 
             if (TransactionTypes.ContainsKey(stringType))
             {
-                var cachedTransactionType = TransactionTypes[stringType];
-                amount *= -1;
-                return cachedTransactionType;
+                return TransactionTypes[stringType];
             }
 
-            string fullTypeText;
-            NamedTransaction transactionType;
-            if (stringType == "D")
-            {
-                fullTypeText = "Credit Card Debit";
-                transactionType = new NamedTransaction(fullTypeText);
-                amount *= -1;
-            }
-            else if (stringType == "C")
-            {
-                fullTypeText = "Credit Card Credit";
-                transactionType = new NamedTransaction(fullTypeText);
-            }
-            else
-            {
-                fullTypeText = stringType;
-                transactionType = new NamedTransaction(fullTypeText);
-            }
-
+            var fullTypeText = stringType;
+            var transactionType = new NamedTransaction(fullTypeText, true);
             TransactionTypes.Add(stringType, transactionType);
             return transactionType;
         }
@@ -238,7 +239,7 @@ namespace BudgetAnalyser.Engine.Statement
         private bool VerifyFirstDataLine(string line)
         {
             string[] split = line.Split(',');
-            var card = this.importUtilities.FetchString(split, 0);
+            var card = this.importUtilities.FetchString(split, Reference1Index);
             if (card.IsNothing())
             {
                 return false;
@@ -249,13 +250,13 @@ namespace BudgetAnalyser.Engine.Statement
                 return false;
             }
 
-            var amount = this.importUtilities.FetchDecimal(split, 2);
+            var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
             if (amount == 0)
             {
                 return false;
             }
 
-            var date = this.importUtilities.FetchDate(split, 4);
+            var date = this.importUtilities.FetchDate(split, DateIndex);
             if (date == DateTime.MinValue)
             {
                 return false;
