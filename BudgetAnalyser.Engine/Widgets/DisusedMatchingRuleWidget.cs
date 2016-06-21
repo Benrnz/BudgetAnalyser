@@ -73,7 +73,7 @@ namespace BudgetAnalyser.Engine.Widgets
             var count = rulesList.Count();
             LargeNumber = count.ToString();
             ToolTip = $"{count}/{ruleService.MatchingRules.Count()} Rules that have not been used for more than a year.";
-            if (count >= 10)
+            if (count >= 20)
             {
                 ColourStyleName = WidgetWarningStyle;
             }
