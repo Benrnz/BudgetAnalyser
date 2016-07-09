@@ -25,7 +25,7 @@ namespace BudgetAnalyser.Engine.Widgets
         /// </summary>
         public OverspentWarning()
         {
-            Category = WidgetGroup.OverviewSectionName;
+            Category = WidgetGroup.MonthlyTrackingSectionName;
             Dependencies = new[]
             {
                 typeof(StatementModel), typeof(IBudgetCurrencyContext), typeof(GlobalFilterCriteria),

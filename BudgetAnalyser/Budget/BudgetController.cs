@@ -32,6 +32,8 @@ namespace BudgetAnalyser.Budget
         private bool doNotUseShownBudget;
         private decimal expenseTotal;
         private decimal incomeTotal;
+
+        private bool isLoadingBudgetModel;
         private decimal surplus;
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
@@ -101,23 +103,31 @@ namespace BudgetAnalyser.Budget
 
             private set
             {
-                this.doNotUseModel = value;
-                ReleaseListBindingEvents();
-                if (this.doNotUseModel == null)
+                try
                 {
-                    Incomes = null;
-                    Expenses = null;
-                }
-                else
-                {
-                    SubscribeListBindingEvents();
-                }
+                    this.isLoadingBudgetModel = true;
+                    this.doNotUseModel = value;
+                    ReleaseListBindingEvents();
+                    if (this.doNotUseModel == null)
+                    {
+                        Incomes = null;
+                        Expenses = null;
+                    }
+                    else
+                    {
+                        SubscribeListBindingEvents();
+                    }
 
-                RaisePropertyChanged(() => Incomes);
-                RaisePropertyChanged(() => Expenses);
-                OnExpenseAmountPropertyChanged(null, EventArgs.Empty);
-                OnIncomeAmountPropertyChanged(null, EventArgs.Empty);
-                RaisePropertyChanged(() => CurrentBudget);
+                    RaisePropertyChanged(() => Incomes);
+                    RaisePropertyChanged(() => Expenses);
+                    OnExpenseAmountPropertyChanged(null, EventArgs.Empty);
+                    OnIncomeAmountPropertyChanged(null, EventArgs.Empty);
+                    RaisePropertyChanged(() => CurrentBudget);
+                }
+                finally
+                {
+                    this.isLoadingBudgetModel = false;
+                }
             }
         }
 
@@ -134,9 +144,9 @@ namespace BudgetAnalyser.Budget
             {
                 this.doNotUseDirty = value;
                 RaisePropertyChanged();
-                CurrentBudget.Model.LastModified = DateTime.Now;
                 if (Dirty)
                 {
+                    CurrentBudget.Model.LastModified = DateTime.Now;
                     this.applicationDatabaseService.NotifyOfChange(ApplicationDataType.Budget);
                 }
             }
@@ -216,6 +226,7 @@ namespace BudgetAnalyser.Budget
 
         private void BudgetModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
+            if (this.isLoadingBudgetModel) return;
             Dirty = true;
         }
 
@@ -340,7 +351,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnExpenseAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)
         {
-            if (ExpenseTotal != 0)
+            if (!this.isLoadingBudgetModel && ExpenseTotal != 0)
             {
                 Dirty = true;
             }
@@ -351,7 +362,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnIncomeAmountPropertyChanged(object sender, EventArgs propertyChangedEventArgs)
         {
-            if (IncomeTotal != 0)
+            if (!this.isLoadingBudgetModel && IncomeTotal != 0)
             {
                 Dirty = true;
             }
@@ -406,7 +417,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnValidatingNotificationReceived(object sender, ValidatingEventArgs eventArgs)
         {
-            SyncDataToBudgetService();
+            if (Dirty) SyncDataToBudgetService();
         }
 
         private void ReleaseListBindingEvents()
