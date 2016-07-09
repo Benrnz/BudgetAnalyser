@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Budget
 {
@@ -10,8 +13,13 @@ namespace BudgetAnalyser.Engine.Budget
     ///     A Budget model that contains all budgeting information. A budget is effective for a period of time after the
     ///     <see cref="EffectiveFrom" />.
     /// </summary>
-    public class BudgetModel
+    public class BudgetModel : INotifyPropertyChanged
     {
+        private DateTime doNotUseEffectiveFrom;
+        private DateTime doNotUseLastModified;
+        private string doNotUseLastModifiedComment;
+        private string doNotUseName;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetModel" /> class.
         /// </summary>
@@ -25,9 +33,23 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
+        ///     The Property Changed event for public properties
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Gets or sets the effective from date.
         /// </summary>
-        public DateTime EffectiveFrom { get; set; }
+        public DateTime EffectiveFrom
+        {
+            get { return this.doNotUseEffectiveFrom; }
+            set
+            {
+                if (value.Equals(this.doNotUseEffectiveFrom)) return;
+                this.doNotUseEffectiveFrom = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         ///     Gets the expenses collection.
@@ -42,17 +64,44 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Gets the date and time the budget model was last modified by the user.
         /// </summary>
-        public DateTime LastModified { get; set; }
+        public DateTime LastModified
+        {
+            get { return this.doNotUseLastModified; }
+            set
+            {
+                if (value.Equals(this.doNotUseLastModified)) return;
+                this.doNotUseLastModified = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         ///     Gets an optional comment than can be given when a change is made to the budget model.
         /// </summary>
-        public string LastModifiedComment { get; set; }
+        public string LastModifiedComment
+        {
+            get { return this.doNotUseLastModifiedComment; }
+            set
+            {
+                if (value == this.doNotUseLastModifiedComment) return;
+                this.doNotUseLastModifiedComment = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the budget name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return this.doNotUseName; }
+            set
+            {
+                if (value == this.doNotUseName) return;
+                this.doNotUseName = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         ///     Gets the calculated surplus amount.
@@ -74,6 +123,16 @@ namespace BudgetAnalyser.Engine.Budget
                 // Consumer should have already called validate and resolved any issues before calling Update+Initialise.
                 throw new ValidationWarningException("The model is invalid. " + builder);
             }
+        }
+
+        /// <summary>
+        ///     Called to to raise the <see cref="PropertyChanged" /> event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         internal void Update(IEnumerable<Income> incomes, IEnumerable<Expense> expenses)
