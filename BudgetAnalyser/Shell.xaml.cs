@@ -58,7 +58,15 @@ namespace BudgetAnalyser
                 e.Cancel = true;
                 if (await Controller.ShellClosing())
                 {
-                    Close();
+                    try
+                    {
+                        Close();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Continue, this ex is thrown when app is shutting down and user has chosen not to save.
+                        Application.Current.Shutdown();
+                    }
                 }
             }
         }

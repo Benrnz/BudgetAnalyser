@@ -83,8 +83,7 @@ namespace BudgetAnalyser.Budget
         [UsedImplicitly]
         public string BudgetMenuItemName
         {
-            [UsedImplicitly]
-            get { return this.budgetMenuItemName; }
+            [UsedImplicitly] get { return this.budgetMenuItemName; }
 
             set
             {
@@ -211,8 +210,13 @@ namespace BudgetAnalyser.Budget
 
         protected virtual string PromptUserForLastModifiedComment()
         {
-            string comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
+            var comment = this.inputBox.Show("Budget Maintenance", "Enter an optional comment to describe what you changed.");
             return comment ?? string.Empty;
+        }
+
+        private void BudgetModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            Dirty = true;
         }
 
         private bool CanExecuteShowPieCommand()
@@ -227,7 +231,7 @@ namespace BudgetAnalyser.Budget
 
         private void OnAddNewBudgetCommandExecuted()
         {
-            DateTime proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
+            var proposedDate = CurrentBudget.Model.EffectiveFrom.AddMonths(1);
             while (proposedDate < DateTime.Today)
             {
                 proposedDate = proposedDate.AddMonths(1);
@@ -239,7 +243,7 @@ namespace BudgetAnalyser.Budget
         {
             try
             {
-                BudgetModel budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom);
+                var budget = this.maintenanceService.CloneBudgetModel(CurrentBudget.Model, NewBudgetController.EffectiveFrom);
                 ShowOtherBudget(budget);
             }
             catch (ArgumentException ex)
@@ -255,7 +259,7 @@ namespace BudgetAnalyser.Budget
         private void OnAddNewExpenseExecute(ExpenseBucket expense)
         {
             Dirty = true;
-            Expense newExpense = Expenses.AddNew();
+            var newExpense = Expenses.AddNew();
             Debug.Assert(newExpense != null);
             newExpense.Amount = 0;
 
@@ -368,7 +372,7 @@ namespace BudgetAnalyser.Budget
                 return;
             }
 
-            var viewModel = (BudgetSelectionViewModel)message.Content;
+            var viewModel = (BudgetSelectionViewModel) message.Content;
             if (viewModel.Selected == null || viewModel.Selected == CurrentBudget.Model)
             {
                 return;
@@ -407,9 +411,10 @@ namespace BudgetAnalyser.Budget
 
         private void ReleaseListBindingEvents()
         {
+            CurrentBudget.Model.PropertyChanged -= BudgetModelOnPropertyChanged;
             if (Incomes != null)
             {
-                foreach (Income item in Incomes)
+                foreach (var item in Incomes)
                 {
                     item.PropertyChanged -= OnIncomeAmountPropertyChanged;
                     item.Bucket.PropertyChanged -= OnIncomeAmountPropertyChanged;
@@ -418,7 +423,7 @@ namespace BudgetAnalyser.Budget
 
             if (Expenses != null)
             {
-                foreach (Expense item in Expenses)
+                foreach (var item in Expenses)
                 {
                     item.PropertyChanged -= OnExpenseAmountPropertyChanged;
                     item.Bucket.PropertyChanged -= OnExpenseAmountPropertyChanged;
@@ -445,14 +450,15 @@ namespace BudgetAnalyser.Budget
 
         private void SubscribeListBindingEvents()
         {
-            Incomes = new BindingList<Income>(this.doNotUseModel.Model.Incomes.ToList());
+            CurrentBudget.Model.PropertyChanged += BudgetModelOnPropertyChanged;
+            Incomes = new BindingList<Income>(CurrentBudget.Model.Incomes.ToList());
             Incomes.ToList().ForEach(
                 i =>
                 {
                     i.PropertyChanged += OnIncomeAmountPropertyChanged;
                     i.Bucket.PropertyChanged += OnIncomeAmountPropertyChanged;
                 });
-            Expenses = new BindingList<Expense>(this.doNotUseModel.Model.Expenses.ToList());
+            Expenses = new BindingList<Expense>(CurrentBudget.Model.Expenses.ToList());
             Expenses.ToList().ForEach(
                 e =>
                 {

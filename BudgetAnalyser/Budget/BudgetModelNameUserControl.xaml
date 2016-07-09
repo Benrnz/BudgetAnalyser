@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="BudgetAnalyser.Budget.BudgetModelNameUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MouseDoubleClick="OnMouseDoubleClick">
 
     <!-- DataContext must be BudgetCurrencyContext -->
     <StackPanel Orientation="Horizontal">
@@ -33,7 +34,16 @@
                        Margin="3"
                        Text="Future" />
         </Border>
-        <TextBlock Style="{StaticResource TextBlock.Heading1}"
-                   Text="{Binding Model.Name}" />
+        <Grid>
+            <TextBlock x:Name="budgetNameTextBlock" 
+                       Style="{StaticResource TextBlock.Heading1}"
+                       Text="{Binding Model.Name}" />
+            <TextBox x:Name="budgetNameTextBox" 
+                     Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Stretch"
+                     KeyUp="OnKeyUp"
+                     TextWrapping="NoWrap"
+                     Visibility="Hidden"/>
+        </Grid>
     </StackPanel>
 </UserControl>
