@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,26 +31,17 @@ namespace BudgetAnalyser.Storage
         /// <param name="fileName">Full path and filename of the file.</param>
         protected override async Task<object> LoadFromDisk(string fileName)
         {
-            // TODO write a backup copy unencrypted
-            //string encryptedData;
-            //using (var sourceStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
-            //{
-            //    using (var reader = new StreamReader(sourceStream))
-            //    {
-            //        encryptedData = await reader.ReadToEndAsync();
-            //    }
-            //}
-
             string decryptedData = null;
             using (var inputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    using (var cryptoStream = CipherStream.Open(inputStream, this.passPhrase.ToString()))
+                    using (var cryptoStream = CipherStream.Open(inputStream, SecureStringToString(this.passPhrase)))
                     {
                         await cryptoStream.CopyToAsync(outputStream);
                     }
 
+                    outputStream.Position = 0;
                     using (var reader = new StreamReader(outputStream))
                     {
                         decryptedData = await reader.ReadToEndAsync();
@@ -67,29 +60,29 @@ namespace BudgetAnalyser.Storage
             // Remove this when confidence is high:
             await base.WriteToDisk(fileName + ".backup", data);
 
-            //await Task.Run(() =>
-            //{
-            //    using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-            //    {
-            //        using (var outputStream = File.Open(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-            //        {
-            //            using (var cryptoStream = CipherStream.Create(outputStream, this.passPhrase.ToString()))
-            //            {
-            //                inputStream.CopyTo(cryptoStream);
-            //            }
-            //        }
-            //    }
-            //});
-
             using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
             {
                 using (var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read, bufferSize: 4096, useAsync: true))
                 {
-                    using (var cryptoStream = CipherStream.Create(outputStream, this.passPhrase.ToString()))
+                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(this.passPhrase)))
                     {
                         await inputStream.CopyToAsync(cryptoStream);
                     }
                 }
+            }
+        }
+
+        private string SecureStringToString(SecureString value)
+        {
+            IntPtr valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
             }
         }
     }

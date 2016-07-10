@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
@@ -14,7 +11,9 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
     [TestClass]
     public class EncryptedXamlOnDiskBudgetRepoTest
     {
+        private const string Password = "Password123456789";
         private const string StorageKey = @"D:\Development\ReesAccounts\ReesBudget2013.3.xml";
+
         private IBudgetRepository subject;
         private IBudgetBucketRepository bucketRepo;
         private readonly SecureString securePassPhrase = new SecureString();
@@ -26,8 +25,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
         [TestInitialize]
         public void TestSetup()
         {
-            string password = "Password123";
-            foreach (var c in password.ToCharArray())
+            foreach (var c in Password.ToCharArray())
             {
                 this.securePassPhrase.AppendChar(c);
             }
@@ -42,32 +40,18 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
         }
 
         [TestMethod]
-        public async Task ConvertExisting()
-        {
-            var xamlBudgetRepo = new XamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper);
-            var budgets = await xamlBudgetRepo.LoadAsync(StorageKey);
-
-            await this.subject.SaveAsync();
-        }
-
-        [TestMethod]
         public async Task LoadTest()
         {
-            try
-            {
-                var budgets = await this.subject.LoadAsync(StorageKey);
-                Assert.AreNotEqual(0, budgets.Count);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            var budgets = await this.subject.LoadAsync(StorageKey);
+            Console.WriteLine(this.securePassPhrase);
+            Assert.AreNotEqual(0, budgets.Count);
         }
 
         [TestMethod]
-        public void SaveTest()
+        public async Task SaveTest()
         {
-            
+            var budgets = await this.subject.LoadAsync(StorageKey);
+            await this.subject.SaveAsync();
         }
     }
 }
