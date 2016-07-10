@@ -11,8 +11,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
     [TestClass]
     public class EncryptedXamlOnDiskBudgetRepoTest
     {
-        private const string Password = "Password123456789";
-        private const string StorageKey = @"D:\Development\ReesAccounts\ReesBudget2013.3.xml";
+        private const string StorageKey = @"D:\";
 
         private IBudgetRepository subject;
         private IBudgetBucketRepository bucketRepo;
@@ -25,17 +24,12 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
         [TestInitialize]
         public void TestSetup()
         {
-            foreach (var c in Password.ToCharArray())
-            {
-                this.securePassPhrase.AppendChar(c);
-            }
-
             this.budgetBucketFactory = new BudgetBucketFactory();
             this.bucketMapper = new Mapper_BudgetBucketDto_BudgetBucket(this.budgetBucketFactory);
             this.bucketRepo = new InMemoryBudgetBucketRepository(this.bucketMapper);
             this.budgetMapper = new Mapper_BudgetModelDto_BudgetModel(this.bucketRepo);
             this.collectionMapper = new Mapper_BudgetCollectionDto_BudgetCollection(this.bucketRepo, this.bucketMapper, this.budgetMapper);
-            this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, this.securePassPhrase);
+            this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, new FileEncryptor(), new CredentialStore());
 
         }
 

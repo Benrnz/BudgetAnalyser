@@ -770,6 +770,10 @@
       <Project>{733305f6-b587-45ee-ad4d-fd6dfef015ab}</Project>
       <Name>BudgetAnalyser.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BudgetAnalyser.Storage\BudgetAnalyser.Storage.csproj">
+      <Project>{17cfb549-81c7-4527-9f3e-5694d2b5b3fa}</Project>
+      <Name>BudgetAnalyser.Storage</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="UI\Assets\PieChart.png" />

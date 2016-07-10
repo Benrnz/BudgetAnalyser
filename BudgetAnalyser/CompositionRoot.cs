@@ -9,6 +9,7 @@ using Autofac.Core;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -18,6 +19,7 @@ using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
 using BudgetAnalyser.ReportsCatalog.OverallPerformance;
 using BudgetAnalyser.Statement;
+using BudgetAnalyser.Storage;
 using GalaSoft.MvvmLight.Messaging;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
@@ -64,10 +66,12 @@ namespace BudgetAnalyser
         {
             var builder = new ContainerBuilder();
             var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
+            var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
             var thisAssembly = GetType().GetTypeInfo().Assembly;
 
             builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
 
+            ComposeTypesWithDefaultImplementations(storageAssembly, builder);
             ComposeTypesWithDefaultImplementations(engineAssembly, builder);
             ComposeTypesWithDefaultImplementations(thisAssembly, builder);
 
@@ -77,9 +81,9 @@ namespace BudgetAnalyser
             // Registrations from Rees.Wpf - There are no automatic registrations in this assembly.
             RegistrationsForReesWpf(builder);
 
-            AllLocalNonAutomaticRegistrations();
+            AllLocalNonAutomaticRegistrations(builder);
 
-            BuildApplicationObjectGraph(builder, engineAssembly, thisAssembly);
+            BuildApplicationObjectGraph(builder, engineAssembly, thisAssembly, storageAssembly);
         }
 
         private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
@@ -115,10 +119,12 @@ namespace BudgetAnalyser
             }
         }
 
-        private static void AllLocalNonAutomaticRegistrations()
+        private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
+
+            builder.RegisterType<EncryptedXamlOnDiskBudgetRepository>().As<IBudgetRepository>().SingleInstance();
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]
