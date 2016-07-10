@@ -6,6 +6,7 @@ namespace BudgetAnalyser.Storage
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class CredentialStore : ICredentialStore
     {
+        // TODO Maybe use the absense of a password to detect that encryption is disabled?
         private const string DefaultPassword = "Password123456789";
         private SecureString passPhrase = new SecureString();
 
