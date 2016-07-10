@@ -24,8 +24,6 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskBudgetRepository" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper)
@@ -47,7 +45,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Creates a new empty <see cref="BudgetCollection" /> but does not save it.
         /// </summary>
-        public BudgetCollection CreateNew()
+        public virtual BudgetCollection CreateNew()
         {
             var budget = new BudgetModel();
             this.currentBudgetCollection = new BudgetCollection(budget);
@@ -57,12 +55,9 @@ namespace BudgetAnalyser.Engine.Budget
 
         /// <summary>
         ///     Creates a new empty <see cref="BudgetCollection" /> at the location indicated by the <see paramref="storageKey" />.
-        ///     Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to load the new collection.
+        ///     Any existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method to load the new collection.
         /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
-        public async Task<BudgetCollection> CreateNewAndSaveAsync(string storageKey)
+        public virtual async Task<BudgetCollection> CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -87,18 +82,15 @@ namespace BudgetAnalyser.Engine.Budget
         }
 
         /// <summary>
-        ///     Loads the a <see cref="BudgetCollection" /> from storage at the location indicated by <see paramref="storageKey" />
-        ///     .
+        ///     Loads the a <see cref="BudgetCollection" /> from storage at the location indicated by <see paramref="storageKey" />.
         /// </summary>
         /// <param name="storageKey"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="KeyNotFoundException">File not found.  + storageKey</exception>
         /// <exception cref="DataFormatException">
-        ///     Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is
-        ///     invalid.
-        ///     or
+        ///     Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.
         /// </exception>
-        public async Task<BudgetCollection> LoadAsync(string storageKey)
+        public virtual async Task<BudgetCollection> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
             {
@@ -152,7 +144,7 @@ namespace BudgetAnalyser.Engine.Budget
         ///     Saves the current <see cref="BudgetCollection" /> to storage.
         /// </summary>
         /// <exception cref="InvalidOperationException">There is no current budget collection loaded.</exception>
-        public async Task SaveAsync()
+        public virtual async Task SaveAsync()
         {
             if (this.currentBudgetCollection == null)
             {
