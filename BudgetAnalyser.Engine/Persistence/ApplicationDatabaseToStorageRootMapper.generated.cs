@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Engine.Persistence
             }
             var modelType = model.GetType();
             ToModelPreprocessing(dto, model);
+            model.IsEncrypted = dto.IsEncrypted;
             ToModelPostprocessing(dto, ref model);
             return model;
         } // End ToModel Method
@@ -37,6 +38,7 @@ namespace BudgetAnalyser.Engine.Persistence
                 dto = new BudgetAnalyserStorageRoot();
             }
             ToDtoPreprocessing(dto, model);
+            dto.IsEncrypted = model.IsEncrypted;
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method
