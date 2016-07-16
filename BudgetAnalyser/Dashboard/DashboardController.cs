@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Windows.Input;
 using BudgetAnalyser.Annotations;
 using BudgetAnalyser.ApplicationState;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.Filtering;
@@ -27,7 +25,6 @@ namespace BudgetAnalyser.Dashboard
         private readonly IUiContext uiContext;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
-        // TODO Support for image changes when widget updates
 
         public DashboardController(
             [NotNull] IUiContext uiContext,
@@ -78,20 +75,6 @@ namespace BudgetAnalyser.Dashboard
 
         public GlobalFilterController GlobalFilterController { [UsedImplicitly] get; private set; }
 
-        public string VersionString
-        {
-            get
-            {
-                AssemblyName assemblyName = GetType().Assembly.GetName();
-                return assemblyName.Name + "Version: " + assemblyName.Version;
-            }
-        }
-
-        [UsedImplicitly]
-        public ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
-
-        public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
-
         public bool Shown
         {
             get { return this.doNotUseShown; }
@@ -105,6 +88,20 @@ namespace BudgetAnalyser.Dashboard
                 RaisePropertyChanged();
             }
         }
+
+        public string VersionString
+        {
+            get
+            {
+                var assemblyName = GetType().Assembly.GetName();
+                return assemblyName.Name + "Version: " + assemblyName.Version;
+            }
+        }
+
+        [UsedImplicitly]
+        public ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
+
+        public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
         private void OnApplicationStateLoadedMessageReceived([NotNull] ApplicationStateLoadedMessage message)
         {
@@ -123,7 +120,7 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnApplicationStateRequested(ApplicationStateRequestedMessage message)
         {
-            WidgetsApplicationState widgetStates = this.dashboardService.PreparePersistentStateData();
+            var widgetStates = this.dashboardService.PreparePersistentStateData();
             message.PersistThisModel(widgetStates);
         }
 
@@ -135,14 +132,14 @@ namespace BudgetAnalyser.Dashboard
             }
 
             CorrelationId = Guid.NewGuid();
-            BudgetBucket bucket = this.chooseBudgetBucketController.Selected;
+            var bucket = this.chooseBudgetBucketController.Selected;
             if (bucket == null)
             {
                 // Cancelled by user.
                 return;
             }
 
-            Widget widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
+            var widget = this.dashboardService.CreateNewBucketMonitorWidget(bucket.Code);
             if (widget == null)
             {
                 this.uiContext.UserPrompts.MessageBox.Show("New Budget Bucket Widget", "This Budget Bucket Monitor Widget for [{0}] already exists.", bucket.Code);
@@ -191,6 +188,13 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
+        private void OnWidgetClickedMessageReceived(WidgetActivatedMessage message)
+        {
+            if (message.Handled) return;
+            var encryptWidget = message.Widget as EncryptWidget;
+            encryptWidget?.WidgetActivated();
+        }
+
         private void OnWidgetCommandExecuted(Widget widget)
         {
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
@@ -202,6 +206,7 @@ namespace BudgetAnalyser.Dashboard
             MessengerInstance = messenger;
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
+            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetClickedMessageReceived);
         }
 
         private static bool WidgetCommandCanExecute(Widget widget)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using BudgetAnalyser.Engine.Persistence;
 using JetBrains.Annotations;
 
@@ -9,8 +8,10 @@ namespace BudgetAnalyser.Engine.Widgets
     ///     Enables or disables encryption for files saved to disk.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
-    public class EncryptWidget : Widget
+    public sealed class EncryptWidget : Widget
     {
+        private ApplicationDatabase appDb;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
         /// </summary>
@@ -19,8 +20,8 @@ namespace BudgetAnalyser.Engine.Widgets
             Category = WidgetGroup.OverviewSectionName;
             Dependencies = new[] { typeof(ApplicationDatabase) };
             Clickable = true;
-            DetailedText = "Password";
-            ColourStyleName = WidgetWarningStyle;
+            Enabled = false;
+            ColourStyleName = WidgetStandardStyle;
             ImageResourceName = "LockOpenImage";
             Sequence = 11;
         }
@@ -36,6 +37,40 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException(nameof(input));
             }
 
+            var newAppDb = (ApplicationDatabase)input[0];
+            if (newAppDb == null)
+            {
+                this.appDb = null;
+            }
+            else
+            {
+                this.appDb = newAppDb;
+            }
+
+            if (this.appDb == null) return;
+            WidgetActivated();
+        }
+
+        /// <summary>
+        /// Is called by the UI when this widget is clicked or activated.
+        /// </summary>
+        public void WidgetActivated()
+        {
+            if (this.appDb == null) return;
+            Enabled = true;
+            this.appDb.IsEncrypted = !this.appDb.IsEncrypted; // TODO this is temporary only to test the UI.
+            if (this.appDb.IsEncrypted)
+            {
+                ColourStyleName = WidgetStandardStyle;
+                ImageResourceName = "LockClosedImage";
+                DetailedText = "Encrypted";
+            }
+            else
+            {
+                ColourStyleName = WidgetWarningStyle;
+                ImageResourceName = "LockOpenImage";
+                DetailedText = "Unprotected";
+            }
         }
     }
 }
