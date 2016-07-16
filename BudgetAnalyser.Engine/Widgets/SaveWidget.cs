@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.Widgets
             ImageResourceName = "SaveImage";
             RecommendedTimeIntervalUpdate = TimeSpan.FromSeconds(30);
             Clickable = true;
-            Sequence = 11;
+            Sequence = 12;
         }
 
         /// <summary>

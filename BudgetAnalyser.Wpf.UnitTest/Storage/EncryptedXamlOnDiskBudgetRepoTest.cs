@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BudgetAnalyser.Wpf.UnitTest.Storage
 {
     [TestClass]
+    [Ignore]
     public class EncryptedXamlOnDiskBudgetRepoTest
     {
         private const string StorageKey = @"D:\";
