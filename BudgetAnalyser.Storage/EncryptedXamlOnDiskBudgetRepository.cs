@@ -9,10 +9,11 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Storage
 {
+    [AutoRegisterWithIoC(SingleInstance = true, Named = "Encrypted")]
     public class EncryptedXamlOnDiskBudgetRepository : XamlOnDiskBudgetRepository
     {
         private readonly ICredentialStore credentialStore;
-        private readonly IFileEncrypter fileEncrypter;
+        private readonly IFileEncryptor fileEncryptor;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskBudgetRepository" /> class.
@@ -20,14 +21,14 @@ namespace BudgetAnalyser.Storage
         public EncryptedXamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper,
-            [NotNull] IFileEncrypter fileEncrypter,
+            [NotNull] IFileEncryptor fileEncryptor,
             [NotNull] ICredentialStore credentialStore)
             : base(bucketRepository, mapper)
         {
             if (bucketRepository == null) throw new ArgumentNullException(nameof(bucketRepository));
             if (mapper == null) throw new ArgumentNullException(nameof(mapper));
-            if (fileEncrypter == null) throw new ArgumentNullException(nameof(fileEncrypter));
-            this.fileEncrypter = fileEncrypter;
+            if (fileEncryptor == null) throw new ArgumentNullException(nameof(fileEncryptor));
+            this.fileEncryptor = fileEncryptor;
             this.credentialStore = credentialStore;
         }
 
@@ -38,7 +39,7 @@ namespace BudgetAnalyser.Storage
         protected override async Task<object> LoadFromDisk([NotNull] string fileName)
         {
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
-            var decryptedData = await this.fileEncrypter.LoadEncryptedFileAsync(fileName, this.credentialStore.RetrievePassword());
+            var decryptedData = await this.fileEncryptor.LoadEncryptedFileAsync(fileName, this.credentialStore.RetrievePassword());
             return XamlServices.Parse(decryptedData);
         }
 
@@ -53,7 +54,7 @@ namespace BudgetAnalyser.Storage
 
             // Remove this when confidence is high:
             await base.WriteToDisk(fileName + ".backup", data);
-            await this.fileEncrypter.SaveStringDataToEncryptedFileAsync(fileName, data, this.credentialStore.RetrievePassword());
+            await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, this.credentialStore.RetrievePassword());
         }
     }
 }

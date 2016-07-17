@@ -14,7 +14,7 @@ namespace BudgetAnalyser.Engine.Budget
     ///     A repository to store the budget collections on local disk as a Xaml file.
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetRepository" />
-    [AutoRegisterWithIoC(SingleInstance = true)]
+    [AutoRegisterWithIoC(SingleInstance = true, Named = "Unprotected")]
     public class XamlOnDiskBudgetRepository : IBudgetRepository
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;

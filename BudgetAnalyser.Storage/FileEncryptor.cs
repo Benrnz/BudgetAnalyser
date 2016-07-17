@@ -13,7 +13,7 @@ namespace BudgetAnalyser.Storage
     ///     A utility class for encrypting files on the local disk.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class FileEncrypter : IFileEncrypter
+    public class FileEncryptor : IFileEncryptor
     {
         /// <summary>
         ///     Encrypts the source file by copying its contents into a new encrypted destination file.

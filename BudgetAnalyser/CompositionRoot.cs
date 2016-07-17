@@ -66,7 +66,7 @@ namespace BudgetAnalyser
         {
             var builder = new ContainerBuilder();
             var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
-            var storageAssembly = typeof(IFileEncrypter).GetTypeInfo().Assembly;
+            var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
             var thisAssembly = GetType().GetTypeInfo().Assembly;
 
             builder.RegisterAssemblyTypes(thisAssembly).AsSelf();
@@ -123,8 +123,6 @@ namespace BudgetAnalyser
         {
             // Register any special mappings that have not been registered with automatic mappings.
             // Explicit object creation below is necessary to correctly register with IoC container.
-
-            builder.RegisterType<EncryptedXamlOnDiskBudgetRepository>().As<IBudgetRepository>().SingleInstance();
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Required here, Composition Root pattern")]

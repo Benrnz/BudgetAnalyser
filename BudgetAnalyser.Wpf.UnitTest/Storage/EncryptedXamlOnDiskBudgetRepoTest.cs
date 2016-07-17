@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
             this.bucketRepo = new InMemoryBudgetBucketRepository(this.bucketMapper);
             this.budgetMapper = new Mapper_BudgetModelDto_BudgetModel(this.bucketRepo);
             this.collectionMapper = new Mapper_BudgetCollectionDto_BudgetCollection(this.bucketRepo, this.bucketMapper, this.budgetMapper);
-            this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, new FileEncrypter(), new CredentialStore());
+            this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, new FileEncryptor(), new CredentialStore());
 
         }
 

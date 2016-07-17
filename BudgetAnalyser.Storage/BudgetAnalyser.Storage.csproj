@@ -72,10 +72,10 @@
   <ItemGroup>
     <Compile Include="CredentialStore.cs" />
     <Compile Include="EncryptedXamlOnDiskBudgetRepository.cs" />
-    <Compile Include="FileEncrypter.cs" />
+    <Compile Include="FileEncryptor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICredentialStore.cs" />
-    <Compile Include="IFileEncrypter.cs" />
+    <Compile Include="IFileEncryptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

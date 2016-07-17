@@ -7,7 +7,7 @@ namespace BudgetAnalyser.Storage
     /// <summary>
     ///     A utility service for providing encryption functions for files on the local disk.
     /// </summary>
-    public interface IFileEncrypter
+    public interface IFileEncryptor
     {
         /// <summary>
         ///     Encrypts the source file by copying its contents into a new encrypted destination file.
