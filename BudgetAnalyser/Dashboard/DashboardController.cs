@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Dashboard
         private readonly IUiContext uiContext;
         private Guid doNotUseCorrelationId;
         private bool doNotUseShown;
+        // TODO Are two images on the medium sized widgets still required?
 
         public DashboardController(
             [NotNull] IUiContext uiContext,
