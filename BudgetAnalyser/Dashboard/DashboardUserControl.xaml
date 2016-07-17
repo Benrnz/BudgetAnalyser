@@ -115,7 +115,7 @@
                                         Template="{Binding ImageResourceName, Converter={StaticResource Converter.TextToControlTemplate}}"
                                         VerticalAlignment="Top"
                                         Visibility="{Binding ImageResourceName, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}"
-                                        Width="40" />
+                                        Width="70" />
                         <ContentControl HorizontalAlignment="Left"
                                         Margin="-10,25,0,0"
                                         Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
