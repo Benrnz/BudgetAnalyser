@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BudgetRepositorySelector.cs" />
     <Compile Include="CredentialStore.cs" />
     <Compile Include="EncryptedXamlOnDiskBudgetRepository.cs" />
     <Compile Include="FileEncryptor.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="ICredentialStore.cs" />
     <Compile Include="IFileEncryptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StorageConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">

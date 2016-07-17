@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Budget;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Storage
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class BudgetRepositorySelector : IRepositorySelector<IBudgetRepository>
@@ -9,14 +13,13 @@ namespace BudgetAnalyser.Engine.Budget
         private readonly IBudgetRepository encryptedRepository;
         private readonly IBudgetRepository unprotectedRepository;
 
-        public BudgetRepositorySelector(
-            [NotNull] IBudgetRepository unprotectedRepository,
-            [NotNull] IBudgetRepository encryptedRepository)
+        public BudgetRepositorySelector([NotNull] IEnumerable<IBudgetRepository> repositories)
         {
-            if (unprotectedRepository == null) throw new ArgumentNullException(nameof(unprotectedRepository));
-            if (encryptedRepository == null) throw new ArgumentNullException(nameof(encryptedRepository));
-            this.unprotectedRepository = unprotectedRepository;
-            this.encryptedRepository = encryptedRepository;
+            if (repositories == null) throw new ArgumentNullException(nameof(repositories));
+
+            var listOfRepos = repositories.ToList();
+            this.encryptedRepository = DefaultIoCRegistrations.GetNamedInstance(listOfRepos, StorageConstants.EncryptedInstanceName);
+            this.unprotectedRepository = DefaultIoCRegistrations.GetNamedInstance(listOfRepos, StorageConstants.UnprotectedInstanceName);
         }
 
         /// <summary>

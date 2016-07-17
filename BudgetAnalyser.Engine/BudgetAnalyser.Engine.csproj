@@ -89,7 +89,6 @@
     <Compile Include="Budget\BudgetException.cs" />
     <Compile Include="Budget\BudgetItem.cs" />
     <Compile Include="Budget\BudgetModel.cs" />
-    <Compile Include="Budget\BudgetRepositorySelector.cs" />
     <Compile Include="Budget\Data\BucketDtoType.cs" />
     <Compile Include="Budget\Data\BudgetBucketDto.cs" />
     <Compile Include="Budget\Data\BudgetBucketFactory.cs" />
