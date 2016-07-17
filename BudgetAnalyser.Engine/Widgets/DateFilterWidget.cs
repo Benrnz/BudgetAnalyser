@@ -24,8 +24,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             Category = WidgetGroup.GlobalFilterSectionName;
             Dependencies = new[] { typeof(GlobalFilterCriteria) };
-            ImageResourceName = "DateFilterBeakerImage";
-            ImageResourceName2 = "DateFilterCalendarImage";
+            ImageResourceName = "DateFilterImage";
             Size = WidgetSize.Medium;
             this.standardStyleName = "Brush.ModernTile.Background2";
             WidgetStyle = "ModernTileMediumStyle2";
