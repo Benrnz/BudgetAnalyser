@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
@@ -15,8 +17,10 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             return dto;
         }
 
-        public ToDoCollection ToModel(List<ToDoTaskDto> dto)
+        public ToDoCollection ToModel([NotNull] List<ToDoTaskDto> dto)
         {
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
+
             var model = new ToDoCollection();
             var mapper = new Mapper_ToDoTaskDto_ToDoTask();
             dto.ForEach(d => model.Add(mapper.ToModel(d)));

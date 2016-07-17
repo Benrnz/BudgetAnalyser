@@ -231,7 +231,7 @@ namespace BudgetAnalyser.Engine.Statement
             return twoLines;
         }
 
-        private bool VerifyColumnHeaderLine(string line)
+        private static bool VerifyColumnHeaderLine(string line)
         {
             return string.CompareOrdinal(line, "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge") == 0;
         }

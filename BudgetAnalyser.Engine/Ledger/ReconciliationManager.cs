@@ -301,7 +301,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return true;
         }
 
-        private void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
+        private static void ValidateAgainstMissingTransactions(DateTime reconciliationDate, StatementModel statement)
         {
             var lastTransactionDate = statement.Transactions.Where(t => t.Date < reconciliationDate).Max(t => t.Date);
             var difference = reconciliationDate.Subtract(lastTransactionDate);

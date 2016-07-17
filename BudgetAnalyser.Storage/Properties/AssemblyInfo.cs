@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -36,4 +37,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("3.01.0")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Engine.UnitTest")]
 [assembly: InternalsVisibleTo("BudgetAnalyser.Wpf.UnitTest")]
-
+[assembly: CLSCompliant(false)]

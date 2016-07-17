@@ -48,9 +48,10 @@ namespace BudgetAnalyser.Engine.Services
         public BurnDownCharts BuildAllCharts(
             StatementModel statementModel,
             BudgetModel budgetModel,
-            LedgerBook ledgerBookModel,
+            LedgerBook ledgerBookModel, 
             GlobalFilterCriteria criteria)
         {
+            if (criteria == null) throw new ArgumentNullException(nameof(criteria));
             if (criteria.Cleared) throw new ArgumentException("There is no date range criteria set. This graph is intended for one month of data.");
             if (criteria.EndDate == null || criteria.BeginDate == null)
             {

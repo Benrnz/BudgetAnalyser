@@ -1,13 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
-using Confuzzle.Core;
 using JetBrains.Annotations;
 using Portable.Xaml;
 using Rees.TangyFruitMapper;
@@ -16,23 +11,23 @@ namespace BudgetAnalyser.Storage
 {
     public class EncryptedXamlOnDiskBudgetRepository : XamlOnDiskBudgetRepository
     {
-        private readonly IFileEncryptor fileEncryptor;
         private readonly ICredentialStore credentialStore;
+        private readonly IFileEncrypter fileEncrypter;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskBudgetRepository" /> class.
         /// </summary>
         public EncryptedXamlOnDiskBudgetRepository(
-            [NotNull] IBudgetBucketRepository bucketRepository, 
-            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper, 
-            [NotNull] IFileEncryptor fileEncryptor,
+            [NotNull] IBudgetBucketRepository bucketRepository,
+            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper,
+            [NotNull] IFileEncrypter fileEncrypter,
             [NotNull] ICredentialStore credentialStore)
             : base(bucketRepository, mapper)
         {
             if (bucketRepository == null) throw new ArgumentNullException(nameof(bucketRepository));
             if (mapper == null) throw new ArgumentNullException(nameof(mapper));
-            if (fileEncryptor == null) throw new ArgumentNullException(nameof(fileEncryptor));
-            this.fileEncryptor = fileEncryptor;
+            if (fileEncrypter == null) throw new ArgumentNullException(nameof(fileEncrypter));
+            this.fileEncrypter = fileEncrypter;
             this.credentialStore = credentialStore;
         }
 
@@ -43,7 +38,7 @@ namespace BudgetAnalyser.Storage
         protected override async Task<object> LoadFromDisk([NotNull] string fileName)
         {
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
-            var decryptedData = await this.fileEncryptor.LoadEncrytpedFileAsync(fileName, this.credentialStore.RetrievePassword());
+            var decryptedData = await this.fileEncrypter.LoadEncryptedFileAsync(fileName, this.credentialStore.RetrievePassword());
             return XamlServices.Parse(decryptedData);
         }
 
@@ -55,10 +50,10 @@ namespace BudgetAnalyser.Storage
         {
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
             if (data.IsNothing()) throw new ArgumentNullException(nameof(data));
-            
+
             // Remove this when confidence is high:
             await base.WriteToDisk(fileName + ".backup", data);
-            await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, this.credentialStore.RetrievePassword());
+            await this.fileEncrypter.SaveStringDataToEncryptedFileAsync(fileName, data, this.credentialStore.RetrievePassword());
         }
     }
 }

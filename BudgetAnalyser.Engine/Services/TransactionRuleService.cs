@@ -288,7 +288,7 @@ namespace BudgetAnalyser.Engine.Services
             // Make sure no rule already exists with this id:
             if (MatchingRules.Any(r => r.RuleId == ruleToAdd.RuleId))
             {
-                throw new DuplicateNameException($"Unable to add new matching rule: RuleID {ruleToAdd.RuleId} already exists in the collection.");
+                throw new DuplicateNameException($"Unable to add new matching rule: Rule ID {ruleToAdd.RuleId} already exists in the collection.");
             }
 
             // Check to see if an existing group object for the desired bucket already exists.

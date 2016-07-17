@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Widgets;
 using JetBrains.Annotations;
@@ -15,7 +14,6 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class DashboardService : IDashboardService
     {
-        private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IBudgetBucketRepository bucketRepository;
         private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
@@ -28,7 +26,6 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IBudgetRepository budgetRepository,
-            [NotNull] IAccountTypeRepository accountTypeRepository,
             [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
@@ -52,11 +49,6 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(budgetRepository));
             }
 
-            if (accountTypeRepository == null)
-            {
-                throw new ArgumentNullException(nameof(accountTypeRepository));
-            }
-
             if (logger == null)
             {
                 throw new ArgumentNullException(nameof(logger));
@@ -67,7 +59,6 @@ namespace BudgetAnalyser.Engine.Services
             this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
             this.budgetRepository = budgetRepository;
-            this.accountTypeRepository = accountTypeRepository;
             this.logger = logger;
             this.monitoringServices = monitorableDependencies;
             this.monitoringServices.DependencyChanged += OnMonitoringServicesDependencyChanged;

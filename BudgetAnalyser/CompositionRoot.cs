@@ -66,7 +66,7 @@ namespace BudgetAnalyser
         {
             var builder = new ContainerBuilder();
             var engineAssembly = typeof(StatementModel).GetTypeInfo().Assembly;
-            var storageAssembly = typeof(IFileEncryptor).GetTypeInfo().Assembly;
+            var storageAssembly = typeof(IFileEncrypter).GetTypeInfo().Assembly;
             var thisAssembly = GetType().GetTypeInfo().Assembly;
 
             builder.RegisterAssemblyTypes(thisAssembly).AsSelf();

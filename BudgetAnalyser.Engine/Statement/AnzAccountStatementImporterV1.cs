@@ -216,7 +216,7 @@ namespace BudgetAnalyser.Engine.Statement
             return twoLines;
         }
 
-        private bool VerifyColumnHeaderLine(string line)
+        private static bool VerifyColumnHeaderLine(string line)
         {
             return string.CompareOrdinal(line, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
         }

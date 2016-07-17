@@ -28,7 +28,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <param name="criteria">The global filter criteria.</param>
         /// <returns>An object that contains all compiled information for the charts including the chart data itself.</returns>
         BurnDownCharts BuildAllCharts(StatementModel statementModel, BudgetModel budgetModel, LedgerBook ledgerBookModel,
-                                      GlobalFilterCriteria criteria);
+                                      [NotNull] GlobalFilterCriteria criteria);
 
         /// <summary>
         ///     Creates a new custom aggregate chart that combines multiple bucket spending information into one burn down chart.

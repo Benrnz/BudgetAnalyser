@@ -13,18 +13,18 @@ namespace BudgetAnalyser.Storage
     ///     A utility class for encrypting files on the local disk.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class FileEncryptor : IFileEncryptor
+    public class FileEncrypter : IFileEncrypter
     {
         /// <summary>
         ///     Encrypts the source file by copying its contents into a new encrypted destination file.
         ///     The source file remains untouched.
         /// </summary>
         /// <exception cref="System.IO.FileNotFoundException">Will be thrown if the source file does not exist.</exception>
-        public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passPhrase)
+        public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase)
         {
             if (sourceFile.IsNothing()) throw new ArgumentNullException(nameof(sourceFile));
             if (destinationFile.IsNothing()) throw new ArgumentNullException(nameof(destinationFile));
-            if (passPhrase == null) throw new ArgumentNullException(nameof(passPhrase));
+            if (passphrase == null) throw new ArgumentNullException(nameof(passphrase));
 
             if (!FileExists(sourceFile))
             {
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Storage
             {
                 using (var outputStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
                 {
-                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passPhrase)))
+                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passphrase)))
                     {
                         // Copy the contents of the input stream into the output stream (file) and in doing so encrypt it.
                         await inputStream.CopyToAsync(cryptoStream);
@@ -48,16 +48,16 @@ namespace BudgetAnalyser.Storage
         ///     Loads the encrytped file asynchronously and returns its contents as a string (UTF8).
         /// </summary>
         /// <param name="fileName">The path and name of the file.</param>
-        /// <param name="passPhrase">The pass phrase.</param>
+        /// <param name="passphrase">The pass phrase.</param>
         /// <returns>UTF8 string contents of the file.</returns>
-        public async Task<string> LoadEncrytpedFileAsync(string fileName, SecureString passPhrase)
+        public async Task<string> LoadEncryptedFileAsync(string fileName, SecureString passphrase)
         {
             string decryptedData;
             using (var inputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    using (var cryptoStream = CipherStream.Open(inputStream, SecureStringToString(passPhrase)))
+                    using (var cryptoStream = CipherStream.Open(inputStream, SecureStringToString(passphrase)))
                     {
                         await cryptoStream.CopyToAsync(outputStream);
                     }
@@ -78,14 +78,14 @@ namespace BudgetAnalyser.Storage
         /// </summary>
         /// <param name="fileName">The path and name of the file.</param>
         /// <param name="data">The data.</param>
-        /// <param name="passPhrase">The pass phrase.</param>
-        public async Task SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passPhrase)
+        /// <param name="passphrase">The pass phrase.</param>
+        public async Task SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)
         {
             using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
             {
                 using (var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
                 {
-                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passPhrase)))
+                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passphrase)))
                     {
                         await inputStream.CopyToAsync(cryptoStream);
                     }
