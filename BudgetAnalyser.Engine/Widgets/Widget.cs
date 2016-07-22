@@ -69,6 +69,7 @@ namespace BudgetAnalyser.Engine.Widgets
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor - ok here, simple bool property with straightforward usage.
             Enabled = true;
             Sequence = 99;
+            RecommendedTimeIntervalUpdate = 30.Seconds();  // TODO - Temporary work around until message issues are resolved.
         }
 
         /// <summary>

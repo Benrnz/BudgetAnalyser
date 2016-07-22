@@ -129,6 +129,7 @@
     <Compile Include="Services\DependencyChangedEventArgs.cs" />
     <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
+    <Compile Include="TimeSpanExtension.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="DataFormatException.cs" />
     <Compile Include="DateTimeExtension.cs" />

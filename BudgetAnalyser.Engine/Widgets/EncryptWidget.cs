@@ -58,7 +58,6 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             if (this.appDb == null) return;
             Enabled = true;
-            this.appDb.IsEncrypted = !this.appDb.IsEncrypted; // TODO this is temporary only to test the UI.
             if (this.appDb.IsEncrypted)
             {
                 ColourStyleName = WidgetStandardStyle;
