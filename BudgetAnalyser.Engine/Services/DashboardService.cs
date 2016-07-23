@@ -18,12 +18,10 @@ namespace BudgetAnalyser.Engine.Services
         private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
         private readonly MonitorableDependencies monitoringServices;
-        private readonly IWidgetRepository widgetRepository;
         private readonly IWidgetService widgetService;
 
         public DashboardService(
             [NotNull] IWidgetService widgetService,
-            [NotNull] IWidgetRepository widgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepository,
             [NotNull] IBudgetRepository budgetRepository,
             [NotNull] ILogger logger,
@@ -32,11 +30,6 @@ namespace BudgetAnalyser.Engine.Services
             if (widgetService == null)
             {
                 throw new ArgumentNullException(nameof(widgetService));
-            }
-
-            if (widgetRepository == null)
-            {
-                throw new ArgumentNullException(nameof(widgetRepository));
             }
 
             if (bucketRepository == null)
@@ -56,7 +49,6 @@ namespace BudgetAnalyser.Engine.Services
             if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
             this.widgetService = widgetService;
-            this.widgetRepository = widgetRepository;
             this.bucketRepository = bucketRepository;
             this.budgetRepository = budgetRepository;
             this.logger = logger;
@@ -86,7 +78,7 @@ namespace BudgetAnalyser.Engine.Services
                 return null;
             }
 
-            var widget = this.widgetRepository.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
+            var widget = this.widgetService.Create(typeof(BudgetBucketMonitorWidget).FullName, bucketCode);
             return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
@@ -109,7 +101,7 @@ namespace BudgetAnalyser.Engine.Services
 
             var bucket = this.bucketRepository.CreateNewFixedBudgetProject(bucketCode, description, fixedBudgetAmount);
             this.budgetRepository.SaveAsync();
-            var widget = this.widgetRepository.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
+            var widget = this.widgetService.Create(typeof(FixedBudgetMonitorWidget).FullName, bucket.Code);
             return UpdateWidgetCollectionWithNewAddition((Widget) widget);
         }
 
@@ -134,7 +126,7 @@ namespace BudgetAnalyser.Engine.Services
                     nameof(bucketCode));
             }
 
-            var widget = this.widgetRepository.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
+            var widget = this.widgetService.Create(typeof(SurprisePaymentWidget).FullName, bucket.Code);
             var paymentWidget = (SurprisePaymentWidget) widget;
             paymentWidget.StartPaymentDate = paymentDate;
             paymentWidget.Frequency = frequency;
@@ -196,7 +188,7 @@ namespace BudgetAnalyser.Engine.Services
                 return;
             }
 
-            this.widgetRepository.Remove(widgetToRemove);
+            this.widgetService.Remove(widgetToRemove);
 
             var baseWidget = (Widget) widgetToRemove;
             var widgetGroup = WidgetGroups.FirstOrDefault(group => group.Heading == baseWidget.Category);
