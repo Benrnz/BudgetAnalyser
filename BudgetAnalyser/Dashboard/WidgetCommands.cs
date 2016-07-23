@@ -84,9 +84,11 @@ namespace BudgetAnalyser.Dashboard
 
         private static void OnWidgetCommandExecuted(Widget widget)
         {
+            // If possible, handle any widget commands here. 
             var encryptWidget = widget as EncryptWidget;
             encryptWidget?.WidgetActivated();
 
+            // If a widget click cannot be handled here, send a message to be handled by some other controller.
             MessengerInstance.Send(new WidgetActivatedMessage(widget));
         }
 
