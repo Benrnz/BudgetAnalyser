@@ -17,8 +17,9 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         /// <typeparam name="T">Any interface or abstract class</typeparam>
         /// <returns>The found named instance, or null if no instance matches the name.</returns>
-        public static T GetNamedInstance<T>(IEnumerable<T> instances, string name) where T : class
+        public static T GetNamedInstance<T>([NotNull] IEnumerable<T> instances, string name) where T : class
         {
+            if (instances == null) throw new ArgumentNullException(nameof(instances));
             foreach (var instance in instances)
             {
                 IEnumerable<AutoRegisterWithIoCAttribute> attributes = instance.GetType().GetTypeInfo().GetCustomAttributes<AutoRegisterWithIoCAttribute>();

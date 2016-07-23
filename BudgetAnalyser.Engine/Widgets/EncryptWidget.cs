@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var newAppDb = (ApplicationDatabase)input[0];
+            var newAppDb = (ApplicationDatabase) input[0];
             if (newAppDb == null)
             {
                 this.appDb = null;
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.Widgets
         }
 
         /// <summary>
-        /// Is called by the UI when this widget is clicked or activated.
+        ///     Is called by the UI when this widget is clicked or activated.
         /// </summary>
         public void WidgetActivated()
         {

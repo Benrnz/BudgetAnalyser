@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Dashboard
         }
 
         [UsedImplicitly]
-        public ICommand WidgetCommand => new RelayCommand<Widget>(OnWidgetCommandExecuted, WidgetCommandCanExecute);
+        public ICommand WidgetActivatedCommand => WidgetCommands.WidgetActivatedCommand;
 
         public ObservableCollection<WidgetGroup> WidgetGroups { get; private set; }
 
@@ -189,30 +189,12 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        private void OnWidgetClickedMessageReceived(WidgetActivatedMessage message)
-        {
-            if (message.Handled) return;
-            var encryptWidget = message.Widget as EncryptWidget;
-            encryptWidget?.WidgetActivated();
-        }
-
-        private void OnWidgetCommandExecuted(Widget widget)
-        {
-            MessengerInstance.Send(new WidgetActivatedMessage(widget));
-        }
-
         private void RegisterForMessengerNotifications(IMessenger messenger)
         {
             // Register for all dependent objects change messages.
             MessengerInstance = messenger;
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoadedMessageReceived);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
-            MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetClickedMessageReceived);
-        }
-
-        private static bool WidgetCommandCanExecute(Widget widget)
-        {
-            return widget.Clickable;
         }
     }
 }
