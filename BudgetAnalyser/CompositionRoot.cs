@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,7 @@ using Autofac.Core;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
@@ -36,9 +37,11 @@ namespace BudgetAnalyser
     ///     else in the application to prevent the Service Locator anti-pattern from appearing.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Reviewed, ok here: Necessary for composition root pattern")]
-    public class CompositionRoot
+    public sealed class CompositionRoot : IDisposable
     {
         private const string InputBoxView = "InputBoxView";
+        private List<IDisposable> disposables = new List<IDisposable>();
+        private bool disposed;
 
         /// <summary>
         ///     The newly instantiated global logger ready for use.  Prior to executing the composition root the logger has not
@@ -86,6 +89,33 @@ namespace BudgetAnalyser
             BuildApplicationObjectGraph(builder, engineAssembly, thisAssembly, storageAssembly);
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Check to see if Dispose has already been called. 
+            if (!this.disposed)
+            {
+                // Release unmanaged resources. If disposing is false, 
+                // only the following code is executed. 
+                this.disposables.ForEach(x => x.Dispose());
+                // Note that this is not thread safe. 
+                // Another thread could start disposing the object 
+                // after the managed resources are disposed, 
+                // but before the disposed flag is set to true. 
+                // If thread safety is necessary, it must be 
+                // implemented by the client. 
+            }
+
+            this.disposed = true;
+
+            // Take yourself off the Finalization queue 
+            // to prevent finalization code for this object 
+            // from executing a second time. 
+            GC.SuppressFinalize(this);
+        }
+
         private static void ComposeTypesWithDefaultImplementations(Assembly assembly, ContainerBuilder builder)
         {
             var dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(assembly);
@@ -103,7 +133,7 @@ namespace BudgetAnalyser
                     registration = builder.RegisterType(dependency.DependencyRequired).InstancePerDependency();
                 }
 
-                if (!string.IsNullOrWhiteSpace(dependency.NamedInstanceName))
+                if (dependency.NamedInstanceName.IsSomething())
                 {
                     // Named Dependency
                     registration = registration.Named(dependency.NamedInstanceName, dependency.DependencyRequired);
@@ -119,6 +149,7 @@ namespace BudgetAnalyser
             }
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "builder", Justification = "Good template code and likely use in the future")]
         private static void AllLocalNonAutomaticRegistrations(ContainerBuilder builder)
         {
             // Register any special mappings that have not been registered with automatic mappings.
@@ -170,6 +201,7 @@ namespace BudgetAnalyser
 
             // Kick it off
             ConstructUiContext(container);
+            this.disposables.AddIfSomething(container.Resolve<ICredentialStore>() as IDisposable);
             ShellController = container.Resolve<ShellController>();
             ShellWindow = new ShellWindow { DataContext = ShellController };
         }
@@ -214,6 +246,23 @@ namespace BudgetAnalyser
             uiContext.StatementControllerNavigation = container.Resolve<StatementControllerNavigation>();
             uiContext.TransferFundsController = container.Resolve<TransferFundsController>();
             uiContext.DisusedRulesController = container.Resolve<DisusedRulesController>();
+            uiContext.EncryptFileController = container.Resolve<EncryptFileController>();
+        }
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="CompositionRoot" /> class.
+        ///     Use C# destructor syntax for finalization code.
+        ///     This destructor will run only if the Dispose method
+        ///     does not get called.
+        ///     It gives your base class the opportunity to finalize.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~CompositionRoot()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            // Calling Dispose(false) is optimal in terms of 
+            // readability and maintainability. 
+            Dispose();
         }
     }
 }

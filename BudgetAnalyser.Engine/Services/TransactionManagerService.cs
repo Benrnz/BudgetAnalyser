@@ -233,15 +233,11 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Saves the application database asynchronously. This may be called using a background worker thread.
         /// </summary>
-        /// <param name="contextObjects">
-        ///     The optional context objects that may have been populated by implementations of the
-        ///     <see cref="SavePreview" /> method call.
-        /// </param>
         /// <exception cref="ValidationWarningException">
         ///     Unable to save transactions at this time, some data is invalid.  +
         ///     messages
         /// </exception>
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             if (StatementModel == null)
             {
@@ -258,6 +254,7 @@ namespace BudgetAnalyser.Engine.Services
                     "Unable to save transactions at this time, some data is invalid. " + messages);
             }
 
+            StatementModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey);
             await this.statementRepository.SaveAsync(StatementModel);
             this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
             Saved?.Invoke(this, EventArgs.Empty);
@@ -270,8 +267,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     this
         ///     can't be done during save as it may not be called using the UI Thread.
         /// </summary>
-        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
         }
 

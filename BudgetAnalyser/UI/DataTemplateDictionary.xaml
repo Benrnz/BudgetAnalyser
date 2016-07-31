@@ -146,4 +146,8 @@
     <DataTemplate DataType="{x:Type matching:DisusedRulesController}">
         <filtering:DisusedRulesUserControl />
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type dashboard:EncryptFileController}">
+        <dashboard:ProtectFilesUserControl/>
+    </DataTemplate>
 </ResourceDictionary>

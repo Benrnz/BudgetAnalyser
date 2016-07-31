@@ -12,6 +12,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
     [Ignore]
     public class EncryptedXamlOnDiskBudgetRepoTest
     {
+        // TODO delete this when done.
         private const string StorageKey = @"D:\";
 
         private IBudgetRepository subject;
@@ -30,14 +31,13 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
             this.bucketRepo = new InMemoryBudgetBucketRepository(this.bucketMapper);
             this.budgetMapper = new Mapper_BudgetModelDto_BudgetModel(this.bucketRepo);
             this.collectionMapper = new Mapper_BudgetCollectionDto_BudgetCollection(this.bucketRepo, this.bucketMapper, this.budgetMapper);
-            this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, new FileEncryptor(), new CredentialStore());
-
+            //this.subject = new EncryptedXamlOnDiskBudgetRepository(this.bucketRepo, this.collectionMapper, new FileEncryptor(), new CredentialStore());
         }
 
         [TestMethod]
         public async Task LoadTest()
         {
-            var budgets = await this.subject.LoadAsync(StorageKey);
+            var budgets = await this.subject.LoadAsync(StorageKey, true);
             Console.WriteLine(this.securePassPhrase);
             Assert.AreNotEqual(0, budgets.Count);
         }
@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Wpf.UnitTest.Storage
         [TestMethod]
         public async Task SaveTest()
         {
-            var budgets = await this.subject.LoadAsync(StorageKey);
+            var budgets = await this.subject.LoadAsync(StorageKey, true);
             await this.subject.SaveAsync();
         }
     }

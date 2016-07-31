@@ -217,6 +217,10 @@
       <DependentUpon>CreateNewSurprisePaymentMonitorUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\CreateNewSurprisePaymentMonitorController.cs" />
+    <Compile Include="Dashboard\ProtectFilesUserControl.xaml.cs">
+      <DependentUpon>ProtectFilesUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\EncryptFileController.cs" />
     <Compile Include="Dashboard\WidgetCommands.cs" />
     <Compile Include="Dashboard\DashboardController.cs" />
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">
@@ -425,6 +429,10 @@
     <Page Include="Dashboard\DashboardUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dashboard\ProtectFilesUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Filtering\DisuedRulesUserControl.xaml">
       <SubType>Designer</SubType>

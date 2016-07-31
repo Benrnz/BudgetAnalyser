@@ -1,34 +1,33 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Security;
 using BudgetAnalyser.Engine;
+using BudgetAnalyser.Engine.Persistence;
 
 namespace BudgetAnalyser.Storage
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     public sealed class CredentialStore : ICredentialStore, IDisposable
     {
-        private const string DefaultPassword = "Password123456789";
-
         // Track whether Dispose has been called. 
         private bool disposed;
         private SecureString passPhrase = new SecureString();
 
-        public CredentialStore()
-        {
-            foreach (var c in DefaultPassword.ToCharArray())
-            {
-                this.passPhrase.AppendChar(c);
-            }
-        }
-
-        public SecureString RetrievePassword()
+        /// <summary>
+        ///     Retrieves the pass key.
+        /// </summary>
+        public object RetrievePasskey()
         {
             return this.passPhrase;
         }
 
-        public void SetPassword(SecureString password)
+        /// <summary>
+        ///     Sets the pass key.
+        /// </summary>
+        public void SetPasskey(object passkey)
         {
-            this.passPhrase = password;
+            this.passPhrase?.Dispose();
+            this.passPhrase = (SecureString)passkey;
         }
 
         /// <summary>
@@ -74,6 +73,20 @@ namespace BudgetAnalyser.Storage
             // Calling Dispose(false) is optimal in terms of 
             // readability and maintainability. 
             Dispose();
+        }
+
+        internal static string SecureStringToString(SecureString value)
+        {
+            var valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
         }
     }
 }

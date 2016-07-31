@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Persistence;
 using JetBrains.Annotations;
@@ -41,21 +40,15 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Saves the application database asynchronously. This may be called using a background worker thread.
         /// </summary>
-        /// <param name="contextObjects">
-        ///     The optional context objects that may have been populated by implementations of the
-        ///     <see cref="SavePreview" /> method call.
-        /// </param>
-        Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects);
+        Task SaveAsync([NotNull] ApplicationDatabase applicationDatabase);
 
         /// <summary>
         ///     Called before Save is called. This will be called on the UI Thread.
         ///     Objects can optionally add some context data that will be passed to the <see cref="SaveAsync" /> method call.
         ///     This can be used to finalise any edits or prompt the user for closing data, ie, a "what-did-you-change" comment;
-        ///     this
-        ///     can't be done during save as it may not be called using the UI Thread.
+        ///     this can't be done during save as it may not be called using the UI Thread.
         /// </summary>
-        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
-        void SavePreview(IDictionary<ApplicationDataType, object> contextObjects);
+        void SavePreview();
 
         /// <summary>
         ///     Validates the model owned by the service.

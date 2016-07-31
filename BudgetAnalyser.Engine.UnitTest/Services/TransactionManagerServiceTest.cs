@@ -370,7 +370,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public async Task Save_ShouldCallStatementRepo_GivenStatementModel()
         {
-            await this.subject.SaveAsync(null);
+            await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
 
             this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Once);
         }
@@ -379,7 +379,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         public async Task Save_ShouldNotCallStatementRepo_GivenNullStatementModel()
         {
             this.subject = CreateSubject();
-            await this.subject.SaveAsync(null);
+            await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
 
             this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Never);
         }

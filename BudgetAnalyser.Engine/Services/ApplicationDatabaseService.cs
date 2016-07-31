@@ -12,15 +12,18 @@ namespace BudgetAnalyser.Engine.Services
     internal class ApplicationDatabaseService : IApplicationDatabaseService
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
+        private readonly ICredentialStore credentialStore;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
         private readonly MonitorableDependencies monitorableDependencies;
+
         private ApplicationDatabase budgetAnalyserDatabase;
 
         public ApplicationDatabaseService(
             [NotNull] IApplicationDatabaseRepository applicationRepository,
             [NotNull] IEnumerable<ISupportsModelPersistence> databaseDependents,
-            [NotNull] MonitorableDependencies monitorableDependencies)
+            [NotNull] MonitorableDependencies monitorableDependencies,
+            [NotNull] ICredentialStore credentialStore)
         {
             if (applicationRepository == null)
             {
@@ -33,15 +36,24 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
+            if (credentialStore == null) throw new ArgumentNullException(nameof(credentialStore));
 
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
+            this.credentialStore = credentialStore;
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
             InitialiseDirtyDataTable();
         }
 
         public bool HasUnsavedChanges => this.dirtyData.Values.Any(v => v);
+
+        public bool IsEncrypted => this.budgetAnalyserDatabase.IsEncrypted;
+
+        public void SetPassword(object passwordClaim)
+        {
+            this.credentialStore.SetPasskey(passwordClaim);
+        }
 
         public ApplicationDatabase Close()
         {
@@ -83,6 +95,22 @@ namespace BudgetAnalyser.Engine.Services
             return this.budgetAnalyserDatabase;
         }
 
+        /// <summary>
+        ///     Encrypts or Decrypts the underlying data files asynchronously.
+        /// </summary>
+        public async Task EncryptFilesAsync()
+        {
+            if (this.credentialStore.RetrievePasskey() == null)
+            {
+                throw new InvalidOperationException("Attempt to use encryption but no password is set.");
+            }
+
+            await CreateBackup(); // Ensure data is not corrupted and lost by backing it up
+            //await SaveAsync(); // Resave to ensure the BAX file has correct file names restored back.
+            this.budgetAnalyserDatabase.IsEncrypted = !this.budgetAnalyserDatabase.IsEncrypted;
+            await SaveAsync(); 
+        }
+
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -91,8 +119,13 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             ClearDirtyDataFlags();
-
+            var encryptionKey = this.credentialStore.RetrievePasskey();
             this.budgetAnalyserDatabase = await this.applicationRepository.LoadAsync(storageKey);
+            if (this.budgetAnalyserDatabase.IsEncrypted && encryptionKey == null)
+            {
+                throw new EncryptionKeyNotProvidedException($"{this.budgetAnalyserDatabase.FileName} is encrypted and no password has been provided.");
+            }
+
             try
             {
                 foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
@@ -159,11 +192,10 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ValidationWarningException(messages.ToString());
             }
 
-            var contexts = new Dictionary<ApplicationDataType, object>();
             this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
                 .ToList()
-                .ForEach(service => service.SavePreview(contexts));
+                .ForEach(service => service.SavePreview());
 
             // This clears all the temporary tasks from the collection.  Only tasks that have CanDelete=false will be kept and saved.
             this.budgetAnalyserDatabase.LedgerReconciliationToDoCollection.Clear();
@@ -174,7 +206,7 @@ namespace BudgetAnalyser.Engine.Services
             // Save all remaining service's data in parallel.
             await this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
-                .Select(async service => await Task.Run(() => service.SaveAsync(contexts)))
+                .Select(async service => await Task.Run(() => service.SaveAsync(this.budgetAnalyserDatabase)))
                 .ContinueWhenAllTasksComplete();
 
             ClearDirtyDataFlags();
@@ -211,6 +243,41 @@ namespace BudgetAnalyser.Engine.Services
             {
                 this.dirtyData[key] = false;
             }
+        }
+
+        private async Task CreateBackup()
+        {
+            // Ensure all data types are marked as requiring a save.
+            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
+            {
+                this.dirtyData[(ApplicationDataType)dataType] = true;
+            }
+
+            var backupSuffix = ".backup";
+            var budgetStorageKey = this.budgetAnalyserDatabase.BudgetCollectionStorageKey;
+            this.budgetAnalyserDatabase.BudgetCollectionStorageKey += backupSuffix;
+
+            var ledgerStorageKey = this.budgetAnalyserDatabase.LedgerBookStorageKey;
+            this.budgetAnalyserDatabase.LedgerBookStorageKey += backupSuffix;
+
+            var matchingRuleStorageKey = this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey;
+            this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey += backupSuffix;
+
+            var statementStorageKey = this.budgetAnalyserDatabase.StatementModelStorageKey;
+            this.budgetAnalyserDatabase.StatementModelStorageKey += backupSuffix;
+
+            await SaveAsync();
+
+            // Ensure all data types are marked as requiring a save.
+            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
+            {
+                this.dirtyData[(ApplicationDataType)dataType] = true;
+            }
+
+            this.budgetAnalyserDatabase.BudgetCollectionStorageKey = budgetStorageKey;
+            this.budgetAnalyserDatabase.LedgerBookStorageKey = ledgerStorageKey;
+            this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey = matchingRuleStorageKey;
+            this.budgetAnalyserDatabase.StatementModelStorageKey = statementStorageKey;
         }
 
         private void InitialiseDirtyDataTable()

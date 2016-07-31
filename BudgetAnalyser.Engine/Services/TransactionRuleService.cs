@@ -126,24 +126,23 @@ namespace BudgetAnalyser.Engine.Services
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             var messages = new StringBuilder();
             if (ValidateModel(messages))
             {
-                await this.ruleRepository.SaveAsync(MatchingRules, this.rulesStorageKey);
+                await this.ruleRepository.SaveAsync(MatchingRules, applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey));
             }
             else
             {
-                throw new ValidationWarningException(
-                    "Unable to save matching rules at this time, some data is invalid.\n" + messages);
+                throw new ValidationWarningException("Unable to save matching rules at this time, some data is invalid.\n" + messages);
             }
 
             this.monitorableDependencies.NotifyOfDependencyChange<ITransactionRuleService>(this);
             Saved?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());

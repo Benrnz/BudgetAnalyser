@@ -133,7 +133,7 @@ namespace BudgetAnalyser.Engine.Services
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             Saving?.Invoke(this, new AdditionalInformationRequestedEventArgs());
 
@@ -143,12 +143,12 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ValidationWarningException("Ledger Book is invalid, cannot save at this time:\n" + messages);
             }
 
-            await this.ledgerRepository.SaveAsync(LedgerBook, LedgerBook.StorageKey);
+            await this.ledgerRepository.SaveAsync(LedgerBook, applicationDatabase.FullPath(applicationDatabase.LedgerBookStorageKey));
             this.monitorableDependencies.NotifyOfDependencyChange(LedgerBook);
             Saved?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
         }
 

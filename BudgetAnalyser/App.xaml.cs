@@ -12,8 +12,10 @@ namespace BudgetAnalyser
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This is the root object in the App")]
     public partial class App
     {
+        private CompositionRoot compositionRoot;
         private ILogger logger;
         private ShellController shellController;
 
@@ -29,18 +31,18 @@ namespace BudgetAnalyser
 
             Current.Exit += OnApplicationExit;
 
-            var compositionRoot = new CompositionRoot();
-            compositionRoot.Compose();
-            this.logger = compositionRoot.Logger;
+            this.compositionRoot = new CompositionRoot();
+            this.compositionRoot.Compose();
+            this.logger = this.compositionRoot.Logger;
 
             this.logger.LogAlways(_ => "=========== Budget Analyser Starting ===========");
-            this.logger.LogAlways(_ => compositionRoot.ShellController.DashboardController.VersionString);
-            this.shellController = compositionRoot.ShellController;
+            this.logger.LogAlways(_ => this.compositionRoot.ShellController.DashboardController.VersionString);
+            this.shellController = this.compositionRoot.ShellController;
             this.shellController?.Initialize();
 
-            compositionRoot.ShellWindow.DataContext = compositionRoot.ShellController;
+            this.compositionRoot.ShellWindow.DataContext = this.compositionRoot.ShellController;
             this.logger.LogInfo(_ => "Initialisation finished.");
-            compositionRoot.ShellWindow.Show();
+            this.compositionRoot.ShellWindow.Show();
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
@@ -73,6 +75,7 @@ namespace BudgetAnalyser
         private void OnApplicationExit(object sender, ExitEventArgs e)
         {
             Current.Exit -= OnApplicationExit;
+            this.compositionRoot.Dispose();
             this.logger.LogAlways(_ => "=========== Application Exiting ===========");
         }
 

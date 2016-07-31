@@ -116,6 +116,7 @@
     <Compile Include="Budget\Income.cs" />
     <Compile Include="Budget\IncomeBudgetBucket.cs" />
     <Compile Include="Budget\InMemoryBudgetBucketRepository.cs" />
+    <Compile Include="Budget\LocalDiskReaderWriter.cs" />
     <Compile Include="Budget\PayCreditCardBucket.cs" />
     <Compile Include="Budget\SavedUpForExpenseBucket.cs" />
     <Compile Include="Budget\SavingsCommitmentBucket.cs" />
@@ -124,9 +125,12 @@
     <Compile Include="Budget\XamlOnDiskBudgetRepository.cs" />
     <Compile Include="DebugLogger.cs" />
     <Compile Include="DuplicateNameException.cs" />
-    <Compile Include="IRepositorySelector.cs" />
+    <Compile Include="IReaderWriterSelector.cs" />
     <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
+    <Compile Include="Persistence\ICredentialStore.cs" />
+    <Compile Include="Persistence\IFileReaderWriter.cs" />
     <Compile Include="Services\DependencyChangedEventArgs.cs" />
+    <Compile Include="Services\EncryptionKeyNotProvidedException.cs" />
     <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />
     <Compile Include="TimeSpanExtension.cs" />

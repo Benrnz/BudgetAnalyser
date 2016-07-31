@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +34,7 @@ namespace BudgetAnalyser.Storage
             {
                 using (var outputStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
                 {
-                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passphrase)))
+                    using (var cryptoStream = CipherStream.Create(outputStream, CredentialStore.SecureStringToString(passphrase)))
                     {
                         // Copy the contents of the input stream into the output stream (file) and in doing so encrypt it.
                         await inputStream.CopyToAsync(cryptoStream);
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.Storage
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    using (var cryptoStream = CipherStream.Open(inputStream, SecureStringToString(passphrase)))
+                    using (var cryptoStream = CipherStream.Open(inputStream, CredentialStore.SecureStringToString(passphrase)))
                     {
                         await cryptoStream.CopyToAsync(outputStream);
                     }
@@ -85,7 +84,7 @@ namespace BudgetAnalyser.Storage
             {
                 using (var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
                 {
-                    using (var cryptoStream = CipherStream.Create(outputStream, SecureStringToString(passphrase)))
+                    using (var cryptoStream = CipherStream.Create(outputStream, CredentialStore.SecureStringToString(passphrase)))
                     {
                         await inputStream.CopyToAsync(cryptoStream);
                     }
@@ -96,20 +95,6 @@ namespace BudgetAnalyser.Storage
         protected virtual bool FileExists(string fileName)
         {
             return File.Exists(fileName);
-        }
-
-        private static string SecureStringToString(SecureString value)
-        {
-            var valuePtr = IntPtr.Zero;
-            try
-            {
-                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
-                return Marshal.PtrToStringUni(valuePtr);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
-            }
         }
     }
 }

@@ -70,12 +70,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BudgetRepositorySelector.cs" />
+    <Compile Include="LocalDiskReaderWriterSelector.cs" />
     <Compile Include="CredentialStore.cs" />
-    <Compile Include="EncryptedXamlOnDiskBudgetRepository.cs" />
+    <Compile Include="EncryptedLocalDiskReaderWriter.cs" />
     <Compile Include="FileEncryptor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ICredentialStore.cs" />
     <Compile Include="IFileEncryptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorageConstants.cs" />

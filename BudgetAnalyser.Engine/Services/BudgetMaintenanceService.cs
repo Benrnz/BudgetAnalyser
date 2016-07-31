@@ -17,24 +17,23 @@ namespace BudgetAnalyser.Engine.Services
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class BudgetMaintenanceService : IBudgetMaintenanceService, ISupportsModelPersistence
     {
-        private readonly IRepositorySelector<IBudgetRepository> budgetRepositorySelector;
+        private readonly IBudgetRepository budgetRepository;
         private readonly ILogger logger;
         private readonly MonitorableDependencies monitorableDependencies;
-        private bool isEncrypted;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BudgetMaintenanceService" /> class.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">budgetRepositorySelector</exception>
+        /// <exception cref="System.ArgumentNullException">budgetRepository</exception>
         public BudgetMaintenanceService(
-            [NotNull] IRepositorySelector<IBudgetRepository> budgetRepositorySelector,
+            [NotNull] IBudgetRepository budgetRepository,
             [NotNull] IBudgetBucketRepository bucketRepo,
             [NotNull] ILogger logger,
             [NotNull] MonitorableDependencies monitorableDependencies)
         {
-            if (budgetRepositorySelector == null)
+            if (budgetRepository == null)
             {
-                throw new ArgumentNullException(nameof(budgetRepositorySelector));
+                throw new ArgumentNullException(nameof(budgetRepository));
             }
 
             if (bucketRepo == null)
@@ -49,7 +48,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
 
-            this.budgetRepositorySelector = budgetRepositorySelector;
+            this.budgetRepository = budgetRepository;
             this.logger = logger;
             this.monitorableDependencies = monitorableDependencies;
             BudgetBucketRepository = bucketRepo;
@@ -99,11 +98,11 @@ namespace BudgetAnalyser.Engine.Services
 
             if (!newBudget.Validate(validationMessages))
             {
-                throw new InvalidOperationException("New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
+                throw new InvalidOperationException("New cloned budget is invalid but the source budget is ok. Code Error.\n" + validationMessages);
             }
 
             Budgets.Add(newBudget);
-            this.budgetRepositorySelector.SelectRepository(this.isEncrypted).SaveAsync();
+            this.budgetRepository.SaveAsync();
             UpdateServiceMonitor();
             return newBudget;
         }
@@ -136,8 +135,7 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
-            this.isEncrypted = applicationDatabase.IsEncrypted;
-            await this.budgetRepositorySelector.SelectRepository(this.isEncrypted).CreateNewAndSaveAsync(applicationDatabase.BudgetCollectionStorageKey);
+            await this.budgetRepository.CreateNewAndSaveAsync(applicationDatabase.BudgetCollectionStorageKey);
             await LoadAsync(applicationDatabase);
         }
 
@@ -148,20 +146,19 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
-            this.isEncrypted = applicationDatabase.IsEncrypted;
-            Budgets = await this.budgetRepositorySelector.SelectRepository(this.isEncrypted).LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
+            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey), applicationDatabase.IsEncrypted);
             UpdateServiceMonitor();
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             EnsureAllBucketsUsedAreInBucketRepo();
 
             var messages = new StringBuilder();
             if (Budgets.Validate(messages))
             {
-                await this.budgetRepositorySelector.SelectRepository(this.isEncrypted).SaveAsync();
+                await this.budgetRepository.SaveAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey), applicationDatabase.IsEncrypted);
                 var savedHandler = Saved;
                 savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
@@ -171,7 +168,7 @@ namespace BudgetAnalyser.Engine.Services
             throw new ValidationWarningException("Unable to save Budget:\n" + messages);
         }
 
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
@@ -220,8 +217,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private void CreateNewBudgetCollection()
         {
-            this.isEncrypted = false;
-            Budgets = this.budgetRepositorySelector.SelectRepository(this.isEncrypted).CreateNew();
+            Budgets = this.budgetRepository.CreateNew();
         }
 
         private void EnsureAllBucketsUsedAreInBucketRepo()

@@ -16,6 +16,11 @@ namespace BudgetAnalyser.Engine.Services
         bool HasUnsavedChanges { get; }
 
         /// <summary>
+        ///     Gets a value indicating whether the underlying data files are encrypted.
+        /// </summary>
+        bool IsEncrypted { get; }
+
+        /// <summary>
         ///     Closes the currently loaded Budget Analyser file, and therefore any other application data is also closed.
         ///     Changes are discarded, no prompt or error will occur if there are unsaved changes. This check should be done before
         ///     calling this method.
@@ -27,6 +32,11 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <param name="storageKey">The storage key.</param>
         Task<ApplicationDatabase> CreateNewDatabaseAsync([NotNull] string storageKey);
+
+        /// <summary>
+        ///     Encrypts or Decrypts the underlying data files asynchronously.
+        /// </summary>
+        Task EncryptFilesAsync();
 
         /// <summary>
         ///     Loads the specified Budget Analyser file by file name. This will also trigger a load on all subordinate
@@ -51,6 +61,14 @@ namespace BudgetAnalyser.Engine.Services
         /// </summary>
         /// <exception cref="ValidationWarningException">Will be thrown if there are any validation errors.</exception>
         Task SaveAsync();
+
+        /// <summary>
+        ///     Sets the password claim. This is required if underlying data files are encrypted.
+        ///     Otherwise it does not need to be called.
+        ///     A password claim can be removed by calling with a null claim value.
+        /// </summary>
+        /// <param name="passwordClaim">The password claim.</param>
+        void SetPassword(object passwordClaim);
 
         /// <summary>
         ///     Validates all models in the application database.

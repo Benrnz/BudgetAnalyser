@@ -250,6 +250,11 @@ namespace BudgetAnalyser
                 {
                     this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
                 }
+                catch (EncryptionKeyNotProvidedException)
+                {
+                    this.uiContext.EncryptFileController.ShowEnterPasswordDialog(storedMainAppState.BudgetAnalyserDataStorageKey);
+
+                }
             }
         }
 

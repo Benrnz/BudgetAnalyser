@@ -28,6 +28,7 @@ namespace BudgetAnalyser
         CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; }
         DashboardController DashboardController { get; }
         EditingTransactionController EditingTransactionController { get; }
+        EncryptFileController EncryptFileController { get; }
         GlobalFilterController GlobalFilterController { get; }
         LedgerBookController LedgerBookController { get; }
         MainMenuController MainMenuController { get; }
