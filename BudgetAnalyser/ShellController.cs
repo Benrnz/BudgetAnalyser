@@ -10,7 +10,6 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -27,8 +26,6 @@ namespace BudgetAnalyser
         private readonly IPersistApplicationState statePersistence;
         private readonly IUiContext uiContext;
         private bool initialised;
-        private int loadAttempts;
-        private string loadingSecuredDatabaseFileName;
         private Point originalWindowSize;
         private Point originalWindowTopLeft;
 
@@ -57,7 +54,6 @@ namespace BudgetAnalyser
             MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
-            MessengerInstance.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
 
             this.statePersistence = statePersistence;
             this.persistenceOperations = persistenceOperations;
@@ -237,30 +233,7 @@ namespace BudgetAnalyser
             var storedMainAppState = message.ElementOfType<MainApplicationState>();
             if (storedMainAppState != null)
             {
-                try
-                {
-                    await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
-                    this.loadAttempts = 0;
-                }
-                catch (KeyNotFoundException)
-                {
-                    this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
-                    this.uiContext.Logger.LogWarning(l => $"The previously loaded Budget Analyser file ({storedMainAppState.BudgetAnalyserDataStorageKey}) no longer exists.");
-                }
-                catch (EncryptionKeyNotProvidedException)
-                {
-                    if (++this.loadAttempts > 3)
-                    {
-                        this.loadAttempts = 0;
-                        this.loadingSecuredDatabaseFileName = null;
-                        throw;
-                    }
-
-                    // Recover by prompting user for the password.
-                    this.uiContext.Logger.LogWarning(l => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
-                    this.loadingSecuredDatabaseFileName = storedMainAppState.BudgetAnalyserDataStorageKey;
-                    this.uiContext.EncryptFileController.ShowEnterPasswordDialog(storedMainAppState.BudgetAnalyserDataStorageKey);
-                }
+                await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
             }
         }
 
@@ -311,21 +284,6 @@ namespace BudgetAnalyser
             dialogController.DialogType = message.DialogType;
             dialogController.CorrelationId = message.CorrelationId;
             dialogController.HelpButtonVisible = message.HelpAvailable;
-        }
-
-        private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
-        {
-            // Reload the database file - treat it as a normal file open scenario.
-            try
-            {
-                await this.persistenceOperations.LoadDatabase(this.loadingSecuredDatabaseFileName);
-                this.loadingSecuredDatabaseFileName = null;
-            }
-            catch (EncryptionKeyIncorrectException)
-            {
-                this.uiContext.Logger.LogWarning(l => "Encryption password is incorrect for " + this.loadingSecuredDatabaseFileName);
-                this.uiContext.UserPrompts.MessageBox.Show("Encryption password is incorrect. Re-open the BAX file to retry.");
-            }
         }
     }
 }

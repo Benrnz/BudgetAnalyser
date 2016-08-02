@@ -88,6 +88,8 @@ namespace BudgetAnalyser.Dashboard
 
         public string FileName { get; private set; }
 
+        public string ValidationMessage { get; private set; }
+
         public bool HasUnsavedChanges
         {
             get { return this.doNotUseHasUnsavedChanges; }
@@ -108,23 +110,24 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
-        public void SetConfirmedPassword(bool confirmed)
+        internal void SetConfirmedPassword(bool confirmed)
         {
             this.passwordConfirmed = confirmed;
             CommandManager.InvalidateRequerySuggested();
         }
 
-        public void SetPassword(SecureString newPassword)
+        internal void SetPassword(SecureString newPassword)
         {
             this.password?.Dispose();
             this.password = newPassword;
             CommandManager.InvalidateRequerySuggested();
         }
 
-        public void ShowEnterPasswordDialog(string appDbFileName)
+        public void ShowEnterPasswordDialog(string appDbFileName, string validationMessage = "")
         {
             EnterPasswordMode = true;
             FileName = appDbFileName;
+            ValidationMessage = validationMessage;
             MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
             {
                 CorrelationId = this.dialogCorrelationId,
@@ -188,7 +191,7 @@ namespace BudgetAnalyser.Dashboard
             if (EnterPasswordMode)
             {
                 this.appDbService.SetPassword(this.password);
-                MessengerInstance.Send(new PasswordSetMessage());
+                MessengerInstance.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
             }
 
             this.password = null;
@@ -202,6 +205,8 @@ namespace BudgetAnalyser.Dashboard
             EncryptFileMode = true;
             IsEncrypted = this.appDbService.IsEncrypted;
             HasUnsavedChanges = this.appDbService.HasUnsavedChanges;
+            ValidationMessage = string.Empty;
+            FileName = string.Empty;
 
             if (HasUnsavedChanges)
             {
