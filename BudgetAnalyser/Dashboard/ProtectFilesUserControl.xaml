@@ -11,7 +11,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Grid.ColumnSpan="2"
@@ -49,6 +50,17 @@
                      KeyUp="OnConfirmBoxKeyUp"
                      Margin="5" 
                      Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}"/>
+        <StackPanel Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}">
+            <ContentControl Height="35"
+                            Margin="5"
+                            Template="{StaticResource WarningImage}" />
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="WARNING! PLEASE READ: Once encrypted, the data cannot be recovered if you forget your password!"/>
+        </StackPanel>
     </Grid>
 
 </UserControl>
