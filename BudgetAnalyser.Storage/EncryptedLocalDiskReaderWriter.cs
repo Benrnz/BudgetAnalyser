@@ -41,33 +41,17 @@ namespace BudgetAnalyser.Storage
         /// <param name="fileName">Full path and filename of the file.</param>
         public async Task<object> LoadFromDiskAsync(string fileName)
         {
-            var password = RetrievePassword();
-
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            var password = RetrievePassword();
             var decryptedData = await this.fileEncryptor.LoadEncryptedFileAsync(fileName, password);
 
-            var validText = true;
-            int characterCount = 0;
-
-            if (validText)
+            if (IsValidAlphaNumericWithPunctuation(decryptedData)) 
             {
+                // TODO Can we really assume it will always be Xaml?
                 return XamlServices.Parse(decryptedData);
             }
 
             throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
-        }
-
-        public bool IsValidAlphaNumericWithPunctuation(string text)
-        {
-            if (text == null) return false;
-            var valid = text.ToCharArray().Take(16).All(IsValidAlphaNumericWithPunctuation);
-            return valid;
-        }
-
-        private bool IsValidAlphaNumericWithPunctuation(char c)
-        {
-            var valid = c < 0x0000007f && c > 0x00000000;
-            return valid;
         }
 
         /// <summary>
@@ -79,9 +63,26 @@ namespace BudgetAnalyser.Storage
             if (data.IsNothing()) throw new ArgumentNullException(nameof(data));
 
             var password = RetrievePassword();
+            Debugger.Break();
             Debug.WriteLine($"Password is: {CredentialStore.SecureStringToString(password)}"); // TODO remove this
 
             await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, password);
+        }
+
+        public bool IsValidAlphaNumericWithPunctuation(string text)
+        {
+            if (text == null) return false;
+            var valid = text.ToCharArray().Take(16).All(IsValidUtf8AlphaNumericWithPunctuation);
+            return valid;
+        }
+
+        private bool IsValidUtf8AlphaNumericWithPunctuation(char c)
+        {
+            // 0x0000007e is Tilde which is considered valid.
+            // 0x00000000 is a null character which is invalid.
+            // Everything beyond 0x0000007f is considered invalid as it is not plain text.
+            var valid = c < 0x0000007f && c > 0x00000000;
+            return valid;
         }
 
         private SecureString RetrievePassword()
@@ -90,7 +91,8 @@ namespace BudgetAnalyser.Storage
 
             if (password == null)
             {
-                throw new SecurityException("Attempt to load an encrypted password protected file and no password has been set.");
+                // This condition should be checked by the UI before calling into the Engine ideally.
+                throw new EncryptionKeyNotProvidedException("Attempt to load an encrypted password protected file and no password has been set.");
             }
 
             return password;

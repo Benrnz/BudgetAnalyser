@@ -1,7 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xaml;
+using BudgetAnalyser.Engine.Matching.Data;
 using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -21,6 +28,59 @@ namespace BudgetAnalyser.Engine.UnitTest.Storage
             this.mockFileEncryptor = new Mock<IFileEncryptor>();
             this.mockCredentialStore = new Mock<ICredentialStore>();
             this.subject = new EncryptedLocalDiskReaderWriter(this.mockFileEncryptor.Object, this.mockCredentialStore.Object);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(EncryptionKeyNotProvidedException))]
+        public async Task LoadFromDiskAsync_ShouldThrow_GivenNoPassword()
+        {
+            this.mockCredentialStore.Setup(m => m.RetrievePasskey()).Returns(null);
+            await this.subject.LoadFromDiskAsync("Foo");
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task LoadFromDiskAsync_ShouldThrow_GivenNullFileName()
+        {
+            await this.subject.LoadFromDiskAsync(null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task LoadFromDiskAsync_ShouldThrow_GivenEmptyFileName()
+        {
+            await this.subject.LoadFromDiskAsync(string.Empty);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public async Task LoadFromDiskAsync_ShouldReturnAnObject_GivenValidFileName()
+        {
+            var password = new SecureString();
+            this.mockCredentialStore.Setup(m => m.RetrievePasskey()).Returns(password);
+            var data =
+                "<List x:TypeArguments=\"x:String\" Capacity=\"4\" xmlns=\"clr-namespace:System.Collections.Generic;assembly=mscorlib\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">\r\n  <x:String>The</x:String>\r\n  <x:String>Quick</x:String>\r\n  <x:String>Brown</x:String>\r\n  <x:String>Fox</x:String>\r\n</List>";
+            this.mockFileEncryptor.Setup(m => m.LoadEncryptedFileAsync("Foo", password)).ReturnsAsync(data);
+            var result = await this.subject.LoadFromDiskAsync("Foo");
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(List<string>));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(EncryptionKeyIncorrectException))]
+        public async Task LoadFromDiskAsync_ShouldThrow_GivenInvalidPassword()
+        {
+            var password = new SecureString();
+            this.mockCredentialStore.Setup(m => m.RetrievePasskey()).Returns(password);
+            byte[] bytes = new byte[] { 0, 1, 3 };
+            string data = Encoding.UTF8.GetString(bytes);
+            this.mockFileEncryptor.Setup(m => m.LoadEncryptedFileAsync("Foo", password)).ReturnsAsync(data);
+            await this.subject.LoadFromDiskAsync("Foo");
+
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -68,6 +128,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Storage
             var result = this.subject.IsValidAlphaNumericWithPunctuation(text);
             Assert.IsTrue(result);
         }
+
         [TestMethod]
         public void IsValidAlphaNumericWithPunctuation_ShouldBeTrue_GivenPunctuationSymbols3()
         {
