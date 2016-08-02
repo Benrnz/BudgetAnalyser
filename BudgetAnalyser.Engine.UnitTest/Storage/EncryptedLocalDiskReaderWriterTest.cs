@@ -31,6 +31,51 @@ namespace BudgetAnalyser.Engine.UnitTest.Storage
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToDiskAsync_ShouldThrow_GivenNullFileName()
+        {
+            await this.subject.WriteToDiskAsync(null, "Foo");
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToDiskAsync_ShouldThrow_GivenNullData()
+        {
+            await this.subject.WriteToDiskAsync("Foo", null);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToDiskAsync_ShouldThrow_GivenEmptyFileName()
+        {
+            await this.subject.WriteToDiskAsync(string.Empty, "Foo");
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteToDiskAsync_ShouldThrow_GivenEmptyData()
+        {
+            await this.subject.WriteToDiskAsync("Foo", string.Empty);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public async Task WriteToDiskAsync_ShouldCallFileEncryptor_GivenValidFileNameAndData()
+        {
+            this.mockCredentialStore.Setup(m => m.RetrievePasskey()).Returns(new SecureString());
+            this.mockFileEncryptor.Setup(m => m.SaveStringDataToEncryptedFileAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SecureString>()))
+                .Returns(Task.CompletedTask);
+
+            await this.subject.WriteToDiskAsync("foo", "Foo");
+            
+            this.mockFileEncryptor.VerifyAll();
+            this.mockCredentialStore.VerifyAll();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(EncryptionKeyNotProvidedException))]
         public async Task LoadFromDiskAsync_ShouldThrow_GivenNoPassword()
         {
