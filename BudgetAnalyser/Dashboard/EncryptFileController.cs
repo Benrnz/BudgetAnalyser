@@ -53,10 +53,7 @@ namespace BudgetAnalyser.Dashboard
                 {
                     return this.password != null && this.password.Length > 4 && this.passwordConfirmed;
                 }
-                else
-                {
-                    return this.password != null && this.password.Length > 4;
-                }
+                return this.password != null && this.password.Length > 4;
             }
         }
 
@@ -149,6 +146,8 @@ namespace BudgetAnalyser.Dashboard
                 confirmation = this.questionService.Show(
                     "Are you sure you want to encrypt and protect the data files?  After this is complete the files cannot be read by any other program aside from Budget Analyser. You will be required to enter the password each time you load your Budget Analyser file.",
                     "Encrypt Data Files?");
+                // TODO
+                throw new NotImplementedException();
             }
 
             if (confirmation == null || !confirmation.Value) return;
@@ -157,6 +156,17 @@ namespace BudgetAnalyser.Dashboard
 
             // TODO Background task?
             await this.appDbService.EncryptFilesAsync();
+
+            if (IsEncrypted)
+            {
+                this.messageService.Show(
+                    "Files are now protected with strong encryption. DO NOT FORGET YOUR PASSWORD. Files are not recoverable without the correct password. Backup files have been created alongside your existing data files. These can be deleted when your satisfied with the encryption.",
+                    "Encrypt Data Files - Completed");
+            }
+            else
+            {
+                this.messageService.Show("Files are decrypted and are no longer protected.", "Decrypt Data Files - Completed");
+            }
         }
 
         private async void OnShellDiaglogResponseMessageReceived(ShellDialogResponseMessage message)
