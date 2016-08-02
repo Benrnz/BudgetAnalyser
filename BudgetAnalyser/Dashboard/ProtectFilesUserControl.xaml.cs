@@ -36,13 +36,13 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.cancellationSource = new CancellationTokenSource();
-            this.finishedEnteringTask = Task.Delay(2.Seconds(), this.cancellationSource.Token)
+            this.finishedEnteringTask = Task.Delay(1.Seconds(), this.cancellationSource.Token)
                 .ContinueWith(t =>
                 {
                     if (t.IsCanceled) return;
                     SendPasswordToController();
                 });
-        }
+        } 
 
         private void OnPasswordLostFocus(object sender, RoutedEventArgs e)
         {
@@ -74,6 +74,10 @@ namespace BudgetAnalyser.Dashboard
         private void OnConfirmBoxKeyUp(object sender, KeyEventArgs e)
         {
             Controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
+        }
+
+        private void OnWindowGotFocus(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

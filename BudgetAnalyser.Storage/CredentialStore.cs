@@ -16,8 +16,10 @@ namespace BudgetAnalyser.Storage
         /// <summary>
         ///     Retrieves the pass key.
         /// </summary>
+        /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
         public object RetrievePasskey()
         {
+            if (this.passPhrase.Length == 0) return null;
             return this.passPhrase;
         }
 
@@ -27,7 +29,7 @@ namespace BudgetAnalyser.Storage
         public void SetPasskey(object passkey)
         {
             this.passPhrase?.Dispose();
-            this.passPhrase = (SecureString)passkey;
+            this.passPhrase = (SecureString) passkey;
         }
 
         /// <summary>
@@ -59,6 +61,20 @@ namespace BudgetAnalyser.Storage
             GC.SuppressFinalize(this);
         }
 
+        internal static string SecureStringToString(SecureString value)
+        {
+            var valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
+        }
+
         /// <summary>
         ///     Finalizes an instance of the <see cref="CredentialStore" /> class.
         ///     Use C# destructor syntax for finalization code.
@@ -73,20 +89,6 @@ namespace BudgetAnalyser.Storage
             // Calling Dispose(false) is optimal in terms of 
             // readability and maintainability. 
             Dispose();
-        }
-
-        internal static string SecureStringToString(SecureString value)
-        {
-            var valuePtr = IntPtr.Zero;
-            try
-            {
-                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
-                return Marshal.PtrToStringUni(valuePtr);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
-            }
         }
     }
 }

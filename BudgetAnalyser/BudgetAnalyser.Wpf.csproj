@@ -221,6 +221,7 @@
       <DependentUpon>ProtectFilesUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dashboard\EncryptFileController.cs" />
+    <Compile Include="Dashboard\PasswordSetMessage.cs" />
     <Compile Include="Dashboard\WidgetCommands.cs" />
     <Compile Include="Dashboard\DashboardController.cs" />
     <Compile Include="Dashboard\DashboardUserControl.xaml.cs">

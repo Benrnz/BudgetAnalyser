@@ -2,7 +2,6 @@
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
@@ -46,7 +45,20 @@ namespace BudgetAnalyser.Dashboard
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
         /// </summary>
-        public bool CanExecuteOkButton => this.password != null && this.password.Length > 4 && this.passwordConfirmed;
+        public bool CanExecuteOkButton
+        {
+            get
+            {
+                if (EncryptFileMode)
+                {
+                    return this.password != null && this.password.Length > 4 && this.passwordConfirmed;
+                }
+                else
+                {
+                    return this.password != null && this.password.Length > 4;
+                }
+            }
+        }
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
@@ -166,6 +178,7 @@ namespace BudgetAnalyser.Dashboard
             if (EnterPasswordMode)
             {
                 this.appDbService.SetPassword(this.password);
+                MessengerInstance.Send(new PasswordSetMessage());
             }
 
             this.password = null;

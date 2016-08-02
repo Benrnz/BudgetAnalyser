@@ -126,8 +126,8 @@ namespace BudgetAnalyser
                 return;
             }
 
-            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
-            appDb = await this.applicationDatabaseService.LoadAsync(fileName);
+            this.applicationDatabaseService.Close();
+            await this.applicationDatabaseService.LoadAsync(fileName);
         }
 
         private async Task<bool> PromptToSaveIfNecessary()

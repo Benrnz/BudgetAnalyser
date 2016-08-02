@@ -32,11 +32,12 @@ namespace BudgetAnalyser
         private bool initialised;
         private Point originalWindowSize;
         private Point originalWindowTopLeft;
+        private int loadAttempts = 0;
+        private string loadingSecuredDatabaseFileName;
 
         public ShellController(
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
-            [NotNull] IDashboardService dashboardService,
             [NotNull] PersistenceOperations persistenceOperations
             )
         {
@@ -50,11 +51,6 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(statePersistence));
             }
 
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
-            }
-
             if (persistenceOperations == null)
             {
                 throw new ArgumentNullException(nameof(persistenceOperations));
@@ -64,6 +60,7 @@ namespace BudgetAnalyser
             MessengerInstance.Register<ShellDialogRequestMessage>(this, OnDialogRequested);
             MessengerInstance.Register<ApplicationStateRequestedMessage>(this, OnApplicationStateRequested);
             MessengerInstance.Register<ApplicationStateLoadedMessage>(this, OnApplicationStateLoaded);
+            MessengerInstance.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
 
             this.statePersistence = statePersistence;
             this.persistenceOperations = persistenceOperations;
@@ -74,6 +71,13 @@ namespace BudgetAnalyser
             TransactionsDialog = new ShellDialogController();
             BudgetDialog = new ShellDialogController();
             ReportsDialog = new ShellDialogController();
+        }
+
+        private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
+        {
+            // Reload the database file - treat it as a normal file open scenario.
+            await this.persistenceOperations.LoadDatabase(this.loadingSecuredDatabaseFileName);
+            this.loadingSecuredDatabaseFileName = null;
         }
 
         [UsedImplicitly]
@@ -245,6 +249,7 @@ namespace BudgetAnalyser
                 try
                 {
                     await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
+                    this.loadAttempts = 0;
                 }
                 catch (KeyNotFoundException)
                 {
@@ -252,8 +257,15 @@ namespace BudgetAnalyser
                 }
                 catch (EncryptionKeyNotProvidedException)
                 {
+                    if (++this.loadAttempts > 3)
+                    {
+                        this.loadAttempts = 0;
+                        this.loadingSecuredDatabaseFileName = null;
+                        throw;
+                    }
+                    this.uiContext.Logger.LogWarning(l => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
+                    this.loadingSecuredDatabaseFileName = storedMainAppState.BudgetAnalyserDataStorageKey;
                     this.uiContext.EncryptFileController.ShowEnterPasswordDialog(storedMainAppState.BudgetAnalyserDataStorageKey);
-
                 }
             }
         }
