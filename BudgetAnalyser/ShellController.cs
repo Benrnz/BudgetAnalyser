@@ -324,7 +324,7 @@ namespace BudgetAnalyser
             catch (EncryptionKeyIncorrectException)
             {
                 this.uiContext.Logger.LogWarning(l => "Encryption password is incorrect for " + this.loadingSecuredDatabaseFileName);
-                this.uiContext.UserPrompts.MessageBox.Show("Encryption password is incorrect.");
+                this.uiContext.UserPrompts.MessageBox.Show("Encryption password is incorrect. Re-open the BAX file to retry.");
             }
         }
     }
