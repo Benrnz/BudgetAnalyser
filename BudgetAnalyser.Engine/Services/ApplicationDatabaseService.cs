@@ -106,7 +106,6 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             await CreateBackup(); // Ensure data is not corrupted and lost by backing it up
-            //await SaveAsync(); // Resave to ensure the BAX file has correct file names restored back.
             this.budgetAnalyserDatabase.IsEncrypted = !this.budgetAnalyserDatabase.IsEncrypted;
             await SaveAsync(); 
         }
@@ -136,8 +135,7 @@ namespace BudgetAnalyser.Engine.Services
             catch (DataFormatException ex)
             {
                 Close();
-                throw new DataFormatException(
-                    "A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
+                throw new DataFormatException("A subordindate data file is invalid or corrupt unable to load " + storageKey, ex);
             }
             catch (KeyNotFoundException ex)
             {

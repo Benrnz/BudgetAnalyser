@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
-using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
 using Portable.Xaml;
 
@@ -14,8 +15,8 @@ namespace BudgetAnalyser.Storage
     [AutoRegisterWithIoC(Named = "Encrypted")]
     internal class EncryptedLocalDiskReaderWriter : IFileReaderWriter
     {
-        private readonly IFileEncryptor fileEncryptor;
         private readonly ICredentialStore credentialStore;
+        private readonly IFileEncryptor fileEncryptor;
 
         public EncryptedLocalDiskReaderWriter([NotNull] IFileEncryptor fileEncryptor, [NotNull] ICredentialStore credentialStore)
         {
@@ -41,11 +42,32 @@ namespace BudgetAnalyser.Storage
         public async Task<object> LoadFromDiskAsync(string fileName)
         {
             var password = RetrievePassword();
-            Debug.WriteLine($"Password is: {CredentialStore.SecureStringToString(password)}"); // TODO remove this
 
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
             var decryptedData = await this.fileEncryptor.LoadEncryptedFileAsync(fileName, password);
-            return XamlServices.Parse(decryptedData);
+
+            var validText = true;
+            int characterCount = 0;
+
+            if (validText)
+            {
+                return XamlServices.Parse(decryptedData);
+            }
+
+            throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
+        }
+
+        public bool IsValidAlphaNumericWithPunctuation(string text)
+        {
+            if (text == null) return false;
+            var valid = text.ToCharArray().Take(16).All(IsValidAlphaNumericWithPunctuation);
+            return valid;
+        }
+
+        private bool IsValidAlphaNumericWithPunctuation(char c)
+        {
+            var valid = c < 0x0000007f && c > 0x00000000;
+            return valid;
         }
 
         /// <summary>

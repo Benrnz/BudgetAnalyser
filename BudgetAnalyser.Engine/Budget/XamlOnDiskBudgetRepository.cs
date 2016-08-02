@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
 using Portable.Xaml;
 using Rees.TangyFruitMapper;
@@ -105,17 +106,15 @@ namespace BudgetAnalyser.Engine.Budget
             }
             catch (XamlObjectWriterException ex)
             {
-                throw new DataFormatException(
-                    string.Format(CultureInfo.CurrentCulture,
-                        "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.",
-                        storageKey),
-                    ex);
+                throw new DataFormatException($"The budget file '{storageKey}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
+            }
+            catch (EncryptionKeyIncorrectException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                throw new DataFormatException(
-                    "Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.",
-                    ex);
+                throw new DataFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             var correctDataFormat = serialised as BudgetCollectionDto;

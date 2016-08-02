@@ -130,6 +130,7 @@
     <Compile Include="Persistence\ICredentialStore.cs" />
     <Compile Include="Persistence\IFileReaderWriter.cs" />
     <Compile Include="Services\DependencyChangedEventArgs.cs" />
+    <Compile Include="Services\EncryptionKeyIncorrectException.cs" />
     <Compile Include="Services\EncryptionKeyNotProvidedException.cs" />
     <Compile Include="Services\MonitorableDependencies.cs" />
     <Compile Include="Services\TransactionConstants.cs" />

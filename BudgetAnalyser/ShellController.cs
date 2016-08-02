@@ -18,9 +18,6 @@ using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
 using Rees.Wpf;
-using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
-using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;
-using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser
 {
@@ -30,10 +27,10 @@ namespace BudgetAnalyser
         private readonly IPersistApplicationState statePersistence;
         private readonly IUiContext uiContext;
         private bool initialised;
+        private int loadAttempts;
+        private string loadingSecuredDatabaseFileName;
         private Point originalWindowSize;
         private Point originalWindowTopLeft;
-        private int loadAttempts = 0;
-        private string loadingSecuredDatabaseFileName;
 
         public ShellController(
             [NotNull] IUiContext uiContext,
@@ -73,13 +70,6 @@ namespace BudgetAnalyser
             ReportsDialog = new ShellDialogController();
         }
 
-        private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
-        {
-            // Reload the database file - treat it as a normal file open scenario.
-            await this.persistenceOperations.LoadDatabase(this.loadingSecuredDatabaseFileName);
-            this.loadingSecuredDatabaseFileName = null;
-        }
-
         [UsedImplicitly]
         public BudgetController BudgetController => this.uiContext.BudgetController;
 
@@ -109,11 +99,12 @@ namespace BudgetAnalyser
 
         public ShellDialogController TransactionsDialog { get; }
 
+        internal Point WindowSize { get; private set; }
+
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
         [UsedImplicitly]
         public string WindowTitle => "Budget Analyser";
 
-        internal Point WindowSize { get; private set; }
         internal Point WindowTopLeft { get; private set; }
 
         public void Initialize()
@@ -137,9 +128,9 @@ namespace BudgetAnalyser
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
             // Send state load messages in order.
-            foreach (int sequence in sequences)
+            foreach (var sequence in sequences)
             {
-                int sequenceCopy = sequence;
+                var sequenceCopy = sequence;
                 IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
@@ -254,6 +245,7 @@ namespace BudgetAnalyser
                 catch (KeyNotFoundException)
                 {
                     this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
+                    this.uiContext.Logger.LogWarning(l => $"The previously loaded Budget Analyser file ({storedMainAppState.BudgetAnalyserDataStorageKey}) no longer exists.");
                 }
                 catch (EncryptionKeyNotProvidedException)
                 {
@@ -263,6 +255,8 @@ namespace BudgetAnalyser
                         this.loadingSecuredDatabaseFileName = null;
                         throw;
                     }
+
+                    // Recover by prompting user for the password.
                     this.uiContext.Logger.LogWarning(l => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
                     this.loadingSecuredDatabaseFileName = storedMainAppState.BudgetAnalyserDataStorageKey;
                     this.uiContext.EncryptFileController.ShowEnterPasswordDialog(storedMainAppState.BudgetAnalyserDataStorageKey);
@@ -279,7 +273,7 @@ namespace BudgetAnalyser
             };
             message.PersistThisModel(shellPersistentStateV1);
 
-            MainApplicationState dataFileState = this.persistenceOperations.PreparePersistentStateData();
+            var dataFileState = this.persistenceOperations.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 
@@ -317,6 +311,21 @@ namespace BudgetAnalyser
             dialogController.DialogType = message.DialogType;
             dialogController.CorrelationId = message.CorrelationId;
             dialogController.HelpButtonVisible = message.HelpAvailable;
+        }
+
+        private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
+        {
+            // Reload the database file - treat it as a normal file open scenario.
+            try
+            {
+                await this.persistenceOperations.LoadDatabase(this.loadingSecuredDatabaseFileName);
+                this.loadingSecuredDatabaseFileName = null;
+            }
+            catch (EncryptionKeyIncorrectException)
+            {
+                this.uiContext.Logger.LogWarning(l => "Encryption password is incorrect for " + this.loadingSecuredDatabaseFileName);
+                this.uiContext.UserPrompts.MessageBox.Show("Encryption password is incorrect.");
+            }
         }
     }
 }

@@ -137,7 +137,7 @@ namespace BudgetAnalyser.Dashboard
 
         private async Task EncryptFile()
         {
-            bool? confirmation = null;
+            bool? confirmation;
             if (IsEncrypted)
             {
                 confirmation = this.questionService.Show(
