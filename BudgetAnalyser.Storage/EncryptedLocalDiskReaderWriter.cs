@@ -63,9 +63,6 @@ namespace BudgetAnalyser.Storage
             if (data.IsNothing()) throw new ArgumentNullException(nameof(data));
 
             var password = RetrievePassword();
-            Debugger.Break();
-            Debug.WriteLine($"Password is: {CredentialStore.SecureStringToString(password)}"); // TODO remove this
-
             await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, password);
         }
 

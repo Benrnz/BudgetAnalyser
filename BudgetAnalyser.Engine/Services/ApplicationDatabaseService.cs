@@ -13,6 +13,7 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly ICredentialStore credentialStore;
+        private readonly ILogger logger;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
         private readonly MonitorableDependencies monitorableDependencies;
@@ -23,7 +24,8 @@ namespace BudgetAnalyser.Engine.Services
             [NotNull] IApplicationDatabaseRepository applicationRepository,
             [NotNull] IEnumerable<ISupportsModelPersistence> databaseDependents,
             [NotNull] MonitorableDependencies monitorableDependencies,
-            [NotNull] ICredentialStore credentialStore)
+            [NotNull] ICredentialStore credentialStore,
+            [NotNull] ILogger logger)
         {
             if (applicationRepository == null)
             {
@@ -37,10 +39,12 @@ namespace BudgetAnalyser.Engine.Services
 
             if (monitorableDependencies == null) throw new ArgumentNullException(nameof(monitorableDependencies));
             if (credentialStore == null) throw new ArgumentNullException(nameof(credentialStore));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             this.applicationRepository = applicationRepository;
             this.monitorableDependencies = monitorableDependencies;
             this.credentialStore = credentialStore;
+            this.logger = logger;
             this.databaseDependents = databaseDependents.OrderBy(d => d.LoadSequence).ToList();
             this.monitorableDependencies.NotifyOfDependencyChange<IApplicationDatabaseService>(this);
             InitialiseDirtyDataTable();
@@ -129,6 +133,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 foreach (var service in this.databaseDependents) // Already sorted ascending by sequence number.
                 {
+                    this.logger.LogInfo(l => $"Loading service: {service}");
                     await service.LoadAsync(this.budgetAnalyserDatabase);
                 }
             }

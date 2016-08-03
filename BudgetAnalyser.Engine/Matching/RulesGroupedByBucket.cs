@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using JetBrains.Annotations;
@@ -10,6 +11,7 @@ namespace BudgetAnalyser.Engine.Matching
     /// <summary>
     ///     A class that models a group of matching rules grouped by a single <see cref="BudgetBucket" />.
     /// </summary>
+    [DebuggerDisplay("RulesGroupedByBucket: {Bucket.Code} {RulesCount} rules")]
     public class RulesGroupedByBucket
     {
         /// <summary>

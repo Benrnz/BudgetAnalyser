@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Services;
 
 namespace BudgetAnalyser
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class PersistenceOperations
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;

@@ -30,7 +30,7 @@ namespace BudgetAnalyser.Dashboard
         {
             if (this.finishedEnteringTask != null)
             {
-                // If 2 seconds is not up yet and another keystroke is received, reset the timer.
+                // If 1 second is not up yet and another keystroke is received, reset the timer.
                 this.cancellationSource.Cancel();
                 this.cancellationSource.Dispose();
             }
@@ -51,18 +51,19 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnWindowLostFocus(object sender, RoutedEventArgs e)
         {
-            if (!(e.OriginalSource is UserControl)) return;
-            // TODO check this happens
+            if (!(sender is ProtectFilesUserControl)) return;
+            
             this.passwordBox.Clear();
             this.confirmBox.Clear();
-            this.cancellationSource.Cancel();
-            this.cancellationSource.Dispose();
+            this.cancellationSource?.Cancel();
+            this.cancellationSource?.Dispose();
         }
 
         private void SendPasswordToController()
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
             {
+                if (Controller == null) return;
                 if (this.passwordBox.SecurePassword.Length > 0)
                 {
                     Controller.SetPassword(this.passwordBox.SecurePassword);
