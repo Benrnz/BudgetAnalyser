@@ -370,7 +370,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public async Task Save_ShouldCallStatementRepo_GivenStatementModel()
         {
-            await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
+            var mockAppDb = new Mock<ApplicationDatabase>();
+            mockAppDb.Setup(m => m.FullPath(It.IsAny<string>())).Returns("Foo");
+            await this.subject.SaveAsync(mockAppDb.Object);
 
             this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Once);
         }

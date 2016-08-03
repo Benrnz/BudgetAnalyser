@@ -137,6 +137,11 @@ namespace BudgetAnalyser.Engine.Budget
 
         public async Task SaveAsync()
         {
+            if (this.currentBudgetCollection == null)
+            {
+                throw new InvalidOperationException("There is no current budget collection loaded.");
+            }
+
             await SaveAsync(this.currentBudgetCollection.StorageKey, this.isEncryptedAtLastAccess);
         }
 

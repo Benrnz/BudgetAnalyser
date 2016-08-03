@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Persistence;
@@ -44,6 +46,12 @@ namespace BudgetAnalyser.Engine.Services
         ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
         /// </summary>
         /// <param name="storageKey">Name and path to the file.</param>
+        /// <exception cref="ArgumentNullException">Will be thrown if <paramref name="storageKey"/> is null or empty.</exception>
+        /// <exception cref="EncryptionKeyNotProvidedException">Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore"/> to provide credentials.</exception>
+        /// <exception cref="EncryptionKeyIncorrectException">Will be thrown if the data files are encrypted and the credentials supplied are incorrect.</exception>
+        /// <exception cref="DataFormatException">Will be thrown if an underlying data file is in an incorrect format. Can occur if file format is out of date and no longer supported.</exception>
+        /// <exception cref="KeyNotFoundException">Will be thrown if the specified storage cannot be found based on the <paramref name="storageKey"/> provided.</exception>
+        /// <exception cref="NotSupportedException ">Will be thrown if an underlying data file is completely the wrong format. Most likely not a Budget Analyser file.</exception>
         Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
 
         /// <summary>

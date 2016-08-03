@@ -107,14 +107,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullRepo()
         {
-            new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object);
+            new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullServices()
         {
-            new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object);
+            new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         [TestMethod]
@@ -260,7 +260,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockCredentials = new Mock<ICredentialStore>();
 
             this.mockServices = new[] { this.mockService1.Object, this.mockService2.Object };
-            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object);
+            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         private void CreateNewDatabaseSetup()

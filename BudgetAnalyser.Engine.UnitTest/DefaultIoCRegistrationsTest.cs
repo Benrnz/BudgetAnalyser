@@ -6,6 +6,7 @@ using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
+using BudgetAnalyser.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.TangyFruitMapper;
 
@@ -44,6 +45,8 @@ namespace BudgetAnalyser.Engine.UnitTest
         public void EnsureAllInterfacesAreRegisteredWithIoC()
         {
             List<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
+            dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(CredentialStore).Assembly));
+
             IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
             var exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();

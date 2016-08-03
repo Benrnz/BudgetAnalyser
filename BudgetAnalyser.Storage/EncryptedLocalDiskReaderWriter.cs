@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -66,7 +65,7 @@ namespace BudgetAnalyser.Storage
             await this.fileEncryptor.SaveStringDataToEncryptedFileAsync(fileName, data, password);
         }
 
-        public bool IsValidAlphaNumericWithPunctuation(string text)
+        internal bool IsValidAlphaNumericWithPunctuation(string text)
         {
             if (text == null) return false;
             var valid = text.ToCharArray().Take(16).All(IsValidUtf8AlphaNumericWithPunctuation);

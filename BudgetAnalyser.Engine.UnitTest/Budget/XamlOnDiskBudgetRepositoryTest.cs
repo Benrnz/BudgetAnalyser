@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xaml;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Budget.Data;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.UnitTest.Helper;
 using BudgetAnalyser.Engine.UnitTest.TestData;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Portable.Xaml;
 using Rees.TangyFruitMapper;
 using Rees.UnitTestUtilities;
 
@@ -19,27 +18,27 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
     [TestClass]
     public class XamlOnDiskBudgetRepositoryTest
     {
-        private Mock<IReaderWriterSelector> fileSelectorMock;
+        private Mock<IReaderWriterSelector> mockFileSelector;
+        private Mock<IFileReaderWriter> mockReaderWriter;
 
         [TestMethod]
         public async Task CreateNewShouldPopulateFileName()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.WriteToDiskMock = (f, d) => { };
+            var subject = Arrange();
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = await subject.CreateNewAndSaveAsync(filename);
+            var collection = await subject.CreateNewAndSaveAsync(filename);
             Assert.AreEqual(filename, collection.StorageKey);
         }
 
         [TestMethod]
         public async Task CreateNewShouldReturnCollectionWithOneBudgetInIt()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
+            var subject = Arrange();
             //subject.WriteToDiskMock = (f, d) => { };
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
-            BudgetCollection collection = await subject.CreateNewAndSaveAsync(filename);
+            var collection = await subject.CreateNewAndSaveAsync(filename);
 
             Assert.IsTrue(collection.Count == 1);
         }
@@ -48,7 +47,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task CreateNewShouldThrowGivenEmptyFileName()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
+            var subject = Arrange();
             await subject.CreateNewAndSaveAsync(string.Empty);
             Assert.Fail();
         }
@@ -57,7 +56,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task CreateNewShouldThrowGivenNullFileName()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
+            var subject = Arrange();
             await subject.CreateNewAndSaveAsync(null);
             Assert.Fail();
         }
@@ -65,13 +64,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public async Task CreateNewShouldWriteToDisk()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            var writeToDiskCalled = false;
-            //subject.WriteToDiskMock = (f, d) => { writeToDiskCalled = true; };
+            var subject = Arrange();
             SetPrivateBudgetCollection(subject);
             var filename = "FooBar.xml";
+
             await subject.CreateNewAndSaveAsync(filename);
-            Assert.IsTrue(writeToDiskCalled);
+
+            this.mockFileSelector.Verify(m => m.SelectReaderWriter(It.IsAny<bool>()));
+            this.mockReaderWriter.Verify(m => m.WriteToDiskAsync(It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 new BucketBucketRepoAlwaysFind(),
                 null,
-                this.fileSelectorMock.Object);
+                this.mockFileSelector.Object);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             new XamlOnDiskBudgetRepository(
                 null,
                 new DtoMapperStub<BudgetCollectionDto, BudgetCollection>(),
-                this.fileSelectorMock.Object);
+                this.mockFileSelector.Object);
             Assert.Fail();
         }
 
@@ -100,16 +100,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             var mockBucketRepository = new Mock<IBudgetBucketRepository>();
             mockBucketRepository.Setup(m => m.Initialise(null));
+            var subject = Arrange();
 
-            var mapperMock = new Mock<IDtoMapper<BudgetCollectionDto, BudgetCollection>>();
-            var subject = new XamlOnDiskBudgetRepository(
-                mockBucketRepository.Object,
-                mapperMock.Object,
-                this.fileSelectorMock.Object);
-            mapperMock.Setup(m => m.ToModel(It.IsAny<BudgetCollectionDto>())).Returns(BudgetModelTestData.CreateCollectionWith1And2);
-            //subject.FileExistsMock = f => true;
+            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.BudgetCollectionTestDataFileName);
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
 
-            //subject.LoadFromDiskMock = OnLoadFromDiskMock;
             await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName, false);
 
             mockBucketRepository.Verify();
@@ -118,10 +114,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public async Task LoadShouldReturnACollectionAndSetFileName()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName, false);
+            var subject = Arrange();
+            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.BudgetCollectionTestDataFileName);
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
+
+            var collection = await subject.LoadAsync(TestDataConstants.BudgetCollectionTestDataFileName, false);
 
             Assert.AreEqual(TestDataConstants.BudgetCollectionTestDataFileName, collection.StorageKey);
         }
@@ -130,9 +128,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(DataFormatException))]
         public async Task LoadShouldThrowIfAnyOtherExceptionIsThrownAndWrapItIntoFileFormatException()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = f => { throw new Exception(); };
+            var subject = Arrange();
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+
             await subject.LoadAsync("SmellyPoo.xml", false);
 
             Assert.Fail();
@@ -142,9 +140,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(DataFormatException))]
         public async Task LoadShouldThrowIfDeserialisedObjectIsNotBudgetCollection()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = f => new object();
+            var subject = Arrange();
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(new object());
+
             await subject.LoadAsync("SmellyPoo.xml", false);
 
             Assert.Fail();
@@ -154,7 +153,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(KeyNotFoundException))]
         public async Task LoadShouldThrowIfFileDoesntExist()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
+            var subject = Arrange();
             //subject.FileExistsMock = f => false;
             await subject.LoadAsync("SmellyPoo.xml", false);
 
@@ -165,9 +164,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(DataFormatException))]
         public async Task LoadShouldThrowIfFileFormatIsInvalid()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = f => { throw new XamlObjectWriterException(); };
+            var subject = Arrange();
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ThrowsAsync(new XamlObjectWriterException());
+
             await subject.LoadAsync("SmellyPoo.xml", false);
 
             Assert.Fail();
@@ -176,10 +176,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public async Task MustBeAbleToLoadDemoBudgetFile()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName, false);
+            var subject = Arrange();
+            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.DemoBudgetFileName);
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
+
+            var collection = await subject.LoadAsync(TestDataConstants.DemoBudgetFileName, false);
 
             Assert.AreEqual(TestDataConstants.DemoBudgetFileName, collection.StorageKey);
             Assert.AreEqual(1, collection.Count);
@@ -188,10 +190,12 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public async Task MustBeAbleToLoadEmptyBudgetFile()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            //subject.FileExistsMock = f => true;
-            //subject.LoadFromDiskMock = OnLoadFromDiskMock;
-            BudgetCollection collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName, false);
+            var subject = Arrange();
+            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.EmptyBudgetFileName);
+            this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
+
+            var collection = await subject.LoadAsync(TestDataConstants.EmptyBudgetFileName, false);
 
             Assert.AreEqual(TestDataConstants.EmptyBudgetFileName, collection.StorageKey);
             Assert.AreEqual(1, collection.Count);
@@ -201,7 +205,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [ExpectedException(typeof(InvalidOperationException))]
         public async Task SaveShouldThrowIfLoadHasntBeenCalled()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
+            var subject = Arrange();
             await subject.SaveAsync();
             Assert.Fail();
         }
@@ -209,30 +213,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestMethod]
         public async Task SaveShouldWriteToDisk()
         {
-            XamlOnDiskBudgetRepository subject = Arrange();
-            var writeToDiskCalled = false;
-            //subject.WriteToDiskMock = (filename, data) => { writeToDiskCalled = true; };
+            var subject = Arrange();
+            this.mockReaderWriter.Setup(m => m.WriteToDiskAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
+
             SetPrivateBudgetCollection(subject);
 
             await subject.SaveAsync();
 
-            Assert.IsTrue(writeToDiskCalled);
+            this.mockReaderWriter.VerifyAll();
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            this.fileSelectorMock = new Mock<IReaderWriterSelector>();
-        }
-
-        private static BudgetCollectionDto OnLoadFromDiskMock(string f)
-        {
-            return EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(f);
-        }
-
-        private static void SetPrivateBudgetCollection(XamlOnDiskBudgetRepository subject)
-        {
-            PrivateAccessor.SetField<XamlOnDiskBudgetRepository>(subject, "currentBudgetCollection", BudgetModelTestData.CreateCollectionWith1And2());
+            this.mockFileSelector = new Mock<IReaderWriterSelector>();
+            this.mockReaderWriter = new Mock<IFileReaderWriter>();
+            this.mockFileSelector.Setup(m => m.SelectReaderWriter(It.IsAny<bool>())).Returns(this.mockReaderWriter.Object);
         }
 
         private XamlOnDiskBudgetRepository Arrange(IBudgetBucketRepository bucketRepo = null)
@@ -243,12 +239,22 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             }
 
             return new XamlOnDiskBudgetRepository(
-                bucketRepo, 
+                bucketRepo,
                 new Mapper_BudgetCollectionDto_BudgetCollection(
-                    bucketRepo, 
-                    new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()), 
-                    new Mapper_BudgetModelDto_BudgetModel(bucketRepo)), 
-                this.fileSelectorMock.Object);
+                    bucketRepo,
+                    new Mapper_BudgetBucketDto_BudgetBucket(new BudgetBucketFactory()),
+                    new Mapper_BudgetModelDto_BudgetModel(bucketRepo)),
+                this.mockFileSelector.Object);
+        }
+
+        private static BudgetCollectionDto OnLoadFromDiskMock(string f)
+        {
+            return EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(f);
+        }
+
+        private static void SetPrivateBudgetCollection(XamlOnDiskBudgetRepository subject)
+        {
+            PrivateAccessor.SetField<XamlOnDiskBudgetRepository>(subject, "currentBudgetCollection", BudgetModelTestData.CreateCollectionWith1And2());
         }
     }
 }
