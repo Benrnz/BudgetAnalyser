@@ -164,7 +164,7 @@ namespace BudgetAnalyser.Engine.Budget
         /// <summary>
         ///     Serialises the specified budget data.
         /// </summary>
-        private string Serialise(BudgetCollectionDto budgetData)
+        private static string Serialise(BudgetCollectionDto budgetData)
         {
             return XamlServices.Save(budgetData);
         }

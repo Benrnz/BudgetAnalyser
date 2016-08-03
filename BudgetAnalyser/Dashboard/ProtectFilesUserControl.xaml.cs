@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
@@ -36,7 +35,8 @@ namespace BudgetAnalyser.Dashboard
             }
 
             this.cancellationSource = new CancellationTokenSource();
-            this.finishedEnteringTask = Task.Delay(1.Seconds(), this.cancellationSource.Token)
+            var delay = this.passwordBox.Password.Length > 4 ? TimeSpan.FromMilliseconds(300) : 1.Seconds();
+            this.finishedEnteringTask = Task.Delay(delay, this.cancellationSource.Token)
                 .ContinueWith(t =>
                 {
                     if (t.IsCanceled) return;
