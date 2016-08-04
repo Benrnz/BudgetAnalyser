@@ -10,7 +10,7 @@ using BudgetAnalyser.Engine.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace BudgetAnalyser.Engine.UnitTest.Storage
+namespace BudgetAnalyser.Engine.UnitTest.Encryption
 {
     [TestClass]
     public class EncryptedLocalDiskReaderWriterTest

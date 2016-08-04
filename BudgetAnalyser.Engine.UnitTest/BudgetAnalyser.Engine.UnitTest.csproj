@@ -195,7 +195,9 @@
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="Statement\TransactionTest.cs" />
     <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
-    <Compile Include="Storage\EncryptedLocalDiskReaderWriterTest.cs" />
+    <Compile Include="Encryption\CredentialStoreTest.cs" />
+    <Compile Include="Encryption\EncryptedLocalDiskReaderWriterTest.cs" />
+    <Compile Include="Encryption\LocalDiskReaderWriterSelectorTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />

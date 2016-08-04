@@ -29,7 +29,19 @@ namespace BudgetAnalyser.Encryption
         /// <returns>An instance of the repository ready to use.</returns>
         public IFileReaderWriter SelectReaderWriter(bool isEncrypted)
         {
-            return isEncrypted ? this.encryptedReaderWriter : this.unprotectedRaderWriter;
+            if (this.unprotectedRaderWriter == null && this.encryptedReaderWriter == null)
+            {
+                throw new InvalidOperationException("Code Bug: There are no instances of IFileReaderWriter registered.");
+            }
+
+            var readerWriter = (isEncrypted ? this.encryptedReaderWriter : this.unprotectedRaderWriter);
+
+            if (readerWriter == null)
+            {
+                throw new InvalidOperationException("Code Bug: There are no instances of IFileReaderWriter registered for the selected encryption mode. " + isEncrypted);
+            }
+
+            return readerWriter;
         }
     }
 }
