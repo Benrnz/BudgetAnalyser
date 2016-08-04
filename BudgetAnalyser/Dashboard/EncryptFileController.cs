@@ -155,7 +155,7 @@ namespace BudgetAnalyser.Dashboard
 
             if (confirmation == null || !confirmation.Value) return;
 
-            this.appDbService.SetPassword(this.password);
+            this.appDbService.SetCredential(this.password);
 
             // TODO Background task?
             await this.appDbService.EncryptFilesAsync();
@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Dashboard
 
             if (EnterPasswordMode)
             {
-                this.appDbService.SetPassword(this.password);
+                this.appDbService.SetCredential(this.password);
                 MessengerInstance.Send(new PasswordSetMessage { DatabaseStorageKey = FileName });
             }
 

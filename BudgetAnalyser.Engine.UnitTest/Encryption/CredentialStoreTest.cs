@@ -82,7 +82,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
             this.subject = new CredentialStore();
         }
 
-        private SecureString CreateSecureString(string text)
+        internal static SecureString CreateSecureString(string text)
         {
             var securedText = new SecureString();
             foreach (var c in text)

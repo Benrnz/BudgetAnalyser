@@ -71,12 +71,12 @@ namespace BudgetAnalyser.Engine.Services
         Task SaveAsync();
 
         /// <summary>
-        ///     Sets the password claim. This is required if underlying data files are encrypted.
-        ///     Otherwise it does not need to be called.
-        ///     A password claim can be removed by calling with a null claim value.
+        ///     Sets the credential that will be used when underlying data files are encrypted.
+        ///     If data files are not encrypted this does not need to be called.
+        ///     The claim can be removed by calling with a null claim value. Only one claim is stored.
         /// </summary>
-        /// <param name="passwordClaim">The password claim.</param>
-        void SetPassword(object passwordClaim);
+        /// <param name="claim">The password claim.</param>
+        void SetCredential(object claim);
 
         /// <summary>
         ///     Validates all models in the application database.

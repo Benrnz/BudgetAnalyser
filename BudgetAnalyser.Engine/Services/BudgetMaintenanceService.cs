@@ -170,20 +170,8 @@ namespace BudgetAnalyser.Engine.Services
 
         public void SavePreview()
         {
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
-            handler?.Invoke(this, args);
-
-            if (args.ModificationComment.IsNothing())
-            {
-                args.ModificationComment = "[No comment]";
-            }
-
-            var budgetModel = args.Context as BudgetModel;
-            if (budgetModel != null)
-            {
-                budgetModel.LastModifiedComment = args.ModificationComment;
-            }
+            Saving?.Invoke(this, args);
         }
 
         public bool ValidateModel(StringBuilder messages)

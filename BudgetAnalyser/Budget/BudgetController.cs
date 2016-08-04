@@ -401,8 +401,6 @@ namespace BudgetAnalyser.Budget
         private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
         {
             SyncDataToBudgetService();
-            // Adding last change comment to budget is more annoying than useful. Will be removed soon.
-            // args.ModificationComment = PromptUserForLastModifiedComment();
             args.Context = CurrentBudget.Model;
         }
 

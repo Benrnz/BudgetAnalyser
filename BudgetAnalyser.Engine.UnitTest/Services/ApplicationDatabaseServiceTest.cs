@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.UnitTest.Encryption;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -20,6 +22,23 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         private Mock<ISupportsModelPersistence> mockService2;
         private IEnumerable<ISupportsModelPersistence> mockServices;
         private ApplicationDatabaseService subject;
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task EncryptFilesAsync_ShouldThrow_GivenNoClaimSet()
+        {
+            await this.subject.EncryptFilesAsync();
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void SetClaim_ShouldCallCredentialStore_GivenValidClaim()
+        {
+            this.subject.SetCredential(CredentialStoreTest.CreateSecureString("Foo"));
+
+            this.mockCredentials.Verify(m => m.SetPasskey(It.IsAny<SecureString>()));
+        }
 
         [TestMethod]
         public void Close_ShouldCloseAllServices()

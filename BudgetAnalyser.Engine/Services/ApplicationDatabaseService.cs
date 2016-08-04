@@ -54,9 +54,9 @@ namespace BudgetAnalyser.Engine.Services
 
         public bool IsEncrypted => this.budgetAnalyserDatabase.IsEncrypted;
 
-        public void SetPassword(object passwordClaim)
+        public void SetCredential(object claim)
         {
-            this.credentialStore.SetPasskey(passwordClaim);
+            this.credentialStore.SetPasskey(claim);
         }
 
         public ApplicationDatabase Close()
