@@ -2,7 +2,7 @@ using System.Security;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Storage
+namespace BudgetAnalyser.Encryption
 {
     /// <summary>
     ///     A utility service for providing encryption functions for files on the local disk.

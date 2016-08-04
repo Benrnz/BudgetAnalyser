@@ -7,8 +7,8 @@
     <ProjectGuid>{17CFB549-81C7-4527-9F3E-5694D2B5B3FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BudgetAnalyser.Storage</RootNamespace>
-    <AssemblyName>BudgetAnalyser.Storage</AssemblyName>
+    <RootNamespace>BudgetAnalyser.Encryption</RootNamespace>
+    <AssemblyName>BudgetAnalyser.Encryption</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BudgetAnalyser.Storage")]
-[assembly: AssemblyDescription("The Budget Analyser local storage management library.")]
+[assembly: AssemblyTitle("BudgetAnalyser.Encryption")]
+[assembly: AssemblyDescription("The Budget Analyser local encryption management library.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rees.biz")]
-[assembly: AssemblyProduct("BudgetAnalyser.Storage")]
+[assembly: AssemblyProduct("BudgetAnalyser")]
 [assembly: AssemblyCopyright("Rees.biz Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

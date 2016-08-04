@@ -9,7 +9,7 @@ using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
 using Portable.Xaml;
 
-namespace BudgetAnalyser.Storage
+namespace BudgetAnalyser.Encryption
 {
     [AutoRegisterWithIoC(Named = "Encrypted")]
     internal class EncryptedLocalDiskReaderWriter : IFileReaderWriter

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
 using Confuzzle.Core;
 
-namespace BudgetAnalyser.Storage
+namespace BudgetAnalyser.Encryption
 {
     /// <summary>
     ///     A utility class for encrypting files on the local disk.

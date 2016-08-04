@@ -4,10 +4,10 @@ using System.Security;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 
-namespace BudgetAnalyser.Storage
+namespace BudgetAnalyser.Encryption
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public sealed class CredentialStore : ICredentialStore, IDisposable
+    internal sealed class CredentialStore : ICredentialStore, IDisposable
     {
         // Track whether Dispose has been called. 
         private bool disposed;

@@ -76,9 +76,5 @@ namespace BudgetAnalyser.Dashboard
         {
             Controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
         }
-
-        private void OnWindowGotFocus(object sender, RoutedEventArgs e)
-        {
-        }
     }
 }

@@ -5,7 +5,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Storage
+namespace BudgetAnalyser.Encryption
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class LocalDiskReaderWriterSelector : IReaderWriterSelector

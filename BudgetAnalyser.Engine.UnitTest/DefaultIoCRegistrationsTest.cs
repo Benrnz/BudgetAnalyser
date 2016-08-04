@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using BudgetAnalyser.Engine.Widgets;
-using BudgetAnalyser.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rees.TangyFruitMapper;
 

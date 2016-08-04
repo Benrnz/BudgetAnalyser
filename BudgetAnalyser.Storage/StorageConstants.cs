@@ -1,4 +1,4 @@
-﻿namespace BudgetAnalyser.Storage
+﻿namespace BudgetAnalyser.Encryption
 {
     public static class StorageConstants
     {
