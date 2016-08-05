@@ -229,7 +229,6 @@
     <Compile Include="TestHarness\FakeMonitorableDependencies.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
-    <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="ThirdPartyTests\PortableXamlTest.cs" />
     <Compile Include="TypeExtensions.cs" />

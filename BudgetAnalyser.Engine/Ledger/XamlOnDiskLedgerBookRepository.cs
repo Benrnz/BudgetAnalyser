@@ -22,20 +22,14 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private readonly BankImportUtilities importUtilities;
         private readonly ILedgerBookFactory ledgerBookFactory;
+        private readonly IReaderWriterSelector readerWriterSelector;
         private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="XamlOnDiskLedgerBookRepository" /> class.
-        /// </summary>
-        /// <param name="mapper">The data to domain mapper.</param>
-        /// <param name="importUtilities">The import utilities.</param>
-        /// <param name="ledgerBookFactory">The ledger book factory.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
         public XamlOnDiskLedgerBookRepository(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
             [NotNull] BankImportUtilities importUtilities,
-            [NotNull] ILedgerBookFactory ledgerBookFactory)
+            [NotNull] ILedgerBookFactory ledgerBookFactory,
+            [NotNull] IReaderWriterSelector readerWriterSelector)
         {
             if (mapper == null)
             {
@@ -51,18 +45,14 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 throw new ArgumentNullException(nameof(ledgerBookFactory));
             }
+            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.mapper = mapper;
             this.importUtilities = importUtilities;
             this.ledgerBookFactory = ledgerBookFactory;
+            this.readerWriterSelector = readerWriterSelector;
         }
 
-        /// <summary>
-        ///     Creates a new empty <see cref="LedgerBook" /> at the location indicated by the <paramref name="storageKey" />. Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to load the new <see cref="LedgerBook" />.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task<LedgerBook> CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -75,22 +65,11 @@ namespace BudgetAnalyser.Engine.Ledger
             book.StorageKey = storageKey;
             book.Modified = DateTime.Now;
 
-            await SaveAsync(book, storageKey);
-            return await LoadAsync(storageKey);
+            await SaveAsync(book, storageKey, false);
+            return await LoadAsync(storageKey, false);
         }
 
-        /// <summary>
-        ///     Loads the asynchronous.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException">Data file can not be found:  + storageKey</exception>
-        /// <exception cref="DataFormatException">
-        ///     Deserialisation Ledger Book file failed, an exception was thrown by the Xaml deserialiser, the file format is
-        ///     invalid.
-        ///     or
-        ///     The Ledger Book has been tampered with, checksum should be  + calculatedChecksum
-        /// </exception>
-        public async Task<LedgerBook> LoadAsync(string storageKey)
+        public async Task<LedgerBook> LoadAsync(string storageKey, bool isEncrypted)
         {
             if (storageKey.IsNothing())
             {
@@ -101,7 +80,7 @@ namespace BudgetAnalyser.Engine.Ledger
             try
             {
                 this.importUtilities.AbortIfFileDoesntExist(storageKey);
-                dataEntity = await LoadXamlFromDiskAsync(storageKey);
+                dataEntity = await LoadXamlFromDiskAsync(storageKey, isEncrypted);
             }
             catch (FileNotFoundException ex)
             {
@@ -147,13 +126,7 @@ namespace BudgetAnalyser.Engine.Ledger
             return book;
         }
 
-        /// <summary>
-        ///     Saves the Ledger Book to the location indicated by the storage key. Any existing Ledger Book at that location will
-        ///     be overwritten.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
-        public async Task SaveAsync(LedgerBook book, string storageKey)
+        public async Task SaveAsync(LedgerBook book, string storageKey, bool isEncrypted)
         {
             if (book == null)
             {
@@ -170,7 +143,7 @@ namespace BudgetAnalyser.Engine.Ledger
             dataEntity.StorageKey = storageKey;
             dataEntity.Checksum = CalculateChecksum(book);
 
-            await SaveDtoToDiskAsync(dataEntity);
+            await SaveDtoToDiskAsync(dataEntity, isEncrypted);
         }
 
         /// <summary>
@@ -182,30 +155,23 @@ namespace BudgetAnalyser.Engine.Ledger
             return File.ReadAllText(fileName);
         }
 
-        /// <summary>
-        ///     Loads the xaml from disk asynchronous.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        protected virtual async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
+        protected virtual async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName, bool isEncrypted)
         {
+            var reader = this.readerWriterSelector.SelectReaderWriter(false);// Todo change this to IsEncrypted when done testing
             object result = null;
-            await Task.Run(() => result = XamlServices.Parse(LoadXamlAsString(fileName)));
+            await Task.Run(() => result = reader.LoadFromDiskAsync(fileName));
             return result as LedgerBookDto;
         }
 
-        /// <summary>
-        ///     Saves the dto to disk asynchronous.
-        /// </summary>
-        /// <param name="dataEntity">The data entity.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity)
+        protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity, bool isEncrypted)
         {
             if (dataEntity == null)
             {
                 throw new ArgumentNullException(nameof(dataEntity));
             }
 
-            await WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity));
+            var writer = this.readerWriterSelector.SelectReaderWriter(false); // Todo change this to IsEncrypted when done testing
+            await Task.Run(() => writer.WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity)));
         }
 
         /// <summary>
@@ -221,22 +187,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return XamlServices.Save(dataEntity);
-        }
-
-        /// <summary>
-        ///     Writes to disk asynchronous.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="data">The data.</param>
-        protected virtual async Task WriteToDiskAsync(string fileName, string data)
-        {
-            using (var stream = new FileStream(fileName, FileMode.Create))
-            {
-                using (var file = new StreamWriter(stream))
-                {
-                    await file.WriteAsync(data);
-                }
-            }
         }
 
         private static double CalculateChecksum(LedgerBook dataEntity)
