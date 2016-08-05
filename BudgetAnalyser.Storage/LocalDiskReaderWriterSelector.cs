@@ -27,6 +27,7 @@ namespace BudgetAnalyser.Encryption
         /// </summary>
         /// <param name="isEncrypted">if set to <c>true</c> the storage files are encrypted.</param>
         /// <returns>An instance of the repository ready to use.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IFileReaderWriter")]
         public IFileReaderWriter SelectReaderWriter(bool isEncrypted)
         {
             if (this.unprotectedRaderWriter == null && this.encryptedReaderWriter == null)

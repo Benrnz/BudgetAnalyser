@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Engine", "BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj", "{22E5FB3E-3044-4BDA-88FF-619F83EC4E99}"
 EndProject
@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf", "Budge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Wpf.UnitTest", "BudgetAnalyser.Wpf.UnitTest\BudgetAnalyser.Wpf.UnitTest.csproj", "{F6BEE529-FA66-4BCD-938B-49677225AFF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Storage", "BudgetAnalyser.Storage\BudgetAnalyser.Storage.csproj", "{17CFB549-81C7-4527-9F3E-5694D2B5B3FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetAnalyser.Encryption", "BudgetAnalyser.Storage\BudgetAnalyser.Encryption.csproj", "{17CFB549-81C7-4527-9F3E-5694D2B5B3FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

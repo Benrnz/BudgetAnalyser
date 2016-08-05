@@ -4,7 +4,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine;
-using Confuzzle.Core;
+using ConfuzzleCore;
 
 namespace BudgetAnalyser.Encryption
 {
@@ -30,17 +30,7 @@ namespace BudgetAnalyser.Encryption
                 throw new FileNotFoundException(sourceFile);
             }
 
-            using (var inputStream = new FileStream(sourceFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
-            {
-                using (var outputStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
-                {
-                    using (var cryptoStream = CipherStream.Create(outputStream, CredentialStore.SecureStringToString(passphrase)))
-                    {
-                        // Copy the contents of the input stream into the output stream (file) and in doing so encrypt it.
-                        await inputStream.CopyToAsync(cryptoStream);
-                    }
-                }
-            }
+            await Confuzzle.EncryptFile(sourceFile).WithPassword(passphrase).IntoFile(destinationFile);
         }
 
         /// <summary>
@@ -51,25 +41,7 @@ namespace BudgetAnalyser.Encryption
         /// <returns>UTF8 string contents of the file.</returns>
         public async Task<string> LoadEncryptedFileAsync(string fileName, SecureString passphrase)
         {
-            string decryptedData;
-            using (var inputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
-            {
-                using (var outputStream = new MemoryStream())
-                {
-                    using (var cryptoStream = CipherStream.Open(inputStream, CredentialStore.SecureStringToString(passphrase)))
-                    {
-                        await cryptoStream.CopyToAsync(outputStream);
-                    }
-
-                    outputStream.Position = 0;
-                    using (var reader = new StreamReader(outputStream))
-                    {
-                        decryptedData = await reader.ReadToEndAsync();
-                    }
-                }
-            }
-
-            return decryptedData;
+            return await Confuzzle.DecryptFile(fileName).WithPassword(passphrase).IntoString();
         }
 
         /// <summary>
@@ -80,16 +52,7 @@ namespace BudgetAnalyser.Encryption
         /// <param name="passphrase">The pass phrase.</param>
         public async Task SaveStringDataToEncryptedFileAsync(string fileName, string data, SecureString passphrase)
         {
-            using (var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-            {
-                using (var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read, 4096, true))
-                {
-                    using (var cryptoStream = CipherStream.Create(outputStream, CredentialStore.SecureStringToString(passphrase)))
-                    {
-                        await inputStream.CopyToAsync(cryptoStream);
-                    }
-                }
-            }
+            await Confuzzle.EncryptString(data).WithPassword(passphrase).IntoFile(fileName);
         }
 
         protected virtual bool FileExists(string fileName)
