@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Services
             List<MatchingRule> repoRules;
             try
             {
-                repoRules = (await this.ruleRepository.LoadAsync(this.rulesStorageKey))
+                repoRules = (await this.ruleRepository.LoadAsync(this.rulesStorageKey, applicationDatabase.IsEncrypted))
                     .OrderBy(r => r.Description)
                     .ToList();
             }
@@ -131,7 +131,8 @@ namespace BudgetAnalyser.Engine.Services
             var messages = new StringBuilder();
             if (ValidateModel(messages))
             {
-                await this.ruleRepository.SaveAsync(MatchingRules, applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey));
+                // Prefer to use the file name from the applicationDatabase in case it has been changed upstream.
+                await this.ruleRepository.SaveAsync(MatchingRules, applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey), applicationDatabase.IsEncrypted);
             }
             else
             {
