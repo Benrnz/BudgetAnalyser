@@ -100,17 +100,17 @@ namespace BudgetAnalyser.Engine.UnitTest
         public void RegisterAutoMappings_ShouldReturnFakeLoggerRegistration()
         {
             IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
-            DependencyRegistrationRequirement loggerRegistration = result.First();
+            DependencyRegistrationRequirement loggerRegistration = result.Last();
             Assert.AreEqual(typeof(FakeLogger), loggerRegistration.DependencyRequired);
             Assert.IsTrue(loggerRegistration.IsSingleInstance);
             Assert.AreEqual("Named Logger", loggerRegistration.NamedInstanceName);
         }
 
         [TestMethod]
-        public void RegisterAutoMappings_ShouldReturnOneGivenThisAssembly()
+        public void RegisterAutoMappings_ShouldReturnTwoGivenThisAssembly()
         {
             IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(2, result.Count());
         }
 
         [TestMethod]

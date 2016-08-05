@@ -209,7 +209,7 @@ namespace BudgetAnalyser.Engine.Services
             // Save all remaining service's data in parallel.
             await this.databaseDependents
                 .Where(service => this.dirtyData[service.DataType])
-                .Select(async service => await Task.Run(() => service.SaveAsync(this.budgetAnalyserDatabase)))
+                .Select(async service => await Task.Run(async () => await service.SaveAsync(this.budgetAnalyserDatabase)))
                 .ContinueWhenAllTasksComplete();
 
             ClearDirtyDataFlags();

@@ -159,7 +159,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(false);// Todo change this to IsEncrypted when done testing
             object result = null;
-            await Task.Run(() => result = reader.LoadFromDiskAsync(fileName));
+            await Task.Run(async () => result = await reader.LoadFromDiskAsync(fileName));
             return result as LedgerBookDto;
         }
 
@@ -171,7 +171,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             var writer = this.readerWriterSelector.SelectReaderWriter(false); // Todo change this to IsEncrypted when done testing
-            await Task.Run(() => writer.WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity)));
+            await Task.Run(async () => await writer.WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity)));
         }
 
         /// <summary>

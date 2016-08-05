@@ -1,9 +1,8 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine.Persistence;
 using Portable.Xaml;
 
-namespace BudgetAnalyser.Engine.Budget
+namespace BudgetAnalyser.Engine.Persistence
 {
     [AutoRegisterWithIoC(Named = "Unprotected")]
     internal class LocalDiskReaderWriter : IFileReaderWriter
