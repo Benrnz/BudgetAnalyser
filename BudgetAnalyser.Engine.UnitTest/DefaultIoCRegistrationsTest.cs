@@ -16,8 +16,8 @@ namespace BudgetAnalyser.Engine.UnitTest
     public class DefaultIoCRegistrationsTest
     {
         /// <summary>
-        /// The interface exclude list.
-        /// This is used to exclude interfaces that do not need to be registered with the IoC container.
+        ///     The interface exclude list.
+        ///     This is used to exclude interfaces that do not need to be registered with the IoC container.
         /// </summary>
         private List<Type> ExemptionList
         {
@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest
                     typeof(ICloneable<>), // Used to consistently implement cloning across multiple types.
                     typeof(IDtoMapper<,>), // Used to consistently implement mappers, mappers are internal and do not need to be registered in an IoC container.
                     typeof(IEnvironmentFolders), // Must be implemented in the UI project as it is platform dependent.
-                    typeof(IPersistentApplicationStateObject), // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
+                    typeof(IPersistentApplicationStateObject) // Used to consistently implement a grain or persistent application data. This does not need to be registered with an IoC container.
                 };
             }
         }
@@ -49,8 +49,8 @@ namespace BudgetAnalyser.Engine.UnitTest
 
             IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
 
-            var exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
-            foreach (Type interfaceType in interfaces.Except(ExemptionList))
+            List<string> exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
+            foreach (var interfaceType in interfaces.Except(ExemptionList))
             {
                 Console.Write("Interface: {0}", interfaceType.Name);
                 if (exemptionListNames.Contains(interfaceType.FullName)) continue;
@@ -100,7 +100,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         public void RegisterAutoMappings_ShouldReturnFakeLoggerRegistration()
         {
             IEnumerable<DependencyRegistrationRequirement> result = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(GetType().Assembly);
-            DependencyRegistrationRequirement loggerRegistration = result.Last();
+            var loggerRegistration = result.Last();
             Assert.AreEqual(typeof(FakeLogger), loggerRegistration.DependencyRequired);
             Assert.IsTrue(loggerRegistration.IsSingleInstance);
             Assert.AreEqual("Named Logger", loggerRegistration.NamedInstanceName);

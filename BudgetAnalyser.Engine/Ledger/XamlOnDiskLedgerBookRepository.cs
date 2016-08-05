@@ -157,7 +157,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
         protected virtual async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(false);// Todo change this to IsEncrypted when done testing
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             object result = null;
             await Task.Run(async () => result = await reader.LoadFromDiskAsync(fileName));
             return result as LedgerBookDto;
@@ -170,7 +170,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(dataEntity));
             }
 
-            var writer = this.readerWriterSelector.SelectReaderWriter(false); // Todo change this to IsEncrypted when done testing
+            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
             await Task.Run(async () => await writer.WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity)));
         }
 
