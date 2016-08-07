@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
             var result = await this.subject.LoadFromDiskAsync("Foo");
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(List<string>));
+            Assert.IsInstanceOfType(result, typeof(string));
         }
 
         [TestMethod]

@@ -41,25 +41,25 @@ namespace BudgetAnalyser.Engine.Statement
         ///     Loads an existing Budget Analyser Transaction file.
         /// </summary>
         /// <param name="storageKey">Pass a known storage key (database identifier or filename) to load.</param>
+        /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
         /// <exception cref="NotSupportedException">Will be thrown if the format of the bank extract is not supported.</exception>
         /// <exception cref="KeyNotFoundException">
-        ///     Will be thrown if the bank extract cannot be located using the given
-        ///     <paramref name="storageKey" />
+        ///     Will be thrown if the bank extract cannot be located using the given <paramref name="storageKey" />
         /// </exception>
         /// <exception cref="StatementModelChecksumException">
-        ///     Will be thrown if the statement model's internal checksum detects
-        ///     corrupt data indicating tampering.
+        ///     Will be thrown if the statement model's internal checksum detects corrupt data indicating tampering.
         /// </exception>
         /// <exception cref="DataFormatException">
-        ///     Will be thrown if the format of the bank extract contains unexpected data
-        ///     indicating it is corrupt or an old file.
+        ///     Will be thrown if the format of the bank extract contains unexpected data indicating it is corrupt or an old file.
         /// </exception>
-        Task<StatementModel> LoadAsync([NotNull] string storageKey);
+        Task<StatementModel> LoadAsync([NotNull] string storageKey, bool isEncrypted);
 
         /// <summary>
         ///     Save the given <see cref="StatementModel" /> into persistent storage. Files are saved into the proprietry
-        ///     Budget Analyser format.
+        ///     Budget Analyser CSV format.
         /// </summary>
-        Task SaveAsync(StatementModel statementModel);
+        /// <param name="statementModel">The model to save.</param>
+        /// <param name="isEncrypted">A boolean to indicate if the data file should be encrypted or not.</param>
+        Task SaveAsync(StatementModel statementModel, bool isEncrypted);
     }
 }

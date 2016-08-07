@@ -18,8 +18,8 @@ namespace BudgetAnalyser.Engine.Matching
     internal class XamlOnDiskMatchingRuleRepository : IMatchingRuleRepository
     {
         private readonly ILogger logger;
-        private readonly IReaderWriterSelector readerWriterSelector;
         private readonly IDtoMapper<MatchingRuleDto, MatchingRule> mapper;
+        private readonly IReaderWriterSelector readerWriterSelector;
 
         public XamlOnDiskMatchingRuleRepository([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
@@ -101,20 +101,25 @@ namespace BudgetAnalyser.Engine.Matching
             await SaveToDiskAsync(storageKey, dataEntities, isEncrypted);
         }
 
+        protected virtual object Deserialise(string xaml)
+        {
+            return XamlServices.Parse(xaml);
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Necessary for persistence - this is the type of the rehydrated object")]
         protected virtual async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var result = await reader.LoadFromDiskAsync(fileName);
-            return result as List<MatchingRuleDto>;
+            return Deserialise(result) as List<MatchingRuleDto>;
         }
 
         protected virtual async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)
         {
-            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
+            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             await writer.WriteToDiskAsync(fileName, Serialise(dataEntities));
         }
-        
+
         protected virtual string Serialise(IEnumerable<MatchingRuleDto> dataEntity)
         {
             if (dataEntity == null)

@@ -203,7 +203,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var subject2 = CreateSubject();
             subject2.FileExistsOverride = f => true;
             subject2.LoadXamlFromDiskFromEmbeddedResources = false;
-            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(XamlServices.Parse(serialisedData));
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(serialisedData);
             await subject2.LoadAsync("foo", false);
             bookDto = subject2.LedgerBookDto;
 

@@ -219,12 +219,11 @@ namespace BudgetAnalyser.Engine.Services
             StatementModel?.Dispose();
             try
             {
-                StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey));
+                StatementModel = await this.statementRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey), applicationDatabase.IsEncrypted);
             }
             catch (StatementModelChecksumException ex)
             {
-                throw new DataFormatException(
-                    "Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
+                throw new DataFormatException("Statement Model data is corrupt and has been tampered with. Unable to load.", ex);
             }
 
             NewDataAvailable();
@@ -250,12 +249,11 @@ namespace BudgetAnalyser.Engine.Services
             var messages = new StringBuilder();
             if (!ValidateModel(messages))
             {
-                throw new ValidationWarningException(
-                    "Unable to save transactions at this time, some data is invalid. " + messages);
+                throw new ValidationWarningException("Unable to save transactions at this time, some data is invalid. " + messages);
             }
 
             StatementModel.StorageKey = applicationDatabase.FullPath(applicationDatabase.StatementModelStorageKey);
-            await this.statementRepository.SaveAsync(StatementModel);
+            await this.statementRepository.SaveAsync(StatementModel, applicationDatabase.IsEncrypted);
             this.monitorableDependencies.NotifyOfDependencyChange(StatementModel);
             Saved?.Invoke(this, EventArgs.Empty);
         }
@@ -342,10 +340,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             if (bucketCode == TransactionConstants.UncategorisedFilter)
             {
-                return
-                    this.transactions =
-                        new ObservableCollection<Transaction>(
-                            StatementModel.Transactions.Where(t => t.BudgetBucket == null));
+                return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => t.BudgetBucket == null));
             }
 
             var bucket = bucketCode == null ? null : this.bucketRepository.GetByCode(bucketCode);
@@ -356,8 +351,7 @@ namespace BudgetAnalyser.Engine.Services
             }
 
             var paternityTest = new BudgetBucketPaternity();
-            return this.transactions = new ObservableCollection<Transaction>(
-                StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
+            return this.transactions = new ObservableCollection<Transaction>(StatementModel.Transactions.Where(t => paternityTest.OfSameBucketFamily(t.BudgetBucket, bucket)));
         }
 
         /// <summary>
@@ -596,10 +590,7 @@ namespace BudgetAnalyser.Engine.Services
                                 if (!bucketExists)
                                 {
                                     t.BudgetBucket = null;
-                                    this.logger.LogWarning(
-                                        l =>
-                                            l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date,
-                                                t.BudgetBucket));
+                                    this.logger.LogWarning(l => l.Format("Transaction {0} has a bucket ({1}) that doesn't exist!", t.Date, t.BudgetBucket));
                                 }
                                 return bucketExists;
                             });

@@ -102,7 +102,8 @@ namespace BudgetAnalyser.Engine.Budget
             object serialised;
             try
             {
-                serialised = await reader.LoadFromDiskAsync(storageKey); // May return null for some errors.
+                var xaml = await reader.LoadFromDiskAsync(storageKey); // May return null for some errors.
+                serialised = Deserialise(xaml);
             }
             catch (XamlObjectWriterException ex)
             {
@@ -161,10 +162,15 @@ namespace BudgetAnalyser.Engine.Budget
             await writer.WriteToDiskAsync(dataFormat.StorageKey, serialised);
         }
 
+        protected virtual object Deserialise(string xaml)
+        {
+            return XamlServices.Parse(xaml);
+        }
+
         /// <summary>
         ///     Serialises the specified budget data.
         /// </summary>
-        private static string Serialise(BudgetCollectionDto budgetData)
+        protected virtual string Serialise(BudgetCollectionDto budgetData)
         {
             return XamlServices.Save(budgetData);
         }

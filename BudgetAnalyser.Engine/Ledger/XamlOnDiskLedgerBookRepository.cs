@@ -22,8 +22,8 @@ namespace BudgetAnalyser.Engine.Ledger
     {
         private readonly BankImportUtilities importUtilities;
         private readonly ILedgerBookFactory ledgerBookFactory;
-        private readonly IReaderWriterSelector readerWriterSelector;
         private readonly IDtoMapper<LedgerBookDto, LedgerBook> mapper;
+        private readonly IReaderWriterSelector readerWriterSelector;
 
         public XamlOnDiskLedgerBookRepository(
             [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
@@ -146,6 +146,11 @@ namespace BudgetAnalyser.Engine.Ledger
             await SaveDtoToDiskAsync(dataEntity, isEncrypted);
         }
 
+        protected virtual object Deserialise(string xaml)
+        {
+            return XamlServices.Parse(xaml);
+        }
+
         /// <summary>
         ///     Loads the xaml as string.
         /// </summary>
@@ -159,7 +164,7 @@ namespace BudgetAnalyser.Engine.Ledger
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             var result = await reader.LoadFromDiskAsync(fileName);
-            return result as LedgerBookDto;
+            return Deserialise(result) as LedgerBookDto;
         }
 
         protected virtual async Task SaveDtoToDiskAsync([NotNull] LedgerBookDto dataEntity, bool isEncrypted)
@@ -169,7 +174,7 @@ namespace BudgetAnalyser.Engine.Ledger
                 throw new ArgumentNullException(nameof(dataEntity));
             }
 
-            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
+            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             await writer.WriteToDiskAsync(dataEntity.StorageKey, Serialise(dataEntity));
         }
 

@@ -17,8 +17,7 @@ namespace BudgetAnalyser.Engine.Statement
     ///     This implementation is strictly not thread safe and should be single threaded only.  Don't allow mulitple threads
     ///     to use it at the same time.
     /// </summary>
-    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC"
-        )]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used by IoC")]
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class StatementRepository : IStatementRepository
     {
@@ -64,24 +63,24 @@ namespace BudgetAnalyser.Engine.Statement
             return await this.importerRepository.ImportAsync(storageKey, account);
         }
 
-        public async Task<StatementModel> LoadAsync(string storageKey)
+        public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
         {
             if (storageKey == null)
             {
                 throw new FileNotFoundException("storageKey");
             }
 
-            return await this.statementModelRepository.LoadAsync(storageKey);
+            return await this.statementModelRepository.LoadAsync(storageKey, isEncrypted);
         }
 
-        public async Task SaveAsync([NotNull] StatementModel statementModel)
+        public async Task SaveAsync([NotNull] StatementModel statementModel, bool isEncrypted)
         {
             if (statementModel == null)
             {
                 throw new ArgumentNullException(nameof(statementModel));
             }
 
-            await this.statementModelRepository.SaveAsync(statementModel, statementModel.StorageKey);
+            await this.statementModelRepository.SaveAsync(statementModel, statementModel.StorageKey, isEncrypted);
         }
     }
 }

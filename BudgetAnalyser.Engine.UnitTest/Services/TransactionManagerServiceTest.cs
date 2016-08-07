@@ -282,7 +282,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             StatementModel testStatement = new StatementModelTestHarness();
             testStatement.LoadTransactions(new List<Transaction>());
 
-            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>())).Returns(Task.FromResult(testStatement));
+            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult(testStatement));
 
             await this.subject.LoadAsync(this.testAppDb);
 
@@ -374,7 +374,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             mockAppDb.Setup(m => m.FullPath(It.IsAny<string>())).Returns("Foo");
             await this.subject.SaveAsync(mockAppDb.Object);
 
-            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Once);
+            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Once);
         }
 
         [TestMethod]
@@ -383,7 +383,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.subject = CreateSubject();
             await this.subject.SaveAsync(It.IsAny<ApplicationDatabase>());
 
-            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>()), Times.Never);
+            this.mockStatementRepo.Verify(m => m.SaveAsync(It.IsAny<StatementModel>(), It.IsAny<bool>()), Times.Never);
         }
 
         [TestMethod]
@@ -414,7 +414,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockBudgetBucketRepo = new Mock<IBudgetBucketRepository>();
             this.mockStatementRepo = new Mock<IStatementRepository>();
 
-            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>()))
+            this.mockStatementRepo.Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult(this.testData))
                 .Verifiable();
 
@@ -453,7 +453,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         private void Arrange()
         {
             this.mockStatementRepo
-                .Setup(m => m.LoadAsync(It.IsAny<string>()))
+                .Setup(m => m.LoadAsync(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult(this.testData));
             this.subject = CreateSubject();
             this.subject.LoadAsync(this.testAppDb).Wait();

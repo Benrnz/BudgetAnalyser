@@ -9,29 +9,32 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
+    internal class CsvOnDiskStatementModelRepositoryV1TestHarness : CsvOnDiskStatementModelRepositoryV1
     {
-        public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities)
+        public CsvOnDiskStatementModelRepositoryV1TestHarness(BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
             : base(importUtilities,
                 new FakeLogger(),
                 new Mapper_TransactionSetDto_StatementModel(
                     new FakeLogger(), 
-                    new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())))
+                    new Mapper_TransactionDto_Transaction(new InMemoryAccountTypeRepository(), new BucketBucketRepoAlwaysFind(), new InMemoryTransactionTypeRepository())),
+                readerWriterSelector)
         {
         }
 
         public CsvOnDiskStatementModelRepositoryV1TestHarness(
             BankImportUtilities importUtilities,
-            IDtoMapper<TransactionSetDto, StatementModel> mapper)
+            IDtoMapper<TransactionSetDto, StatementModel> mapper,
+            IReaderWriterSelector readerWriterSelector)
             : base(importUtilities,
                 new FakeLogger(),
-                mapper)
+                mapper,
+                readerWriterSelector)
         {
         }
 
         public Func<string, IEnumerable<string>> ReadLinesOverride { get; set; }
 
-        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
             if (ReadLinesOverride == null)
             {
@@ -41,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             return Task.FromResult(ReadLinesOverride(fileName));
         }
 
-        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
+        protected override Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
             if (ReadLinesOverride == null)
             {

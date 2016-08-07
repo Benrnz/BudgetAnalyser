@@ -7,7 +7,6 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
-using Portable.Xaml;
 
 namespace BudgetAnalyser.Encryption
 {
@@ -25,6 +24,11 @@ namespace BudgetAnalyser.Encryption
             this.credentialStore = credentialStore;
         }
 
+        public Stream CreateWritableStream(string fileName)
+        {
+            return this.fileEncryptor.CreateWritableEncryptedStream(fileName, RetrievePassword());
+        }
+
         /// <summary>
         ///     Files the exists.
         /// </summary>
@@ -38,16 +42,32 @@ namespace BudgetAnalyser.Encryption
         ///     Loads a budget collection xaml file from disk.
         /// </summary>
         /// <param name="fileName">Full path and filename of the file.</param>
-        public async Task<object> LoadFromDiskAsync(string fileName)
+        public async Task<string> LoadFromDiskAsync(string fileName)
         {
             if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
             var password = RetrievePassword();
             var decryptedData = await this.fileEncryptor.LoadEncryptedFileAsync(fileName, password);
 
-            if (IsValidAlphaNumericWithPunctuation(decryptedData)) 
+            if (IsValidAlphaNumericWithPunctuation(decryptedData))
             {
-                // TODO Can we really assume it will always be Xaml?
-                return XamlServices.Parse(decryptedData);
+                return decryptedData;
+            }
+
+            throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");
+        }
+
+        /// <summary>
+        ///     Loads a budget collection xaml file from disk.
+        /// </summary>
+        /// <param name="fileName">Full path and filename of the file.</param>
+        /// <param name="lineCount">The number of lines to load.</param>
+        public async Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
+        {
+            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            var decryptedData = await this.fileEncryptor.LoadFirstLinesFromDiskAsync(fileName, lineCount, RetrievePassword());
+            if (IsValidAlphaNumericWithPunctuation(decryptedData))
+            {
+                return decryptedData;
             }
 
             throw new EncryptionKeyIncorrectException("The provided encryption credential did not result in a valid decryption result.");

@@ -1,38 +1,81 @@
+using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
-using Portable.Xaml;
 
 namespace BudgetAnalyser.Engine.Persistence
 {
+    /// <summary>
+    ///     Reads and writes to local plain text files on disk.
+    /// </summary>
     [AutoRegisterWithIoC(Named = "Unprotected")]
     internal class LocalDiskReaderWriter : IFileReaderWriter
     {
         /// <summary>
-        ///     Files the exists.
+        ///     Creates a writable stream to write data into.
+        ///     This is an alternative to <see cref="IFileReaderWriter.WriteToDiskAsync" />
         /// </summary>
         /// <param name="fileName">Full path and filename of the file.</param>
+        public Stream CreateWritableStream(string fileName)
+        {
+            return new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous);
+        }
+
         public bool FileExists(string fileName)
         {
+            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
             return File.Exists(fileName);
         }
 
-        /// <summary>
-        ///     Loads a budget collection xaml file from disk.
-        /// </summary>
-        /// <param name="fileName">Full path and filename of the file.</param>
-        public async Task<object> LoadFromDiskAsync(string fileName)
+        public async Task<string> LoadFromDiskAsync(string fileName)
         {
-            object result = null;
-            await Task.Run(() => result = XamlServices.Load(fileName));
-            return result;
+            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            using (var reader = File.OpenText(fileName))
+            {
+                try
+                {
+                    var allText = await reader.ReadToEndAsync();
+                    return allText;
+                }
+                catch (IOException)
+                {
+                    return null;
+                }
+            }
         }
 
-        /// <summary>
-        ///     Writes the budget collections to a xaml file on disk.
-        /// </summary>
+        public async Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
+        {
+            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            using (var reader = File.OpenText(fileName))
+            {
+                try
+                {
+                    var builder = new StringBuilder();
+                    for (var index = 0; index < lineCount; index++)
+                    {
+                        var line = await reader.ReadLineAsync();
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            break;
+                        }
+
+                        builder.AppendLine(line);
+                    }
+
+                    return builder.ToString();
+                }
+                catch (IOException)
+                {
+                    return null;
+                }
+            }
+        }
+
         public async Task WriteToDiskAsync(string fileName, string data)
         {
-            using (var fileStream = new StreamWriter(new FileStream(fileName, FileMode.Create)))
+            if (fileName.IsNothing()) throw new ArgumentNullException(nameof(fileName));
+            using (var fileStream = new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Write, 4096, true)))
             {
                 await fileStream.WriteAsync(data);
             }

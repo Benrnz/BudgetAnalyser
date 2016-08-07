@@ -360,7 +360,6 @@
     </Compile>
     <Compile Include="Statement\StatementControllerFileOperations.cs" />
     <Compile Include="Statement\StatementControllerNavigation.cs" />
-    <Compile Include="Statement\StatementOpenMode.cs" />
     <Compile Include="Statement\StatementReadyMessage.cs" />
     <Compile Include="Statement\LoadFileController.cs" />
     <Compile Include="Statement\StatementController.cs" />

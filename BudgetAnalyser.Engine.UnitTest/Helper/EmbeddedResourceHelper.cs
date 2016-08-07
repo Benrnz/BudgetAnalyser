@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Helper
                 using (var streamReader = new StreamReader(stream))
                 {
                     string text = streamReader.ReadToEnd();
-                    return text.Split('\n');
+                    return text.SplitLines();
                 }
             }
         }

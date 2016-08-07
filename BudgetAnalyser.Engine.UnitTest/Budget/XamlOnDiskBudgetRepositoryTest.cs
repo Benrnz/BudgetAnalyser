@@ -102,7 +102,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
             mockBucketRepository.Setup(m => m.Initialise(null));
             var subject = Arrange();
 
-            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.BudgetCollectionTestDataFileName);
+            var data = EmbeddedResourceHelper.ExtractText(TestDataConstants.BudgetCollectionTestDataFileName);
             this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
             this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
 
@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public async Task LoadShouldReturnACollectionAndSetFileName()
         {
             var subject = Arrange();
-            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.BudgetCollectionTestDataFileName);
+            var data = EmbeddedResourceHelper.ExtractText(TestDataConstants.BudgetCollectionTestDataFileName);
             this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
             this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
 
@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         {
             var subject = Arrange();
             this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
-            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(new object());
+            this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(string.Empty);
 
             await subject.LoadAsync("SmellyPoo.xml", false);
 
@@ -177,7 +177,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public async Task MustBeAbleToLoadDemoBudgetFile()
         {
             var subject = Arrange();
-            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.DemoBudgetFileName);
+            var data = EmbeddedResourceHelper.ExtractText(TestDataConstants.DemoBudgetFileName);
             this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
             this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
 
@@ -191,7 +191,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         public async Task MustBeAbleToLoadEmptyBudgetFile()
         {
             var subject = Arrange();
-            var data = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>(TestDataConstants.EmptyBudgetFileName);
+            var data = EmbeddedResourceHelper.ExtractText(TestDataConstants.EmptyBudgetFileName);
             this.mockReaderWriter.Setup(m => m.FileExists(It.IsAny<string>())).Returns(true);
             this.mockReaderWriter.Setup(m => m.LoadFromDiskAsync(It.IsAny<string>())).ReturnsAsync(data);
 

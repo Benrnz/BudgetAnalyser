@@ -17,25 +17,19 @@ namespace BudgetAnalyser.Engine.Statement
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Statement.IVersionedStatementModelRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
+    internal class CsvOnDiskStatementModelRepositoryV1 : IVersionedStatementModelRepository
     {
         private const string VersionHash = "15955E20-A2CC-4C69-AD42-94D84377FC0C";
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
         private readonly IDtoMapper<TransactionSetDto, StatementModel> mapper;
+        private readonly IReaderWriterSelector readerWriterSelector;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CsvOnDiskStatementModelRepositoryV1" /> class.
-        /// </summary>
-        /// <param name="importUtilities">The import utilities.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The dto to domain mapper.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
         public CsvOnDiskStatementModelRepositoryV1(
             [NotNull] BankImportUtilities importUtilities,
             [NotNull] ILogger logger,
-            [NotNull] IDtoMapper<TransactionSetDto, StatementModel> mapper)
+            [NotNull] IDtoMapper<TransactionSetDto, StatementModel> mapper,
+            [NotNull] IReaderWriterSelector readerWriterSelector)
         {
             if (importUtilities == null)
             {
@@ -51,20 +45,14 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
+            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.importUtilities = importUtilities;
             this.logger = logger;
             this.mapper = mapper;
+            this.readerWriterSelector = readerWriterSelector;
         }
 
-        /// <summary>
-        ///     Creates a new empty <see cref="StatementModel" /> at the location indicated by the <paramref name="storageKey" />.
-        ///     Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to
-        ///     load the new <see cref="StatementModel" />.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
         public async Task CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -73,37 +61,10 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var newStatement = new StatementModel(this.logger) { StorageKey = storageKey };
-            await SaveAsync(newStatement, storageKey);
+            await SaveAsync(newStatement, storageKey, false);
         }
 
-        /// <summary>
-        ///     Determines whether the provided <paramref name="storageKey" /> is refering to a statement model.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public async Task<bool> IsStatementModelAsync(string storageKey)
-        {
-            if (storageKey.IsNothing())
-            {
-                throw new ArgumentNullException(nameof(storageKey));
-            }
-
-            this.importUtilities.AbortIfFileDoesntExist(storageKey);
-            List<string> allLines = (await ReadLinesAsync(storageKey, 2)).ToList();
-            if (!VersionCheck(allLines))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        ///     Loads the <see cref="StatementModel" />.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException"></exception>
-        /// <exception cref="System.NotSupportedException">The CSV file is not supported by this version of the Budget Analyser.</exception>
-        public async Task<StatementModel> LoadAsync(string storageKey)
+        public async Task<StatementModel> LoadAsync(string storageKey, bool isEncrypted)
         {
             if (storageKey.IsNothing())
             {
@@ -119,17 +80,16 @@ namespace BudgetAnalyser.Engine.Statement
                 throw new KeyNotFoundException(ex.Message, ex);
             }
 
-            if (!await IsStatementModelAsync(storageKey))
+            if (!await IsStatementModelAsync(storageKey, isEncrypted))
             {
                 throw new NotSupportedException("The CSV file is not supported by this version of the Budget Analyser.");
             }
 
-            List<string> allLines = (await ReadLinesAsync(storageKey)).ToList();
+            List<string> allLines = (await ReadLinesAsync(storageKey, isEncrypted)).ToList();
             var totalLines = allLines.LongCount();
             if (totalLines < 2)
             {
-                return
-                    new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
+                return new StatementModel(this.logger) { StorageKey = storageKey }.LoadTransactions(new List<Transaction>());
             }
 
             List<TransactionDto> transactions = ReadTransactions(totalLines, allLines);
@@ -140,15 +100,8 @@ namespace BudgetAnalyser.Engine.Statement
             return this.mapper.ToModel(transactionSet);
         }
 
-        /// <summary>
-        ///     Saves the <see cref="StatementModel" />.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
-        /// <exception cref="BudgetAnalyser.Engine.Statement.StatementModelChecksumException"></exception>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
-            Justification = "Stream and StreamWriter are designed with this pattern in mind")]
-        public async Task SaveAsync(StatementModel model, string storageKey)
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Stream and StreamWriter are designed with this pattern in mind")]
+        public async Task SaveAsync(StatementModel model, string storageKey, bool isEncrypted)
         {
             if (model == null)
             {
@@ -174,13 +127,12 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            using (
-                var stream = new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096,
-                    FileOptions.Asynchronous))
+            var writer = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            using (var stream = writer.CreateWritableStream(storageKey)) // new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous)
             {
-                using (var writer = new StreamWriter(stream))
+                using (var streamWriter = new StreamWriter(stream))
                 {
-                    WriteHeader(writer, transactionSet);
+                    WriteHeader(streamWriter, transactionSet);
 
                     foreach (var transaction in transactionSet.Transactions)
                     {
@@ -215,10 +167,10 @@ namespace BudgetAnalyser.Engine.Statement
                         line.Append(transaction.Id);
                         line.Append(",");
 
-                        await writer.WriteLineAsync(line.ToString());
+                        await streamWriter.WriteLineAsync(line.ToString());
                     }
 
-                    await writer.FlushAsync();
+                    await streamWriter.FlushAsync();
                 }
             }
         }
@@ -226,39 +178,39 @@ namespace BudgetAnalyser.Engine.Statement
         /// <summary>
         ///     Reads the lines from the file asynchronously.
         /// </summary>
-        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
-            return await this.importUtilities.ReadLinesAsync(fileName);
+            var reader = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            var allText = await reader.LoadFromDiskAsync(fileName);
+            return allText.SplitLines();
         }
 
         /// <summary>
         ///     Reads the lines from the file asynchronously.
         /// </summary>
-        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines)
+        protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
-            var responseList = new List<string>();
-            using (var reader = File.OpenText(fileName))
+            var reader = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            var textData = await reader.LoadFirstLinesFromDiskAsync(fileName, lines);
+            string[] firstLines = textData.SplitLines(lines);
+            return firstLines;
+        }
+
+        internal async Task<bool> IsStatementModelAsync(string storageKey, bool isEncrypted)
+        {
+            if (storageKey.IsNothing())
             {
-                try
-                {
-                    for (var index = 0; index < lines; index++)
-                    {
-                        var line = await reader.ReadLineAsync();
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            break;
-                        }
-
-                        responseList.Add(line);
-                    }
-
-                    return responseList;
-                }
-                catch (IOException)
-                {
-                    return new List<string>();
-                }
+                throw new ArgumentNullException(nameof(storageKey));
             }
+
+            this.importUtilities.AbortIfFileDoesntExist(storageKey);
+            List<string> allLines = (await ReadLinesAsync(storageKey, 2, isEncrypted)).ToList();
+            if (!VersionCheck(allLines))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static long CalculateTransactionCheckSum(TransactionSetDto setDto)
@@ -277,8 +229,7 @@ namespace BudgetAnalyser.Engine.Statement
             return txnCheckSum;
         }
 
-        private TransactionSetDto CreateTransactionSet(string fileName, List<string> allLines,
-                                                       List<TransactionDto> transactions)
+        private TransactionSetDto CreateTransactionSet(string fileName, List<string> allLines, List<TransactionDto> transactions)
         {
             var header = allLines[0];
             if (string.IsNullOrWhiteSpace(header))
@@ -329,13 +280,11 @@ namespace BudgetAnalyser.Engine.Statement
                 }
                 catch (InvalidDataException ex)
                 {
-                    throw new DataFormatException(
-                        "The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
+                    throw new DataFormatException("The Budget Analyser is corrupt. The file has some invalid data in inappropriate columns.", ex);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
-                    throw new DataFormatException(
-                        "The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
+                    throw new DataFormatException("The Budget Analyser is corrupt. The file does not have the correct number of columns.", ex);
                 }
 
                 if (transaction.Date == DateTime.MinValue || transaction.Id == Guid.Empty)
@@ -358,11 +307,10 @@ namespace BudgetAnalyser.Engine.Statement
             // Ignore a checksum of 1, this is used as a special case to bypass transaction checksum test. Useful for manual manipulation of the statement csv.
             if (transactionSet.Checksum > 1 && transactionSet.Checksum != calcTxnCheckSum)
             {
-                this.logger.LogError(
-                    l =>
-                        l.Format(
-                            "BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}",
-                            transactionSet.Checksum, calcTxnCheckSum));
+                this.logger.LogError(l =>
+                    l.Format(
+                        "BudgetAnalyser statement file being loaded has an incorrect checksum of: {0}, transactions calculate to: {1}",
+                        transactionSet.Checksum, calcTxnCheckSum));
                 throw new StatementModelChecksumException(
                     calcTxnCheckSum.ToString(CultureInfo.InvariantCulture),
                     string.Format(
@@ -392,8 +340,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private static void WriteHeader(StreamWriter writer, TransactionSetDto setDto)
         {
-            writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum,
-                setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
+            writer.WriteLine("VersionHash,{0},TransactionCheckSum,{1},{2}", setDto.VersionHash, setDto.Checksum, setDto.LastImport.ToString("O", CultureInfo.InvariantCulture));
         }
     }
 }

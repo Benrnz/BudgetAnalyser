@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BudgetAnalyser.Engine
 {
@@ -61,6 +63,25 @@ namespace BudgetAnalyser.Engine
         }
 
         /// <summary>
+        ///     An extension to the <see cref="string.Split(char[])" /> method. This method splits at new line characters, trims
+        ///     off trailing whitespace, and returns the specified number of lines.
+        /// </summary>
+        public static string[] SplitLines(this string instance, int numberOfLines = 0)
+        {
+            if (numberOfLines < 0) throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
+            if (instance == null) return null;
+
+            string[] split = instance.Split('\r', '\n');
+            IEnumerable<string> query = split.Where(l => l.Length > 0);
+            if (numberOfLines > 0)
+            {
+                query = query.Take(numberOfLines);
+            }
+
+            return query.ToArray();
+        }
+
+        /// <summary>
         ///     Trims the end of a string safely.  If the string is null, null is returned.
         /// </summary>
         public static string TrimEndSafely(this string instance)
@@ -70,8 +91,7 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         ///     Truncates the right of a string to the specified length, but only if it exceeds that length. Optionally the
-        ///     returned string can include
-        ///     ellipses.
+        ///     returned string can include ellipses.
         /// </summary>
         public static string Truncate(this string instance, int truncateToLength, bool useEllipses = false)
         {
@@ -95,8 +115,7 @@ namespace BudgetAnalyser.Engine
 
         /// <summary>
         ///     Truncates the left of a string to the specified length, but only if it exceeds that length. Optionally the returned
-        ///     string can
-        ///     include ellipses.
+        ///     string can include ellipses.
         /// </summary>
         public static string TruncateLeft(this string instance, int truncateToLength, bool useEllipses = false)
         {
