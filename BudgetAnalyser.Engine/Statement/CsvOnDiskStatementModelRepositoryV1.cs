@@ -127,7 +127,7 @@ namespace BudgetAnalyser.Engine.Statement
                         model.AllTransactions.Count()));
             }
 
-            var writer = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
             using (var stream = writer.CreateWritableStream(storageKey)) 
             {
                 using (var streamWriter = new StreamWriter(stream))
@@ -180,7 +180,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
             var allText = await reader.LoadFromDiskAsync(fileName);
             return allText.SplitLines();
         }
@@ -190,7 +190,7 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName, int lines, bool isEncrypted)
         {
-            var reader = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted); 
             var textData = await reader.LoadFirstLinesFromDiskAsync(fileName, lines);
             string[] firstLines = textData.SplitLines(lines);
             return firstLines;
