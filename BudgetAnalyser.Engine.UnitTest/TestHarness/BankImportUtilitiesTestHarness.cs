@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class BankImportUtilitiesTestHarness : BankImportUtilities
+    internal class BankImportUtilitiesTestHarness : BankImportUtilities
     {
         public BankImportUtilitiesTestHarness() : base(new FakeLogger())
         {

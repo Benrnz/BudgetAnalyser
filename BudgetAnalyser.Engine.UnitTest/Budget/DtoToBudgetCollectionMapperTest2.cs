@@ -34,7 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Budget
         [TestInitialize]
         public void TestInitialise()
         {
-            TestData = EmbeddedResourceHelper.ExtractXaml<BudgetCollectionDto>("BudgetAnalyser.Engine.UnitTest.TestData.BudgetCollectionTestData.xml");
+            TestData = GetType().Assembly.ExtractEmbeddedResourceAsXamlObject<BudgetCollectionDto>("BudgetAnalyser.Engine.UnitTest.TestData.BudgetCollectionTestData.xml");
             var bucketRepo = new BucketBucketRepoAlwaysFind();
             var subject = new Mapper_BudgetCollectionDto_BudgetCollection(
                 bucketRepo,

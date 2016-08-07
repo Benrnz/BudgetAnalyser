@@ -31,7 +31,6 @@ namespace BudgetAnalyser.Engine.Statement.Data
 
         partial void ToModelPostprocessing(TransactionDto dto, ref Transaction model)
         {
-            // TODO do these need to be added to the repo here?
             model.Account = this.accountRepo.GetByKey(dto.Account);
             model.BudgetBucket = this.bucketRepo.GetByCode(dto.BudgetBucketCode);
             model.TransactionType = this.transactionTypeRepo.GetOrCreateNew(dto.TransactionType);

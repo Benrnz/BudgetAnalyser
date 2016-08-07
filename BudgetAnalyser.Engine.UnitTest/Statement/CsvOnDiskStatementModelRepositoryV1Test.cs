@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.TangyFruitMapper;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
@@ -179,7 +180,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task MustBeAbleToLoadDemoStatementFile()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
+            subject.ReadLinesOverride = x => GetType().Assembly.ExtractEmbeddedResourceAsLines(x);
 
             var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
@@ -191,7 +192,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         public async Task MustBeAbleToLoadDemoStatementFile2()
         {
             var subject = Arrange();
-            subject.ReadLinesOverride = file => EmbeddedResourceHelper.ExtractLines(TestDataConstants.DemoTransactionsFileName, true);
+            subject.ReadLinesOverride = file => GetType().Assembly.ExtractEmbeddedResourceAsLines(TestDataConstants.DemoTransactionsFileName, true);
             var model = await subject.LoadAsync("Foo.foo", false);
             Console.WriteLine(model.DurationInMonths);
             Assert.AreEqual(1, model.DurationInMonths);

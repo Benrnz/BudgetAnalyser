@@ -177,15 +177,6 @@ namespace BudgetAnalyser.Engine.Statement
             return array[index].Trim();
         }
 
-        // TODO Remove this
-        //internal virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
-        //{
-        //    // This will read the entire file then return the complete collection when done. 
-        //    // Given the file size is expected to be relatively small this is the fastest way to do this.  Excessive tasking actually results in poorer performance until file size 
-        //    // becomes large. 
-        //    return await Task.Run(() => File.ReadAllLines(fileName).ToList());
-        //}
-
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
         {
             throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));

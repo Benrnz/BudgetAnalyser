@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             var writer = this.readerWriterSelector.SelectReaderWriter(false); // TODO change this when tested
-            using (var stream = writer.CreateWritableStream(storageKey)) // new FileStream(storageKey, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous)
+            using (var stream = writer.CreateWritableStream(storageKey)) 
             {
                 using (var streamWriter = new StreamWriter(stream))
                 {

@@ -53,8 +53,8 @@
       <HintPath>..\packages\Rees.TangyFruitMapper.1.0.12\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
+    <Reference Include="Rees.UnitTestUtilities, Version=1.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.7\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

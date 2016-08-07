@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
-    // TODO If Automapper is removed, can all mappers and Dtos be internal?
     /// <summary>
     ///     A Dto for <see cref="LedgerEntryLine" />
     /// </summary>

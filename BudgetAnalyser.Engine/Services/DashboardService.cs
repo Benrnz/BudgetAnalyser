@@ -135,7 +135,6 @@ namespace BudgetAnalyser.Engine.Services
 
         public ObservableCollection<WidgetGroup> LoadPersistedStateData(WidgetsApplicationState storedState)
         {
-            // TODO This used to accept a strongly typed state object for Dashboard state persistence.
             if (storedState == null)
             {
                 throw new ArgumentNullException(nameof(storedState));

@@ -149,7 +149,7 @@ namespace BudgetAnalyser.Dashboard
                 confirmation = this.questionService.Show(
                     "Are you sure you want to encrypt and protect the data files?  After this is complete the files cannot be read by any other program aside from Budget Analyser. You will be required to enter the password each time you load your Budget Analyser file.",
                     "Encrypt Data Files?");
-                // TODO
+                // TODO Decrypt files
                 throw new NotImplementedException();
             }
 
@@ -157,8 +157,7 @@ namespace BudgetAnalyser.Dashboard
 
             this.appDbService.SetCredential(this.password);
 
-            // TODO Background task?
-            await this.appDbService.EncryptFilesAsync();
+            await Task.Run(async () => await this.appDbService.EncryptFilesAsync());
 
             if (IsEncrypted)
             {

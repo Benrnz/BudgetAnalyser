@@ -146,7 +146,7 @@ namespace BudgetAnalyser.Engine.Statement
         {
             var reader = this.readerWriterSelector.SelectReaderWriter(false);
             var allText = await reader.LoadFromDiskAsync(fileName);
-            return allText.SplitLines('\n'); // TODO test this
+            return allText.SplitLines();
         }
 
         /// <summary>

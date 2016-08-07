@@ -42,7 +42,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
-                LedgerBookDto = EmbeddedResourceHelper.ExtractXaml<LedgerBookDto>(fileName, true);
+                LedgerBookDto = GetType().Assembly.ExtractEmbeddedResourceAsXamlObject<LedgerBookDto>(fileName, true);
                 EventHandler handler = DtoDeserialised;
                 handler?.Invoke(this, EventArgs.Empty);
 

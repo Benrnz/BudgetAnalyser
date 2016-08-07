@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.UnitTest.Helper;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// <param name="fileName">Full path and filename of the file.</param>
         public Stream CreateWritableStream(string fileName)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException("Implement these when required");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// <param name="lineCount">The number of lines to load.</param>
         public Task<string> LoadFirstLinesFromDiskAsync(string fileName, int lineCount)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException("Implement these when required");
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// <param name="fileName">Full path and filename of the file.</param>
         public async Task<string> LoadFromDiskAsync(string fileName)
         {
-            return await Task.FromResult(EmbeddedResourceHelper.ExtractText(fileName));
+            return await Task.FromResult(GetType().Assembly.ExtractEmbeddedResourceAsText(fileName));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         /// </summary>
         public Task WriteToDiskAsync(string fileName, string data)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
