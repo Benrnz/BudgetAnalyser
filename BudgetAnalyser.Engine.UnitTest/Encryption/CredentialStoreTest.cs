@@ -8,7 +8,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
     [TestClass]
     public class CredentialStoreTest
     {
-        private CredentialStore subject;
+        private SecureStringCredentialStore subject;
 
         [TestMethod]
         [ExpectedException(typeof(ObjectDisposedException))]
@@ -79,7 +79,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Encryption
         [TestInitialize]
         public void TestSetup()
         {
-            this.subject = new CredentialStore();
+            this.subject = new SecureStringCredentialStore();
         }
 
         internal static SecureString CreateSecureString(string text)

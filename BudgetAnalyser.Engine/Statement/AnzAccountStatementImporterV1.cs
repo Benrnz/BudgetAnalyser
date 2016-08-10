@@ -185,32 +185,11 @@ namespace BudgetAnalyser.Engine.Statement
             }
 
             return chunk.SplitLines(2);
-
-
-            //string[] twoLines = { string.Empty, string.Empty };
-
-            //var position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
-            //if (position > 0)
-            //{
-            //    twoLines[0] = chunk.Substring(0, position).TrimEndSafely();
-            //}
-
-            //var position2 = chunk.IndexOf("\n", ++position, StringComparison.OrdinalIgnoreCase);
-            //if (position2 > 0)
-            //{
-            //    twoLines[1] = chunk.Substring(position, position2 - position).TrimEndSafely();
-            //}
-            //else
-            //{
-            //    twoLines[1] = chunk.Substring(position);
-            //}
-
-            //return twoLines;
         }
 
         private static bool VerifyColumnHeaderLine(string line)
         {
-            var compareTo = line.EndsWith("\r") ? line.Remove(line.Length - 1, 1) : line;
+            var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
             return string.CompareOrdinal(compareTo, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
         }
 

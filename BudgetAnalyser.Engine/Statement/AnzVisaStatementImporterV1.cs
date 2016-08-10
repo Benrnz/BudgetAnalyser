@@ -213,7 +213,7 @@ namespace BudgetAnalyser.Engine.Statement
 
         private static bool VerifyColumnHeaderLine(string line)
         {
-            var compareTo = line.EndsWith("\r") ? line.Remove(line.Length - 1, 1) : line;
+            var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
             return string.CompareOrdinal(compareTo, "Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge") == 0;
         }
 

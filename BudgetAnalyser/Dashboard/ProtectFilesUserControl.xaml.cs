@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
@@ -25,6 +26,11 @@ namespace BudgetAnalyser.Dashboard
 
         private EncryptFileController Controller => (EncryptFileController) DataContext;
 
+        private void OnConfirmBoxKeyUp(object sender, KeyEventArgs e)
+        {
+            Controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
+        }
+
         private void OnPasswordKeyUp(object sender, KeyEventArgs e)
         {
             if (this.finishedEnteringTask != null)
@@ -42,21 +48,23 @@ namespace BudgetAnalyser.Dashboard
                     if (t.IsCanceled) return;
                     SendPasswordToController();
                 });
-        } 
+        }
 
         private void OnPasswordLostFocus(object sender, RoutedEventArgs e)
         {
             SendPasswordToController();
+            e.Handled = true;
         }
 
-        private void OnWindowLostFocus(object sender, RoutedEventArgs e)
+        private void OnWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!(sender is ProtectFilesUserControl)) return;
-            
-            this.passwordBox.Clear();
-            this.confirmBox.Clear();
-            this.cancellationSource?.Cancel();
-            this.cancellationSource?.Dispose();
+            if ((bool)e.NewValue == false && (bool)e.OldValue == true)
+            {
+                this.passwordBox.Clear();
+                this.confirmBox.Clear();
+                this.cancellationSource?.Cancel();
+                this.cancellationSource?.Dispose();
+            }
         }
 
         private void SendPasswordToController()
@@ -70,11 +78,6 @@ namespace BudgetAnalyser.Dashboard
                     Debug.WriteLine($"{DateTime.Now} Sent password to controller");
                 }
             });
-        }
-
-        private void OnConfirmBoxKeyUp(object sender, KeyEventArgs e)
-        {
-            Controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
         }
     }
 }

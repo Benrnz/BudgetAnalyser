@@ -13,9 +13,9 @@ namespace BudgetAnalyser.Engine.Services
     {
         private readonly IApplicationDatabaseRepository applicationRepository;
         private readonly ICredentialStore credentialStore;
-        private readonly ILogger logger;
         private readonly IEnumerable<ISupportsModelPersistence> databaseDependents;
         private readonly Dictionary<ApplicationDataType, bool> dirtyData = new Dictionary<ApplicationDataType, bool>();
+        private readonly ILogger logger;
         private readonly MonitorableDependencies monitorableDependencies;
 
         private ApplicationDatabase budgetAnalyserDatabase;
@@ -99,19 +99,40 @@ namespace BudgetAnalyser.Engine.Services
             return this.budgetAnalyserDatabase;
         }
 
-        /// <summary>
-        ///     Encrypts or Decrypts the underlying data files asynchronously.
-        /// </summary>
         public async Task EncryptFilesAsync()
+        {  
+            if (this.credentialStore.RetrievePasskey() == null)
+            {
+                throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
+            }
+
+            await CreateBackup(); // Ensure data is not corrupted and lost when encrypting files
+
+            SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
+            this.budgetAnalyserDatabase.IsEncrypted = true;
+            await SaveAsync();
+        }
+
+        public async Task DecryptFilesAsync(object confirmCredentialsClaim)
         {
             if (this.credentialStore.RetrievePasskey() == null)
             {
-                throw new InvalidOperationException("Attempt to use encryption but no password is set.");
+                throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
             }
 
-            await CreateBackup(); // Ensure data is not corrupted and lost by backing it up
-            this.budgetAnalyserDatabase.IsEncrypted = !this.budgetAnalyserDatabase.IsEncrypted;
-            await SaveAsync(); 
+            if (this.credentialStore.AreEqual(confirmCredentialsClaim))
+            {
+                SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
+                this.budgetAnalyserDatabase.IsEncrypted = false;
+
+                await SaveAsync();
+
+                // If the files are now unprotected (unencrypted) then ensure the password is no longer stored in memory.
+                SetCredential(null);
+                return;
+            }
+
+            throw new EncryptionKeyIncorrectException("The provided credential does not match the existing credential used to load the encrypted files.");
         }
 
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)
@@ -250,11 +271,7 @@ namespace BudgetAnalyser.Engine.Services
 
         private async Task CreateBackup()
         {
-            // Ensure all data types are marked as requiring a save.
-            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
-            {
-                this.dirtyData[(ApplicationDataType)dataType] = true;
-            }
+            SetAllDirtyFlags();
 
             var backupSuffix = ".backup";
             var budgetStorageKey = this.budgetAnalyserDatabase.BudgetCollectionStorageKey;
@@ -271,12 +288,6 @@ namespace BudgetAnalyser.Engine.Services
 
             await SaveAsync();
 
-            // Ensure all data types are marked as requiring a save.
-            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
-            {
-                this.dirtyData[(ApplicationDataType)dataType] = true;
-            }
-
             this.budgetAnalyserDatabase.BudgetCollectionStorageKey = budgetStorageKey;
             this.budgetAnalyserDatabase.LedgerBookStorageKey = ledgerStorageKey;
             this.budgetAnalyserDatabase.MatchingRulesCollectionStorageKey = matchingRuleStorageKey;
@@ -289,6 +300,15 @@ namespace BudgetAnalyser.Engine.Services
             {
                 var enumValue = (ApplicationDataType) value;
                 this.dirtyData.Add(enumValue, false);
+            }
+        }
+
+        private void SetAllDirtyFlags()
+        {
+            // Ensure all data types are marked as requiring a save.
+            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
+            {
+                this.dirtyData[(ApplicationDataType) dataType] = true;
             }
         }
     }

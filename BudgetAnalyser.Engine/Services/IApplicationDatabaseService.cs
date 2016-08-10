@@ -36,8 +36,19 @@ namespace BudgetAnalyser.Engine.Services
         Task<ApplicationDatabase> CreateNewDatabaseAsync([NotNull] string storageKey);
 
         /// <summary>
-        ///     Encrypts or Decrypts the underlying data files asynchronously.
+        ///     Decrypt the underlying data files.
         /// </summary>
+        /// <param name="confirmCredentialsClaim">A duplicate credential must be provided to ensure the user can decrypt their files.</param>
+        /// <exception cref="EncryptionKeyNotProvidedException">Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore"/> to provide credentials.</exception>
+        Task DecryptFilesAsync(object confirmCredentialsClaim);
+
+        /// <summary>
+        ///     Encrypts the underlying data files.
+        /// </summary>
+        /// <exception cref="EncryptionKeyNotProvidedException">
+        ///     Will be thrown if the data files are encrypted and no credentials
+        ///     are provided. See <see cref="ICredentialStore" /> to provide credentials.
+        /// </exception>
         Task EncryptFilesAsync();
 
         /// <summary>
@@ -46,12 +57,27 @@ namespace BudgetAnalyser.Engine.Services
         ///     No warning will be given if there is any unsaved data. This should be checked before calling this method.
         /// </summary>
         /// <param name="storageKey">Name and path to the file.</param>
-        /// <exception cref="ArgumentNullException">Will be thrown if <paramref name="storageKey"/> is null or empty.</exception>
-        /// <exception cref="EncryptionKeyNotProvidedException">Will be thrown if the data files are encrypted and no credentials are provided. See <see cref="ICredentialStore"/> to provide credentials.</exception>
-        /// <exception cref="EncryptionKeyIncorrectException">Will be thrown if the data files are encrypted and the credentials supplied are incorrect.</exception>
-        /// <exception cref="DataFormatException">Will be thrown if an underlying data file is in an incorrect format. Can occur if file format is out of date and no longer supported.</exception>
-        /// <exception cref="KeyNotFoundException">Will be thrown if the specified storage cannot be found based on the <paramref name="storageKey"/> provided.</exception>
-        /// <exception cref="NotSupportedException ">Will be thrown if an underlying data file is completely the wrong format. Most likely not a Budget Analyser file.</exception>
+        /// <exception cref="ArgumentNullException">Will be thrown if <paramref name="storageKey" /> is null or empty.</exception>
+        /// <exception cref="EncryptionKeyNotProvidedException">
+        ///     Will be thrown if the data files are encrypted and no credentials
+        ///     are provided. See <see cref="ICredentialStore" /> to provide credentials.
+        /// </exception>
+        /// <exception cref="EncryptionKeyIncorrectException">
+        ///     Will be thrown if the data files are encrypted and the credentials
+        ///     supplied are incorrect.
+        /// </exception>
+        /// <exception cref="DataFormatException">
+        ///     Will be thrown if an underlying data file is in an incorrect format. Can occur if
+        ///     file format is out of date and no longer supported.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        ///     Will be thrown if the specified storage cannot be found based on the
+        ///     <paramref name="storageKey" /> provided.
+        /// </exception>
+        /// <exception cref="NotSupportedException ">
+        ///     Will be thrown if an underlying data file is completely the wrong format. Most
+        ///     likely not a Budget Analyser file.
+        /// </exception>
         Task<ApplicationDatabase> LoadAsync([NotNull] string storageKey);
 
         /// <summary>

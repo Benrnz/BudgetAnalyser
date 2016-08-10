@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
 using BudgetAnalyser.Engine;
@@ -7,7 +8,7 @@ using BudgetAnalyser.Engine.Persistence;
 namespace BudgetAnalyser.Encryption
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
-    internal sealed class CredentialStore : ICredentialStore, IDisposable
+    internal sealed class SecureStringCredentialStore : ICredentialStore, IDisposable
     {
         // Track whether Dispose has been called. 
         private bool disposed;
@@ -44,7 +45,7 @@ namespace BudgetAnalyser.Encryption
             {
                 // Release unmanaged resources. If disposing is false, 
                 // only the following code is executed. 
-                this.passPhrase.Dispose();
+                this.passPhrase?.Dispose();
                 // Note that this is not thread safe. 
                 // Another thread could start disposing the object 
                 // after the managed resources are disposed, 
@@ -59,6 +60,64 @@ namespace BudgetAnalyser.Encryption
             // to prevent finalization code for this object 
             // from executing a second time. 
             GC.SuppressFinalize(this);
+        }
+
+        public bool AreEqual(object compareTo)
+        {
+            if (this.passPhrase == null || compareTo == null)
+            {
+                return false;
+            }
+
+            var key1 = this.passPhrase;
+            var key2 = compareTo as SecureString;
+            if (key2 == null)
+            {
+                throw new NotSupportedException($"{nameof(SecureStringCredentialStore)} only supports use of SecureStrings.");
+            }
+
+            if (key1.Length != key2.Length)
+            {
+                return false;
+            }
+
+            var bstr1 = IntPtr.Zero;
+            var bstr2 = IntPtr.Zero;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+
+            try
+            {
+                bstr1 = Marshal.SecureStringToBSTR(key1);
+                bstr2 = Marshal.SecureStringToBSTR(key2);
+
+                unsafe
+                {
+                    for (char* ptr1 = (char*) bstr1.ToPointer(), ptr2 = (char*) bstr2.ToPointer();
+                        *ptr1 != 0 && *ptr2 != 0;
+                        ++ptr1, ++ptr2)
+                    {
+                        if (*ptr1 != *ptr2)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+            finally
+            {
+                if (bstr1 != IntPtr.Zero)
+                {
+                    Marshal.ZeroFreeBSTR(bstr1);
+                }
+
+                if (bstr2 != IntPtr.Zero)
+                {
+                    Marshal.ZeroFreeBSTR(bstr2);
+                }
+            }
         }
 
         internal static string SecureStringToString(SecureString value)
@@ -76,14 +135,14 @@ namespace BudgetAnalyser.Encryption
         }
 
         /// <summary>
-        ///     Finalizes an instance of the <see cref="CredentialStore" /> class.
+        ///     Finalizes an instance of the <see cref="SecureStringCredentialStore" /> class.
         ///     Use C# destructor syntax for finalization code.
         ///     This destructor will run only if the Dispose method
         ///     does not get called.
         ///     It gives your base class the opportunity to finalize.
         ///     Do not provide destructors in types derived from this class.
         /// </summary>
-        ~CredentialStore()
+        ~SecureStringCredentialStore()
         {
             // Do not re-create Dispose clean-up code here. 
             // Calling Dispose(false) is optimal in terms of 

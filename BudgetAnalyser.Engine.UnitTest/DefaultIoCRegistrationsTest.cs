@@ -45,7 +45,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         public void EnsureAllInterfacesAreRegisteredWithIoC()
         {
             List<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
-            dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(CredentialStore).Assembly));
+            dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
             IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
 

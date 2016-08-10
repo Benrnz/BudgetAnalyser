@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Encryption
         public Stream CreateWritableEncryptedStream(string fileName, SecureString passphrase)
         {
             var outputStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, 4096, FileOptions.Asynchronous);
-            return CipherStream.Create(outputStream, CredentialStore.SecureStringToString(passphrase));
+            return CipherStream.Create(outputStream, SecureStringCredentialStore.SecureStringToString(passphrase));
         }
 
         public async Task EncryptFileAsync(string sourceFile, string destinationFile, SecureString passphrase)
@@ -52,7 +52,7 @@ namespace BudgetAnalyser.Encryption
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    var password = CredentialStore.SecureStringToString(passphrase);
+                    var password = SecureStringCredentialStore.SecureStringToString(passphrase);
                     using (var cryptoStream = CipherStream.Open(inputStream, password))
                     {
                         while (cryptoStream.CanRead)
