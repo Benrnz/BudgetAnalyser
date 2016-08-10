@@ -24,7 +24,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         private ApplicationDatabaseService subject;
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(EncryptionKeyNotProvidedException))]
         public async Task EncryptFilesAsync_ShouldThrow_GivenNoClaimSet()
         {
             await this.subject.EncryptFilesAsync();
