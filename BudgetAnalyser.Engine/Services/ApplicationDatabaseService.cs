@@ -120,19 +120,20 @@ namespace BudgetAnalyser.Engine.Services
                 throw new EncryptionKeyNotProvidedException("Attempt to use encryption but no password is set.");
             }
 
-            if (this.credentialStore.AreEqual(confirmCredentialsClaim))
+            if (!this.credentialStore.AreEqual(confirmCredentialsClaim))
             {
-                SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
-                this.budgetAnalyserDatabase.IsEncrypted = false;
-
-                await SaveAsync();
-
-                // If the files are now unprotected (unencrypted) then ensure the password is no longer stored in memory.
-                SetCredential(null);
-                return;
+                throw new EncryptionKeyIncorrectException("The provided credential does not match the existing credential used to load the encrypted files.");
             }
 
-            throw new EncryptionKeyIncorrectException("The provided credential does not match the existing credential used to load the encrypted files.");
+            await CreateBackup(); // Ensure data is not corrupted and lost when encrypting files
+
+            SetAllDirtyFlags(); // Ensure all files are marked as requiring a save.
+            this.budgetAnalyserDatabase.IsEncrypted = false;
+
+            await SaveAsync();
+
+            // If the files are now unprotected (unencrypted) then ensure the password is no longer stored in memory.
+            SetCredential(null);
         }
 
         public async Task<ApplicationDatabase> LoadAsync(string storageKey)

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BudgetAnalyser.Engine;
@@ -18,17 +17,16 @@ namespace BudgetAnalyser.Dashboard
     {
         private CancellationTokenSource cancellationSource;
         private Task finishedEnteringTask;
+        private EncryptFileController controller;
 
         public ProtectFilesUserControl()
         {
             InitializeComponent();
         }
 
-        private EncryptFileController Controller => (EncryptFileController) DataContext;
-
         private void OnConfirmBoxKeyUp(object sender, KeyEventArgs e)
         {
-            Controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
+            this.controller.SetConfirmedPassword(this.passwordBox.Password == this.confirmBox.Password);
         }
 
         private void OnPasswordKeyUp(object sender, KeyEventArgs e)
@@ -46,7 +44,7 @@ namespace BudgetAnalyser.Dashboard
                 .ContinueWith(t =>
                 {
                     if (t.IsCanceled) return;
-                    SendPasswordToController();
+                    DispatchPasswordToController();
                 });
         }
 
@@ -58,6 +56,10 @@ namespace BudgetAnalyser.Dashboard
 
         private void OnWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            if (DataContext != null)
+            {
+                this.controller = (EncryptFileController) DataContext;
+            }
             if ((bool)e.NewValue == false && (bool)e.OldValue == true)
             {
                 this.passwordBox.Clear();
@@ -67,17 +69,18 @@ namespace BudgetAnalyser.Dashboard
             }
         }
 
+        private void DispatchPasswordToController()
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, SendPasswordToController);
+        }
+
         private void SendPasswordToController()
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+            if (this.passwordBox.SecurePassword.Length > 0)
             {
-                if (Controller == null) return;
-                if (this.passwordBox.SecurePassword.Length > 0)
-                {
-                    Controller.SetPassword(this.passwordBox.SecurePassword);
-                    Debug.WriteLine($"{DateTime.Now} Sent password to controller");
-                }
-            });
+                this.controller.SetPassword(this.passwordBox.SecurePassword);
+                Debug.WriteLine($"{DateTime.Now} Sent password to controller {this.passwordBox.Password }");
+            }
         }
     }
 }
