@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Encryption
         /// <returns>A credential object or null if no credentials have been provided by the user.</returns>
         public object RetrievePasskey()
         {
-            if (this.passPhrase.Length == 0) return null;
+            if (this.passPhrase == null || this.passPhrase.Length == 0) return null;
             return this.passPhrase;
         }
 
@@ -38,6 +38,7 @@ namespace BudgetAnalyser.Encryption
         ///     Do not make this method virtual.
         ///     A derived class should not be able to override this method
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "passPhrase", Justification = "False positive, it is being disposed (C#6 syntax issue)")]
         public void Dispose()
         {
             // Check to see if Dispose has already been called. 
@@ -62,6 +63,8 @@ namespace BudgetAnalyser.Encryption
             GC.SuppressFinalize(this);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SecureStrings")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SecureStringCredentialStore")]
         public bool AreEqual(object compareTo)
         {
             if (this.passPhrase == null || compareTo == null)
