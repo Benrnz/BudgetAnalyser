@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.BankAccount;
 using JetBrains.Annotations;
@@ -13,7 +12,7 @@ namespace BudgetAnalyser.Engine.Statement
     ///     An Importer for ANZ Cheque and Savings Accounts bank statement exports.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class AnzAccountStatementImporterV1 : IBankStatementImporter
+    internal class AnzAccountStatementImporterV1 : IBankStatementImporter
     {
         private const int TransactionTypeIndex = 0;
         private const int DescriptionIndex = 1;
@@ -27,13 +26,14 @@ namespace BudgetAnalyser.Engine.Statement
 
         private readonly BankImportUtilities importUtilities;
         private readonly ILogger logger;
+        private readonly IReaderWriterSelector readerWriterSelector;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AnzAccountStatementImporterV1" /> class.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public AnzAccountStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger)
+        public AnzAccountStatementImporterV1([NotNull] BankImportUtilities importUtilities, [NotNull] ILogger logger, [NotNull] IReaderWriterSelector readerWriterSelector)
         {
             if (importUtilities == null)
             {
@@ -44,9 +44,11 @@ namespace BudgetAnalyser.Engine.Statement
             {
                 throw new ArgumentNullException(nameof(logger));
             }
+            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
 
             this.importUtilities = importUtilities;
             this.logger = logger;
+            this.readerWriterSelector = readerWriterSelector;
             this.importUtilities.ConfigureLocale(new CultureInfo("en-NZ"));
             // ANZ importers are NZ specific at this stage.
         }
@@ -142,7 +144,9 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
         {
-            return await this.importUtilities.ReadLinesAsync(fileName);
+            var reader = this.readerWriterSelector.SelectReaderWriter(false);
+            var allText = await reader.LoadFromDiskAsync(fileName);
+            return allText.SplitLines();
         }
 
         /// <summary>
@@ -150,23 +154,8 @@ namespace BudgetAnalyser.Engine.Statement
         /// </summary>
         protected virtual async Task<string> ReadTextChunkAsync(string filePath)
         {
-            using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1024, false))
-            {
-                var sb = new StringBuilder();
-                var buffer = new byte[0x256];
-                int numRead;
-                while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                {
-                    var text = Encoding.UTF8.GetString(buffer, 0, numRead);
-                    sb.Append(text);
-                    if (text.Contains("\n"))
-                    {
-                        break;
-                    }
-                }
-
-                return sb.ToString();
-            }
+            var reader = this.readerWriterSelector.SelectReaderWriter(false);
+            return await reader.LoadFirstLinesFromDiskAsync(filePath, 2);
         }
 
         private TransactionType FetchTransactionType(string[] array, decimal amount)
@@ -195,30 +184,13 @@ namespace BudgetAnalyser.Engine.Statement
                 return null;
             }
 
-            string[] twoLines = { string.Empty, string.Empty };
-
-            var position = chunk.IndexOf("\n", StringComparison.OrdinalIgnoreCase);
-            if (position > 0)
-            {
-                twoLines[0] = chunk.Substring(0, position).TrimEndSafely();
-            }
-
-            var position2 = chunk.IndexOf("\n", ++position, StringComparison.OrdinalIgnoreCase);
-            if (position2 > 0)
-            {
-                twoLines[1] = chunk.Substring(position, position2 - position).TrimEndSafely();
-            }
-            else
-            {
-                twoLines[1] = chunk.Substring(position);
-            }
-
-            return twoLines;
+            return chunk.SplitLines(2);
         }
 
-        private bool VerifyColumnHeaderLine(string line)
+        private static bool VerifyColumnHeaderLine(string line)
         {
-            return string.CompareOrdinal(line, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
+            var compareTo = line.EndsWith("\r", StringComparison.OrdinalIgnoreCase) ? line.Remove(line.Length - 1, 1) : line;
+            return string.CompareOrdinal(compareTo, "Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge") == 0;
         }
 
         private bool VerifyFirstDataLine(string line)

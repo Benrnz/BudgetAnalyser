@@ -128,7 +128,7 @@ namespace BudgetAnalyser.Engine.Ledger
             };
         }
 
-        private LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
+        private static LedgerTransaction SupplementToOpeningBalance(decimal closingBalance, DateTime reconciliationDate, decimal openingBalance)
         {
             if (openingBalance - closingBalance == 0)
             {

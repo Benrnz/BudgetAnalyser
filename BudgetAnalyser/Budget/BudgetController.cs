@@ -401,7 +401,6 @@ namespace BudgetAnalyser.Budget
         private void OnSavingNotificationReceived(object sender, AdditionalInformationRequestedEventArgs args)
         {
             SyncDataToBudgetService();
-            args.ModificationComment = PromptUserForLastModifiedComment();
             args.Context = CurrentBudget.Model;
         }
 

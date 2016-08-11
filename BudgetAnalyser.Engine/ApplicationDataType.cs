@@ -28,6 +28,6 @@
         /// <summary>
         ///     Identifies a category of data within the application as "Tasks".
         /// </summary>
-        Tasks
+        Tasks,
     }
 }

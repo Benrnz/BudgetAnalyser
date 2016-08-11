@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="BudgetAnalyser.Dashboard.ProtectFilesUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             IsVisibleChanged="OnWindowIsVisibleChanged">
+
+    <Grid FocusManager.FocusedElement="{Binding ElementName=passwordBox}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="0"
+                    Orientation="Horizontal"
+                    Visibility="{Binding DecryptFileMode, Converter={StaticResource Converter.BoolToVis}}">
+            <ContentControl Height="35"
+                            Margin="5"
+                            Template="{StaticResource WarningImage}" />
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="WARNING! Your files are already protected with strong encryption. Do you want to unprotect your files?" />
+        </StackPanel>
+
+        <TextBlock Grid.ColumnSpan="2"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Style="{StaticResource TextBlock.Paragraph}"
+                   Text="Enter a password that will be used to encrypt the data files, the longer the better. Minimum of five characters. "
+                   Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}" />
+        
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="2"
+                    Orientation="Horizontal"
+                    Visibility="{Binding EnterPasswordMode, Converter={StaticResource Converter.BoolToVis}}">
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                       Text="{Binding EnterPasswordText}"
+                       Visibility="{Binding EnterPasswordMode, Converter={StaticResource Converter.BoolToVis}}"/>
+            <TextBlock Style="{StaticResource TextBlock.Paragraph}"
+                       Text="{Binding FileName}" />
+        </StackPanel>
+        
+        <TextBlock Grid.Column="0"
+                   Grid.Row="3"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Password" />
+        <PasswordBox x:Name="passwordBox"
+                     Grid.Column="1"
+                     Grid.Row="3"
+                     KeyUp="OnPasswordKeyUp"
+                     LostFocus="OnPasswordLostFocus"
+                     Margin="5" />
+        <TextBlock Grid.Column="1"
+                   Grid.Row="4"
+                   Style="{StaticResource TextBlock.ValidationError}"
+                   Text="{Binding ValidationMessage}"/>
+        <TextBlock Grid.Column="0"
+                   Grid.Row="5"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Confirm Password"
+                   Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}" />
+        <PasswordBox x:Name="confirmBox"
+                     Grid.Column="1"
+                     Grid.Row="5"
+                     KeyUp="OnConfirmBoxKeyUp"
+                     Margin="5"
+                     Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}" />
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="6"
+                    Orientation="Horizontal"
+                    Visibility="{Binding EncryptFileMode, Converter={StaticResource Converter.BoolToVis}}">
+            <ContentControl Height="35"
+                            Margin="5"
+                            Template="{StaticResource WarningImage}" />
+            <TextBlock Style="{StaticResource TextBlock.LabelStyle}"
+                       Text="WARNING! PLEASE READ: Once encrypted, the data cannot be recovered if you forget your password!" />
+        </StackPanel>
+    </Grid>
+
+</UserControl>

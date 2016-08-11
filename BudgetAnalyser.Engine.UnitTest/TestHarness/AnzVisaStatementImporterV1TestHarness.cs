@@ -6,10 +6,10 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
+    internal class AnzVisaStatementImporterV1TestHarness : AnzVisaStatementImporterV1
     {
-        public AnzVisaStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities)
-            : base(importUtilities, new FakeLogger())
+        public AnzVisaStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+            : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }
 

@@ -1,26 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine.Persistence;
+using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Services;
-using Rees.UserInteraction.Contracts;
 
 namespace BudgetAnalyser
 {
-    [AutoRegisterWithIoC]
+    [AutoRegisterWithIoC(SingleInstance = true)]
     public class PersistenceOperations
     {
         private readonly IApplicationDatabaseService applicationDatabaseService;
         private readonly DemoFileHelper demoFileHelper;
-        private readonly UserPrompts userPrompts;
+        private readonly IUiContext uiContext;
 
         public PersistenceOperations(
             [NotNull] IApplicationDatabaseService applicationDatabaseService,
             [NotNull] DemoFileHelper demoFileHelper,
-            [NotNull] UserPrompts userPrompts)
+            [NotNull] IUiContext uiContext)
         {
             if (applicationDatabaseService == null)
             {
@@ -32,14 +32,16 @@ namespace BudgetAnalyser
                 throw new ArgumentNullException(nameof(demoFileHelper));
             }
 
-            if (userPrompts == null)
+            if (uiContext == null)
             {
-                throw new ArgumentNullException(nameof(userPrompts));
+                throw new ArgumentNullException(nameof(uiContext));
             }
 
+            this.uiContext = uiContext;
             this.applicationDatabaseService = applicationDatabaseService;
             this.demoFileHelper = demoFileHelper;
-            this.userPrompts = userPrompts;
+
+            this.uiContext.Messenger.Register<PasswordSetMessage>(this, OnPasswordSetMessageReceived);
         }
 
         public bool HasUnsavedChanges => this.applicationDatabaseService.HasUnsavedChanges;
@@ -57,7 +59,7 @@ namespace BudgetAnalyser
                 return;
             }
 
-            IUserPromptSaveFile fileDialog = this.userPrompts.SaveFileFactory();
+            var fileDialog = this.uiContext.UserPrompts.SaveFileFactory();
             fileDialog.CheckPathExists = true;
             fileDialog.DefaultExt = "*.bax";
             fileDialog.AddExtension = true;
@@ -68,9 +70,9 @@ namespace BudgetAnalyser
             {
                 return;
             }
-            string fileName = fileDialog.FileName;
+            var fileName = fileDialog.FileName;
 
-            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
+            var appDb = this.applicationDatabaseService.Close();
             appDb = await this.applicationDatabaseService.CreateNewDatabaseAsync(fileName);
         }
 
@@ -81,7 +83,7 @@ namespace BudgetAnalyser
 
         public async void OnLoadDemoDatabaseCommandExecute()
         {
-            string fileName = this.demoFileHelper.FindDemoFile();
+            var fileName = this.demoFileHelper.FindDemoFile();
             await LoadDatabase(() => fileName);
         }
 
@@ -119,15 +121,42 @@ namespace BudgetAnalyser
                 return;
             }
 
-            string fileName = getFileName();
+            var fileName = getFileName();
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 // User cancelled.
                 return;
             }
 
-            ApplicationDatabase appDb = this.applicationDatabaseService.Close();
-            appDb = await this.applicationDatabaseService.LoadAsync(fileName);
+            this.applicationDatabaseService.Close();
+
+            try
+            {
+                await this.applicationDatabaseService.LoadAsync(fileName);
+            }
+            catch (EncryptionKeyIncorrectException)
+            {
+                // Recover by prompting user for the password.
+                this.uiContext.Logger.LogWarning(l => $"Attempt to open an encrypted file {fileName} with an incorrect password.");
+                this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName, "Incorrect password");
+            }
+            catch (KeyNotFoundException)
+            {
+                this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", fileName);
+                this.uiContext.Logger.LogWarning(l => $"The previously loaded Budget Analyser file ({fileName}) no longer exists.");
+            }
+            catch (EncryptionKeyNotProvidedException)
+            {
+                // Recover by prompting user for the password.
+                this.uiContext.Logger.LogWarning(l => "Attempt to open an encrypted file with no password set. (Ok if only happens once).");
+                this.uiContext.EncryptFileController.ShowEnterPasswordDialog(fileName);
+            }
+        }
+
+        private async void OnPasswordSetMessageReceived(PasswordSetMessage message)
+        {
+            // Reload the database file - treat it as a normal file open scenario.
+            await LoadDatabase(message.DatabaseStorageKey);
         }
 
         private async Task<bool> PromptToSaveIfNecessary()
@@ -135,7 +164,7 @@ namespace BudgetAnalyser
             if (this.applicationDatabaseService.HasUnsavedChanges)
             {
                 const string messageBoxHeading = "Open Budget Analyser File";
-                bool? response = this.userPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
+                bool? response = this.uiContext.UserPrompts.YesNoBox.Show("Save changes before loading a different file?", messageBoxHeading);
                 if (response != null && response.Value)
                 {
                     return await SaveDatabase(messageBoxHeading);
@@ -150,7 +179,7 @@ namespace BudgetAnalyser
 
         private string PromptUserForFileName()
         {
-            IUserPromptOpenFile openDialog = this.userPrompts.OpenFileFactory();
+            var openDialog = this.uiContext.UserPrompts.OpenFileFactory();
             openDialog.CheckFileExists = true;
             openDialog.AddExtension = true;
             openDialog.DefaultExt = "*.bax";
@@ -184,7 +213,7 @@ namespace BudgetAnalyser
                 return true;
             }
 
-            this.userPrompts.MessageBox.Show("Can't continue, some data is invalid, see messages below:\n" + messages, title);
+            this.uiContext.UserPrompts.MessageBox.Show("Can't continue, some data is invalid, see messages below:\n" + messages, title);
             return false;
         }
     }

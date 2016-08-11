@@ -24,6 +24,8 @@
                 <ResourceDictionary Source="UI/Assets/CoolImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/NewFileImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/SaveImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/LockClosedImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/LockOpenImage.xaml" />
                 
                 <ResourceDictionary Source="UI/Style/Buttons.xaml" />
 

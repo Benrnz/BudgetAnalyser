@@ -38,8 +38,7 @@ namespace BudgetAnalyser.Engine.Matching
         /// </summary>
         /// <param name="bucketRepository">The bucket repository.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Reviewed, ok here")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Reviewed, ok here")]
         public MatchingRule([NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (bucketRepository == null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -218,11 +217,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Saves the application database asynchronously. This may be called using a background worker thread.
         /// </summary>
-        /// <param name="contextObjects">
-        ///     The optional context objects that may have been populated by implementations of the
-        ///     <see cref="ISupportsModelPersistence.SavePreview" /> method call.
-        /// </param>
-        public Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             // Nothing needs to be done here.
             return Task.CompletedTask;
@@ -236,8 +231,7 @@ namespace BudgetAnalyser.Engine.Services
         ///     this
         ///     can't be done during save as it may not be called using the UI Thread.
         /// </summary>
-        /// <param name="contextObjects">The optional context objects that can be populated by implementations.</param>
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
         }
 

@@ -12,18 +12,19 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
     internal class XamlOnDiskLedgerBookRepositoryTestHarness : XamlOnDiskLedgerBookRepository
     {
         public XamlOnDiskLedgerBookRepositoryTestHarness(
-            [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper) : base(mapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())))
+            [NotNull] IDtoMapper<LedgerBookDto, LedgerBook> mapper,
+            IReaderWriterSelector selector) : base(mapper, new BankImportUtilitiesTestHarness(), new LedgerBookFactory(new ReconciliationBuilder(new FakeLogger())), selector)
         {
             LoadXamlFromDiskFromEmbeddedResources = true;
         }
 
+        public string SerialisedData { get; private set; }
         public event EventHandler DtoDeserialised;
         public Func<string, bool> FileExistsOverride { get; set; }
         public LedgerBookDto LedgerBookDto { get; private set; }
         public Func<string, string> LoadXamlAsStringOverride { get; set; }
         public bool LoadXamlFromDiskFromEmbeddedResources { get; set; }
         public Action<LedgerBookDto> SaveDtoToDiskOverride { get; set; }
-        public Action<string, string> WriteToDiskOverride { get; set; }
 
         protected override string LoadXamlAsString(string fileName)
         {
@@ -37,35 +38,36 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
             return LoadXamlAsStringOverride(fileName);
         }
 
-        protected override async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName)
+        protected override async Task<LedgerBookDto> LoadXamlFromDiskAsync(string fileName, bool isEncrypted)
         {
             if (LoadXamlFromDiskFromEmbeddedResources)
             {
-                LedgerBookDto = EmbeddedResourceHelper.ExtractXaml<LedgerBookDto>(fileName, true);
+                LedgerBookDto = GetType().Assembly.ExtractEmbeddedResourceAsXamlObject<LedgerBookDto>(fileName, true);
                 EventHandler handler = DtoDeserialised;
                 handler?.Invoke(this, EventArgs.Empty);
 
                 return LedgerBookDto;
             }
 
-            LedgerBookDto = await base.LoadXamlFromDiskAsync(fileName);
+            LedgerBookDto = await base.LoadXamlFromDiskAsync(fileName, isEncrypted);
             return LedgerBookDto;
         }
 
-        protected override async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity)
+        protected override async Task SaveDtoToDiskAsync(LedgerBookDto dataEntity, bool isEncrypted)
         {
             if (SaveDtoToDiskOverride == null)
             {
-                await base.SaveDtoToDiskAsync(dataEntity);
+                await base.SaveDtoToDiskAsync(dataEntity, isEncrypted);
                 return;
             }
 
             SaveDtoToDiskOverride(dataEntity);
         }
 
-        protected override Task WriteToDiskAsync(string filename, string data)
+        protected override string Serialise(LedgerBookDto dataEntity)
         {
-            return Task.Run(() => WriteToDiskOverride(filename, data));
+            SerialisedData = base.Serialise(dataEntity);
+            return SerialisedData;
         }
     }
 }

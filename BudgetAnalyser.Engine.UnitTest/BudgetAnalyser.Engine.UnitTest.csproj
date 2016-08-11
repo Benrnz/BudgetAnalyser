@@ -37,8 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.1.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.5\lib\net\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
@@ -53,8 +53,8 @@
       <HintPath>..\packages\Rees.TangyFruitMapper.1.0.12\lib\portable-win+net45\Rees.TangyFruitMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rees.UnitTestUtilities, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.5\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
+    <Reference Include="Rees.UnitTestUtilities, Version=1.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rees.UnitTestUtilities.1.1.7\lib\net46\Rees.UnitTestUtilities.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -71,6 +71,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -194,6 +195,9 @@
     <Compile Include="Statement\TransactionGroupedByBucketTest.cs" />
     <Compile Include="Statement\TransactionTest.cs" />
     <Compile Include="Statement\TransactionToDtoMapperTest.cs" />
+    <Compile Include="Encryption\CredentialStoreTest.cs" />
+    <Compile Include="Encryption\EncryptedLocalDiskReaderWriterTest.cs" />
+    <Compile Include="Encryption\LocalDiskReaderWriterSelectorTest.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="TestData\AnzChequeCsvTestData.cs" />
     <Compile Include="TestData\AnzVisaCsvTestData.cs" />
@@ -220,12 +224,12 @@
     <Compile Include="TestHarness\BucketBucketRepoAlwaysFind.cs" />
     <Compile Include="TestHarness\BudgetBucketTestHarness.cs" />
     <Compile Include="TestHarness\BudgetModelFake.cs" />
+    <Compile Include="TestHarness\EmbeddedResourceFileReaderWriter.cs" />
     <Compile Include="TestHarness\FakeEnvironmentFolders.cs" />
     <Compile Include="TestHarness\FakeLogger.cs" />
     <Compile Include="TestHarness\FakeMonitorableDependencies.cs" />
     <Compile Include="TestHarness\LedgerBookTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskApplicationDatabaseRepositoryTestHarness.cs" />
-    <Compile Include="TestHarness\XamlOnDiskBudgetRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskLedgerBookRepositoryTestHarness.cs" />
     <Compile Include="TestHarness\XamlOnDiskMatchingRuleRepositoryTestHarness.cs" />
     <Compile Include="ThirdPartyTests\PortableXamlTest.cs" />
@@ -251,6 +255,14 @@
     <ProjectReference Include="..\BudgetAnalyser.Engine\BudgetAnalyser.Engine.csproj">
       <Project>{22e5fb3e-3044-4bda-88ff-619f83ec4e99}</Project>
       <Name>BudgetAnalyser.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BudgetAnalyser.Storage\BudgetAnalyser.Encryption.csproj">
+      <Project>{17cfb549-81c7-4527-9f3e-5694d2b5b3fa}</Project>
+      <Name>BudgetAnalyser.Encryption</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MapperGeneration\MapperGeneration.csproj">
+      <Project>{7fa4712a-2eec-4441-bedc-33f6def5e67e}</Project>
+      <Name>MapperGeneration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

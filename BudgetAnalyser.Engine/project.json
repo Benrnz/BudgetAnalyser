@@ -4,11 +4,13 @@
     "uwp.10.0.app": {}
   },
   "dependencies": {
-    "JetBrains.Annotations": "10.1.4",
+    "JetBrains.Annotations": "10.1.5",
     "Microsoft.NETCore": "5.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.0",
     "Portable.Xaml": "0.13.0",
     "Rees.TangyFruitMapper": "1.0.12",
+    "System.IO.FileSystem": "4.0.0",
+    "System.IO.FileSystem.Primitives": "4.0.0",
     "System.Reflection.TypeExtensions": "4.0.0",
     "System.Runtime": "4.0.20"
   },

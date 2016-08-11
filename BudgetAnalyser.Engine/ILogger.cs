@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine
 {
@@ -11,31 +12,31 @@ namespace BudgetAnalyser.Engine
         ///     A custom string format method to avoid code translation and localisation warnings. The logging language is always
         ///     English.
         /// </summary>
-        string Format(string formatTemplate, params object[] parameters);
+        string Format([NotNull] string formatTemplate, params object[] parameters);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry regardless of the configured log level.
         /// </summary>
-        void LogAlways(Func<ILogger, string> logEntryBuilder);
+        void LogAlways([NotNull] Func<ILogger, string> logEntryBuilder);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry if the configured log level is set to error.
         /// </summary>
-        void LogError(Func<ILogger, string> logEntryBuilder);
+        void LogError([NotNull] Func<ILogger, string> logEntryBuilder);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry if the configured log level is set to error.
         /// </summary>
-        void LogError(Exception ex, Func<ILogger, string> logEntryBuilder);
+        void LogError([NotNull] Exception ex, [NotNull] Func<ILogger, string> logEntryBuilder);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry if the configured log level is set to info.
         /// </summary>
-        void LogInfo(Func<ILogger, string> logEntryBuilder);
+        void LogInfo([NotNull] Func<ILogger, string> logEntryBuilder);
 
         /// <summary>
         ///     Write a debug/diagnostic log entry if the configured log level is set to warning.
         /// </summary>
-        void LogWarning(Func<ILogger, string> logEntryBuilder);
+        void LogWarning([NotNull] Func<ILogger, string> logEntryBuilder);
     }
 }

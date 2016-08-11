@@ -1,82 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
+﻿using System.Reflection;
 using System.Xaml;
-using BudgetAnalyser.Engine.UnitTest.TestHarness;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Helper
 {
+    /// <summary>
+    ///     An additional XAML focused overload over and above what is provided by Rees.UnitTest.Utilities.
+    /// </summary>
     public static class EmbeddedResourceHelper
     {
-        // TODO Consider moving this to Rees.UnitTestUtilities
-
-        public static IEnumerable<string> ExtractLines(string resourceName, bool outputText = false)
+        /// <summary>
+        ///     Accesses a embedded resource xaml file included in the assembly and returns it as a deserialised object.
+        /// </summary>
+        /// <typeparam name="T">The type of the object described in the xaml file. This is used to deserialise the object.</typeparam>
+        /// <param name="assembly">The assembly in which to find the embedded resource.</param>
+        /// <param name="resourceName">
+        ///     The resource name of the file. This matches its filename and path from the root of the solution.
+        ///     For example "AssemblyName.FolderName(s).EmbeddedFile.xaml";
+        /// </param>
+        /// <param name="outputXaml">Optionally output the xaml file to the Debug console before returning.</param>
+        /// <returns>A fully deserialised object.</returns>
+        public static T ExtractEmbeddedResourceAsXamlObject<T>(this Assembly assembly, string resourceName, bool outputXaml = false)
         {
-            string contents = ExtractText(resourceName, outputText);
-            var reader = new StringReader(contents);
-            string line = reader.ReadLine();
-            var lines = new List<string>();
-            while (line != null)
-            {
-                lines.Add(line);
-                line = reader.ReadLine();
-            }
-
-            return lines;
-        }
-
-        public static IEnumerable<string> ExtractString(string resourceName)
-        {
-            using (Stream stream = typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-                    ShowAllEmbeddedResources();
-                    throw new MissingManifestResourceException("Cannot find resource named: " + resourceName);
-                }
-
-                using (var streamReader = new StreamReader(stream))
-                {
-                    string text = streamReader.ReadToEnd();
-                    return text.Split('\n');
-                }
-            }
-        }
-
-        public static string ExtractText(string resourceName, bool outputText = false)
-        {
-            using (Stream stream = typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
-                    ShowAllEmbeddedResources();
-                    throw new MissingManifestResourceException("Cannot find resource named: " + resourceName);
-                }
-
-                var reader = new StreamReader(stream);
-                string stringData = reader.ReadToEnd();
-                if (outputText)
-                {
-                    Debug.WriteLine(stringData);
-                }
-                return stringData;
-            }
-        }
-
-        public static T ExtractXaml<T>(string resourceName, bool outputXaml = false)
-        {
-            string stringData = ExtractText(resourceName, outputXaml);
-            return (T)XamlServices.Parse(stringData);
-        }
-
-        private static void ShowAllEmbeddedResources()
-        {
-            typeof(FakeLogger).GetTypeInfo().Assembly.GetManifestResourceNames().ToList().ForEach(n => Debug.WriteLine(n));
+            var stringData = assembly.ExtractEmbeddedResourceAsText(resourceName, outputXaml);
+            return (T) XamlServices.Parse(stringData);
         }
     }
 }

@@ -16,37 +16,37 @@
                 <Style BasedOn="{StaticResource TextBlock.ContextMenuStyle}"
                        TargetType="{x:Type TextBlock}" />
             </ContextMenu.Resources>
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.HideWidgetCommand}"
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.HideWidgetCommand}"
                       CommandParameter="{Binding .}">
                 <MenuItem.Header>
                     <TextBlock Text="Hide" />
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.UnhideAllWidgetsCommand}">
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.UnhideAllWidgetsCommand}">
                 <MenuItem.Header>
                     <TextBlock Text="Unhide all" />
                 </MenuItem.Header>
             </MenuItem>
             <Separator />
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewBucketMonitorWidgetCommand}"
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewBucketMonitorWidgetCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
                 <MenuItem.Header>
                     <TextBlock Text="New Bucket Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewFixedBudgetMonitorWidgetCommand}"
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewFixedBudgetMonitorWidgetCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
                 <MenuItem.Header>
                     <TextBlock Text="New Fixed Budget Project Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.AddNewSurprisePaymentMonitorWidgetCommand}"
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.AddNewSurprisePaymentMonitorWidgetCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.Tag.CorrelationId}">
                 <MenuItem.Header>
                     <TextBlock Text="New Surprise Regular Payment Monitor Widget" />
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{x:Static dashboard:DashboardCommands.RemoveWidgetCommand}"
+            <MenuItem Command="{x:Static dashboard:WidgetCommands.RemoveWidgetCommand}"
                       CommandParameter="{Binding .}">
                 <MenuItem.Header>
                     <TextBlock Text="Remove Widget" />
@@ -116,6 +116,7 @@
                                         VerticalAlignment="Top"
                                         Visibility="{Binding ImageResourceName, Converter={StaticResource Converter.NullToVis}, ConverterParameter=Collapsed}"
                                         Width="70" />
+                        <!-- Not sure if this second overlay image is needed any more -->
                         <ContentControl HorizontalAlignment="Left"
                                         Margin="-10,25,0,0"
                                         Template="{Binding ImageResourceName2, Converter={StaticResource Converter.TextToControlTemplate}}"
@@ -133,7 +134,7 @@
                                Text="{Binding DetailedText}"
                                TextWrapping="Wrap" />
                     <Button
-                        Command="{Binding DataContext.WidgetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
+                        Command="{Binding DataContext.WidgetActivatedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dashboard:DashboardUserControl}}}"
                         CommandParameter="{Binding .}"
                         Grid.ColumnSpan="2"
                         Grid.RowSpan="2"

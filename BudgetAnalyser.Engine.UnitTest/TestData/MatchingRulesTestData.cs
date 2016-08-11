@@ -8,7 +8,9 @@ namespace BudgetAnalyser.Engine.UnitTest.TestData
     {
         public static IEnumerable<MatchingRuleDto> RawTestData1()
         {
-            return EmbeddedResourceHelper.ExtractXaml<List<MatchingRuleDto>>("BudgetAnalyser.Engine.UnitTest.TestData.MatchingRulesTestData.xml");
+            return typeof(MatchingRulesTestData)
+                .Assembly
+                .ExtractEmbeddedResourceAsXamlObject<List<MatchingRuleDto>>("BudgetAnalyser.Engine.UnitTest.TestData.MatchingRulesTestData.xml");
         }
     }
 }

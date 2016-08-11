@@ -23,6 +23,14 @@ namespace BudgetAnalyser.Engine.Persistence
         public StorageBranch BudgetCollectionRootDto { get; set; }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether the data files are encrypted.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if this instance is encrypted; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEncrypted { get; set; }
+
+        /// <summary>
         ///     Gets or sets the ledger book root dto.
         /// </summary>
         public StorageBranch LedgerBookRootDto { get; set; }

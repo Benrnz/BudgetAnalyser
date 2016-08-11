@@ -88,6 +88,25 @@ namespace BudgetAnalyser.Engine.Services
                 .OrderBy(g => g.Sequence).ThenBy(g => g.Heading);
         }
 
+        /// <summary>
+        ///     Removes the specified widget.
+        /// </summary>
+        public void Remove(IUserDefinedWidget widget)
+        {
+            this.widgetRepo.Remove(widget);
+        }
+
+        /// <summary>
+        ///     Create a new widget with the given parameters. This is used to instantiate the <see cref="IUserDefinedWidget" />s.
+        ///     These can only be created after receiving the application state.
+        /// </summary>
+        /// <param name="fullName">The full type name of the widget type.</param>
+        /// <param name="bucketCode">A unique identifier for the instance</param>
+        public IUserDefinedWidget Create(string fullName, string bucketCode)
+        {
+            return this.widgetRepo.Create(fullName, bucketCode);
+        }
+
         private void CreateMultiInstanceWidget(MultiInstanceWidgetState multiInstanceState)
         {
             // MultiInstance widgets need to be created at this point.  The App State data is required to create them.

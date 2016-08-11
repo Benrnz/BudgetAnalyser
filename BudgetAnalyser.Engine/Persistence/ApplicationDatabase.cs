@@ -35,6 +35,14 @@ namespace BudgetAnalyser.Engine.Persistence
         public string FileName { get; internal set; }
 
         /// <summary>
+        ///     Gets a value indicating whether the Application database is encrypted when stored on disk.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if this instance is encrypted; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEncrypted { get; internal set; }
+
+        /// <summary>
         ///     Gets the ledger book storage key.
         ///     This is used to locate and load the <see cref="LedgerBook" />.
         /// </summary>

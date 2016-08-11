@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using BudgetAnalyser.Annotations;
-using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
@@ -80,7 +79,7 @@ namespace BudgetAnalyser.Statement
         {
             PersistenceOperationCommands.SaveDatabaseCommand.Execute(this);
 
-            string fileName = await GetFileNameFromUser(StatementOpenMode.Merge);
+            var fileName = await GetFileNameFromUser();
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 // User cancelled
@@ -89,7 +88,7 @@ namespace BudgetAnalyser.Statement
 
             try
             {
-                Account account = this.loadFileController.SelectedExistingAccountName;
+                var account = this.loadFileController.SelectedExistingAccountName;
                 await this.transactionService.ImportAndMergeBankStatementAsync(fileName, account);
 
                 await SyncWithServiceAsync();
@@ -125,7 +124,7 @@ namespace BudgetAnalyser.Statement
 
         internal async Task<bool> SyncWithServiceAsync()
         {
-            StatementModel statementModel = this.transactionService.StatementModel;
+            var statementModel = this.transactionService.StatementModel;
             LoadingData = true;
             await Dispatcher.CurrentDispatcher.BeginInvoke(
                 DispatcherPriority.Normal,
@@ -157,25 +156,15 @@ namespace BudgetAnalyser.Statement
         }
 
         /// <summary>
-        ///     Prompts the user for a filename and other required parameters to be able to load/import/merge the file.
+        ///     Prompts the user for a filename and other required parameters to be able to merge the statement file.
         /// </summary>
-        /// <param name="mode">Open or Merge mode.</param>
         /// <returns>
         ///     The user selected filename. All other required parameters are accessible from the
         ///     <see cref="LoadFileController" />.
         /// </returns>
-        private async Task<string> GetFileNameFromUser(StatementOpenMode mode)
+        private async Task<string> GetFileNameFromUser()
         {
-            switch (mode)
-            {
-                case StatementOpenMode.Merge:
-                    await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
-                    break;
-
-                case StatementOpenMode.Open:
-                    await this.loadFileController.RequestUserInputForOpenFile();
-                    break;
-            }
+            await this.loadFileController.RequestUserInputForMerging(ViewModel.Statement);
 
             return this.loadFileController.FileName;
         }

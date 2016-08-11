@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
+using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -28,8 +29,10 @@ namespace BudgetAnalyser
         CreateNewSurprisePaymentMonitorController CreateNewSurprisePaymentMonitorController { get; }
         DashboardController DashboardController { get; }
         EditingTransactionController EditingTransactionController { get; }
+        EncryptFileController EncryptFileController { get; }
         GlobalFilterController GlobalFilterController { get; }
         LedgerBookController LedgerBookController { get; }
+        ILogger Logger { get; }
         MainMenuController MainMenuController { get; }
         IMessenger Messenger { get; }
         NewRuleController NewRuleController { get; }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget.Data;
+using BudgetAnalyser.Engine.Services;
 using JetBrains.Annotations;
 using Portable.Xaml;
 using Rees.TangyFruitMapper;
@@ -15,20 +16,21 @@ namespace BudgetAnalyser.Engine.Budget
     /// </summary>
     /// <seealso cref="BudgetAnalyser.Engine.Budget.IBudgetRepository" />
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class XamlOnDiskBudgetRepository : IBudgetRepository
+    internal class XamlOnDiskBudgetRepository : IBudgetRepository
     {
         private readonly IBudgetBucketRepository budgetBucketRepository;
         private readonly IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper;
+        private readonly IReaderWriterSelector readerWriterSelector;
         private BudgetCollection currentBudgetCollection;
+        private bool isEncryptedAtLastAccess;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlOnDiskBudgetRepository" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         public XamlOnDiskBudgetRepository(
             [NotNull] IBudgetBucketRepository bucketRepository,
-            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper)
+            [NotNull] IDtoMapper<BudgetCollectionDto, BudgetCollection> mapper,
+            [NotNull] IReaderWriterSelector readerWriterSelector)
         {
             if (bucketRepository == null)
             {
@@ -40,8 +42,11 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new ArgumentNullException(nameof(mapper));
             }
 
+            if (readerWriterSelector == null) throw new ArgumentNullException(nameof(readerWriterSelector));
+
             this.budgetBucketRepository = bucketRepository;
             this.mapper = mapper;
+            this.readerWriterSelector = readerWriterSelector;
         }
 
         /// <summary>
@@ -55,13 +60,6 @@ namespace BudgetAnalyser.Engine.Budget
             return this.currentBudgetCollection;
         }
 
-        /// <summary>
-        ///     Creates a new empty <see cref="BudgetCollection" /> at the location indicated by the <see paramref="storageKey" />.
-        ///     Any
-        ///     existing data at this location will be overwritten. After this is complete, use the <see cref="LoadAsync" /> method
-        ///     to load the new collection.
-        /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
         public async Task<BudgetCollection> CreateNewAndSaveAsync(string storageKey)
         {
             if (storageKey.IsNothing())
@@ -82,30 +80,21 @@ namespace BudgetAnalyser.Engine.Budget
 
             this.budgetBucketRepository.Initialise(new List<BudgetBucketDto>());
 
-            await SaveAsync();
+            await SaveAsync(storageKey, false);
             return this.currentBudgetCollection;
         }
 
-        /// <summary>
-        ///     Loads the a <see cref="BudgetCollection" /> from storage at the location indicated by <see paramref="storageKey" />
-        ///     .
-        /// </summary>
-        /// <param name="storageKey"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="KeyNotFoundException">File not found.  + storageKey</exception>
-        /// <exception cref="DataFormatException">
-        ///     Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is
-        ///     invalid.
-        ///     or
-        /// </exception>
-        public async Task<BudgetCollection> LoadAsync(string storageKey)
+        public async Task<BudgetCollection> LoadAsync(string storageKey, bool isEncrypted)
         {
             if (storageKey.IsNothing())
             {
                 throw new ArgumentNullException(nameof(storageKey));
             }
 
-            if (!FileExists(storageKey))
+            this.isEncryptedAtLastAccess = isEncrypted;
+            var reader = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+
+            if (!reader.FileExists(storageKey))
             {
                 throw new KeyNotFoundException("File not found. " + storageKey);
             }
@@ -113,21 +102,20 @@ namespace BudgetAnalyser.Engine.Budget
             object serialised;
             try
             {
-                serialised = await LoadFromDisk(storageKey); // May return null for some errors.
+                var xaml = await reader.LoadFromDiskAsync(storageKey); // May return null for some errors.
+                serialised = Deserialise(xaml);
             }
             catch (XamlObjectWriterException ex)
             {
-                throw new DataFormatException(
-                    string.Format(CultureInfo.CurrentCulture,
-                        "The budget file '{0}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.",
-                        storageKey),
-                    ex);
+                throw new DataFormatException($"The budget file '{storageKey}' is an invalid format. This is probably due to changes in the code, most likely namespace changes.", ex);
+            }
+            catch (EncryptionKeyIncorrectException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                throw new DataFormatException(
-                    "Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.",
-                    ex);
+                throw new DataFormatException("Deserialisation the Budget file failed, an exception was thrown by the Xaml deserialiser, the file format is invalid.", ex);
             }
 
             var correctDataFormat = serialised as BudgetCollectionDto;
@@ -148,10 +136,6 @@ namespace BudgetAnalyser.Engine.Budget
             return budgetCollection;
         }
 
-        /// <summary>
-        ///     Saves the current <see cref="BudgetCollection" /> to storage.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">There is no current budget collection loaded.</exception>
         public async Task SaveAsync()
         {
             if (this.currentBudgetCollection == null)
@@ -159,30 +143,28 @@ namespace BudgetAnalyser.Engine.Budget
                 throw new InvalidOperationException("There is no current budget collection loaded.");
             }
 
+            await SaveAsync(this.currentBudgetCollection.StorageKey, this.isEncryptedAtLastAccess);
+        }
+
+        public async Task SaveAsync(string storageKey, bool isEncrypted)
+        {
+            if (this.currentBudgetCollection == null)
+            {
+                throw new InvalidOperationException("There is no current budget collection loaded.");
+            }
+
+            this.isEncryptedAtLastAccess = isEncrypted;
+            var writer = this.readerWriterSelector.SelectReaderWriter(isEncrypted);
+
+            this.currentBudgetCollection.StorageKey = storageKey;
             var dataFormat = this.mapper.ToDto(this.currentBudgetCollection);
-
             var serialised = Serialise(dataFormat);
-            await WriteToDisk(dataFormat.StorageKey, serialised);
+            await writer.WriteToDiskAsync(dataFormat.StorageKey, serialised);
         }
 
-        /// <summary>
-        ///     Files the exists.
-        /// </summary>
-        /// <param name="fileName">Full path and filename of the file.</param>
-        protected virtual bool FileExists(string fileName)
+        protected virtual object Deserialise(string xaml)
         {
-            return File.Exists(fileName);
-        }
-
-        /// <summary>
-        ///     Loads a budget collection xaml file from disk.
-        /// </summary>
-        /// <param name="fileName">Full path and filename of the file.</param>
-        protected virtual async Task<object> LoadFromDisk(string fileName)
-        {
-            object result = null;
-            await Task.Run(() => result = XamlServices.Load(fileName));
-            return result;
+            return XamlServices.Parse(xaml);
         }
 
         /// <summary>
@@ -191,17 +173,6 @@ namespace BudgetAnalyser.Engine.Budget
         protected virtual string Serialise(BudgetCollectionDto budgetData)
         {
             return XamlServices.Save(budgetData);
-        }
-
-        /// <summary>
-        ///     Writes the budget collections to a xaml file on disk.
-        /// </summary>
-        protected virtual async Task WriteToDisk(string fileName, string data)
-        {
-            using (var fileStream = new StreamWriter(new FileStream(fileName, FileMode.Create)))
-            {
-                await fileStream.WriteAsync(data);
-            }
         }
     }
 }

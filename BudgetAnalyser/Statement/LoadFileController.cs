@@ -20,7 +20,6 @@ namespace BudgetAnalyser.Statement
     {
         private readonly IAccountTypeRepository accountTypeRepository;
         private readonly IUserMessageBox messageBox;
-        private readonly IVersionedStatementModelRepository statementModelRepository;
         private readonly Func<IUserPromptOpenFile> userPromptOpenFileFactory;
         private Guid dialogCorrelationId;
         private bool disposed;
@@ -34,8 +33,7 @@ namespace BudgetAnalyser.Statement
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "OnPropertyChange is ok to call here")]
         public LoadFileController(
             [NotNull] IUiContext uiContext,
-            [NotNull] IAccountTypeRepository accountTypeRepository,
-            [NotNull] IVersionedStatementModelRepository statementModelRepository)
+            [NotNull] IAccountTypeRepository accountTypeRepository)
         {
             if (uiContext == null)
             {
@@ -47,34 +45,12 @@ namespace BudgetAnalyser.Statement
                 throw new ArgumentNullException(nameof(accountTypeRepository));
             }
 
-            if (statementModelRepository == null)
-            {
-                throw new ArgumentNullException(nameof(statementModelRepository));
-            }
-
             this.messageBox = uiContext.UserPrompts.MessageBox;
-            this.statementModelRepository = statementModelRepository;
             this.userPromptOpenFileFactory = uiContext.UserPrompts.OpenFileFactory;
             this.accountTypeRepository = accountTypeRepository;
 
             MessengerInstance = uiContext.Messenger;
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogResponseReceived);
-        }
-
-        /// <summary>
-        ///     Finalizes an instance of the <see cref="LoadFileController" /> class.
-        ///     Use C# destructor syntax for finalization code.
-        ///     This destructor will run only if the Dispose method
-        ///     does not get called.
-        ///     It gives your base class the opportunity to finalize.
-        ///     Do not provide destructors in types derived from this class.
-        /// </summary>
-        ~LoadFileController()
-        {
-            // Do not re-create Dispose clean-up code here. 
-            // Calling Dispose(false) is optimal in terms of 
-            // readability and maintainability. 
-            Dispose(false);
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Used by data binding")]
@@ -119,7 +95,6 @@ namespace BudgetAnalyser.Statement
             }
         }
 
-        public bool? LastFileWasBudgetAnalyserStatementFile { get; private set; }
         public bool MergeMode { [UsedImplicitly] get; private set; }
 
         public Account SelectedExistingAccountName
@@ -170,7 +145,6 @@ namespace BudgetAnalyser.Statement
             }
 
             MergeMode = true;
-            LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Merge Statement";
             ActionButtonToolTip = "Merge transactions from the selected file into the current statement file.";
@@ -191,7 +165,6 @@ namespace BudgetAnalyser.Statement
 
             MergeMode = false;
             ActionButtonToolTip = "Open the selected file. Any statement file already open will be closed first.";
-            LastFileWasBudgetAnalyserStatementFile = null;
             SuggestedDateRange = null;
             Title = "Open Statement";
             return RequestUserInputCommomPreparation();
@@ -204,14 +177,13 @@ namespace BudgetAnalyser.Statement
                 throw new ObjectDisposedException("LoadFileController.Reset");
             }
 
-            LastFileWasBudgetAnalyserStatementFile = null;
             FileName = null;
         }
 
         private void CalculateSuggestedDateRange(StatementModel currentStatement)
         {
-            DateTime lastTransactionDate = currentStatement.AllTransactions.Max(t => t.Date).Date.AddDays(1);
-            DateTime maxDate = DateTime.Today;
+            var lastTransactionDate = currentStatement.AllTransactions.Max(t => t.Date).Date.AddDays(1);
+            var maxDate = DateTime.Today;
             if (maxDate.DayOfWeek == DayOfWeek.Monday)
             {
                 // Monday is not an ideal day to end a date range as some banks may back date weekend transactions after Monday night processing.
@@ -253,7 +225,7 @@ namespace BudgetAnalyser.Statement
             CanExecuteOkButton = true;
         }
 
-        private async void CheckFileName()
+        private void CheckFileName()
         {
             if (string.IsNullOrEmpty(FileName))
             {
@@ -262,18 +234,8 @@ namespace BudgetAnalyser.Statement
                 return;
             }
 
-            LastFileWasBudgetAnalyserStatementFile = await this.statementModelRepository.IsStatementModelAsync(FileName);
-            if (LastFileWasBudgetAnalyserStatementFile ?? false)
-            {
-                FileTypeSelectionReady = false;
-                CanExecuteOkButton = true;
-            }
-            else
-            {
-                // Appears to be a new statement that has never been loaded before.
-                FileTypeSelectionReady = true;
-                CanExecuteOkButton = true;
-            }
+            FileTypeSelectionReady = true;
+            CanExecuteOkButton = true;
         }
 
         /// <summary>
@@ -317,7 +279,7 @@ namespace BudgetAnalyser.Statement
             try
             {
                 this.showingDialog = true;
-                IUserPromptOpenFile dialog = this.userPromptOpenFileFactory();
+                var dialog = this.userPromptOpenFileFactory();
                 dialog.DefaultExt = "*.CSV";
                 dialog.Title = "Select a CSV file of transactions to load.";
                 dialog.Filter = "Comma Separated Values (*.CSV)|*.CSV";
@@ -381,6 +343,22 @@ namespace BudgetAnalyser.Statement
             this.fileSelectionTask = new Task(() => { });
             MessengerInstance.Send(popRequest);
             return this.fileSelectionTask;
+        }
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="LoadFileController" /> class.
+        ///     Use C# destructor syntax for finalization code.
+        ///     This destructor will run only if the Dispose method
+        ///     does not get called.
+        ///     It gives your base class the opportunity to finalize.
+        ///     Do not provide destructors in types derived from this class.
+        /// </summary>
+        ~LoadFileController()
+        {
+            // Do not re-create Dispose clean-up code here. 
+            // Calling Dispose(false) is optimal in terms of 
+            // readability and maintainability. 
+            Dispose(false);
         }
     }
 }

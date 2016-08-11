@@ -10,7 +10,6 @@ using BudgetAnalyser.Budget;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
-using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
@@ -18,9 +17,6 @@ using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ShellDialog;
 using BudgetAnalyser.Statement;
 using Rees.Wpf;
-using ApplicationStateLoadedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadedMessage;
-using ApplicationStateLoadFinishedMessage = BudgetAnalyser.ApplicationState.ApplicationStateLoadFinishedMessage;
-using ApplicationStateRequestedMessage = BudgetAnalyser.ApplicationState.ApplicationStateRequestedMessage;
 
 namespace BudgetAnalyser
 {
@@ -36,7 +32,6 @@ namespace BudgetAnalyser
         public ShellController(
             [NotNull] IUiContext uiContext,
             [NotNull] IPersistApplicationState statePersistence,
-            [NotNull] IDashboardService dashboardService,
             [NotNull] PersistenceOperations persistenceOperations
             )
         {
@@ -48,11 +43,6 @@ namespace BudgetAnalyser
             if (statePersistence == null)
             {
                 throw new ArgumentNullException(nameof(statePersistence));
-            }
-
-            if (dashboardService == null)
-            {
-                throw new ArgumentNullException(nameof(dashboardService));
             }
 
             if (persistenceOperations == null)
@@ -105,11 +95,12 @@ namespace BudgetAnalyser
 
         public ShellDialogController TransactionsDialog { get; }
 
+        internal Point WindowSize { get; private set; }
+
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Data binding")]
         [UsedImplicitly]
         public string WindowTitle => "Budget Analyser";
 
-        internal Point WindowSize { get; private set; }
         internal Point WindowTopLeft { get; private set; }
 
         public void Initialize()
@@ -133,9 +124,9 @@ namespace BudgetAnalyser
             this.uiContext.Controllers.OfType<IInitializableController>().ToList().ForEach(i => i.Initialize());
 
             // Send state load messages in order.
-            foreach (int sequence in sequences)
+            foreach (var sequence in sequences)
             {
-                int sequenceCopy = sequence;
+                var sequenceCopy = sequence;
                 IEnumerable<IPersistentApplicationStateObject> models = rehydratedModels.Where(persistentModel => persistentModel.LoadSequence == sequenceCopy);
                 MessengerInstance.Send(new ApplicationStateLoadedMessage(models));
             }
@@ -242,14 +233,7 @@ namespace BudgetAnalyser
             var storedMainAppState = message.ElementOfType<MainApplicationState>();
             if (storedMainAppState != null)
             {
-                try
-                {
-                    await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
-                }
-                catch (KeyNotFoundException)
-                {
-                    this.uiContext.UserPrompts.MessageBox.Show("Budget Analyser", "The previously loaded Budget Analyser file ({0}) no longer exists.", storedMainAppState.BudgetAnalyserDataStorageKey);
-                }
+                await this.persistenceOperations.LoadDatabase(storedMainAppState.BudgetAnalyserDataStorageKey);
             }
         }
 
@@ -262,7 +246,7 @@ namespace BudgetAnalyser
             };
             message.PersistThisModel(shellPersistentStateV1);
 
-            MainApplicationState dataFileState = this.persistenceOperations.PreparePersistentStateData();
+            var dataFileState = this.persistenceOperations.PreparePersistentStateData();
             message.PersistThisModel(dataFileState);
         }
 

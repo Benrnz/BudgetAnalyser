@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace BudgetAnalyser.Engine
 {
@@ -9,6 +10,7 @@ namespace BudgetAnalyser.Engine
     ///     By default all registrations should be self registered to its own class name as well as all directly implemented
     ///     interfaces.
     /// </summary>
+    [DebuggerDisplay("DependencyRegistrationRequirement: DependencyReqd:{DependencyRequired} Named:{NamedInstanceName}")]
     public class DependencyRegistrationRequirement
     {
         /// <summary>

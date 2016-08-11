@@ -9,163 +9,169 @@ using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Rees.TangyFruitMapper;
+using Rees.UnitTestUtilities;
 
 namespace BudgetAnalyser.Engine.UnitTest.Statement
 {
     [TestClass]
     public class CsvOnDiskStatementModelRepositoryV1Test
     {
+        private Mock<IReaderWriterSelector> mockReaderWriterSelector;
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullBankImportUtils()
+        public void Ctor_ShouldThrow_GivenNullBankImportUtils()
         {
             new CsvOnDiskStatementModelRepositoryV1(
                 null,
                 new FakeLogger(),
-                new DtoMapperStub<TransactionSetDto, StatementModel>());
+                new DtoMapperStub<TransactionSetDto, StatementModel>(),
+                this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullMapper()
-        {
-            new CsvOnDiskStatementModelRepositoryV1(
-                new BankImportUtilities(new FakeLogger()),
-                new FakeLogger(),
-                null);
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CtorShouldThrowGivenNullLogger()
+        public void Ctor_ShouldThrow_GivenNullLogger()
         {
             new CsvOnDiskStatementModelRepositoryV1(
                 new BankImportUtilities(new FakeLogger()),
                 null,
-                new DtoMapperStub<TransactionSetDto, StatementModel>());
+                new DtoMapperStub<TransactionSetDto, StatementModel>(),
+                this.mockReaderWriterSelector.Object);
             Assert.Fail();
         }
 
         [TestMethod]
-        public async Task IsValidFileShouldReturnFalseGivenIncorrectVersionHashFile()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ShouldThrow_GivenNullMapper()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            new CsvOnDiskStatementModelRepositoryV1(
+                new BankImportUtilities(new FakeLogger()),
+                new FakeLogger(),
+                null,
+                this.mockReaderWriterSelector.Object);
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public async Task IsValidFile_ShouldReturnFalse_GivenIncorrectVersionHashFile()
+        {
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            bool result = await subject.IsStatementModelAsync("Foo.foo");
+            var result = await subject.IsStatementModelAsync("Foo.foo", false);
 
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public async Task IsValidFileShouldReturnTrueGivenGoodFile()
+        public async Task IsValidFile_ShouldReturnTrue_GivenGoodFile()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            bool result = await subject.IsStatementModelAsync("Foo.foo");
+            var result = await subject.IsStatementModelAsync("Foo.foo", false);
 
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnAStatementModelGivenFileWithNoTransactions()
+        public async Task Load_ShouldReturnAStatementModel_GivenFileWithNoTransactions()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.IsNotNull(model);
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithFilenameGivenTestData1()
+        public async Task Load_ShouldReturnStatementModelWithFilename_GivenTestData1()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.AreEqual("Foo.foo", model.StorageKey);
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithImportedDateGivenTestData1()
+        public async Task Load_ShouldReturnStatementModelWithImportedDate_GivenTestData1()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
             Console.WriteLine(model.LastImport);
             Assert.AreEqual(new DateTime(2012, 08, 20), model.LastImport);
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithNoTransactionsGivenFileWithNoTransactions()
+        public async Task Load_ShouldReturnStatementModelWithNoTransactions_GivenFileWithNoTransactions()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.AreEqual(0, model.AllTransactions.Count());
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithOneDurationGivenTestData1()
+        public async Task Load_ShouldReturnStatementModelWithOneDuration_GivenTestData1()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.AreEqual(1, model.DurationInMonths);
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithTransactionsGivenTestData1()
+        public async Task Load_ShouldReturnStatementModelWithTransactions_GivenTestData1()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.TestData1();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.AreEqual(15, model.AllTransactions.Count());
         }
 
         [TestMethod]
-        public async Task LoadShouldReturnStatementModelWithZeroDurationGivenFileWithNoTransactions()
+        public async Task Load_ShouldReturnStatementModelWithZeroDuration_GivenFileWithNoTransactions()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.EmptyTestData();
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var model = await subject.LoadAsync("Foo.foo", false);
 
             Assert.AreEqual(0, model.DurationInMonths);
         }
 
         [TestMethod]
         [ExpectedException(typeof(StatementModelChecksumException))]
-        public async Task LoadShouldThrowGivenFileWithIncorrectChecksum()
+        public async Task Load_ShouldThrow_GivenFileWithIncorrectChecksum()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectChecksum();
-            await subject.LoadAsync("foo.foo");
+            await subject.LoadAsync("foo.foo", false);
 
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(DataFormatException))]
-        public async Task LoadShouldThrowGivenFileWithIncorrectDataTypes()
+        public async Task Load_ShouldThrow_GivenFileWithIncorrectDataTypes()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectDataTypeInRow1();
-            await subject.LoadAsync("foo.foo");
+            await subject.LoadAsync("foo.foo", false);
             Assert.Fail();
         }
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public async Task LoadShouldThrowGivenIncorrectVersionHashFile()
+        public async Task Load_ShouldThrow_GivenIncorrectVersionHashFile()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
+            var subject = Arrange();
             subject.ReadLinesOverride = file => BudgetAnalyserRawCsvTestDataV1.BadTestData_IncorrectVersionHash();
-            await subject.LoadAsync("Foo.foo");
+            await subject.LoadAsync("Foo.foo", false);
 
             Assert.Fail();
         }
@@ -173,10 +179,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public async Task MustBeAbleToLoadDemoStatementFile()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = EmbeddedResourceHelper.ExtractString;
+            var subject = Arrange();
+            subject.ReadLinesOverride = x => GetType().Assembly.ExtractEmbeddedResourceAsLines(x);
 
-            StatementModel model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName);
+            var model = await subject.LoadAsync(TestDataConstants.DemoTransactionsFileName, false);
 
             Assert.IsNotNull(model);
             Assert.AreEqual(33, model.AllTransactions.Count());
@@ -185,20 +191,20 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
         [TestMethod]
         public async Task MustBeAbleToLoadDemoStatementFile2()
         {
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = Arrange();
-            subject.ReadLinesOverride = file => EmbeddedResourceHelper.ExtractLines(TestDataConstants.DemoTransactionsFileName, true);
-            StatementModel model = await subject.LoadAsync("Foo.foo");
+            var subject = Arrange();
+            subject.ReadLinesOverride = file => GetType().Assembly.ExtractEmbeddedResourceAsLines(TestDataConstants.DemoTransactionsFileName, true);
+            var model = await subject.LoadAsync("Foo.foo", false);
             Console.WriteLine(model.DurationInMonths);
             Assert.AreEqual(1, model.DurationInMonths);
         }
 
         [TestMethod]
         [ExpectedException(typeof(StatementModelChecksumException))]
-        public async Task SaveShouldThrowGivenMappingDoesNotMapAllTransactions()
+        public async Task Save_ShouldThrow_GivenMappingDoesNotMapAllTransactions()
         {
             var mapper = new Mock<IDtoMapper<TransactionSetDto, StatementModel>>();
-            CsvOnDiskStatementModelRepositoryV1TestHarness subject = ArrangeWithMockMappers(mapper.Object);
-            StatementModel model = StatementModelTestData.TestData2();
+            var subject = ArrangeWithMockMappers(mapper.Object);
+            var model = StatementModelTestData.TestData2();
             model.Filter(new GlobalFilterCriteria { BeginDate = new DateTime(2013, 07, 20), EndDate = new DateTime(2013, 08, 19) });
 
             mapper.Setup(m => m.ToDto(model)).Returns(
@@ -209,19 +215,25 @@ namespace BudgetAnalyser.Engine.UnitTest.Statement
                     Transactions = TransactionSetDtoTestData.TestData2().Transactions.Take(2).ToList()
                 });
 
-            await subject.SaveAsync(model, "Foo.bar");
+            await subject.SaveAsync(model, "Foo.bar", false);
 
             Assert.Fail();
         }
 
+        [TestInitialize]
+        public void TestSetup()
+        {
+            this.mockReaderWriterSelector = new Mock<IReaderWriterSelector>();
+        }
+
         private CsvOnDiskStatementModelRepositoryV1TestHarness Arrange()
         {
-            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness());
+            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness(), this.mockReaderWriterSelector.Object);
         }
 
         private CsvOnDiskStatementModelRepositoryV1TestHarness ArrangeWithMockMappers(IDtoMapper<TransactionSetDto, StatementModel> mapper)
         {
-            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness(), mapper);
+            return new CsvOnDiskStatementModelRepositoryV1TestHarness(new BankImportUtilitiesTestHarness(), mapper, this.mockReaderWriterSelector.Object);
         }
     }
 }

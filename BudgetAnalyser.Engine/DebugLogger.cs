@@ -39,6 +39,9 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public void LogError(Exception ex, Func<ILogger, string> logEntryBuilder)
         {
+            if (ex == null) throw new ArgumentNullException(nameof(ex));
+            if (logEntryBuilder == null) throw new ArgumentNullException(nameof(logEntryBuilder));
+
             Debug.WriteLine(ConstructLogEntry("ERROR", logEntryBuilder));
             Debug.WriteLine(ex.ToString());
         }
@@ -48,6 +51,7 @@ namespace BudgetAnalyser.Engine
         /// </summary>
         public void LogInfo(Func<ILogger, string> logEntryBuilder)
         {
+            if (logEntryBuilder == null) throw new ArgumentNullException(nameof(logEntryBuilder));
             Debug.WriteLine("INFO   " + logEntryBuilder(this));
         }
 

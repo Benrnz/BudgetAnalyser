@@ -8,55 +8,42 @@ using Rees.TangyFruitMapper;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class XamlOnDiskMatchingRuleRepositoryTestHarness : XamlOnDiskMatchingRuleRepository
+    internal class XamlOnDiskMatchingRuleRepositoryTestHarness : XamlOnDiskMatchingRuleRepository
     {
-        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper) : base(mapper, new FakeLogger())
+        public XamlOnDiskMatchingRuleRepositoryTestHarness([NotNull] IDtoMapper<MatchingRuleDto, MatchingRule> mapper, IReaderWriterSelector selector) : base(mapper, new FakeLogger(), selector)
         {
         }
 
         public Func<string, bool> ExistsOveride { get; set; }
         public Func<string, List<MatchingRuleDto>> LoadFromDiskOveride { get; set; }
-        public Func<string, string> LoadXamlFromDiskOveride { get; set; }
         public Action<string, IEnumerable<MatchingRuleDto>> SaveToDiskOveride { get; set; }
+        public string SerialisedData { get; set; }
 
-        protected override bool Exists(string storageKey)
-        {
-            if (ExistsOveride == null)
-            {
-                return true;
-            }
-
-            return ExistsOveride(storageKey);
-        }
-
-        protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName)
+        protected override async Task<List<MatchingRuleDto>> LoadFromDiskAsync(string fileName, bool isEncrypted)
         {
             if (LoadFromDiskOveride == null)
             {
-                return await base.LoadFromDiskAsync(fileName);
+                return await base.LoadFromDiskAsync(fileName, isEncrypted);
             }
 
             return LoadFromDiskOveride(fileName);
         }
 
-        protected override string LoadXamlFromDisk(string fileName)
-        {
-            if (LoadXamlFromDiskOveride == null)
-            {
-                return base.LoadXamlFromDisk(fileName);
-            }
-
-            return LoadXamlFromDiskOveride(fileName);
-        }
-
-        protected override Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities)
+        protected override async Task SaveToDiskAsync(string fileName, IEnumerable<MatchingRuleDto> dataEntities, bool isEncrypted)
         {
             if (SaveToDiskOveride == null)
             {
-                return Task.Delay(1);
+                await Task.Delay(1);
+                return;
             }
 
-            return Task.Run(() => SaveToDiskOveride(fileName, dataEntities));
+            await Task.Run(() => SaveToDiskOveride(fileName, dataEntities));
+        }
+
+        protected override string Serialise(IEnumerable<MatchingRuleDto> dataEntity)
+        {
+            SerialisedData = base.Serialise(dataEntity);
+            return SerialisedData;
         }
     }
 }

@@ -109,7 +109,7 @@ namespace BudgetAnalyser.Engine.Services
             List<MatchingRule> repoRules;
             try
             {
-                repoRules = (await this.ruleRepository.LoadAsync(this.rulesStorageKey))
+                repoRules = (await this.ruleRepository.LoadAsync(this.rulesStorageKey, applicationDatabase.IsEncrypted))
                     .OrderBy(r => r.Description)
                     .ToList();
             }
@@ -126,24 +126,24 @@ namespace BudgetAnalyser.Engine.Services
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             var messages = new StringBuilder();
             if (ValidateModel(messages))
             {
-                await this.ruleRepository.SaveAsync(MatchingRules, this.rulesStorageKey);
+                // Prefer to use the file name from the applicationDatabase in case it has been changed upstream.
+                await this.ruleRepository.SaveAsync(MatchingRules, applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey), applicationDatabase.IsEncrypted);
             }
             else
             {
-                throw new ValidationWarningException(
-                    "Unable to save matching rules at this time, some data is invalid.\n" + messages);
+                throw new ValidationWarningException("Unable to save matching rules at this time, some data is invalid.\n" + messages);
             }
 
             this.monitorableDependencies.NotifyOfDependencyChange<ITransactionRuleService>(this);
             Saved?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
             EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             handler?.Invoke(this, new AdditionalInformationRequestedEventArgs());
@@ -288,7 +288,7 @@ namespace BudgetAnalyser.Engine.Services
             // Make sure no rule already exists with this id:
             if (MatchingRules.Any(r => r.RuleId == ruleToAdd.RuleId))
             {
-                throw new DuplicateNameException($"Unable to add new matching rule: RuleID {ruleToAdd.RuleId} already exists in the collection.");
+                throw new DuplicateNameException($"Unable to add new matching rule: Rule ID {ruleToAdd.RuleId} already exists in the collection.");
             }
 
             // Check to see if an existing group object for the desired bucket already exists.

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Persistence;
 using BudgetAnalyser.Engine.Services;
+using BudgetAnalyser.Engine.UnitTest.Encryption;
 using BudgetAnalyser.Engine.UnitTest.TestHarness;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -15,11 +16,29 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
     [TestClass]
     public class ApplicationDatabaseServiceTest
     {
+        private Mock<ICredentialStore> mockCredentials;
         private Mock<IApplicationDatabaseRepository> mockRepo;
         private Mock<ISupportsModelPersistence> mockService1;
         private Mock<ISupportsModelPersistence> mockService2;
         private IEnumerable<ISupportsModelPersistence> mockServices;
         private ApplicationDatabaseService subject;
+
+        [TestMethod]
+        [ExpectedException(typeof(EncryptionKeyNotProvidedException))]
+        public async Task EncryptFilesAsync_ShouldThrow_GivenNoClaimSet()
+        {
+            await this.subject.EncryptFilesAsync();
+
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void SetClaim_ShouldCallCredentialStore_GivenValidClaim()
+        {
+            this.subject.SetCredential(CredentialStoreTest.CreateSecureString("Foo"));
+
+            this.mockCredentials.Verify(m => m.SetPasskey(It.IsAny<SecureString>()));
+        }
 
         [TestMethod]
         public void Close_ShouldCloseAllServices()
@@ -57,7 +76,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             CreateNewDatabaseSetup();
 
-            ApplicationDatabase appDb = await this.subject.CreateNewDatabaseAsync("Foo");
+            var appDb = await this.subject.CreateNewDatabaseAsync("Foo");
 
             this.mockService1.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
             this.mockService2.Verify(m => m.CreateAsync(It.IsAny<ApplicationDatabase>()));
@@ -68,7 +87,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             CreateNewDatabaseSetup();
 
-            ApplicationDatabase appDb = await this.subject.CreateNewDatabaseAsync("Foo");
+            var appDb = await this.subject.CreateNewDatabaseAsync("Foo");
 
             Assert.IsNotNull(appDb);
         }
@@ -90,9 +109,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [TestMethod]
         public void Ctor_ShouldOrderServices()
         {
-            var services = (IEnumerable<ISupportsModelPersistence>)PrivateAccessor.GetField(this.subject, "databaseDependents");
+            var services = (IEnumerable<ISupportsModelPersistence>) PrivateAccessor.GetField(this.subject, "databaseDependents");
             var sequence = 0;
-            foreach (ISupportsModelPersistence service in services)
+            foreach (var service in services)
             {
                 if (sequence > service.LoadSequence)
                 {
@@ -107,14 +126,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullRepo()
         {
-            new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies());
+            new ApplicationDatabaseService(null, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ShouldThrow_GivenNullServices()
         {
-            new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies());
+            new ApplicationDatabaseService(this.mockRepo.Object, null, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         [TestMethod]
@@ -128,7 +147,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             LoadDatabaseSetup();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
 
             this.mockService1.Verify(m => m.LoadAsync(It.IsAny<ApplicationDatabase>()));
             this.mockService2.Verify(m => m.LoadAsync(It.IsAny<ApplicationDatabase>()));
@@ -139,7 +158,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             LoadDatabaseSetup();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
 
             Assert.IsFalse(this.subject.HasUnsavedChanges);
         }
@@ -149,7 +168,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
         {
             LoadDatabaseSetup();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
 
             Assert.IsNotNull(appDb);
         }
@@ -176,7 +195,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
 
             this.mockService1.Setup(m => m.LoadAsync(It.IsAny<ApplicationDatabase>())).Throws<DataFormatException>();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
         }
 
         [TestMethod]
@@ -187,7 +206,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
 
             this.mockService1.Setup(m => m.LoadAsync(It.IsAny<ApplicationDatabase>())).Throws<KeyNotFoundException>();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
         }
 
         [TestMethod]
@@ -198,15 +217,15 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
 
             this.mockService1.Setup(m => m.LoadAsync(It.IsAny<ApplicationDatabase>())).Throws<NotSupportedException>();
 
-            ApplicationDatabase appDb = await this.subject.LoadAsync("Foo");
+            var appDb = await this.subject.LoadAsync("Foo");
         }
 
         [TestMethod]
         public void NotifyOfChange_ShouldIndicateUnsavedChanges()
         {
-            foreach (object dataType in Enum.GetValues(typeof(ApplicationDataType)))
+            foreach (var dataType in Enum.GetValues(typeof(ApplicationDataType)))
             {
-                this.subject.NotifyOfChange((ApplicationDataType)dataType);
+                this.subject.NotifyOfChange((ApplicationDataType) dataType);
                 Assert.IsTrue(this.subject.HasUnsavedChanges);
                 TestInitialise();
             }
@@ -218,8 +237,8 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             SaveSetup();
             await this.subject.SaveAsync();
 
-            this.mockService1.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyDictionary<ApplicationDataType, object>>()));
-            this.mockService2.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyDictionary<ApplicationDataType, object>>()));
+            this.mockService1.Verify(m => m.SaveAsync(It.IsAny<ApplicationDatabase>()));
+            this.mockService2.Verify(m => m.SaveAsync(It.IsAny<ApplicationDatabase>()));
         }
 
         [TestMethod]
@@ -257,8 +276,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Services
             this.mockService2 = new Mock<ISupportsModelPersistence>();
             this.mockService2.Setup(m => m.LoadSequence).Returns(20);
 
+            this.mockCredentials = new Mock<ICredentialStore>();
+
             this.mockServices = new[] { this.mockService1.Object, this.mockService2.Object };
-            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies());
+            this.subject = new ApplicationDatabaseService(this.mockRepo.Object, this.mockServices, new FakeMonitorableDependencies(), this.mockCredentials.Object, new FakeLogger());
         }
 
         private void CreateNewDatabaseSetup()

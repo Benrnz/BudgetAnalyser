@@ -1,4 +1,6 @@
-﻿using BudgetAnalyser.Engine;
+﻿using System;
+using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BudgetAnalyser.Engine.UnitTest
@@ -7,117 +9,117 @@ namespace BudgetAnalyser.Engine.UnitTest
     public class StringExtensionTest
     {
         [TestMethod]
-        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithLowerVowel()
+        public void AnOrA_ShouldReturnAn_WhenFirstSentenceBeginsWithLowerVowel()
         {
-            string result = "apple or banana".AnOrA();
+            var result = "apple or banana".AnOrA();
             Assert.AreEqual("an", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnAnWhenFirstSentenceBeginsWithUpperVowel()
+        public void AnOrA_ShouldReturnAn_WhenFirstSentenceBeginsWithUpperVowel()
         {
-            string result = "Apple or banana".AnOrA();
+            var result = "Apple or banana".AnOrA();
             Assert.AreEqual("an", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithLowerVowel()
+        public void AnOrA_ShouldReturnA_WhenFirstSentenceBeginsWithLowerVowel()
         {
-            string result = "banana or apple".AnOrA();
+            var result = "banana or apple".AnOrA();
             Assert.AreEqual("a", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnAWhenFirstSentenceBeginsWithUpperVowel()
+        public void AnOrA_ShouldReturnA_WhenFirstSentenceBeginsWithUpperVowel()
         {
-            string result = "banana or apple".AnOrA();
+            var result = "banana or apple".AnOrA();
             Assert.AreEqual("a", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithLowerVowel()
+        public void AnOrA_ShouldReturnProperCaseAn_WhenFirstSentenceBeginsWithLowerVowel()
         {
-            string result = "apple or banana".AnOrA(true);
+            var result = "apple or banana".AnOrA(true);
             Assert.AreEqual("An", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAnWhenFirstSentenceBeginsWithUpperVowel()
+        public void AnOrA_ShouldReturnProperCaseAn_WhenFirstSentenceBeginsWithUpperVowel()
         {
-            string result = "Apple or banana".AnOrA(true);
+            var result = "Apple or banana".AnOrA(true);
             Assert.AreEqual("An", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithLowerVowel()
+        public void AnOrA_ShouldReturnProperCaseA_WhenFirstSentenceBeginsWithLowerVowel()
         {
-            string result = "banana or apple".AnOrA(true);
+            var result = "banana or apple".AnOrA(true);
             Assert.AreEqual("A", result);
         }
 
         [TestMethod]
-        public void AnOrAShouldReturnProperCaseAWhenFirstSentenceBeginsWithUpperVowel()
+        public void AnOrA_ShouldReturnProperCaseA_WhenFirstSentenceBeginsWithUpperVowel()
         {
-            string result = "banana or apple".AnOrA(true);
+            var result = "banana or apple".AnOrA(true);
             Assert.AreEqual("A", result);
         }
 
         [TestMethod]
-        public void IsNothingShouldReturnFalseGivenEmpty()
+        public void IsNothing_ShouldReturnFalse_GivenEmpty()
         {
-            string subject = string.Empty;
+            var subject = string.Empty;
             Assert.IsTrue(subject.IsNothing());
         }
 
         [TestMethod]
-        public void IsNothingShouldReturnFalseGivenNull()
+        public void IsNothing_ShouldReturnFalse_GivenNull()
         {
             string subject = null;
             Assert.IsTrue(subject.IsNothing());
         }
 
         [TestMethod]
-        public void IsNothingShouldReturnTrueGivenAnyText()
+        public void IsNothing_ShouldReturnTrue_GivenAnyText()
         {
             var subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
             Assert.IsFalse(subject.IsNothing());
         }
 
         [TestMethod]
-        public void IsSomethingShouldReturnFalseGivenEmpty()
+        public void IsSomething_ShouldReturnFalse_GivenEmpty()
         {
-            string subject = string.Empty;
+            var subject = string.Empty;
             Assert.IsFalse(subject.IsSomething());
         }
 
         [TestMethod]
-        public void IsSomethingShouldReturnFalseGivenNull()
+        public void IsSomething_ShouldReturnFalse_GivenNull()
         {
             string subject = null;
             Assert.IsFalse(subject.IsSomething());
         }
 
         [TestMethod]
-        public void IsSomethingShouldReturnTrueGivenAnyText()
+        public void IsSomething_ShouldReturnTrue_GivenAnyText()
         {
             var subject = "BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrr!";
             Assert.IsTrue(subject.IsSomething());
         }
 
         [TestMethod]
-        public void TruncateEmptyStringTo9()
+        public void Truncate_ShouldReturnEmptyString_GivenEmptyString()
         {
             Assert.AreEqual(string.Empty, string.Empty.Truncate(9));
         }
 
         [TestMethod]
-        public void TruncateLeftEmptyStringTo9()
+        public void TruncateLeft_ShouldReturnEmptyString_GivenEmptyString()
         {
             Assert.AreEqual(string.Empty, string.Empty.TruncateLeft(9, true));
         }
 
         [TestMethod]
-        public void TruncateLeftShortStringTo30()
+        public void TruncateLeft_ShouldReturnInput_GivenInputIsShorterThanRequiredLength()
         {
             var data1 = "The quick brown fox";
 
@@ -125,7 +127,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         }
 
         [TestMethod]
-        public void TruncateLeftValidStringTo9()
+        public void TruncateLeft_ShouldReturnChoppedLeftString_GivenStringLongerThanLengthRequired()
         {
             var data1 = "The quick brown fox";
 
@@ -133,7 +135,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         }
 
         [TestMethod]
-        public void TruncateLeftValidStringTo9WithEllipses()
+        public void TruncateLeft_ShouldReturnChoppedLeftStringWithEllipses_GivenStringLongerThanLengthRequired()
         {
             var data1 = "The quick brown fox";
 
@@ -141,7 +143,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         }
 
         [TestMethod]
-        public void TruncateShortStringTo20()
+        public void Truncate_ShouldReturnInput_GivenInputIsShorterThanRequiredLength()
         {
             var data1 = "The quick brown fox";
 
@@ -149,7 +151,7 @@ namespace BudgetAnalyser.Engine.UnitTest
         }
 
         [TestMethod]
-        public void TruncateValidStringTo9()
+        public void Truncate_ShouldReturnChoppedRight_GivenStringLongerThanLengthRequired()
         {
             var data1 = "The quick brown fox";
 
@@ -157,11 +159,80 @@ namespace BudgetAnalyser.Engine.UnitTest
         }
 
         [TestMethod]
-        public void TruncateValidStringTo9WithEllipses()
+        public void Truncate_ShouldReturnChoppedLeftStringWithEllipses_GivenStringLongerThanLengthRequired()
         {
             var data1 = "The quick brown fox";
 
             Assert.AreEqual("The quic…", data1.Truncate(9, true));
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturnAllLines_GivenLineCount0()
+        {
+            var data = @"Do you like Green eggs and ham?
+I do not like them Sam I am.
+I do not like green eggs and ham.";
+            var lines = data.SplitLines(0);
+
+            Assert.AreEqual(3, lines.Length);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void SplitLines_ShouldThrow_GivenLineCountMinus1()
+        {
+            "Do you like Green eggs and ham?".SplitLines(-1);
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturn3Lines_GivenStringWith3NewLineChars()
+        {
+            var data = @"Do you like Green eggs and ham?
+I do not like them Sam I am.
+I do not like green eggs and ham.";
+            var lines = data.SplitLines(3);
+
+            Assert.AreEqual(3, lines.Length);
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturnLinesWithNoDataLoss_GivenStringWith3NewLineChars()
+        {
+            var data = @"Do you like Green eggs and ham?
+I do not like them Sam I am.
+I do not like green eggs and ham.";
+            var lines = data.SplitLines(3);
+
+            Assert.AreEqual(92, lines.Sum(l => l.Length));
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturnLinesWithTrailingWhitespace_GivenStringWith3NewLineChars()
+        {
+            var data = @"Do you like Green eggs and ham?
+I do not like them Sam I am.
+I do not like green eggs and ham.";
+            var lines = data.SplitLines(3);
+            var lastChar = lines[0].ToCharArray().Last();
+            Assert.AreNotEqual('\r', lastChar);
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturnAnEmptyArray_GivenEmptyString()
+        {
+            var data = @"";
+            var lines = data.SplitLines(3);
+
+            Assert.AreEqual(0, lines.Length);
+        }
+
+        [TestMethod]
+        public void SplitLines_ShouldReturnNull_GivenNullString()
+        {
+            string data = null;
+            var lines = data.SplitLines(3);
+
+            Assert.IsNull(lines);
         }
     }
 }

@@ -14,10 +14,8 @@ namespace BudgetAnalyser.Engine.Reports
         /// <summary>
         ///     Gets or sets the charts.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
-            Justification = "Required for serialisation")]
-        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
-            Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Required for serialisation")]
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "Required for serialisation")]
         public List<CustomAggregateBurnDownGraph> Charts { get; set; }
 
         /// <summary>

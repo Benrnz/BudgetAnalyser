@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget;
 using JetBrains.Annotations;
 
@@ -14,7 +11,7 @@ namespace BudgetAnalyser.Engine.Statement
     ///     A set of utilities used when importing bank data
     /// </summary>
     [AutoRegisterWithIoC]
-    public class BankImportUtilities
+    internal class BankImportUtilities
     {
         private readonly ILogger logger;
         private CultureInfo locale;
@@ -48,8 +45,7 @@ namespace BudgetAnalyser.Engine.Statement
             this.locale = culture;
         }
 
-        internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index,
-                                                [NotNull] IBudgetBucketRepository bucketRepository)
+        internal BudgetBucket FetchBudgetBucket([NotNull] string[] array, int index, [NotNull] IBudgetBucketRepository bucketRepository)
         {
             if (array == null)
             {
@@ -181,18 +177,9 @@ namespace BudgetAnalyser.Engine.Statement
             return array[index].Trim();
         }
 
-        internal virtual async Task<IEnumerable<string>> ReadLinesAsync(string fileName)
-        {
-            // This will read the entire file then return the complete collection when done. 
-            // Given the file size is expected to be relatively small this is the fastest way to do this.  Excessive tasking actually results in poorer performance until file size 
-            // becomes large. 
-            return await Task.Run(() => File.ReadAllLines(fileName).ToList());
-        }
-
         private static void ThrowIndexOutOfRangeException(string[] array, int index)
         {
-            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture,
-                "Index {0} is out of range for array with length {1}.", index, array.Length));
+            throw new UnexpectedIndexException(string.Format(CultureInfo.CurrentCulture, "Index {0} is out of range for array with length {1}.", index, array.Length));
         }
     }
 }

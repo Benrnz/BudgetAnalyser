@@ -6,10 +6,10 @@ using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.UnitTest.TestHarness
 {
-    public class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
+    internal class AnzAccountStatementImporterV1TestHarness : AnzAccountStatementImporterV1
     {
-        public AnzAccountStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities)
-            : base(importUtilities, new FakeLogger())
+        public AnzAccountStatementImporterV1TestHarness([NotNull] BankImportUtilities importUtilities, IReaderWriterSelector readerWriterSelector)
+            : base(importUtilities, new FakeLogger(), readerWriterSelector)
         {
         }
 
@@ -20,7 +20,7 @@ namespace BudgetAnalyser.Engine.UnitTest.TestHarness
         {
             if (ReadLinesOverride == null)
             {
-                return Task.FromResult((IEnumerable<string>)new List<string>());
+                return Task.FromResult((IEnumerable<string>)new string[] { });
             }
 
             return Task.FromResult(ReadLinesOverride(fileName));

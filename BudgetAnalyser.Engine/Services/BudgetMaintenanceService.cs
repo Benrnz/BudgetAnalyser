@@ -75,24 +75,18 @@ namespace BudgetAnalyser.Engine.Services
 
             if (newBudgetEffectiveFrom <= sourceBudget.EffectiveFrom)
             {
-                throw new ArgumentException(
-                    "The effective date of the new budget must be later than the other budget.",
-                    nameof(newBudgetEffectiveFrom));
+                throw new ArgumentException("The effective date of the new budget must be later than the other budget.", nameof(newBudgetEffectiveFrom));
             }
 
             if (newBudgetEffectiveFrom <= DateTime.Today)
             {
-                throw new ArgumentException("The effective date of the new budget must be a future date.",
-                    nameof(newBudgetEffectiveFrom));
+                throw new ArgumentException("The effective date of the new budget must be a future date.", nameof(newBudgetEffectiveFrom));
             }
 
             var validationMessages = new StringBuilder();
             if (!sourceBudget.Validate(validationMessages))
             {
-                throw new ValidationWarningException(
-                    string.Format(CultureInfo.CurrentCulture,
-                        "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}",
-                        validationMessages));
+                throw new ValidationWarningException(string.Format(CultureInfo.CurrentCulture, "The source budget is currently in an invalid state, unable to clone it at this time.\n{0}", validationMessages));
             }
 
             var newBudget = new BudgetModel
@@ -104,8 +98,7 @@ namespace BudgetAnalyser.Engine.Services
 
             if (!newBudget.Validate(validationMessages))
             {
-                throw new InvalidOperationException(
-                    "New cloned budget is invalid and the source budget is not. Code Error.\n" + validationMessages);
+                throw new InvalidOperationException("New cloned budget is invalid but the source budget is ok. Code Error.\n" + validationMessages);
             }
 
             Budgets.Add(newBudget);
@@ -153,45 +146,32 @@ namespace BudgetAnalyser.Engine.Services
                 throw new ArgumentNullException(nameof(applicationDatabase));
             }
 
-            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey));
+            Budgets = await this.budgetRepository.LoadAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey), applicationDatabase.IsEncrypted);
             UpdateServiceMonitor();
             NewDataSourceAvailable?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task SaveAsync(IReadOnlyDictionary<ApplicationDataType, object> contextObjects)
+        public async Task SaveAsync(ApplicationDatabase applicationDatabase)
         {
             EnsureAllBucketsUsedAreInBucketRepo();
 
             var messages = new StringBuilder();
             if (Budgets.Validate(messages))
             {
-                await this.budgetRepository.SaveAsync();
+                await this.budgetRepository.SaveAsync(applicationDatabase.FullPath(applicationDatabase.BudgetCollectionStorageKey), applicationDatabase.IsEncrypted);
                 var savedHandler = Saved;
                 savedHandler?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
-            this.logger.LogWarning(
-                l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
+            this.logger.LogWarning(l => l.Format("BudgetMaintenanceService.Save: unable to save due to validation errors:\n{0}", messages));
             throw new ValidationWarningException("Unable to save Budget:\n" + messages);
         }
 
-        public void SavePreview(IDictionary<ApplicationDataType, object> contextObjects)
+        public void SavePreview()
         {
-            EventHandler<AdditionalInformationRequestedEventArgs> handler = Saving;
             var args = new AdditionalInformationRequestedEventArgs();
-            handler?.Invoke(this, args);
-
-            if (args.ModificationComment.IsNothing())
-            {
-                args.ModificationComment = "[No comment]";
-            }
-
-            var budgetModel = args.Context as BudgetModel;
-            if (budgetModel != null)
-            {
-                budgetModel.LastModifiedComment = args.ModificationComment;
-            }
+            Saving?.Invoke(this, args);
         }
 
         public bool ValidateModel(StringBuilder messages)

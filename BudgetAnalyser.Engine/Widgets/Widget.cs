@@ -21,9 +21,19 @@ namespace BudgetAnalyser.Engine.Widgets
         protected const string DesignedForOneMonthOnly = "Reduce the date range to one month to enable this widget.";
 
         /// <summary>
-        ///     A constant for the standard widget style
+        ///     A constant for the standard widget style. (Blue)
         /// </summary>
         protected const string WidgetStandardStyle = "WidgetStandardStyle";
+
+        /// <summary>
+        ///     A constant for an alternative standard widget style. (Green)
+        /// </summary>
+        protected const string WidgetStandardStyle2 = "WidgetStandardStyle2";
+
+        /// <summary>
+        ///     A constant for an alternative standard widget style. (Purple)
+        /// </summary>
+        protected const string WidgetStandardStyle3 = "WidgetStandardStyle3";
 
         /// <summary>
         ///     A constant for the warning widget style
@@ -59,6 +69,7 @@ namespace BudgetAnalyser.Engine.Widgets
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor - ok here, simple bool property with straightforward usage.
             Enabled = true;
             Sequence = 99;
+            RecommendedTimeIntervalUpdate = 30.Seconds();  // TODO - Temporary work around until message refresh issues are resolved.
         }
 
         /// <summary>

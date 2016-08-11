@@ -27,9 +27,9 @@ namespace BudgetAnalyser.Engine.Budget
         {
             Incomes = new List<Income>();
             Expenses = new List<Expense>();
-            LastModified = DateTime.Now;
+            this.doNotUseLastModified = DateTime.Now;
             // Set this here because the deserialisation process will reset if a value exists in the XML file. If not its better to have a date than min value.
-            EffectiveFrom = DateTime.Now;
+            this.doNotUseEffectiveFrom = DateTime.Now;
         }
 
         /// <summary>
