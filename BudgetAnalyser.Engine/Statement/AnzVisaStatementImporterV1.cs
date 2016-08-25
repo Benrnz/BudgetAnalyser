@@ -221,14 +221,12 @@ namespace BudgetAnalyser.Engine.Statement
         {
             string[] split = line.Split(',');
             var card = this.importUtilities.FetchString(split, Reference1Index);
-            if (card.IsNothing())
+            if (card.IsSomething())
             {
-                return false;
-            }
-
-            if (!char.IsDigit(card.ToCharArray()[0]))
-            {
-                return false;
+                if (!char.IsDigit(card.ToCharArray()[0]))
+                {
+                    return false;
+                }
             }
 
             var amount = this.importUtilities.FetchDecimal(split, AmountIndex);
