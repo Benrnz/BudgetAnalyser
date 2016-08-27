@@ -9,6 +9,7 @@ using BudgetAnalyser.Engine;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
+using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
@@ -82,6 +83,8 @@ namespace BudgetAnalyser
         public StatementController StatementController { get; set; }
         public StatementControllerNavigation StatementControllerNavigation { get; set; }
         public TransferFundsController TransferFundsController { get; set; }
+
+        public UploadMobileDataController UploadMobileDataController { get; set; }
         public UserPrompts UserPrompts { get; }
 
         private List<ControllerBase> DiscoverAllControllers()

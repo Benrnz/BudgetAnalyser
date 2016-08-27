@@ -226,7 +226,7 @@ namespace BudgetAnalyser.Engine.Services
         {
             this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
             this.monitorableDependencies.NotifyOfDependencyChange<IBudgetCurrencyContext>(new BudgetCurrencyContext(Budgets, Budgets.CurrentActiveBudget));
-            this.monitorableDependencies.NotifyOfDependencyChange(BudgetBucketRepository);
+            this.monitorableDependencies.NotifyOfDependencyChange(Budgets);
         }
     }
 }

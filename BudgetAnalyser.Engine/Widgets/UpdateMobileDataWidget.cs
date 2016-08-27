@@ -1,9 +1,8 @@
 ﻿using System;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
-using BudgetAnalyser.Engine.Persistence;
-using JetBrains.Annotations;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Widgets
 {
@@ -19,13 +18,27 @@ namespace BudgetAnalyser.Engine.Widgets
         public UpdateMobileDataWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
-            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(IBudgetCurrencyContext) };
+            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection) };
+            DetailedText = "Upload mobile data";
+            Sequence = 10;
             Clickable = true;
             Enabled = false;
-            ColourStyleName = WidgetStandardStyle;
-            ImageResourceName = "LockOpenImage";
-            Sequence = 11;
         }
+
+        /// <summary>
+        ///     The current Budget Collection held by this widget
+        /// </summary>
+        public BudgetCollection BudgetCollection { get; private set; }
+
+        /// <summary>
+        ///     The current Ledger Book held by this widget
+        /// </summary>
+        public LedgerBook LedgerBook { get; private set; }
+
+        /// <summary>
+        ///     The current Statement Model held by this widget
+        /// </summary>
+        public StatementModel StatementModel { get; private set; }
 
         /// <summary>
         ///     Updates the widget with new input.
@@ -38,12 +51,17 @@ namespace BudgetAnalyser.Engine.Widgets
                 throw new ArgumentNullException(nameof(input));
             }
 
+            Enabled = false;
+            
             if (!ValidateUpdateInput(input)) return;
 
-            var ledgerBook = (LedgerBook)input[0];
-            var transactions = (StatementModel) input[1];
-            var budgetContext = (IBudgetCurrencyContext) input[2];
+            LedgerBook = (LedgerBook) input[0];
+            StatementModel = (StatementModel) input[1];
+            BudgetCollection = (BudgetCollection) input[2];
 
+            if (LedgerBook == null || StatementModel == null || BudgetCollection == null) return;
+
+            Enabled = true;
         }
     }
 }

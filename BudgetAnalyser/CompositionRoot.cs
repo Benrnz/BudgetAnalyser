@@ -16,6 +16,7 @@ using BudgetAnalyser.Engine.Statement;
 using BudgetAnalyser.Filtering;
 using BudgetAnalyser.LedgerBook;
 using BudgetAnalyser.Matching;
+using BudgetAnalyser.Mobile;
 using BudgetAnalyser.ReportsCatalog;
 using BudgetAnalyser.ReportsCatalog.BurnDownGraphs;
 using BudgetAnalyser.ReportsCatalog.LongTermSpendingLineGraph;
@@ -247,6 +248,7 @@ namespace BudgetAnalyser
             uiContext.TransferFundsController = container.Resolve<TransferFundsController>();
             uiContext.DisusedRulesController = container.Resolve<DisusedRulesController>();
             uiContext.EncryptFileController = container.Resolve<EncryptFileController>();
+            uiContext.UploadMobileDataController = container.Resolve<UploadMobileDataController>();
         }
 
         /// <summary>

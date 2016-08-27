@@ -267,6 +267,7 @@
     <Compile Include="Matching\MatchingRuleUserControl.xaml.cs">
       <DependentUpon>MatchingRuleUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mobile\UploadMobileDataController.cs" />
     <Compile Include="PersistenceOperationCommands.cs" />
     <Compile Include="PersistenceOperations.cs" />
     <Compile Include="ScratchPad.xaml.cs">
