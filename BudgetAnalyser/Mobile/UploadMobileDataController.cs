@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Mobile
             {
                 var budget = widget.BudgetCollection.CurrentActiveBudget;
                 var export = this.dataExporter.CreateExportObject(widget.StatementModel, budget, widget.LedgerBook);
+                var serialisedData = this.dataExporter.Serialise(export);
             }
         }
     }

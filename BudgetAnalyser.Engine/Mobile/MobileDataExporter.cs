@@ -4,21 +4,22 @@ using System.Linq;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using Newtonsoft.Json;
 
 namespace BudgetAnalyser.Engine.Mobile
 {
     /// <summary>
-    /// A class to extract and summarise data to upload to the web to serve to the mobile app.
+    ///     A class to extract and summarise data to upload to the web to serve to the mobile app.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
     public class MobileDataExporter
     {
         /// <summary>
-        /// Create the export object
+        ///     Create the export object
         /// </summary>
-        /// <param name="transactions">The current <see cref="StatementModel"/></param>
-        /// <param name="currentBudget">The current <see cref="BudgetModel"/></param>
-        /// <param name="ledger">The current <see cref="LedgerBook"/></param>
+        /// <param name="transactions">The current <see cref="StatementModel" /></param>
+        /// <param name="currentBudget">The current <see cref="BudgetModel" /></param>
+        /// <param name="ledger">The current <see cref="LedgerBook" /></param>
         /// <returns>An object containing the summarised data.</returns>
         public SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledger)
         {
@@ -45,8 +46,25 @@ namespace BudgetAnalyser.Engine.Mobile
                 });
             }
 
+            ledgerList.Add(new SummarisedLedgerBucket
+            {
+                MonthlyBudgetAmount = currentBudget.Surplus,
+                Balance = latestRecon.CalculatedSurplus,
+                BucketCode = SurplusBucket.SurplusCode,
+                BucketType = "Surplus",
+                Description = SurplusBucket.SurplusDescription
+            });
+
             export.LedgerBuckets = ledgerList.OrderBy(l => l.BucketCode).ToList();
             return export;
+        }
+
+        /// <summary>
+        ///     Serialise a <see cref="SummarisedLedgerMobileData" /> object to a format that can be uploaded to web storage.
+        /// </summary>
+        public string Serialise(SummarisedLedgerMobileData dataObject)
+        {
+            return JsonConvert.SerializeObject(dataObject);
         }
     }
 }
