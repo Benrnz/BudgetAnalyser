@@ -50,8 +50,11 @@ namespace BudgetAnalyser.Engine.Ledger
         /// </summary>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public virtual decimal CalculateCurrentMonthBucketSpend([NotNull] LedgerBook ledgerBook,
-                                                                [NotNull] GlobalFilterCriteria filter, [NotNull] StatementModel statement, [NotNull] string bucketCode)
+        public virtual decimal CalculateCurrentMonthBucketSpend(
+            [NotNull] LedgerBook ledgerBook,
+            [NotNull] GlobalFilterCriteria filter, 
+            [NotNull] StatementModel statement, 
+            [NotNull] string bucketCode)
         {
             CheckCacheForCleanUp();
             if (ledgerBook == null)

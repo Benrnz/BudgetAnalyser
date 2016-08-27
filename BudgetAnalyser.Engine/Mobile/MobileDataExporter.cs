@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Ledger;
 using BudgetAnalyser.Engine.Statement;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace BudgetAnalyser.Engine.Mobile
@@ -12,33 +15,47 @@ namespace BudgetAnalyser.Engine.Mobile
     ///     A class to extract and summarise data to upload to the web to serve to the mobile app.
     /// </summary>
     [AutoRegisterWithIoC(SingleInstance = true)]
-    public class MobileDataExporter
+    internal class MobileDataExporter : IMobileDataExporter
     {
+        private readonly LedgerCalculation calculator;
+        private readonly IEnvironmentFolders environmentFolders;
+        private readonly IReaderWriterSelector readerWriterSelector;
+
+        /// <summary>
+        ///     Initialises an instance of the <see cref="MobileDataExporter" /> class.
+        /// </summary>
+        public MobileDataExporter([NotNull] LedgerCalculation calculator, IReaderWriterSelector readerWriterSelector, IEnvironmentFolders environmentFolders)
+        {
+            if (calculator == null) throw new ArgumentNullException(nameof(calculator));
+            this.calculator = calculator;
+            this.readerWriterSelector = readerWriterSelector;
+            this.environmentFolders = environmentFolders;
+        }
+
         /// <summary>
         ///     Create the export object
         /// </summary>
-        /// <param name="transactions">The current <see cref="StatementModel" /></param>
-        /// <param name="currentBudget">The current <see cref="BudgetModel" /></param>
-        /// <param name="ledger">The current <see cref="LedgerBook" /></param>
         /// <returns>An object containing the summarised data.</returns>
-        public SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledger)
+        public SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledger, GlobalFilterCriteria filter)
         {
             var export = new SummarisedLedgerMobileData
             {
                 Exported = DateTime.Now,
                 LastTransactionImport = transactions.LastImport,
                 Title = currentBudget.Name
-            };
+            }; 
 
             var latestRecon = ledger.Reconciliations.LastOrDefault();
             if (latestRecon == null) return null;
 
             var ledgerList = new List<SummarisedLedgerBucket>();
+            IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentMonthLedgerBalances(ledger, filter, transactions);
             foreach (var entry in latestRecon.Entries)
             {
                 ledgerList.Add(new SummarisedLedgerBucket
                 {
-                    Balance = entry.Balance,
+                    RemainingBalance = currentBalances[entry.LedgerBucket.BudgetBucket],
+                    OpeningBalance = entry.Balance,
                     BucketCode = entry.LedgerBucket.BudgetBucket.Code,
                     BucketType = entry.LedgerBucket.BudgetBucket.TypeDescription,
                     Description = entry.LedgerBucket.BudgetBucket.Description,
@@ -49,7 +66,8 @@ namespace BudgetAnalyser.Engine.Mobile
             ledgerList.Add(new SummarisedLedgerBucket
             {
                 MonthlyBudgetAmount = currentBudget.Surplus,
-                Balance = latestRecon.CalculatedSurplus,
+                RemainingBalance = currentBalances[new SurplusBucket()],
+                OpeningBalance = latestRecon.CalculatedSurplus,
                 BucketCode = SurplusBucket.SurplusCode,
                 BucketType = "Surplus",
                 Description = SurplusBucket.SurplusDescription
@@ -60,8 +78,20 @@ namespace BudgetAnalyser.Engine.Mobile
         }
 
         /// <summary>
-        ///     Serialise a <see cref="SummarisedLedgerMobileData" /> object to a format that can be uploaded to web storage.
+        ///     Save a copy of the data export file locally.
         /// </summary>
+        public async Task SaveCopyAsync(SummarisedLedgerMobileData dataObject)
+        {
+            var serialised = Serialise(dataObject);
+            var writer = this.readerWriterSelector.SelectReaderWriter(false);
+            await writer.WriteToDiskAsync(await GetFileName(), serialised);
+        }
+
+        private async Task<string> GetFileName()
+        {
+            return Path.Combine(await this.environmentFolders.LogFolder(), "MobileDataExport.json");
+        }
+
         public string Serialise(SummarisedLedgerMobileData dataObject)
         {
             return JsonConvert.SerializeObject(dataObject);

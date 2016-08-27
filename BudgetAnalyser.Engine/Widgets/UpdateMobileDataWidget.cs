@@ -18,7 +18,7 @@ namespace BudgetAnalyser.Engine.Widgets
         public UpdateMobileDataWidget()
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
-            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection) };
+            Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria) };
             DetailedText = "Upload mobile data";
             Sequence = 10;
             Clickable = true;
@@ -29,6 +29,11 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     The current Budget Collection held by this widget
         /// </summary>
         public BudgetCollection BudgetCollection { get; private set; }
+
+        /// <summary>
+        ///     The current filter as held by this widget
+        /// </summary>
+        public GlobalFilterCriteria Filter { get; private set; }
 
         /// <summary>
         ///     The current Ledger Book held by this widget
@@ -52,14 +57,15 @@ namespace BudgetAnalyser.Engine.Widgets
             }
 
             Enabled = false;
-            
+
             if (!ValidateUpdateInput(input)) return;
 
             LedgerBook = (LedgerBook) input[0];
             StatementModel = (StatementModel) input[1];
             BudgetCollection = (BudgetCollection) input[2];
+            Filter = (GlobalFilterCriteria) input[3];
 
-            if (LedgerBook == null || StatementModel == null || BudgetCollection == null) return;
+            if (LedgerBook == null || StatementModel == null || BudgetCollection == null || Filter == null) return;
 
             Enabled = true;
         }

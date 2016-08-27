@@ -6,11 +6,6 @@
     public class SummarisedLedgerBucket
     {
         /// <summary>
-        ///     The funds remaining in the bucket
-        /// </summary>
-        public decimal Balance { get; set; }
-
-        /// <summary>
         ///     The bucket code for the ledger
         /// </summary>
         public string BucketCode { get; set; }
@@ -29,5 +24,15 @@
         ///     The monthly budget amount credited into this ledger
         /// </summary>
         public decimal MonthlyBudgetAmount { get; set; }
+
+        /// <summary>
+        ///     The opening balance at the begining of the month
+        /// </summary>
+        public decimal OpeningBalance { get; set; }
+
+        /// <summary>
+        ///     The funds remaining in the bucket
+        /// </summary>
+        public decimal RemainingBalance { get; set; }
     }
 }

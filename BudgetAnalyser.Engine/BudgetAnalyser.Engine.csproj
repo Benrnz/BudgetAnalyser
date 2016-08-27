@@ -125,7 +125,10 @@
     <Compile Include="DebugLogger.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="IReaderWriterSelector.cs" />
+    <Compile Include="Mobile\IMobileDataExporter.cs" />
+    <Compile Include="Mobile\IMobileDataUploader.cs" />
     <Compile Include="Mobile\MobileDataExporter.cs" />
+    <Compile Include="Mobile\S3MobileDataUploader.cs" />
     <Compile Include="Mobile\SummarisedLedgerBucket.cs" />
     <Compile Include="Mobile\SummarisedLedgerMobileData.cs" />
     <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
