@@ -303,6 +303,7 @@
     <Compile Include="TaskExtension.cs" />
     <Compile Include="ValidationWarningException.cs" />
     <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
+    <Compile Include="Widgets\UpdateMobileDataWidget.cs" />
     <Compile Include="Widgets\EncryptWidget.cs" />
     <Compile Include="Widgets\CurrentFileWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
