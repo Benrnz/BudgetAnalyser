@@ -37,7 +37,7 @@ namespace BudgetAnalyser.Mobile
                 {
                     widget.LockWhileUploading(true);
                     var budget = widget.BudgetCollection.CurrentActiveBudget;
-                    var export = this.dataExporter.CreateExportObject(widget.StatementModel, budget, widget.LedgerBook, widget.Filter);
+                    var export = this.dataExporter.CreateExportObject(widget.StatementModel, budget , widget.LedgerBook, widget.Filter);
 
                     await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 

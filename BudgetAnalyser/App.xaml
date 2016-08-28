@@ -46,6 +46,7 @@
                 <ResourceDictionary Source="UI/Assets/DateFilterImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/OctWarningImage.xaml" />
                 <ResourceDictionary Source="UI/Assets/BooksImage.xaml" />
+                <ResourceDictionary Source="UI/Assets/MobileImage.xaml" />
 
                 <ResourceDictionary Source="UI/DataTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>

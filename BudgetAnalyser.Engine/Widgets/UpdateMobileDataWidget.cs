@@ -25,6 +25,7 @@ namespace BudgetAnalyser.Engine.Widgets
             Sequence = 10;
             Clickable = true;
             Enabled = false;
+            ImageResourceName = "MobileImage";
         }
 
         /// <summary>

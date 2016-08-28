@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTemplate x:Key="MobileImage">
+        <Viewbox>
+            <Path Fill="{StaticResource Brush.Text.Default}"
+                  Data="M 384.00,0.00L 96.00,0.00 C 78.40,0.00, 64.00,14.399, 64.00,32.00l0.00,448.00 c0.00,17.60, 14.399,32.00, 32.00,32.00l 288.00,0.00 c 17.60,0.00, 32.00-14.40, 32.00-32.00L 416.00,32.00 C 416.00,14.399, 401.60,0.00, 384.00,0.00z M 240.00,488.891c-13.746,0.00-24.891-11.145-24.891-24.891s 11.145-24.891, 24.891-24.891s 24.891,11.145, 24.891,24.891 S 253.746,488.891, 240.00,488.891z M 384.00,416.00L 96.00,416.00 L 96.00,64.00 l 288.00,0.00 L 384.00,416.00 z" />
+        </Viewbox>
+    </ControlTemplate>
+</ResourceDictionary>
