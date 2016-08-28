@@ -12,6 +12,8 @@ namespace BudgetAnalyser.Engine.Widgets
     /// <seealso cref="BudgetAnalyser.Engine.Widgets.Widget" />
     public sealed class UpdateMobileDataWidget : Widget
     {
+        private const string WidgetLabel = "Upload mobile data";
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="CurrentFileWidget" /> class.
         /// </summary>
@@ -19,7 +21,7 @@ namespace BudgetAnalyser.Engine.Widgets
         {
             Category = WidgetGroup.MonthlyTrackingSectionName;
             Dependencies = new[] { typeof(LedgerBook), typeof(StatementModel), typeof(BudgetCollection), typeof(GlobalFilterCriteria) };
-            DetailedText = "Upload mobile data";
+            DetailedText = WidgetLabel;
             Sequence = 10;
             Clickable = true;
             Enabled = false;
@@ -44,6 +46,18 @@ namespace BudgetAnalyser.Engine.Widgets
         ///     The current Statement Model held by this widget
         /// </summary>
         public StatementModel StatementModel { get; private set; }
+
+        private bool lockActive = false;
+
+        /// <summary>
+        /// This method is used to disable the widget while upload is active.
+        /// </summary>
+        public void LockWhileUploading(bool @lock)
+        {
+            this.lockActive = @lock;
+            Enabled = !this.lockActive;
+            DetailedText = this.lockActive ? "Uploading..." : WidgetLabel;
+        }
 
         /// <summary>
         ///     Updates the widget with new input.

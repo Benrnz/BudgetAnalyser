@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace BudgetAnalyser.Engine.Mobile
@@ -9,11 +10,13 @@ namespace BudgetAnalyser.Engine.Mobile
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class S3MobileDataUploader : IMobileDataUploader
     {
-        public Task UploadDataFileAsync(string data)
+        public async Task UploadDataFileAsync(string data)
         {
             Debug.WriteLine(data);
             // Stubbed for now
-            return Task.CompletedTask;
+            await Task.Delay(10000);
+
+            Debug.WriteLine("Upload completed at: " + DateTime.Now);
         }
     }
 }
