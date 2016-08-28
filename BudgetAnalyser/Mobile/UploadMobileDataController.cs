@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Security;
 using System.Threading.Tasks;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine.Mobile;
@@ -12,8 +12,8 @@ namespace BudgetAnalyser.Mobile
     public class UploadMobileDataController : ControllerBase
     {
         private readonly IMobileDataExporter dataExporter;
-        private readonly IMobileDataUploader uploader;
         private readonly IUserMessageBox messageBoxService;
+        private readonly IMobileDataUploader uploader;
 
         public UploadMobileDataController(IUiContext uiContext, IMobileDataExporter dataExporter, IMobileDataUploader uploader)
         {
@@ -26,10 +26,15 @@ namespace BudgetAnalyser.Mobile
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
 
             MessengerInstance.Register<WidgetActivatedMessage>(this, OnWidgetActivatedMessageReceived);
-        } 
+        }
+
+        public string AccessKeyId { get; set; }
+
+        public string AccessKeySecret { get; set; }
 
         private async void OnWidgetActivatedMessageReceived(WidgetActivatedMessage message)
         {
+            // TODO Show UI to upload and specify credentials.
             var widget = message.Widget as UpdateMobileDataWidget;
             if (widget != null && widget.Enabled)
             {
@@ -37,14 +42,21 @@ namespace BudgetAnalyser.Mobile
                 {
                     widget.LockWhileUploading(true);
                     var budget = widget.BudgetCollection.CurrentActiveBudget;
-                    var export = this.dataExporter.CreateExportObject(widget.StatementModel, budget , widget.LedgerBook, widget.Filter);
+                    var export = this.dataExporter.CreateExportObject(widget.StatementModel, budget, widget.LedgerBook, widget.Filter);
 
                     await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 
-                    // TODO Do I care about exception conditions here?
-                    await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export)));
+                    await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export), AccessKeyId, AccessKeySecret));
 
                     this.messageBoxService.Show("Mobile summary data exported successfully.");
+                }
+                catch (SecurityException)
+                {
+                    // TODO
+                }
+                catch (Exception)
+                {
+                    // TODO
                 }
                 finally
                 {

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Security;
 using System.Threading.Tasks;
+using Amazon;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace BudgetAnalyser.Engine.Mobile
 {
@@ -10,13 +15,36 @@ namespace BudgetAnalyser.Engine.Mobile
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class S3MobileDataUploader : IMobileDataUploader
     {
-        public async Task UploadDataFileAsync(string data)
-        {
-            Debug.WriteLine(data);
-            // Stubbed for now
-            await Task.Delay(10000);
+        private const string AwsBucketName = "baxmobilesummary";
+        private const string AwsBucketFileName = "MyFile.json";
 
-            Debug.WriteLine("Upload completed at: " + DateTime.Now);
+        public async Task UploadDataFileAsync(string data, string storageKeyId, string storageSecret)
+        {
+            using (var client = new AmazonS3Client(storageKeyId, storageSecret, RegionEndpoint.APSoutheast2))
+            {
+                try
+                {
+                    var putRequest1 = new PutObjectRequest
+                    {
+                        BucketName = AwsBucketName,
+                        Key = AwsBucketFileName,
+                        ContentBody = data,
+                        ContentType = "text/plain"
+                    };
+
+                    await client.PutObjectAsync(putRequest1);
+                }
+                catch (AmazonS3Exception amazonS3Exception)
+                {
+                    if (amazonS3Exception.ErrorCode != null &&
+                        (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId") || amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                    {
+                        throw new SecurityException("Invalid Amazon S3 credentials - data was not uploaded.", amazonS3Exception);
+                    }
+
+                    throw new HttpRequestException("Unspecified error attempting to upload data: " + amazonS3Exception.Message, amazonS3Exception);
+                }
+            }
         }
     }
 }

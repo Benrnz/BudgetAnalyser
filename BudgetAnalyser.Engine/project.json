@@ -4,6 +4,7 @@
     "uwp.10.0.app": {}
   },
   "dependencies": {
+    "AWSSDK.S3": "3.1.9",
     "JetBrains.Annotations": "10.1.5",
     "Microsoft.NETCore": "5.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.0",
