@@ -24,6 +24,11 @@ namespace BudgetAnalyser.Engine.Mobile
         public List<SummarisedLedgerBucket> LedgerBuckets { get; set; }
 
         /// <summary>
+        ///     The date this month started
+        /// </summary>
+        public DateTime StartOfMonth { get; set; }
+
+        /// <summary>
         ///     The title of the budget
         /// </summary>
         public string Title { get; set; }

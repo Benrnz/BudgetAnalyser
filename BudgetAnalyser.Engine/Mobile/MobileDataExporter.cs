@@ -36,16 +36,27 @@ namespace BudgetAnalyser.Engine.Mobile
         ///     Create the export object
         /// </summary>
         /// <returns>An object containing the summarised data.</returns>
-        public SummarisedLedgerMobileData CreateExportObject(StatementModel transactions, BudgetModel currentBudget, LedgerBook ledger, GlobalFilterCriteria filter)
+        public SummarisedLedgerMobileData CreateExportObject(
+            [NotNull] StatementModel transactions, 
+            [NotNull] BudgetModel currentBudget, 
+            [NotNull] LedgerBook ledger,
+            [NotNull] GlobalFilterCriteria filter)
         {
+            if (transactions == null) throw new ArgumentNullException(nameof(transactions));
+            if (currentBudget == null) throw new ArgumentNullException(nameof(currentBudget));
+            if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
+            if (filter.BeginDate == null) return null;
+
             var export = new SummarisedLedgerMobileData
             {
                 Exported = DateTime.Now,
                 LastTransactionImport = transactions.LastImport,
-                Title = currentBudget.Name
-            }; 
+                Title = currentBudget.Name,
+                StartOfMonth = filter.BeginDate.Value,
+            };
 
-            var latestRecon = ledger.Reconciliations.LastOrDefault();
+            var latestRecon = this.calculator.LocateApplicableLedgerLine(ledger, filter);
             if (latestRecon == null) return null;
 
             var ledgerList = new List<SummarisedLedgerBucket>();
