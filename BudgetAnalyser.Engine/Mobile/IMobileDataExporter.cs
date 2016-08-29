@@ -24,6 +24,6 @@ namespace BudgetAnalyser.Engine.Mobile
         /// <summary>
         ///     Serialise the data
         /// </summary>
-        string Serialise(SummarisedLedgerMobileData export);
+        string Serialise(SummarisedLedgerMobileData dataExport);
     }
 }

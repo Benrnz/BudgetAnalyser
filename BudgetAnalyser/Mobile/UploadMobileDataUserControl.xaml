@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BudgetAnalyser.Mobile.UploadMobileDataUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   Text="Enter your Amazon S3 Credentials to upload the mobile data extract." />
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Access Key Id" />
+        <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 Text="{Binding AccessKeyId}" />
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Access Key Secret" />
+        <TextBox Grid.Row="2"
+                 Grid.Column="1"
+                 Text="{Binding AccessKeySecret}" />
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Style="{StaticResource TextBlock.LabelStyle}"
+                   Text="Region" />
+        <ComboBox Grid.Row="3"
+                  Grid.Column="1"
+                  SelectedItem="{Binding AmazonRegion}">
+            <ComboBox.Items>
+                <ComboBoxItem IsSelected="True">APSoutheast2</ComboBoxItem>
+                <ComboBoxItem>APSoutheast1</ComboBoxItem>
+                <ComboBoxItem>CNNorth1</ComboBoxItem>
+                <ComboBoxItem>EUCentral1</ComboBoxItem>
+                <ComboBoxItem>EUCentral1</ComboBoxItem>
+                <ComboBoxItem>EUWest1</ComboBoxItem>
+                <ComboBoxItem>SAEast1</ComboBoxItem>
+                <ComboBoxItem>USEast</ComboBoxItem>
+                <ComboBoxItem>USWest1</ComboBoxItem>
+                <ComboBoxItem>USWest2</ComboBoxItem>
+                <ComboBoxItem>APNortheast1</ComboBoxItem>
+                <ComboBoxItem>APNortheast2</ComboBoxItem>
+            </ComboBox.Items>
+        </ComboBox>
+    </Grid>
+</UserControl>

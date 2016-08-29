@@ -280,6 +280,9 @@
       <DependentUpon>MatchingRuleUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mobile\UploadMobileDataController.cs" />
+    <Compile Include="Mobile\UploadMobileDataUserControl.xaml.cs">
+      <DependentUpon>UploadMobileDataUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PersistenceOperationCommands.cs" />
     <Compile Include="PersistenceOperations.cs" />
     <Compile Include="ScratchPad.xaml.cs">
@@ -493,6 +496,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Matching\NewRuleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mobile\UploadMobileDataUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

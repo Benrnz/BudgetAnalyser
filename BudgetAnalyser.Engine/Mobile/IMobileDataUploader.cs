@@ -15,8 +15,9 @@ namespace BudgetAnalyser.Engine.Mobile
         /// <param name="data">The JSON data to upload</param>
         /// <param name="storageKeyId">The Amazon AccessKeyId</param>
         /// <param name="storageSecret">The Amazon SecretAccessKey</param>
+        /// <param name="region">The Amazon region the data is stored in</param>
         /// <exception cref="SecurityException">Will be thrown if authentication credentials fail.</exception>
         /// <exception cref="HttpRequestException">Will be thrown for any other kind of communications failure.</exception>
-        Task UploadDataFileAsync(string data, string storageKeyId, string storageSecret);
+        Task UploadDataFileAsync(string data, string storageKeyId, string storageSecret, string region);
     }
 }

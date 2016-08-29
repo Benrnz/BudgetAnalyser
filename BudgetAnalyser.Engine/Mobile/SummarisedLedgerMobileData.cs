@@ -9,6 +9,13 @@ namespace BudgetAnalyser.Engine.Mobile
     public class SummarisedLedgerMobileData
     {
         /// <summary>
+        /// Instantiate a new instance of <see cref="SummarisedLedgerMobileData"/>
+        /// </summary>
+        public SummarisedLedgerMobileData()
+        {
+            LedgerBuckets = new List<SummarisedLedgerBucket>();
+        }
+        /// <summary>
         ///     The date and time this object was exported from Budget Analyser
         /// </summary>
         public DateTime Exported { get; set; }
@@ -21,7 +28,7 @@ namespace BudgetAnalyser.Engine.Mobile
         /// <summary>
         ///     All the ledger buckets in the ledger
         /// </summary>
-        public List<SummarisedLedgerBucket> LedgerBuckets { get; set; }
+        public List<SummarisedLedgerBucket> LedgerBuckets { get; private set; }
 
         /// <summary>
         ///     The date this month started

@@ -84,7 +84,7 @@ namespace BudgetAnalyser.Engine.Mobile
                 Description = SurplusBucket.SurplusDescription
             });
 
-            export.LedgerBuckets = ledgerList.OrderBy(l => l.BucketCode).ToList();
+            export.LedgerBuckets.AddRange(ledgerList.OrderBy(l => l.BucketCode));
             return export;
         }
 
@@ -103,9 +103,9 @@ namespace BudgetAnalyser.Engine.Mobile
             return Path.Combine(await this.environmentFolders.LogFolder(), "MobileDataExport.json");
         }
 
-        public string Serialise(SummarisedLedgerMobileData dataObject)
+        public string Serialise(SummarisedLedgerMobileData dataExport)
         {
-            return JsonConvert.SerializeObject(dataObject);
+            return JsonConvert.SerializeObject(dataExport);
         }
     }
 }

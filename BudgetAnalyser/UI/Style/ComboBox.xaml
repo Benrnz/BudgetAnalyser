@@ -125,6 +125,10 @@
                 Value="30" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
+        <Setter Property="TextBlock.Foreground"
+                Value="{StaticResource Brush.Text.Default}"/>
+        <Setter Property="Margin"
+                Value="2"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -168,8 +172,7 @@
                                       Grid.Column="2"
                                       Focusable="false"
                                       ClickMode="Press"
-                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, 
-              RelativeSource={RelativeSource TemplatedParent}}" />
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
                         <ContentPresenter x:Name="ContentSite"
                                           IsHitTestVisible="False"
                                           Content="{TemplateBinding SelectionBoxItem}"
@@ -249,6 +252,7 @@
                 Value="true" />
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text.Default}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">

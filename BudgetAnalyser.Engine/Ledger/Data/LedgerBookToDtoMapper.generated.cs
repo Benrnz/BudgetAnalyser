@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using BudgetAnalyser.Engine.Ledger;
 using System;
 using BudgetAnalyser.Engine.Ledger.Data;
+using BudgetAnalyser.Engine.Mobile;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
 {
@@ -38,6 +39,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             modelType.GetProperty("Reconciliations").SetValue(model, reconciliations4);
             var storageKey5 = dto.StorageKey;
             modelType.GetProperty("StorageKey").SetValue(model, storageKey5);
+            var mapper3 = new Mapper_MobileSettingsDto_MobileSettings();
+            model.MobileSettings = mapper3.ToModel(dto.MobileSettings);
+
             ToModelPostprocessing(dto, ref model);
             return model;
         } // End ToModel Method
@@ -63,6 +67,9 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             dto.Reconciliations = reconciliations10;
             var storageKey11 = model.StorageKey;
             dto.StorageKey = storageKey11;
+            var mapper5 = new Mapper_MobileSettingsDto_MobileSettings();
+            dto.MobileSettings = mapper5.ToDto(model.MobileSettings);
+
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method
@@ -385,6 +392,53 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         partial void DtoFactory(ref LedgerTransactionDto dto, LedgerTransaction model);
         partial void ToModelPostprocessing(LedgerTransactionDto dto, ref LedgerTransaction model);
         partial void ToDtoPostprocessing(ref LedgerTransactionDto dto, LedgerTransaction model);
+    } // End Class
+
+    [GeneratedCode("1.0", "Tangy Fruit Mapper 3/01/2016 2:19:01 AM UTC")]
+    internal partial class Mapper_MobileSettingsDto_MobileSettings : IDtoMapper<MobileStorageSettingsDto, Mobile.MobileStorageSettings>
+    {
+        public virtual Mobile.MobileStorageSettings ToModel(MobileStorageSettingsDto dto)
+        {
+            ToModelPreprocessing(dto);
+            Mobile.MobileStorageSettings model = null;
+            ModelFactory(dto, ref model);
+            if (model == null)
+            {
+                model = new MobileStorageSettings();
+            }
+            if (dto == null) return model;
+            var modelType = model.GetType();
+            model.AccessKeyId = dto.AccessKeyId;
+            model.AccessKeySecret = dto.AccessKeySecret;
+            model.AmazonS3Region = dto.AmazonS3Region;
+            ToModelPostprocessing(dto, ref model);
+            return model;
+        } // End ToModel Method
+
+        public virtual MobileStorageSettingsDto ToDto(Mobile.MobileStorageSettings model)
+        {
+            ToDtoPreprocessing(model);
+            MobileStorageSettingsDto dto = null;
+            DtoFactory(ref dto, model);
+            if (dto == null)
+            {
+                dto = new MobileStorageSettingsDto();
+            }
+
+            dto.AccessKeyId = model.AccessKeyId;
+            dto.AccessKeySecret = model.AccessKeySecret;
+            dto.AmazonS3Region = model.AmazonS3Region;
+
+            ToDtoPostprocessing(ref dto, model);
+            return dto;
+        } // End ToDto Method
+
+        partial void ToModelPreprocessing(MobileStorageSettingsDto dto);
+        partial void ToDtoPreprocessing(Mobile.MobileStorageSettings model);
+        partial void ModelFactory(MobileStorageSettingsDto dto, ref Mobile.MobileStorageSettings model);
+        partial void DtoFactory(ref MobileStorageSettingsDto dto, Mobile.MobileStorageSettings model);
+        partial void ToModelPostprocessing(MobileStorageSettingsDto dto, ref Mobile.MobileStorageSettings model);
+        partial void ToDtoPostprocessing(ref MobileStorageSettingsDto dto, Mobile.MobileStorageSettings model);
     } // End Class
 
 } // End Namespace

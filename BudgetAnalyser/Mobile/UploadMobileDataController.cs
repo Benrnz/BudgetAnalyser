@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using BudgetAnalyser.Dashboard;
 using BudgetAnalyser.Engine;
 using BudgetAnalyser.Engine.Mobile;
+using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Widgets;
 using BudgetAnalyser.ShellDialog;
 using Rees.UserInteraction.Contracts;
 using Rees.Wpf;
+using Rees.Wpf.Annotations;
 
 namespace BudgetAnalyser.Mobile
 {
@@ -17,16 +19,26 @@ namespace BudgetAnalyser.Mobile
         private readonly IMobileDataExporter dataExporter;
         private readonly IUserMessageBox messageBoxService;
         private readonly IMobileDataUploader uploader;
+        private readonly IApplicationDatabaseService appDbService;
         private UpdateMobileDataWidget widget;
         private readonly ILogger logger;
+        private string doNotUseAccessKeyId;
+        private string doNotUseAccessKeySecret;
+        private string doNotUseAmazonRegion;
 
-        public UploadMobileDataController(IUiContext uiContext, IMobileDataExporter dataExporter, IMobileDataUploader uploader)
+        public UploadMobileDataController(
+            [NotNull] IUiContext uiContext, 
+            [NotNull] IMobileDataExporter dataExporter, 
+            [NotNull] IMobileDataUploader uploader, 
+            [NotNull] IApplicationDatabaseService appDbService)
         {
             if (uiContext == null) throw new ArgumentNullException(nameof(uiContext));
             if (dataExporter == null) throw new ArgumentNullException(nameof(dataExporter));
             if (uploader == null) throw new ArgumentNullException(nameof(uploader));
+            if (appDbService == null) throw new ArgumentNullException(nameof(appDbService));
             this.dataExporter = dataExporter;
             this.uploader = uploader;
+            this.appDbService = appDbService;
             MessengerInstance = uiContext.Messenger;
             this.messageBoxService = uiContext.UserPrompts.MessageBox;
             this.logger = uiContext.Logger;
@@ -35,9 +47,37 @@ namespace BudgetAnalyser.Mobile
             MessengerInstance.Register<ShellDialogResponseMessage>(this, OnShellDialogMessageReceived);
         }
 
-        public string AccessKeyId { get; set; }
+        public string AccessKeyId
+        {
+            get { return this.doNotUseAccessKeyId; }
+            set
+            {
+                this.doNotUseAccessKeyId = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string AccessKeySecret { get; set; }
+        public string AccessKeySecret
+        {
+            get { return this.doNotUseAccessKeySecret; }
+            set
+            {
+                this.doNotUseAccessKeySecret = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+        public string AmazonRegion
+        {
+            get { return this.doNotUseAmazonRegion; }
+            set
+            {
+                this.doNotUseAmazonRegion = value;
+                RaisePropertyChanged();
+
+            }
+        }
 
         /// <summary>
         ///     Will be called to ascertain the availability of the button.
@@ -64,7 +104,7 @@ namespace BudgetAnalyser.Mobile
 
                 await Task.Run(() => this.dataExporter.SaveCopyAsync(export));
 
-                await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export), AccessKeyId, AccessKeySecret));
+                await Task.Run(() => this.uploader.UploadDataFileAsync(this.dataExporter.Serialise(export), AccessKeyId, AccessKeySecret, AmazonRegion));
 
                 this.messageBoxService.Show("Mobile summary data exported successfully.");
             }
@@ -91,6 +131,16 @@ namespace BudgetAnalyser.Mobile
             try
             {
                 if (message.Response == ShellDialogButton.Cancel) return;
+                bool changed = AccessKeyId != this.widget.LedgerBook.MobileSettings.AccessKeyId;
+                changed |= AccessKeySecret != this.widget.LedgerBook.MobileSettings.AccessKeySecret;
+                changed |= AmazonRegion != this.widget.LedgerBook.MobileSettings.AmazonS3Region;
+                if (changed)
+                {
+                    this.widget.LedgerBook.MobileSettings.AccessKeyId = AccessKeyId;
+                    this.widget.LedgerBook.MobileSettings.AccessKeySecret = AccessKeySecret;
+                    this.widget.LedgerBook.MobileSettings.AmazonS3Region = AmazonRegion;
+                    this.appDbService.NotifyOfChange(ApplicationDataType.Ledger);
+                }
                 await AttemptUploadAsync();
             }
             finally
@@ -104,7 +154,14 @@ namespace BudgetAnalyser.Mobile
             this.widget = message.Widget as UpdateMobileDataWidget;
             if (this.widget != null && this.widget.Enabled)
             {
-                MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel));
+                AccessKeyId = this.widget.LedgerBook.MobileSettings.AccessKeyId;
+                AccessKeySecret = this.widget.LedgerBook.MobileSettings.AccessKeySecret;
+                AmazonRegion = this.widget.LedgerBook.MobileSettings.AmazonS3Region;
+                MessengerInstance.Send(new ShellDialogRequestMessage(BudgetAnalyserFeature.Dashboard, this, ShellDialogType.OkCancel)
+                {
+                    CorrelationId = this.correlationId,
+                    Title = "Upload Mobile Summary Data"
+                });
             }
         }
     }
