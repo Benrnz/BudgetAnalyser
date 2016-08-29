@@ -16,7 +16,7 @@ namespace BudgetAnalyser.Engine.Mobile
     internal class S3MobileDataUploader : IMobileDataUploader
     {
         private const string AwsBucketName = "baxmobilesummary";
-        private const string AwsBucketFileName = "MyFile.json";
+        private const string AwsBucketFileName = "MobileDataExport.json";
 
         public async Task UploadDataFileAsync(string data, string storageKeyId, string storageSecret)
         {
@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Mobile
                         BucketName = AwsBucketName,
                         Key = AwsBucketFileName,
                         ContentBody = data,
-                        ContentType = "text/plain"
+                        ContentType = "application/json"
                     };
 
                     await client.PutObjectAsync(putRequest1);
