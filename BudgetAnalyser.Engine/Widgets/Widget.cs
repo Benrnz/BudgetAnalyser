@@ -150,6 +150,8 @@ namespace BudgetAnalyser.Engine.Widgets
             }
         }
 
+        private bool clickableWhenEnabled;
+
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="Widget" /> is enabled, showing data, and clickable.
         /// </summary>
@@ -160,6 +162,14 @@ namespace BudgetAnalyser.Engine.Widgets
             {
                 this.doNotUseEnabled = value;
                 OnPropertyChanged();
+                if (this.doNotUseEnabled == false && Clickable)
+                {
+                    this.clickableWhenEnabled = true;
+                    Clickable = false;
+                } else if (this.doNotUseEnabled == true && !Clickable && this.clickableWhenEnabled)
+                {
+                    Clickable = true;
+                }
             }
         }
 

@@ -4,9 +4,11 @@
     "uwp.10.0.app": {}
   },
   "dependencies": {
+    "AWSSDK.S3": "3.1.9",
     "JetBrains.Annotations": "10.1.5",
     "Microsoft.NETCore": "5.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.0",
+    "Newtonsoft.Json": "9.0.1",
     "Portable.Xaml": "0.14.0",
     "Rees.TangyFruitMapper": "1.0.12",
     "System.IO.FileSystem": "4.0.0",

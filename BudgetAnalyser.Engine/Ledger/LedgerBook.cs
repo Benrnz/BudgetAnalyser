@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Mobile;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
@@ -50,6 +51,11 @@ namespace BudgetAnalyser.Engine.Ledger
             get { return this.ledgersColumns; }
             internal set { this.ledgersColumns = value.OrderBy(c => c.BudgetBucket.Code).ToList(); }
         }
+
+        /// <summary>
+        ///     The configuration for the remote mobile data storage
+        /// </summary>
+        public MobileStorageSettings MobileSettings { get; internal set; }
 
         /// <summary>
         ///     Gets the last modified date.

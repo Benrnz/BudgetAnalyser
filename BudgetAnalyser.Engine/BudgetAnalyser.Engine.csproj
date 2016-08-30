@@ -125,6 +125,14 @@
     <Compile Include="DebugLogger.cs" />
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="IReaderWriterSelector.cs" />
+    <Compile Include="Ledger\Data\MobileStorageSettingsDto.cs" />
+    <Compile Include="Mobile\IMobileDataExporter.cs" />
+    <Compile Include="Mobile\IMobileDataUploader.cs" />
+    <Compile Include="Mobile\MobileDataExporter.cs" />
+    <Compile Include="Mobile\MobileStorageSettings.cs" />
+    <Compile Include="Mobile\S3MobileDataUploader.cs" />
+    <Compile Include="Mobile\SummarisedLedgerBucket.cs" />
+    <Compile Include="Mobile\SummarisedLedgerMobileData.cs" />
     <Compile Include="Persistence\BadApplicationStateFileFormatException.cs" />
     <Compile Include="Persistence\ICredentialStore.cs" />
     <Compile Include="Persistence\IFileReaderWriter.cs" />
@@ -303,6 +311,7 @@
     <Compile Include="TaskExtension.cs" />
     <Compile Include="ValidationWarningException.cs" />
     <Compile Include="Widgets\BudgetBucketMonitorWidget.cs" />
+    <Compile Include="Widgets\UpdateMobileDataWidget.cs" />
     <Compile Include="Widgets\EncryptWidget.cs" />
     <Compile Include="Widgets\CurrentFileWidget.cs" />
     <Compile Include="Widgets\DateFilterWidget.cs" />
@@ -337,6 +346,7 @@
       <Link>CodeAnalysisDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

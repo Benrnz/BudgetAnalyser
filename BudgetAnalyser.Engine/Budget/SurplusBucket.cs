@@ -13,10 +13,15 @@
         public const string SurplusCode = "SURPLUS";
 
         /// <summary>
+        ///     The constant for surplus description.
+        /// </summary>
+        public const string SurplusDescription = "A special bucket to allocate against any discretionary spending.";
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="SurplusBucket" /> class.
         /// </summary>
         public SurplusBucket()
-            : base(SurplusCode, "A special bucket to allocate against any discretionary spending.")
+            : base(SurplusCode, SurplusDescription)
         {
         }
 

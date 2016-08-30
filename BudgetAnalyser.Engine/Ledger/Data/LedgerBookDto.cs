@@ -36,6 +36,11 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         public List<LedgerBucketDto> Ledgers { get; set; }
 
         /// <summary>
+        ///     The configuration for the remote mobile data storage
+        /// </summary>
+        public MobileStorageSettingsDto MobileSettings { get; set; }
+
+        /// <summary>
         ///     Gets or sets the last modified date.
         /// </summary>
         public DateTime Modified { get; set; }
