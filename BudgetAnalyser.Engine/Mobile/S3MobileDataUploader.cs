@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 
@@ -17,7 +18,8 @@ namespace BudgetAnalyser.Engine.Mobile
 
         public async Task UploadDataFileAsync(string data, string storageKeyId, string storageSecret, string region)
         {
-            using (var client = new AmazonS3Client(storageKeyId, storageSecret, region))
+            var regionIdentifier = RegionEndpoint.GetBySystemName(region);
+            using (var client = new AmazonS3Client(storageKeyId, storageSecret, regionIdentifier))
             {
                 try
                 {

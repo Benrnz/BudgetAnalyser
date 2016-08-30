@@ -40,21 +40,8 @@
                    Text="Region" />
         <ComboBox Grid.Row="3"
                   Grid.Column="1"
-                  SelectedItem="{Binding AmazonRegion}">
-            <ComboBox.Items>
-                <ComboBoxItem IsSelected="True">APSoutheast2</ComboBoxItem>
-                <ComboBoxItem>APSoutheast1</ComboBoxItem>
-                <ComboBoxItem>CNNorth1</ComboBoxItem>
-                <ComboBoxItem>EUCentral1</ComboBoxItem>
-                <ComboBoxItem>EUCentral1</ComboBoxItem>
-                <ComboBoxItem>EUWest1</ComboBoxItem>
-                <ComboBoxItem>SAEast1</ComboBoxItem>
-                <ComboBoxItem>USEast</ComboBoxItem>
-                <ComboBoxItem>USWest1</ComboBoxItem>
-                <ComboBoxItem>USWest2</ComboBoxItem>
-                <ComboBoxItem>APNortheast1</ComboBoxItem>
-                <ComboBoxItem>APNortheast2</ComboBoxItem>
-            </ComboBox.Items>
+                  SelectedItem="{Binding AmazonRegion}"
+                  ItemsSource="{Binding AmazonRegions}">
         </ComboBox>
     </Grid>
 </UserControl>
