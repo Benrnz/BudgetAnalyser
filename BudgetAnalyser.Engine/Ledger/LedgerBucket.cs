@@ -42,6 +42,11 @@ namespace BudgetAnalyser.Engine.Ledger
         }
 
         /// <summary>
+        ///     A unique token to identify the bucket when using the code is not appropriate.
+        /// </summary>
+        public Guid Id { get; internal set; }
+
+        /// <summary>
         ///     Gets or sets the Account in which this ledger's funds are stored.
         /// </summary>
         public Account StoredInAccount { get; internal set; }
