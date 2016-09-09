@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Security;
 using System.Threading.Tasks;
 using Amazon;
@@ -42,6 +44,12 @@ namespace BudgetAnalyser.Engine.Mobile
                     }
 
                     throw new HttpRequestException("Unspecified error attempting to upload data: " + amazonS3Exception.Message, amazonS3Exception);
+                }
+
+                var response = await client.GetObjectAsync(AwsBucketName, AwsBucketFileName);
+                using (var reader = new StreamReader(response.ResponseStream))
+                {
+                    Debug.WriteLine(await reader.ReadToEndAsync());
                 }
             }
         }

@@ -69,17 +69,17 @@ namespace BudgetAnalyser.Engine.Mobile
                     OpeningBalance = entry.Balance,
                     BucketCode = entry.LedgerBucket.BudgetBucket.Code,
                     BucketType = entry.LedgerBucket.BudgetBucket.TypeDescription,
-                    Description = entry.LedgerBucket.BudgetBucket.Description,
+                    Description = entry.LedgerBucket.BudgetBucket.Description, 
                     MonthlyBudgetAmount = currentBudget.Expenses.First(e => e.Bucket.Code == entry.LedgerBucket.BudgetBucket.Code).Amount
                 });
             }
 
             ledgerList.Add(new SummarisedLedgerBucket
             {
-                MonthlyBudgetAmount = currentBudget.Surplus,
+                MonthlyBudgetAmount = -1, // Do not show, not relevant
                 RemainingBalance = currentBalances[new SurplusBucket()],
                 OpeningBalance = latestRecon.CalculatedSurplus,
-                BucketCode = SurplusBucket.SurplusCode,
+                BucketCode = " " + SurplusBucket.SurplusCode,
                 BucketType = "Surplus",
                 Description = SurplusBucket.SurplusDescription
             });

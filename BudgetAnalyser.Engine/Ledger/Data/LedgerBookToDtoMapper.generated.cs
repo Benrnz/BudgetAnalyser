@@ -97,6 +97,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
                 model = (LedgerBucket)constructor.Invoke(new Type[] { });
             }
             var modelType = model.GetType();
+            model.Id = dto.Id;
             ToModelPostprocessing(dto, ref model);
             return model;
         } // End ToModel Method
@@ -110,6 +111,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             {
                 dto = new LedgerBucketDto();
             }
+            dto.Id = model.Id;
             ToDtoPostprocessing(ref dto, model);
             return dto;
         } // End ToDto Method
