@@ -167,6 +167,8 @@ namespace BudgetAnalyser.ShellDialog
                         {
                             case ShellDialogButton.Ok:
                             case ShellDialogButton.Save:
+                                if (!OkButtonVisible && commandType == ShellDialogButton.Ok) commandType = ShellDialogButton.Save;
+                                // Ok will be the default response if Enter is pressed, even when the Ok button is invisble.
                                 MessengerInstance.Send(new ShellDialogResponseMessage(Content, commandType) { CorrelationId = CorrelationId });
                                 break;
 
