@@ -122,7 +122,8 @@ namespace BudgetAnalyser.Engine.Ledger
             if (txn != null)
             {
                 this.transactions.Remove(txn);
-                Balance -= txn.Amount;
+                // Can't just simply adjust Balance here by subtract the txn amount from the balance. Must recalc based on opening balance and txns.
+                // To do that the balance needs to be recalced at the Ledger Line Level.
             }
         }
 

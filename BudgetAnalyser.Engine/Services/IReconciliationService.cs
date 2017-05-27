@@ -70,7 +70,7 @@ namespace BudgetAnalyser.Engine.Services
         /// <summary>
         ///     Removes the transaction from the specified Ledger Entry.
         /// </summary>
-        void RemoveTransaction([NotNull] LedgerEntry ledgerEntry, Guid transactionId);
+        void RemoveTransaction([NotNull] LedgerBook ledgerBook, [NotNull] LedgerEntry ledgerEntry, Guid transactionId);
 
         /// <summary>
         ///     Transfer funds from one ledger bucket to another. This is only possible if the current ledger reconciliation is

@@ -126,14 +126,24 @@ namespace BudgetAnalyser.Engine.Services
             return reconResult.Reconciliation;
         }
 
-        public void RemoveTransaction(LedgerEntry ledgerEntry, Guid transactionId)
+        public void RemoveTransaction(LedgerBook ledgerBook, LedgerEntry ledgerEntry, Guid transactionId)
         {
+            if (ledgerBook == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBook));
+            }
+
             if (ledgerEntry == null)
             {
                 throw new ArgumentNullException(nameof(ledgerEntry));
             }
 
             ledgerEntry.RemoveTransaction(transactionId);
+
+            // Recalc balance based on opening balance and transactions.
+            var previousLine = ledgerBook.Reconciliations.Skip(1).FirstOrDefault();
+            var openingBalance = LedgerEntryLine.FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket);
+            ledgerEntry.Balance = openingBalance + ledgerEntry.Transactions.Sum(t => t.Amount);
         }
 
         /// <summary>

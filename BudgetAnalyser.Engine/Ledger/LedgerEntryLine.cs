@@ -197,6 +197,23 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
+        internal static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine,
+                                                                [NotNull] LedgerBucket ledgerBucket)
+        {
+            if (ledgerBucket == null)
+            {
+                throw new ArgumentNullException(nameof(ledgerBucket));
+            }
+
+            if (previousLine == null)
+            {
+                return 0;
+            }
+
+            var previousEntry = previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
+            return previousEntry?.Balance ?? 0;
+        }
+
         internal void Lock()
         {
             IsNew = false;
@@ -271,24 +288,6 @@ namespace BudgetAnalyser.Engine.Ledger
             }
 
             return result;
-        }
-
-        private static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine,
-                                                               [NotNull] LedgerBucket ledgerBucket)
-        {
-            if (ledgerBucket == null)
-            {
-                throw new ArgumentNullException(nameof(ledgerBucket));
-            }
-
-            if (previousLine == null)
-            {
-                return 0;
-            }
-
-            var previousEntry =
-                previousLine.Entries.FirstOrDefault(e => e.LedgerBucket.BudgetBucket == ledgerBucket.BudgetBucket);
-            return previousEntry?.Balance ?? 0;
         }
 
         private decimal TotalBankBalanceAdjustmentForAccount(Account account)

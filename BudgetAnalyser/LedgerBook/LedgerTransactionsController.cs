@@ -234,7 +234,7 @@ namespace BudgetAnalyser.LedgerBook
             if (InLedgerEntryMode)
             {
                 this.wasChanged = true;
-                this.reconService.RemoveTransaction(LedgerEntry, transaction.Id);
+                this.reconService.RemoveTransaction(this.ledgerService.LedgerBook, LedgerEntry, transaction.Id);
                 ShownTransactions.Remove(transaction);
             }
             else if (InBalanceAdjustmentMode)
