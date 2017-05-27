@@ -197,7 +197,7 @@ namespace BudgetAnalyser.Engine.Ledger
             }
         }
 
-        internal static decimal FindPreviousEntryOpeningBalance([CanBeNull] LedgerEntryLine previousLine,
+        internal static decimal FindPreviousEntryClosingBalance([CanBeNull] LedgerEntryLine previousLine,
                                                                 [NotNull] LedgerBucket ledgerBucket)
         {
             if (ledgerBucket == null)
@@ -279,7 +279,7 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (
                     !ledgerEntry.Validate(validationMessages,
-                        FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket)))
+                        FindPreviousEntryClosingBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
                     validationMessages.AppendFormat(CultureInfo.CurrentCulture,
                         "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);

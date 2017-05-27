@@ -142,7 +142,7 @@ namespace BudgetAnalyser.Engine.Services
 
             // Recalc balance based on opening balance and transactions.
             var previousLine = ledgerBook.Reconciliations.Skip(1).FirstOrDefault();
-            var openingBalance = LedgerEntryLine.FindPreviousEntryOpeningBalance(previousLine, ledgerEntry.LedgerBucket);
+            var openingBalance = LedgerEntryLine.FindPreviousEntryClosingBalance(previousLine, ledgerEntry.LedgerBucket);
             ledgerEntry.Balance = openingBalance + ledgerEntry.Transactions.Sum(t => t.Amount);
         }
 
