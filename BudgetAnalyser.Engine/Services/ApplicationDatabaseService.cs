@@ -250,7 +250,7 @@ namespace BudgetAnalyser.Engine.Services
             {
                 try
                 {
-                    valid = service.ValidateModel(messages);
+                    valid &= service.ValidateModel(messages);
                 }
                 catch (ValidationWarningException ex)
                 {

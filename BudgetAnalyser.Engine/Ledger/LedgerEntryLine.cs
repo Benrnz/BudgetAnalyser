@@ -263,8 +263,7 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (Entries.None())
             {
-                validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                    "The Ledger Entry does not contain any entries, either delete it or add entries.");
+                validationMessages.AppendFormat(CultureInfo.CurrentCulture, "The Ledger Entry does not contain any entries, either delete it or add entries.");
                 result = false;
             }
 
@@ -277,12 +276,9 @@ namespace BudgetAnalyser.Engine.Ledger
 
             foreach (var ledgerEntry in Entries)
             {
-                if (
-                    !ledgerEntry.Validate(validationMessages,
-                        FindPreviousEntryClosingBalance(previousLine, ledgerEntry.LedgerBucket)))
+                if (!ledgerEntry.Validate(validationMessages, FindPreviousEntryClosingBalance(previousLine, ledgerEntry.LedgerBucket)))
                 {
-                    validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                        "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
+                    validationMessages.AppendFormat(CultureInfo.CurrentCulture, "\nLedger Entry with Balance {0:C} is invalid.", ledgerEntry.Balance);
                     result = false;
                 }
             }
