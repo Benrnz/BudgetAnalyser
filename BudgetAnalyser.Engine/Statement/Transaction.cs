@@ -280,7 +280,7 @@ namespace BudgetAnalyser.Engine.Statement
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentUICulture, "Transaction: ({0} {1:N} {2} {3} {4} {5})", Date, Amount,
-                Description, BudgetBucket.Code, Reference1, Id);
+                Description, BudgetBucket?.Code, Reference1, Id);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
