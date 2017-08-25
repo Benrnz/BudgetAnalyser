@@ -3,7 +3,7 @@ using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     /// <summary>
     ///     Responsible for reconciling the month's transactions against the budget and creating a

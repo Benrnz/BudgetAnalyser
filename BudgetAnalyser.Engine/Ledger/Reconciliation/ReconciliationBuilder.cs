@@ -4,15 +4,15 @@ using System.Globalization;
 using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Ledger.Reconciliation;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     [AutoRegisterWithIoC(SingleInstance = true)]
     internal class ReconciliationBuilder : IReconciliationBuilder
     {
+        private readonly IEnumerable<IReconciliationBehaviour> beahviours;
         internal const string MatchedPrefix = "Matched ";
         private readonly ILogger logger;
         private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
@@ -21,6 +21,7 @@ namespace BudgetAnalyser.Engine.Ledger
         public ReconciliationBuilder([NotNull] ILogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.beahviours = ReconciliationBehaviourFactory.ListAllBehaviours();
         }
 
         public LedgerBook LedgerBook { get; set; }
@@ -202,9 +203,15 @@ namespace BudgetAnalyser.Engine.Ledger
                 AddBalanceAdjustmentsForFutureTransactions(statement, reconciliationDate);
             }
 
-            var behaviour = new ReconciliationBehaviourPaidFromWrongAccount();
-            behaviour.Initialise(filteredStatementTransactions, this.newReconciliationLine, this.toDoList);
-            behaviour.ApplyBehaviour();
+            foreach (var behaviour in this.beahviours)
+            {
+                behaviour.Initialise(
+                    new KeyValuePair<string, object>(filteredStatementTransactions.GetType().Name, filteredStatementTransactions),
+                    new KeyValuePair<string, object>(this.newReconciliationLine.GetType().Name, this.newReconciliationLine), 
+                    new KeyValuePair<string, object>(this.toDoList.GetType().Name, this.toDoList),
+                    new KeyValuePair<string, object>(typeof(ILogger).Name, this.logger));
+                behaviour.ApplyBehaviour();
+            }
         }
 
         /// <summary>

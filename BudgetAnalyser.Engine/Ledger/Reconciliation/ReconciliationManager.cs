@@ -11,7 +11,7 @@ using BudgetAnalyser.Engine.Services;
 using BudgetAnalyser.Engine.Statement;
 using JetBrains.Annotations;
 
-namespace BudgetAnalyser.Engine.Ledger
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
     [AutoRegisterWithIoC]
     internal class ReconciliationManager : IReconciliationManager
