@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BudgetAnalyser.Engine.BankAccount;
 using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Mobile;
 using JetBrains.Annotations;
 
 namespace BudgetAnalyser.Engine.Ledger.Data
@@ -105,6 +106,11 @@ namespace BudgetAnalyser.Engine.Ledger.Data
         partial void ToModelPostprocessing(LedgerBookDto dto, ref LedgerBook model)
         {
             InitialiseAndValidateLedgerBook(dto, model);
+        }
+
+        partial void ToDtoPreprocessing(LedgerBook model)
+        {
+            if (model.MobileSettings == null) model.MobileSettings = new MobileStorageSettings();
         }
     }
 

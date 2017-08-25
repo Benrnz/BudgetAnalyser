@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using BudgetAnalyser.Encryption;
 using BudgetAnalyser.Engine.Budget;
 using BudgetAnalyser.Engine.Persistence;
@@ -44,22 +46,33 @@ namespace BudgetAnalyser.Engine.UnitTest
                      " the exclude list. This prevents runtime errors where the IoC container cannot resolve a concrete type for the new interface.")]
         public void EnsureAllInterfacesAreRegisteredWithIoC()
         {
-            List<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
-            dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
-
-            IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
-
-            List<string> exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
-            foreach (var interfaceType in interfaces.Except(ExemptionList))
+            try
             {
-                Console.Write("Interface: {0}", interfaceType.Name);
-                if (exemptionListNames.Contains(interfaceType.FullName)) continue;
-                if (!dependencies.Any(d => d.AdditionalRegistrationType == interfaceType || IsSelfRegistered(interfaceType, d)))
-                {
-                    Assert.Fail($"Interface: {interfaceType.FullName} is not registered.");
-                }
+                List<DependencyRegistrationRequirement> dependencies = DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(StatementModel).Assembly).ToList();
+                dependencies.AddRange(DefaultIoCRegistrations.RegisterAutoMappingsFromAssembly(typeof(SecureStringCredentialStore).Assembly));
 
-                Console.WriteLine(" registered.");
+                IEnumerable<Type> interfaces = typeof(StatementModel).Assembly.GetTypes().Where(t => t.IsInterface);
+
+                List<string> exemptionListNames = ExemptionList.Select(e => e.FullName).ToList();
+                foreach (var interfaceType in interfaces.Except(ExemptionList))
+                {
+                    Console.Write("Interface: {0}", interfaceType.Name);
+                    if (exemptionListNames.Contains(interfaceType.FullName)) continue;
+                    if (!dependencies.Any(d => d.AdditionalRegistrationType == interfaceType || IsSelfRegistered(interfaceType, d)))
+                    {
+                        Assert.Fail($"Interface: {interfaceType.FullName} is not registered.");
+                    }
+
+                    Console.WriteLine(" registered.");
+                }
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                foreach (var exception in ex.LoaderExceptions)
+                {
+                    Debug.WriteLine(exception);
+                }
+                Assert.Fail();
             }
         }
 

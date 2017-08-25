@@ -115,7 +115,7 @@ namespace BudgetAnalyser.Engine.Ledger
             if (!this.isNew)
             {
                 throw new InvalidOperationException(
-                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
+                                                    "Cannot adjust existing ledger lines, only newly added lines can be adjusted.");
             }
 
             var txn = this.transactions.FirstOrDefault(t => t.Id == transactionId);
@@ -170,14 +170,14 @@ namespace BudgetAnalyser.Engine.Ledger
             if (LedgerBucket.BudgetBucket == null)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                    "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
+                                                "Ledger Bucket '{0}' has no Bucket assigned.", LedgerBucket);
                 result = false;
             }
 
             if (openingBalance + Transactions.Sum(t => t.Amount) != Balance)
             {
                 validationMessages.AppendFormat(CultureInfo.CurrentCulture,
-                    "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
+                                                "Ledger Entry '{0}' transactions do not add up to the calculated balance!", this);
                 result = false;
             }
 

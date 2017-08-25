@@ -126,6 +126,7 @@
     <Compile Include="DuplicateNameException.cs" />
     <Compile Include="IReaderWriterSelector.cs" />
     <Compile Include="Ledger\Data\MobileStorageSettingsDto.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourPaidFromWrongAccount.cs" />
     <Compile Include="Mobile\IMobileDataExporter.cs" />
     <Compile Include="Mobile\IMobileDataUploader.cs" />
     <Compile Include="Mobile\MobileDataExporter.cs" />

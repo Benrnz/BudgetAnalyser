@@ -75,7 +75,9 @@ namespace BudgetAnalyser.Engine.Services
         public async Task CreateAsync(ApplicationDatabase applicationDatabase)
         {
             if (applicationDatabase.MatchingRulesCollectionStorageKey.IsNothing())
+            {
                 throw new ArgumentNullException(nameof(applicationDatabase));
+            }
 
             await this.ruleRepository.CreateNewAndSaveAsync(applicationDatabase.MatchingRulesCollectionStorageKey);
             await LoadAsync(applicationDatabase);
@@ -115,7 +117,9 @@ namespace BudgetAnalyser.Engine.Services
                 await this.ruleRepository.SaveAsync(MatchingRules, applicationDatabase.FullPath(applicationDatabase.MatchingRulesCollectionStorageKey), applicationDatabase.IsEncrypted);
             }
             else
+            {
                 throw new ValidationWarningException("Unable to save matching rules at this time, some data is invalid.\n" + messages);
+            }
 
             this.monitorableDependencies.NotifyOfDependencyChange<ITransactionRuleService>(this);
             Saved?.Invoke(this, EventArgs.Empty);
@@ -145,7 +149,7 @@ namespace BudgetAnalyser.Engine.Services
                                                             string transactionTypeName, decimal? amount, bool andMatching)
         {
             var rule = this.ruleFactory.CreateNewSingleUseRule(bucketCode, description, references, transactionTypeName,
-                amount, andMatching);
+                                                               amount, andMatching);
             AddRule(rule);
             return rule;
         }
@@ -173,7 +177,7 @@ namespace BudgetAnalyser.Engine.Services
             if (match)
             {
                 this.logger.LogInfo(
-                    l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
+                                    l => l.Format("Rule Match: {0} Existing Rule:{1} Criteria:{2}", match, rule, description));
                 rule.AmountMatched = matchedByResults[0] && amount.Applicable;
                 rule.DescriptionMatched = matchedByResults[1] && description.Applicable;
                 rule.Reference1Matched = matchedByResults[2] && references[0].Applicable;
@@ -197,25 +201,33 @@ namespace BudgetAnalyser.Engine.Services
             var matchesMade = this.matchmaker.Match(transactions, MatchingRules);
             this.logger.LogInfo(l => "TransactionRuleService: Removing any SingleUseRules that have been used.");
             foreach (var rule in MatchingRules.OfType<SingleUseMatchingRule>().ToList())
+            {
                 if (rule.MatchCount > 0)
+                {
                     RemoveRule(rule);
+                }
+            }
             return matchesMade;
         }
 
         public bool RemoveRule(MatchingRule ruleToRemove)
         {
             if (ruleToRemove == null)
+            {
                 throw new ArgumentNullException(nameof(ruleToRemove));
+            }
 
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
             {
                 throw new InvalidOperationException(
-                    "Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
+                                                    "Unable to remove a matching rule at this time, the service has not yet loaded a matching rule set.");
             }
 
             var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(g => g.Bucket == ruleToRemove.Bucket);
             if (existingGroup == null)
+            {
                 return false;
+            }
 
             var success1 = existingGroup.Rules.Remove(ruleToRemove);
             var success2 = this.matchingRules.Remove(ruleToRemove);
@@ -225,13 +237,13 @@ namespace BudgetAnalyser.Engine.Services
             if (!success1)
             {
                 this.logger.LogWarning(
-                    _ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
+                                       _ => "Matching Rule was not removed successfully from the Grouped list: " + removedRule);
             }
 
             if (!success2)
             {
                 this.logger.LogWarning(
-                    _ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
+                                       _ => "Matching Rule was not removed successfully from the flat list: " + removedRule);
             }
 
             return true;
@@ -246,14 +258,20 @@ namespace BudgetAnalyser.Engine.Services
         private void AddRule(MatchingRule ruleToAdd)
         {
             if (ruleToAdd == null)
+            {
                 throw new ArgumentNullException(nameof(ruleToAdd));
+            }
 
             if (string.IsNullOrWhiteSpace(this.rulesStorageKey))
+            {
                 throw new InvalidOperationException("Unable to add a matching rule at this time, the service has not yet loaded a matching rule set.");
+            }
 
             // Make sure no rule already exists with this id:
             if (MatchingRules.Any(r => r.RuleId == ruleToAdd.RuleId))
+            {
                 throw new DuplicateNameException($"Unable to add new matching rule: Rule ID {ruleToAdd.RuleId} already exists in the collection.");
+            }
 
             // Check to see if an existing group object for the desired bucket already exists.
             var existingGroup = MatchingRulesGroupedByBucket.FirstOrDefault(group => group.Bucket == ruleToAdd.Bucket);
@@ -295,7 +313,7 @@ namespace BudgetAnalyser.Engine.Services
                 .Select(group => new RulesGroupedByBucket(group.Key, group))
                 .OrderBy(group => group.Bucket.Code);
 
-            var allBuckets = this.bucketRepo.Buckets.OrderBy(b => b);
+            IOrderedEnumerable<BudgetBucket> allBuckets = this.bucketRepo.Buckets.OrderBy(b => b);
             foreach (var bucket in allBuckets)
             {
                 var group = grouped.FirstOrDefault(g => g.Bucket == bucket);
@@ -315,19 +333,29 @@ namespace BudgetAnalyser.Engine.Services
                                                        StringCriteria description, StringCriteria[] references, StringCriteria transactionType)
         {
             if (rule == null)
+            {
                 throw new ArgumentNullException(nameof(rule));
+            }
 
             if (amount == null)
+            {
                 throw new ArgumentNullException(nameof(amount));
+            }
 
             if (description == null)
+            {
                 throw new ArgumentNullException(nameof(description));
+            }
 
             if (references == null)
+            {
                 throw new ArgumentNullException(nameof(references));
+            }
 
             if (transactionType == null)
+            {
                 throw new ArgumentNullException(nameof(transactionType));
+            }
         }
     }
 }
