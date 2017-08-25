@@ -14,14 +14,17 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
     ///     advance in the bucket. It'll also add balance adjustments to correct the bank balances.
     /// </summary>
     [AutoRegisterWithIoC]
-    public class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBehaviour
+    internal class ReconciliationBehaviourPaidFromWrongAccount : IReconciliationBehaviour
     {
         private const string LogPrefix = "Ledger Reconciliation - ";
         private Dictionary<BudgetBucket, Account> ledgerBuckets;
         private ILogger logger;
-        private LedgerEntryLine newReconLine;
-        private IList<ToDoTask> todoTasks;
-        private IEnumerable<Transaction> transactions;
+
+        public LedgerEntryLine NewReconLine { get; private set; }
+
+        public IList<ToDoTask> TodoTasks { get; private set; }
+
+        public IEnumerable<Transaction> Transactions { get; private set; }
 
         /// <inheritdoc />
         public void ApplyBehaviour()
@@ -41,30 +44,30 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         {
             foreach (KeyValuePair<string, object> argument in anyArguments)
             {
-                this.todoTasks = this.todoTasks ?? argument.Value as IList<ToDoTask>;
-                this.newReconLine = this.newReconLine ?? argument.Value as LedgerEntryLine;
-                this.transactions = this.transactions ?? argument.Value as IEnumerable<Transaction>;
+                TodoTasks = TodoTasks ?? argument.Value as IList<ToDoTask>;
+                NewReconLine = NewReconLine ?? argument.Value as LedgerEntryLine;
+                Transactions = Transactions ?? argument.Value as IEnumerable<Transaction>;
                 this.logger = this.logger ?? argument.Value as ILogger;
             }
 
-            if (this.todoTasks == null)
+            if (TodoTasks == null)
             {
-                throw new ArgumentNullException(nameof(this.todoTasks));
+                throw new ArgumentNullException(nameof(TodoTasks));
             }
-            if (this.newReconLine == null)
+            if (NewReconLine == null)
             {
-                throw new ArgumentNullException(nameof(this.newReconLine));
+                throw new ArgumentNullException(nameof(NewReconLine));
             }
-            if (this.transactions == null)
+            if (Transactions == null)
             {
-                throw new ArgumentNullException(nameof(this.transactions));
+                throw new ArgumentNullException(nameof(Transactions));
             }
             if (this.logger == null)
             {
                 throw new ArgumentNullException(nameof(this.logger));
             }
 
-            this.ledgerBuckets = this.newReconLine.Entries.Select(e => e.LedgerBucket)
+            this.ledgerBuckets = NewReconLine.Entries.Select(e => e.LedgerBucket)
                 .Distinct()
                 .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
         }
@@ -72,9 +75,9 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <inheritdoc />
         public void Dispose()
         {
-            this.newReconLine = null;
-            this.todoTasks = null;
-            this.transactions = null;
+            NewReconLine = null;
+            TodoTasks = null;
+            Transactions = null;
             this.ledgerBuckets = null;
         }
 
@@ -86,22 +89,24 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 {
                     Amount = transaction.Amount, // Amount is already negative/debit
                     AutoMatchingReference = reference,
-                    Date = this.newReconLine.Date, // TODO check this
+                    Date = NewReconLine.Date, // TODO check this
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var journal2 = new CreditLedgerTransaction
                 {
                     Amount = -transaction.Amount,
                     AutoMatchingReference = reference,
-                    Date = this.newReconLine.Date,
+                    Date = NewReconLine.Date,
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
-                var ledger = this.newReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
+                var ledger = NewReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
                 ledger.AddTransaction(journal1);
                 ledger.AddTransaction(journal2);
 
-                this.newReconLine.BalanceAdjustment(transaction.Amount, $"Decrease balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
-                                                    ledger.LedgerBucket.StoredInAccount);
+                NewReconLine.BalanceAdjustment(transaction.Amount, $"Decrease balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
+                                               ledger.LedgerBucket.StoredInAccount);
+                NewReconLine.BalanceAdjustment(-transaction.Amount, $"Increase balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
+                                               transaction.Account);
             }
         }
 
@@ -110,23 +115,23 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
             foreach (var transaction in wrongAccountPayments)
             {
                 var ledgerAccount = this.ledgerBuckets[transaction.BudgetBucket];
-                this.todoTasks.Add(
-                                   new TransferTask(
-                                                    $"A {transaction.BudgetBucket.Code} payment for {transaction.Amount:C} on the {transaction.Date:d} has been made from {transaction.Account}, but funds are stored in {ledgerAccount}. Use reference {reference}",
-                                                    true)
-                                   {
-                                       Amount = -transaction.Amount,
-                                       SourceAccount = ledgerAccount,
-                                       DestinationAccount = transaction.Account,
-                                       BucketCode = transaction.BudgetBucket.Code,
-                                       Reference = reference
-                                   });
+                TodoTasks.Add(
+                              new TransferTask(
+                                               $"A {transaction.BudgetBucket.Code} payment for {transaction.Amount:C} on the {transaction.Date:d} has been made from {transaction.Account}, but funds are stored in {ledgerAccount}. Use reference {reference}",
+                                               true)
+                              {
+                                  Amount = -transaction.Amount,
+                                  SourceAccount = ledgerAccount,
+                                  DestinationAccount = transaction.Account,
+                                  BucketCode = transaction.BudgetBucket.Code,
+                                  Reference = reference
+                              });
             }
         }
 
         private IList<Transaction> DiscoverWrongAccountPaymentTransactions()
         {
-            List<Transaction> debitAccountTransactionsOnly = this.transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
+            List<Transaction> debitAccountTransactionsOnly = Transactions.Where(t => t.Account.AccountType != AccountType.CreditCard).ToList();
 
             var wrongAccountPayments = new List<Transaction>();
 
