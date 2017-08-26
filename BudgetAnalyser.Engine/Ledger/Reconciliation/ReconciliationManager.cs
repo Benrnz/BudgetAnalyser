@@ -254,14 +254,16 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
             if (!(transferDetails.FromLedger.BudgetBucket is SurplusBucket))
             {
                 var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.FromLedger);
-                ledgerEntry.AddTransaction(sourceTransaction);
+                // TODO this needs to change
+                ledgerEntry.AddTransactionForPersistenceOnly(sourceTransaction);
             }
 
             // No need for a destination transaction for surplus ledger.
             if (!(transferDetails.ToLedger.BudgetBucket is SurplusBucket))
             {
                 var ledgerEntry = ledgerEntryLine.Entries.Single(e => e.LedgerBucket == transferDetails.ToLedger);
-                ledgerEntry.AddTransaction(destinationTransaction);
+                // TODO this needs to change
+                ledgerEntry.AddTransactionForPersistenceOnly(destinationTransaction);
             }
         }
 

@@ -194,8 +194,9 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         }
 
         [TestMethod]
-        public void Reconcile_WithPaymentFromWrongAccountShouldCreateBalanceAdjustment_GivenTestData1()
+        public void Reconcile_WithPaymentFromWrongAccountShouldCreateBalanceAdjustment_GivenTestData5()
         {
+            this.testDataBudget.Output();
             this.subject = LedgerBookTestData.TestData5();
             var testTransaction = this.testDataStatement.AllTransactions.Last();
             testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
@@ -214,6 +215,24 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             Assert.AreEqual(650M, savingsBal, "Savings should be decreased because savings still has the funds and needs to payback the Cheque account."); 
             Assert.AreEqual(2200.50M, chqBal, "Chq should be increased after it has been paid back from savings.");
             Assert.AreEqual(0M, reconResult.Reconciliation.TotalBalanceAdjustments);
+        }
+
+        [TestMethod]
+        public void Reconcile_WithPaymentFromWrongAccountShouldUpdateLedgerBalance_GivenTestData5()
+        {
+            this.testDataBudget = BudgetModelTestData.CreateTestData5();
+            this.subject = LedgerBookTestData.TestData5();
+            var testTransaction = this.testDataStatement.AllTransactions.Last();
+            testTransaction.BudgetBucket = LedgerBookTestData.HouseInsLedgerSavingsAccount.BudgetBucket;
+            testTransaction.Account = StatementModelTestData.ChequeAccount;
+            testTransaction.Amount = -1250;
+            this.testDataStatement.Output(DateTime.MinValue);
+            this.subject.Output();
+
+            var reconResult = Act(bankBalances: new[] { new BankBalance(StatementModelTestData.ChequeAccount, 1850.5M), new BankBalance(StatementModelTestData.SavingsAccount, 1000M) });
+            this.subject.Output(true);
+
+            Assert.AreEqual(300M, reconResult.Reconciliation.Entries.Single(e => e.LedgerBucket == LedgerBookTestData.HouseInsLedgerSavingsAccount).Balance);
         }
 
         [TestMethod]

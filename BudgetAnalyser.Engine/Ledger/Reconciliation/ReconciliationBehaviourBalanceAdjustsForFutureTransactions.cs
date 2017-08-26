@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BudgetAnalyser.Engine.BankAccount;
+using BudgetAnalyser.Engine.Budget;
+using BudgetAnalyser.Engine.Statement;
+
+namespace BudgetAnalyser.Engine.Ledger.Reconciliation
+{
+    [AutoRegisterWithIoC]
+    internal class ReconciliationBehaviourBalanceAdjustsForFutureTransactions : IReconciliationBehaviour
+    {
+        public LedgerEntryLine NewReconLine { get; private set; }
+
+        public StatementModel Statement { get; private set; }
+        public IList<ToDoTask> TodoTasks { get; private set; }
+
+        public void Dispose()
+        {
+            NewReconLine = null;
+            TodoTasks = null;
+            Statement = null;
+        }
+
+        public void Initialise(params object[] anyParameters)
+        {
+            foreach (var argument in anyParameters)
+            {
+                TodoTasks = TodoTasks ?? argument as IList<ToDoTask>;
+                NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
+                Statement = Statement ?? argument as StatementModel;
+            }
+
+            if (TodoTasks == null)
+            {
+                throw new ArgumentNullException(nameof(TodoTasks));
+            }
+
+            if (NewReconLine == null)
+            {
+                throw new ArgumentNullException(nameof(NewReconLine));
+            }
+
+            if (Statement == null)
+            {
+                throw new ArgumentNullException(nameof(Statement));
+            }
+        }
+
+        public void ApplyBehaviour()
+        {
+            if (Statement != null)
+            {
+                AddBalanceAdjustmentsForFutureTransactions(Statement, NewReconLine.Date);
+            }
+        }
+
+        private void AddBalanceAdjustmentsForFutureTransactions(StatementModel statement, DateTime reconciliationDate)
+        {
+            var adjustmentsMade = false;
+            foreach (var futureTransaction in statement.AllTransactions
+                .Where(
+                       t =>
+                           t.Account.AccountType != AccountType.CreditCard && t.Date >= reconciliationDate &&
+                           !(t.BudgetBucket is PayCreditCardBucket)))
+            {
+                adjustmentsMade = true;
+                NewReconLine.BalanceAdjustment(
+                                               -futureTransaction.Amount,
+                                               "Remove future transaction for " + futureTransaction.Date.ToString("d"),
+                                               futureTransaction.Account);
+            }
+
+            if (adjustmentsMade)
+            {
+                TodoTasks.Add(new ToDoTask("Check auto-generated balance adjustments for future transactions.", true));
+            }
+        }
+    }
+}

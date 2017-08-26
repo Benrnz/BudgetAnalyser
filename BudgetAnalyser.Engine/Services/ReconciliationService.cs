@@ -108,7 +108,9 @@ namespace BudgetAnalyser.Engine.Services
             LedgerTransaction newTransaction = new CreditLedgerTransaction();
             newTransaction.WithAmount(amount).WithNarrative(narrative);
             newTransaction.Date = reconciliation.Date;
-            ledgerEntry.AddTransaction(newTransaction);
+
+            // TODO this needs to change
+            ledgerEntry.AddTransactionForPersistenceOnly(newTransaction);
             return newTransaction;
         }
 

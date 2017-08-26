@@ -94,7 +94,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var entryLine = Act(this.subject, this.testDataBudget);
             var newTransaction = new CreditLedgerTransaction { Amount = -100 };
             var entry = entryLine.Reconciliation.Entries.First();
-            entry.AddTransaction(newTransaction);
+            entry.AddTransactionForPersistenceOnly(newTransaction);
 
             this.subject.Output();
             Assert.AreEqual(20, entry.Balance);
@@ -106,7 +106,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             var entryLine = Act(this.subject, this.testDataBudget);
             var newTransaction = new CreditLedgerTransaction { Amount = -100 };
             var entry = entryLine.Reconciliation.Entries.First();
-            entry.AddTransaction(newTransaction);
+            entry.AddTransactionForPersistenceOnly(newTransaction);
 
             Assert.AreEqual(-100, entry.NetAmount);
         }

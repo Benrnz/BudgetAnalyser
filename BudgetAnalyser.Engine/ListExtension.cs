@@ -15,14 +15,17 @@ namespace BudgetAnalyser.Engine
         /// <typeparam name="T">Any type</typeparam>
         /// <param name="instance">The target collection</param>
         /// <param name="newElement">The new element to add if its not null.</param>
-        public static void AddIfSomething<T>([NotNull] this IList<T> instance, T newElement) where T : class
+        public static bool AddIfSomething<T>([NotNull] this IList<T> instance, T newElement) where T : class
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             if (newElement != null)
             {
                 instance.Add(newElement);
+                return true;
             }
+
+            return false;
         }
     }
 }

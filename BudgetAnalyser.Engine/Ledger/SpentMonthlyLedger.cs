@@ -27,7 +27,7 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public override void ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
+        public override bool ApplyReconciliationBehaviour(IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance)
         {
             var netAmount = transactions.Sum(t => t.Amount);
             var closingBalance = openingBalance + netAmount;
@@ -35,22 +35,18 @@ namespace BudgetAnalyser.Engine.Ledger
 
             if (budgetTransaction == null)
             {
-                transactions.AddIfSomething(SupplementToZero(closingBalance, reconciliationDate));
-
-                return;
+                return transactions.AddIfSomething(SupplementToZero(closingBalance, reconciliationDate));
             }
 
             // Supplement
             if (closingBalance < budgetTransaction.Amount)
             {
-                transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
-                return;
+                return transactions.AddIfSomething(SupplementToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
             }
 
             if (closingBalance < openingBalance)
             {
-                transactions.AddIfSomething(SupplementToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
-                return;
+                return transactions.AddIfSomething(SupplementToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
             }
 
             // Remove-excess
@@ -58,13 +54,13 @@ namespace BudgetAnalyser.Engine.Ledger
             {
                 if (openingBalance > budgetTransaction.Amount)
                 {
-                    transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
+                    return transactions.AddIfSomething(RemoveExcessToOpeningBalance(closingBalance, reconciliationDate, openingBalance));
                 }
-                else
-                {
-                    transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
-                }
+
+                return transactions.AddIfSomething(RemoveExcessToBudgetAmount(closingBalance, reconciliationDate, budgetTransaction.Amount));
             }
+
+            return false;
         }
 
         /// <summary>

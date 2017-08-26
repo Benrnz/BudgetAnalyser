@@ -127,6 +127,10 @@
     <Compile Include="IReaderWriterSelector.cs" />
     <Compile Include="Ledger\Data\MobileStorageSettingsDto.cs" />
     <Compile Include="Ledger\Reconciliation\IReconciliationBehaviour.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourOverdrawnSurplus.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourLedgerBucket.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourBalanceAdjustsForFutureTransactions.cs" />
+    <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourBudgetAmountBalanceAdjustments.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourFactory.cs" />
     <Compile Include="Ledger\Reconciliation\ReconciliationBehaviourPaidFromWrongAccount.cs" />
     <Compile Include="Mobile\IMobileDataExporter.cs" />

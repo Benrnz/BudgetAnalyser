@@ -34,6 +34,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         private const decimal OpeningBalance = 125M;
         private DateTime reconciliationDate;
         private LedgerEntry subject;
+        private SpentMonthlyLedger subject2;
 
         [TestMethod]
         public void ShouldSupplementToBudgetAmount_GivenNetDifferenceOfZeroAndClosingBalanceIsLessThanBudgetAmount()
@@ -45,11 +46,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 300M, Date = new DateTime(2013, 9, 11) },
                 new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
 
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(300M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(300M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -62,11 +63,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new CreditLedgerTransaction { Amount = 300M, Date = new DateTime(2013, 9, 11) },
                 new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
 
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(0M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(0M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new CreditLedgerTransaction { Amount = -1251.17M, Date = new DateTime(2014, 1, 14) },
                 new BudgetCreditLedgerTransaction { Amount = 1620.00M, Date = new DateTime(2014, 1, 20) },
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            this.subject.SetTransactionsForReconciliation(testInput);
 
             this.subject.Output();
 
@@ -96,11 +97,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             {
                 new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(0M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(0M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -113,11 +113,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 201M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -300M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(201M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(201M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestInitialize]
@@ -125,6 +124,11 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         {
             this.reconciliationDate = new DateTime(2013, 9, 20);
 
+            this.subject2 = new SpentMonthlyLedger
+            {
+                BudgetBucket = StatementModelTestData.PowerBucket,
+                StoredInAccount = StatementModelTestData.ChequeAccount
+            };
             this.subject = new LedgerEntry(true)
             {
                 LedgerBucket = LedgerBookTestData.PowerLedger,
@@ -145,10 +149,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 0M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = 1M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            Assert.IsTrue(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         [TestMethod]
@@ -161,27 +165,25 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             {
                 new CreditLedgerTransaction { Amount = 1M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(2, this.subject.Transactions.Count());
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, testInput.Count());
         }
 
         [TestMethod]
         [Description("Test case 3")]
         public void ShouldCreateSupplementTransaction_GivenClosingBalanceIsLessThanBudgetAmountAndLessThanOrEqualToOpeningBalance()
         {
-            this.subject.Balance = 0;
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 1, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -1M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, 0);
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            Assert.IsTrue(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         [TestMethod]
@@ -195,10 +197,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 1, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -2M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            Assert.IsTrue(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         [TestMethod]
@@ -212,10 +214,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new CreditLedgerTransaction { Amount = 1, Date = new DateTime(2013, 9, 11) },
                 new CreditLedgerTransaction { Amount = -1, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            Assert.IsTrue(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         #endregion
@@ -226,16 +228,14 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
         [Description("Test case 2 - no budget amount allocated at all")]
         public void ShouldNotCreateSupplementTransaction_GivenClosingBalanceIsLessThanOpeningBalanceAndNoBudgetAmount()
         {
-            this.subject.Balance = 1;
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new CreditLedgerTransaction { Amount = -1, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, 1);
 
-            Assert.AreEqual(1, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(1, testInput.Count());
         }
 
         [TestMethod]
@@ -249,10 +249,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 1M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -1, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(2, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(2, testInput.Count());
         }
 
 
@@ -266,26 +266,24 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = OpeningBalance, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -OpeningBalance, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(2, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(2, testInput.Count());
         }
 
         [TestMethod]
         [Description("Test case 7")]
         public void ShouldNotAddCompensatingTransaction_GivenClosingBalanceIsEqualToBudgetAndNoWithdrawals()
         {
-            this.subject.Balance = 0;
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 1, Date = this.reconciliationDate, Narrative = "Budget Amount" }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, 0);
 
-            Assert.AreEqual(1, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(1, testInput.Count());
         }
 
         [TestMethod]
@@ -300,10 +298,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new CreditLedgerTransaction { Amount = 1, Date = new DateTime(2013, 9, 11) },
                 new CreditLedgerTransaction { Amount = -1, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         [TestMethod]
@@ -313,7 +311,7 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
             this.subject.Balance = 0;
             Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>();
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            this.subject.SetTransactionsForReconciliation(testInput);
             this.subject.Output();
 
             Assert.AreEqual(0, this.subject.Transactions.Count());
@@ -333,11 +331,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 175M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -75M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(175M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(175M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -350,11 +347,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 105M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -75M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(125M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(125M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         #endregion
@@ -371,11 +367,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 100M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -200M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(100M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(100M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -388,11 +383,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 125M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -200M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(OpeningBalance, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(OpeningBalance, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
@@ -405,11 +399,10 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
                 new BudgetCreditLedgerTransaction { Amount = 200M, Date = this.reconciliationDate, Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -200M, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            this.subject.Output();
-
-            Assert.AreEqual(200M, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(200M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         #endregion

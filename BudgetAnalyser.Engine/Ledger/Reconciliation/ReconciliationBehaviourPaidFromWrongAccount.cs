@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <inheritdoc />
         public void ApplyBehaviour()
         {
-            IList<Transaction> wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
+            var wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
 
             var reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
 
@@ -40,14 +40,14 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         }
 
         /// <inheritdoc />
-        public void Initialise(params KeyValuePair<string, object>[] anyArguments)
+        public void Initialise(params object[] anyArguments)
         {
-            foreach (KeyValuePair<string, object> argument in anyArguments)
+            foreach (var argument in anyArguments)
             {
-                TodoTasks = TodoTasks ?? argument.Value as IList<ToDoTask>;
-                NewReconLine = NewReconLine ?? argument.Value as LedgerEntryLine;
-                Transactions = Transactions ?? argument.Value as IEnumerable<Transaction>;
-                this.logger = this.logger ?? argument.Value as ILogger;
+                TodoTasks = TodoTasks ?? argument as IList<ToDoTask>;
+                NewReconLine = NewReconLine ?? argument as LedgerEntryLine;
+                Transactions = Transactions ?? argument as IEnumerable<Transaction>;
+                this.logger = this.logger ?? argument as ILogger;
             }
 
             if (TodoTasks == null)
@@ -89,7 +89,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 {
                     Amount = transaction.Amount, // Amount is already negative/debit
                     AutoMatchingReference = reference,
-                    Date = NewReconLine.Date, // TODO check this
+                    Date = NewReconLine.Date, 
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var journal2 = new CreditLedgerTransaction
@@ -100,8 +100,10 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var ledger = NewReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
-                ledger.AddTransaction(journal1);
-                ledger.AddTransaction(journal2);
+                var replacementTransactions = ledger.Transactions.ToList();
+                replacementTransactions.Add(journal1);
+                replacementTransactions.Add(journal2);
+                ledger.SetTransactionsForReconciliation(replacementTransactions);
 
                 NewReconLine.BalanceAdjustment(transaction.Amount, $"Decrease balance to show transfer to rectify {ledger.LedgerBucket.BudgetBucket.Code} payment made from wrong account.",
                                                ledger.LedgerBucket.StoredInAccount);

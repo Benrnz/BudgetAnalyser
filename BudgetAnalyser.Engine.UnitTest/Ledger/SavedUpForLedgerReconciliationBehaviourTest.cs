@@ -12,104 +12,101 @@ namespace BudgetAnalyser.Engine.UnitTest.Ledger
     public class SavedUpForLedgerReconciliationBehaviourTest
     {
         private const decimal OpeningBalance = 100M;
-        private LedgerEntry subject;
+        private SavedUpForLedger subject2;
         private readonly DateTime reconciliationDate = new DateTime(2013, 9, 20);
 
         [TestMethod]
         public void ShouldAddCompensatingTransaction_GivenClosingBalanceLessThanBudgetAmount()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 150, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -200, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
 
-            Assert.AreEqual(3, this.subject.Transactions.Count());
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
+
+            Assert.IsTrue(result);
+            Assert.AreEqual(3, testInput.Count());
         }
 
         [TestMethod]
         public void ShouldNotAddCompensatingTransaction_GivenNoBudgetAmountAndClosingBalanceGreaterThanZero()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new CreditLedgerTransaction { Amount = -20, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(1, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(1, testInput.Count());
         }
 
         [TestMethod]
         public void ShouldNotAddCompensatingTransaction_GivenClosingBalanceGreaterThanBudgetAmount()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 150, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -20, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(2, this.subject.Transactions.Count());
+            Assert.IsFalse(result);
+            Assert.AreEqual(2, testInput.Count());
         }
 
         [TestMethod]
         public void ShouldAddCompensatingTransaction_GivenNoBudgetAmountAndClosingBalanceLessThanZero()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new CreditLedgerTransaction { Amount = -200, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
 
-            Assert.AreEqual(2, this.subject.Transactions.Count());
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
+            
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, testInput.Count);
         }
 
         [TestMethod]
         public void ShouldSupplementOverdrawnBalance_GivenClosingBalanceLessThanBudgetAmount()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 150, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -200, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
 
-            Assert.AreEqual(150, this.subject.Balance);
+            Assert.IsTrue(result);
+            Assert.AreEqual(150, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestMethod]
         public void ShouldNotSupplementPositiveBalance_GivenClosingBalanceGreaterThanBudgetAmount()
         {
-            Console.WriteLine($"Opening Balance: {this.subject.Balance:F2}");
             var testInput = new List<LedgerTransaction>
             {
                 new BudgetCreditLedgerTransaction { Amount = 150, Date = new DateTime(2013, 9, 11), Narrative = "Budget Amount" },
                 new CreditLedgerTransaction { Amount = -20, Date = new DateTime(2013, 9, 11) }
             };
-            this.subject.SetTransactionsForReconciliation(testInput, this.reconciliationDate);
-            this.subject.Output();
 
-            Assert.AreEqual(230M, this.subject.Balance);
+            var result = this.subject2.ApplyReconciliationBehaviour(testInput, this.reconciliationDate, OpeningBalance);
+
+            Assert.IsFalse(result);
+            Assert.AreEqual(230M, OpeningBalance + testInput.Sum(t => t.Amount));
         }
 
         [TestInitialize]
         public void TestInitialise()
         {
-            this.subject = new LedgerEntry(true)
+            this.subject2 = new SavedUpForLedger
             {
-                LedgerBucket = LedgerBookTestData.CarInsLedger,
-                Balance = OpeningBalance
+                BudgetBucket = StatementModelTestData.CarMtcBucket,
+                StoredInAccount = StatementModelTestData.ChequeAccount,
             };
         }
     }

@@ -54,7 +54,8 @@ namespace BudgetAnalyser.Engine.Ledger
         /// <summary>
         ///     Allows ledger bucket specific behaviour during reconciliation.
         /// </summary>
-        public abstract void ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
+        /// <returns>True if a transaction is created and added, otherwise false for nothing was added.</returns>
+        public abstract bool ApplyReconciliationBehaviour([NotNull] IList<LedgerTransaction> transactions, DateTime reconciliationDate, decimal openingBalance);
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" />, is equal to this instance.

@@ -265,7 +265,7 @@ namespace BudgetAnalyser.Engine.Ledger.Data
             var transactionMapper = new Mapper_LedgerTransactionDto_LedgerTransaction(this.transactionFactory, this.accountTypeRepo);
             foreach (var txn in dto.Transactions)
             {
-                model.AddTransaction(transactionMapper.ToModel(txn));
+                model.AddTransactionForPersistenceOnly(transactionMapper.ToModel(txn));
             }
         }
     }
