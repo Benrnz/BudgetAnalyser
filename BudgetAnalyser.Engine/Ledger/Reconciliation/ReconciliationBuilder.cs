@@ -12,7 +12,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
     internal class ReconciliationBuilder : IReconciliationBuilder
     {
         internal const string MatchedPrefix = "Matched ";
-        private readonly IEnumerable<IReconciliationBehaviour> beahviours;
         private readonly ILogger logger;
         private readonly IList<ToDoTask> toDoList = new List<ToDoTask>();
         private LedgerEntryLine newReconciliationLine;
@@ -20,7 +19,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         public ReconciliationBuilder([NotNull] ILogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.beahviours = ReconciliationBehaviourFactory.ListAllBehaviours();
         }
 
         public LedgerBook LedgerBook { get; set; }
@@ -192,14 +190,17 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
             this.newReconciliationLine.SetNewLedgerEntries(entries);
 
-            foreach (var behaviour in this.beahviours)
+            foreach (var behaviour in ReconciliationBehaviourFactory.ListAllBehaviours())
             {
-                behaviour.Initialise(filteredStatementTransactions,
-                                     this.newReconciliationLine,
-                                     this.toDoList,
-                                     this.logger,
-                                     statement);
-                behaviour.ApplyBehaviour();
+                using (behaviour)
+                {
+                    behaviour.Initialise(filteredStatementTransactions,
+                                         this.newReconciliationLine,
+                                         this.toDoList,
+                                         this.logger,
+                                         statement);
+                    behaviour.ApplyBehaviour();
+                }
             }
 
             // At this point each ledger balance is still set to the opening balance, it hasn't ben updated yet. This should always be done last.
