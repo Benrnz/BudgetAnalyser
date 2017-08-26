@@ -26,7 +26,10 @@ namespace BudgetAnalyser.Engine.Mobile
         /// </summary>
         public MobileDataExporter([NotNull] LedgerCalculation calculator, IReaderWriterSelector readerWriterSelector, IEnvironmentFolders environmentFolders)
         {
-            if (calculator == null) throw new ArgumentNullException(nameof(calculator));
+            if (calculator == null)
+            {
+                throw new ArgumentNullException(nameof(calculator));
+            }
             this.calculator = calculator;
             this.readerWriterSelector = readerWriterSelector;
             this.environmentFolders = environmentFolders;
@@ -37,27 +40,45 @@ namespace BudgetAnalyser.Engine.Mobile
         /// </summary>
         /// <returns>An object containing the summarised data.</returns>
         public SummarisedLedgerMobileData CreateExportObject(
-            [NotNull] StatementModel transactions, 
-            [NotNull] BudgetModel currentBudget, 
+            [NotNull] StatementModel transactions,
+            [NotNull] BudgetModel currentBudget,
             [NotNull] LedgerBook ledger,
             [NotNull] GlobalFilterCriteria filter)
         {
-            if (transactions == null) throw new ArgumentNullException(nameof(transactions));
-            if (currentBudget == null) throw new ArgumentNullException(nameof(currentBudget));
-            if (ledger == null) throw new ArgumentNullException(nameof(ledger));
-            if (filter == null) throw new ArgumentNullException(nameof(filter));
-            if (filter.BeginDate == null) return null;
+            if (transactions == null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+            if (currentBudget == null)
+            {
+                throw new ArgumentNullException(nameof(currentBudget));
+            }
+            if (ledger == null)
+            {
+                throw new ArgumentNullException(nameof(ledger));
+            }
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+            if (filter.BeginDate == null)
+            {
+                return null;
+            }
 
             var export = new SummarisedLedgerMobileData
             {
                 Exported = DateTime.Now,
                 LastTransactionImport = transactions.LastImport,
                 Title = currentBudget.Name,
-                StartOfMonth = filter.BeginDate.Value,
+                StartOfMonth = filter.BeginDate.Value
             };
 
             var latestRecon = this.calculator.LocateApplicableLedgerLine(ledger, filter);
-            if (latestRecon == null) return null;
+            if (latestRecon == null)
+            {
+                return null;
+            }
 
             var ledgerList = new List<SummarisedLedgerBucket>();
             IDictionary<BudgetBucket, decimal> currentBalances = this.calculator.CalculateCurrentMonthLedgerBalances(ledger, filter, transactions);
@@ -65,17 +86,24 @@ namespace BudgetAnalyser.Engine.Mobile
             {
                 ledgerList.Add(new SummarisedLedgerBucket
                 {
+                    AccountName = entry.LedgerBucket.StoredInAccount.Name,
                     RemainingBalance = currentBalances[entry.LedgerBucket.BudgetBucket],
                     OpeningBalance = entry.Balance,
                     BucketCode = entry.LedgerBucket.BudgetBucket.Code,
                     BucketType = entry.LedgerBucket.BudgetBucket.TypeDescription,
-                    Description = entry.LedgerBucket.BudgetBucket.Description, 
+                    Description = entry.LedgerBucket.BudgetBucket.Description,
                     MonthlyBudgetAmount = currentBudget.Expenses.First(e => e.Bucket.Code == entry.LedgerBucket.BudgetBucket.Code).Amount
                 });
             }
 
+            var accounts = string.Empty;
+            foreach (var account in latestRecon.BankBalances)
+            {
+                accounts = $"{accounts}, {account.Account.Name}";
+            }
             ledgerList.Add(new SummarisedLedgerBucket
             {
+                AccountName = accounts,
                 MonthlyBudgetAmount = -1, // Do not show, not relevant
                 RemainingBalance = currentBalances[new SurplusBucket()],
                 OpeningBalance = latestRecon.CalculatedSurplus,
@@ -98,14 +126,14 @@ namespace BudgetAnalyser.Engine.Mobile
             await writer.WriteToDiskAsync(await GetFileName(), serialised);
         }
 
-        private async Task<string> GetFileName()
-        {
-            return Path.Combine(await this.environmentFolders.LogFolder(), "MobileDataExport.json");
-        }
-
         public string Serialise(SummarisedLedgerMobileData dataExport)
         {
             return JsonConvert.SerializeObject(dataExport);
+        }
+
+        private async Task<string> GetFileName()
+        {
+            return Path.Combine(await this.environmentFolders.LogFolder(), "MobileDataExport.json");
         }
     }
 }

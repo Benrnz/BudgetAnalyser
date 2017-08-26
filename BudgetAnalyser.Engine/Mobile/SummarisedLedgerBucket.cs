@@ -6,6 +6,11 @@
     public class SummarisedLedgerBucket
     {
         /// <summary>
+        ///     The name of the account as it appears on screen.
+        /// </summary>
+        public string AccountName { get; set; }
+
+        /// <summary>
         ///     The bucket code for the ledger
         /// </summary>
         public string BucketCode { get; set; }
