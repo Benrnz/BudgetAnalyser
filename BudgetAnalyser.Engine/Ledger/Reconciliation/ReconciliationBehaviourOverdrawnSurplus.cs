@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
@@ -16,12 +15,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         public LedgerEntryLine NewReconLine { get; private set; }
 
         public IList<ToDoTask> TodoTasks { get; private set; }
-
-        public void Dispose()
-        {
-            NewReconLine = null;
-            TodoTasks = null;
-        }
 
         public void Initialise(params object[] anyParameters)
         {

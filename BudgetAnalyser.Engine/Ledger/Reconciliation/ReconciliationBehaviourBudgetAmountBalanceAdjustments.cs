@@ -9,13 +9,8 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
     internal class ReconciliationBehaviourBudgetAmountBalanceAdjustments : IReconciliationBehaviour
     {
         public LedgerEntryLine NewReconLine { get; private set; }
-        public IList<ToDoTask> TodoTasks { get; private set; }
 
-        public void Dispose()
-        {
-            NewReconLine = null;
-            TodoTasks = null;
-        }
+        public IList<ToDoTask> TodoTasks { get; private set; }
 
         public void Initialise(params object[] anyParameters)
         {

@@ -192,15 +192,12 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 
             foreach (var behaviour in ReconciliationBehaviourFactory.ListAllBehaviours())
             {
-                using (behaviour)
-                {
-                    behaviour.Initialise(filteredStatementTransactions,
-                                         this.newReconciliationLine,
-                                         this.toDoList,
-                                         this.logger,
-                                         statement);
-                    behaviour.ApplyBehaviour();
-                }
+                behaviour.Initialise(filteredStatementTransactions,
+                                     this.newReconciliationLine,
+                                     this.toDoList,
+                                     this.logger,
+                                     statement);
+                behaviour.ApplyBehaviour();
             }
 
             // At this point each ledger balance is still set to the opening balance, it hasn't ben updated yet. This should always be done last.

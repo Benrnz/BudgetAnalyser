@@ -15,13 +15,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         public StatementModel Statement { get; private set; }
         public IList<ToDoTask> TodoTasks { get; private set; }
 
-        public void Dispose()
-        {
-            NewReconLine = null;
-            TodoTasks = null;
-            Statement = null;
-        }
-
         public void Initialise(params object[] anyParameters)
         {
             foreach (var argument in anyParameters)

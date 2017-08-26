@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BudgetAnalyser.Engine.BankAccount;
-using BudgetAnalyser.Engine.Budget;
-using BudgetAnalyser.Engine.Statement;
 
 namespace BudgetAnalyser.Engine.Ledger.Reconciliation
 {
@@ -11,11 +8,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
     internal class ReconciliationBehaviourForLedgerBucket : IReconciliationBehaviour
     {
         public LedgerEntryLine NewReconLine { get; private set; }
-
-        public void Dispose()
-        {
-            NewReconLine = null;
-        }
 
         public void Initialise(params object[] anyParameters)
         {
@@ -34,7 +26,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         {
             foreach (var ledger in NewReconLine.Entries)
             {
-                var transactions = ledger.Transactions.ToList();
+                List<LedgerTransaction> transactions = ledger.Transactions.ToList();
                 if (ledger.LedgerBucket.ApplyReconciliationBehaviour(transactions, NewReconLine.Date, ledger.Balance))
                 {
                     ledger.SetTransactionsForReconciliation(transactions);

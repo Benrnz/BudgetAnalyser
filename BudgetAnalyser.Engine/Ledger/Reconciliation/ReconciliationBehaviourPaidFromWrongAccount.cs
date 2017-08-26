@@ -29,7 +29,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
         /// <inheritdoc />
         public void ApplyBehaviour()
         {
-            var wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
+            IList<Transaction> wrongAccountPayments = DiscoverWrongAccountPaymentTransactions();
 
             var reference = ReferenceNumberGenerator.IssueTransactionReferenceNumber();
 
@@ -72,15 +72,6 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 .ToDictionary(l => l.BudgetBucket, l => l.StoredInAccount);
         }
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            NewReconLine = null;
-            TodoTasks = null;
-            Transactions = null;
-            this.ledgerBuckets = null;
-        }
-
         private void CreateLedgerTransactionsShowingTransfer(IEnumerable<Transaction> wrongAccountPayments, string reference)
         {
             foreach (var transaction in wrongAccountPayments)
@@ -89,7 +80,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                 {
                     Amount = transaction.Amount, // Amount is already negative/debit
                     AutoMatchingReference = reference,
-                    Date = NewReconLine.Date, 
+                    Date = NewReconLine.Date,
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var journal2 = new CreditLedgerTransaction
@@ -100,7 +91,7 @@ namespace BudgetAnalyser.Engine.Ledger.Reconciliation
                     Narrative = "Transfer to rectify payment made from wrong account."
                 };
                 var ledger = NewReconLine.Entries.Single(l => l.LedgerBucket.BudgetBucket == transaction.BudgetBucket);
-                var replacementTransactions = ledger.Transactions.ToList();
+                List<LedgerTransaction> replacementTransactions = ledger.Transactions.ToList();
                 replacementTransactions.Add(journal1);
                 replacementTransactions.Add(journal2);
                 ledger.SetTransactionsForReconciliation(replacementTransactions);
